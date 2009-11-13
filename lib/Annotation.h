@@ -35,7 +35,7 @@
 namespace degate {
 
   /**
-   * An annotation is a descritive meta object that can be
+   * An annotation is a descriptive meta object that can be
    * placed on a logic model's layer to mark a region of interest.
    *
    * The semantics of an annotation is user defined. The libdegate
