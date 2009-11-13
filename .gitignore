@@ -1,0 +1,15 @@
+.DS_Store
+todo.txt
+*~
+
+CMakeFiles
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+doc/libdegate
+
+libtest/testfiles
+
+gui/degate_bin
+libtest/libdegate_test
