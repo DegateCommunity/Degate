@@ -24,6 +24,8 @@
 
 #include "Grid.h"
 
+#include <tr1/memory>
+
 namespace degate {
 
   /**
@@ -83,6 +85,7 @@ namespace degate {
 	
   };
 
+  typedef std::tr1::shared_ptr<IrregularGrid> IrregularGrid_shptr;
 }
 
 #endif

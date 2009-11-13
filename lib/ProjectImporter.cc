@@ -316,11 +316,11 @@ void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_ele
 
       const Glib::ustring orientation(regular_grid_elem->get_attribute_value("orientation"));
 
-      RegularGrid & reg_grid = (orientation == "horizontal") ?
+      RegularGrid_shptr reg_grid = (orientation == "horizontal") ?
 	prj->get_regular_horizontal_grid() : prj->get_regular_vertical_grid();
 
-      reg_grid.set_distance(parse_number<unsigned int>(regular_grid_elem, "distance", 0));
-      reg_grid.set_enabled(parse_bool(regular_grid_elem->get_attribute_value("enabled")));
+      reg_grid->set_distance(parse_number<unsigned int>(regular_grid_elem, "distance", 0));
+      reg_grid->set_enabled(parse_bool(regular_grid_elem->get_attribute_value("enabled")));
     }
   }
 
@@ -329,10 +329,10 @@ void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_ele
 
       const Glib::ustring orientation(irregular_grid_elem->get_attribute_value("orientation"));
 
-      IrregularGrid & irreg_grid = (orientation == "horizontal") ? 
+      IrregularGrid_shptr irreg_grid = (orientation == "horizontal") ? 
 	prj->get_irregular_horizontal_grid() : prj->get_irregular_vertical_grid();
 
-      irreg_grid.set_enabled(parse_bool(irregular_grid_elem->get_attribute_value("enabled")));
+      irreg_grid->set_enabled(parse_bool(irregular_grid_elem->get_attribute_value("enabled")));
 
       const xmlpp::Node::NodeList offsets_entry_list = irregular_grid_elem->get_children("offsets");
       const xmlpp::Node::NodeList::const_iterator offsets_iter = offsets_entry_list.begin();
@@ -345,7 +345,7 @@ void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_ele
 	      offs_iter != offset_entry_list.end(); 
 	      ++offs_iter) {
 	    if(const xmlpp::Element* offset_entry_elem = dynamic_cast<const xmlpp::Element*>(*offs_iter)) {
-	      irreg_grid.add_offset(parse_number<int>(offset_entry_elem, "offset"));
+	      irreg_grid->add_offset(parse_number<int>(offset_entry_elem, "offset"));
 	    }
 	  }
 	}
@@ -364,10 +364,10 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
 					    
   // Use geometry information to set up regular grid ranges.
   // The RegularGrid implementation might be changed in order to avoid this setup.
-  RegularGrid & reg_vert_grid = parent_prj->get_regular_vertical_grid();
-  RegularGrid & reg_hor_grid = parent_prj->get_regular_horizontal_grid();
-  reg_vert_grid.set_range(0, w);
-  reg_hor_grid.set_range(0, h);
+  RegularGrid_shptr reg_vert_grid = parent_prj->get_regular_vertical_grid();
+  RegularGrid_shptr reg_hor_grid = parent_prj->get_regular_horizontal_grid();
+  reg_vert_grid->set_range(0, w);
+  reg_hor_grid->set_range(0, h);
 
   parent_prj->set_degate_version(project_elem->get_attribute_value("degate-version"));
   parent_prj->set_name(project_elem->get_attribute_value("name"));

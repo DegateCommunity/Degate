@@ -42,7 +42,7 @@ void ImageWin::setup_renderer() {
 
   renderer_add_layer(renderer, (render_func_t) &render_background, &render_params, 1, "Background");
   renderer_add_layer(renderer, (render_func_t) &render_to_grayscale, &render_params, 0, "Background to grayscale");
-  //renderer_add_layer(renderer, (render_func_t) &render_grid, &render_params, 1, "Grid");
+  renderer_add_layer(renderer, (render_func_t) &render_grid, &render_params, 1, "Grid");
   renderer_add_layer(renderer, (render_func_t) &render_gates, &render_params, 1, "Logic Gates");
   renderer_add_layer(renderer, (render_func_t) &render_wires, &render_params, 1, "Wires");
   renderer_add_layer(renderer, (render_func_t) &render_vias, &render_params, 1, "Vias");
@@ -754,11 +754,19 @@ bool ImageWin::get_renderer_func_enabled(int slot_pos) {
 grid_t * ImageWin::get_grid() {
   return render_params.grid;
 }
-
-void ImageWin::set_grid(grid_t * grid) {
-  render_params.grid = grid;
-}
 */
+
+void ImageWin::set_grid(RegularGrid_shptr regular_horizontal_grid, 
+			RegularGrid_shptr regular_vertical_grid,
+			IrregularGrid_shptr irregular_horizontal_grid,
+			IrregularGrid_shptr irregular_vertical_grid) {
+
+  render_params.regular_horizontal_grid = regular_horizontal_grid;
+  render_params.regular_vertical_grid = regular_vertical_grid;
+  render_params.irregular_horizontal_grid = irregular_horizontal_grid;
+  render_params.irregular_vertical_grid = irregular_vertical_grid;
+}
+
 
 render_params_t * ImageWin::get_render_params() {
   return &render_params;

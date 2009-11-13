@@ -24,7 +24,9 @@
 
 #include "Grid.h"
 #include "globals.h"
+
 #include <algorithm>
+#include <tr1/memory>
 
 namespace degate {
 
@@ -73,6 +75,7 @@ namespace degate {
 	
   };
 
+  typedef std::tr1::shared_ptr<RegularGrid> RegularGrid_shptr;
 }
 
 #endif

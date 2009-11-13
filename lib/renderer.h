@@ -42,6 +42,10 @@ namespace degate {
   struct render_params {
     LogicModel_shptr lmodel;
     //grid_t * grid;
+    RegularGrid_shptr regular_horizontal_grid;
+    RegularGrid_shptr regular_vertical_grid;
+    IrregularGrid_shptr irregular_horizontal_grid;
+    IrregularGrid_shptr irregular_vertical_grid;
 
     std::tr1::shared_ptr<ScalingManager<BackgroundImage> > scaling_manager;
 

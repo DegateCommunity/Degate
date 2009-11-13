@@ -46,11 +46,11 @@ namespace degate {
 		   Project_shptr prj) throw(std::runtime_error );
     
     void add_regular_grid(xmlpp::Element* grids_elem, 
-			  RegularGrid const & grid, 
+			  const RegularGrid_shptr grid, 
 			  std::string const & grid_orientation) throw(std::runtime_error );;
     
     void add_irregular_grid(xmlpp::Element* grids_elem, 
-			    IrregularGrid const & grid, 
+			    const IrregularGrid_shptr grid, 
 			    std::string const & grid_orientation) throw(std::runtime_error );;
     
     void add_layers(xmlpp::Element* prj_elem, 

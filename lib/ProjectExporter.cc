@@ -117,37 +117,37 @@ void ProjectExporter::add_grids(xmlpp::Element* prj_elem,
 }
 
 void ProjectExporter::add_regular_grid(xmlpp::Element* grids_elem, 
-				       RegularGrid const & grid, 
+				       const RegularGrid_shptr grid, 
 				       std::string const & grid_orientation) 
   throw(std::runtime_error ) {
 
   xmlpp::Element* grid_elem = grids_elem->add_child("regular-grid");
   if(grid_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  grid_elem->set_attribute("enabled", grid.is_enabled() ? "true" : "false");
-  grid_elem->set_attribute("distance", number_to_string<double>(grid.get_distance()));
-  grid_elem->set_attribute("offset", number_to_string<int>(grid.get_min()));
+  grid_elem->set_attribute("enabled", grid->is_enabled() ? "true" : "false");
+  grid_elem->set_attribute("distance", number_to_string<double>(grid->get_distance()));
+  grid_elem->set_attribute("offset", number_to_string<int>(grid->get_min()));
   grid_elem->set_attribute("orientation", grid_orientation);
 
   
 }
 
 void ProjectExporter::add_irregular_grid(xmlpp::Element* grids_elem, 
-					 IrregularGrid const & grid, 
+					 const IrregularGrid_shptr grid, 
 					 std::string const & grid_orientation) 
   throw(std::runtime_error ) {
 
   xmlpp::Element* grid_elem = grids_elem->add_child("irregular-grid");
   if(grid_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  grid_elem->set_attribute("enabled", grid.is_enabled() ? "true" : "false");
+  grid_elem->set_attribute("enabled", grid->is_enabled() ? "true" : "false");
   grid_elem->set_attribute("orientation", grid_orientation);  
 
   xmlpp::Element* offsets_elem = grid_elem->add_child("offsets");
   if(offsets_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  for(IrregularGrid::grid_iter iter = grid.begin();
-      iter != grid.end(); ++iter) {
+  for(IrregularGrid::grid_iter iter = grid->begin();
+      iter != grid->end(); ++iter) {
 
     xmlpp::Element* offset_elem = offsets_elem->add_child("offset-entry");
     if(offset_elem == NULL) throw(std::runtime_error("Failed to create node."));

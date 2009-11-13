@@ -45,10 +45,10 @@ class GridConfigWin : private GladeFileLoader {
  public:
 
   GridConfigWin(Gtk::Window *parent, 
-		degate::RegularGrid & regular_horizontal_grid,
-		degate::RegularGrid & regular_vertical_grid,
-		degate::IrregularGrid & irregular_horizontal_grid,
-		degate::IrregularGrid & irregular_vertical_grid);
+		degate::RegularGrid_shptr regular_horizontal_grid,
+		degate::RegularGrid_shptr regular_vertical_grid,
+		degate::IrregularGrid_shptr irregular_horizontal_grid,
+		degate::IrregularGrid_shptr irregular_vertical_grid);
 
   virtual ~GridConfigWin();
         
@@ -59,10 +59,10 @@ class GridConfigWin : private GladeFileLoader {
 
  private:
   Gtk::Window *parent;
-  degate::RegularGrid & regular_horizontal_grid;
-  degate::RegularGrid & regular_vertical_grid;
-  degate::IrregularGrid & irregular_horizontal_grid;
-  degate::IrregularGrid & irregular_vertical_grid;
+  degate::RegularGrid_shptr regular_horizontal_grid;
+  degate::RegularGrid_shptr regular_vertical_grid;
+  degate::IrregularGrid_shptr irregular_horizontal_grid;
+  degate::IrregularGrid_shptr irregular_vertical_grid;
 
   sigc::signal<void>  signal_changed_;
 

@@ -833,7 +833,8 @@ ret_t degate::render_vias(RENDERER_FUNC_PARAMS) {
 
 
 ret_t render_regular_grid(RENDERER_FUNC_PARAMS) {
-  /*  unsigned int dst_x = 0, dst_y = 0;
+  /*
+  unsigned int dst_x = 0, dst_y = 0;
   double dbl_dst_x, dbl_dst_y;
 
   grid_t * grid = data_ptr->grid;

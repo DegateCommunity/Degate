@@ -58,10 +58,10 @@ namespace degate {
     std::string degate_version;
     std::string directory;
     
-    RegularGrid regular_horizontal_grid;
-    RegularGrid regular_vertical_grid;
-    IrregularGrid irregular_horizontal_grid;
-    IrregularGrid irregular_vertical_grid;
+    RegularGrid_shptr regular_horizontal_grid;
+    RegularGrid_shptr regular_vertical_grid;
+    IrregularGrid_shptr irregular_horizontal_grid;
+    IrregularGrid_shptr irregular_vertical_grid;
   
     bool changed;
   
@@ -83,6 +83,11 @@ namespace degate {
       lambda = 5;
 
       changed = false;
+
+      regular_horizontal_grid = RegularGrid_shptr(new RegularGrid());
+      regular_vertical_grid = RegularGrid_shptr(new RegularGrid());
+      irregular_horizontal_grid = IrregularGrid_shptr(new IrregularGrid());
+      irregular_vertical_grid = IrregularGrid_shptr(new IrregularGrid());
     }
 
   public:
@@ -182,11 +187,10 @@ namespace degate {
     void set_changed(bool state = true) { changed = state; }
     bool is_changed() const { return changed; }
     
-    // XXX make them const?
-    RegularGrid & get_regular_horizontal_grid() { return regular_horizontal_grid; }
-    RegularGrid & get_regular_vertical_grid() { return regular_vertical_grid; }
-    IrregularGrid & get_irregular_horizontal_grid() { return irregular_horizontal_grid; }
-    IrregularGrid & get_irregular_vertical_grid() { return irregular_vertical_grid; }
+    RegularGrid_shptr get_regular_horizontal_grid() { return regular_horizontal_grid; }
+    RegularGrid_shptr get_regular_vertical_grid() { return regular_vertical_grid; }
+    IrregularGrid_shptr get_irregular_horizontal_grid() { return irregular_horizontal_grid; }
+    IrregularGrid_shptr get_irregular_vertical_grid() { return irregular_vertical_grid; }
     
     PortColorManager_shptr get_port_color_manager() { return port_color_manager; }
 

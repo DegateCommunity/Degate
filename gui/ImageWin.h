@@ -27,7 +27,8 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <degate.h>
 #include <renderer.h>
 #include <LogicModel.h>
-//#include "lib/graphics.h"
+#include <RegularGrid.h>
+#include <IrregularGrid.h>
 #include <ScalingManager.h>
 #include <list>
 #include "gui_globals.h"
@@ -103,7 +104,10 @@ class ImageWin : public Gtk::DrawingArea {
   const std::vector<bool> get_renderer_func_states();
 
   //grid_t * get_grid();
-  //void set_grid(grid_t * grid);
+  void set_grid(degate::RegularGrid_shptr regular_horizontal_grid, 
+		degate::RegularGrid_shptr regular_vertical_grid,
+		degate::IrregularGrid_shptr irregular_horizontal_grid,
+		degate::IrregularGrid_shptr irregular_vertical_grid);
   degate::render_params_t * get_render_params();
 
   sigc::signal<void>& signal_wire_tool_released();

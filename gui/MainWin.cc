@@ -566,7 +566,11 @@ void MainWin::update_gui_for_loaded_project() {
     imgWin.set_render_logic_model(lmodel);
     imgWin.reset_selection();
     imgWin.set_current_layer(0);
-    //imgWin.set_grid(main_project->grid);
+    
+    imgWin.set_grid(main_project->get_regular_horizontal_grid(),
+		    main_project->get_regular_vertical_grid(),
+		    main_project->get_irregular_horizontal_grid(),
+		    main_project->get_irregular_vertical_grid());
     
     menu_manager->set_widget_sensitivity(true);
     add_to_recent_menu();
@@ -1557,12 +1561,12 @@ void MainWin::on_popup_menu_set_name() {
 void MainWin::on_popup_menu_add_vertical_grid_line() {
   if(main_project != NULL) {
 
-    IrregularGrid & g = main_project->get_irregular_vertical_grid();
+    IrregularGrid_shptr g = main_project->get_irregular_vertical_grid();
 
-    if(!g.is_enabled())
+    if(!g->is_enabled())
       error_dialog("Error", "Please set the unregular grid mode in the grid configuration.");
     else {
-      g.add_offset(last_click_on_real_x);
+      g->add_offset(last_click_on_real_x);
       gcWin->update_grid_entries();
       main_project->set_changed();
       imgWin.update_screen();
@@ -1573,12 +1577,12 @@ void MainWin::on_popup_menu_add_vertical_grid_line() {
 void MainWin::on_popup_menu_add_horizontal_grid_line() {
   if(main_project != NULL) {
 
-    IrregularGrid & g = main_project->get_irregular_horizontal_grid();
+    IrregularGrid_shptr g = main_project->get_irregular_horizontal_grid();
 
-    if(!g.is_enabled())
+    if(!g->is_enabled())
       error_dialog("Error", "Please set the unregular grid mode in the grid configuration.");
     else {
-      g.add_offset(last_click_on_real_x);
+      g->add_offset(last_click_on_real_x);
       gcWin->update_grid_entries();
       main_project->set_changed();
       imgWin.update_screen();
@@ -1749,7 +1753,11 @@ void MainWin::on_background_import_finished() {
     ipWin = NULL;
   }
   //imgWin.unlock_renderer();
-  imgWin.update_screen();
+  //imgWin.update_screen();
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+  Layer_shptr layer = lmodel->get_current_layer();
+  assert(layer != NULL);
+  set_layer(layer->get_layer_pos());
 }
 
 
