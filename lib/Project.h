@@ -84,10 +84,10 @@ namespace degate {
 
       changed = false;
 
-      regular_horizontal_grid = RegularGrid_shptr(new RegularGrid());
-      regular_vertical_grid = RegularGrid_shptr(new RegularGrid());
-      irregular_horizontal_grid = IrregularGrid_shptr(new IrregularGrid());
-      irregular_vertical_grid = IrregularGrid_shptr(new IrregularGrid());
+      regular_horizontal_grid = RegularGrid_shptr(new RegularGrid(Grid::HORIZONTAL));
+      regular_vertical_grid = RegularGrid_shptr(new RegularGrid(Grid::VERTICAL));
+      irregular_horizontal_grid = IrregularGrid_shptr(new IrregularGrid(Grid::HORIZONTAL));
+      irregular_vertical_grid = IrregularGrid_shptr(new IrregularGrid(Grid::VERTICAL));
     }
 
   public:

@@ -41,7 +41,7 @@ namespace degate {
     
     void precalc_steps();
   public:
-    RegularGrid() {
+    RegularGrid(Grid::ORIENTATION orientation) : Grid(orientation) {
       min = 0;
       max = 0;
       distance = 0;

@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
  
- */
+*/
 
 #ifndef __GRID_H__
 #define __GRID_H__
@@ -26,25 +26,50 @@
 
 namespace degate {
 
-class Grid {
+  /**
+   * Base class for grid types.
+   */
+  class Grid {
 
- private:
-  bool enabled;
- public:
-  typedef std::list<int> grid_set;
-  typedef grid_set::const_iterator grid_iter;
-  
- Grid() : enabled(false) {}
-  virtual ~Grid() {}
-  virtual grid_iter begin() const = 0;
-  virtual grid_iter end() const = 0;
-  virtual void clear() = 0;
-  
-  virtual void set_enabled(bool state = true) { enabled = state; }
-  virtual bool is_enabled() const { return enabled; }
+  public:
 
-  virtual int snap_to_grid(int pos) const = 0;
-};
+    /**
+     * Enum to declare the type of a grid.
+     */
+    
+    enum ORIENTATION {
+      HORIZONTAL = 1,
+      VERTICAL = 2
+    };
+
+  private:
+
+    ORIENTATION orientation;
+    bool enabled;
+
+  public:
+    typedef std::list<int> grid_set;
+    typedef grid_set::const_iterator grid_iter;
+    
+    Grid(ORIENTATION _orientation, bool _enabled = false) : 
+      orientation(_orientation), 
+      enabled(_enabled) {}
+
+    virtual ~Grid() {}
+
+    virtual grid_iter begin() const = 0;
+    virtual grid_iter end() const = 0;
+    virtual void clear() = 0;
+    
+    virtual void set_enabled(bool state = true) { enabled = state; }
+    virtual bool is_enabled() const { return enabled; }
+    
+    virtual int snap_to_grid(int pos) const = 0;
+
+    virtual ORIENTATION get_orientation() const { return orientation; }
+    virtual bool is_horizontal() const { return orientation == HORIZONTAL; }
+    virtual bool is_vertical() const { return orientation == VERTICAL; }
+  };
 
 }
 

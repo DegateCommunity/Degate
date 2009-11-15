@@ -41,7 +41,7 @@ namespace degate {
     /**
      * The ctor to construct a new irregular grid.
      */
-    IrregularGrid() {}
+    IrregularGrid(Grid::ORIENTATION orientation) : Grid(orientation) {}
 
     /**
      * The destructor.
