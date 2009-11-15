@@ -72,6 +72,7 @@ set(DEGATE_SRC
 	       RecognitionManager.cc
 	       TemplateMatchingGUI.cc
 
+	       AppHelper.cc
 	       ImageWin.cc
 	       MainWin.cc
 

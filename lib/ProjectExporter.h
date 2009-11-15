@@ -74,7 +74,11 @@ namespace degate {
     void export_data(std::string const& filename, Project_shptr prj) 
       throw( InvalidPathException, InvalidPointerException, std::runtime_error );
     
-    void export_all(std::string const& project_directory, Project_shptr prj, bool enable_oid_rewrite = true) 
+    void export_all(std::string const& project_directory, Project_shptr prj, 
+		    bool enable_oid_rewrite = true,
+		    std::string const& project_file = "project.xml",
+		    std::string const& lmodel_file = "lmodel.xml",
+		    std::string const& gatelib_file = "gate_library.xml") 
       throw( InvalidPathException, InvalidPointerException, std::runtime_error );
     
   };

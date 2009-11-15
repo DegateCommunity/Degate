@@ -43,7 +43,10 @@ using namespace std;
 using namespace degate;
 
 void ProjectExporter::export_all(std::string const& project_directory, Project_shptr prj, 
-				 bool enable_oid_rewrite) 
+				 bool enable_oid_rewrite, 
+				 std::string const& project_file,
+				 std::string const& lmodel_file,
+				 std::string const& gatelib_file) 
   throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
 
   if(!is_directory(project_directory)) {
@@ -52,13 +55,13 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
   else {
     ObjectIDRewriter_shptr oid_rewriter(new ObjectIDRewriter(enable_oid_rewrite));
 
-    export_data(project_directory + string("/project.xml"), prj);
+    export_data(join_pathes(project_directory, project_file), prj);
     
     LogicModel_shptr lmodel = prj->get_logic_model();
 
     if(lmodel != NULL) {
       LogicModelExporter lm_exporter(oid_rewriter);
-      string lm_filename(project_directory + string("/lmodel.xml"));
+      string lm_filename(join_pathes(project_directory, lmodel_file));
       lm_exporter.export_data(lm_filename, lmodel);
 
 
@@ -66,7 +69,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
       if(glib != NULL) {
       
 	GateLibraryExporter gl_exporter(oid_rewriter);
-	gl_exporter.export_data(project_directory + string("/gate_library.xml"), glib);
+	gl_exporter.export_data(join_pathes(project_directory, gatelib_file), glib);
       }
     }
   }

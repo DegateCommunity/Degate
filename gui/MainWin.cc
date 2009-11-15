@@ -47,6 +47,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericTextInputWin.h"
 #include "RecognitionManager.h"
 #include "gui_globals.h"
+#include <AppHelper.h>
 
 #include <degate.h>
 #include <ProjectExporter.h>
@@ -152,12 +153,18 @@ void MainWin::update_title() {
 
 
 bool MainWin::on_idle() {
-  debug(TM, "idle");
+
   if(project_to_open != NULL) {
     open_project(project_to_open);
     project_to_open = NULL;
   }
-  return false;
+
+  if(main_project != NULL) {
+    if(autosave_project(main_project))
+      m_statusbar.push("Autosaving project data ... done.");
+  }
+
+  return true;
 }
 
 void MainWin::on_view_info_layer_toggled(int slot_pos) {
@@ -361,19 +368,8 @@ void MainWin::on_menu_project_export_archive() {
     dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
     dialog.add_button("Select", Gtk::RESPONSE_OK);
 
-    time_t tim = time(NULL);
-    tm *now = localtime(&tim);
-    char filename_sugg[PATH_MAX];
-    //char * name = rindex(main_project->project_dir, '/');
-    //if(name && name + 1 < main_project->project_dir + strlen(main_project->project_dir)) name++;
-    
-    snprintf(filename_sugg, PATH_MAX, "%4d-%02d-%02d_%02d%02d_%s.zip", 
-	     now->tm_year+1900, now->tm_mon+1, now->tm_mday, now->tm_hour, now->tm_min,
-	     get_file_suffix(get_basedir(main_project->get_project_directory())).c_str() );
-    
-    //dialog.unselect_all();
-    //dialog.select_filename(filename_sugg);
-    dialog.set_current_name(filename_sugg);
+    std::string suffix = get_basename(main_project->get_project_directory());
+    dialog.set_current_name(get_date_and_time_as_file_prefix() + suffix + ".zip");
     int result = dialog.run();
     dialog.hide();
 

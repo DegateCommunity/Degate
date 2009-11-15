@@ -31,6 +31,8 @@
 #include <list>
 #include <tr1/memory>
 
+#include <ctime>
+
 namespace degate {
 
   class Project;
@@ -64,6 +66,7 @@ namespace degate {
     IrregularGrid_shptr irregular_vertical_grid;
   
     bool changed;
+    clock_t last_persistent_version;
   
     diameter_t default_pin_diameter;
     diameter_t default_wire_diameter;
@@ -82,7 +85,7 @@ namespace degate {
       default_wire_diameter = 5;
       lambda = 5;
 
-      changed = false;
+      set_changed(false);
 
       regular_horizontal_grid = RegularGrid_shptr(new RegularGrid(Grid::HORIZONTAL));
       regular_vertical_grid = RegularGrid_shptr(new RegularGrid(Grid::VERTICAL));
@@ -184,9 +187,44 @@ namespace degate {
     void set_default_wire_diameter(diameter_t wire_diameter) { default_wire_diameter = wire_diameter; }
     diameter_t get_default_wire_diameter() const { return default_wire_diameter; }
     
-    void set_changed(bool state = true) { changed = state; }
+
+    /**
+     * Set changed flag to indicate that the project data was changed.
+     *
+     * This method is normally called from the GUI.
+     * If the project was saved to disc, the code should call set_changed(false). Project
+     * saving is implemented in ProjectExporter, but because the ProjectExporter might be used
+     * for different purposes, this method must be called from the GUI code.
+     */
+    void set_changed(bool state = true) { 
+      changed = state; 
+      if(state == false)
+	reset_last_saved_counter();
+    }
+
+    /**
+     * Check if the project was changed.
+     */
     bool is_changed() const { return changed; }
     
+    /**
+     * Get time since last "save".
+     * @return Returns the time in seconds since the project change state was set to false.
+     * @see set_changed()
+     */
+
+    unsigned int get_time_since_last_save() const {
+      return (clock() - last_persistent_version)/CLOCKS_PER_SEC;
+    }
+
+    /**
+     * Reset last save counter.
+     */
+    void reset_last_saved_counter() {
+      last_persistent_version = clock();
+    }
+
+
     RegularGrid_shptr get_regular_horizontal_grid() { return regular_horizontal_grid; }
     RegularGrid_shptr get_regular_vertical_grid() { return regular_vertical_grid; }
     IrregularGrid_shptr get_irregular_horizontal_grid() { return irregular_horizontal_grid; }
