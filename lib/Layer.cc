@@ -146,6 +146,8 @@ void Layer::set_image(BackgroundImage_shptr img) {
   scaling_manager = 
     std::tr1::shared_ptr<ScalingManager<BackgroundImage> >
     (new ScalingManager<BackgroundImage>(img, img->get_directory()));
+
+  scaling_manager->create_scalings();
 }
 
 BackgroundImage_shptr Layer::get_image() throw(DegateLogicException) {

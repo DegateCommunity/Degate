@@ -147,17 +147,26 @@ namespace degate {
 	snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
 	std::string dir_path = join_pathes(images[1]->get_directory(), std::string(dir_name));
 
-	debug(TM, "create scaled image in %s", dir_path.c_str());
-	create_directory(dir_path);
+	debug(TM, "create scaled image in %s for scaling factor %d?", dir_path.c_str(), i);
+	if(!file_exists(dir_path)) {
+	  debug(TM, "yes");
+	  create_directory(dir_path);
 
-	std::tr1::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
-							      images[1]->is_persistent()));
+	  std::tr1::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
+								images[1]->is_persistent()));
 
-	scale_bicubical<ImageType, ImageType>(new_img, last_img);
-	std::tr1::shared_ptr<ImageType> last_img = new_img;
+	  scale_bicubical<ImageType, ImageType>(new_img, last_img);
+	  last_img = new_img;
+	}
+	else {
+	  debug(TM, "no");
+	  std::tr1::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
+								images[1]->is_persistent()));
 
+	  last_img = new_img;
+	}
+	images[i] = last_img;
       }
-
     }
 
     /**
@@ -172,10 +181,11 @@ namespace degate {
 			  (unsigned long)lrint(images.rbegin()->first));
 	typename image_map::iterator found = images.find(factor);
 	assert(found != images.end());
+	//debug(TM, "requested scaling is %f. nearest scaling is %d. found image with scaling %f", request_scaling, factor, found->first);
 	return (*found);
       }
       
-      //debug(TM, "return normal image");
+      debug(TM, "return normal image");
       return image_map_element(1, images[1]);
     }
 
