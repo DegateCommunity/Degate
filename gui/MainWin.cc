@@ -1561,7 +1561,7 @@ void MainWin::on_popup_menu_set_name() {
 void MainWin::on_popup_menu_add_vertical_grid_line() {
   if(main_project != NULL) {
 
-    IrregularGrid_shptr g = main_project->get_irregular_vertical_grid();
+    IrregularGrid_shptr g = main_project->get_irregular_horizontal_grid();
 
     if(!g->is_enabled())
       error_dialog("Error", "Please set the unregular grid mode in the grid configuration.");
@@ -1577,7 +1577,7 @@ void MainWin::on_popup_menu_add_vertical_grid_line() {
 void MainWin::on_popup_menu_add_horizontal_grid_line() {
   if(main_project != NULL) {
 
-    IrregularGrid_shptr g = main_project->get_irregular_horizontal_grid();
+    IrregularGrid_shptr g = main_project->get_irregular_vertical_grid();
 
     if(!g->is_enabled())
       error_dialog("Error", "Please set the unregular grid mode in the grid configuration.");

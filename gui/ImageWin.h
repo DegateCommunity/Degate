@@ -22,6 +22,12 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #ifndef __IMAGEWIN_H__
 #define __IMAGEWIN_H__
 
+/* ---------------------------------------------------------
+
+   Warning: this is old ugly code and must be rewritten.
+
+   --------------------------------------------------------- */
+
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/tooltips.h>
 #include <degate.h>

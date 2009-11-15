@@ -32,6 +32,12 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "IrregularGrid.h"
 #include "ScalingManager.h"
 
+/* ---------------------------------------------------------
+
+   Warning: this is old ugly code and must be rewritten.
+
+   --------------------------------------------------------- */
+
 namespace degate {
 
   // Todo: should rendering params and renderer data structures be merged?

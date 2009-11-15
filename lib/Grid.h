@@ -23,6 +23,7 @@
 #define __GRID_H__
 
 #include <list>
+#include <tr1/memory>
 
 namespace degate {
 
@@ -125,6 +126,7 @@ namespace degate {
     virtual bool is_vertical() const { return orientation == VERTICAL; }
   };
 
+  typedef std::tr1::shared_ptr<Grid> Grid_shptr;
 }
 
 #endif

@@ -19,6 +19,12 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
                                                                                 
 */
 
+/* ---------------------------------------------------------
+
+   Warning: this is old ugly code and must be rewritten.
+
+   --------------------------------------------------------- */
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,11 +38,11 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 #include <degate.h>
 #include <LogicModelHelper.h>
-//#include "graphics.h"
+
 #include <renderer.h>
-#include "LogicModel.h"
-#include "QuadTree.h"
-//#include "font.h"
+#include <LogicModel.h>
+#include <QuadTree.h>
+#include <Grid.h>
 
 #include <ImageManipulation.h>
 
@@ -830,106 +836,6 @@ ret_t degate::render_vias(RENDERER_FUNC_PARAMS) {
   return RET_OK;
 }
 
-
-
-ret_t render_regular_grid(RENDERER_FUNC_PARAMS) {
-  /*
-  unsigned int dst_x = 0, dst_y = 0;
-  double dbl_dst_x, dbl_dst_y;
-
-  grid_t * grid = data_ptr->grid;
-  if(grid == NULL) return RET_OK;
-
-  double scaling_x =  (max_x - min_x) / (double)dst_img->get_width();
-  double scaling_y =  (max_y - min_y) / (double)dst_img->get_height();
-
-  if(grid->dist_x < 1 || grid->dist_y < 1) return RET_OK;
-
-  unsigned int screen_offs_x;
-  unsigned int screen_offs_y;
-
-  if(grid->offset_y >= min_y)
-    screen_offs_y = (unsigned int) ((grid->offset_y - min_y)/ scaling_y);
-  else {
-    int n = (int)((min_y - grid->offset_y) / grid->dist_y);
-    screen_offs_y = (unsigned int) ((grid->dist_y - (min_y - grid->offset_y - n * grid->dist_y))/ scaling_y);
-  }
-
-  if(grid->offset_x >= min_x)
-    screen_offs_x = (unsigned int) ((grid->offset_x - min_x)/ scaling_x);
-  else {
-    int n = (int)((min_x - grid->offset_x) / grid->dist_x);
-    screen_offs_x = (unsigned int) ((grid->dist_x - (min_x - grid->offset_x - n * grid->dist_x))/ scaling_x);
-  }
-
-  if(grid->vertical_lines_enabled && scaling_x > 0 && grid->dist_x / scaling_x >= 2) {
-    for(dbl_dst_x = screen_offs_x; dbl_dst_x < dst_img->get_width() - 1; dbl_dst_x += (grid->dist_x / scaling_x)) {
-      dst_x =  lrint(dbl_dst_x);
-      vline(dst_img, dst_x, 0, data_ptr->grid_color);
-    }
-  }
-  
-  if(grid->horizontal_lines_enabled && scaling_y > 0 && grid->dist_y / scaling_y >= 2) {
-    for(dbl_dst_y = screen_offs_y; dbl_dst_y < dst_img->get_height() - 1; dbl_dst_y += (grid->dist_y / scaling_y)) {
-      dst_y =  lrint(dbl_dst_y);
-      hline(dst_img, 0, dst_y, data_ptr->grid_color);
-    }
-  }
-  */
-  return RET_OK;
-}
-
-ret_t render_unregular_grid(RENDERER_FUNC_PARAMS) {
-  /*  unsigned int i;
-  grid_t * grid = data_ptr->grid;
-  if(grid == NULL) return RET_OK;
-
-  
-  double scaling_x =  (max_x - min_x) / (double)dst_img->get_width();
-  double scaling_y =  (max_y - min_y) / (double)dst_img->get_height();
-
-  // horizontal lines 
-  if(grid->uhg_enabled == 1) {
-    for(i = 0; i < grid->num_uhg_entries; i++) {
-      unsigned int offset = grid->uhg_offsets[i];
-      if(offset >= min_y && offset <= max_y) {
-	unsigned int dst_y = (double)(offset - min_y) / scaling_y;
-	hline(dst_img, 0, dst_y, data_ptr->grid_color);
-      }
-    }
-  }
-
-  // vertical lines 
-  if(grid->uvg_enabled == 1) {
-    for(i = 0; i < grid->num_uvg_entries; i++) {
-      unsigned int offset = grid->uvg_offsets[i];
-      if(offset >= min_x && offset <= max_x) {
-	unsigned int dst_x = (double)(offset - min_x) / scaling_x;
-	vline(dst_img, dst_x, 0, data_ptr->grid_color);
-      }
-    }
-  }
-*/
-  return RET_OK;
-}
-
-ret_t degate::render_grid(RENDERER_FUNC_PARAMS) {
-  /*  if(data_ptr->grid != NULL) {
-    switch(data_ptr->grid->grid_mode) {
-    case USE_REGULAR_GRID:
-      return render_regular_grid(renderer, dst_img, layer, min_x, min_y, max_x, max_y, data_ptr); 
-      break;
-    case USE_UNREGULAR_GRID:
-      return render_unregular_grid(renderer, dst_img, layer, min_x, min_y, max_x, max_y, data_ptr);
-      break;
-    default:
-      return RET_ERR;
-    }
-  }
-  else return RET_INV_PTR;*/
-  return RET_OK;
-}
-
 void vline(RendererImage_shptr img, unsigned int x, unsigned int y, uint32_t col) {
   unsigned int _y;
   for(_y = y; _y < img->get_height(); _y++) {
@@ -945,6 +851,81 @@ void hline(RendererImage_shptr img, unsigned int x, unsigned int y, uint32_t col
     gr_set_pixval(img, _x, y, alpha_blend(pix, col));
   }	
 }
+
+
+ret_t render_grid_lines(RENDERER_FUNC_PARAMS,
+			  Grid_shptr grid) {
+  
+
+  debug(TM, "render grid");
+  if(grid == NULL) return RET_ERR;
+  if(!grid->is_enabled()) return RET_OK;
+
+  double scaling_x =  (double)(max_x - min_x) / (double)dst_img->get_width();
+  double scaling_y =  (double)(max_y - min_y) / (double)dst_img->get_height();
+
+  //if(grid->get_distance()) return RET_OK;
+
+  unsigned int screen_offs_x;
+  unsigned int screen_offs_y;
+
+
+  for(Grid::grid_iter iter = grid->begin(); iter != grid->end(); ++iter) {
+    unsigned int real_offs = *iter;
+
+
+    if(grid->is_horizontal()) {
+      if(real_offs >= min_x && real_offs < max_x) {
+	screen_offs_x = (unsigned int) ((real_offs - min_x)/ scaling_x);
+	vline(dst_img, screen_offs_x, 0, data_ptr->grid_color);
+      }
+    }
+
+    else if(grid->is_vertical()) {
+      if(real_offs >= min_y && real_offs < max_y) {
+	screen_offs_y = (unsigned int) ((real_offs - min_y)/ scaling_y);
+	//debug(TM, "offset: %d", screen_offs_y);
+
+	hline(dst_img, 0, screen_offs_y, data_ptr->grid_color);
+      }
+    }
+  }
+  
+  return RET_OK;
+}
+
+
+ret_t degate::render_grid(RENDERER_FUNC_PARAMS) {
+
+  if(data_ptr->regular_horizontal_grid != NULL &&
+     data_ptr->regular_horizontal_grid->is_enabled())
+
+    render_grid_lines(renderer, dst_img, layer, min_x, min_y, max_x, max_y, data_ptr, 
+		      data_ptr->regular_horizontal_grid);
+
+  if(data_ptr->regular_vertical_grid != NULL &&
+     data_ptr->regular_vertical_grid->is_enabled())
+
+    render_grid_lines(renderer, dst_img, layer, min_x, min_y, max_x, max_y, data_ptr,
+		      data_ptr->regular_vertical_grid);
+
+
+  if(data_ptr->irregular_horizontal_grid != NULL &&
+     data_ptr->irregular_horizontal_grid->is_enabled())
+
+    render_grid_lines(renderer, dst_img, layer, min_x, min_y, max_x, max_y, data_ptr, 
+		      data_ptr->irregular_horizontal_grid);
+
+  if(data_ptr->irregular_vertical_grid != NULL &&
+     data_ptr->irregular_vertical_grid->is_enabled())
+
+    render_grid_lines(renderer, dst_img, layer, min_x, min_y, max_x, max_y, data_ptr,
+		      data_ptr->irregular_vertical_grid);
+
+
+  return RET_OK;
+}
+
 
 /*
  */

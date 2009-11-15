@@ -342,15 +342,15 @@ void GridConfigWin::on_horz_checkb_clicked() {
 
   if(p_horizontal_checkbutton->get_active()) {
     regular_horizontal_grid->set_enabled(true);
-    p_scale_offset_y->set_sensitive(true);
-    p_scale_dist_y->set_sensitive(true);
-    p_entry_dist_y->set_sensitive(true);
+    p_scale_offset_x->set_sensitive(true);
+    p_scale_dist_x->set_sensitive(true);
+    p_entry_dist_x->set_sensitive(true);
   }
   else {
     regular_horizontal_grid->set_enabled(false);
-    p_scale_offset_y->set_sensitive(false);
-    p_scale_dist_y->set_sensitive(false);
-    p_entry_dist_y->set_sensitive(false);
+    p_scale_offset_x->set_sensitive(false);
+    p_scale_dist_x->set_sensitive(false);
+    p_entry_dist_x->set_sensitive(false);
   }
   signal_changed_();
 }
@@ -359,52 +359,48 @@ void GridConfigWin::on_vert_checkb_clicked() {
 
   if(p_vertical_checkbutton->get_active()) {
     regular_vertical_grid->set_enabled(true);
-    p_scale_offset_x->set_sensitive(true);
-    p_scale_dist_x->set_sensitive(true);
-    p_entry_dist_x->set_sensitive(true);
+    p_scale_offset_y->set_sensitive(true);
+    p_scale_dist_y->set_sensitive(true);
+    p_entry_dist_y->set_sensitive(true);
   }
   else {
     regular_vertical_grid->set_enabled(false);
-    p_scale_offset_x->set_sensitive(false);
-    p_scale_dist_x->set_sensitive(false);
-    p_entry_dist_x->set_sensitive(false);
+    p_scale_offset_y->set_sensitive(false);
+    p_scale_dist_y->set_sensitive(false);
+    p_entry_dist_y->set_sensitive(false);
   }
   signal_changed_();
 }
 
 
 void GridConfigWin::on_offset_x_changed() {
-  //grid->offset_x = p_adj_offset_x->get_value();
-
-  irregular_vertical_grid->add_offset(p_adj_offset_x->get_value());
-
+  regular_horizontal_grid->set_range(p_adj_offset_x->get_value(), 
+				     regular_horizontal_grid->get_max());
   signal_changed_();
 }
 
 void GridConfigWin::on_offset_y_changed() {
-  //grid->offset_y = p_adj_offset_y->get_value();
-
-  irregular_horizontal_grid->add_offset(p_adj_offset_y->get_value());
-
+  regular_vertical_grid->set_range(p_adj_offset_y->get_value(), 
+				   regular_vertical_grid->get_max());
   signal_changed_();
 }
 
 void GridConfigWin::on_dist_x_changed() {
 
-  regular_vertical_grid->set_distance(p_adj_dist_x->get_value());
+  regular_horizontal_grid->set_distance(p_adj_dist_x->get_value());
 
   char tmp[50];
-  snprintf(tmp, sizeof(tmp), "%f", regular_vertical_grid->get_distance());
+  snprintf(tmp, sizeof(tmp), "%f", regular_horizontal_grid->get_distance());
   p_entry_dist_x->set_text(tmp);
   signal_changed_();
 }
 
 void GridConfigWin::on_dist_y_changed() {
-  regular_horizontal_grid->set_distance(p_adj_dist_y->get_value());
+  regular_vertical_grid->set_distance(p_adj_dist_y->get_value());
 
   char tmp[50];
   //grid->dist_y = p_adj_dist_y->get_value();
-  snprintf(tmp, sizeof(tmp), "%f", regular_horizontal_grid->get_distance());
+  snprintf(tmp, sizeof(tmp), "%f", regular_vertical_grid->get_distance());
   p_entry_dist_y->set_text(tmp);
   signal_changed_();
 }
@@ -418,7 +414,7 @@ void GridConfigWin::on_entry_dist_x_changed() {
   }
 
   //grid->dist_x = v;
-  regular_vertical_grid->set_distance(v);
+  regular_horizontal_grid->set_distance(v);
   p_adj_dist_x->set_value(v);
   signal_changed_();
 }
@@ -430,7 +426,7 @@ void GridConfigWin::on_entry_dist_y_changed() {
     v = 0;
   }
 
-  regular_horizontal_grid->set_distance(v);
+  regular_vertical_grid->set_distance(v);
   //grid->dist_y = v;
   p_adj_dist_y->set_value(v);
 

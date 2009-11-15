@@ -20,6 +20,12 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
                                                                                 
 */
 
+/* ---------------------------------------------------------
+
+   Warning: this is old ugly code and must be rewritten.
+
+   --------------------------------------------------------- */
+
 #include <gdkmm/window.h>
 #include <iostream>
 

@@ -101,7 +101,7 @@
                                 <property name="orientation">vertical</property>
                                 <child>
                                   <widget class="GtkCheckButton" id="horizontal_checkbutton">
-                                    <property name="label" translatable="yes">horizontal lines</property>
+                                    <property name="label" translatable="yes">horizontal grid (vertical lines)</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
@@ -116,7 +116,7 @@
                                 </child>
                                 <child>
                                   <widget class="GtkCheckButton" id="vertical_checkbutton">
-                                    <property name="label" translatable="yes">vertical lines</property>
+                                    <property name="label" translatable="yes">vertical grid (horizontal lines)</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
@@ -399,7 +399,7 @@
                                 <property name="orientation">vertical</property>
                                 <child>
                                   <widget class="GtkCheckButton" id="uhg_checkbutton">
-                                    <property name="label" translatable="yes">horizontal lines</property>
+                                    <property name="label" translatable="yes">horizontal grid (vertical lines)</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
@@ -516,7 +516,7 @@
                                 <property name="orientation">vertical</property>
                                 <child>
                                   <widget class="GtkCheckButton" id="uvg_checkbutton">
-                                    <property name="label" translatable="yes">vertical lines</property>
+                                    <property name="label" translatable="yes">vertical grid (horizontal lines)</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
