@@ -182,6 +182,10 @@ void degate::load_background_image(Layer_shptr layer,
   fmter % layer->get_layer_pos();
 
   std::string dir(join_pathes(project_dir, fmter.str()));
+
+  if(layer->has_background_image())
+    layer->unset_image();
+
   debug(TM, "Create background image in %s", dir.c_str());
   BackgroundImage_shptr bg_image(new BackgroundImage(layer->get_width(),
 						     layer->get_height(),
@@ -190,8 +194,6 @@ void degate::load_background_image(Layer_shptr layer,
   debug(TM, "Load image %s", image_file.c_str());
   load_image<BackgroundImage>(image_file, bg_image);
 
-  if(layer->has_background_image())
-    layer->unset_image();
   debug(TM, "Set image to layer.");
   layer->set_image(bg_image);
   debug(TM, "Done.");

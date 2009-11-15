@@ -181,6 +181,7 @@ void Layer::unset_image() throw(DegateLogicException) {
   if(scaling_manager == NULL) throw DegateLogicException("There is no scaling manager.");
   std::string img_dir = get_image_filename();
   scaling_manager.reset();
+  debug(TM, "remove directory: %s", img_dir.c_str());
   remove_directory(img_dir);
 }
 
