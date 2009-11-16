@@ -22,7 +22,7 @@
 #include <LogicModelHelper.h>
 
 #include <TemplateMatchingGUI.h>
-#include <TemplatematchingParamsWin.h>
+#include <TemplateMatchingParamsWin.h>
 
 #include <GateSelectWin.h>
 
