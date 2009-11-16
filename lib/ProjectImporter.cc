@@ -166,7 +166,9 @@ void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_e
 
       const std::string image_filename(layer_elem->get_attribute_value("image-filename"));
       const std::string layer_type_str(layer_elem->get_attribute_value("type"));
+      const std::string layer_description(layer_elem->get_attribute_value("description"));
       unsigned int position = parse_number<unsigned int>(layer_elem, "position");
+      const std::string layer_enabled_str = layer_elem->get_attribute_value("enabled");
       
       Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
 
@@ -177,6 +179,13 @@ void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_e
 	    layer_type_str.c_str(),
 	    Layer::get_layer_type_as_string(layer_type).c_str(),
 	    image_filename.c_str());
+
+      bool layer_enabled = true;
+      if(layer_enabled_str.size() != 0)
+	layer_enabled = parse_bool(layer_enabled_str);
+      new_layer->set_enabled(layer_enabled);
+
+      new_layer->set_description(layer_description);
 
       lmodel->add_layer(position, new_layer);
 

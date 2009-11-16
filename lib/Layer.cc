@@ -55,14 +55,16 @@ void Layer::remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o)
 Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type) : 
   quadtree(bbox, 100), 
   layer_type(_layer_type), 
-  layer_pos(0) {
+  layer_pos(0),
+  enabled(true)  {
 }
 
 Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type, 
 	     BackgroundImage_shptr img) : 
   quadtree(bbox, 100), 
   layer_type(_layer_type), 
-  layer_pos(0) {
+  layer_pos(0),
+  enabled(true) {
 
   set_image(img);
 }
@@ -251,3 +253,21 @@ bool Layer::exists_gate_in_region(unsigned int min_x, unsigned int max_x,
   return false;
 }
 
+
+void Layer::set_enabled(bool state) {
+  enabled = state;
+}
+
+bool Layer::is_enabled() const {
+  return enabled;
+}
+
+
+std::string Layer::get_description() const {
+  return description;
+}
+
+
+void Layer::set_description(std::string const& description) {
+  this->description = description;
+}

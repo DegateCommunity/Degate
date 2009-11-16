@@ -74,7 +74,10 @@ namespace degate {
     // store shared pointers to objects, that belong to the layer
     typedef std::map<object_id_t, PlacedLogicModelObject_shptr> object_collection;
     object_collection objects;
-    
+
+    bool enabled;
+    std::string description;
+
   private:
     
     void set_layer_pos(layer_position_t pos) { layer_pos = pos; }
@@ -302,6 +305,33 @@ namespace degate {
     
     bool exists_gate_in_region(unsigned int min_x, unsigned int max_x,
 			       unsigned int min_y, unsigned int max_y);
+
+
+    /**
+     * Enable a layer.
+     */
+
+    void set_enabled(bool state = true);
+
+    /**
+     * Check if a layer is enabled.
+     */
+
+    bool is_enabled() const;
+
+
+    /**
+     * Get layer description.
+     */
+
+    std::string get_description() const;
+
+
+    /**
+     * Set layer description.
+     */
+
+    void set_description(std::string const& description);
 
   };
 
