@@ -48,9 +48,8 @@ namespace degate {
      * Parse a string that represents a boolean value, that is "true" or "false".
      * @return Returns a C++ bool, depending on the parsed string.
      * @throw std::invalid_argument The exception is thrown, if the string can not be parsed.
-     * @todo Maybe change exception to a XMLAttributeParseException.
      */
-    virtual bool parse_bool(std::string const& str) const throw(std::invalid_argument);
+    virtual bool parse_bool(std::string const& str) const throw(XMLAttributeParseException);
 
     /**
      * Parse a string that represents a number.
