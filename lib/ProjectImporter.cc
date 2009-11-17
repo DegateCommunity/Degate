@@ -228,18 +228,24 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 
       // determine where we can store the new backgound image
       boost::format fmter("layer_%1%.dimg");
-      fmter % layer->get_layer_pos();
+      /* We convert old degate background images to the new tile based format.
+	 Therefore we need directory names. The directory name should not reflect
+	 a layer position number, because it it possible that the layers become
+	 reorderd later. We do not want to rename the directories in that case.
+	 To avoid, that a user thinks the directory name reflects a layer position,
+	 we just add a number. */
+      fmter % (layer->get_layer_pos() + 0x2342); 
       std::string new_dir(join_pathes(prj->get_project_directory(), fmter.str()));
 
       debug(TM, "project importer loads an old single file based image from [%s]", 
 	    image_path_to_load.c_str());
 
-      if(!is_directory(new_dir)) { // we have to check this, before we call the constructor
+      if(!is_directory(new_dir) && !file_exists(new_dir)) { // we have to check this, before we call the constructor
 
 	// create new background image
 	BackgroundImage_shptr new_bg_image(new BackgroundImage(prj->get_width(),
-							     prj->get_height(),
-							     new_dir));
+							       prj->get_height(),
+							       new_dir));
 
 	// load old single file image
 	PersistentImage_RGBA_shptr old_bg_image =
@@ -263,6 +269,7 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 	//save_image<BackgroundImage>("/tmp/yyy.tif", new_bg_image);
       }
       else {
+	assert(1 == 0); // XXX should not go here
 	debug(TM, 
 	      "There is already a directory named %s. It should be loaded as an image now.", 
 	      new_dir.c_str());

@@ -30,6 +30,8 @@
 #include <Project.h>
 #include <ProjectExporter.h>
 
+#include <gtkmm.h>
+
 /**
  * Get date and time as a string that can be used to generate file names.
  */
@@ -46,5 +48,12 @@ std::string get_date_and_time_as_file_prefix();
  */
 
 bool autosave_project(degate::Project_shptr project, unsigned int interval = 5 * 60);
+
+/**
+ * Add file filter for background images to a Gtk::FileChooserDialog.
+ * @todo Lookup available image importer.
+ */
+
+void add_image_file_filter_to_file_chooser(Gtk::FileChooserDialog & dialog);
 
 #endif

@@ -61,3 +61,11 @@ bool autosave_project(Project_shptr project, unsigned int interval) {
   }
   return false;
 }
+
+void add_image_file_filter_to_file_chooser(Gtk::FileChooserDialog & dialog) {
+  Gtk::FileFilter filter;
+  filter.set_name("Tiff image");
+  filter.add_pattern("*.tif");
+  filter.add_pattern("*.tiff");
+  dialog.add_filter(filter);
+}

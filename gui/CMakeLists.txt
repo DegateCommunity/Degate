@@ -63,6 +63,8 @@ set(DEGATE_SRC
 	       PortColorsWin.cc
 	       PortSelectWin.cc
 
+	       LayerConfigWin.cc
+
 	       NewProjectWin.cc
 	       ObjectMatchingWin.cc
 	       TemplateMatchingParamsWin.cc

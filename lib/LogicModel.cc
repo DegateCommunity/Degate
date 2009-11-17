@@ -105,7 +105,7 @@ LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int lay
     get_create_layer(i);
   
   if(layers > 0)
-    set_layer(0);
+    set_current_layer(0);
 
   gate_library = GateLibrary_shptr(new GateLibrary());
 }
@@ -458,6 +458,9 @@ Layer_shptr LogicModel::get_layer(layer_position_t pos) {
   return layers.at(pos);
 }
 
+void LogicModel::set_layers(layer_collection layers) {
+  this->layers = layers;
+}
 
 void LogicModel::remove_layer(layer_position_t pos) {
   remove_layer(layers.at(pos));
@@ -470,7 +473,7 @@ void LogicModel::remove_layer(Layer_shptr layer) {
   layers.erase(remove(layers.begin(), layers.end(), layer), layers.end());
 }
 
-void LogicModel::set_layer(layer_position_t pos) {
+void LogicModel::set_current_layer(layer_position_t pos) {
   current_layer = layers[pos];
 }
 

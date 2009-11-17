@@ -63,6 +63,7 @@ void MenuManager::create_menu() {
   create_and_bind_project_menu();
   create_and_bind_view_menu();
   create_and_bind_tools_menu();
+  create_and_bind_layer_menu();
   create_and_bind_logic_menu();
   create_and_bind_gate_menu();
   create_and_bind_recognition_menu();
@@ -198,7 +199,9 @@ void MenuManager::create_and_bind_tools_menu() {
 
   m_refChoice_via_down = Gtk::RadioAction::create(group_tools, "ToolViaDown", "Via down");
   m_refActionGroup->add(m_refChoice_via_down, sigc::mem_fun(*window, &MainWin::on_menu_tools_via_down) );
+}
 
+void MenuManager::create_and_bind_layer_menu() {
   // Layer Menu
   m_refActionGroup->add( Gtk::Action::create("LayerMenu", "Layer"));
 
@@ -213,6 +216,10 @@ void MenuManager::create_and_bind_tools_menu() {
 					    "Clear background image for current layer"),
 			sigc::mem_fun(*window, &MainWin::on_menu_layer_clear_background_image));
 
+
+  m_refActionGroup->add(Gtk::Action::create("LayerConfiguration",
+					    "Layer configuration", "Layer configuration"),
+			sigc::mem_fun(*window, &MainWin::on_menu_layer_configuration));
 
 
   Gtk::RadioAction::Group group_layer_type;
@@ -405,6 +412,8 @@ void MenuManager::setup_menu_structure() {
         "    <menu action='LayerMenu'>"
         "      <menuitem action='LayerImportBackground'/>"
         "      <menuitem action='LayerClearBackgroundImage'/>"
+        "      <separator/>"
+        "      <menuitem action='LayerConfiguration'/>"
         "      <separator/>"
         "      <menu action='LayerType'>"
         "        <menuitem action='LayerTypeTransistor'/>"
@@ -645,6 +654,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
 
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerImportBackground", state);
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerClearBackgroundImage", state);
+  set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerConfiguration", state);
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerType", state);
 
 

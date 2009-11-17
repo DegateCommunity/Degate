@@ -4,6 +4,9 @@
   <!-- interface-naming-policy project-wide -->
   <widget class="GtkDialog" id="layer_config_dialog">
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">Layer configuration</property>
+    <property name="default_width">600</property>
+    <property name="default_height">300</property>
     <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
@@ -16,32 +19,20 @@
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <widget class="GtkLabel" id="label">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Layer configuration</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="padding">5</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkTreeView" id="treeview1">
+              <widget class="GtkTreeView" id="treeview_layers">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </widget>
               <packing>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="hbox1">
+              <widget class="GtkHBox" id="hbox2">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkButton" id="down_button">
-                    <property name="label" translatable="yes">gtk-go-down</property>
+                  <widget class="GtkButton" id="add_button">
+                    <property name="label" translatable="yes">gtk-add</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -55,8 +46,8 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="up_button">
-                    <property name="label" translatable="yes">gtk-go-up</property>
+                  <widget class="GtkButton" id="remove_button">
+                    <property name="label" translatable="yes">gtk-remove</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -70,8 +61,8 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="add_button">
-                    <property name="label" translatable="yes">gtk-add</property>
+                  <widget class="GtkButton" id="bg_file_button">
+                    <property name="label" translatable="yes">gtk-open</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -85,8 +76,8 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="remove_button">
-                    <property name="label" translatable="yes">gtk-remove</property>
+                  <widget class="GtkButton" id="clear_bg_button">
+                    <property name="label" translatable="yes">gtk-clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -104,7 +95,7 @@
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="padding">5</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>
@@ -131,7 +122,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button2">
+              <widget class="GtkButton" id="ok_button">
                 <property name="label" translatable="yes">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>

@@ -31,6 +31,7 @@ namespace degate {
   /**
    * Get the first layer of a layer type. The search order is
    * from bottom to top (lower layer position numbers to higher).
+   * Method ignores disabled layers.
    * @exception InvalidPointerException Is thrown if you passed
    *   an invalid pointer for \p lmodel .
    * @exception DegateLogicException This exception is thrown
@@ -45,6 +46,7 @@ namespace degate {
   /**
    * Get the first layer that is a logic layer. The search order is
    * from bottom to top (lower layer position numbers to higher).
+   * Method ignores disabled layers.
    * @exception InvalidPointerException Is thrown if you passed
    *   an invalid pointer for \p lmodel .
    * @exception CollectionLookupException Is thrown if there is no
@@ -270,18 +272,54 @@ namespace degate {
    * Load an image in a common image format as background image for a layer.
    * If there is already a background image, it will be unset and removed from
    * the project directory.
+   * @exception InvalidPointerException If you pass an invalid shared pointer for
+   *   \p layer, then this exception is raised.
    * 
    */
   void load_background_image(Layer_shptr layer, 
 			     std::string const& project_dir,
-			     std::string const& image_file);
+			     std::string const& image_file) throw(InvalidPointerException);
 
   /**
    * Clear the logic model for a layer.
+   * @exception InvalidPointerException If you pass an invalid shared pointer for
+   *   \p lmodel or \p layer, then this exception is raised.
    */
 
-  void clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer);
+  void clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer) throw(InvalidPointerException);
 
+
+  /**
+   * Get first enabled layer
+   * @exception InvalidPointerException If you pass an invalid shared pointer for
+   *   \p layer, then this exception is raised.
+   * @exception CollectionLookupException Is thrown, if all layers are disabled.
+   */
+
+  Layer_shptr get_first_enabled_layer(LogicModel_shptr lmodel) 
+    throw(InvalidPointerException, CollectionLookupException);
+  
+  /**
+   * Get next enabled layer.
+   * @exception InvalidPointerException If you pass an invalid shared pointer for
+   *   \p layer, then this exception is raised.
+   * @exception CollectionLookupException Is thrown, if all layers are disabled.
+   * @exception DegateRuntimeException Is thrown, if there is no current layer.
+   */
+
+  Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel) 
+    throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException);
+
+  /**
+   * Get previous enabled layer.
+   * @exception InvalidPointerException If you pass an invalid shared pointer for
+   *   \p layer, then this exception is raised.
+   * @exception CollectionLookupException Is thrown, if all layers are disabled.
+   * @exception DegateRuntimeException Is thrown, if there is no current layer.
+   */
+
+  Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel) 
+    throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException);
 
 }
 

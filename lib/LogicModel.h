@@ -332,7 +332,12 @@ namespace degate {
 
     void remove_layer(layer_position_t pos);
    
-    
+    /**
+     * Set layers.
+     */
+
+    void set_layers(layer_collection layers);
+
     /**
      * Remove a layer from the logic model.
      * A layer contains logical objects. These object are referred in other parts
@@ -346,7 +351,7 @@ namespace degate {
      * Set the current layer you are working on.
      */
 
-    void set_layer(layer_position_t pos);
+    void set_current_layer(layer_position_t pos);
     
     /**
      * Get the current layer.

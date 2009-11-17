@@ -77,11 +77,7 @@ namespace degate {
 
     bool enabled;
     std::string description;
-
-  private:
-    
-    void set_layer_pos(layer_position_t pos) { layer_pos = pos; }
-    
+        
   protected:
     
     /**
@@ -332,6 +328,12 @@ namespace degate {
      */
 
     void set_description(std::string const& description);
+
+
+    /**
+     * Set layer position.
+     */
+    void set_layer_pos(layer_position_t pos) { layer_pos = pos; }
 
   };
 

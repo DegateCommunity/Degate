@@ -46,6 +46,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "ConnectionInspectorWin.h"
 #include "GenericTextInputWin.h"
 #include "RecognitionManager.h"
+#include "LayerConfigWin.h"
 #include "gui_globals.h"
 #include <AppHelper.h>
 
@@ -292,14 +293,18 @@ void MainWin::on_menu_project_new() {
     // create the project
 
     switch(result) {
-    case(Gtk::RESPONSE_OK):
+    case(Gtk::RESPONSE_OK): {
       main_project = Project_shptr(new Project(width, height, project_dir, layers));
-
+      
+      
       update_gui_for_loaded_project();
-      set_layer(0);
 
+      lcWin->run();
+
+      set_layer(get_first_enabled_layer(main_project->get_logic_model()));
+      
       on_menu_project_save();
-
+    }
       break;
     case(Gtk::RESPONSE_CANCEL):
       break;
@@ -336,6 +341,9 @@ void MainWin::on_menu_project_close() {
 
     delete gcWin;
     gcWin = NULL;
+
+    delete lcWin;
+    lcWin = NULL;
 
     menu_manager->set_widget_sensitivity(false);
   }
@@ -496,7 +504,7 @@ void MainWin::on_project_load_finished() {
     assert(layer != NULL);
     menu_manager->set_layer_type_in_menu(layer->get_layer_type());
     update_gui_for_loaded_project();
-    set_layer(0);
+    set_layer(get_first_enabled_layer(main_project->get_logic_model()));
   }
 }
 
@@ -556,12 +564,13 @@ void MainWin::update_gui_for_loaded_project() {
     imgWin.set_view(0, 0, imgWin.get_width(), imgWin.get_height());
     
     LogicModel_shptr lmodel = main_project->get_logic_model();
-    lmodel->set_layer(0);
+    int l_pos = get_first_enabled_layer(main_project->get_logic_model())->get_layer_pos();
+    lmodel->set_current_layer(l_pos);
     Layer_shptr layer = lmodel->get_current_layer();
 
     imgWin.set_render_logic_model(lmodel);
     imgWin.reset_selection();
-    imgWin.set_current_layer(0);
+    imgWin.set_current_layer(l_pos);
     
     imgWin.set_grid(main_project->get_regular_horizontal_grid(),
 		    main_project->get_regular_vertical_grid(),
@@ -587,8 +596,14 @@ void MainWin::update_gui_for_loaded_project() {
     gcWin->signal_changed().connect(sigc::mem_fun(*this, &MainWin::on_grid_config_changed));
 
 
+    lcWin = new LayerConfigWin(this, main_project->get_logic_model(), 
+			       main_project->get_project_directory());
     imgWin.update_screen();  
   }
+}
+
+void MainWin::set_layer(Layer_shptr layer) {
+  set_layer(layer->get_layer_pos());
 }
 
 void MainWin::set_layer(unsigned int layer) {
@@ -600,7 +615,7 @@ void MainWin::set_layer(unsigned int layer) {
 
   Layer_shptr layer_ptr = lmodel->get_layer(layer);
 
-  lmodel->set_layer(layer_ptr->get_layer_pos());
+  lmodel->set_current_layer(layer_ptr->get_layer_pos());
 
   imgWin.set_current_layer(layer_ptr->get_layer_pos());
   
@@ -633,13 +648,7 @@ void MainWin::on_menu_view_next_layer() {
   
   LogicModel_shptr lmodel = main_project->get_logic_model();
   if(lmodel->get_num_layers() == 0) return;
-
-  Layer_shptr curr_layer = lmodel->get_current_layer();
-
-  if(curr_layer->get_layer_pos() < lmodel->get_num_layers() - 1)
-    set_layer(curr_layer->get_layer_pos() + 1);
-  else 
-    set_layer(0);
+  set_layer(get_next_enabled_layer(lmodel));
 }
 
 void MainWin::on_menu_view_prev_layer() {
@@ -647,13 +656,7 @@ void MainWin::on_menu_view_prev_layer() {
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
   if(lmodel->get_num_layers() == 0) return;
-
-  Layer_shptr curr_layer = lmodel->get_current_layer();
-
-  if(curr_layer->get_layer_pos() == 0)
-    set_layer(lmodel->get_num_layers() - 1);
-  else 
-    set_layer(curr_layer->get_layer_pos() - 1);
+  set_layer(get_prev_enabled_layer(lmodel));
 }
 
 // @todo just dispatch to RenderWindow
@@ -1713,6 +1716,7 @@ void MainWin::on_menu_layer_import_background() {
 
   dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
   dialog.add_button("Select", Gtk::RESPONSE_OK);
+  add_image_file_filter_to_file_chooser(dialog);  
 
   int result = dialog.run();
 
@@ -1766,6 +1770,16 @@ void MainWin::background_import_thread(Glib::ustring bg_filename) {
   signal_bg_import_finished_();
 }
 
+
+void MainWin::on_menu_layer_configuration() {
+  if(main_project) {
+    
+    if(lcWin->run()) {
+      main_project->set_changed();
+      set_layer(get_first_enabled_layer(main_project->get_logic_model()));
+    }
+  }
+}
 
 void MainWin::on_menu_layer_set_transistor() { 
   if(main_project) {

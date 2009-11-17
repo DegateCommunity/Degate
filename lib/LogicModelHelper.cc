@@ -38,7 +38,7 @@ Layer_shptr degate::get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE l
       iter != lmodel->layers_end(); ++iter) {
     Layer_shptr layer = *iter;
 
-    if(layer->get_layer_type() == layer_type)
+    if(layer->is_enabled() && layer->get_layer_type() == layer_type)
       return layer;
   }
   
@@ -175,8 +175,10 @@ void degate::grab_template_images(LogicModel_shptr lmodel,
 
 void degate::load_background_image(Layer_shptr layer, 
 				   std::string const& project_dir,
-				   std::string const& image_file) {
+				   std::string const& image_file) throw(InvalidPointerException) {
   
+  if(layer == NULL) 
+    throw InvalidPointerException("Error: you passed an invalid pointer to load_background_image()");
   
   boost::format fmter("layer_%1%.dimg");
   fmter % layer->get_layer_pos();
@@ -200,7 +202,9 @@ void degate::load_background_image(Layer_shptr layer,
 }
 
 
-void degate::clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer) {
+void degate::clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer) throw(InvalidPointerException) {
+  if(lmodel == NULL || layer == NULL) 
+    throw InvalidPointerException("Error: you passed an invalid pointer to clear_logc_model()");
 
   // iterate over all objects that are placed on a specific layer and remove them
 
@@ -214,3 +218,53 @@ void degate::clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer) {
 
 }
 
+Layer_shptr degate::get_first_enabled_layer(LogicModel_shptr lmodel) 
+  throw(InvalidPointerException, CollectionLookupException) {
+  if(lmodel == NULL) 
+    throw InvalidPointerException("Error: you passed an invalid pointer to get_first_enabled_layer()");
+
+  for(LogicModel::layer_collection::iterator iter = lmodel->layers_begin();
+      iter != lmodel->layers_end(); ++iter) {
+    Layer_shptr layer = *iter;
+
+    if(layer->is_enabled()) return layer;
+  }
+  throw InvalidPointerException("Error: all layers are disabled.");
+}
+
+Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel) 
+  throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException) {
+  if(lmodel == NULL) 
+    throw InvalidPointerException("Error: you passed an invalid pointer to get_next_enabled_layer()");
+
+  Layer_shptr curr_layer = lmodel->get_current_layer();
+  if(curr_layer == NULL)
+    throw DegateRuntimeException("Error: there is no current layer.");
+
+  for(unsigned int l_pos = curr_layer->get_layer_pos() + 1; 
+      l_pos <= curr_layer->get_layer_pos() + lmodel->get_num_layers(); l_pos++) {
+    Layer_shptr layer = lmodel->get_layer(l_pos % lmodel->get_num_layers());
+    if(layer->is_enabled()) return layer;
+  }
+  throw InvalidPointerException("Error: all layers are disabled.");
+  return Layer_shptr(); // to avoid compiler warning
+}
+
+Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel) 
+  throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException) {
+  if(lmodel == NULL) 
+    throw InvalidPointerException("Error: you passed an invalid pointer to get_prev_enabled_layer()");
+
+  Layer_shptr curr_layer = lmodel->get_current_layer();
+  if(curr_layer == NULL)
+    throw DegateRuntimeException("Error: there is no current layer.");
+
+  for(unsigned int l_pos = curr_layer->get_layer_pos() + lmodel->get_num_layers() - 1; 
+      l_pos > 0; l_pos--) {
+    Layer_shptr layer = lmodel->get_layer(l_pos % lmodel->get_num_layers());
+    if(layer->is_enabled()) return layer;
+  }
+  throw InvalidPointerException("Error: all layers are disabled.");
+  return Layer_shptr(); // to avoid compiler warning
+
+}

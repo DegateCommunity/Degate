@@ -59,6 +59,7 @@ GenericTextInputWin::GenericTextInputWin(Gtk::Window *parent,
     }
     else return;
 
+
     refXml->get_widget("label", label);
     if(label != NULL) {
       label->set_text(label_text);

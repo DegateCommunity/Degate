@@ -74,6 +74,7 @@ class MenuManager {
   void create_and_bind_project_menu();
   void create_and_bind_view_menu();
   void create_and_bind_tools_menu();
+  void create_and_bind_layer_menu();
   void create_and_bind_logic_menu();
   void create_and_bind_gate_menu();
   void create_and_bind_recognition_menu();

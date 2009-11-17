@@ -30,6 +30,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "ConnectionInspectorWin.h"
 #include "HlObjectSet.h"
 #include "MenuManager.h"
+#include "LayerConfigWin.h"
 
 #include <degate.h>
 #include <AutoNameGates.h>
@@ -64,6 +65,7 @@ class MainWin : public Gtk::Window  {
 
   void zoom(unsigned int center_x, unsigned int center_y, double zoom_factor);
   void center_view(unsigned int center_x, unsigned int center_y, unsigned int layer);
+  void set_layer(degate::Layer_shptr layer);
   void set_layer(unsigned int layer);
 
   bool selected_objects_are_interconnectable();
@@ -97,6 +99,7 @@ class MainWin : public Gtk::Window  {
 
   // Layer menu
   virtual void on_menu_layer_import_background();
+  virtual void on_menu_layer_configuration();
   virtual void on_menu_layer_set_transistor();
   virtual void on_menu_layer_set_logic();
   virtual void on_menu_layer_set_metal();
@@ -160,6 +163,7 @@ class MainWin : public Gtk::Window  {
   InProgressWin * ipWin;
   ConnectionInspectorWin * ciWin;
   GridConfigWin * gcWin;
+  LayerConfigWin * lcWin;
 
   Gtk::HBox m_displayBox;
   Gtk::Adjustment m_VAdjustment;

@@ -857,7 +857,6 @@ ret_t render_grid_lines(RENDERER_FUNC_PARAMS,
 			  Grid_shptr grid) {
   
 
-  debug(TM, "render grid");
   if(grid == NULL) return RET_ERR;
   if(!grid->is_enabled()) return RET_OK;
 
