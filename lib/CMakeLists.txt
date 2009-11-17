@@ -12,8 +12,6 @@ find_package(TIFF)
 include_directories(${TIFF_INCLUDE_DIR})
 set(LIBS ${LIBS} ${TIFF_LIBRARIES})
 
-set(Boost_USE_STATIC_LIBS   ON)
-set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.38.0 COMPONENTS filesystem system)
 if(Boost_FOUND)
 	include_directories(${Boost_INCLUDE_DIRS})
