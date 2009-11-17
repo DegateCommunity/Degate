@@ -240,7 +240,7 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
       debug(TM, "project importer loads an old single file based image from [%s]", 
 	    image_path_to_load.c_str());
 
-      if(!is_directory(new_dir) && !file_exists(new_dir)) { // we have to check this, before we call the constructor
+      if(!file_exists(new_dir) && !is_directory(new_dir)) { // we have to check this, before we call the constructor
 
 	// create new background image
 	BackgroundImage_shptr new_bg_image(new BackgroundImage(prj->get_width(),
@@ -269,7 +269,7 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 	//save_image<BackgroundImage>("/tmp/yyy.tif", new_bg_image);
       }
       else {
-	assert(1 == 0); // XXX should not go here
+	
 	debug(TM, 
 	      "There is already a directory named %s. It should be loaded as an image now.", 
 	      new_dir.c_str());
