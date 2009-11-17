@@ -15,7 +15,7 @@ set(CMAKE_VERBOSE_MAKEFILE true)
 #set(CMAKE_EXE_LINKER_FLAGS -pg)
 #set(CMAKE_SHARED_LINKER_FLAGS -pg)
 
-add_definitions(-Wall -O3 -ggdb -fPIC)
+add_definitions(-Wall -O3 -ggdb)
 #set(CMAKE_EXE_LINKER_FLAGS)
 #set(CMAKE_SHARED_LINKER_FLAGS -O3)
 
