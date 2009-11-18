@@ -90,8 +90,9 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
       debug(TM, "Check if we have template images.");
       for(GateLibrary::template_iterator iter = gate_lib->begin();
 	  iter != gate_lib->end(); ++iter) {
-	
-	GateTemplate_shptr tmpl = (*iter).second;
+
+	debug(TM, "Will grab template image for gate template ID: %d", iter->first);
+	GateTemplate_shptr tmpl = iter->second;
 	assert(tmpl != NULL);
 
 	BoundingBox const& bbox = tmpl->get_bounding_box();
