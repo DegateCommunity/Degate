@@ -80,12 +80,17 @@ namespace degate {
 
     /**
      * Get a gate template from the library
+     * @exception CollectionLookupException This exception is thrown if
+     *  there is no gate template that has ID \p id.
+     * @exception InvalidObjectIDException This exception is thrown if the
+     *   object ID is invalid.
      * @return Returns a shared pointer to the template. The
      *   pointer value is NULL, if a template with the \p id
      *   was not found.
      */
 
-    GateTemplate_shptr get_template(object_id_t id);
+    GateTemplate_shptr get_template(object_id_t id) 
+      throw(InvalidObjectIDException, CollectionLookupException);
 
 
     /**

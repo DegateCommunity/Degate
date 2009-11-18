@@ -47,8 +47,19 @@ void GateLibrary::add_template(GateTemplate_shptr gate_template)
 }
 
 
-GateTemplate_shptr GateLibrary::get_template(object_id_t id) {
-  return templates[id];
+GateTemplate_shptr GateLibrary::get_template(object_id_t id) 
+  throw(InvalidObjectIDException, CollectionLookupException) {
+
+  if(id == 0)
+    throw InvalidObjectIDException("Error in get_template(): Can't lookup template with id == 0");
+
+  template_iterator found = templates.find(id);
+  if(found == templates.end()) {
+    boost::format f("Error in get_template(): Can't lookup gate template with ID %1%");
+    f % id;
+    throw CollectionLookupException(f.str());
+  }
+  return found->second;
 }
 
 
