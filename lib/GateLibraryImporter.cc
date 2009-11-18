@@ -140,7 +140,7 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
       if(ports != NULL) parse_template_ports_element(ports, gate_template);
 
       
-      gate_lib->add_template(std::tr1::shared_ptr<GateTemplate>(gate_template));
+      gate_lib->add_template(gate_template);
     }
   }
 
