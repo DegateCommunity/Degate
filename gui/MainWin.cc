@@ -1581,7 +1581,7 @@ void MainWin::on_popup_menu_add_horizontal_grid_line() {
     if(!g->is_enabled())
       error_dialog("Error", "Please set the unregular grid mode in the grid configuration.");
     else {
-      g->add_offset(last_click_on_real_x);
+      g->add_offset(last_click_on_real_y);
       gcWin->update_grid_entries();
       main_project->set_changed();
       imgWin.update_screen();
