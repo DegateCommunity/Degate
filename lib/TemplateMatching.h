@@ -70,8 +70,11 @@ namespace degate {
       unsigned int x, y; // unscaled coordinates in the cropped image
       unsigned int step_size_search;
       BoundingBox search_area; // on unscaled uncropped image
-      
+
+      Grid_shptr grid;
+      Grid::grid_iter iter, iter_begin, iter_end;
     };
+
 
   private:
 
@@ -95,13 +98,13 @@ namespace degate {
     BoundingBox bounding_box; // bounding box on original unscaled background image
 
     std::list<GateTemplate_shptr> tmpl_set; // templates to match
-
-
-    Project_shptr project;
+    std::list<Gate::ORIENTATION> tmpl_orientations; // template orientations to match
 
     clock_t start, finish;
 
   protected:
+
+    Project_shptr project;
 
     Layer_shptr layer_matching; // matching happens on this layer
     Layer_shptr layer_insert; // found gates are inserted here
@@ -182,7 +185,7 @@ namespace degate {
      * @return Returns false if there is no further position.
      */
 
-    virtual bool get_next_pos(struct search_state & state,
+    virtual bool get_next_pos(struct search_state * state,
 			      struct prepared_template const& tmpl) const = 0;
   public:
 
@@ -268,6 +271,12 @@ namespace degate {
 
 
     /**
+     * Set orientations that should be tested.
+     */
+
+    void set_orientations(std::list<Gate::ORIENTATION> tmpl_orientations);
+
+    /**
      * Set the layers.
      * 
      */
@@ -289,7 +298,7 @@ namespace degate {
    */
   class TemplateMatchingNormal : public TemplateMatching {
   protected:
-    bool get_next_pos(struct search_state & state,
+    bool get_next_pos(struct search_state * state,
 		      struct prepared_template const& tmpl) const;
   public:
     TemplateMatchingNormal() {}
@@ -300,12 +309,38 @@ namespace degate {
 
 
   /**
+   * This class is the base class for template matching along a grid.
+   */
+
+  class TemplateMatchingAlongGrid : public TemplateMatching {
+
+  protected:
+
+    bool initialize_state_struct(struct search_state * state,
+				 int offs_min,
+				 int offs_max) const;
+
+    virtual bool get_next_pos(struct search_state * state,
+			      struct prepared_template const& tmpl) const = 0;
+
+  public:
+
+    virtual ~TemplateMatchingAlongGrid() {}
+
+  };
+
+
+  /**
    * This class implements matching for gate template that are aligned in a row.
    */
-  class TemplateMatchingInRows : public TemplateMatching {
+  class TemplateMatchingInRows : public TemplateMatchingAlongGrid {
+
   protected:
-    bool get_next_pos(struct search_state & state,
+
+    bool get_next_pos(struct search_state * state,
 		      struct prepared_template const& tmpl) const;
+
+
   public:
     TemplateMatchingInRows() {}
     ~TemplateMatchingInRows() {}
@@ -316,11 +351,14 @@ namespace degate {
   /**
    * This class implements matching for gate template that are aligned in a column.
    */
-  class TemplateMatchingInCols : public TemplateMatching {
+  class TemplateMatchingInCols : public TemplateMatchingAlongGrid {
+
   protected:
-    bool get_next_pos(struct search_state & state,
+
+    bool get_next_pos(struct search_state * state,
 		      struct prepared_template const& tmpl) const;
   public:
+
     TemplateMatchingInCols() {}
     ~TemplateMatchingInCols() {}
   };

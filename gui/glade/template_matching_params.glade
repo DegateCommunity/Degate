@@ -7,7 +7,7 @@
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">500</property>
-    <property name="default_height">150</property>
+    <property name="default_height">200</property>
     <property name="type_hint">dialog</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
@@ -17,7 +17,7 @@
         <child>
           <widget class="GtkTable" id="table1">
             <property name="visible">True</property>
-            <property name="n_rows">4</property>
+            <property name="n_rows">5</property>
             <property name="n_columns">2</property>
             <child>
               <widget class="GtkHScale" id="hscale_threshold_hc">
@@ -30,6 +30,7 @@
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
             <child>
@@ -70,6 +71,9 @@ after scaling (pixel):</property>
                 <property name="right_attach">2</property>
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
+                <property name="x_options">GTK_FILL</property>
+                <property name="y_options"></property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
             <child>
@@ -95,6 +99,7 @@ after scaling (pixel):</property>
                 <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
             <child>
@@ -107,6 +112,30 @@ after scaling (pixel):</property>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
                 <property name="y_options"></property>
+                <property name="x_padding">5</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label_template_orientations">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Match template orientations:</property>
+              </widget>
+              <packing>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkComboBox" id="combobox_tmpl_orientations">
+                <property name="visible">True</property>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+                <property name="y_options"></property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
           </widget>
@@ -129,6 +158,7 @@ after scaling (pixel):</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="padding">5</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -143,12 +173,14 @@ after scaling (pixel):</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="padding">5</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
+            <property name="padding">5</property>
             <property name="pack_type">end</property>
             <property name="position">0</property>
           </packing>

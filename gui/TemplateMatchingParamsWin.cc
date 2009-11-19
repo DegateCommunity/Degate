@@ -79,8 +79,8 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
     refXml->get_widget("combobox_scale_down", combobox_scale_down);
     if(combobox_scale_down != NULL) {
 
-      m_refTreeModel = Gtk::ListStore::create(m_Columns);
-      combobox_scale_down->set_model(m_refTreeModel);
+      m_refTreeModel_scalings = Gtk::ListStore::create(m_Columns_scalings);
+      combobox_scale_down->set_model(m_refTreeModel_scalings);
       int row_number = 0;
 
       
@@ -93,14 +93,27 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
 	  iter != steps.end(); ++iter, row_number++) {
 
 	unsigned int i = *iter;
-	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
-	row[m_Columns.m_col_scaling] = i;
+	Gtk::TreeModel::Row row = *(m_refTreeModel_scalings->append());
+	row[m_Columns_scalings.m_col_scaling] = i;
 	if(i == preselected_scale_down) combobox_scale_down->set_active(row_number);
 
       }
-      combobox_scale_down->pack_start(m_Columns.m_col_scaling);
-
+      combobox_scale_down->pack_start(m_Columns_scalings.m_col_scaling);
     }
+
+
+    refXml->get_widget("combobox_tmpl_orientations", combobox_tmpl_orientations);
+    if(combobox_tmpl_orientations != NULL) {
+      m_refTreeModel_orientations = Gtk::ListStore::create(m_Columns_orientations);
+      combobox_tmpl_orientations->set_model(m_refTreeModel_orientations);
+
+      populate_orientations_combobox();
+
+      combobox_tmpl_orientations->pack_start(m_Columns_orientations.m_col_orientation_str);
+      combobox_tmpl_orientations->set_active(0);
+      
+    }
+
 
   }
 }
@@ -108,10 +121,51 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
 TemplateMatchingParamsWin::~TemplateMatchingParamsWin() {
 }
 
+void TemplateMatchingParamsWin::populate_orientations_combobox() {
+  std::list<degate::Gate::ORIENTATION> o_list;
+
+  Gtk::TreeModel::Row row;
+      
+  o_list.push_back(Gate::ORIENTATION_NORMAL);
+  o_list.push_back(Gate::ORIENTATION_FLIPPED_UP_DOWN);
+  o_list.push_back(Gate::ORIENTATION_FLIPPED_LEFT_RIGHT);
+  o_list.push_back(Gate::ORIENTATION_FLIPPED_BOTH);
+  row = *(m_refTreeModel_orientations->append());
+  row[m_Columns_orientations.m_col_orientation_str] = "any";
+  row[m_Columns_orientations.m_col_orientations] = o_list;
+	
+  
+  o_list.clear();
+  o_list.push_back(Gate::ORIENTATION_NORMAL);
+  row = *(m_refTreeModel_orientations->append());
+  row[m_Columns_orientations.m_col_orientation_str] = "normal";
+  row[m_Columns_orientations.m_col_orientations] = o_list;
+
+  o_list.clear();
+  o_list.push_back(Gate::ORIENTATION_FLIPPED_LEFT_RIGHT);
+  row = *(m_refTreeModel_orientations->append());
+  row[m_Columns_orientations.m_col_orientation_str] = "flipped left-right";
+  row[m_Columns_orientations.m_col_orientations] = o_list;
+
+  o_list.clear();
+  o_list.push_back(Gate::ORIENTATION_FLIPPED_UP_DOWN);
+  row = *(m_refTreeModel_orientations->append());
+  row[m_Columns_orientations.m_col_orientation_str] = "flipped up-down";
+  row[m_Columns_orientations.m_col_orientations] = o_list;
+
+  o_list.clear();
+  o_list.push_back(Gate::ORIENTATION_FLIPPED_BOTH);
+  row = *(m_refTreeModel_orientations->append());
+  row[m_Columns_orientations.m_col_orientation_str] = "flipped both";
+  row[m_Columns_orientations.m_col_orientations] = o_list;
+  
+}
+
 bool TemplateMatchingParamsWin::run(double * threshold_hc,
 				    double * threshold_detection,
 				    unsigned int * max_step_size_search,
-				    unsigned int * scale_down) {
+				    unsigned int * scale_down,
+				    std::list<Gate::ORIENTATION> & tmpl_orientations) {
   assert(threshold_hc != NULL);
   assert(threshold_detection != NULL);
   assert(max_step_size_search != NULL);
@@ -129,11 +183,21 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
       *threshold_hc = hscale_threshold_hc->get_value();
       *threshold_detection = hscale_threshold_detection->get_value();
 
-      Gtk::TreeModel::iterator iter = combobox_scale_down->get_active();
+      Gtk::TreeModel::iterator iter;
+      
+      iter = combobox_tmpl_orientations->get_active();
       if(iter) {
 	Gtk::TreeModel::Row row = *iter;
 	if(row) {
-	  *scale_down = row[m_Columns.m_col_scaling];
+	  tmpl_orientations = row[m_Columns_orientations.m_col_orientations];
+	}
+      }
+
+      iter = combobox_scale_down->get_active();
+      if(iter) {
+	Gtk::TreeModel::Row row = *iter;
+	if(row) {
+	  *scale_down = row[m_Columns_scalings.m_col_scaling];
 	}
       }
 

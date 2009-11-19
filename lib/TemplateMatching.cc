@@ -164,6 +164,14 @@ void TemplateMatching::set_templates(std::list<GateTemplate_shptr> tmpl_set) {
   this->tmpl_set = tmpl_set;
 }
 
+void TemplateMatching::set_orientations(std::list<Gate::ORIENTATION> tmpl_orientations) {
+  this->tmpl_orientations = tmpl_orientations;
+  for(std::list<Gate::ORIENTATION>::const_iterator iter = tmpl_orientations.begin();
+      iter != tmpl_orientations.end(); ++iter) {
+    debug(TM, "Template orientation to match: %d", *iter);
+  }
+}
+
 void TemplateMatching::run() {
 
   debug(TM, "run template matching");
@@ -174,11 +182,13 @@ void TemplateMatching::run() {
     GateTemplate_shptr tmpl = *iter;
     debug(TM, "check template: %s", tmpl->get_name().c_str());
 
-    prepared_template prep_tmpl_img = prepare_template(tmpl, Gate::ORIENTATION_NORMAL);
+    for(std::list<Gate::ORIENTATION>::const_iterator iter = tmpl_orientations.begin();
+	iter != tmpl_orientations.end(); ++iter) {
 
-    match_single_template(prep_tmpl_img);
+      prepared_template prep_tmpl_img = prepare_template(tmpl, *iter);
+      match_single_template(prep_tmpl_img);
+    }
     
-    // flip restart
   }
 }
 
@@ -208,13 +218,39 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
   assert(layer_matching->get_layer_type() == Layer::LOGIC);
   assert(tmpl->has_image(layer_matching->get_layer_type()));
 
-  GateTemplateImage_shptr tmpl_img = tmpl->get_image(layer_matching->get_layer_type());
   prep.gate_template = tmpl;
   prep.orientation = orientation;
 
+  // get image from template
+  GateTemplateImage_shptr tmpl_img_orig = tmpl->get_image(layer_matching->get_layer_type());
+
   unsigned int 
-    w = tmpl_img->get_width(),
-    h = tmpl_img->get_height(),
+    w = tmpl_img_orig->get_width(),
+    h = tmpl_img_orig->get_height();
+
+  // get image according to orientation
+  GateTemplateImage_shptr tmpl_img(new GateTemplateImage(w, h));
+  copy_image<GateTemplateImage, GateTemplateImage>(tmpl_img, tmpl_img_orig);
+
+  switch(orientation) {
+  case Gate::ORIENTATION_FLIPPED_UP_DOWN:
+    flip_up_down<GateTemplateImage>(tmpl_img);
+    break;
+  case Gate::ORIENTATION_FLIPPED_LEFT_RIGHT:
+    flip_left_right<GateTemplateImage>(tmpl_img);
+    break;
+  case Gate::ORIENTATION_FLIPPED_BOTH:
+    flip_both<GateTemplateImage>(tmpl_img);
+    break;
+  case Gate::ORIENTATION_NORMAL:
+    break;
+  case Gate::ORIENTATION_UNDEFINED:
+    assert(1 == 0); // it is already checked
+  }
+
+  // create a scaled version of the template image
+
+  unsigned int
     scaled_tmpl_width = (double)w / get_scaling_factor(),
     scaled_tmpl_height = (double)h / get_scaling_factor();
 
@@ -309,7 +345,7 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl) {
 
     }
 
-  } while(get_next_pos(state, tmpl));
+  } while(get_next_pos(&state, tmpl));
 
 }
 
@@ -439,36 +475,36 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
   }
   
   double q = nummerator/denominator;
-  if(!(q >= -1 && q <= 1)) {
+  if(!(q >= -1.000001 && q <= 1.000001)) {
     debug(TM, "nummerator = %f / denominator = %f", nummerator, denominator);
   }
   assert(q >= -1 && q <= 1);
   return q;
 }
 
-bool TemplateMatchingNormal::get_next_pos(struct search_state & state,
+bool TemplateMatchingNormal::get_next_pos(struct search_state * state,
 					  struct prepared_template const& tmpl) const {
 
   unsigned int 
     tmpl_w = tmpl.tmpl_img_normal->get_width(),
     tmpl_h = tmpl.tmpl_img_normal->get_height();
 
-  if((unsigned int)state.search_area.get_width() < tmpl_w ||
-     (unsigned int)state.search_area.get_height() < tmpl_h) return false;
+  if(state->search_area.get_width() < tmpl_w ||
+     state->search_area.get_height() < tmpl_h) return false;
 
-  unsigned int step = state.step_size_search;
+  unsigned int step = state->step_size_search;
 
-  if(layer_insert->exists_gate_in_region(state.x, state.x + get_max_step_size(), 
-					 state.y, state.y + get_max_step_size() )) {
+  if(layer_insert->exists_gate_in_region(state->x, state->x + get_max_step_size(), 
+					 state->y, state->y + get_max_step_size() )) {
     step = get_max_step_size(); // XXX
   }
 
-  if( state.x + state.step_size_search < (unsigned int )state.search_area.get_width() - tmpl_w) 
-    state.x += step;
+  if( state->x + step < state->search_area.get_width() - tmpl_w) 
+    state->x += step;
   else {
-    state.x = 0;
-    if(state.y + state.step_size_search < (unsigned int)state.search_area.get_height() - tmpl_h) 
-      state.y += state.step_size_search;
+    state->x = 0;
+    if(state->y + step < state->search_area.get_height() - tmpl_h) 
+      state->y += step;
     else return false;
   }
 
@@ -476,31 +512,109 @@ bool TemplateMatchingNormal::get_next_pos(struct search_state & state,
 }
 
 
-bool TemplateMatchingInRows::get_next_pos(struct search_state & state,
+bool TemplateMatchingAlongGrid::initialize_state_struct(struct search_state * state,
+							int offs_min,
+							int offs_max) const {
+  if(state->grid == NULL) {
+    const RegularGrid_shptr rg = project->get_regular_horizontal_grid();
+    const IrregularGrid_shptr ig = project->get_irregular_horizontal_grid();
+
+    if(rg->is_enabled()) state->grid = rg;
+    else if(ig->is_enabled()) state->grid = ig;
+
+    if(state->grid != NULL) {
+
+      for(Grid::grid_iter iter = state->grid->begin(); 
+	  iter != state->grid->end(); ++iter) {
+	if(*iter <= offs_min) state->iter_begin = iter;
+	if(*iter <= offs_max) state->iter_end = iter;
+      }
+
+      if(state->iter_begin != state->grid->end()) state->iter_begin++;
+      if(state->iter_end != state->grid->end()) state->iter_end++;
+
+      if(state->iter_begin == state->grid->end() ||
+	 state->iter_end == state->grid->end()) return false;
+
+      state->iter = state->iter_begin;
+    }
+    else return false;
+  }
+  return true;
+}
+
+bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
 					  struct prepared_template const& tmpl) const {
 
+  // check if the search area is larger then the template
   unsigned int 
     tmpl_w = tmpl.tmpl_img_normal->get_width(),
     tmpl_h = tmpl.tmpl_img_normal->get_height();
 
-  if((unsigned int)state.search_area.get_width() < tmpl_w ||
-     (unsigned int)state.search_area.get_height() < tmpl_h) return false;
+  if(state->search_area.get_width() < tmpl_w ||
+     state->search_area.get_height() < tmpl_h) return false;
 
-  unsigned int step = state.step_size_search;
+  unsigned int step = state->step_size_search;
 
-  if(layer_insert->exists_gate_in_region(state.x, state.x + get_max_step_size(), 
-					 state.y, state.y + get_max_step_size() )) {
-    step = get_max_step_size(); // XXX
+  // get grid and check if we are working on regular or irregular grid
+  if(state->grid == NULL && 
+     initialize_state_struct(state,
+			     state->search_area.get_min_y(),
+			     state->search_area.get_max_y() - tmpl_h) == false) 
+    return false;
+  
+
+  if(state->x == 0 && state->y == 0) { // state condition
+    state->y = *(state->iter) - state->search_area.get_min_y();
   }
-
-  if( state.x + state.step_size_search < (unsigned int )state.search_area.get_width() - tmpl_w) 
-    state.x += step;
+  
+  if(state->x + step < state->search_area.get_width()) 
+    state->x += step;
   else {
-    state.x = 0;
-    if(state.y + state.step_size_search < (unsigned int)state.search_area.get_height() - tmpl_h) 
-      state.y += state.step_size_search;
-    else return false;
+    state->x = 0;
+    state->y = *(state->iter) - state->search_area.get_min_y();
+    ++state->iter;
+    if(state->iter == state->iter_end) return false;
   }
-
+  
   return true;
 }
+
+
+bool TemplateMatchingInCols::get_next_pos(struct search_state * state,
+					  struct prepared_template const& tmpl) const {
+
+  // check if the search area is larger then the template
+  unsigned int 
+    tmpl_w = tmpl.tmpl_img_normal->get_width(),
+    tmpl_h = tmpl.tmpl_img_normal->get_height();
+
+  if(state->search_area.get_width() < tmpl_w ||
+     state->search_area.get_height() < tmpl_h) return false;
+
+  unsigned int step = state->step_size_search;
+
+  // get grid and check if we are working on regular or irregular grid
+  if(state->grid == NULL && 
+     initialize_state_struct(state,
+			     state->search_area.get_min_x(),
+			     state->search_area.get_max_x() - tmpl_w) == false) 
+    return false;
+  
+
+  if(state->x == 0 && state->y == 0) { // state condition
+    state->x = *(state->iter) - state->search_area.get_min_x();
+  }
+  
+  if(state->y + step < state->search_area.get_height()) 
+    state->y += step;
+  else {
+    state->x = *(state->iter) - state->search_area.get_min_x();
+    state->y = 0;
+    ++state->iter;
+    if(state->iter == state->iter_end) return false;
+  }
+  
+  return true;
+}
+

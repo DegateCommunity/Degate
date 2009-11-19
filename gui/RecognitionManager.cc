@@ -30,8 +30,17 @@ RecognitionManager * RecognitionManager::instance = NULL;
 RecognitionManager::RecognitionManager() {
 
   TemplateMatchingNormal_shptr tm_normal(new TemplateMatchingNormal());
+  TemplateMatchingInRows_shptr tm_in_rows(new TemplateMatchingInRows());
+  TemplateMatchingInCols_shptr tm_in_cols(new TemplateMatchingInCols());
 
-  plugins.push_back(new TemplateMatchingGUI(tm_normal, "Template matching") );
+  plugins.push_back(new TemplateMatchingGUI(tm_normal, 
+					    "Template matching") );
+
+  plugins.push_back(new TemplateMatchingGUI(tm_in_rows, 
+					    "Template matching along grid in rows") );
+
+  plugins.push_back(new TemplateMatchingGUI(tm_in_cols, 
+					    "Template matching along grid in columns") );
 }
 
 RecognitionManager::~RecognitionManager() {
