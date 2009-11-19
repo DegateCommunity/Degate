@@ -55,8 +55,8 @@ namespace degate {
     virtual bool intersects(Rectangle const & rect) const;
     virtual bool complete_within(Rectangle const & rect) const;
     
-    virtual int get_width() const;
-    virtual int get_height() const;
+    virtual unsigned int get_width() const;
+    virtual unsigned int get_height() const;
     
     virtual int get_min_x() const;
     virtual int get_max_x() const;

@@ -113,11 +113,11 @@ LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int lay
 LogicModel::~LogicModel() {
 }
 
-int LogicModel::get_width() const {
+unsigned int LogicModel::get_width() const {
   return bounding_box.get_width();
 }
 
-int LogicModel::get_height() const {
+unsigned int LogicModel::get_height() const {
   return bounding_box.get_height();
 }
 

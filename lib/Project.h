@@ -141,12 +141,12 @@ namespace degate {
     /**
      * Get the width of the project.
      */
-    int get_width() const { return bounding_box.get_width(); }
+    unsigned int get_width() const { return bounding_box.get_width(); }
     
     /**
      * get the height of a project.
      */
-    int get_height() const { return bounding_box.get_height(); }
+    unsigned int get_height() const { return bounding_box.get_height(); }
     
     /**
      * Get the logic model. The logic model should be present all time. This means

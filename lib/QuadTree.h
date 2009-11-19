@@ -76,9 +76,9 @@ namespace degate {
     const static int SW = 2;
     const static int SE = 3;
     
-    const static int bbox_min_size = 10;
+    const static unsigned int bbox_min_size = 10;
     
-    unsigned int  max_entries;
+    unsigned int max_entries;
     
     BoundingBox box;
     std::vector<QuadTree<T> > subtree_nodes;
@@ -165,13 +165,13 @@ namespace degate {
      * Get the dimension of the quadtree.
      */
 
-    int get_width() const;
+    unsigned int get_width() const;
 
     /**
      * Get the dimension of the quadtree.
      */
 
-    int get_height() const;
+    unsigned int get_height() const;
 
 
     /**
@@ -244,12 +244,12 @@ namespace degate {
   }
   
   template <typename T>
-  int QuadTree<T>::get_width() const {
+  unsigned int QuadTree<T>::get_width() const {
     return box.get_width();
   }
   
   template <typename T>
-  int QuadTree<T>::get_height() const {
+  unsigned int QuadTree<T>::get_height() const {
     return box.get_height();
   }
   

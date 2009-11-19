@@ -102,11 +102,11 @@ bool BoundingBox::complete_within(BoundingBox const & rect) const {
 	  max_y >= rect.max_y);
 }
 
-int BoundingBox::get_width() const {
+unsigned int BoundingBox::get_width() const {
   return max_x - min_x;
 }
 
-int BoundingBox::get_height() const {
+unsigned int BoundingBox::get_height() const {
   return max_y - min_y;
 }
 

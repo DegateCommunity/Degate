@@ -173,13 +173,13 @@ namespace degate {
      * Get the width of logic model.
      */
 
-    int get_width() const;
+    unsigned int get_width() const;
 
     /**
      * Get the height of logic model.
      */
 
-    int get_height() const;
+    unsigned int get_height() const;
 
 
     /**

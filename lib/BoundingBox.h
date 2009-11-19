@@ -55,8 +55,8 @@ class BoundingBox {
   bool intersects(BoundingBox const & rect) const;
   bool complete_within(BoundingBox const & rect) const;
 
-  int get_width() const;
-  int get_height() const;
+  unsigned int get_width() const;
+  unsigned int get_height() const;
 
   int get_min_x() const;
   int get_max_x() const;

@@ -107,11 +107,11 @@ bool Rectangle::complete_within(Rectangle const & rect) const {
 	  max_y >= rect.max_y);
 }
 
-int Rectangle::get_width() const {
+unsigned int Rectangle::get_width() const {
   return max_x - min_x;
 }
 
-int Rectangle::get_height() const {
+unsigned int Rectangle::get_height() const {
   return max_y - min_y;
 }
 
