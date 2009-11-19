@@ -60,7 +60,7 @@ namespace degate {
   }
   
   /**
-   * Flip image in place from top to down
+   * Flip image in place from top to down.
    */
   template<typename ImageType>
   void flip_up_down(std::tr1::shared_ptr<ImageType> img) {
@@ -74,6 +74,15 @@ namespace degate {
 	img->set_pixel(x, y, p2);
 	img->set_pixel(x, other_y, p1);
       }
+  }
+
+  /**
+   * Flip image in place from top to down and from left to right.
+   */
+  template<typename ImageType>
+  void flip_both(std::tr1::shared_ptr<ImageType> img) {
+    flip_up_down<ImageType>(img);
+    flip_left_right<ImageType>(img);
   }
 
   /**
