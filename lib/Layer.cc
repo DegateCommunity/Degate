@@ -92,7 +92,7 @@ const std::string Layer::get_layer_type_as_string(LAYER_TYPE _layer_type) {
   case LOGIC:
     return std::string("logic");
   case TRANSISTOR:
-    return std::string("transitor");
+    return std::string("transistor");
   case UNDEFINED:
   default:
     return std::string("undefined");
