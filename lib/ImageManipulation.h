@@ -416,9 +416,12 @@ namespace degate {
     typename ImageTypeSrc::pixel_type src_min = get_minimum<ImageTypeSrc>(src);
     typename ImageTypeSrc::pixel_type src_max = get_maximum<ImageTypeSrc>(src);
 
+    if(src_max - src_min == 0) return;
+
     double shift = -src_min;
     double factor = (double)(upper_bound - lower_bound) / (double)(src_max - src_min);
 
+    /*
     std::cout 
       << "lower bound: " << lower_bound << std::endl
       << "upper bound: " << upper_bound << std::endl
@@ -429,6 +432,7 @@ namespace degate {
       << "factor     : " << factor << std::endl
       << std::endl
       ;
+    */
 
     unsigned int h = std::min(src->get_height(), dst->get_height());
     unsigned int w = std::min(src->get_width(), dst->get_width());
