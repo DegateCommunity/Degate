@@ -77,7 +77,7 @@ public:
    * @param path The parameter path specifies the project directory
    *             or the path to the project.xml file. It is determined automatically.
    * @exception std::runtime_error If there are parsing problems.
-   * @return Returns a pointer to a project object. You have to free the memory by yourself.
+   * @return Returns a pointer to a project object.
    */
   Project_shptr import_all(std::string const& path);
 
