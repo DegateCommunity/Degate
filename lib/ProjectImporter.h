@@ -67,8 +67,9 @@ public:
    * Import a degate project.
    * @param path The parameter path specifies the project directory
    *             or the path to the project.xml file. It is determined automatically.
-   * @exception std::runtime_error If there are parsing problems.
-   * @return Returns a pointer to a project object. You have to free the memory by yourself.
+   * @exception InvalidPathException This exception is raised if \p path does not exists.
+   * @exception InvalidXMLException This exception is raised if there is a parsing error.
+   * @return Returns a pointer to a project object.
    */
   Project_shptr import(std::string const& path) throw( InvalidPathException, InvalidXMLException );
 
