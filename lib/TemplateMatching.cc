@@ -215,7 +215,7 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
 
   prepared_template prep;
 
-  assert(layer_matching->get_layer_type() == Layer::LOGIC);
+  assert(layer_matching->get_layer_type() != Layer::UNDEFINED);
   assert(tmpl->has_image(layer_matching->get_layer_type()));
 
   prep.gate_template = tmpl;
