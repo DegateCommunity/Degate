@@ -85,6 +85,12 @@ class LayerConfigWin : private GladeFileLoader {
         
   bool run();
 
+  /**
+   * Set up a callback mechanism for the case calling code should be notified.
+   */
+
+  Glib::Dispatcher& signal_on_background_import_finished();
+
  private:
 
   typedef Gtk::TreeModel::Children type_children;
@@ -111,7 +117,9 @@ class LayerConfigWin : private GladeFileLoader {
     * p_bg_file_button,
     * p_clear_bg_button;
 
-  Glib::Dispatcher signal_bg_import_finished_;
+  Glib::Dispatcher _signal_bg_import_finished_; // class internal signal
+
+  Glib::Dispatcher signal_on_background_import_finished_; // to notify third parties
   
   bool result;
 
@@ -130,7 +138,7 @@ class LayerConfigWin : private GladeFileLoader {
 
 
   void background_import_thread(image_list l);
-  void on_background_import_finished();
+  void _on_background_import_finished();
 
   // helper
   

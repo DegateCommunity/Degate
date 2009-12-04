@@ -598,6 +598,7 @@ void MainWin::update_gui_for_loaded_project() {
 
     lcWin = new LayerConfigWin(this, main_project->get_logic_model(), 
 			       main_project->get_project_directory());
+    lcWin->signal_on_background_import_finished().connect(sigc::mem_fun(*this, &MainWin::on_background_import_finished));
     imgWin.update_screen();  
   }
 }
@@ -628,7 +629,6 @@ void MainWin::set_layer(unsigned int layer) {
 void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
   assert(obj_ptr != NULL);
   if(main_project != NULL && obj_ptr != NULL) {
-    unsigned int center_x, center_y;
 
     const BoundingBox & bbox = obj_ptr->get_bounding_box();
     Layer_shptr layer = obj_ptr->get_layer();
@@ -1747,6 +1747,7 @@ void MainWin::on_menu_layer_import_background() {
 // in GUI-thread
 void MainWin::on_background_import_finished() {
 
+  debug(TM, "BG import finished");
   if(ipWin) {
     ipWin->close();
     delete ipWin;
@@ -1757,7 +1758,10 @@ void MainWin::on_background_import_finished() {
   LogicModel_shptr lmodel = main_project->get_logic_model();
   Layer_shptr layer = lmodel->get_current_layer();
   assert(layer != NULL);
-  set_layer(layer->get_layer_pos());
+  
+  if(!layer->is_enabled()) set_layer(get_first_enabled_layer(lmodel));
+  else set_layer(layer->get_layer_pos());
+  
 }
 
 

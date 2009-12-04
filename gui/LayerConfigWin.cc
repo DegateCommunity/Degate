@@ -247,7 +247,7 @@ void LayerConfigWin::on_ok_button_clicked() {
   lmodel->set_layers(layers);
 
   if(need_progress_bar) {
-    signal_bg_import_finished_.connect(sigc::mem_fun(*this, &LayerConfigWin::on_background_import_finished));
+    _signal_bg_import_finished_.connect(sigc::mem_fun(*this, &LayerConfigWin::_on_background_import_finished));
     Glib::Thread::create(sigc::bind<image_list>(sigc::mem_fun(*this, &LayerConfigWin::background_import_thread), 
 						images_to_load), false);
   }
@@ -259,7 +259,7 @@ void LayerConfigWin::on_ok_button_clicked() {
 }
 
 
-void LayerConfigWin::on_background_import_finished() {
+void LayerConfigWin::_on_background_import_finished() {
   if(ipWin != NULL) {
     ipWin->close();
     delete ipWin;
@@ -280,7 +280,8 @@ void LayerConfigWin::background_import_thread(image_list l) {
       debug(TM, "Background image loaded.");
   }
 
-  signal_bg_import_finished_();
+  _signal_bg_import_finished_(); // internal signal
+  signal_on_background_import_finished_(); // signal for third parties
 }
 
 void LayerConfigWin::on_cancel_button_clicked() {
@@ -409,4 +410,8 @@ void LayerConfigWin::check_at_least_one_layer_enabled() {
     dialog.set_title("Error");
     dialog.run();
   }
+}
+
+Glib::Dispatcher& LayerConfigWin::signal_on_background_import_finished() {
+  return signal_on_background_import_finished_;
 }
