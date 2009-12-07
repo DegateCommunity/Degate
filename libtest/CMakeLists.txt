@@ -1,18 +1,21 @@
-find_package(CppUnit)
+find_package(PkgConfig)
 
-if(CppUnit_FOUND)
+pkg_check_modules(CPPUNIT cppunit)
+
+
+if(CPPUNIT_FOUND)
 
 	ENABLE_TESTING()
 
+        include_directories(${CPPUNIT_INCLUDE_DIRS})
+        link_directories(${CPPUNIT_LIBRARY_DIRS}) 
+        set(LIBS ${LIBS} ${CPPUNIT_LIBRARIES})
 
-	include_directories(${CppUnit_INCLUDE_DIRS})
-	set(LIBS ${LIBS} ${CppUnit_LIBRARIES})
+        pkg_check_modules(LIBXML++ libxml++-2.6)
+        include_directories(${LIBXML++_INCLUDE_DIRS})
 
 	include_directories(. ../lib)
 
-	find_package(LibXML++ REQUIRED)
-	include_directories(${LibXML++_INCLUDE_DIRS})
-	set(LIBS ${LIBS} ${LibXML++_LIBRARIES})
 
 	set(TESTCASES 
 	      FileSystemTest.cc
@@ -47,4 +50,4 @@ if(CppUnit_FOUND)
 else()
 	message("Cppunit framework not found. Will not build test "
 			 "suite. Please install the cppunit package in order to build tests")
-endif(CppUnit_FOUND)
+endif(CPPUNIT_FOUND)

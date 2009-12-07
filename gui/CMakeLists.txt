@@ -32,9 +32,10 @@ include_directories(${GLIBMM_INCLUDE_DIRS})
 link_directories(${GLIBMM_LIBRARY_DIRS}) 
 set(LIBS ${LIBS} ${GLIBMM_LIBRARIES})
 
-find_package(LibXML++ REQUIRED)
-include_directories(${LibXML++_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${LibXML++_LIBRARIES})
+
+pkg_check_modules(LIBXML++ libxml++-2.6)
+include_directories(${LIBXML++_INCLUDE_DIRS})
+set(LIBS ${LIBS} ${LIBXML++_LIBRARIES})
 
 #pkg_check_modules(GTKGLEXTMM gtkglextmm-1.2 )
 #include_directories(${GTKGLEXTMM_INCLUDE_DIRS})

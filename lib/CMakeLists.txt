@@ -1,12 +1,15 @@
+find_package(PkgConfig)
 include_directories (. /opt/local/include /opt/local/include/freetype2 /usr/include/freetype2)
 
 #
 # Check libraries.
 #
 
-find_package(LibXML++ REQUIRED)
-include_directories(${LibXML++_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${LibXML++_LIBRARIES})
+pkg_check_modules(LIBXML++ libxml++-2.6)
+include_directories(${LIBXML++_INCLUDE_DIRS})
+link_directories(${LIBXML++_LIBRARY_DIRS}) 
+set(LIBS ${LIBS} ${LIBXML++_LIBRARIES})
+
 
 find_package(TIFF)
 include_directories(${TIFF_INCLUDE_DIR})

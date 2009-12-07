@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 
 message(STATUS "Using compiler: ${CMAKE_CXX_COMPILER}")
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 
 set(CMAKE_VERBOSE_MAKEFILE true)
