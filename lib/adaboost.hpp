@@ -117,7 +117,7 @@ public:
 	{
 		float res=0;
 		for (unsigned int i=0;i<weights.size();i++)
-			res+=weights[i]*clsfrs[i]->recognize(obj);
+		  if(weights[i]> 0) res+=weights[i]*clsfrs[i]->recognize(obj);
 		score=res;
 		if (res>=0) 
 			return 1;
