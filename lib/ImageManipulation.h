@@ -542,9 +542,10 @@ namespace degate {
 
 
   /**
-   * Filter an RBGA image.
+   * Filter an (RBGA) image.
    * 
-   *
+   * @param threshold The threshold parameter is directly passed to the calculate() 
+   *   method of the calculation policy class.
    * @exception DegateRuntimeException This exception is thrown if
    *   your images are to small for the kernel or if the width of the kernel is
    *   to small.
@@ -553,7 +554,8 @@ namespace degate {
   template<typename ImageTypeDst, typename ImageTypeSrc, typename FunctionPolicy>
   void filter_image(std::tr1::shared_ptr<ImageTypeDst> dst,
 		    std::tr1::shared_ptr<ImageTypeSrc> src,
-		    unsigned int kernel_width = 3) {
+		    unsigned int kernel_width = 3,
+		    unsigned int threshold = 3) {
     
     if(kernel_width <= 1)
       throw DegateRuntimeException("Error in filter_image(). Kernel width is to small.");
@@ -574,16 +576,19 @@ namespace degate {
 	
 	typename ImageTypeSrc::pixel_type out = 
 	  FunctionPolicy::calculate(src,
-				    x - kernel_center, 
+				    x, y,
+				    x - kernel_center,
 				    x - kernel_center + kernel_width,
 				    y - kernel_center,
-				    y - kernel_center + kernel_width);
+				    y - kernel_center + kernel_width,
+				    threshold);
 	
 	dst->set_pixel_as<typename ImageTypeSrc::pixel_type>(x, y, out);
       }
     }
     
   }
+
 
 }
 

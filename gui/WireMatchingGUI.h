@@ -19,8 +19,8 @@
  
 */
 
-#ifndef __TEMPLATEMATCHINGGUI_H__
-#define __TEMPLATEMATCHINGGUI_H__
+#ifndef __WIREMATCHINGGUI_H__
+#define __WIREMATCHINGGUI_H__
 
 
 #include <tr1/memory>
@@ -29,11 +29,11 @@
 
 #include <BoundingBox.h>
 #include <Project.h>
-#include <TemplateMatching.h>
+#include <WireMatching.h>
 #include <RecognitionGUIBase.h>
 #include <GateTemplate.h>
 
-class TemplateMatchingGUI : public RecognitionGUIBase {
+class WireMatchingGUI : public RecognitionGUIBase {
   
  private:
 
@@ -41,27 +41,9 @@ class TemplateMatchingGUI : public RecognitionGUIBase {
   degate::BoundingBox bounding_box;
   degate::Project_shptr project;
 
-  degate::TemplateMatching_shptr matching;
-
-  std::list<degate::GateTemplate_shptr> tmpl_set;
-
-  degate::LogicModel_shptr lmodel;
-  degate::Layer_shptr current_layer;
-
+  degate::WireMatching_shptr matching;
 
  private:
-
-  /**
-   * Check if gate templates will fit into the bounding box and if there a template
-   * images for the layer type. In case there is only one template to match an error
-   * dialog is displayed. If there is more then one template to match, the template
-   * is ignored in the search.
-   * @return Returns true if templates are ok. If it returns false, the template
-   *   matching should be aborted.
-   */
-  bool check_template_selection(std::list<degate::GateTemplate_shptr> & tmpl_set, 
-				degate::Layer::LAYER_TYPE layer_type);
-
 
   /**
    * Run a dialog to aquire matching params and set it to the matching algorithm.
@@ -72,16 +54,28 @@ class TemplateMatchingGUI : public RecognitionGUIBase {
 
  public:
   
-  TemplateMatchingGUI(degate::TemplateMatching_shptr _matching, std::string const& name);
+  WireMatchingGUI(degate::WireMatching_shptr _matching, std::string const& name) : 
+    RecognitionGUIBase(name),
+    matching(_matching) {}
   
-  virtual ~TemplateMatchingGUI();
+  virtual ~WireMatchingGUI() {}
   
  
   virtual void init(Gtk::Window *parent, 
 		    degate::BoundingBox const& bounding_box, 
-		    degate::Project_shptr project);
-  virtual bool before_dialog();
-  virtual void run();
+		    degate::Project_shptr project) {
+    this->parent = parent;
+    this->bounding_box = bounding_box;
+    this->project = project;
+    
+  }
+
+  virtual bool before_dialog() { return true; }
+
+  virtual void run() {
+    matching->init(bounding_box, project);
+    matching->run();
+  }
   virtual void after_dialog() {}
   
 };

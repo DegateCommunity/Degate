@@ -66,13 +66,12 @@ int main(void) {
   testrunner.addTest(FileSystemTest::suite());
   //testrunner.addTest(ShapeTest::suite());
   testrunner.addTest(MemoryMapTest::suite());
-  //  testrunner.addTest(ImageTest::suite());
+  testrunner.addTest(ImageTest::suite());
   testrunner.addTest(QuadTreeTest::suite());
   
   testrunner.addTest(LogicModelTest::suite());
   testrunner.addTest(LMOinQTreeTest::suite());
 
-  /*
   testrunner.addTest(GateLibraryImporterTest::suite());
   testrunner.addTest(LogicModelImporterTest::suite());
   testrunner.addTest(ProjectImporterTest::suite());
@@ -82,10 +81,10 @@ int main(void) {
   testrunner.addTest(ProjectExporterTest::suite());
   
   testrunner.addTest(LogicModelDOTExporterTest::suite());
-  //testrunner.addTest(ScalingManagerTest::suite());
+  testrunner.addTest(ScalingManagerTest::suite());
 
-  //testrunner.addTest(ImageProcessingTest::suite());
-  */
+  testrunner.addTest(ImageProcessingTest::suite());
+
   testrunner.run(testresult);
 
   // Resultate im Compiler-Format ausgeben

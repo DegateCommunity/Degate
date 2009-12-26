@@ -21,6 +21,7 @@
 
 #include <RecognitionManager.h>
 #include <TemplateMatchingGUI.h>
+#include <WireMatchingGUI.h>
 
 using namespace degate;
 
@@ -41,6 +42,9 @@ RecognitionManager::RecognitionManager() {
 
   plugins.push_back(new TemplateMatchingGUI(tm_in_cols, 
 					    "Template matching along grid in columns") );
+
+  WireMatching_shptr wire_matching(new WireMatching());
+  plugins.push_back(new WireMatchingGUI(wire_matching, "Wire matching") );
 }
 
 RecognitionManager::~RecognitionManager() {

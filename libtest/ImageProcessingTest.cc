@@ -31,13 +31,14 @@
 #include <IPImageWriter.h>
 
 #include <ImageHelper.h>
-#include <WireMatchingSimple.h>
-#include <WireMatchingCanny.h>
+#include <CannyEdgeDetection.h>
+#include <ZeroCrossingEdgeDetection.h>
 
 #include <ImageHistogram.h>
 #include <BackgroundClassifier.h>
 #include <MedianFilter.h>
 #include <AnalyzeWireGradient.h>
+#include <LineSegmentExtraction.h>
 
 #include <globals.h>
 #include <stdlib.h>
@@ -121,8 +122,7 @@ void ImageProcessingTest::test_wire_matching(void) {
   CPPUNIT_ASSERT(img_in->get_width() > 0);
   CPPUNIT_ASSERT(img_in->get_height() > 0);
 
-  //WireMatchingSimple wm(0, img_in->get_width(), 0, img_in->get_height(), true, false, 8);
-  WireMatchingCanny wm(0, img_in->get_width(), 0, img_in->get_height(), 5);
+  CannyEdgeDetection ed(0, img_in->get_width(), 0, img_in->get_height(), 5);
 
   //wm.run(img_in);
   
@@ -141,7 +141,7 @@ void ImageProcessingTest::test_background_classification_dect(void) {
   TempImage_RGBA_shptr i3(new TempImage_RGBA(img_in->get_width(), img_in->get_height()));
   TempImage_RGBA_shptr img(new TempImage_RGBA(img_in->get_width(), img_in->get_height()));
   
-  std::list<BoundingBox> bg_areas, fg_areas;;
+  std::list<BoundingBox> bg_areas, fg_areas;
   //bg_areas.push_back(BoundingBox(370, 580, 0, 25));
   //bg_areas.push_back(BoundingBox(714, 888, 356, 400));
   //bg_areas.push_back(BoundingBox(256, 1013, 498, 541));
@@ -204,8 +204,10 @@ void ImageProcessingTest::test_background_classification_legic(void) {
 
   TempImage_RGBA_shptr img_in = load_image<TempImage_RGBA>(testfile);
 
-  TempImage_RGBA_shptr i3(new TempImage_RGBA(img_in->get_width(), img_in->get_height()));
-  TempImage_RGBA_shptr img(new TempImage_RGBA(img_in->get_width(), img_in->get_height()));
+  unsigned int width = img_in->get_width();
+  unsigned int height = img_in->get_height();
+  TempImage_RGBA_shptr i3(new TempImage_RGBA(width, height));
+  TempImage_RGBA_shptr img(new TempImage_RGBA(width, height));
   
   std::list<BoundingBox> bg_areas, fg_areas;;
 
@@ -231,7 +233,7 @@ void ImageProcessingTest::test_background_classification_legic(void) {
   bg_areas.push_back(BoundingBox(146,168,454, 516));
   bg_areas.push_back(BoundingBox(369,397,279,419));
   bg_areas.push_back(BoundingBox(14,61,459,516));
-  median_filter<TempImage_RGBA, TempImage_RGBA>(img, img_in, 3 /*wire_diameter >> 2*/);
+  median_filter<TempImage_RGBA, TempImage_RGBA>(img, img_in, 2 /*wire_diameter >> 1*/);
 
 
   //BackgroundClassifier bg_c(wire_diameter);
@@ -245,16 +247,14 @@ void ImageProcessingTest::test_background_classification_legic(void) {
   unsigned int window_threshold = (wire_diameter * wire_diameter) >> 1;
 
   BackgroundClassifier<TempImage_RGBA, 
-    HueImageHistogram> hue_classifier(img, window_width, window_threshold, "hue");
-  
-  
+    HueImageHistogram> hue_classifier(img, window_width, window_threshold, "hue");  
   BackgroundClassifier<TempImage_RGBA, SaturationImageHistogram> 
     sat_classifier(img, window_width, window_threshold, "sat");
   BackgroundClassifier<TempImage_RGBA, LightnessImageHistogram> 
     value_classifier(img, window_width, window_threshold, "value");
+
   BackgroundClassifier<TempImage_RGBA, RedChannelImageHistogram> 
     red_classifier(img, window_width, window_threshold, "red");
-  
   BackgroundClassifier<TempImage_RGBA, GreenChannelImageHistogram> 
     green_classifier(img, window_width, window_threshold, "green");
   BackgroundClassifier<TempImage_RGBA, BlueChannelImageHistogram> 
@@ -263,11 +263,10 @@ void ImageProcessingTest::test_background_classification_legic(void) {
 
   classifier_list_type classifiers;
   classifiers.push_back(&hue_classifier);
-
   classifiers.push_back(&sat_classifier);
   classifiers.push_back(&value_classifier);
-  classifiers.push_back(&red_classifier);
 
+  classifiers.push_back(&red_classifier);
   classifiers.push_back(&green_classifier);
   classifiers.push_back(&blue_classifier);
 
@@ -374,7 +373,8 @@ void ImageProcessingTest::test_background_classification_legic(void) {
   MultiClassifier<coord_type> multi(weights, classifiers);
 
 
-  TempImage_GS_DOUBLE_shptr prob(new TempImage_GS_DOUBLE(img_in->get_width(), img_in->get_height()));
+  TempImage_GS_DOUBLE_shptr prob(new TempImage_GS_DOUBLE(width, height));
+  TempImage_GS_DOUBLE_shptr i4(new TempImage_GS_DOUBLE(width, height));
   
   
   std::cout << "classify image pixel" << std::endl;
@@ -385,68 +385,125 @@ void ImageProcessingTest::test_background_classification_legic(void) {
     for(unsigned int x = 0; x < img->get_width(); x++) {
       coord_type c(x, y);
       if(multi.recognize(c) == 1) {
-	i3->set_pixel(x, y, img_in->get_pixel(x, y));
+	//i3->set_pixel(x, y, img_in->get_pixel(x, y));
+	i4->set_pixel_as<double>(x, y, img_in->get_pixel_as<double>(x, y));
 	prob->set_pixel(x, y, 1);
       }
       else {
 	uint8_t gs = RGBA_TO_GS_BY_VAL(img_in->get_pixel(x, y));
-	i3->set_pixel(x, y, MERGE_CHANNELS(gs, gs, gs, 255));
+	//i3->set_pixel(x, y, MERGE_CHANNELS(gs, gs, gs, 255));
+	i4->set_pixel(x, y, 0);
 	prob->set_pixel(x, y, 0);
       }
     }
   }
   
 
-  // release the resources
-  //for(unsigned int i = 0; i < data.size(); i++) delete training_data[i];
+  save_normalized_image<TempImage_GS_DOUBLE>(join_pathes(directory, "removed_background.tif"), i4);
 
 
+  ZeroCrossingEdgeDetection ed(0, img->get_width(), 0, img->get_height(), wire_diameter, 
+			       10, 2.1, 
+			       3, 15);
 
-  save_image<TempImage_RGBA>(join_pathes(directory, "removed_background.tif"), i3);
+  //CannyEdgeDetection ed(0, img_in->get_width(), 0, img_in->get_height(), wire_diameter, 10, 
+  //2.1, 0.35, 0.5);
 
-
-
-  WireMatchingCanny wm(0, img_in->get_width(), 0, img_in->get_height(), wire_diameter);
-  wm.run(img_in, prob, directory);
-
-
-
+  TempImage_GS_DOUBLE_shptr edge_image = ed.run(img_in, prob, directory);
 
   /*
+  LineSegmentExtraction extraction(edge_image, wire_diameter/2, 3, ed.get_border());
+  LineSegmentMap_shptr line_segments = extraction.run();
 
 
-  for(unsigned int y = 0; y < img->get_height(); y++)
-    for(unsigned int x = 0; x < img->get_width(); x++) {
+  ContourTracer tracer(line_segments, wire_diameter, 0.8*(double)wire_diameter);
+  tracer.run();
+  */
 
-      rgba_pixel_t p = img->get_pixel(x, y);
+}
 
-      prob->set_pixel(x, y, bg_c.get_probability(img->get_pixel(x, y)));
-      
-      if(bg_c.get_probability(p) > 0)
-      i3->set_pixel(x, y, img_in->get_pixel(x, y));
-      else {
-	uint8_t gs = RGBA_TO_GS_BY_VAL(img_in->get_pixel(x, y)) >> 1;
-	i3->set_pixel(x, y, MERGE_CHANNELS(gs, gs, gs, 255));
-      }
-    }
+void ImageProcessingTest::test_line_segment_extraction(void) {
 
-  save_image<TempImage_RGBA>(join_pathes(directory, "removed_background.tif"), i3);
-  save_normalized_image<TempImage_GS_DOUBLE>(join_pathes(directory, "removed_background_prob.tif"), prob);
+  unsigned int wire_diameter = 10;
+  std::string directory("libtest/testfiles/wire_matching_samples/legic");
+  std::string testfile(join_pathes(directory, "04_non_max_suppression.tif"));
+
+  TempImage_RGBA_shptr img = load_image<TempImage_RGBA>(testfile);
+  TempImage_GS_DOUBLE_shptr img2(new TempImage_GS_DOUBLE(img->get_width(), img->get_height()));
+  
+  copy_image<TempImage_GS_DOUBLE, TempImage_RGBA>(img2, img);
+
+  LineSegmentExtraction extraction(img2, wire_diameter, wire_diameter/2, 10);
+  extraction.run();
+}
+
+void ImageProcessingTest::test_mifare(void) {
+  std::string directory("libtest/testfiles/wire_matching_samples/mifare/normal");
+  //std::string directory("libtest/testfiles/wire_matching_samples/c_unknown/good");
+  std::string testfile(join_pathes(directory, "good.tif"));
+
+  int wire_diameter = 6;
+  int median_size = wire_diameter;
+  // load a background image
+  TempImage_RGBA_shptr img_in = load_image<TempImage_RGBA>(testfile);
+
+  CPPUNIT_ASSERT(img_in != NULL);
+  CPPUNIT_ASSERT(img_in->get_width() > 0);
+  CPPUNIT_ASSERT(img_in->get_height() > 0);
+
+  TempImage_RGBA_shptr img(new TempImage_RGBA(img_in->get_width(), img_in->get_height()));
+  median_filter<TempImage_RGBA, TempImage_RGBA>(img, img_in, median_size);
+
+  /*
+  CannyEdgeDetection ed(0, img->get_width(), 0, img->get_height(), wire_diameter, 10,
+			2.1,
+			0.30, 0.35);
+  */
+
+  ZeroCrossingEdgeDetection ed(0, img->get_width(), 0, img->get_height(), wire_diameter,
+			       10, 2.1,
+			       3, 10);
+
+  TempImage_GS_DOUBLE_shptr i = ed.run(img, TempImage_GS_DOUBLE_shptr(), directory);
+
 
   
+  LineSegmentExtraction extraction(i, wire_diameter/2, 2, ed.get_border());
+  LineSegmentMap_shptr line_segments = extraction.run();
+
+  /*
+  ContourTracer tracer(line_segments, wire_diameter, 1.5 * (double)wire_diameter);
+  tracer.run();
+  */
+}
+
+void ImageProcessingTest::test_c_unknown(void) {
+  std::string directory("libtest/testfiles/wire_matching_samples/c_unknown/good");
+  std::string testfile(join_pathes(directory, "good.tif"));
+
+  int wire_diameter = 3;
+  int median_size = 3;
+  // load a background image
+  TempImage_RGBA_shptr img = load_image<TempImage_RGBA>(testfile);
 
 
-  
-  //unsigned int wire_width_min = wire_diameter - 1;
-  //unsigned int wire_width_max = wire_diameter + 1;
+  //TempImage_RGBA_shptr img(new TempImage_RGBA(img_in->get_width(), img_in->get_height()));
+  //median_filter<TempImage_RGBA, TempImage_RGBA>(img, img_in, median_size);
 
-  
 
-  //AnalyzeWireGradient<TempImage_GS_DOUBLE, TempImage_RGBA> awg(prob, img_in, wire_width_min, wire_width_max);
-  //awg.run();
+  ZeroCrossingEdgeDetection ed(0, img->get_width(), 0, img->get_height(), wire_diameter, 
+			       0, 0.8, 
+			       1, 10);
 
-  SubImageAnalyzer<TempImage_RGBA> sia(img, wire_diameter);
-  sia.run();
+  TempImage_GS_DOUBLE_shptr i = ed.run(img, TempImage_GS_DOUBLE_shptr(), directory);
+  /*
+
+  LineSegmentExtraction extraction(i, wire_diameter/2, 2, ed.get_border());
+  LineSegmentMap_shptr line_segments = extraction.run();
+
+
+  ContourTracer tracer(line_segments, wire_diameter,  1*(double)wire_diameter);
+  std::list<ContourPath_shptr> pathes = tracer.run();
   */
 
 }

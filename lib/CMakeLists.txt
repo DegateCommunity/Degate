@@ -102,8 +102,9 @@ set(SOURCES
 	#
 	renderer.cc
 	FilterKernel.cc
-	WireMatchingSimple.cc
-	WireMatchingCanny.cc
+	EdgeDetection.cc
+	CannyEdgeDetection.cc
+	ZeroCrossingEdgeDetection.cc
 	TemplateMatching.cc
 )
 

@@ -31,9 +31,9 @@
 using namespace degate;
 
 TemplateMatchingGUI::TemplateMatchingGUI(TemplateMatching_shptr _matching,
-					 std::string const& _name) : 
-  matching(_matching),
-  name(_name) {
+					 std::string const& name) : 
+  RecognitionGUIBase(name),
+  matching(_matching) {
 }
   
 TemplateMatchingGUI::~TemplateMatchingGUI() {

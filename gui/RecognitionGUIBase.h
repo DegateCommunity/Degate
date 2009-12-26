@@ -31,14 +31,19 @@
 
 
 class RecognitionGUIBase {
+private:
+
+  std::string name;
+
 public:
-  
+  RecognitionGUIBase(std::string const& _name) : name(_name) {}
+
   virtual ~RecognitionGUIBase() {}
   virtual void init(Gtk::Window *parent, degate::BoundingBox const& bouding_box, degate::Project_shptr project) = 0;
   virtual bool before_dialog() = 0;
   virtual void run() = 0;
   virtual void after_dialog() = 0;
-  virtual std::string get_name() const = 0;
+  virtual std::string get_name() const { return name; }
 };
 
 

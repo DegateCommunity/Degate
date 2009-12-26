@@ -35,8 +35,11 @@ class ImageProcessingTest : public CPPUNIT_NS :: TestFixture {
   CPPUNIT_TEST (test_pipe);
   //CPPUNIT_TEST (test_wire_matching);
   //CPPUNIT_TEST (test_background_classification_dect);
-  CPPUNIT_TEST (test_background_classification_legic);
-  
+  //CPPUNIT_TEST (test_background_classification_legic);
+  //CPPUNIT_TEST(test_line_segment_extraction);
+  //CPPUNIT_TEST(test_mifare);
+  //CPPUNIT_TEST(test_c_unknown);
+
   CPPUNIT_TEST_SUITE_END ();
   
 public:
@@ -50,7 +53,9 @@ protected:
   void test_wire_matching(void);
   void test_background_classification_dect(void);
   void test_background_classification_legic(void);
-
+  void test_line_segment_extraction(void);
+  void test_mifare(void);
+  void test_c_unknown(void);
 };
 
 #endif

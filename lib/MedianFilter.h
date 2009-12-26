@@ -34,10 +34,12 @@ namespace degate {
      * Calculate the median for an image region.
      */
     static inline PixelType calculate(std::tr1::shared_ptr<ImageType> src,
+				      unsigned int x, unsigned int y,
 				      unsigned int min_x, 
 				      unsigned int max_x,
 				      unsigned int min_y,
-				      unsigned int max_y) {
+				      unsigned int max_y,
+				      unsigned int threshold) {
       
       assert(min_x < max_x && min_y < max_y);
       assert(min_x < src->get_width());
@@ -70,10 +72,12 @@ namespace degate {
      */
     
     static inline rgba_pixel_t calculate(std::tr1::shared_ptr<ImageType> src,
+					 unsigned int x, unsigned int y,
 					 unsigned int min_x, 
 					 unsigned int max_x,
 					 unsigned int min_y,
-					 unsigned int max_y) {
+					 unsigned int max_y,
+					 unsigned int threshold) {
       
       assert(min_x < max_x && min_y < max_y);
       assert(min_x < src->get_width());
