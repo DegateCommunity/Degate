@@ -156,8 +156,8 @@ namespace degate {
       FilterKernel(width, height) {
       unsigned int x, y;
 
-      for(y = 0; y < get_columns(); y++) {
-	for(x = 0; x < get_rows(); x++) {
+      for(y = 0; y < get_rows(); y++) {
+	for(x = 0; x < get_columns(); x++) {
 
 	  double _x = (double)x - (double)get_center_column();
 	  double _y = (double)y - (double)get_center_row();
@@ -172,6 +172,36 @@ namespace degate {
 
     virtual ~GaussianBlur() {}
   };
+
+  /**
+   * Implements a Laplacian of Gaussian.
+   */
+  class LoG : public FilterKernel {
+  public:
+    LoG(unsigned int width, unsigned int height, double sigma = 1.4) : FilterKernel(width, height) {
+      unsigned int x, y;
+
+      for(y = 0; y < get_rows(); y++) {
+	for(x = 0; x < get_columns(); x++) {
+
+	  double _x = (double)x - (double)get_center_column();
+	  double _y = (double)y - (double)get_center_row();
+	  
+	  double v = 
+	    -1.0/(M_PI * pow(sigma, 4)) * 
+	    (1.0 - (pow(_x, 2) + pow(_y, 2)) / (2.0*pow(sigma, 2))) *
+	    exp(-(pow(_x, 2) + pow(_y, 2)) / (2.0*pow(sigma,2)));
+	 
+	  set(x, y, v);
+	}
+
+      }
+    }
+
+   virtual ~LoG() {}
+  };
+
+  typedef std::tr1::shared_ptr<LoG> LoG_shptr;
 
 }
 
