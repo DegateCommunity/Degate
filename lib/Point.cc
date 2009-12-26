@@ -22,6 +22,7 @@
 #include "globals.h"
 
 #include "Point.h"
+#include <boost/format.hpp>
 
 using namespace degate;
 
@@ -68,3 +69,12 @@ void Point::shift_x(int delta_x) {
 }
 
 
+unsigned int Point::get_distance(Point const& p) const {
+  return ((labs(x - p.get_x()) << 1) + (labs(y - p.get_y()) << 1)) >> 1;
+}
+
+std::string Point::to_string() const {
+  boost::format f("point(%1%, %2%)");
+  f % x % y;
+  return f.str();
+}

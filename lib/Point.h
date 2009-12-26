@@ -48,8 +48,16 @@ namespace degate {
     void shift_x(int delta_x);
     void shift_y(int delta_y);
 
+    /**
+     * Calculate the distance to another point.
+     */
+    unsigned int get_distance(Point const& p) const;
+
+
+    std::string to_string() const;
   };
 
+  typedef std::tr1::shared_ptr<Point> Point_shptr;
 }
 
 #endif
