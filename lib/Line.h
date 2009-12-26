@@ -22,8 +22,9 @@
 #ifndef __LINE_H__
 #define __LINE_H__
 
-#include "BoundingBox.h"
-#include "Shape.h"
+#include <BoundingBox.h>
+#include <Shape.h>
+#include <Point.h>
 
 namespace degate {
 
@@ -70,6 +71,13 @@ namespace degate {
     virtual bool is_vertical() const;
     virtual bool is_horizontal() const;
 
+    virtual unsigned int get_length() const;
+
+    virtual Point get_p1() const;
+    virtual Point get_p2() const;
+
+    virtual void set_p1(Point const& p);
+    virtual void set_p2(Point const& p);
 
   };
 

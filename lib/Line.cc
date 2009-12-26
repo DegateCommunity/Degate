@@ -112,8 +112,6 @@ unsigned int Line::get_diameter() const {
   return diameter;
 }
 
-
-
 int Line::get_from_x() const {
   return from_x;
 }
@@ -169,4 +167,27 @@ void Line::shift_x(int delta_x) {
 
 void Line::calculate_bounding_box() {
   bounding_box = BoundingBox(from_x, to_x, from_y, to_y);	     
+}
+
+
+unsigned int Line::get_length() const {
+  return ((labs(from_x - to_x) << 1) + (labs(from_y - to_y) << 1)) >> 1;
+}
+
+Point Line::get_p1() const {
+  return Point(from_x, from_y);
+}
+
+Point Line::get_p2() const {
+  return Point(to_x, to_y);
+}
+
+void Line::set_p1(Point const& p) {
+  set_from_x(p.get_x());
+  set_from_y(p.get_y());
+}
+
+void Line::set_p2(Point const& p) {
+  set_to_x(p.get_x());
+  set_to_y(p.get_y());
 }
