@@ -553,7 +553,7 @@ void MenuManager::initialize_menu_algorithm_funcs() {
       RecognitionManager * rm = RecognitionManager::get_instance();
       RecognitionManager::plugin_list plugins = rm->get_plugins();
       for(RecognitionManager::plugin_list::iterator iter = plugins.begin();
-	  iter != plugins.end(); ++iter) {
+	  iter != plugins.end(); ++iter, i++) {
 
 	RecognitionGUIBase * ui = *iter;
 	assert(ui != NULL);
