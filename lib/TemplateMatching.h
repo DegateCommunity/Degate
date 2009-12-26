@@ -44,7 +44,7 @@ namespace degate {
    * a background image.
    */
 
-  class TemplateMatching {
+  class TemplateMatching : public Matching {
   protected:
 
     struct prepared_template {
