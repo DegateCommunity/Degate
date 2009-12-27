@@ -83,7 +83,7 @@ int main(void) {
   testrunner.addTest(LogicModelDOTExporterTest::suite());
   testrunner.addTest(ScalingManagerTest::suite());
 
-  testrunner.addTest(ImageProcessingTest::suite());
+  //  testrunner.addTest(ImageProcessingTest::suite());
 
   testrunner.run(testresult);
 

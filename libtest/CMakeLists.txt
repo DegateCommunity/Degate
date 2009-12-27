@@ -36,7 +36,7 @@ if(CPPUNIT_FOUND)
 	      LogicModelDOTExporterTest.cc
 
 	      ScalingManagerTest.cc
-	      ImageProcessingTest.cc
+#	      ImageProcessingTest.cc
 	      )
 
 	set(TESTMAIN main.cc)

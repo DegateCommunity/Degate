@@ -433,7 +433,7 @@ void ImageProcessingTest::test_line_segment_extraction(void) {
   
   copy_image<TempImage_GS_DOUBLE, TempImage_RGBA>(img2, img);
 
-  LineSegmentExtraction extraction(img2, wire_diameter, wire_diameter/2, 10);
+  LineSegmentExtraction<TempImage_GS_DOUBLE> extraction(img2, wire_diameter, wire_diameter/2, 10);
   extraction.run();
 }
 
@@ -468,7 +468,7 @@ void ImageProcessingTest::test_mifare(void) {
 
 
   
-  LineSegmentExtraction extraction(i, wire_diameter/2, 2, ed.get_border());
+  LineSegmentExtraction<TempImage_GS_DOUBLE> extraction(i, wire_diameter/2, 2, ed.get_border());
   LineSegmentMap_shptr line_segments = extraction.run();
 
   /*
