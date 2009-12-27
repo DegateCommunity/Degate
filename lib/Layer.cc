@@ -241,8 +241,6 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y) {
 bool Layer::exists_gate_in_region(unsigned int min_x, unsigned int max_x,
 				  unsigned int min_y, unsigned int max_y) {
   
-  PlacedLogicModelObject_shptr plo;
-  
   for(Layer::qt_region_iterator iter = quadtree.region_iter_begin(min_x, max_x, min_y, max_y);
       iter != quadtree.region_iter_end(); ++iter) {
     
