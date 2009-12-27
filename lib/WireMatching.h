@@ -24,6 +24,7 @@
 
 #include <Image.h>
 #include <Project.h>
+#include <TemplateMatching.h>
 
 namespace degate {
 
@@ -32,34 +33,27 @@ namespace degate {
   private:
 
     Layer_shptr layer;
+    LogicModel_shptr lmodel;
+    unsigned int wire_diameter, median_filter_width;
+    double sigma, min_edge_magnitude;
+    BackgroundImage_shptr img;
+
+    BoundingBox bounding_box;
 
   public:
 
-    WireMatching() {
-    }
+    WireMatching();
 
     virtual void init(BoundingBox const& bounding_box, Project_shptr project) 
-      throw(InvalidPointerException, DegateRuntimeException) {
+      throw(InvalidPointerException, DegateRuntimeException);
 
-      if(project == NULL)
-	throw InvalidPointerException("Invalid pointer for parameter project.");
+    virtual void run();
 
-      LogicModel_shptr lmodel = project->get_logic_model();
-      assert(lmodel != NULL); // always has a logic model
-
-      layer = lmodel->get_current_layer();
-      if(layer == NULL) throw DegateRuntimeException("No current layer in project.");
-
-
-      ScalingManager_shptr sm = layer->get_scaling_manager();
-      assert(sm != NULL);
-      BackgroundImage_shptr img = sm->get_image(1).second;
-      assert(img != NULL);
-
-    }
-
-    virtual void run() {
-    }
+    void set_wire_diameter(unsigned int wire_diameter);
+    void set_median_filter_width(unsigned int median_filter_width);
+    void set_sigma(double sigma);
+    void set_min_edge_magnitude(double min_edge_magnitude);
+    
   };
 
   typedef std::tr1::shared_ptr<WireMatching> WireMatching_shptr;

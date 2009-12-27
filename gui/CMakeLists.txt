@@ -68,12 +68,15 @@ set(DEGATE_SRC
 
 	       NewProjectWin.cc
 	       ObjectMatchingWin.cc
-	       TemplateMatchingParamsWin.cc
 	       ConnectionInspectorWin.cc
 	       MenuManager.cc	       
 	       
+	       TemplateMatchingParamsWin.cc
+	       WireMatchingParamsWin.cc
+
 	       RecognitionManager.cc
 	       TemplateMatchingGUI.cc
+	       WireMatchingGUI.cc
 
 	       AppHelper.cc
 	       ImageWin.cc

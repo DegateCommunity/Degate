@@ -31,7 +31,8 @@
 #include <Project.h>
 #include <WireMatching.h>
 #include <RecognitionGUIBase.h>
-#include <GateTemplate.h>
+#include <Layer.h>
+
 
 class WireMatchingGUI : public RecognitionGUIBase {
   
@@ -50,33 +51,24 @@ class WireMatchingGUI : public RecognitionGUIBase {
    * @return Returns false, if the dialog was canceled.
    */
 
-  bool run_matching_param_dialog();
+  //bool run_matching_param_dialog();
 
  public:
   
-  WireMatchingGUI(degate::WireMatching_shptr _matching, std::string const& name) : 
-    RecognitionGUIBase(name),
-    matching(_matching) {}
+  WireMatchingGUI(degate::WireMatching_shptr _matching, std::string const& name);
   
-  virtual ~WireMatchingGUI() {}
+  virtual ~WireMatchingGUI();
   
  
   virtual void init(Gtk::Window *parent, 
 		    degate::BoundingBox const& bounding_box, 
-		    degate::Project_shptr project) {
-    this->parent = parent;
-    this->bounding_box = bounding_box;
-    this->project = project;
-    
-  }
+		    degate::Project_shptr project);
 
-  virtual bool before_dialog() { return true; }
+  virtual bool before_dialog();
 
-  virtual void run() {
-    matching->init(bounding_box, project);
-    matching->run();
-  }
-  virtual void after_dialog() {}
+  virtual void run();
+
+  virtual void after_dialog();
   
 };
 

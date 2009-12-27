@@ -105,7 +105,9 @@ set(SOURCES
 	EdgeDetection.cc
 	CannyEdgeDetection.cc
 	ZeroCrossingEdgeDetection.cc
+	WireMatching.cc
 	TemplateMatching.cc
+	
 )
 
 

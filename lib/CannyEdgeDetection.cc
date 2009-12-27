@@ -33,11 +33,12 @@ using namespace degate;
 CannyEdgeDetection::CannyEdgeDetection(unsigned int min_x, unsigned int max_x, 
 				       unsigned int min_y, unsigned int max_y,
 				       unsigned int wire_diameter,
+				       unsigned int median_filter_width,
 				       unsigned int blur_kernel_size,
 				       double sigma,
 				       double _hysteresis_min,
 				       double _hysteresis_max) : 
-  EdgeDetection(min_x, max_x, min_y, max_y, wire_diameter, blur_kernel_size, sigma),
+  EdgeDetection(min_x, max_x, min_y, max_y, wire_diameter, median_filter_width, blur_kernel_size, sigma),
   hysteresis_min(_hysteresis_min),
   hysteresis_max(_hysteresis_max) {
   }
@@ -45,30 +46,38 @@ CannyEdgeDetection::CannyEdgeDetection(unsigned int min_x, unsigned int max_x,
 CannyEdgeDetection::~CannyEdgeDetection() {}
 
 
-TempImage_GS_DOUBLE_shptr CannyEdgeDetection::run(ImageBase_shptr img_in, 
-						  TempImage_GS_DOUBLE_shptr probability_map,
-						  std::string const& directory) {
-  
-  set_directory(directory);
+TileImage_GS_DOUBLE_shptr CannyEdgeDetection::run(ImageBase_shptr img_in, 
+						  TileImage_GS_DOUBLE_shptr probability_map) {
   run_edge_detection(img_in);
-  TempImage_GS_DOUBLE_shptr edge_image = get_edge_image(probability_map);
-  TempImage_GS_DOUBLE_shptr edge_magnitude_image = get_edge_magnitude_image(probability_map);
+  TileImage_GS_DOUBLE_shptr edge_image = get_edge_image(probability_map);
+  TileImage_GS_DOUBLE_shptr edge_magnitude_image = get_edge_magnitude_image(probability_map);
   
-  TempImage_GS_DOUBLE_shptr sup_edge_image(new TempImage_GS_DOUBLE(get_width(), get_height()));
+  TileImage_GS_DOUBLE_shptr sup_edge_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
   non_maximum_supression(get_horizontal_edges(), get_vertical_edges(), 
-			 edge_magnitude_image, sup_edge_image, directory);
+			 edge_magnitude_image, sup_edge_image);
   
-  normalize<TempImage_GS_DOUBLE, TempImage_GS_DOUBLE>(sup_edge_image, sup_edge_image, 0, 1);
+  normalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(sup_edge_image, sup_edge_image, 0, 1);
   
   hysteresis(sup_edge_image);
-  save_normalized_image<TempImage_GS_DOUBLE>(join_pathes(directory, "06_hysteresis.tif"), 
-					     sup_edge_image);
   
   return sup_edge_image;
 }
 
+TileImage_GS_DOUBLE_shptr CannyEdgeDetection::run(ImageBase_shptr img_in, 
+						  TileImage_GS_DOUBLE_shptr probability_map,
+						  std::string const& directory) {
+  
+  set_directory(directory);
+  TileImage_GS_DOUBLE_shptr sup_edge_image = run(img_in, probability_map);
+  
+  save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "06_hysteresis.tif"), 
+					     sup_edge_image);
 
-void CannyEdgeDetection::hysteresis(TempImage_GS_DOUBLE_shptr sup_edge_image) {
+  return sup_edge_image;
+}
+
+
+void CannyEdgeDetection::hysteresis(TileImage_GS_DOUBLE_shptr sup_edge_image) {
   unsigned int x, y;
   for(y = get_border(); y < sup_edge_image->get_height() - get_border(); y++) {
     for(x = get_border(); x < sup_edge_image->get_width() - get_border(); x++) {
@@ -110,11 +119,10 @@ void CannyEdgeDetection::hysteresis(TempImage_GS_DOUBLE_shptr sup_edge_image) {
 }
 
 
-void CannyEdgeDetection::non_maximum_supression(TempImage_GS_DOUBLE_shptr horizontal_edges,
-						TempImage_GS_DOUBLE_shptr vertical_edges,
-						TempImage_GS_DOUBLE_shptr edge_image,
-						TempImage_GS_DOUBLE_shptr sup_edge_image,
-						std::string const& directory) {
+void CannyEdgeDetection::non_maximum_supression(TileImage_GS_DOUBLE_shptr horizontal_edges,
+						TileImage_GS_DOUBLE_shptr vertical_edges,
+						TileImage_GS_DOUBLE_shptr edge_image,
+						TileImage_GS_DOUBLE_shptr sup_edge_image) {
   
   for(unsigned int y = get_border(); y < edge_image->get_height() - get_border(); y++) {
     for(unsigned int x = get_border(); x < edge_image->get_width() - get_border(); x++) {
@@ -129,17 +137,18 @@ void CannyEdgeDetection::non_maximum_supression(TempImage_GS_DOUBLE_shptr horizo
     }
   }
   
-  save_normalized_image<TempImage_GS_DOUBLE>(join_pathes(directory,
-							 "04_non_max_suppression.tif"),
-					     sup_edge_image);
+  if(has_directory())
+    save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(get_directory(),
+							   "04_non_max_suppression.tif"),
+					       sup_edge_image);
 }
 
 
 
     // returns the direction in degrees
-int CannyEdgeDetection::get_gradient_direction(TempImage_GS_DOUBLE_shptr horizontal_edges,
-					       TempImage_GS_DOUBLE_shptr vertical_edges,
-					       TempImage_GS_DOUBLE_shptr edge_mag_image,
+int CannyEdgeDetection::get_gradient_direction(TileImage_GS_DOUBLE_shptr horizontal_edges,
+					       TileImage_GS_DOUBLE_shptr vertical_edges,
+					       TileImage_GS_DOUBLE_shptr edge_mag_image,
 					       unsigned int x, unsigned int y) {
   double tangent = 5;
   // determine gradient direction

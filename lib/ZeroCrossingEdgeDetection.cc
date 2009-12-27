@@ -27,45 +27,62 @@ using namespace degate;
 ZeroCrossingEdgeDetection::ZeroCrossingEdgeDetection(unsigned int min_x, unsigned int max_x, 
 						     unsigned int min_y, unsigned int max_y,
 						     unsigned int wire_diameter,
+						     unsigned int median_filter_width,
 						     unsigned int blur_kernel_size,
 						     double sigma,
 						     unsigned int _min_d, 
 						     unsigned int _max_d,
 						     double _edge_threshold, 
 						     double _zero_threshold) : 
-  EdgeDetection(min_x, max_x, min_y, max_y, wire_diameter, blur_kernel_size, sigma),
+  EdgeDetection(min_x, max_x, min_y, max_y, wire_diameter, median_filter_width, blur_kernel_size, sigma),
   min_d(_min_d), 
   max_d(_max_d),
   edge_threshold(_edge_threshold),
   zero_threshold(_zero_threshold) {
   }
 
-TempImage_GS_DOUBLE_shptr ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in, 
-							 TempImage_GS_DOUBLE_shptr probability_map,
+TileImage_GS_DOUBLE_shptr 
+ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in, 
+			       TileImage_GS_DOUBLE_shptr probability_map) {
+
+  run_edge_detection(img_in);
+  TileImage_GS_DOUBLE_shptr edge_image = get_edge_image(probability_map);
+  TileImage_GS_DOUBLE_shptr edge_magnitude_image = get_edge_magnitude_image(probability_map);
+  
+  TileImage_GS_DOUBLE_shptr zero_cross_img = 
+    analyze_edge_image(edge_image, probability_map, min_d, max_d);
+
+  TileImage_GS_DOUBLE_shptr zero_cross_img2(new TileImage_GS_DOUBLE(get_width(), get_height()));
+  
+  morphological_close<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>
+    (zero_cross_img2, zero_cross_img, 3, 1);
+  
+  thinning<TileImage_GS_DOUBLE>(zero_cross_img2);
+  
+  return zero_cross_img2; 
+}
+
+TileImage_GS_DOUBLE_shptr ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in, 
+							 TileImage_GS_DOUBLE_shptr probability_map,
 							 std::string const& directory) {
   set_directory(directory);
-  run_edge_detection(img_in);
-  TempImage_GS_DOUBLE_shptr edge_image = get_edge_image(probability_map);
-  TempImage_GS_DOUBLE_shptr edge_magnitude_image = get_edge_magnitude_image(probability_map);
-  
-  TempImage_GS_DOUBLE_shptr zero_cross_img = analyze_edge_image(edge_image, probability_map, min_d, max_d);
-  TempImage_GS_DOUBLE_shptr zero_cross_img2(new TempImage_GS_DOUBLE(get_width(), get_height()));
-  
-  morphological_close<TempImage_GS_DOUBLE, TempImage_GS_DOUBLE>(zero_cross_img2, zero_cross_img, 3, 1);
-  
-  thinning<TempImage_GS_DOUBLE>(zero_cross_img2);
-  
-  save_normalized_image<TempImage_GS_DOUBLE>(join_pathes(directory, 
-							 "03_edge_zero_cross.tif"), 
-					     zero_cross_img2);
-  
-  //overlay_result(zero_cross_img, std::tr1::dynamic_pointer_cast<TempImage_RGBA>(img_in), directory);
-  overlay_result(zero_cross_img2, edge_image, directory);
-  return zero_cross_img2;
+  assert(img_in != NULL);
+  TileImage_GS_DOUBLE_shptr zero_cross_img = run(img_in, probability_map);
+  assert(zero_cross_img != NULL);
+
+  save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "03_edge_zero_cross.tif"), 
+					     zero_cross_img);
+
+  /*
+  overlay_result(zero_cross_img, 
+		 std::tr1::dynamic_pointer_cast<TileImage_GS_DOUBLE>(img_in), 
+		 directory);
+  */
+  return zero_cross_img;
 }
 
 
-bool ZeroCrossingEdgeDetection::trace(TempImage_GS_DOUBLE_shptr edge_image,
+bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
 				      int _x, int _y,
 				      int inc_x, int inc_y,
 				      int * start_x, int * stop_x, 
@@ -142,16 +159,16 @@ bool ZeroCrossingEdgeDetection::trace(TempImage_GS_DOUBLE_shptr edge_image,
 }
 
 
-TempImage_GS_DOUBLE_shptr 
-ZeroCrossingEdgeDetection::analyze_edge_image(TempImage_GS_DOUBLE_shptr edge_image,
-					      TempImage_GS_DOUBLE_shptr probability_map,
+TileImage_GS_DOUBLE_shptr 
+ZeroCrossingEdgeDetection::analyze_edge_image(TileImage_GS_DOUBLE_shptr edge_image,
+					      TileImage_GS_DOUBLE_shptr probability_map,
 					      unsigned int min_d, unsigned int max_d) {
   int start_x = 0, start_y = 0, stop_x = 0, stop_y = 0, x, y;
   double mag = 0;
   
-  normalize<TempImage_GS_DOUBLE, TempImage_GS_DOUBLE>(edge_image, edge_image, -1, 1);
+  normalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(edge_image, edge_image, -1, 1);
   
-  TempImage_GS_DOUBLE_shptr out_image(new TempImage_GS_DOUBLE(get_width(), get_height()));
+  TileImage_GS_DOUBLE_shptr out_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
   
   for(y = get_border() ; y < edge_image->get_height() - get_border(); y++) {
     for(x = get_border(); x < edge_image->get_width() - get_border();) {
@@ -214,9 +231,9 @@ ZeroCrossingEdgeDetection::analyze_edge_image(TempImage_GS_DOUBLE_shptr edge_ima
   return out_image;
 }
 
-void ZeroCrossingEdgeDetection::overlay_result(TempImage_GS_DOUBLE_shptr zc, 
-					       TempImage_GS_DOUBLE_shptr bg, 
-					       //TempImage_RGBA_shptr bg, 
+void ZeroCrossingEdgeDetection::overlay_result(TileImage_GS_DOUBLE_shptr zc, 
+					       TileImage_GS_DOUBLE_shptr bg, 
+					       //TileImage_RGBA_shptr bg, 
 					       std::string const& directory) const {
 
   assert(bg != NULL && zc != NULL);
@@ -227,8 +244,8 @@ void ZeroCrossingEdgeDetection::overlay_result(TempImage_GS_DOUBLE_shptr zc,
 	if(zc->get_pixel(x, y) > 0)
 	  bg->set_pixel(x, y, -1);
       }
-    //save_image<TempImage_RGBA>(join_pathes(directory, "overlay.tif"),  bg);
-    save_normalized_image<TempImage_GS_DOUBLE>(join_pathes(directory, "overlay.tif"),  bg);
+    //save_image<TileImage_RGBA>(join_pathes(directory, "overlay.tif"),  bg);
+    save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "overlay.tif"),  bg);
   }
 }
 

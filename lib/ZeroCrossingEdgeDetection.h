@@ -36,7 +36,7 @@ namespace degate {
 
   private:
 
-    bool trace(TempImage_GS_DOUBLE_shptr edge_image,
+    bool trace(TileImage_GS_DOUBLE_shptr edge_image,
 	       int _x, int _y,
 	       int inc_x, int inc_y,
 	       int * start_x, int * stop_x, 
@@ -46,27 +46,31 @@ namespace degate {
 	       double zero_threshold,
 	       unsigned int min_d, unsigned int max_d);
 
-    TempImage_GS_DOUBLE_shptr analyze_edge_image(TempImage_GS_DOUBLE_shptr edge_image,
-						 TempImage_GS_DOUBLE_shptr probability_map,
+    TileImage_GS_DOUBLE_shptr analyze_edge_image(TileImage_GS_DOUBLE_shptr edge_image,
+						 TileImage_GS_DOUBLE_shptr probability_map,
 						 unsigned int min_d, unsigned int max_d);
 
-    void overlay_result(TempImage_GS_DOUBLE_shptr zc, 
-			TempImage_GS_DOUBLE_shptr bg, 
-			//TempImage_RGBA_shptr bg, 
+    void overlay_result(TileImage_GS_DOUBLE_shptr zc, 
+			TileImage_GS_DOUBLE_shptr bg, 
+			//TileImage_RGBA_shptr bg, 
 			std::string const& directory) const;
   public:
 
     ZeroCrossingEdgeDetection(unsigned int min_x, unsigned int max_x, 
 			      unsigned int min_y, unsigned int max_y,
 			      unsigned int wire_diameter = 5,
+			      unsigned int median_filter_width = 3,
 			      unsigned int blur_kernel_size = 10,
 			      double sigma = 0.5,
 			      unsigned int _min_d = 1, unsigned int _max_d = 10,
 			      double _edge_threshold = 0.25, double _zero_threshold = 0.4);
 
-    TempImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in, 
-				  TempImage_GS_DOUBLE_shptr probability_map,
+    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in, 
+				  TileImage_GS_DOUBLE_shptr probability_map,
 				  std::string const& directory);
+
+    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in, 
+				  TileImage_GS_DOUBLE_shptr probability_map);
 
 
   };

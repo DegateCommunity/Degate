@@ -43,10 +43,12 @@ namespace degate {
 
     unsigned int min_x, max_x, min_y, max_y;
     unsigned int feature_size;
+    unsigned int median_filter_width;
+
     unsigned int blur_kernel_size, border;
     double sigma;
 
-    TempImage_GS_DOUBLE_shptr i1, i2; // edge images (x direction and y direction)
+    TileImage_GS_DOUBLE_shptr i1, i2; // edge images (x direction and y direction)
 
     std::string directory; // path for storing debug images
     bool has_path;
@@ -62,14 +64,18 @@ namespace degate {
 
     void set_directory(std::string const& path);
 
+    std::string get_directory() const;
+
+    bool has_directory() const;
+
     void run_edge_detection(ImageBase_shptr in);
 
-    TempImage_GS_DOUBLE_shptr get_horizontal_edges();
-    TempImage_GS_DOUBLE_shptr get_vertical_edges();
+    TileImage_GS_DOUBLE_shptr get_horizontal_edges();
+    TileImage_GS_DOUBLE_shptr get_vertical_edges();
 
-    TempImage_GS_DOUBLE_shptr get_edge_magnitude_image(TempImage_GS_DOUBLE_shptr probability_map);
+    TileImage_GS_DOUBLE_shptr get_edge_magnitude_image(TileImage_GS_DOUBLE_shptr probability_map);
 
-    TempImage_GS_DOUBLE_shptr get_edge_image(TempImage_GS_DOUBLE_shptr probability_map);
+    TileImage_GS_DOUBLE_shptr get_edge_image(TileImage_GS_DOUBLE_shptr probability_map);
 
 
   public:
@@ -77,6 +83,7 @@ namespace degate {
     EdgeDetection(unsigned int _min_x, unsigned int _max_x, 
 		  unsigned int _min_y, unsigned int _max_y,
 		  unsigned int _feature_size = 5,
+		  unsigned int median_filter_width = 3,
 		  unsigned int _blur_kernel_size = 10,
 		  double _sigma = 0.5);
 

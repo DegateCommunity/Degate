@@ -266,33 +266,34 @@ namespace degate{
 
   // ----------------------------------------------------------------------------------
 
+  template<typename ImageType>
   class LineSegmentExtraction {
 
   private:
 
     unsigned int width, height;
-    TempImage_GS_DOUBLE_shptr img;
-    TempImage_GS_DOUBLE_shptr processed;
+    std::tr1::shared_ptr<ImageType> img;
+    std::tr1::shared_ptr<ImageType> processed;
     LineSegmentMap_shptr line_segments;
     unsigned int search_radius_along;
     unsigned int search_radius_across;
     unsigned int border;
 
   public:
-  LineSegmentExtraction(TempImage_GS_DOUBLE_shptr _img,
+  LineSegmentExtraction(std::tr1::shared_ptr<ImageType> _img,
 			unsigned int _search_radius_along,
 			unsigned int _search_radius_across,
 			unsigned int _border) :
       width(_img->get_width()),
       height(_img->get_height()),
       img(_img),
-      processed(new TempImage_GS_DOUBLE(width, height)),
+      processed(new ImageType(width, height)),
       line_segments(new LineSegmentMap()),
       search_radius_along(_search_radius_along),
       search_radius_across(_search_radius_across),
       border(_border) {
 
-      copy_image<TempImage_GS_DOUBLE, TempImage_GS_DOUBLE>(processed, img);
+      copy_image<ImageType, ImageType>(processed, img);
     }
 
     LineSegmentMap_shptr run() {
@@ -318,8 +319,8 @@ namespace degate{
 	}
     }
 
-    LinearPrimitive_shptr trace_line_primitive(TempImage_GS_DOUBLE_shptr img, 
-					   unsigned int x, unsigned int y) {
+    LinearPrimitive_shptr trace_line_primitive(std::tr1::shared_ptr<ImageType> img, 
+					       unsigned int x, unsigned int y) {
 
       LinearPrimitive_shptr segment;
 
