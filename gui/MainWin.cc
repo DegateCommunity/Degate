@@ -1203,6 +1203,25 @@ void MainWin::on_selection_activated() {
 
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateCreateBySelection", true);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", true);
+
+    LogicModel_shptr lmodel = main_project->get_logic_model();
+    Layer_shptr layer = lmodel->get_current_layer();
+
+    for(Layer::qt_region_iterator iter = 
+	  layer->region_begin(imgWin.get_selection_min_x(), 
+			      imgWin.get_selection_max_x(), 
+			      imgWin.get_selection_min_y(), 
+			      imgWin.get_selection_max_y());
+	iter != layer->region_end(); ++iter) {
+      
+      PlacedLogicModelObject_shptr plo = *iter;
+      assert(plo != NULL);
+
+      selected_objects.insert(plo);
+      highlighted_objects.add(plo);
+    }
+    
+
   }
 }
 
