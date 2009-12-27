@@ -56,4 +56,5 @@ bool autosave_project(degate::Project_shptr project, unsigned int interval = 5 *
 
 void add_image_file_filter_to_file_chooser(Gtk::FileChooserDialog & dialog);
 
+
 #endif

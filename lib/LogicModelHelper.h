@@ -25,6 +25,7 @@
 #include <degate.h>
 #include <ImageHelper.h>
 #include <ConnectedLogicModelObject.h>
+#include <Project.h>
 
 namespace degate {
 
@@ -320,6 +321,12 @@ namespace degate {
 
   Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel) 
     throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException);
+
+
+  /**
+   * Get the current layer.
+   */
+  Layer_shptr get_current_layer(Project_shptr project) throw(InvalidPointerException);
 
 }
 

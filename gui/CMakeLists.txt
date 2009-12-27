@@ -65,6 +65,7 @@ set(DEGATE_SRC
 	       PortSelectWin.cc
 
 	       LayerConfigWin.cc
+	       AnnotationListWin.cc
 
 	       NewProjectWin.cc
 	       ObjectMatchingWin.cc

@@ -52,6 +52,7 @@ void ImageWin::setup_renderer() {
   renderer_add_layer(renderer, (render_func_t) &render_gates, &render_params, 1, "Logic Gates");
   renderer_add_layer(renderer, (render_func_t) &render_wires, &render_params, 1, "Wires");
   renderer_add_layer(renderer, (render_func_t) &render_vias, &render_params, 1, "Vias");
+  renderer_add_layer(renderer, (render_func_t) &render_annotations, &render_params, 1, "Annotations");
 
 
   current_layer = -1;

@@ -21,6 +21,7 @@
 
 #include <degate.h>
 #include <LogicModelHelper.h>
+
 #include <boost/format.hpp>
 
 using namespace degate;
@@ -267,4 +268,13 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel)
   throw InvalidPointerException("Error: all layers are disabled.");
   return Layer_shptr(); // to avoid compiler warning
 
+}
+
+Layer_shptr degate::get_current_layer(Project_shptr project) throw(InvalidPointerException) {
+  if(project == NULL) 
+    throw InvalidPointerException("Invalid parameter for get_curent_layer()");
+
+  LogicModel_shptr lmodel = project->get_logic_model();
+  assert(lmodel != NULL);
+  return lmodel->get_current_layer();
 }

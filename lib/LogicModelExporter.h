@@ -48,6 +48,9 @@ private:
 
   void add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel) throw(std::runtime_error);
 
+  void add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos) 
+    throw(std::runtime_error );
+
   ObjectIDRewriter_shptr oid_rewriter;
 
 public:

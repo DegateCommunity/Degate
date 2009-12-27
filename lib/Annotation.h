@@ -53,8 +53,8 @@ namespace degate {
    *
    * This class is designed to be derived for concrete annotations. 
    *
-   * @see set_name
-   * @see set_description
+   * @see set_name()
+   * @see set_description()
    */
   
   class Annotation : public Rectangle, public PlacedLogicModelObject {
@@ -108,6 +108,35 @@ namespace degate {
      */
 
     virtual const std::string get_object_type_name() const;
+
+    /**
+     * Print annotation.
+     */
+    void print(std::ostream & os = std::cout, int n_tabs = 0) const;
+
+
+
+    void shift_x(int delta_x) {
+      Rectangle::shift_x(delta_x);
+      notify_shape_change();
+    }
+
+    void shift_y(int delta_y) {
+      Rectangle::shift_y(delta_y);
+      notify_shape_change();
+    }
+
+    virtual bool in_bounding_box(BoundingBox const& bbox) const {
+      return in_bounding_box(bbox);
+    }
+
+    virtual BoundingBox const& get_bounding_box() const {
+      return Rectangle::get_bounding_box();
+    }
+
+    virtual bool in_shape(int x, int y) const {
+      return Rectangle::in_shape(x, y);
+    }
 
   };
 

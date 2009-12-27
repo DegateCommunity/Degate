@@ -110,6 +110,8 @@ namespace degate {
   class Via;
   typedef std::tr1::shared_ptr<Via> Via_shptr;
 
+  class Annotation;
+  typedef std::tr1::shared_ptr<Annotation> Annotation_shptr;
 
   typedef unsigned int layer_position_t;
 

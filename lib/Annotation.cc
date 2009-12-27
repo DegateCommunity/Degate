@@ -44,10 +44,24 @@ void Annotation::set_class_id(class_id_t _class_id) {
 
 const std::string Annotation::get_descriptive_identifier() const {
   boost::format fmter("%1% (id=%2%,class=%3%)");
-  fmter % get_name() % get_class_id();
+  fmter % get_object_id() % get_name() % get_class_id();
   return fmter.str();
 }
 
 const std::string Annotation::get_object_type_name() const {
   return std::string("Annotation");
+}
+
+void Annotation::print(std::ostream & os, int n_tabs) const {
+
+  os
+    << gen_tabs(n_tabs) << "Annotation name  : " << get_name() << std::endl
+    << gen_tabs(n_tabs) << "Ddescription     : " << get_description() << std::endl
+    << gen_tabs(n_tabs) << "Object ID        : " << get_object_id() << std::endl
+    << gen_tabs(n_tabs) << "Bounding box     : " << Rectangle::get_bounding_box().to_string() << std::endl
+    << gen_tabs(n_tabs) << "Annotation class : " << get_class_id() << std::endl
+    << std::endl;
+
+  os << std::endl;
+
 }

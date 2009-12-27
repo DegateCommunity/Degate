@@ -274,13 +274,9 @@ void degate::renderer_initialize_params(render_params_t * rend) {
   rend->il_down_color     = 0xff0000ff; // red
   rend->il_up_color       = 0xff12ff00; // green
 
-  /*
-  if(rend->grid != NULL) {
-    rend->grid->offset_x = 0;
-    rend->grid->offset_y = 0;
-    rend->grid->dist_x = 1;
-    rend->grid->dist_y = 1;
-    }*/
+  rend->annotation_fill_color =  0x10101010;
+  rend->annotation_frame_color = 0xa000ffff; // a yellow
+
 }
 
 
@@ -767,6 +763,42 @@ ret_t render_via(renderer_t * renderer, render_params_t * render_params, Rendere
   return RET_OK;
 }
 
+ret_t render_annotation(renderer_t * renderer, render_params_t * render_params, RendererImage_shptr dst_img, 
+			Annotation_shptr a,
+			unsigned int min_x, unsigned int min_y, unsigned int max_x, unsigned int max_y) {
+
+  if(a->get_max_x() < min_x || a->get_min_x() > max_x ||
+     a->get_max_y() < min_y || a->get_min_y() > max_y) return RET_OK;
+
+  ret_t ret;
+  double scaling_x = (max_x - min_x) / (double)dst_img->get_width();
+  double scaling_y = (max_y - min_y) / (double)dst_img->get_height();
+
+  unsigned int screen_min_x = a->get_min_x() > min_x ? (unsigned int)((a->get_min_x() - min_x) / scaling_x) : 0;
+  unsigned int screen_min_y = a->get_min_y() > min_y ? (unsigned int)((a->get_min_y() - min_y) / scaling_y) : 0;
+  unsigned int screen_max_x = a->get_max_x() < max_x ? (unsigned int)((a->get_max_x() - min_x) / scaling_x) : dst_img->get_width() - 1;
+  unsigned int screen_max_y = a->get_max_y() < max_y ? (unsigned int)((a->get_max_y() - min_y) / scaling_y) : dst_img->get_height() - 1;
+
+  // render filled rectangle
+  color_t fill_col = a->get_fill_color();
+  color_t frame_col = a->get_frame_color();
+
+  if(fill_col == 0) fill_col = render_params->annotation_fill_color;
+  if(frame_col == 0) frame_col = render_params->annotation_frame_color;
+
+  draw_rectangle(dst_img, screen_min_x, screen_min_y, screen_max_x, screen_max_y, 
+		 highlight_color_by_state(fill_col, a->is_selected()), 
+		 highlight_color_by_state(frame_col, a->is_selected()),
+		 std::min(std::max((int)lrint(2.5 / scaling_x), 1), 3)
+		 );
+
+  if(a->has_name() && screen_max_x - screen_min_x > a->get_name().length() * FONT_SIZE) {
+    draw_string(renderer, render_params, dst_img,
+		a->get_name().c_str(), screen_min_x + 5, screen_min_y + 2*5 + FONT_SIZE);
+  }
+
+}
+
 ret_t degate::render_gates(RENDERER_FUNC_PARAMS) {
   ret_t ret;
   
@@ -829,6 +861,23 @@ ret_t degate::render_vias(RENDERER_FUNC_PARAMS) {
     if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(*iter)) {
       if(RET_IS_NOT_OK(ret = render_via(renderer, data_ptr, dst_img, via,
 					 min_x, min_y, max_x, max_y))) return ret;
+
+    }
+
+  }
+  return RET_OK;
+}
+
+ret_t degate::render_annotations(RENDERER_FUNC_PARAMS) {
+  ret_t ret;
+  LogicModel_shptr lmodel = data_ptr->lmodel;
+  Layer_shptr layer_ptr = lmodel->get_layer(layer);
+  for(Layer::qt_region_iterator iter = layer_ptr->region_begin(min_x, max_x, min_y, max_y);
+      iter != layer_ptr->region_end(); ++iter) {
+
+    if(Annotation_shptr via = std::tr1::dynamic_pointer_cast<Annotation>(*iter)) {
+      if(RET_IS_NOT_OK(ret = render_annotation(renderer, data_ptr, dst_img, via,
+					       min_x, min_y, max_x, max_y))) return ret;
 
     }
 

@@ -44,6 +44,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "SetOrientationWin.h"
 #include "ProjectSettingsWin.h"
 #include "ConnectionInspectorWin.h"
+#include "AnnotationListWin.h"
 #include "GenericTextInputWin.h"
 #include "RecognitionManager.h"
 #include "LayerConfigWin.h"
@@ -339,6 +340,9 @@ void MainWin::on_menu_project_close() {
     delete ciWin; 
     ciWin = NULL;
 
+    delete alWin; 
+    alWin = NULL;
+
     delete gcWin;
     gcWin = NULL;
 
@@ -584,8 +588,13 @@ void MainWin::update_gui_for_loaded_project() {
 
     adjust_scrollbars();
     
+    on_selection_revoked();
+
     ciWin = new ConnectionInspectorWin(this, main_project->get_logic_model());
     ciWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
+
+    alWin = new AnnotationListWin(this, main_project->get_logic_model());
+    alWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
     
     gcWin = new GridConfigWin(this, 
 			      main_project->get_regular_horizontal_grid(),
@@ -1203,6 +1212,7 @@ void MainWin::on_selection_activated() {
 
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateCreateBySelection", true);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", true);
+    menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicCreateAnnotation", true);
 
     LogicModel_shptr lmodel = main_project->get_logic_model();
     Layer_shptr layer = lmodel->get_current_layer();
@@ -1230,6 +1240,7 @@ void MainWin::on_selection_revoked() {
 
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateCreateBySelection", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", false);
+    menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicCreateAnnotation", false);
   }
 }
 
@@ -1710,6 +1721,32 @@ void MainWin::on_menu_logic_isolate() {
 
 void MainWin::on_menu_logic_connection_inspector() {
   if(main_project != NULL && ciWin != NULL) ciWin->show();
+}
+
+
+void MainWin::on_menu_logic_create_annotaion() {
+  if(main_project == NULL) return;
+
+  Annotation_shptr annotation(new Annotation(imgWin.get_selection_min_x(),
+					     imgWin.get_selection_max_x(),
+					     imgWin.get_selection_min_y(),
+					     imgWin.get_selection_max_y()));
+
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+  assert(lmodel != NULL);
+  Layer_shptr layer = lmodel->get_current_layer();
+  assert(layer != NULL);
+
+  lmodel->add_object(layer->get_layer_pos(), annotation);
+
+  main_project->set_changed();
+  imgWin.update_screen();
+
+  if(alWin != NULL) alWin->refresh();
+}
+
+void MainWin::on_menu_logic_show_annotaions() {
+  if(main_project != NULL && alWin != NULL) alWin->show();
 }
 
 

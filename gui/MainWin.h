@@ -28,6 +28,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "GridConfigWin.h"
 #include "ObjectMatchingWin.h"
 #include "ConnectionInspectorWin.h"
+#include "AnnotationListWin.h"
 #include "HlObjectSet.h"
 #include "MenuManager.h"
 #include "LayerConfigWin.h"
@@ -112,6 +113,8 @@ class MainWin : public Gtk::Window  {
   virtual void remove_objects();
   virtual void on_menu_logic_connection_inspector();
   virtual void on_menu_logic_auto_name_gates(degate::AutoNameGates::ORIENTATION orientation);
+  virtual void on_menu_logic_create_annotaion();
+  virtual void on_menu_logic_show_annotaions();
 
   // Gate menu
   virtual void on_menu_gate_create_by_selection();
@@ -162,6 +165,7 @@ class MainWin : public Gtk::Window  {
   ImageWin imgWin;
   InProgressWin * ipWin;
   ConnectionInspectorWin * ciWin;
+  AnnotationListWin * alWin;
   GridConfigWin * gcWin;
   LayerConfigWin * lcWin;
 

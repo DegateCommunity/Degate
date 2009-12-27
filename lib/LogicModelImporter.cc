@@ -99,6 +99,9 @@ void LogicModelImporter::parse_logic_model_element(const xmlpp::Element * const 
   const xmlpp::Element * nets_elem = get_dom_twig(lm_elem, "nets");
   if(nets_elem != NULL) parse_nets_element(nets_elem, lmodel);
 
+  const xmlpp::Element * annotations_elem = get_dom_twig(lm_elem, "annotations");
+  if(annotations_elem != NULL) parse_annotations_element(annotations_elem, lmodel);
+
 }
 
 void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_element, 
@@ -333,4 +336,46 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
     }
   }
 
+}
+
+
+void LogicModelImporter::parse_annotations_element(const xmlpp::Element * const annotations_element, 
+						   LogicModel_shptr lmodel) 
+  throw(InvalidPointerException) {
+
+  if(annotations_element == NULL || lmodel == NULL) throw InvalidPointerException();
+
+  const xmlpp::Node::NodeList annotation_list = annotations_element->get_children("annotation");
+  for(xmlpp::Node::NodeList::const_iterator iter = annotation_list.begin();
+      iter != annotation_list.end(); 
+      ++iter) {
+
+    if(const xmlpp::Element* annotation_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
+
+      object_id_t object_id = parse_number<object_id_t>(annotation_elem, "id");
+
+      int min_x = parse_number<int>(annotation_elem, "min-x");
+      int min_y = parse_number<int>(annotation_elem, "min-y");
+      int max_x = parse_number<int>(annotation_elem, "max-x");
+      int max_y = parse_number<int>(annotation_elem, "max-y");
+
+      int layer = parse_number<int>(annotation_elem, "layer");
+      Annotation::class_id_t class_id = parse_number<Annotation::class_id_t>(annotation_elem, "class-id");
+
+      const Glib::ustring name(annotation_elem->get_attribute_value("name"));
+      const Glib::ustring description(annotation_elem->get_attribute_value("description"));
+      const Glib::ustring fill_color_str(annotation_elem->get_attribute_value("fill-color"));
+      const Glib::ustring frame_color_str(annotation_elem->get_attribute_value("frame-color"));
+
+
+      Annotation_shptr annotation(new Annotation(min_x, max_x, min_y, max_y, class_id));
+      annotation->set_name(name.c_str());
+      annotation->set_description(description.c_str());
+      annotation->set_object_id(object_id);
+      annotation->set_fill_color(parse_color_string(fill_color_str));
+      annotation->set_frame_color(parse_color_string(frame_color_str));
+
+      lmodel->add_object(layer, annotation);
+    }
+  }
 }

@@ -61,6 +61,9 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
     xmlpp::Element* nets_elem = root_elem->add_child("nets");
     if(nets_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
+    xmlpp::Element* annotations_elem = root_elem->add_child("annotations");
+    if(annotations_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
     for(LogicModel::layer_collection::iterator layer_iter = lmodel->layers_begin();
 	layer_iter != lmodel->layers_end(); ++layer_iter) {
 
@@ -82,7 +85,8 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 	else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
 	  add_wire(wires_elem, wire, layer_pos);
 
-
+	else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
+	  add_annotation(annotations_elem, annotation, layer_pos);
 	
       }
     }
@@ -212,4 +216,28 @@ void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer
   via_elem->set_attribute("frame-color", to_color_string(via->get_frame_color()));
 
   via_elem->set_attribute("direction", via->get_direction_as_string());
+}
+
+
+void LogicModelExporter::add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos) 
+  throw(std::runtime_error) {
+  
+  xmlpp::Element* annotation_elem = annotations_elem->add_child("annotation");
+  if(annotation_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
+  object_id_t new_oid = oid_rewriter->get_new_object_id(annotation->get_object_id());
+  annotation_elem->set_attribute("id", number_to_string<object_id_t>(new_oid));
+  annotation_elem->set_attribute("name", annotation->get_name());
+  annotation_elem->set_attribute("description", annotation->get_description());
+  annotation_elem->set_attribute("layer", number_to_string<layer_position_t>(layer_pos));
+  annotation_elem->set_attribute("class-id", number_to_string<layer_position_t>(annotation->get_class_id()));
+
+  annotation_elem->set_attribute("min-x", number_to_string<int>(annotation->get_min_x()));
+  annotation_elem->set_attribute("min-y", number_to_string<int>(annotation->get_min_y()));
+  annotation_elem->set_attribute("max-x", number_to_string<int>(annotation->get_max_x()));
+  annotation_elem->set_attribute("max-y", number_to_string<int>(annotation->get_max_y()));
+
+  annotation_elem->set_attribute("fill-color", to_color_string(annotation->get_fill_color()));
+  annotation_elem->set_attribute("frame-color", to_color_string(annotation->get_frame_color()));
+
 }

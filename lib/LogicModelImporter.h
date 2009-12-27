@@ -57,6 +57,10 @@ private:
 			  LogicModel_shptr lmodel) 
     throw(XMLAttributeParseException, InvalidPointerException, CollectionLookupException);
 
+  void parse_annotations_element(const xmlpp::Element * const annotations_element, 
+				 LogicModel_shptr lmodel) 
+    throw(InvalidPointerException);
+
 public:
   
   /**

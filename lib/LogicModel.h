@@ -22,21 +22,22 @@
 #ifndef __LOGICMODEL_H__
 #define __LOGICMODEL_H__
 
-#include "globals.h"
-#include "LogicModelObjectBase.h"
-#include "PlacedLogicModelObject.h"
-#include "Net.h"
-#include "Layer.h"
+#include <globals.h>
+#include <LogicModelObjectBase.h>
+#include <PlacedLogicModelObject.h>
+#include <Net.h>
+#include <Layer.h>
 
-#include "Rectangle.h"
+#include <Rectangle.h>
 
-#include "Via.h"
-#include "Wire.h"
-#include "Gate.h"
-#include "GatePort.h"
-#include "GateTemplate.h"
-#include "GateTemplatePort.h"
-#include "GateLibrary.h"
+#include <Via.h>
+#include <Wire.h>
+#include <Gate.h>
+#include <GatePort.h>
+#include <GateTemplate.h>
+#include <GateTemplatePort.h>
+#include <GateLibrary.h>
+#include <Annotation.h>
 
 #include <tr1/memory>
 #include <set>
@@ -60,6 +61,7 @@ namespace degate {
 
     typedef std::map<object_id_t, PlacedLogicModelObject_shptr> object_collection;
     typedef std::map<object_id_t, Net_shptr> net_collection;
+    typedef std::map<object_id_t, Annotation_shptr> annotation_collection;
 
     typedef std::vector<Layer_shptr> layer_collection;
     typedef std::map<object_id_t, Gate_shptr > gate_collection;
@@ -76,6 +78,7 @@ namespace degate {
     gate_collection gates;
     std::map<object_id_t, Wire_shptr > wires;
     std::map<object_id_t, Via_shptr > vias;
+    annotation_collection annotations;
     net_collection nets;
     
     /**
@@ -88,7 +91,9 @@ namespace degate {
      * Counter to generate new object IDs.
      */
     object_id_t object_id_counter;
-  
+
+  private:
+
     /**
      * Get a layer. Create the layer if it doesn't exists.
      * @see get_layer
@@ -112,6 +117,16 @@ namespace degate {
      */
     
     void add_via(int layer_pos, Via_shptr o) throw(InvalidPointerException);
+
+    /**
+     * Add an annotation into the logic model. If the layer doesn't exists, the layer is created implicitly.
+     * If the annotation has no object ID, a new object ID for the via is generated.
+     * @param layer_pos The layer position (starting at 0).
+     * @param o A shared pointer to the object.
+     */
+    
+    void add_annotation(int layer_pos, Annotation_shptr o) throw(InvalidPointerException);
+
 
     /**
      * Add a gate into the logic model. If the layer doesn't exists, the layer is
@@ -152,6 +167,13 @@ namespace degate {
      */
     
     void remove_via(Via_shptr o) throw(InvalidPointerException);
+
+    /**
+     * Remove an annotation from the logic model.
+     * @param o A shared pointer to the object.
+     */
+    
+    void remove_annotation(Annotation_shptr o) throw(InvalidPointerException);
 
 
   public:
@@ -448,6 +470,21 @@ namespace degate {
      */
 
     net_collection::iterator nets_end();
+
+
+    /**
+     * Get a iterator to iterate over all annotations.
+     */
+
+    annotation_collection::iterator annotations_begin();
+
+   
+    /**
+     * Get an end iterator for the iteration over all annotations.
+     */
+
+    annotation_collection::iterator annotations_end();
+
     
     /**
      * Print the content of the logic model into an ostream.

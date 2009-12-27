@@ -62,7 +62,9 @@ namespace degate {
     color_t il_up_color;
     color_t il_down_color;
     color_t grid_color;
-  
+
+    color_t annotation_frame_color;
+    color_t annotation_fill_color;
   };
 
   typedef struct render_params render_params_t;
@@ -132,6 +134,7 @@ namespace degate {
   ret_t render_gates(RENDERER_FUNC_PARAMS);
   ret_t render_wires(RENDERER_FUNC_PARAMS);
   ret_t render_vias(RENDERER_FUNC_PARAMS);
+  ret_t render_annotations(RENDERER_FUNC_PARAMS);
   ret_t render_grid(RENDERER_FUNC_PARAMS);
 
   ret_t renderer_write_image(RendererImage_shptr img, const char * const filename);

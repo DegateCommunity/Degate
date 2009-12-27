@@ -20,20 +20,18 @@
  */
 
 #include <degate.h>
-#include "globals.h"
-#include "Layer.h"
+#include <globals.h>
+#include <Layer.h>
 
-#include "LogicModelObjectBase.h"
-#include "Net.h"
+#include <LogicModelObjectBase.h>
+#include <Net.h>
 
-#include "ConnectedLogicModelObject.h"
-#include "degate_exceptions.h"
+#include <ConnectedLogicModelObject.h>
+#include <degate_exceptions.h>
 
-//#include "GateTemplate.h"
-//#include "GateTemplatePort.h"
-#include "GateLibrary.h"
+#include <GateLibrary.h>
 
-#include "LogicModel.h"
+#include <LogicModel.h>
 
 using namespace std;
 using namespace degate;
@@ -151,6 +149,12 @@ void LogicModel::add_via(int layer_pos, Via_shptr o) throw(InvalidPointerExcepti
   vias[o->get_object_id()] = o;
 }
 
+void LogicModel::add_annotation(int layer_pos, Annotation_shptr o) throw(InvalidPointerException) {
+  if(o == NULL) throw InvalidPointerException();
+  if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
+  annotations[o->get_object_id()] = o;
+}
+
 void LogicModel::add_gate(int layer_pos, Gate_shptr o) throw(InvalidPointerException) {
 
   if(o == NULL) throw InvalidPointerException();
@@ -194,6 +198,11 @@ void LogicModel::remove_via(Via_shptr o) throw(InvalidPointerException) {
   vias.erase(o->get_object_id());
 }
 
+void LogicModel::remove_annotation(Annotation_shptr o) throw(InvalidPointerException) {
+  if(o == NULL) throw InvalidPointerException();
+  annotations.erase(o->get_object_id());
+}
+
 
 
 
@@ -210,6 +219,8 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
     add_wire(layer_pos, wire);
   else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
     add_via(layer_pos, via);
+  else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
+    add_annotation(layer_pos, annotation);
 
   if(objects.find(object_id) != objects.end()) {
     std::ostringstream stm;
@@ -246,6 +257,8 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPoin
       remove_wire(wire);
     else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
       remove_via(via);
+    else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
+      remove_annotation(annotation);
     
     layer->remove_object(o);
   }
@@ -566,6 +579,14 @@ LogicModel::net_collection::iterator LogicModel::nets_begin() {
 
 LogicModel::net_collection::iterator LogicModel::nets_end() {
   return nets.end();
+}
+
+LogicModel::annotation_collection::iterator LogicModel::annotations_begin() {
+  return annotations.begin();
+}
+
+LogicModel::annotation_collection::iterator LogicModel::annotations_end() {
+  return annotations.end();
 }
 
 
