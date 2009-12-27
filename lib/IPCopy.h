@@ -67,7 +67,8 @@ namespace degate {
       max_x(_max_x),
       min_y(_min_y),
       max_y(_max_y),
-      work_on_region(true) { }
+      work_on_region(true) { 
+    }
 
     /**
      * The destructor.
@@ -84,8 +85,10 @@ namespace degate {
       std::tr1::shared_ptr<ImageTypeIn> img_in = 
 	std::tr1::dynamic_pointer_cast<ImageTypeIn>(_in);
 
-      std::tr1::shared_ptr<ImageTypeOut> 
-	img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
+      std::tr1::shared_ptr<ImageTypeOut> img_out
+	(work_on_region ? 
+	 new ImageTypeOut(max_x - min_x, max_y - min_y) :
+	 new ImageTypeOut(_in->get_width(), _in->get_height()));
 
       assert(img_in != NULL);
       assert(img_out != NULL);
