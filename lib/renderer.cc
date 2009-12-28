@@ -57,17 +57,6 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace degate;
 
-typedef struct {
-  renderer_t * const renderer;
-  render_params_t * const render_params;
-  RendererImage_shptr dst_img;
-
-  unsigned int min_x;  // real
-  unsigned int min_y;
-  unsigned int max_x;
-  unsigned int max_y;
-} qtree_callback_params_t;
-
 
 void gr_map_clear(RendererImage_shptr img) {
   clear_image<RendererImage>(img);
