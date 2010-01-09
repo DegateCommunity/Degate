@@ -22,6 +22,7 @@
 #include "Line.h"
 #include "globals.h"
 #include <math.h>
+#include <stdlib.h>
 
 using namespace degate;
 
