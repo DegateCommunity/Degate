@@ -170,7 +170,7 @@ namespace degate{
 	  if(a1.get_distance(b1) <= search_radius_along ||
 	     a1.get_distance(b2) <= search_radius_along ||
 	     a2.get_distance(b1) <= search_radius_along ||
-	     a2.get_distance(b2) <= search_radius_along)
+	     a2.get_distance(b2) <= search_radius_along) {
 
 	    if(elem->get_orientation() == LineSegment::HORIZONTAL) {
 	      int _min = std::min(a1.get_y(), 
@@ -191,7 +191,7 @@ namespace degate{
 
 	      if((unsigned int)(_max - _min) < search_radius_across) return elem2;
 	    }
-
+	  }
 	}
       }
       return LineSegment_shptr();
