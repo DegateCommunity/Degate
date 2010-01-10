@@ -28,9 +28,10 @@
 #include "PlacedLogicModelObject.h"
 
 #include "Rectangle.h"
-#include "PlacedLogicModelObject.h"
 
 #include <set>
+#include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 
 namespace degate {
 
@@ -60,11 +61,38 @@ namespace degate {
   class Annotation : public Rectangle, public PlacedLogicModelObject {
     
   public:
+
     typedef unsigned int class_id_t;
+
+    /**
+     * Enums to declare the type of annotation.
+     */
     
+    enum ANNOTATION_TYPE {
+      UNDEFINED = 0,
+      SUBPROJECT = 1
+    };
+    
+    typedef std::map<std::string, /* param name */
+		     std::string  /* param value */ > parameter_set_type;
+
   private:
+
     class_id_t class_id;
-    
+    parameter_set_type parameters;
+
+  protected:
+
+
+    /**
+     * Set a parameter.
+     */
+
+    void set_parameter(std::string const& parameter_name, 
+		       std::string const& parameter_value) {
+      parameters[parameter_name] = parameter_value;
+    }
+
   public:
     
     /**
@@ -72,7 +100,7 @@ namespace degate {
      */
 
     Annotation(int _min_x, int _max_x, int _min_y, int _max_y, 
-	       class_id_t _class_id = 0);
+	       class_id_t _class_id = UNDEFINED);
    
     
     /**
@@ -138,6 +166,51 @@ namespace degate {
       return Rectangle::in_shape(x, y);
     }
 
+
+    /**
+     * Get a parameter value.
+     *
+     * @exception boost::bad_lexical_cast This exception is thrown if the parameter value
+     *   cannot be converted to the desired type.
+     * @exception CollectionLookupException This exception is thrown if the parameter is
+     *   not stored in the lookup table.
+     */
+
+    template<typename NewType>
+    NewType get_parameter(std::string parameter_name) 
+      const throw(boost::bad_lexical_cast, CollectionLookupException) {
+
+      parameter_set_type::const_iterator iter = parameters.find(parameter_name);
+      if(iter == parameters.end()) {
+	boost::format f("Failed to lookup parameter %1%.");
+	f % parameter_name;
+	throw CollectionLookupException(f.str());
+      }
+
+      if(typeid(NewType) == typeid(std::string) ||
+	 typeid(NewType) == typeid(boost::filesystem::path)) {
+
+	return NewType(iter->second);
+      }
+
+      try {
+	return boost::lexical_cast<NewType>(iter->second);
+      }
+      catch(boost::bad_lexical_cast &) {
+	debug(TM, "Failed to convert value string '%s'.", iter->second.c_str());
+	throw;
+      }
+    }
+
+    /**
+     * Get an iterator to iterate over parameters.
+     */
+    parameter_set_type::const_iterator parameters_begin() const;
+
+    /**
+     * Get an end marker for the parameter iteration.
+     */
+    parameter_set_type::const_iterator parameters_end() const;
   };
 
 }

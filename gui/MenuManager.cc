@@ -99,6 +99,17 @@ void MenuManager::create_and_bind_project_menu() {
 					    Gtk::Stock::SAVE, "_Save", "Save a project"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_save));
 
+  m_refActionGroup->add(Gtk::Action::create("ProjectCreateSubproject",
+					    "Create subproject for selection", 
+					    "Create subproject for selection"),
+			sigc::mem_fun(*window, &MainWin::on_menu_project_create_subproject));
+
+  m_refActionGroup->add(Gtk::Action::create("ProjectOpenParent",
+					    "Open parent project", 
+					    "Open parent project"),
+			sigc::mem_fun(*window, &MainWin::on_menu_project_open_parent));
+
+
   m_refActionGroup->add(Gtk::Action::create("ProjectSettings",
 					    Gtk::Stock::PREFERENCES,
 					    "Project settings", "Project settings"),
@@ -390,6 +401,9 @@ void MenuManager::setup_menu_structure() {
         "      <menuitem action='ProjectSave'/>"
         "      <menuitem action='ProjectExportArchive'/>"
         "      <separator/>"
+        "      <menuitem action='ProjectCreateSubproject'/>"
+        "      <menuitem action='ProjectOpenParent'/>"
+        "      <separator/>"
         "      <menuitem action='ProjectSettings'/>"
         "      <separator/>"
         "      <menuitem action='ExportViewAsGraphics'/>"
@@ -648,9 +662,12 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectClose", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectSave", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectExportArchive", state);
+  set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectOpenParent", state);
+
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectSettings", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ExportViewAsGraphics", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ExportLayerAsGraphics", state);
+  set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectCreateSubproject", state);
 
   set_menu_item_sensitivity("/MenuBar/ViewMenu/ViewZoomIn", state);
   set_menu_item_sensitivity("/MenuBar/ViewMenu/ViewZoomOut", state);

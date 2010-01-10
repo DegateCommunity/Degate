@@ -55,6 +55,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <ProjectExporter.h>
 #include <ProjectImporter.h>
 #include <LogicModelHelper.h>
+#include <SubProjectAnnotation.h>
 
 #define ZOOM_STEP 1.3
 #define ZOOM_STEP_MOUSE_SCROLL 2.0
@@ -111,7 +112,8 @@ MainWin::MainWin() :
   imgWin.grab_focus();
 
   project_to_open = NULL;
-  Glib::signal_idle().connect( sigc::mem_fun(*this, &MainWin::on_idle));
+  //Glib::signal_idle().connect( sigc::mem_fun(*this, &MainWin::on_idle));
+  Glib::signal_timeout().connect( sigc::mem_fun(*this, &MainWin::on_idle), 5000);
 
 
   if(getuid() == 0) {
@@ -155,7 +157,6 @@ void MainWin::update_title() {
 
 
 bool MainWin::on_idle() {
-
   if(project_to_open != NULL) {
     open_project(project_to_open);
     project_to_open = NULL;
@@ -267,7 +268,22 @@ void MainWin::on_menu_project_quit() {
 }
 
 void MainWin::on_menu_project_new() {
+  Gtk::FileChooserDialog dialog("Please choose a project folder", Gtk::FILE_CHOOSER_ACTION_CREATE_FOLDER);
+  dialog.set_transient_for(*this);
+  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+  dialog.add_button("Select", Gtk::RESPONSE_OK);
+  
+  int result = dialog.run();
+  std::string project_dir = dialog.get_filename();
+  dialog.hide();
 
+  if(result == Gtk::RESPONSE_OK) {
+    create_new_project(project_dir);
+  }
+
+}
+
+void MainWin::create_new_project(std::string const& project_dir) {
   if(main_project) on_menu_project_close();
 
   NewProjectWin npw_dialog(this);
@@ -275,44 +291,26 @@ void MainWin::on_menu_project_new() {
   unsigned int width = npw_dialog.get_width();
   unsigned int height = npw_dialog.get_height();
   unsigned int layers = npw_dialog.get_layers();
-
+  
   if(width == 0 || height == 0 || layers == 0) {
     Gtk::MessageDialog dialog(*this, "Invalid value", true, Gtk::MESSAGE_ERROR);
     dialog.set_title("The values you entered are invalid.");
     dialog.run();
   }
   else {
-    Gtk::FileChooserDialog dialog("Please choose a project folder", Gtk::FILE_CHOOSER_ACTION_CREATE_FOLDER);
-    dialog.set_transient_for(*this);
-    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-    dialog.add_button("Select", Gtk::RESPONSE_OK);
-    
-    int result = dialog.run();
-    std::string project_dir = dialog.get_filename();
-    dialog.hide();
-
-    // create the project
-
-    switch(result) {
-    case(Gtk::RESPONSE_OK): {
+    try {
+      if(!file_exists(project_dir)) create_directory(project_dir);
       main_project = Project_shptr(new Project(width, height, project_dir, layers));
-      
-      
       update_gui_for_loaded_project();
-
       lcWin->run();
-
       set_layer(get_first_enabled_layer(main_project->get_logic_model()));
-      
       on_menu_project_save();
     }
-      break;
-    case(Gtk::RESPONSE_CANCEL):
-      break;
+    catch(degate::FileSystemException & ex) {
+      error_dialog("Error: Can't create a new project.", ex.what());
     }
 
   }
-
 }
 
 void MainWin::on_menu_project_close() {
@@ -611,6 +609,45 @@ void MainWin::update_gui_for_loaded_project() {
     imgWin.update_screen();  
   }
 }
+
+void MainWin::on_menu_project_create_subproject() {
+  if(main_project == NULL) return;
+
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+  assert(lmodel != NULL);
+  Layer_shptr layer = lmodel->get_current_layer();
+  assert(layer != NULL);
+
+  boost::format f("subproject_%1%");
+  f % lmodel->get_new_object_id();
+
+  SubProjectAnnotation_shptr annotation
+    (new SubProjectAnnotation(imgWin.get_selection_min_x(),
+			      imgWin.get_selection_max_x(),
+			      imgWin.get_selection_min_y(),
+			      imgWin.get_selection_max_y(), 
+			      f.str()));
+  annotation->set_fill_color(0x7f0000ff);
+
+  lmodel->add_object(layer->get_layer_pos(), annotation);
+
+  main_project->set_changed();
+  imgWin.update_screen();
+
+  if(alWin != NULL) alWin->refresh();
+}
+
+void MainWin::on_menu_project_open_parent() {
+  if(main_project == NULL) return;
+  
+  std::string parent_dir = join_pathes(main_project->get_project_directory(), "..");
+  if(file_exists(join_pathes(parent_dir, "project.xml"))) {
+    open_project(parent_dir);
+  }
+  else
+    error_dialog("Error", "Current project has no parent project.");
+}
+
 
 void MainWin::set_layer(Layer_shptr layer) {
   set_layer(layer->get_layer_pos());
@@ -1213,6 +1250,7 @@ void MainWin::on_selection_activated() {
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateCreateBySelection", true);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", true);
     menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicCreateAnnotation", true);
+    menu_manager->set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectCreateSubproject", true);
 
     LogicModel_shptr lmodel = main_project->get_logic_model();
     Layer_shptr layer = lmodel->get_current_layer();
@@ -1241,6 +1279,8 @@ void MainWin::on_selection_revoked() {
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateCreateBySelection", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicCreateAnnotation", false);
+    menu_manager->set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectCreateSubproject", false);
+
   }
 }
 
@@ -1286,38 +1326,54 @@ void MainWin::on_mouse_scroll_up(unsigned int clicked_real_x, unsigned int click
 // @todo should have two params with real coords. the prevents, that we need a coord transformation
 bool MainWin::on_imgwin_clicked(GdkEventButton * event) {
 
-  if(main_project && (event->type == GDK_BUTTON_PRESS)) {
-    if(event->button == 3) {
-      imgWin.coord_screen_to_real((unsigned int)(event->x), (unsigned int)(event->y), &last_click_on_real_x, &last_click_on_real_y);
-      menu_manager->show_popup_menu(event->button, event->time);
-    }
-    else if(event->button == 1) {
-      unsigned int real_x, real_y;
-      imgWin.coord_screen_to_real((unsigned int)(event->x), (unsigned int)(event->y), &real_x, &real_y);
+  if(main_project != NULL) {
 
-      if(tool == TOOL_SELECT && !imgWin.selection_active()) {
-	debug(TM, "call object_clicked()");
-	object_clicked(real_x, real_y);
-      }
-      else if(tool == TOOL_VIA_UP || tool == TOOL_VIA_DOWN) {
+    if(event->type == GDK_2BUTTON_PRESS) {
 
-	Via_shptr new_via(new Via(real_x, real_y,
-				  main_project->get_default_pin_diameter(),
-				  tool == TOOL_VIA_UP ? Via::DIRECTION_UP : Via::DIRECTION_DOWN));
-
-	assert(new_via);
-	
-	LogicModel_shptr lmodel = main_project->get_logic_model();
-
-	lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), 
-			   new_via);
-
-	main_project->set_changed();
-	imgWin.update_screen();
-
+      if(tool == TOOL_SELECT) {
+	debug(TM, "call object_double_clicked()");
+	unsigned int real_x, real_y;
+	imgWin.coord_screen_to_real
+	  ((unsigned int)(event->x), (unsigned int)(event->y), &real_x, &real_y);
+	object_double_clicked(real_x, real_y);
       }
     }
+    else if(event->type == GDK_BUTTON_PRESS) {
+      if(event->button == 3) {
+	imgWin.coord_screen_to_real
+	  ((unsigned int)(event->x), (unsigned int)(event->y), 
+	   &last_click_on_real_x, &last_click_on_real_y);
+	menu_manager->show_popup_menu(event->button, event->time);
+      }
+      else if(event->button == 1) {
+	unsigned int real_x, real_y;
+	imgWin.coord_screen_to_real
+	  ((unsigned int)(event->x), (unsigned int)(event->y), &real_x, &real_y);
+
+	if(tool == TOOL_SELECT && !imgWin.selection_active()) {
+	  debug(TM, "call object_clicked()");
+	  object_clicked(real_x, real_y);
+	}
+	else if(tool == TOOL_VIA_UP || tool == TOOL_VIA_DOWN) {
+	  
+	  Via_shptr new_via(new Via(real_x, real_y,
+				    main_project->get_default_pin_diameter(),
+				    tool == TOOL_VIA_UP ? Via::DIRECTION_UP : Via::DIRECTION_DOWN));
+	  
+	  assert(new_via);
+	  
+	  LogicModel_shptr lmodel = main_project->get_logic_model();
+	  
+	  lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), 
+			     new_via);
+	  
+	  main_project->set_changed();
+	  imgWin.update_screen();
+	  
+	}
+      }
       
+    }
   }
   return true;
 }
@@ -1404,6 +1460,24 @@ void MainWin::update_gui_on_selection_change() {
 					  selected_objects.size() >= 1 && 
 					  selected_objects_are_interconnectable() ? true : false);
 
+}
+
+void MainWin::object_double_clicked(unsigned int real_x, unsigned int real_y) {
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+  Layer_shptr layer = lmodel->get_current_layer();
+  PlacedLogicModelObject_shptr plo = layer->get_object_at_position(real_x, real_y);
+
+  if(SubProjectAnnotation_shptr sp = 
+     std::tr1::dynamic_pointer_cast<SubProjectAnnotation>(plo)) {
+    debug(TM, "double clicked subproject");
+    std::string dir = join_pathes(main_project->get_project_directory(), sp->get_path());
+    debug(TM, "Will open or create project at %s", dir.c_str());
+    
+    if(file_exists(dir))
+      open_project(dir);
+    else 
+      create_new_project(dir);
+  }
 }
 
 void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {

@@ -38,7 +38,7 @@ Annotation::class_id_t Annotation::get_class_id() const {
   return class_id; 
 }
 
-void Annotation::set_class_id(class_id_t _class_id) { 
+void Annotation::set_class_id(Annotation::class_id_t _class_id) { 
   class_id = _class_id; 
 }
 
@@ -56,7 +56,7 @@ void Annotation::print(std::ostream & os, int n_tabs) const {
 
   os
     << gen_tabs(n_tabs) << "Annotation name  : " << get_name() << std::endl
-    << gen_tabs(n_tabs) << "Ddescription     : " << get_description() << std::endl
+    << gen_tabs(n_tabs) << "Description      : " << get_description() << std::endl
     << gen_tabs(n_tabs) << "Object ID        : " << get_object_id() << std::endl
     << gen_tabs(n_tabs) << "Bounding box     : " << Rectangle::get_bounding_box().to_string() << std::endl
     << gen_tabs(n_tabs) << "Annotation class : " << get_class_id() << std::endl
@@ -64,4 +64,12 @@ void Annotation::print(std::ostream & os, int n_tabs) const {
 
   os << std::endl;
 
+}
+
+Annotation::parameter_set_type::const_iterator Annotation::parameters_begin() const {
+  return parameters.begin();
+}
+
+Annotation::parameter_set_type::const_iterator Annotation::parameters_end() const {
+  return parameters.end();
 }

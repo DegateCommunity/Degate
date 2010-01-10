@@ -21,6 +21,7 @@
 
 #include <degate.h>
 #include <LogicModelImporter.h>
+#include <SubProjectAnnotation.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -368,7 +369,15 @@ void LogicModelImporter::parse_annotations_element(const xmlpp::Element * const 
       const Glib::ustring frame_color_str(annotation_elem->get_attribute_value("frame-color"));
 
 
-      Annotation_shptr annotation(new Annotation(min_x, max_x, min_y, max_y, class_id));
+      Annotation_shptr annotation;
+
+      if(class_id == Annotation::SUBPROJECT) {
+	const std::string path = annotation_elem->get_attribute_value("subproject-directory");
+	annotation = Annotation_shptr(new SubProjectAnnotation(min_x, max_x, min_y, max_y, path));
+      }
+      else
+	annotation = Annotation_shptr(new Annotation(min_x, max_x, min_y, max_y, class_id));
+
       annotation->set_name(name.c_str());
       annotation->set_description(description.c_str());
       annotation->set_object_id(object_id);
