@@ -279,12 +279,17 @@ void MenuManager::create_and_bind_logic_menu() {
   m_refActionGroup->add(Gtk::Action::create("LogicCreateAnnotation", 
 					    "Create an annotation", 
 					    "Create an annotaion"),
-			sigc::mem_fun(*window, &MainWin::on_menu_logic_create_annotaion));
+			sigc::mem_fun(*window, &MainWin::on_menu_logic_create_annotation));
 
   m_refActionGroup->add(Gtk::Action::create("LogicShowAnnotations", 
 					    "Show list of annotations", 
 					    "Show list of annotations"),
-			sigc::mem_fun(*window, &MainWin::on_menu_logic_show_annotaions));
+			sigc::mem_fun(*window, &MainWin::on_menu_logic_show_annotations));
+
+  m_refActionGroup->add(Gtk::Action::create("LogicShowModules", 
+					    "Show list of modules", 
+					    "Show list of modules"),
+			sigc::mem_fun(*window, &MainWin::on_menu_logic_show_modules));
 
 
 
@@ -440,6 +445,8 @@ void MenuManager::setup_menu_structure() {
         "      <separator/>"
         "      <menuitem action='LogicCreateAnnotation'/>"
         "      <menuitem action='LogicShowAnnotations'/>"
+        "      <separator/>"
+        "      <menuitem action='LogicShowModules'/>"
         "      <separator/>"
         "      <menuitem action='LogicConnectionInspector'/>"  
         "    </menu>"
@@ -681,6 +688,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicCreateAnnotation", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicShowAnnotations", state);
+  set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicShowModules", state);
 
   set_menu_item_sensitivity("/MenuBar/GateMenu/GateList", state);
   set_menu_item_sensitivity("/MenuBar/GateMenu/GatePortColors", state);

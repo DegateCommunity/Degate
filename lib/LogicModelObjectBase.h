@@ -144,6 +144,7 @@ namespace degate {
 
   };
 
+  typedef std::tr1::shared_ptr<LogicModelObjectBase> LogicModelObjectBase_shptr;
 }
 
 #endif

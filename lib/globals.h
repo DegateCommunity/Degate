@@ -113,6 +113,10 @@ namespace degate {
   class Annotation;
   typedef std::tr1::shared_ptr<Annotation> Annotation_shptr;
 
+  class Module;
+  typedef std::tr1::shared_ptr<Module> Module_shptr;
+
+
   typedef unsigned int layer_position_t;
 
 

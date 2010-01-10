@@ -44,6 +44,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "SetOrientationWin.h"
 #include "ProjectSettingsWin.h"
 #include "ConnectionInspectorWin.h"
+#include "ModuleWin.h"
 #include "AnnotationListWin.h"
 #include "GenericTextInputWin.h"
 #include "RecognitionManager.h"
@@ -593,6 +594,9 @@ void MainWin::update_gui_for_loaded_project() {
     ciWin = new ConnectionInspectorWin(this, main_project->get_logic_model());
     ciWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
+    modWin = new ModuleWin(this, main_project->get_logic_model());
+    modWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
+
     alWin = new AnnotationListWin(this, main_project->get_logic_model());
     alWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
     
@@ -647,7 +651,6 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
     center_view(bbox.get_center_x(), bbox.get_center_y(), layer->get_layer_pos());
 
     highlighted_objects.remove(obj_ptr);
-
     
   }
 }
@@ -1009,9 +1012,7 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 	dialog2.hide();
 	if(dialog2.run() == Gtk::RESPONSE_YES)
 	  lmodel->remove_gate_template(gate_template);
-
       }
-
       
       imgWin.update_screen();
       main_project->set_changed();
@@ -1724,7 +1725,7 @@ void MainWin::on_menu_logic_connection_inspector() {
 }
 
 
-void MainWin::on_menu_logic_create_annotaion() {
+void MainWin::on_menu_logic_create_annotation() {
   if(main_project == NULL) return;
 
   Annotation_shptr annotation(new Annotation(imgWin.get_selection_min_x(),
@@ -1745,10 +1746,13 @@ void MainWin::on_menu_logic_create_annotaion() {
   if(alWin != NULL) alWin->refresh();
 }
 
-void MainWin::on_menu_logic_show_annotaions() {
+void MainWin::on_menu_logic_show_annotations() {
   if(main_project != NULL && alWin != NULL) alWin->show();
 }
 
+void MainWin::on_menu_logic_show_modules() {
+  if(main_project != NULL && modWin != NULL) modWin->show();
+}
 
 void MainWin::on_menu_view_grid_config() {
 

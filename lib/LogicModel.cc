@@ -97,6 +97,7 @@ object_id_t LogicModel::get_new_object_id() {
 
 LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int layers) : 
   bounding_box(width, height),
+  main_module(new Module("main_module")),
   object_id_counter(0) {
 
   for(unsigned int i = 0; i < layers; i++)
@@ -131,7 +132,7 @@ PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id)
     throw CollectionLookupException(stm.str());
   }
   else {
-    return (*found).second;
+    return found->second;
   }
 }
 
@@ -144,7 +145,7 @@ void LogicModel::add_wire(int layer_pos, Wire_shptr o) throw(InvalidPointerExcep
 
 void LogicModel::add_via(int layer_pos, Via_shptr o) throw(InvalidPointerException) {
 
-  if(o == NULL) throw InvalidPointerException();
+  if(o == NULL) throw InvalidPointerException(); // 
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
   vias[o->get_object_id()] = o;
 }
@@ -160,6 +161,9 @@ void LogicModel::add_gate(int layer_pos, Gate_shptr o) throw(InvalidPointerExcep
   if(o == NULL) throw InvalidPointerException();
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
   gates[o->get_object_id()] = o;
+
+  assert(main_module != NULL);
+  main_module->add_gate(o);
   
   // iterate over ports and add them into the lookup table
   for(Gate::port_iterator iter = o->ports_begin(); iter != o->ports_end(); ++iter) {
@@ -181,11 +185,13 @@ void LogicModel::remove_gate_ports(Gate_shptr o) throw(InvalidPointerException) 
 }
 
 void LogicModel::remove_gate(Gate_shptr o) throw(InvalidPointerException) {
-      
+
   if(o == NULL) throw InvalidPointerException();
   remove_gate_ports(o);
   debug(TM, "remove gate");
   gates.erase(o->get_object_id());
+
+  main_module->remove_gate(o);
 }
 
 void LogicModel::remove_wire(Wire_shptr o) throw(InvalidPointerException) {
@@ -592,4 +598,8 @@ LogicModel::annotation_collection::iterator LogicModel::annotations_end() {
 
 unsigned int LogicModel::get_num_layers() const {
   return layers.size();
+}
+
+Module_shptr LogicModel::get_main_module() const {
+  return main_module;
 }

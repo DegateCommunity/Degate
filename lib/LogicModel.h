@@ -38,6 +38,7 @@
 #include <GateTemplatePort.h>
 #include <GateLibrary.h>
 #include <Annotation.h>
+#include <Module.h>
 
 #include <tr1/memory>
 #include <set>
@@ -62,6 +63,7 @@ namespace degate {
     typedef std::map<object_id_t, PlacedLogicModelObject_shptr> object_collection;
     typedef std::map<object_id_t, Net_shptr> net_collection;
     typedef std::map<object_id_t, Annotation_shptr> annotation_collection;
+    
 
     typedef std::vector<Layer_shptr> layer_collection;
     typedef std::map<object_id_t, Gate_shptr > gate_collection;
@@ -80,6 +82,7 @@ namespace degate {
     std::map<object_id_t, Via_shptr > vias;
     annotation_collection annotations;
     net_collection nets;
+    Module_shptr main_module;
     
     /**
      * Contains any placeable object.
@@ -514,6 +517,12 @@ namespace degate {
     void update_ports(GateTemplate_shptr gate_template)
       throw(InvalidPointerException);
 
+
+    /**
+     * Get the main module.
+     */
+
+    Module_shptr get_main_module() const;
 
   };
 
