@@ -22,6 +22,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #ifndef __ANNOTATIONLISTWIN_H__
 #define __ANNOTATIONLISTWIN_H__
 
+#include <globals.h>
 #include <degate.h>
 #include "GladeFileLoader.h"
 #include <gtkmm.h>
@@ -42,7 +43,7 @@ class AnnotationListWin : public Gtk::Window, private GladeFileLoader {
       add(m_col_object_ptr);
     }
     
-    Gtk::TreeModelColumn<unsigned int> m_col_layer_pos;
+    Gtk::TreeModelColumn<degate::layer_position_t> m_col_layer_pos;
     Gtk::TreeModelColumn<unsigned int> m_col_annotation_class;
     Gtk::TreeModelColumn<Glib::ustring> m_col_name;
     Gtk::TreeModelColumn<Glib::ustring> m_col_description;

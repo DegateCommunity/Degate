@@ -30,6 +30,7 @@
 
 #include <iostream>
 #include <set>
+#include <boost/lexical_cast.hpp>
 
 #include <globals.h>
 
@@ -92,9 +93,14 @@ AnnotationListWin::~AnnotationListWin() {
 void AnnotationListWin::refresh() {
   clear_list();
 
-  Annotation::class_id_t class_id = atoi(entry_filter_by_class->get_text().c_str());
-  int layer_pos = atoi(entry_filter_by_layer->get_text().c_str());
+  Annotation::class_id_t class_id;
+  layer_position_t layer_pos;
 
+  class_id = boost::lexical_cast<Annotation::class_id_t>(entry_filter_by_class->get_text().c_str());
+  layer_pos = boost::lexical_cast<layer_position_t>(entry_filter_by_layer->get_text().c_str());
+
+  // there should be no exception, but else we will pass it 
+  
   for(LogicModel::annotation_collection::iterator iter = lmodel->annotations_begin();
       iter != lmodel->annotations_end(); ++iter) {
     
