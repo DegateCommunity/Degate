@@ -90,6 +90,8 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_project_export_view();
   virtual void on_menu_project_export_layer();
   virtual void on_menu_project_recent_projects();
+  virtual void on_menu_project_create_subproject();
+  virtual void on_menu_project_open_parent();
   
   virtual void on_menu_view_zoom_in();
   virtual void on_menu_view_zoom_out();
@@ -141,6 +143,7 @@ class MainWin : public Gtk::Window  {
 
   virtual bool on_imgwin_clicked(GdkEventButton * event);
   void object_clicked(unsigned int real_x, unsigned int real_y);
+  void object_double_clicked(unsigned int real_x, unsigned int real_y);
   
   virtual void on_wire_tool_release();
   virtual void on_selection_activated(); // should be renamed to area selection
@@ -195,6 +198,8 @@ class MainWin : public Gtk::Window  {
 
   unsigned int last_click_on_real_x, last_click_on_real_y;
 
+
+  void create_new_project(std::string const& project_dir);
 
   void update_title();
   void add_to_recent_menu();

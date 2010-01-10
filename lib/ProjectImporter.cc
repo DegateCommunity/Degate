@@ -403,31 +403,5 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
 
   e = get_dom_twig(project_elem, "port-colors");
   if(e != NULL) parse_port_colors_element(e, parent_prj);
-
-
-
-  /*
-  xmlpp::Node::NodeList sproject_node_list = project_node->get_children("subprojects");
-
-  // there are subprojects
-  if(!sproject_node_list.empty()) {
-
-    xmlpp::Node::Node * sproject_node = sproject_node_list.front();
-    assert(sproject_node != NULL);
-
-
-    xmlpp::Node::NodeList project_node_list = sproject_node->get_children("subproject");
-
-    for(xmlpp::Node::NodeList::iterator iter = project_node_list.begin(); iter != project_node_list.end(); ++iter) {
-
-    if(const xmlpp::Element* child_project_node = dynamic_cast<const xmlpp::Element*>(*iter)) {
-	debug(TM, "parse subnode:");
-	Project_shptr sub_prj = parse_project_node(child_project_node);
-	assert(sub_prj != NULL);
-	parent_prj->add_sub_project(sub_prj);
-      }
-    }
-  }
-  */
   
 }

@@ -50,7 +50,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
   throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
 
   if(!is_directory(project_directory)) {
-    throw InvalidPathException("The path where the project should be exportet to is not a directory.");
+    throw InvalidPathException("The path where the project should be exported to is not a directory.");
   }
   else {
     ObjectIDRewriter_shptr oid_rewriter(new ObjectIDRewriter(enable_oid_rewrite));
@@ -92,9 +92,6 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
     add_grids(root_elem, prj);
     add_port_colors(root_elem, prj->get_port_color_manager());
 
-    xmlpp::Element* subprojects_elem = root_elem->add_child("subprojects");
-    if(subprojects_elem == NULL) throw(std::runtime_error("Failed to create node."));
-    
     doc.write_to_file_formatted(filename, "ISO-8859-1");
 
   }

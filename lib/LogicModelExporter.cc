@@ -240,4 +240,8 @@ void LogicModelExporter::add_annotation(xmlpp::Element* annotations_elem, Annota
   annotation_elem->set_attribute("fill-color", to_color_string(annotation->get_fill_color()));
   annotation_elem->set_attribute("frame-color", to_color_string(annotation->get_frame_color()));
 
+  for(Annotation::parameter_set_type::const_iterator iter = annotation->parameters_begin();
+      iter != annotation->parameters_end(); ++iter) {
+    annotation_elem->set_attribute(iter->first, iter->second);
+  }
 }

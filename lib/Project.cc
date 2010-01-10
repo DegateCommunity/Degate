@@ -38,7 +38,6 @@ void Project::print(std::ostream & os) {
     << "+ Directory: " << directory << endl
     << "+" << endl
     << "+ Changed: " << (changed ? "true" : "false") << endl
-    << "+ Number of sub projects: " << sub_projects.size() << endl
     << "+" << endl
     << "+ Default wire diameter: " << default_wire_diameter << endl
     << "+ Default pin diameter: " << default_pin_diameter << endl

@@ -72,7 +72,6 @@ namespace degate {
     diameter_t default_wire_diameter;
     length_t lambda;
     
-    ProjectList sub_projects;
     
     LogicModel_shptr logic_model;
 
@@ -174,9 +173,6 @@ namespace degate {
     
     void set_degate_version(std::string version_str) { degate_version = version_str; }
     std::string const&get_degate_version() { return degate_version; }
-    
-    ProjectList & get_sub_projects() { return sub_projects; }
-    void add_sub_project(Project_shptr prj) { sub_projects.push_back(prj); }
     
     void set_lambda(length_t l) { lambda = l; }
     length_t get_lambda() const { return lambda; }

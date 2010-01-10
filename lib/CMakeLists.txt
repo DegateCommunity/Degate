@@ -73,6 +73,7 @@ set(SOURCES
 	Wire.cc
 	Via.cc
 	Annotation.cc
+	SubProjectAnnotation.cc
 	LogicModelObjectBase.cc
 	ConnectedLogicModelObject.cc
 	PlacedLogicModelObject.cc
