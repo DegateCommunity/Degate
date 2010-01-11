@@ -42,11 +42,11 @@ class AnnotationListWin : public Gtk::Window, private GladeFileLoader {
       add(m_col_object_ptr);
     }
     
-    Gtk::TreeModelColumn<unsigned int> m_col_layer_pos;
-    Gtk::TreeModelColumn<unsigned int> m_col_annotation_class;
+    Gtk::TreeModelColumn<degate::layer_position_t> m_col_layer_pos;
+    Gtk::TreeModelColumn<degate::Annotation::class_id_t> m_col_annotation_class;
     Gtk::TreeModelColumn<Glib::ustring> m_col_name;
     Gtk::TreeModelColumn<Glib::ustring> m_col_description;
-    Gtk::TreeModelColumn<degate::PlacedLogicModelObject_shptr> m_col_object_ptr;
+    Gtk::TreeModelColumn<degate::Annotation_shptr> m_col_object_ptr;
   };
 
 
@@ -104,6 +104,9 @@ class AnnotationListWin : public Gtk::Window, private GladeFileLoader {
 
   virtual void on_selection_changed();
   virtual void on_entry_changed();
+  
+  void on_edited_name(const Glib::ustring & path, const Glib::ustring & new_text);
+  void on_edited_description(const Glib::ustring & path, const Glib::ustring & new_text);
 };
 
 #endif
