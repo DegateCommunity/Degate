@@ -513,10 +513,17 @@ void MainWin::on_project_load_finished() {
 
 void MainWin::project_open_thread(Glib::ustring project_dir) {
 
-  ProjectImporter importer;
-  Project_shptr prj(importer.import_all(project_dir));
+  assert(main_project == NULL);
 
-  main_project = prj;
+  try {
+    ProjectImporter importer;
+    Project_shptr prj(importer.import_all(project_dir));
+
+    main_project = prj;
+  }
+  catch(std::runtime_error const& ex) {
+    debug(TM, "Exception while opening a project: %s", ex.what());
+  }
 
   signal_project_open_finished_();
 }
