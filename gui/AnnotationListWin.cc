@@ -33,6 +33,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <globals.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace degate;
 
@@ -74,8 +75,27 @@ AnnotationListWin::AnnotationListWin(Gtk::Window *parent, degate::LogicModel_shp
       
       pTreeView->append_column("Layer", m_Columns.m_col_layer_pos);
       pTreeView->append_column("Class", m_Columns.m_col_annotation_class);
-      pTreeView->append_column("Name", m_Columns.m_col_name);
-      pTreeView->append_column("Description", m_Columns.m_col_description);
+
+      {
+	int view_column = pTreeView->append_column_editable("Name", m_Columns.m_col_name);
+	Gtk::CellRenderer *renderer = pTreeView->get_column_cell_renderer(view_column - 1);
+	Gtk::CellRendererText *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
+	if(text_renderer) {
+	  text_renderer->signal_edited().connect(sigc::mem_fun(*this, &AnnotationListWin::on_edited_name));
+	  text_renderer->property_editable() = true;
+	}
+      }
+
+      {
+	int view_column = pTreeView->append_column_editable("Description", m_Columns.m_col_description);
+	
+	Gtk::CellRenderer *renderer = pTreeView->get_column_cell_renderer(view_column - 1);
+	Gtk::CellRendererText *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
+	if(text_renderer) {
+	  text_renderer->signal_edited().connect(sigc::mem_fun(*this, &AnnotationListWin::on_edited_description));
+	  text_renderer->property_editable() = true;
+	}
+      }
 
       // signal
       Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = pTreeView->get_selection();
@@ -87,17 +107,48 @@ AnnotationListWin::AnnotationListWin(Gtk::Window *parent, degate::LogicModel_shp
 
 }
 
+
+
 AnnotationListWin::~AnnotationListWin() {
+}
+
+void AnnotationListWin::on_edited_name(const Glib::ustring & path, const Glib::ustring & new_text) {
+  Gtk::TreePath tpath(path);
+  Gtk::TreeModel::iterator iter = refListStore->get_iter(tpath);
+  if(iter) {
+    Gtk::TreeModel::Row row = *iter;
+    row[m_Columns.m_col_name] = new_text;
+    Annotation_shptr a = row[m_Columns.m_col_object_ptr];
+    assert(a != NULL);
+    a->set_name(new_text.c_str());
+  }
+
+}
+
+void AnnotationListWin::on_edited_description(const Glib::ustring & path, const Glib::ustring & new_text) {
+  Gtk::TreePath tpath(path);
+  Gtk::TreeModel::iterator iter = refListStore->get_iter(tpath);
+  if(iter) {
+    Gtk::TreeModel::Row row = *iter;
+    row[m_Columns.m_col_description] = new_text;
+    Annotation_shptr a = row[m_Columns.m_col_object_ptr];
+    assert(a != NULL);
+    a->set_description(new_text.c_str());
+  }
 }
 
 void AnnotationListWin::refresh() {
   clear_list();
 
-  Annotation::class_id_t class_id;
-  layer_position_t layer_pos;
+  Annotation::class_id_t class_id = 0;
+  layer_position_t layer_pos = 0;
 
-  class_id = boost::lexical_cast<Annotation::class_id_t>(entry_filter_by_class->get_text().c_str());
-  layer_pos = boost::lexical_cast<layer_position_t>(entry_filter_by_layer->get_text().c_str());
+  try {
+    class_id = boost::lexical_cast<Annotation::class_id_t>(entry_filter_by_class->get_text());
+    layer_pos = boost::lexical_cast<layer_position_t>(entry_filter_by_layer->get_text());
+  }
+  catch(boost::bad_lexical_cast &) {
+  }
 
   // there should be no exception, but else we will pass it 
   
@@ -107,18 +158,18 @@ void AnnotationListWin::refresh() {
     Annotation_shptr annotation = iter->second;
     
     Layer_shptr layer = annotation->get_layer();
-
+    
     bool add = true;
-
+    
     if(entry_filter_by_layer->get_text().size() > 0 &&
        layer->get_layer_pos() != layer_pos) add = false;
-
+    
     if(entry_filter_by_class->get_text().size() > 0 &&
        annotation->get_class_id() != class_id) add = false;
-
+    
     if(add) {
       Gtk::TreeModel::Row row = *(refListStore->append());
-    
+      
       row[m_Columns.m_col_layer_pos] = layer->get_layer_pos();
       row[m_Columns.m_col_annotation_class] = annotation->get_class_id();
       row[m_Columns.m_col_name] = annotation->get_name();
@@ -126,6 +177,7 @@ void AnnotationListWin::refresh() {
       row[m_Columns.m_col_object_ptr] = annotation;
     }
   }
+  
 }
 
 void AnnotationListWin::show() {
@@ -151,7 +203,7 @@ void AnnotationListWin::on_goto_button_clicked() {
     if(*iter) {
       Gtk::TreeModel::Row row = *iter;
 
-      PlacedLogicModelObject_shptr object_ptr(row[m_Columns.m_col_object_ptr]);
+      Annotation_shptr object_ptr(row[m_Columns.m_col_object_ptr]);
       assert(object_ptr != NULL);
 
       signal_goto_button_clicked_(object_ptr);

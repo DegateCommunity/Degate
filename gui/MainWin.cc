@@ -1214,12 +1214,12 @@ void MainWin::on_menu_help_about() {
 
   Gtk::AboutDialog about_dialog;
 
-  about_dialog.set_version("Version 0.0.6");
+  about_dialog.set_version("Version 0.0.7");
   about_dialog.set_logo(Gdk::Pixbuf::create_from_file(filename));
 
   about_dialog.set_comments("Martin Schobert <martin@weltregierung.de>\n"
 			    "This software is released under the\nGNU General Public License Version 3.\n"
-			    "2009"
+			    "2010"
 			    );
   about_dialog.set_website("http://degate.zfch.de/");
   about_dialog.run();
