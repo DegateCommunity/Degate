@@ -81,7 +81,7 @@ MainWin::MainWin() :
 
 
   // setup menu
-  menu_manager = new MenuManager(this);
+  menu_manager = std::tr1::shared_ptr<MenuManager>(new MenuManager(this));
   Gtk::Widget* menubar = menu_manager->get_menubar();
   Gtk::Widget* toolbar = menu_manager->get_toolbar();
   assert(menubar != NULL);
@@ -304,6 +304,7 @@ void MainWin::create_new_project(std::string const& project_dir) {
       if(!file_exists(project_dir)) create_directory(project_dir);
       main_project = Project_shptr(new Project(width, height, project_dir, layers));
       update_gui_for_loaded_project();
+      assert(lcWin != NULL);
       lcWin->run();
       set_layer(get_first_enabled_layer(main_project->get_logic_model()));
       on_menu_project_save();
@@ -337,17 +338,11 @@ void MainWin::on_menu_project_close() {
 
     update_title();
     
-    delete ciWin; 
-    ciWin = NULL;
-
-    delete alWin; 
-    alWin = NULL;
-
-    delete gcWin;
-    gcWin = NULL;
-
-    delete lcWin;
-    lcWin = NULL;
+    
+    if(ciWin != NULL) ciWin.reset();
+    if(alWin != NULL) alWin.reset();
+    if(gcWin != NULL) gcWin.reset();
+    if(lcWin != NULL) lcWin.reset();
 
     menu_manager->set_widget_sensitivity(false);
   }
@@ -388,7 +383,7 @@ void MainWin::on_menu_project_export_archive() {
     switch(result) {
     case Gtk::RESPONSE_OK:
 
-      ipWin = new InProgressWin(this, "Exporting", "Please wait while exporting project.");
+      ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Exporting", "Please wait while exporting project."));
       ipWin->show();
 
       signal_export_finished_.connect(sigc::mem_fun(*this, &MainWin::on_export_finished));
@@ -430,8 +425,7 @@ void MainWin::project_export_thread(std::string project_dir,
 void MainWin::on_export_finished(bool success) {
   if(ipWin) {
     ipWin->close();
-    delete ipWin;
-    ipWin = NULL;
+    ipWin.reset();
   }
   if(success == false) {
     error_dialog("Error", "Export failed.");
@@ -471,7 +465,7 @@ void MainWin::set_project_to_open(char * project_dir) {
 void MainWin::open_project(Glib::ustring project_dir) {
   if(main_project) on_menu_project_close();
 
-  ipWin = new InProgressWin(this, "Opening Project", "Please wait while opening project.");
+  ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Opening Project", "Please wait while opening project."));
   ipWin->show();
 
   signal_project_open_finished_.connect(sigc::mem_fun(*this, &MainWin::on_project_load_finished));
@@ -486,8 +480,7 @@ void MainWin::on_project_load_finished() {
   
   if(ipWin) {
     ipWin->close();
-    delete ipWin;
-    ipWin = NULL;
+    ipWin.reset();
   }
   
   if(main_project == NULL) {
@@ -588,27 +581,29 @@ void MainWin::update_gui_for_loaded_project() {
     
     on_selection_revoked();
 
-    ciWin = new ConnectionInspectorWin(this, main_project->get_logic_model());
+
+    ciWin = std::tr1::shared_ptr<ConnectionInspectorWin>(new ConnectionInspectorWin(this, main_project->get_logic_model()));
     ciWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
-    modWin = new ModuleWin(this, main_project->get_logic_model());
+    modWin = std::tr1::shared_ptr<ModuleWin>(new ModuleWin(this, main_project->get_logic_model()));
     modWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
-    alWin = new AnnotationListWin(this, main_project->get_logic_model());
+    alWin = std::tr1::shared_ptr<AnnotationListWin>(new AnnotationListWin(this, main_project->get_logic_model()));
     alWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
     
-    gcWin = new GridConfigWin(this, 
-			      main_project->get_regular_horizontal_grid(),
-			      main_project->get_regular_vertical_grid(),
-			      main_project->get_irregular_horizontal_grid(),
-			      main_project->get_irregular_vertical_grid() );
-
+    gcWin = std::tr1::shared_ptr<GridConfigWin>(new GridConfigWin(this, 
+							  main_project->get_regular_horizontal_grid(),
+							  main_project->get_regular_vertical_grid(),
+							  main_project->get_irregular_horizontal_grid(),
+							  main_project->get_irregular_vertical_grid()));
     gcWin->signal_changed().connect(sigc::mem_fun(*this, &MainWin::on_grid_config_changed));
 
 
-    lcWin = new LayerConfigWin(this, main_project->get_logic_model(), 
-			       main_project->get_project_directory());
-    lcWin->signal_on_background_import_finished().connect(sigc::mem_fun(*this, &MainWin::on_background_import_finished));
+    lcWin = std::tr1::shared_ptr<LayerConfigWin>(new LayerConfigWin(this, main_project->get_logic_model(), 
+							    main_project->get_project_directory()));
+    lcWin->signal_on_background_import_finished().connect
+      (sigc::mem_fun(*this, &MainWin::on_background_import_finished));
+
     imgWin.update_screen();  
   }
 }
@@ -867,8 +862,7 @@ void MainWin::on_algorithm_finished(int slot_pos) {
 
   if(ipWin) {
     ipWin->close();
-    delete ipWin;
-    ipWin = NULL;
+    ipWin.reset();
   }
 
   imgWin.update_screen();
@@ -878,7 +872,7 @@ void MainWin::on_algorithm_finished(int slot_pos) {
   RecognitionManager * rm = RecognitionManager::get_instance();
   rm->after_dialog(slot_pos);
 
-  delete signal_algorithm_finished_;
+  signal_algorithm_finished_.reset();
 
   main_project->set_changed();
 }
@@ -891,7 +885,7 @@ void MainWin::algorithm_calc_thread(int slot_pos) {
 
   rm->run(slot_pos);
 
-  (*signal_algorithm_finished_)();
+  signal_algorithm_finished_->emit();
 }
 
 void MainWin::on_algorithms_func_clicked(int slot_pos) {
@@ -914,10 +908,10 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
 
   if(rm->before_dialog(slot_pos)) {
 
-    ipWin = new InProgressWin(this, "Calculating", "Please wait while calculating.");
+    ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Calculating", "Please wait while calculating."));
     ipWin->show();
     
-    signal_algorithm_finished_ = new Glib::Dispatcher;
+    signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
 
     signal_algorithm_finished_->connect(sigc::bind(sigc::mem_fun(*this, 
 								 &MainWin::on_algorithm_finished),
@@ -1712,7 +1706,8 @@ void MainWin::on_menu_logic_auto_name_gates(AutoNameGates::ORIENTATION orientati
       return;
     }
 
-    ipWin = new InProgressWin(this, "Naming gates", "Please wait while generating names.");
+    ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Naming gates", 
+							  "Please wait while generating names."));
     ipWin->show();
 
     signal_auto_name_finished_.connect(sigc::mem_fun(*this, &MainWin::on_auto_name_finished));
@@ -1741,8 +1736,7 @@ void MainWin::auto_name_gates_thread(AutoNameGates::ORIENTATION orientation) {
 void MainWin::on_auto_name_finished(ret_t ret) {
   if(ipWin) {
     ipWin->close();
-    delete ipWin;
-    ipWin = NULL;
+    ipWin.reset();
   }
   if(RET_IS_NOT_OK(ret)) {
     error_dialog("Error", "naming failed");
@@ -1860,14 +1854,17 @@ void MainWin::on_menu_layer_import_background() {
   switch(result) {
   case(Gtk::RESPONSE_OK):
 
-    ipWin = new InProgressWin(this, "Importing", 
-			      "Please wait while importing background image and calculate the prescaled images.");
+    assert(ipWin == NULL);
+    ipWin = std::tr1::shared_ptr<InProgressWin>
+      (new InProgressWin(this, "Importing", 
+			 "Please wait while importing background image and calculate the prescaled images."));
     ipWin->show();
     main_project->set_changed();
     //imgWin.lock_renderer();
 
     signal_bg_import_finished_.connect(sigc::mem_fun(*this, &MainWin::on_background_import_finished));
-    Glib::Thread::create(sigc::bind<const Glib::ustring>(sigc::mem_fun(*this, &MainWin::background_import_thread), filename), false);
+    Glib::Thread::create(sigc::bind<const Glib::ustring>
+			 (sigc::mem_fun(*this, &MainWin::background_import_thread), filename), false);
 
     break;
   case(Gtk::RESPONSE_CANCEL):
@@ -1883,8 +1880,7 @@ void MainWin::on_background_import_finished() {
   debug(TM, "BG import finished");
   if(ipWin) {
     ipWin->close();
-    delete ipWin;
-    ipWin = NULL;
+    ipWin.reset();
   }
   //imgWin.unlock_renderer();
   //imgWin.update_screen();

@@ -167,13 +167,14 @@ class MainWin : public Gtk::Window  {
 
 
   Gtk::Statusbar m_statusbar;
+
   ImageWin imgWin;
-  InProgressWin * ipWin;
-  ConnectionInspectorWin * ciWin;
-  ModuleWin * modWin;
-  AnnotationListWin * alWin;
-  GridConfigWin * gcWin;
-  LayerConfigWin * lcWin;
+  std::tr1::shared_ptr<InProgressWin> ipWin;
+  std::tr1::shared_ptr<ConnectionInspectorWin> ciWin;
+  std::tr1::shared_ptr<ModuleWin> modWin;
+  std::tr1::shared_ptr<AnnotationListWin> alWin;
+  std::tr1::shared_ptr<GridConfigWin> gcWin;
+  std::tr1::shared_ptr<LayerConfigWin> lcWin;
 
   Gtk::HBox m_displayBox;
   Gtk::Adjustment m_VAdjustment;
@@ -181,7 +182,7 @@ class MainWin : public Gtk::Window  {
   Gtk::VScrollbar m_VScrollbar;
   Gtk::HScrollbar m_HScrollbar;
   
-  MenuManager * menu_manager;
+  std::tr1::shared_ptr<MenuManager> menu_manager;
 
   degate::Project_shptr main_project;
 
@@ -224,7 +225,7 @@ class MainWin : public Gtk::Window  {
   
   Glib::Dispatcher signal_project_open_finished_;
   Glib::Dispatcher signal_bg_import_finished_;
-  Glib::Dispatcher * signal_algorithm_finished_;
+  std::tr1::shared_ptr<Glib::Dispatcher> signal_algorithm_finished_;
   sigc::signal<void, bool> signal_export_finished_;
   sigc::signal<void, degate::ret_t> signal_auto_name_finished_;
 
