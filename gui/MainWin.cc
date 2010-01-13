@@ -57,6 +57,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <ProjectImporter.h>
 #include <LogicModelHelper.h>
 #include <SubProjectAnnotation.h>
+#include <ProjectArchiver.h>
 
 #define ZOOM_STEP 1.3
 #define ZOOM_STEP_MOUSE_SCROLL 2.0
@@ -392,8 +393,8 @@ void MainWin::on_menu_project_export_archive() {
 
       signal_export_finished_.connect(sigc::mem_fun(*this, &MainWin::on_export_finished));
       thread = Glib::Thread::create(sigc::bind<std::string, std::string>
-				    (sigc::mem_fun(*this, &MainWin::project_export_thread), 
-				     main_project->get_project_directory(), 
+				    (sigc::mem_fun(*this, &MainWin::project_export_thread),
+				     main_project->get_project_directory(),
 				     dialog.get_filename()), false);
 
 
@@ -405,32 +406,23 @@ void MainWin::on_menu_project_export_archive() {
   }
 }
 
-void MainWin::project_export_thread(std::string project_dir, std::string dst_file) {
+void MainWin::project_export_thread(std::string project_dir, 
+				    std::string dst_file) {
 
-  pid_t pid = fork();
-  if(pid == 0) {
-    // child
-    if(execlp("zip", "-j", "-r", dst_file.c_str(), project_dir.c_str(), NULL) == -1) {
-      debug(TM, "exec failed");
-    }
-    debug(TM, "sth. failed");
-    exit(1);
+  ProjectArchiver archiver;
+
+  try {
+
+    std::string filename = get_filename_from_path(dst_file);
+    assert(filename.length() > (get_file_suffix(filename).length() + 1));
+    std::string name = filename.substr(0, filename.length() - 
+				       (get_file_suffix(filename).length() + 1));
+
+    archiver.export_data(project_dir.c_str(), dst_file.c_str(), name);
+    signal_export_finished_(true);
   }
-  else if(pid < 0) {
-    // fork failed
-    debug(TM, "fork() failed");
+  catch(ZipException & ex) {
     signal_export_finished_(false);
-  }
-  else {
-    // parent
-    int exit_code;
-    if(waitpid(pid, &exit_code, 0) != pid) {
-      debug(TM, "failed");
-      signal_export_finished_(false);
-    }
-    else {
-      signal_export_finished_(WEXITSTATUS(exit_code) == 0 ? true : false);
-    }
   }
 }
 
@@ -442,7 +434,7 @@ void MainWin::on_export_finished(bool success) {
     ipWin = NULL;
   }
   if(success == false) {
-    error_dialog("Error", "Export failed. Maybe you have no zip utility installed?");
+    error_dialog("Error", "Export failed.");
   }
 }
 

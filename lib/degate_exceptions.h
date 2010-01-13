@@ -158,6 +158,17 @@ namespace degate {
     InvalidFileFormatException(std::string const & str) : DegateRuntimeException(str) {}
   };
 
+
+  /**
+   * This exception is thrown if a ZIP archive cannot be exported.
+   */
+
+  class ZipException : public DegateRuntimeException {
+  public:
+    ZipException() : DegateRuntimeException("Can't export ZIP archive." ) {}
+    ZipException(std::string const & str) : DegateRuntimeException(str) {}
+  };
+
 }
 
 #endif

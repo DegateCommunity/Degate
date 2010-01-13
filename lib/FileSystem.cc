@@ -34,12 +34,16 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 #include <iostream>
 #include <string>
 
 using namespace degate;
+using namespace boost::filesystem;
 
-/** @todo Instead of writing own wrapper functions, it would be better to use the boost filesystem abstraction. */
+/** @todo Instead of writing own wrapper functions, it would be better to 
+    use the boost filesystem abstraction. 
+*/
 
 bool degate::is_directory(std::string const & path) {
   struct stat stat_buf;
@@ -337,4 +341,23 @@ std::string degate::get_relative_path(std::string const& path,
 
   free(rel_path);
   return ret;
+}
+
+
+
+boost::filesystem::path degate::strip_path(boost::filesystem::path const& strip_from,
+					   boost::filesystem::path const& strip_what) {
+
+  path::iterator src_path_iter = strip_what.begin();
+  path::iterator src_path_end = strip_what.end();
+  path stripped;
+  
+  BOOST_FOREACH(std::string s, strip_from) {
+    if(src_path_iter != src_path_end && *src_path_iter == s) 
+      ++src_path_iter;
+    else 
+      stripped /= s;
+  }
+  
+  return stripped;
 }

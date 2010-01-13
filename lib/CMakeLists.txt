@@ -28,6 +28,11 @@ include_directories(${FREETYPE_INCLUDE_DIRS})
 message(STATUS ${FREETYPE_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${FREETYPE_LIBRARIES})
 
+pkg_check_modules(LIBZIP REQUIRED libzip)
+include_directories(${LIBZIP_INCLUDE_DIRS})
+link_directories(${LIBZIP_LIBRARY_DIRS}) 
+set(LIBS ${LIBS} ${LIBZIP_LIBRARIES})
+
 #set(LIBS ${LIBS} "-lshogun")
 
 #
@@ -97,6 +102,7 @@ set(SOURCES
 	DOTExporter.cc
 	DOTAttributes.cc
 	LogicModelDOTExporter.cc
+	ProjectArchiver.cc
 
 	#
 	# Images

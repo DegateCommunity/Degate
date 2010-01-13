@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <boost/filesystem/path.hpp>
 
 namespace degate{
 
@@ -186,6 +187,17 @@ namespace degate{
   std::string get_relative_path(std::string const& path, 
 				std::string const& relative_to);
 
+
+  
+
+  /**
+   * Strip the leading directory part from a path.
+   * @param strip_from Is the path.
+   * @param strip_what Is the base directory that should be removed.
+   * @return Returnes a new path with the base directory stripped.
+   */
+  boost::filesystem::path strip_path(boost::filesystem::path const& strip_from,
+				     boost::filesystem::path const& strip_what);
 
 }
 
