@@ -104,9 +104,6 @@ class MainWin : public Gtk::Window  {
   // Layer menu
   virtual void on_menu_layer_import_background();
   virtual void on_menu_layer_configuration();
-  virtual void on_menu_layer_set_transistor();
-  virtual void on_menu_layer_set_logic();
-  virtual void on_menu_layer_set_metal();
   virtual void on_menu_layer_clear_background_image();
 
   // Logic menu

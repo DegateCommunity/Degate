@@ -33,8 +33,6 @@ class MenuManager {
 
   void toggle_toolbar_visibility();
 
-  void set_layer_type_in_menu(degate::Layer::LAYER_TYPE layer_type);
-
   const std::vector<bool> toggle_info_layer_visibility();
 
   bool toggle_info_layer(int slot_pos);
@@ -59,11 +57,6 @@ class MenuManager {
     m_refChoice_Select, m_refChoice_Move, m_refChoice_Wire, 
     m_refChoice_via_up, m_refChoice_via_down;
   Glib::RefPtr<Gtk::RadioAction> m_refChoice_TransistorLayer, m_refChoice_LogicLayer, m_refChoice_MetalLayer;
-
-  // There is a point where we need to unbind signals. Therefore we store this.
-  sigc::connection sig_conn_rbg_transistor;
-  sigc::connection sig_conn_rbg_logic;
-  sigc::connection sig_conn_rbg_metal;
 
   std::vector<std::pair<Gtk::CheckMenuItem *, bool> > slot_states;
 

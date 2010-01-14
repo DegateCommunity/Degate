@@ -490,7 +490,6 @@ void MainWin::on_project_load_finished() {
   else {
     Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
     assert(layer != NULL);
-    menu_manager->set_layer_type_in_menu(layer->get_layer_type());
     update_gui_for_loaded_project();
     set_layer(get_first_enabled_layer(main_project->get_logic_model()));
   }
@@ -664,8 +663,6 @@ void MainWin::set_layer(unsigned int layer) {
 
   imgWin.set_current_layer(layer_ptr->get_layer_pos());
   
-  menu_manager->set_layer_type_in_menu(layer_ptr->get_layer_type());
-
   update_title();
   imgWin.update_screen();
 }
@@ -1913,28 +1910,6 @@ void MainWin::on_menu_layer_configuration() {
     }
   }
 }
-
-void MainWin::on_menu_layer_set_transistor() { 
-  if(main_project) {
-    main_project->get_logic_model()->get_current_layer()->set_layer_type(Layer::TRANSISTOR);
-    main_project->set_changed();
-  }
-}
-
-void MainWin::on_menu_layer_set_logic() { 
-  if(main_project) {
-    main_project->get_logic_model()->get_current_layer()->set_layer_type(Layer::LOGIC);
-    main_project->set_changed();
-  }
-}
-
-void MainWin::on_menu_layer_set_metal() { 
-  if(main_project) {
-    main_project->get_logic_model()->get_current_layer()->set_layer_type(Layer::METAL);
-    main_project->set_changed();
-  }
-}
-
 
 
 void MainWin::on_menu_logic_clear_logic_model() {

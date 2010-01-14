@@ -233,24 +233,6 @@ void MenuManager::create_and_bind_layer_menu() {
 					    "Layer configuration", "Layer configuration"),
 			sigc::mem_fun(*window, &MainWin::on_menu_layer_configuration));
 
-
-  Gtk::RadioAction::Group group_layer_type;
-  m_refActionGroup->add(Gtk::Action::create("LayerType", "Layer type"));
-  
-  m_refChoice_TransistorLayer = Gtk::RadioAction::create(group_layer_type, "LayerTypeTransistor", "Transistor layer");
-  m_refActionGroup->add(m_refChoice_TransistorLayer);
-  sig_conn_rbg_transistor = m_refChoice_TransistorLayer->signal_activate().connect(sigc::mem_fun(*window, &MainWin::on_menu_layer_set_transistor));
-  
-  m_refChoice_LogicLayer = Gtk::RadioAction::create(group_layer_type, "LayerTypeLogic", "Logic layer (M1)");
-  //m_refActionGroup->add(m_refChoice_LogicLayer, sigc::mem_fun(*window, &MainWin::on_menu_layer_set_logic));
-  m_refActionGroup->add(m_refChoice_LogicLayer);
-  sig_conn_rbg_logic = m_refChoice_LogicLayer->signal_activate().connect(sigc::mem_fun(*window, &MainWin::on_menu_layer_set_logic), true); 
-
-  m_refChoice_MetalLayer = Gtk::RadioAction::create(group_layer_type, "LayerTypeMetal", "Metal layer");
-  //m_refActionGroup->add(m_refChoice_MetalLayer, sigc::mem_fun(*window, &MainWin::on_menu_layer_set_metal));
-  m_refActionGroup->add(m_refChoice_MetalLayer);
-  sig_conn_rbg_metal = m_refChoice_MetalLayer->signal_activate().connect(sigc::mem_fun(*window, &MainWin::on_menu_layer_set_metal));
-
 }
 
 void MenuManager::create_and_bind_logic_menu() {
@@ -444,12 +426,6 @@ void MenuManager::setup_menu_structure() {
         "      <menuitem action='LayerClearBackgroundImage'/>"
         "      <separator/>"
         "      <menuitem action='LayerConfiguration'/>"
-        "      <separator/>"
-        "      <menu action='LayerType'>"
-        "        <menuitem action='LayerTypeTransistor'/>"
-        "        <menuitem action='LayerTypeLogic'/>"
-        "        <menuitem action='LayerTypeMetal'/>"
-        "      </menu>"
         "    </menu>"
         "    <menu action='LogicMenu'>"
         "      <menuitem action='LogicInterconnect'/>"
@@ -695,8 +671,6 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerImportBackground", state);
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerClearBackgroundImage", state);
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerConfiguration", state);
-  set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerType", state);
-
 
   if(state == false) {
     set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicInterconnect", state);
@@ -761,40 +735,6 @@ void MenuManager::toggle_toolbar_visibility() {
 }
 
 
-void MenuManager::set_layer_type_in_menu(degate::Layer::LAYER_TYPE layer_type) {
-
-  /* Hack: If you defined a signal handler for radio button activation in a group and you want to
-     activate another item from the radio button group via ->activate() or ->set_active() two signals
-     are emitted -- for the last activted button and for the new one.
-
-     Here it is a problem, because we want to find out, if the user activated it 
-     directly via menu or if it is activated just because it is defined as callback.
-     So we undefine the callback first, to prevent it.
-  */
-
-  sig_conn_rbg_transistor.disconnect();
-  sig_conn_rbg_logic.disconnect();
-  sig_conn_rbg_metal.disconnect();
-
-  switch(layer_type) {
-  case Layer::TRANSISTOR: 
-      m_refChoice_TransistorLayer->set_active();
-      break;
-    case Layer::LOGIC: 
-      m_refChoice_LogicLayer->set_active();
-      break;
-    case Layer::METAL: 
-    case Layer::UNDEFINED: 
-      m_refChoice_MetalLayer->activate();
-      break;
-  }
-
-  sig_conn_rbg_transistor = m_refChoice_TransistorLayer->signal_activate().connect(sigc::mem_fun(*window, &MainWin::on_menu_layer_set_transistor));
-  sig_conn_rbg_logic = m_refChoice_LogicLayer->signal_activate().connect(sigc::mem_fun(*window, &MainWin::on_menu_layer_set_logic));
-  sig_conn_rbg_metal = m_refChoice_MetalLayer->signal_activate().connect(sigc::mem_fun(*window, &MainWin::on_menu_layer_set_metal));
-
-}
-
 bool MenuManager::toggle_menu_item(Glib::ustring path, bool state, 
 			       Glib::ustring text1, Glib::ustring text2) {
 
@@ -825,7 +765,6 @@ const std::vector<bool> MenuManager::toggle_info_layer_visibility() {
     it++; it++; 
   }
 
-  // This is a hack, because we have not stored sigc::connection in order to  disconnect it here.
   info_layers_checkbox_ignore_sig = true; 
 
   while(it != slot_states.end()) {
