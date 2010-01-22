@@ -110,19 +110,19 @@ const std::string GatePort::get_descriptive_identifier() const {
      gate->has_template()) {
 
     if(gate->has_name()) {
-      boost::format fmter("%1: %2% (%3%)");
-      fmter
+      boost::format fmter("%1%: %2% (%3%)");
+      fmter 
 	% gate->get_name()
 	% gate_template_port->get_name()
 	% gate->get_gate_template()->get_name();
       return fmter.str();
     }
     else {
-      boost::format fmter("%1% : %2% (%3%)");
+      boost::format fmter("%1% (%2%, gate=%3%)");
       fmter 
-	% gate->get_name()
 	% gate_template_port->get_name()
-	% gate->get_gate_template()->get_name();
+	% gate->get_gate_template()->get_name()
+	% get->get_object_id();
       return fmter.str();
     }
   }
