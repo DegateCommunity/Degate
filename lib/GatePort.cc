@@ -122,7 +122,7 @@ const std::string GatePort::get_descriptive_identifier() const {
       fmter 
 	% gate_template_port->get_name()
 	% gate->get_gate_template()->get_name()
-	% get->get_object_id();
+	% gate->get_object_id();
       return fmter.str();
     }
   }
