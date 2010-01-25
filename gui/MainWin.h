@@ -72,6 +72,7 @@ class MainWin : public Gtk::Window  {
 
   bool selected_objects_are_interconnectable();
   bool selected_objects_are_removable();
+  bool selected_objects_are_gates();
 
 
   //Signal handlers:
@@ -116,6 +117,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_logic_create_annotation();
   virtual void on_menu_logic_show_annotations();
   virtual void on_menu_logic_show_modules();
+  virtual void on_menu_move_gate_into_module();
 
   // Gate menu
   virtual void on_menu_gate_create_by_selection();

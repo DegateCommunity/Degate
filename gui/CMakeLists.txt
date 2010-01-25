@@ -67,6 +67,7 @@ set(DEGATE_SRC
 	       LayerConfigWin.cc
 	       AnnotationListWin.cc
 	       ModuleWin.cc
+	       SelectModuleWin.cc
 
 	       NewProjectWin.cc
 	       ObjectMatchingWin.cc

@@ -101,6 +101,8 @@ namespace degate {
   public:
     
     typedef std::set<object_id_t>::iterator connection_iterator;
+    typedef std::set<object_id_t>::iterator iterator;
+    typedef std::set<object_id_t>::const_iterator const_iterator;
     
     /**
      * Construct a new net.

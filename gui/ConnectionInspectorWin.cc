@@ -170,7 +170,6 @@ void ConnectionInspectorWin::set_object(degate::PlacedLogicModelObject_shptr obj
     current_object_type_label->set_text(obj_ptr->get_object_type_name());
     clear_list();
 
-    std::cout << "set object" << std::endl;
     obj_ptr->print();
 
     back_list.push_back(obj_ptr);
@@ -191,9 +190,7 @@ void ConnectionInspectorWin::set_object(degate::PlacedLogicModelObject_shptr obj
     }
     else if(ConnectedLogicModelObject_shptr o = 
 	    std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(obj_ptr)) {
-      std::cout <<  "shoukd have a net" << std::endl;
-      if(o != NULL)
-	show_connections(o, MY_WHITE);
+      show_connections(o, MY_WHITE);
     }
 
   }
@@ -222,11 +219,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
     const ConnectedLogicModelObject_shptr obj_ptr = 
       std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(lmodel->get_object(oid));
 
-    std::cout << "display net element " << oid << std::endl;
-
     if(obj_ptr != src_curr_obj) {
-
-      std::cout << "not equal " <<std::endl;
 
       row = *(refListStore->append()); 
 
@@ -324,7 +317,7 @@ void ConnectionInspectorWin::on_back_button_clicked() {
 
     set_object(o); // adds current obj to back_list
 
-    signal_goto_button_clicked_(o);
+    if(!signal_goto_button_clicked_.empty()) signal_goto_button_clicked_(o);
   }
 }
 

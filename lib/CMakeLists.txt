@@ -86,6 +86,7 @@ set(SOURCES
 	Gate.cc
 	GateTemplate.cc
 	GateLibrary.cc
+	Module.cc
 
 	#
 	# importer / exporter

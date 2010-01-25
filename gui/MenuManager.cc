@@ -276,14 +276,20 @@ void MenuManager::create_and_bind_logic_menu() {
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_create_annotation));
 
   m_refActionGroup->add(Gtk::Action::create("LogicShowAnnotations", 
-					    "Show list of annotations", 
+					    "Annotations", 
 					    "Show list of annotations"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_show_annotations));
 
   m_refActionGroup->add(Gtk::Action::create("LogicShowModules", 
-					    "Show list of modules", 
+					    "Modules", 
 					    "Show list of modules"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_show_modules));
+
+  m_refActionGroup->add(Gtk::Action::create("LogicMoveGateIntoModule", 
+					    "Move gate(s) into module", 
+					    "Move gate(s) into module"),
+			Gtk::AccelKey("<control>M"),
+			sigc::mem_fun(*window, &MainWin::on_menu_move_gate_into_module));
 
 
 
@@ -438,6 +444,7 @@ void MenuManager::setup_menu_structure() {
         "      <menuitem action='LogicShowAnnotations'/>"
         "      <separator/>"
         "      <menuitem action='LogicShowModules'/>"
+        "      <menuitem action='LogicMoveGateIntoModule'/>"
         "      <separator/>"
         "      <menuitem action='LogicConnectionInspector'/>"  
         "    </menu>"
@@ -479,6 +486,8 @@ void MenuManager::setup_menu_structure() {
         "    <separator/>"
         "    <toolitem action='GateList'/>"
         "    <toolitem action='LogicConnectionInspector'/>"
+        "    <toolitem action='LogicShowModules'/>"
+        "    <toolitem action='LogicShowAnnotations'/>"
         "  </toolbar>"
     "</ui>";
 
@@ -520,7 +529,7 @@ void MenuManager::set_toolbar_images() {
   set_image_for_toolbar_widget("/ToolBar/ToolWire",    "tools_wire.png");
   set_image_for_toolbar_widget("/ToolBar/ToolViaUp",   "tools_via_up.png");
   set_image_for_toolbar_widget("/ToolBar/ToolViaDown", "tools_via_down.png");
-  
+  //set_image_for_toolbar_widget("/ToolBar/LogicShowAnnotations", "annotation.png");
 }
 
 
@@ -644,6 +653,8 @@ void MenuManager::set_widget_sensitivity(bool state) {
 
   set_toolbar_item_sensitivity("/ToolBar/GateList", state);
   set_toolbar_item_sensitivity("/ToolBar/LogicConnectionInspector", state);
+  set_toolbar_item_sensitivity("/ToolBar/LogicShowAnnotations", state);
+  set_toolbar_item_sensitivity("/ToolBar/LogicShowModules", state);
 
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectClose", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectSave", state);
@@ -683,6 +694,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicCreateAnnotation", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicShowAnnotations", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicShowModules", state);
+  set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicMoveGateIntoModule", state);
 
   set_menu_item_sensitivity("/MenuBar/GateMenu/GateList", state);
   set_menu_item_sensitivity("/MenuBar/GateMenu/GatePortColors", state);

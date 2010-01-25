@@ -45,6 +45,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "ProjectSettingsWin.h"
 #include "ConnectionInspectorWin.h"
 #include "ModuleWin.h"
+#include <SelectModuleWin.h>
 #include "AnnotationListWin.h"
 #include "GenericTextInputWin.h"
 #include "RecognitionManager.h"
@@ -383,7 +384,8 @@ void MainWin::on_menu_project_export_archive() {
     switch(result) {
     case Gtk::RESPONSE_OK:
 
-      ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Exporting", "Please wait while exporting project."));
+      ipWin = std::tr1::shared_ptr<InProgressWin>
+	(new InProgressWin(this, "Exporting", "Please wait while exporting project."));
       ipWin->show();
 
       signal_export_finished_.connect(sigc::mem_fun(*this, &MainWin::on_export_finished));
@@ -445,7 +447,8 @@ void MainWin::on_menu_project_open() {
 
   if(main_project) on_menu_project_close();
 
-  Gtk::FileChooserDialog dialog("Please choose a project folder", Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
+  Gtk::FileChooserDialog dialog("Please choose a project folder", 
+				Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
   dialog.set_transient_for(*this);
 
   dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
@@ -465,12 +468,14 @@ void MainWin::set_project_to_open(char * project_dir) {
 void MainWin::open_project(Glib::ustring project_dir) {
   if(main_project) on_menu_project_close();
 
-  ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Opening Project", "Please wait while opening project."));
+  ipWin = std::tr1::shared_ptr<InProgressWin>
+    (new InProgressWin(this, "Opening Project", "Please wait while opening project."));
   ipWin->show();
 
   signal_project_open_finished_.connect(sigc::mem_fun(*this, &MainWin::on_project_load_finished));
-  thread = Glib::Thread::create(sigc::bind<const Glib::ustring>(sigc::mem_fun(*this, &MainWin::project_open_thread), 
-								project_dir), false);
+  thread = Glib::Thread::create(sigc::bind<const Glib::ustring>
+				(sigc::mem_fun(*this, &MainWin::project_open_thread), 
+				 project_dir), false);
 }
 
 // in GUI-thread
@@ -484,7 +489,8 @@ void MainWin::on_project_load_finished() {
   }
   
   if(main_project == NULL) {
-    Gtk::MessageDialog err_dialog(*this, "Can't open project", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+    Gtk::MessageDialog err_dialog(*this, "Can't open project", 
+				  false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
     err_dialog.run();
   }
   else {
@@ -527,7 +533,8 @@ void MainWin::on_menu_project_export_view() {
 				imgWin.get_min_y(),
 				imgWin.get_max_x(),
 				imgWin.get_max_y())) {
-	Gtk::MessageDialog err_dialog(*this, "Can't export graphics", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+	Gtk::MessageDialog err_dialog(*this, "Can't export graphics", 
+				      false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
 	err_dialog.run();
       }
   }   
@@ -544,8 +551,10 @@ void MainWin::on_menu_project_export_layer() {
     dialog.hide();
 
     if(result == Gtk::RESPONSE_OK)
-      if(!imgWin.render_to_file(filename.c_str(), 0, 0, main_project->get_width(), main_project->get_height())) {
-	Gtk::MessageDialog err_dialog(*this, "Can't export graphics", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+      if(!imgWin.render_to_file(filename.c_str(), 0, 0, 
+				main_project->get_width(), main_project->get_height())) {
+	Gtk::MessageDialog err_dialog(*this, "Can't export graphics", 
+				      false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
 	err_dialog.run();
       }
   }   
@@ -581,13 +590,15 @@ void MainWin::update_gui_for_loaded_project() {
     on_selection_revoked();
 
 
-    ciWin = std::tr1::shared_ptr<ConnectionInspectorWin>(new ConnectionInspectorWin(this, main_project->get_logic_model()));
+    ciWin = std::tr1::shared_ptr<ConnectionInspectorWin>
+      (new ConnectionInspectorWin(this, main_project->get_logic_model()));
     ciWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
     modWin = std::tr1::shared_ptr<ModuleWin>(new ModuleWin(this, main_project->get_logic_model()));
     modWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
-    alWin = std::tr1::shared_ptr<AnnotationListWin>(new AnnotationListWin(this, main_project->get_logic_model()));
+    alWin = std::tr1::shared_ptr<AnnotationListWin>
+      (new AnnotationListWin(this, main_project->get_logic_model()));
     alWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
     
     gcWin = std::tr1::shared_ptr<GridConfigWin>(new GridConfigWin(this, 
@@ -815,9 +826,6 @@ void MainWin::on_h_adjustment_changed() {
 }
 
 
-// here is a list og images for each mouse cursor type:
-// http://www.pygtk.org/docs/pygtk/gdk-constants.html
-
 void MainWin::on_menu_tools_select() {
   Glib::RefPtr<Gdk::Window> window = imgWin.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::LEFT_PTR));
@@ -905,7 +913,8 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
 
   if(rm->before_dialog(slot_pos)) {
 
-    ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Calculating", "Please wait while calculating."));
+    ipWin = std::tr1::shared_ptr<InProgressWin>
+      (new InProgressWin(this, "Calculating", "Please wait while calculating."));
     ipWin->show();
     
     signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
@@ -1426,7 +1435,7 @@ void MainWin::update_gui_on_selection_change() {
       menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", true);
     }
     else {
-      menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", imgWin.selection_active() ? true : false);
+      menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", imgWin.selection_active());
     }
     
     if(ciWin != NULL) ciWin->set_object(*it);
@@ -1435,21 +1444,24 @@ void MainWin::update_gui_on_selection_change() {
   else {
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateOrientation", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSetAsMaster", false);
-    menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", imgWin.selection_active() ? true : false);
+    menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", imgWin.selection_active());
 
     if(ciWin != NULL) ciWin->disable_inspection();
   }
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection", 
-					  selected_objects_are_removable() ? true : false);
+					  selected_objects_are_removable());
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicInterconnect", 
 					  selected_objects.size() >= 2 && 
-					  selected_objects_are_interconnectable() ? true : false);
+					  selected_objects_are_interconnectable());
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicIsolate", 
 					  selected_objects.size() >= 1 && 
-					  selected_objects_are_interconnectable() ? true : false);
+					  selected_objects_are_interconnectable());
+
+  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicMoveGateIntoModule", 
+					  selected_objects_are_gates());
 
 }
 
@@ -1460,7 +1472,7 @@ void MainWin::object_double_clicked(unsigned int real_x, unsigned int real_y) {
 
   if(SubProjectAnnotation_shptr sp = 
      std::tr1::dynamic_pointer_cast<SubProjectAnnotation>(plo)) {
-    debug(TM, "double clicked subproject");
+
     std::string dir = join_pathes(main_project->get_project_directory(), sp->get_path());
     debug(TM, "Will open or create project at %s", dir.c_str());
     
@@ -1478,9 +1490,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
   // get info about selected object
   LogicModel_shptr lmodel = main_project->get_logic_model();
   Layer_shptr layer = lmodel->get_current_layer();
-  debug(TM, "try to run get_object_at_position");
   PlacedLogicModelObject_shptr plo = layer->get_object_at_position(real_x, real_y);
-  debug(TM, "get_object_at_position returned");
 
   // check if there is a gate on the logic layer
   if(plo == NULL) {
@@ -1546,6 +1556,19 @@ bool MainWin::selected_objects_are_removable() {
   if(selected_objects.size() == 0) return false;
   for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
     if(std::tr1::dynamic_pointer_cast<GatePort>(*it) != NULL) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// XXX put into a selection class
+bool MainWin::selected_objects_are_gates() {
+  std::set<PlacedLogicModelObject_shptr>::const_iterator it;
+
+  if(selected_objects.size() == 0) return false;
+  for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
+    if(std::tr1::dynamic_pointer_cast<Gate>(*it) == NULL) {
       return false;
     }
   }
@@ -1816,6 +1839,33 @@ void MainWin::on_menu_logic_show_annotations() {
 
 void MainWin::on_menu_logic_show_modules() {
   if(main_project != NULL && modWin != NULL) modWin->show();
+}
+
+void MainWin::on_menu_move_gate_into_module() {
+  if(main_project == NULL && !selected_objects_are_gates()) return;
+
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+
+  SelectModuleWin smWin(this, lmodel);
+  Module_shptr mod = smWin.show();
+  if(mod != NULL) {
+
+    for(std::set<PlacedLogicModelObject_shptr>::const_iterator it = selected_objects.begin(); 
+	it != selected_objects.end(); it++) {
+
+      Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it);
+      assert(gate != NULL);
+
+      
+      Module_shptr root_module = lmodel->get_main_module();
+      root_module->remove_gate(gate);
+      mod->add_gate(gate);
+    }
+
+    modWin->update();
+    main_project->set_changed();
+  }
+  
 }
 
 void MainWin::on_menu_view_grid_config() {

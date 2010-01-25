@@ -152,6 +152,7 @@ namespace degate {
 
     /**
      * Remove a gate from the logic model.
+     * This effects the module hierarchy, too.
      * @param o A shared pointer to the object.
      */
     
