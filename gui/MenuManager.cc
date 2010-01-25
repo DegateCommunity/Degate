@@ -129,7 +129,7 @@ void MenuManager::create_and_bind_project_menu() {
 					    "Export current layer as XPM-graphics", "Export layer as graphics"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_export_layer));
 
-  /*
+  
   Glib::RefPtr<Gtk::RecentAction> recent_action_ptr = Gtk::RecentAction::create("ProjectRecentProjects", "_Recent projects");
   recent_action_ptr->signal_item_activated().connect(sigc::mem_fun(*window, &MainWin::on_menu_project_recent_projects));
   m_refActionGroup->add(recent_action_ptr);
@@ -139,10 +139,15 @@ void MenuManager::create_and_bind_project_menu() {
   recent_action_ptr->set_filter(*recent_filter_ptr);
   recent_action_ptr->set_show_numbers(true);
   recent_action_ptr->set_sort_type(Gtk::RECENT_SORT_MRU);
-  */
+  
 
   m_refActionGroup->add(Gtk::Action::create("ProjectQuit", Gtk::Stock::QUIT),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_quit));
+}
+
+std::string MenuManager::get_recent_project_uri() {
+  return Glib::RefPtr<Gtk::RecentAction>::cast_static
+    (m_refActionGroup->get_action("ProjectRecentProjects"))->get_current_uri();
 }
 
 void MenuManager::create_and_bind_view_menu() {
@@ -391,6 +396,7 @@ void MenuManager::setup_menu_structure() {
         "    <menu action='ProjectMenu'>"
         "      <menuitem action='ProjectNew'/>"
         "      <menuitem action='ProjectOpen'/>"
+	"      <menuitem action='ProjectRecentProjects'/>"
         "      <menuitem action='ProjectClose'/>"
         "      <menuitem action='ProjectSave'/>"
         "      <menuitem action='ProjectExportArchive'/>"
@@ -402,8 +408,6 @@ void MenuManager::setup_menu_structure() {
         "      <separator/>"
         "      <menuitem action='ExportViewAsGraphics'/>"
         "      <menuitem action='ExportLayerAsGraphics'/>"
-    /*        "      <separator/>"
-	      "      <menuitem action='ProjectRecentProjects'/>" */
         "      <separator/>"
         "      <menuitem action='ProjectQuit'/>"
         "    </menu>"

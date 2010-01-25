@@ -41,6 +41,8 @@ class MenuManager {
 
   void set_widget_sensitivity(bool state);
 
+  std::string get_recent_project_uri();
+
  private:
 
   bool toolbar_visible;

@@ -248,21 +248,10 @@ void MainWin::add_to_recent_menu() {
 
 void MainWin::on_menu_project_recent_projects() {
   debug(TM, "on_menu_project_recent_projects()");
-  /*
-  Glib::RefPtr<Gtk::RecentManager> m_refRecentManager;
 
-
-  Gtk::RecentChooserDialog dialog(*this, "Recent Files", m_refRecentManager);
-  dialog.add_button("Select File", Gtk::RESPONSE_OK);
-  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-
-  const int response = dialog.run();
-  dialog.hide();
-  if(response == Gtk::RESPONSE_OK)
-    {
-      std::cout << "URI selected = " << dialog.get_current_uri() << std::endl;
-    }
-  */
+  std::string recent_project = Glib::filename_from_uri(menu_manager->get_recent_project_uri());
+  std::cout << "URI selected = " << recent_project << std::endl;
+  open_project(recent_project);
 }
 
 void MainWin::on_menu_project_quit() {
