@@ -7,14 +7,14 @@
     <property name="title" translatable="yes">Edit gate</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
-    <property name="default_width">300</property>
+    <property name="default_width">400</property>
     <property name="default_height">600</property>
     <property name="type_hint">dialog</property>
     <property name="deletable">False</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="spacing">2</property>
+        <property name="spacing">5</property>
         <child>
           <widget class="GtkTable" id="table1">
             <property name="visible">True</property>
@@ -86,6 +86,7 @@
                 <property name="right_attach">2</property>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
+                <property name="x_padding">10</property>
               </packing>
             </child>
             <child>
@@ -96,7 +97,9 @@
               <packing>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
+                <property name="x_options"></property>
                 <property name="y_options"></property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
             <child>
@@ -110,6 +113,7 @@
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
                 <property name="y_options">GTK_FILL</property>
+                <property name="x_padding">10</property>
               </packing>
             </child>
             <child>
@@ -121,6 +125,7 @@
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
                 <property name="y_options">GTK_FILL</property>
+                <property name="x_padding">10</property>
               </packing>
             </child>
             <child>
@@ -131,8 +136,9 @@
               <packing>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
-                <property name="x_options">GTK_FILL</property>
+                <property name="x_options"></property>
                 <property name="y_options"></property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
             <child>
@@ -141,8 +147,9 @@
                 <property name="label" translatable="yes">Short name:</property>
               </widget>
               <packing>
-                <property name="x_options">GTK_FILL</property>
+                <property name="x_options"></property>
                 <property name="y_options"></property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
             <child>
@@ -153,7 +160,9 @@
               <packing>
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
+                <property name="x_options"></property>
                 <property name="y_options"></property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
             <child>
@@ -171,7 +180,8 @@
                 <property name="bottom_attach">4</property>
                 <property name="x_options">GTK_FILL</property>
                 <property name="y_options"></property>
-                <property name="y_padding">10</property>
+                <property name="x_padding">10</property>
+                <property name="y_padding">5</property>
               </packing>
             </child>
             <child>
@@ -182,7 +192,9 @@
               <packing>
                 <property name="top_attach">4</property>
                 <property name="bottom_attach">5</property>
+                <property name="x_options"></property>
                 <property name="y_options"></property>
+                <property name="x_padding">5</property>
               </packing>
             </child>
             <child>
@@ -199,7 +211,8 @@
                 <property name="top_attach">4</property>
                 <property name="bottom_attach">5</property>
                 <property name="y_options"></property>
-                <property name="y_padding">10</property>
+                <property name="x_padding">10</property>
+                <property name="y_padding">5</property>
               </packing>
             </child>
           </widget>
