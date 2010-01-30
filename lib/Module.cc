@@ -179,7 +179,7 @@ void Module::determine_module_ports() {
       - net in known_nets -> no module port
    */
 
-  debug(TM, "in determine_module_ports()");
+  //debug(TM, "in determine_module_ports()");
   std::set<Net_shptr> known_ports;
 
   for(gate_collection::iterator g_iter = gates_begin();
@@ -188,24 +188,24 @@ void Module::determine_module_ports() {
     Gate_shptr gate = *g_iter;
     assert(gate != NULL);
     
-    debug(TM, "check gate");
+    //debug(TM, "check gate");
 
     for(Gate::port_const_iterator p_iter = gate->ports_begin();
 	p_iter != gate->ports_end(); ++p_iter) {
 	
       GatePort_shptr gate_port = *p_iter;
       assert(gate_port != NULL);
-      debug(TM, "check gate port");
+      //debug(TM, "check gate port");
 
       Net_shptr net = gate_port->get_net();
 
-      debug(TM, "check net");
+      //debug(TM, "check net");
 
-      if(net == NULL) debug(TM, "is null");
+      //if(net == NULL) debug(TM, "is null");
       
       if((net != NULL) && known_ports.find(net) == known_ports.end()) {
 
-	debug(TM, "iterate over net with size %d", net->size());
+	//debug(TM, "iterate over net with size %d", net->size());
 
 	bool is_a_port = false;
 
@@ -214,14 +214,14 @@ void Module::determine_module_ports() {
 	  
 	  object_id_t oid = *c_iter;
 
-	  debug(TM,"\tcheck object id: %d", oid);
+	  //debug(TM,"\tcheck object id: %d", oid);
 
 	  if((oid != gate_port->get_object_id()) &&
 	     !exists_gate_port_recursive(oid)) {
 	    // is a module port
-	    debug(TM, "is a module port");
-	    std::cout << "This gate port is a module port: " << std::endl;
-	    gate_port->print();
+	    //debug(TM, "is a module port");
+	    //std::cout << "This gate port is a module port: " << std::endl;
+	    //gate_port->print();
 
 	    GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 	    std::string mod_port_name;
