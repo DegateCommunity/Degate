@@ -52,6 +52,11 @@ private:
 				     std::string const& directory) 
     throw(XMLAttributeParseException, InvalidPointerException);
 
+  void parse_template_implementations_element(const xmlpp::Element * const implementations_element, 
+					      GateTemplate_shptr gate_tmpl,
+					      std::string const& directory) 
+    throw(XMLAttributeParseException, InvalidPointerException);
+
 
   void parse_template_ports_element(const xmlpp::Element * const template_ports_element, 
 				    GateTemplate_shptr gate_tmpl) 

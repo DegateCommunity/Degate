@@ -21,6 +21,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 #include "GateConfigWin.h"
 #include "GladeFileLoader.h"
+#include <VHDLCodeTemplateGenerator.h>
 
 #include <gdkmm/window.h>
 #include <gtkmm/stock.h>
@@ -31,9 +32,10 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 #include "GateTemplate.h"
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 
 using namespace degate;
-
+using namespace boost;
 
 GateConfigWin::GateConfigWin(Gtk::Window *parent, 
 			     LogicModel_shptr lmodel,
@@ -148,10 +150,99 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       if(entry_description) 
 	entry_description->set_text(gate_template->get_description());
 
-    }
+
+      /*
+       * page 2
+       */
+      
+      refXml->get_widget("combobox_lang", combobox_lang);
+      assert(combobox_lang != NULL);
+      if(combobox_lang != NULL) {
+	for(GateTemplate::implementation_iter iter = gate_template->implementations_begin();
+	    iter != gate_template->implementations_end(); ++iter)
+	  code_text[iter->first] = iter->second;
+
+	combobox_lang->set_active(TEXT);
+      }
+      
+
+      refXml->get_widget("generate_code_button", codegen_button);
+      assert(codegen_button != NULL);
+      if(codegen_button) {
+	codegen_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_codegen_button_clicked));
+	codegen_button->set_sensitive(false);
+      }
+
+      refXml->get_widget("code_textview", code_textview);
+      assert(code_textview != NULL);
+      if(code_textview) {
+	code_textview->get_buffer()->set_text(code_text[GateTemplate::TEXT]);
+	code_textview->get_buffer()->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_code_changed));
+      }
+
+
+      combobox_lang->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_language_changed));
+
+
+  }
 }
 
 GateConfigWin::~GateConfigWin() {
+}
+
+GateTemplate::IMPLEMENTATION_TYPE  GateConfigWin::lang_idx_to_impl(int idx) {
+  switch(idx) {
+  case 0: return GateTemplate::TEXT;
+  case 1: return GateTemplate::VHDL;
+  case 2: return GateTemplate::VHDL_TESTBENCH;
+  case 3: return GateTemplate::VERILOG;
+  case 4: return GateTemplate::VERILOG_TESTBENCH;
+  default: return GateTemplate::UNDEFINED;
+  }
+}
+
+void GateConfigWin::on_code_changed() {
+  unsigned int idx = combobox_lang->get_active_row_number();
+  code_text[lang_idx_to_impl(idx)] = code_textview->get_buffer()->get_text();
+}
+
+void GateConfigWin::on_language_changed() {
+  unsigned int idx = combobox_lang->get_active_row_number();
+  code_textview->get_buffer()->set_text(code_text[lang_idx_to_impl(idx)]);
+  if(lang_idx_to_impl(idx) == GateTemplate::VHDL)
+    codegen_button->set_sensitive(true);
+  else
+    codegen_button->set_sensitive(false);
+}
+
+void GateConfigWin::on_codegen_button_clicked() {
+
+  if(code_textview->get_buffer()->size() > 0) {
+    Gtk::MessageDialog dialog("Are you sure you want to replace the code?", 
+			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
+    dialog.set_title("Warning");      
+    if(dialog.run() == Gtk::RESPONSE_NO) return;
+  }
+
+  CodeTemplateGenerator_shptr codegen;
+
+  int idx = combobox_lang->get_active_row_number();
+  if(lang_idx_to_impl(idx) == GateTemplate::VHDL) {
+    debug(TM, "generate vhdl");
+    codegen = CodeTemplateGenerator_shptr(new VHDLCodeTemplateGenerator(entry_short_name->get_text().c_str(),
+									entry_description->get_text().c_str()));
+  }
+  else {
+    return;
+  }
+
+  type_children children = refListStore_ports->children();
+  for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
+    Gtk::TreeModel::Row row = *iter;
+    Glib::ustring port_name = row[m_Columns.m_col_text];
+    codegen->add_port(port_name, row[m_Columns.m_col_inport]);
+  }
+  code_textview->get_buffer()->set_text(codegen->generate());
 }
 
 
@@ -170,7 +261,6 @@ void GateConfigWin::on_ok_button_clicked() {
   gate_template->set_description(entry_description->get_text().c_str());
 
   // get ports
-  typedef Gtk::TreeModel::Children type_children;
 
   type_children children = refListStore_ports->children();
   for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
@@ -227,6 +317,12 @@ void GateConfigWin::on_ok_button_clicked() {
 						frame_color.get_green() >> 8,
 						frame_color.get_blue() >> 8,
 						colorbutton_frame_color->get_alpha() >> 8));
+
+
+  
+
+  BOOST_FOREACH(code_text_map_type::value_type &p, code_text)
+    gate_template->set_implementation(p.first, p.second);
 
   pDialog->hide();
   result = true;

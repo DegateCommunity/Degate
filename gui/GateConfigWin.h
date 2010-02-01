@@ -47,7 +47,7 @@ class GateConfigWin : private GladeFileLoader {
     Gtk::TreeModelColumn<bool> m_col_inport; 
     Gtk::TreeModelColumn<bool> m_col_outport; 
   };
-
+  
  public:
   GateConfigWin(Gtk::Window *parent, 
 		degate::LogicModel_shptr lmodel, 
@@ -57,7 +57,15 @@ class GateConfigWin : private GladeFileLoader {
         
   bool run();
 
-  private:
+ private:
+
+  enum LANG_ROW_INDEX {
+    TEXT = 0,
+    VHDL = 1,
+    VERILOG = 2
+  };
+
+
   Gtk::Window *parent;
 
   degate::LogicModel_shptr lmodel;
@@ -70,6 +78,7 @@ class GateConfigWin : private GladeFileLoader {
 
   Gtk::TreeView* pTreeView_ports;
 
+
   bool result;
 
   Gtk::Entry * entry_short_name;
@@ -77,6 +86,9 @@ class GateConfigWin : private GladeFileLoader {
 
   Gtk::ColorButton * colorbutton_fill_color;
   Gtk::ColorButton * colorbutton_frame_color;
+  Gtk::Button * codegen_button;
+  Gtk::ComboBox * combobox_lang;
+  Gtk::TextView * code_textview;
 
   // Signal handlers:
   virtual void on_ok_button_clicked();
@@ -85,6 +97,16 @@ class GateConfigWin : private GladeFileLoader {
   virtual void on_port_add_button_clicked();
   virtual void on_port_remove_button_clicked();
 
+  void on_codegen_button_clicked();
+  void on_language_changed();
+  void on_code_changed();
+
+  typedef std::map<degate::GateTemplate::IMPLEMENTATION_TYPE, std::string> code_text_map_type;
+  code_text_map_type code_text;
+
+  typedef Gtk::TreeModel::Children type_children;
+
+  degate::GateTemplate::IMPLEMENTATION_TYPE lang_idx_to_impl(int idx);
 };
 
 #endif

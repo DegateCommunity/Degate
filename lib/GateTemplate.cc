@@ -175,8 +175,18 @@ unsigned int GateTemplate::get_reference_counter() const {
 }
 
 
-void GateTemplate::set_implementation(IMPLEMENTATION_TYPE impl_type, std::string filename) {
-  implementations[impl_type] = filename;
+void GateTemplate::set_implementation(IMPLEMENTATION_TYPE impl_type, std::string const& code) {
+  implementations[impl_type] = code;
+}
+
+std::string GateTemplate::get_implementation(IMPLEMENTATION_TYPE impl_type) const 
+  throw(CollectionLookupException) {
+
+  implementation_collection::const_iterator found = implementations.find(impl_type);
+  if(found == implementations.end()) 
+    throw CollectionLookupException("There is no implementation for the requested type");
+  else
+    return found->second;
 }
 
 GateTemplate::implementation_iter GateTemplate::implementations_begin() {
@@ -211,3 +221,33 @@ unsigned int GateTemplate::get_number_of_ports() const {
   return ports.size();
 }
 
+
+
+std::string GateTemplate::get_impl_type_as_string(IMPLEMENTATION_TYPE impl_type) {
+  switch(impl_type) {
+  case TEXT:
+    return std::string("text");
+  case VHDL:
+    return std::string("vhdl");
+  case VHDL_TESTBENCH:
+    return std::string("vhdl-testbench");
+  case VERILOG:
+    return std::string("verilog");
+  case VERILOG_TESTBENCH:
+    return std::string("verilog-testbench");
+  default:
+    return std::string("undefined");
+  }
+}
+
+GateTemplate::IMPLEMENTATION_TYPE GateTemplate::get_impl_type_from_string(std::string const& impl_type_str) 
+  throw(DegateRuntimeException) {
+
+  if(impl_type_str == "text") return TEXT;
+  else if(impl_type_str == "vhdl") return VHDL;
+  else if(impl_type_str == "vhdl-testbench") return VHDL_TESTBENCH;
+  else if(impl_type_str == "verilog") return VERILOG_TESTBENCH;
+  else if(impl_type_str == "verilog-testbench") return VERILOG_TESTBENCH;
+  else if(impl_type_str == "undefined") return UNDEFINED;
+  else throw DegateRuntimeException("Can't parse implementation type.");
+}
