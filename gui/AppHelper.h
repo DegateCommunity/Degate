@@ -42,7 +42,7 @@ std::string get_date_and_time_as_file_prefix();
 /**
  * Autosave a project.
  * @param project Shared pointer to the project.
- * @parem interval Minimum time in seconds.
+ * @parem interval Minimum time in seconds. If you pass a zero, autosave is enforced.
  * @return Returns true if the project was saved. Returns false, if there
  *   is nothing to save.
  */

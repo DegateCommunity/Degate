@@ -869,6 +869,11 @@ void MainWin::on_algorithm_finished(int slot_pos) {
   signal_algorithm_finished_.reset();
 
   main_project->set_changed();
+
+
+  if(autosave_project(main_project, 0))
+    m_statusbar.push("Autosaving project data ... done.");
+
 }
 
 
