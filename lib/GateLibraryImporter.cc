@@ -114,6 +114,7 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
 
       const Glib::ustring name(gate_elem->get_attribute_value("name"));
       const Glib::ustring description(gate_elem->get_attribute_value("description"));
+      const Glib::ustring logic_class(gate_elem->get_attribute_value("logic-class"));
       const Glib::ustring frame_color_str(gate_elem->get_attribute_value("frame-color"));
       const Glib::ustring fill_color_str(gate_elem->get_attribute_value("fill-color"));
 
@@ -128,6 +129,7 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
 
       gate_template->set_name(string(name.c_str()));
       gate_template->set_description(string(description.c_str()));
+      gate_template->set_logic_class(string(logic_class.c_str()));
       gate_template->set_object_id(object_id);
       gate_template->set_fill_color(parse_color_string(fill_color_str));
       gate_template->set_frame_color(parse_color_string(frame_color_str));
@@ -205,7 +207,8 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
       if(myfile.is_open()) {
 	while (!myfile.eof()) {
 	  getline(myfile, line);
-	  code += line << std::endl;
+	  code.append(line);
+	  code.append("\n");
 	}
 	myfile.close();
       }

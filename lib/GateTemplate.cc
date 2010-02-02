@@ -251,3 +251,12 @@ GateTemplate::IMPLEMENTATION_TYPE GateTemplate::get_impl_type_from_string(std::s
   else if(impl_type_str == "undefined") return UNDEFINED;
   else throw DegateRuntimeException("Can't parse implementation type.");
 }
+
+void GateTemplate::set_logic_class(std::string const& logic_class) {
+  this->logic_class = logic_class;
+}
+
+
+std::string GateTemplate::get_logic_class() const {
+  return logic_class;
+}

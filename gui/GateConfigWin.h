@@ -32,10 +32,12 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 class GateConfigWin : private GladeFileLoader {
 
-  class GateConfigModelColumns : public Gtk::TreeModelColumnRecord {
+protected:
+  
+  class PortModelColumns : public Gtk::TreeModelColumnRecord {
   public:
     
-    GateConfigModelColumns() { 
+    PortModelColumns() { 
       add(m_col_id); 
       add(m_col_text); 
       add(m_col_inport); 
@@ -47,8 +49,21 @@ class GateConfigWin : private GladeFileLoader {
     Gtk::TreeModelColumn<bool> m_col_inport; 
     Gtk::TreeModelColumn<bool> m_col_outport; 
   };
-  
- public:
+
+  class LClassModelColumns : public Gtk::TreeModel::ColumnRecord {
+  public:
+    
+    LClassModelColumns() { 
+      add(m_col_ident); 
+      add(m_col_descr); 
+    }
+
+    Gtk::TreeModelColumn<Glib::ustring> m_col_ident;
+    Gtk::TreeModelColumn<Glib::ustring> m_col_descr;
+  };
+
+
+public:
   GateConfigWin(Gtk::Window *parent, 
 		degate::LogicModel_shptr lmodel, 
 		degate::GateTemplate_shptr gate_template);
@@ -57,7 +72,7 @@ class GateConfigWin : private GladeFileLoader {
         
   bool run();
 
- private:
+private:
 
   enum LANG_ROW_INDEX {
     TEXT = 0,
@@ -73,10 +88,14 @@ class GateConfigWin : private GladeFileLoader {
 
   std::list<degate::GateTemplatePort_shptr> original_ports;
 
-  GateConfigModelColumns m_Columns;
+  PortModelColumns port_model_columns;
   Glib::RefPtr<Gtk::ListStore> refListStore_ports;
-
   Gtk::TreeView* pTreeView_ports;
+
+  LClassModelColumns lclass_model_columns;
+  Glib::RefPtr<Gtk::ListStore> refListStore_lclass;
+  Gtk::ComboBox * combobox_logic_class;
+
 
 
   bool result;
@@ -107,6 +126,10 @@ class GateConfigWin : private GladeFileLoader {
   typedef Gtk::TreeModel::Children type_children;
 
   degate::GateTemplate::IMPLEMENTATION_TYPE lang_idx_to_impl(int idx);
+
+  void insert_logic_classes();
+  void append_logic_class(Glib::ustring const& ident, Glib::ustring const& descr);
+  void append_logic_class(Glib::ustring const& ident);
 };
 
 #endif

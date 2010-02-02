@@ -87,6 +87,7 @@ void GateLibraryExporter::add_gates(xmlpp::Element* templates_elem,
     gate_elem->set_attribute("type-id", number_to_string<object_id_t>(new_oid));
     gate_elem->set_attribute("name", gate_tmpl->get_name());
     gate_elem->set_attribute("description", gate_tmpl->get_description());
+    gate_elem->set_attribute("logic-class", gate_tmpl->get_logic_class());
 
     gate_elem->set_attribute("fill-color", to_color_string(gate_tmpl->get_fill_color()));
     gate_elem->set_attribute("frame-color", to_color_string(gate_tmpl->get_frame_color()));

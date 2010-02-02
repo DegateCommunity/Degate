@@ -71,7 +71,9 @@ namespace degate {
     
     implementation_collection implementations;
     image_collection images;
-   
+
+    std::string logic_class; // e.g. nand, xor, flipflop, buffer, oai
+
   protected:
     
     /**
@@ -297,6 +299,7 @@ namespace degate {
     /**
      * Get code for an implementation type.
      */
+
     std::string get_implementation(IMPLEMENTATION_TYPE impl_type) const throw(CollectionLookupException);
 
     /**
@@ -309,7 +312,29 @@ namespace degate {
     /**
      * Get number of defined ports.
      */
+
     virtual unsigned int get_number_of_ports() const;
+
+
+    /**
+     * Set logic class for a standard cell.
+     *
+     * There are two reasons for having this kind of tagging. First we
+     * want to render dedicated electronic symbols for standard gates, e.g.
+     * nands, xors and flipflops, independed of the standard cells name.
+     * Second we want to search for common building blocks, e.g.
+     * linear feedback shift registers, that we basically describe as
+     * a set of connected flipflops with some xor gates between them,
+     * independend of the gate's naming.
+     */
+
+    virtual void set_logic_class(std::string const& logic_class);
+
+    /**
+     * Get logic class for a standard cell.
+     */
+
+    virtual std::string get_logic_class() const;
 
 
     static std::string get_impl_type_as_string(IMPLEMENTATION_TYPE impl_type);
