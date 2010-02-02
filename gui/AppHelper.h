@@ -23,10 +23,11 @@
 #define __APPHELPER_H__
 
 #include <boost/format.hpp>
+#include <boost/filesystem.hpp>
 #include <stdlib.h>
 #include <iostream>
 #include <unistd.h>
-
+#include <ctime>
 #include <Project.h>
 #include <ProjectExporter.h>
 
@@ -47,7 +48,7 @@ std::string get_date_and_time_as_file_prefix();
  *   is nothing to save.
  */
 
-bool autosave_project(degate::Project_shptr project, unsigned int interval = 5 * 60);
+bool autosave_project(degate::Project_shptr project, time_t interval = 5 * 60);
 
 /**
  * Add file filter for background images to a Gtk::FileChooserDialog.
@@ -55,6 +56,17 @@ bool autosave_project(degate::Project_shptr project, unsigned int interval = 5 *
  */
 
 void add_image_file_filter_to_file_chooser(Gtk::FileChooserDialog & dialog);
+
+/**
+ * Check if there are autosaved files in \p project_dir that are newer than the
+ * normal project files.
+ */
+bool check_for_autosaved_project(boost::filesystem::path const& project_dir);
+
+/**
+ * Restore project files from the last autosaved project files.
+ */
+void restore_autosaved_project(boost::filesystem::path const& project_dir);
 
 
 #endif

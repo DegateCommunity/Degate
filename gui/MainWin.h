@@ -250,6 +250,7 @@ class MainWin : public Gtk::Window  {
   void update_gui_on_selection_change();
   void clear_selection();
   
+  void project_changed();
 };
 
 #endif
