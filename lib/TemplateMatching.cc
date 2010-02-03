@@ -28,6 +28,8 @@
 
 #include <utility>
 
+#include <math.h>
+
 using namespace degate;
 
 TemplateMatching::TemplateMatching() {
@@ -275,6 +277,9 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
   prep.sum_over_zero_mean_template_scaled = subtract_mean(prep.tmpl_img_scaled, 
 							  prep.zero_mean_template_scaled);
 
+  assert(prep.sum_over_zero_mean_template_normal > 0);
+  assert(prep.sum_over_zero_mean_template_scaled > 0);
+
   return prep;
 }
 
@@ -434,6 +439,8 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
 					   unsigned int local_y) const {
 
   double template_size = zero_mean_template->get_width() * zero_mean_template->get_height();
+  assert(template_size > 0);
+  
 
   unsigned int 
     x_plus_w = local_x + zero_mean_template->get_width() -1,
@@ -462,7 +469,8 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
   double denominator = sqrt((f2 - f1*f1/template_size) * sum_over_zero_mean_template);
   
   // calculate nummerator
-  
+  assert(!isinf(denominator) && !isnan(denominator));
+
   unsigned int _x, _y;
   double nummerator = 0;
 
