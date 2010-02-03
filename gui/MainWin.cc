@@ -1898,7 +1898,7 @@ void MainWin::on_menu_layer_import_background() {
     assert(ipWin == NULL);
     ipWin = std::tr1::shared_ptr<InProgressWin>
       (new InProgressWin(this, "Importing", 
-			 "Please wait while importing background image and calculate the prescaled images."));
+			 "Please wait while importing background image and calculating the prescaled images."));
     ipWin->show();
     main_project->set_changed();
     //imgWin.lock_renderer();
