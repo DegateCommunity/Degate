@@ -30,6 +30,7 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <list>
@@ -113,6 +114,7 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
 
       const Glib::ustring name(gate_elem->get_attribute_value("name"));
       const Glib::ustring description(gate_elem->get_attribute_value("description"));
+      const Glib::ustring logic_class(gate_elem->get_attribute_value("logic-class"));
       const Glib::ustring frame_color_str(gate_elem->get_attribute_value("frame-color"));
       const Glib::ustring fill_color_str(gate_elem->get_attribute_value("fill-color"));
 
@@ -127,6 +129,7 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
 
       gate_template->set_name(string(name.c_str()));
       gate_template->set_description(string(description.c_str()));
+      gate_template->set_logic_class(string(logic_class.c_str()));
       gate_template->set_object_id(object_id);
       gate_template->set_fill_color(parse_color_string(fill_color_str));
       gate_template->set_frame_color(parse_color_string(frame_color_str));
@@ -139,6 +142,9 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
       const xmlpp::Element * ports = get_dom_twig(gate_elem, "ports");
       if(ports != NULL) parse_template_ports_element(ports, gate_template);
 
+      const xmlpp::Element * implementations = get_dom_twig(gate_elem, "implementations");
+      if(implementations != NULL) 
+	parse_template_implementations_element(implementations, gate_template, directory);
       
       gate_lib->add_template(gate_template);
     }
@@ -156,8 +162,7 @@ void GateLibraryImporter::parse_template_images_element(const xmlpp::Element * c
 
   const xmlpp::Node::NodeList image_list = template_images_element->get_children("image");
   for(xmlpp::Node::NodeList::const_iterator iter = image_list.begin();
-      iter != image_list.end(); 
-      ++iter) {
+      iter != image_list.end(); ++iter) {
 
     if(const xmlpp::Element* image_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
       const std::string layer_type_str(image_elem->get_attribute_value("layer-type"));
@@ -168,6 +173,52 @@ void GateLibraryImporter::parse_template_images_element(const xmlpp::Element * c
 
       assert(img != NULL);
       gate_tmpl->set_image(layer_type, img);
+    }
+  }
+
+}
+
+void GateLibraryImporter::parse_template_implementations_element(const xmlpp::Element * const implementations_element, 
+								 GateTemplate_shptr gate_tmpl,
+								 std::string const& directory) 
+  throw(XMLAttributeParseException, InvalidPointerException) {
+
+  if(implementations_element == NULL || 
+     gate_tmpl == NULL) throw InvalidPointerException("Invalid pointer");
+
+  const xmlpp::Node::NodeList impl_list = implementations_element->get_children("implementation");
+  for(xmlpp::Node::NodeList::const_iterator iter = impl_list.begin();
+      iter != impl_list.end(); ++iter) {
+
+    if(const xmlpp::Element* impl_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
+      const std::string impl_type_str(impl_elem->get_attribute_value("type"));
+      const std::string impl_file(join_pathes(directory, impl_elem->get_attribute_value("file")));
+
+      GateTemplate::IMPLEMENTATION_TYPE impl_type;
+      try {
+	impl_type = GateTemplate::get_impl_type_from_string(impl_type_str);
+      }
+      catch(DegateRuntimeException const &ex) {
+	throw XMLAttributeParseException(ex.what());
+      }
+	
+      std::ifstream myfile(impl_file.c_str());
+      std::string line, code;
+      if(myfile.is_open()) {
+	while (!myfile.eof()) {
+	  getline(myfile, line);
+	  code.append(line);
+	  code.append("\n");
+	}
+	myfile.close();
+      }
+      else {
+	boost::format f("Can't open file %1%");
+	f % impl_file;
+	throw FileSystemException(f.str());
+      }
+
+      gate_tmpl->set_implementation(impl_type, code);
     }
   }
 

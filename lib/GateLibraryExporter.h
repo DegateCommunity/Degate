@@ -47,6 +47,9 @@ private:
 		  std::string const& directory) 
     throw(std::runtime_error );
 
+  void add_implementations(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
+			   std::string const& directory);
+
   void add_ports(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl);
 
   ObjectIDRewriter_shptr oid_rewriter;

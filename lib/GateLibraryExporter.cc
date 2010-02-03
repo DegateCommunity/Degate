@@ -32,9 +32,11 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <stdexcept>
 #include <list>
 #include <tr1/memory>
+
 
 using namespace std;
 using namespace degate;
@@ -85,6 +87,7 @@ void GateLibraryExporter::add_gates(xmlpp::Element* templates_elem,
     gate_elem->set_attribute("type-id", number_to_string<object_id_t>(new_oid));
     gate_elem->set_attribute("name", gate_tmpl->get_name());
     gate_elem->set_attribute("description", gate_tmpl->get_description());
+    gate_elem->set_attribute("logic-class", gate_tmpl->get_logic_class());
 
     gate_elem->set_attribute("fill-color", to_color_string(gate_tmpl->get_fill_color()));
     gate_elem->set_attribute("frame-color", to_color_string(gate_tmpl->get_frame_color()));
@@ -94,6 +97,7 @@ void GateLibraryExporter::add_gates(xmlpp::Element* templates_elem,
 
     add_images(gate_elem, gate_tmpl, directory);
     add_ports(gate_elem, gate_tmpl);
+    add_implementations(gate_elem, gate_tmpl, directory);
   }
 }
 
@@ -160,5 +164,49 @@ void GateLibraryExporter::add_ports(xmlpp::Element* gate_elem,
       port_elem->set_attribute("y", number_to_string<int>(point.get_y()));
     }
     
+  }
+}
+
+void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem, 
+					      GateTemplate_shptr gate_tmpl,
+					      std::string const& directory) {
+
+  xmlpp::Element* implementations_elem = gate_elem->add_child("implementations");
+  if(implementations_elem == NULL) throw(std::runtime_error("Failed to create node."));
+  
+  for(GateTemplate::implementation_iter iter = gate_tmpl->implementations_begin();
+      iter != gate_tmpl->implementations_end(); ++iter) {
+    
+    xmlpp::Element* impl_elem = implementations_elem->add_child("implementation");
+    if(impl_elem == NULL) throw(std::runtime_error("Failed to create node."));
+    
+    
+    GateTemplate::IMPLEMENTATION_TYPE t = iter->first;
+    std::string const& code = iter->second;
+
+    std::cout << "Code: " << code;
+    if(t != GateTemplate::UNDEFINED && !code.empty()) {
+
+      object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
+      boost::format fmter("%1%%2%.%3%");
+      switch(t) {
+      case GateTemplate::TEXT: fmter % "" % new_oid % "txt"; break;
+      case GateTemplate::VHDL: fmter % "" % new_oid % "vhdl"; break;
+      case GateTemplate::VHDL_TESTBENCH: fmter % "test_" % new_oid % "vhdl"; break;
+      case GateTemplate::VERILOG: fmter % "" % new_oid % "v"; break;
+      case GateTemplate::VERILOG_TESTBENCH: fmter % "test_" % new_oid % "v"; break;
+      default: assert(1==0); // already handled. just to get rid of a compiler warning.
+      }
+      std::string filename(fmter.str());
+
+      
+      std::ofstream myfile;
+      myfile.open(join_pathes(directory, filename).c_str());
+      myfile << code;
+      myfile.close();
+
+      impl_elem->set_attribute("type", GateTemplate::get_impl_type_as_string(t));
+      impl_elem->set_attribute("file", filename);
+    }
   }
 }

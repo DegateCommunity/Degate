@@ -23,12 +23,6 @@
 #define __GATETEMPLATE_H__
 
 #include <degate.h>
-/*
-#include "LogicModelObjectBase.h"
-#include "Rectangle.h"
-#include <ColoredObject.h>
-#include "degate_exceptions.h"
-*/
 
 #include <Layer.h>
 #include <Image.h>
@@ -55,11 +49,14 @@ namespace degate {
      */
     enum IMPLEMENTATION_TYPE {
       UNDEFINED = 0,
-      VHDL = 1,
-      VERILOG = 2
+      TEXT = 1,
+      VHDL = 2,
+      VHDL_TESTBENCH = 3,
+      VERILOG = 4,
+      VERILOG_TESTBENCH = 5
     };
 
-    typedef std::map<IMPLEMENTATION_TYPE, std::string /* filename */> implementation_collection;
+    typedef std::map<IMPLEMENTATION_TYPE, std::string /* code */> implementation_collection;
     typedef implementation_collection::iterator implementation_iter;
 
     typedef std::map<Layer::LAYER_TYPE, GateTemplateImage_shptr> image_collection;
@@ -74,6 +71,8 @@ namespace degate {
     
     implementation_collection implementations;
     image_collection images;
+
+    std::string logic_class; // e.g. nand, xor, flipflop, buffer, oai
 
   protected:
     
@@ -292,28 +291,55 @@ namespace degate {
     /**
      * Set VHDL/Verilog implementation for the gate template.
      * @param impl_type Set VHDL or Verilog.
-     * @param filename The name of the file, where the source code is. To prevent
-     *   trouble make sure that the filename is relative to the degate project
-     *   and the implementation is stored in the project directory.
+     * @param code The implementation.
      */
 
-    virtual void set_implementation(IMPLEMENTATION_TYPE impl_type, std::string filename);
+    virtual void set_implementation(IMPLEMENTATION_TYPE impl_type, std::string const& code);
 
-    
-    
+    /**
+     * Get code for an implementation type.
+     */
+
+    std::string get_implementation(IMPLEMENTATION_TYPE impl_type) const throw(CollectionLookupException);
+
     /**
      * Print gate template's meta information to an output stream.
      */
 
-    void print(std::ostream & os);
+    virtual void print(std::ostream & os);
 
 
     /**
      * Get number of defined ports.
      */
-    unsigned int get_number_of_ports() const;
+
+    virtual unsigned int get_number_of_ports() const;
 
 
+    /**
+     * Set logic class for a standard cell.
+     *
+     * There are two reasons for having this kind of tagging. First we
+     * want to render dedicated electronic symbols for standard gates, e.g.
+     * nands, xors and flipflops, independed of the standard cells name.
+     * Second we want to search for common building blocks, e.g.
+     * linear feedback shift registers, that we basically describe as
+     * a set of connected flipflops with some xor gates between them,
+     * independend of the gate's naming.
+     */
+
+    virtual void set_logic_class(std::string const& logic_class);
+
+    /**
+     * Get logic class for a standard cell.
+     */
+
+    virtual std::string get_logic_class() const;
+
+
+    static std::string get_impl_type_as_string(IMPLEMENTATION_TYPE impl_type);
+    static IMPLEMENTATION_TYPE get_impl_type_from_string(std::string const& impl_type_str) 
+      throw(DegateRuntimeException);
 
   };
 

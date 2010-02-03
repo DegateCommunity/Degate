@@ -311,7 +311,7 @@ void MainWin::on_menu_project_close() {
 
     if(main_project->is_changed()) {
 
-      Gtk::MessageDialog dialog(*this, "Project data was modified. Should it be saved?", 
+      Gtk::MessageDialog dialog("Project data was modified. Should it be saved?", 
 				true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
       dialog.set_title("Warning");      
       if(dialog.run() == Gtk::RESPONSE_YES) {
@@ -343,7 +343,7 @@ void MainWin::on_menu_project_settings() {
   if(main_project) {
     ProjectSettingsWin psWin(this, main_project);
     if(psWin.run()) {
-      main_project->set_changed();
+      project_changed();
     }
   }
 }
@@ -457,10 +457,20 @@ void MainWin::set_project_to_open(char * project_dir) {
 void MainWin::open_project(Glib::ustring project_dir) {
   if(main_project) on_menu_project_close();
 
+  if(check_for_autosaved_project(project_dir.c_str())) {
+
+    Gtk::MessageDialog dialog("There are autosaved files that are newer than the project files. "
+			      "Should the project data be loaded from the autosaved files instead?", 
+			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
+    dialog.set_title("Question");      
+    if(dialog.run() == Gtk::RESPONSE_YES)
+      restore_autosaved_project(project_dir.c_str());
+  }
+
   ipWin = std::tr1::shared_ptr<InProgressWin>
     (new InProgressWin(this, "Opening Project", "Please wait while opening project."));
   ipWin->show();
-
+  
   signal_project_open_finished_.connect(sigc::mem_fun(*this, &MainWin::on_project_load_finished));
   thread = Glib::Thread::create(sigc::bind<const Glib::ustring>
 				(sigc::mem_fun(*this, &MainWin::project_open_thread), 
@@ -628,7 +638,7 @@ void MainWin::on_menu_project_create_subproject() {
 
   lmodel->add_object(layer->get_layer_pos(), annotation);
 
-  main_project->set_changed();
+  project_changed();
   imgWin.update_screen();
 
   if(alWin != NULL) alWin->refresh();
@@ -868,8 +878,7 @@ void MainWin::on_algorithm_finished(int slot_pos) {
 
   signal_algorithm_finished_.reset();
 
-  main_project->set_changed();
-
+  project_changed();
 
   if(autosave_project(main_project, 0))
     m_statusbar.push("Autosaving project data ... done.");
@@ -971,7 +980,7 @@ void MainWin::on_menu_gate_port_colors() {
     pcWin.run();
 
     imgWin.update_screen();
-    main_project->set_changed();
+    project_changed();
   }
 }
 
@@ -981,8 +990,8 @@ void MainWin::on_menu_gate_list() {
     GateListWin glWin(this, main_project->get_logic_model());
     glWin.run();
 
+    project_changed();
     imgWin.update_screen();
-    main_project->set_changed();
 
     apply_colors_to_gate_ports(main_project->get_logic_model(), 
 			       main_project->get_port_color_manager());
@@ -1004,7 +1013,7 @@ void MainWin::on_menu_gate_orientation() {
       }
       else {
 	imgWin.update_screen();
-	main_project->set_changed();
+	project_changed();
       }
     }
     
@@ -1045,7 +1054,7 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
       }
       
       imgWin.update_screen();
-      main_project->set_changed();
+      project_changed();
     }
     
   }
@@ -1079,7 +1088,7 @@ void MainWin::on_menu_gate_set_as_master() {
 			   gate->get_orientation());
 
       imgWin.update_screen();
-      main_project->set_changed();
+      project_changed();
     }
   }
 }
@@ -1133,7 +1142,7 @@ void MainWin::on_menu_gate_set() {
     new_gate->print();
     imgWin.reset_selection();
     imgWin.update_screen();
-    main_project->set_changed();
+    project_changed();
 
   }
   else if(selected_objects.size() == 1) {
@@ -1150,7 +1159,7 @@ void MainWin::on_menu_gate_set() {
       gate->set_gate_template(tmpl);
 
       imgWin.update_screen();
-      main_project->set_changed();
+      project_changed();
 
     }
   }
@@ -1195,7 +1204,7 @@ void MainWin::on_menu_gate_create_by_selection() {
     
       imgWin.reset_selection();
       imgWin.update_screen();
-      main_project->set_changed();
+      project_changed();
 
     }
   }
@@ -1234,7 +1243,7 @@ void MainWin::on_wire_tool_release() {
 
   lmodel->add_object(layer->get_layer_pos(), new_wire);
 
-  main_project->set_changed();
+  project_changed();
   imgWin.update_screen();
 }
 
@@ -1361,7 +1370,7 @@ bool MainWin::on_imgwin_clicked(GdkEventButton * event) {
 	  lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), 
 			     new_via);
 	  
-	  main_project->set_changed();
+	  project_changed();
 	  imgWin.update_screen();
 	  
 	}
@@ -1634,7 +1643,7 @@ void MainWin::on_popup_menu_set_port() {
       template_port->set_point(p);
       lmodel->update_ports(gate_template);
 
-      main_project->set_changed();
+      project_changed();
       imgWin.update_screen();
     }
   }
@@ -1662,7 +1671,7 @@ void MainWin::on_popup_menu_set_name() {
       for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
 	(*it)->set_name(name);
       }
-      main_project->set_changed();
+      project_changed();
       imgWin.update_screen();
     }
 
@@ -1679,7 +1688,7 @@ void MainWin::on_popup_menu_add_vertical_grid_line() {
     else {
       g->add_offset(last_click_on_real_x);
       gcWin->update_grid_entries();
-      main_project->set_changed();
+      project_changed();
       imgWin.update_screen();
     }
   }
@@ -1695,7 +1704,7 @@ void MainWin::on_popup_menu_add_horizontal_grid_line() {
     else {
       g->add_offset(last_click_on_real_y);
       gcWin->update_grid_entries();
-      main_project->set_changed();
+      project_changed();
       imgWin.update_screen();
     }
   }
@@ -1756,7 +1765,7 @@ void MainWin::on_auto_name_finished(ret_t ret) {
     error_dialog("Error", "naming failed");
   }
   else {
-    main_project->set_changed();
+    project_changed();
     //imgWin.update_screen(); // XXX results in a Fatal IO error 11 (Resource temporarily unavailable) on X server :0.0.
   }
 }
@@ -1770,13 +1779,11 @@ void MainWin::on_menu_logic_interconnect() {
       return;
     }
 
-
     connect_objects<std::set<PlacedLogicModelObject_shptr>::iterator>(main_project->get_logic_model(),
       selected_objects.begin(),
       selected_objects.end());
 
-
-    main_project->set_changed();
+    project_changed();
     imgWin.update_screen();
   }
 }
@@ -1795,7 +1802,7 @@ void MainWin::on_menu_logic_isolate() {
       selected_objects.begin(),
       selected_objects.end());
 
-    main_project->set_changed();
+    project_changed();
     imgWin.update_screen();
   }
 
@@ -1821,7 +1828,7 @@ void MainWin::on_menu_logic_create_annotation() {
 
   lmodel->add_object(layer->get_layer_pos(), annotation);
 
-  main_project->set_changed();
+  project_changed();
   imgWin.update_screen();
 
   if(alWin != NULL) alWin->refresh();
@@ -1857,7 +1864,7 @@ void MainWin::on_menu_move_gate_into_module() {
     }
 
     modWin->update();
-    main_project->set_changed();
+    project_changed();
   }
   
 }
@@ -1872,7 +1879,7 @@ void MainWin::on_menu_view_grid_config() {
 
 void MainWin::on_grid_config_changed() {
   if(gcWin) {
-    main_project->set_changed();
+    project_changed();
     imgWin.update_screen();
   }
 }
@@ -1900,8 +1907,7 @@ void MainWin::on_menu_layer_import_background() {
       (new InProgressWin(this, "Importing", 
 			 "Please wait while importing background image and calculating the prescaled images."));
     ipWin->show();
-    main_project->set_changed();
-    //imgWin.lock_renderer();
+    project_changed();
 
     signal_bg_import_finished_.connect(sigc::mem_fun(*this, &MainWin::on_background_import_finished));
     Glib::Thread::create(sigc::bind<const Glib::ustring>
@@ -1949,7 +1955,7 @@ void MainWin::on_menu_layer_configuration() {
   if(main_project) {
     
     if(lcWin->run()) {
-      main_project->set_changed();
+      project_changed();
       set_layer(get_first_enabled_layer(main_project->get_logic_model()));
     }
   }
@@ -1968,7 +1974,7 @@ void MainWin::on_menu_logic_clear_logic_model() {
   switch(result) {
   case(Gtk::RESPONSE_OK):
     clear_logic_model(lmodel, lmodel->get_current_layer());
-    main_project->set_changed();
+    project_changed();
     imgWin.update_screen();
     ciWin->objects_removed();
     break;
@@ -2011,7 +2017,7 @@ void MainWin::on_menu_layer_clear_background_image() {
     if(layer->has_background_image()) {
       BackgroundImage_shptr img = layer->get_image();
       clear_image<BackgroundImage>(img);
-      main_project->set_changed();
+      project_changed();
       imgWin.update_screen();
     }
   }
@@ -2035,3 +2041,8 @@ void MainWin::warning_dialog(const char * const title, const char * const messag
   dialog.run();
 }
 
+void MainWin::project_changed() {
+
+  if(main_project != NULL) main_project->set_changed();
+  update_title();
+}
