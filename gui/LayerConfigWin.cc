@@ -205,7 +205,7 @@ void LayerConfigWin::on_ok_button_clicked() {
   if(need_progress_bar) {
     debug(TM, "progress bar");
     ipWin = new InProgressWin(parent, "Importing", 
-			      "Please wait while importing background image and calculate the prescaled images.");
+			      "Please wait while importing background image and calculating the prescaled images.");
     ipWin->show();
   }
   else {
@@ -240,6 +240,7 @@ void LayerConfigWin::on_ok_button_clicked() {
     Glib::ustring filename = row[m_Columns.m_col_filename];
     if(filename != "") {
       images_to_load.push_back(std::make_pair(layer, filename));
+      row[m_Columns.m_col_filename] = "";
     }
 
   }
