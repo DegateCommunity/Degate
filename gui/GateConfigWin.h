@@ -109,12 +109,15 @@ private:
   Gtk::ComboBox * combobox_lang;
   Gtk::TextView * code_textview;
 
+  std::string selected_logic_class;
+
   // Signal handlers:
   virtual void on_ok_button_clicked();
   virtual void on_cancel_button_clicked();
 
   virtual void on_port_add_button_clicked();
   virtual void on_port_remove_button_clicked();
+  virtual void on_logic_class_changed();
 
   void on_codegen_button_clicked();
   void on_language_changed();

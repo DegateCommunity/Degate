@@ -87,6 +87,7 @@ set(SOURCES
 	GateTemplate.cc
 	GateLibrary.cc
 	Module.cc
+	CodeTemplateGenerator.cc
 	VHDLCodeTemplateGenerator.cc
 
 	#

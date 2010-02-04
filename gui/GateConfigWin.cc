@@ -159,12 +159,15 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 	combobox_logic_class->set_model(refListStore_lclass);
 	insert_logic_classes();
 	combobox_logic_class->pack_start(lclass_model_columns.m_col_descr);
+	selected_logic_class = gate_template->get_logic_class();
 	type_children children = refListStore_lclass->children();
 	for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
 	  Gtk::TreeModel::Row row = *iter;
-	  if(row[lclass_model_columns.m_col_ident] == gate_template->get_logic_class())
+	  if(row[lclass_model_columns.m_col_ident] == selected_logic_class)
 	    combobox_logic_class->set_active(iter);
 	}
+
+	combobox_logic_class->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_logic_class_changed));
       }
 
       /*
@@ -191,6 +194,8 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       refXml->get_widget("code_textview", code_textview);
       assert(code_textview != NULL);
       if(code_textview) {
+	code_textview->modify_font(Pango::FontDescription("courier"));
+
 	code_textview->get_buffer()->set_text(code_text[GateTemplate::TEXT]);
 	code_textview->get_buffer()->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_code_changed));
       }
@@ -233,7 +238,6 @@ void GateConfigWin::insert_logic_classes() {
 }
 
 void GateConfigWin::append_logic_class(Glib::ustring const& ident, Glib::ustring const& descr) {
-  std::cout << "add " << ident << std::endl;
   Gtk::TreeModel::Row row = *(refListStore_lclass->append());
   row[lclass_model_columns.m_col_ident] = ident;
   row[lclass_model_columns.m_col_descr] = descr;
@@ -283,7 +287,8 @@ void GateConfigWin::on_codegen_button_clicked() {
   if(lang_idx_to_impl(idx) == GateTemplate::VHDL) {
     debug(TM, "generate vhdl");
     codegen = CodeTemplateGenerator_shptr(new VHDLCodeTemplateGenerator(entry_short_name->get_text().c_str(),
-									entry_description->get_text().c_str()));
+									entry_description->get_text().c_str(),
+									selected_logic_class));
   }
   else {
     return;
@@ -372,15 +377,7 @@ void GateConfigWin::on_ok_button_clicked() {
 						colorbutton_frame_color->get_alpha() >> 8));
 
 
-  
-  Gtk::TreeModel::iterator iter = combobox_logic_class->get_active();
-  if(iter) {
-    Gtk::TreeModel::Row row = *iter;
-    if(row) {
-      Glib::ustring cl_name = row[lclass_model_columns.m_col_ident];
-      gate_template->set_logic_class(cl_name);
-    }
-  }
+  gate_template->set_logic_class(selected_logic_class);
 
 
   BOOST_FOREACH(code_text_map_type::value_type &p, code_text)
@@ -388,6 +385,17 @@ void GateConfigWin::on_ok_button_clicked() {
 
   pDialog->hide();
   result = true;
+}
+
+void GateConfigWin::on_logic_class_changed() {
+  Gtk::TreeModel::iterator iter = combobox_logic_class->get_active();
+  if(iter) {
+    Gtk::TreeModel::Row row = *iter;
+    if(row) {
+      Glib::ustring s = row[lclass_model_columns.m_col_ident];
+      selected_logic_class = s;
+    }
+  }
 }
 
 void GateConfigWin::on_cancel_button_clicked() {

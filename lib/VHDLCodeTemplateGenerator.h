@@ -26,33 +26,10 @@
 #include <tr1/memory>
 #include <cctype>
 
+#include <CodeTemplateGenerator.h>
+#include <boost/foreach.hpp>
+
 namespace degate {
-
-  class CodeTemplateGenerator {
-  public:
-    typedef std::map<std::string, bool> port_map_type;
-    
-  protected:
-    std::string entity_name, description;
-    port_map_type port_map;
-
-  public:
-
-    CodeTemplateGenerator(std::string const& _entity_name,
-			  std::string const& _description) : 
-      entity_name(_entity_name),
-      description(_description) {}
-
-    virtual ~CodeTemplateGenerator() {}
-
-    virtual void add_port(std::string port_name, bool is_inport) {
-      port_map[port_name] = is_inport;
-    }
-
-    virtual std::string generate() const = 0;
-  };
-
-  typedef std::tr1::shared_ptr<CodeTemplateGenerator> CodeTemplateGenerator_shptr;
 
   /**
    * A code template generator for VHDL.
@@ -62,7 +39,8 @@ namespace degate {
   public:
     
     VHDLCodeTemplateGenerator(std::string const& entity_name,
-			      std::string const& description);
+			      std::string const& description,
+			      std::string const& logic_class);
 
     virtual ~VHDLCodeTemplateGenerator();
 
@@ -72,9 +50,11 @@ namespace degate {
 
     std::string generate_header() const;
 
-    std::string generate_enitity() const;
+    std::string generate_entity() const;
 
-    std::string generate_architecture() const;
+    std::string generate_architecture(std::string const& impl) const;
+
+    std::string generate_impl(std::string const& logic_class) const;
 
     /**
      * Generate a VHDL complient identifier from a string.
@@ -88,6 +68,15 @@ namespace degate {
      * - are not case sensitive.
      */
     std::string generate_identifier(std::string const& name) const;
+
+    template<typename Container>
+    Container generate_identifier(Container const& c) const {
+      Container new_c;
+      BOOST_FOREACH(typename Container::value_type const& s, c) {
+	new_c.push_back(generate_identifier(s));
+      }
+      return new_c;
+    }
 
   };
 
