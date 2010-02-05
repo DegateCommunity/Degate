@@ -44,17 +44,32 @@ namespace degate {
 
     virtual ~VHDLCodeTemplateGenerator();
 
-    std::string generate() const;
+    virtual std::string generate() const;
 
-  private:
+    typedef std::map<std::string, std::string> port_map_type;
+    
+  protected:
 
-    std::string generate_header() const;
+    virtual std::string generate_header() const;
 
-    std::string generate_entity() const;
+    virtual std::string generate_port_description() const;
 
-    std::string generate_architecture(std::string const& impl) const;
+    virtual std::string generate_entity(std::string const& entity_name,
+					std::string const& port_description = "") const;
 
-    std::string generate_impl(std::string const& logic_class) const;
+    virtual std::string generate_component(std::string const& entity_name,
+					   std::string const& port_description) const;
+
+    virtual std::string generate_architecture(std::string const& entity_name,
+					      std::string const& header,
+					      std::string const& impl) const;
+
+    virtual std::string generate_impl(std::string const& logic_class) const;
+
+
+    virtual std::string generate_instance(std::string const& instance_name,
+					  std::string const& instance_type,
+					  port_map_type const& port_map) const;
 
     /**
      * Generate a VHDL complient identifier from a string.
@@ -67,7 +82,7 @@ namespace degate {
      * - Cannot contain white space
      * - are not case sensitive.
      */
-    std::string generate_identifier(std::string const& name) const;
+    virtual std::string generate_identifier(std::string const& name) const;
 
     template<typename Container>
     Container generate_identifier(Container const& c) const {

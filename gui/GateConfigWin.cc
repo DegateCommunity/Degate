@@ -22,6 +22,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "GateConfigWin.h"
 #include "GladeFileLoader.h"
 #include <VHDLCodeTemplateGenerator.h>
+#include <VHDLTBCodeTemplateGenerator.h>
 
 #include <gdkmm/window.h>
 #include <gtkmm/stock.h>
@@ -266,13 +267,17 @@ void GateConfigWin::on_code_changed() {
 void GateConfigWin::on_language_changed() {
   unsigned int idx = combobox_lang->get_active_row_number();
   code_textview->get_buffer()->set_text(code_text[lang_idx_to_impl(idx)]);
-  if(lang_idx_to_impl(idx) == GateTemplate::VHDL)
+  if(lang_idx_to_impl(idx) == GateTemplate::VHDL ||
+     lang_idx_to_impl(idx) == GateTemplate::VHDL_TESTBENCH)
     codegen_button->set_sensitive(true);
   else
     codegen_button->set_sensitive(false);
 }
 
 void GateConfigWin::on_codegen_button_clicked() {
+
+  CodeTemplateGenerator_shptr codegen;
+  int idx = combobox_lang->get_active_row_number();
 
   if(code_textview->get_buffer()->size() > 0) {
     Gtk::MessageDialog dialog("Are you sure you want to replace the code?", 
@@ -281,14 +286,26 @@ void GateConfigWin::on_codegen_button_clicked() {
     if(dialog.run() == Gtk::RESPONSE_NO) return;
   }
 
-  CodeTemplateGenerator_shptr codegen;
+  if(lang_idx_to_impl(idx) == GateTemplate::UNDEFINED) {
+    Gtk::MessageDialog dialog("If you define a logic class under the tab 'entity', "
+			      "you can auto-generate more specific code stubs.", 
+			      true, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK);
+    dialog.set_title("Hint");      
+    dialog.run();
+  }
 
-  int idx = combobox_lang->get_active_row_number();
+
   if(lang_idx_to_impl(idx) == GateTemplate::VHDL) {
     debug(TM, "generate vhdl");
     codegen = CodeTemplateGenerator_shptr(new VHDLCodeTemplateGenerator(entry_short_name->get_text().c_str(),
 									entry_description->get_text().c_str(),
 									selected_logic_class));
+  }
+  else if(lang_idx_to_impl(idx) == GateTemplate::VHDL_TESTBENCH) {
+    debug(TM, "generate vhdl");
+    codegen = CodeTemplateGenerator_shptr(new VHDLTBCodeTemplateGenerator(entry_short_name->get_text().c_str(),
+									  entry_description->get_text().c_str(),
+									  selected_logic_class));
   }
   else {
     return;

@@ -31,11 +31,19 @@ namespace degate {
 
   class CodeTemplateGenerator {
   public:
-    typedef std::map<std::string, bool> port_map_type;
+    typedef std::map<std::string, bool> port_direction_type;
     
   protected:
     std::string entity_name, description, logic_class;
-    port_map_type port_map;
+    port_direction_type port_direction;
+
+    virtual std::vector<std::string> get_inports() const;
+
+    virtual std::vector<std::string> get_outports() const;
+
+    std::string get_clock_port_name() const;
+
+    std::string get_reset_port_name() const;
 
   public:
 
@@ -46,10 +54,6 @@ namespace degate {
     virtual ~CodeTemplateGenerator();
 
     virtual void add_port(std::string port_name, bool is_inport);
-
-    virtual std::vector<std::string> get_inports() const;
-
-    virtual std::vector<std::string> get_outports() const;
 
     virtual std::string generate() const = 0;
   };

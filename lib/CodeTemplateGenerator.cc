@@ -21,6 +21,8 @@
 
 #include <CodeTemplateGenerator.h>
 #include <boost/foreach.hpp>
+#include <algorithm>
+#include <string>
 
 using namespace degate;
 using namespace boost;
@@ -38,13 +40,33 @@ CodeTemplateGenerator::~CodeTemplateGenerator() {
 
 
 void CodeTemplateGenerator::add_port(std::string port_name, bool is_inport) {
-  port_map[port_name] = is_inport;
+  std::string lc = port_name;
+  std::transform(lc.begin(), lc.end(), lc.begin(), ::tolower);
+  port_direction[port_name] = is_inport;
+}
+
+std::string CodeTemplateGenerator::get_clock_port_name() const {
+  port_direction_type::const_iterator found;
+  if((port_direction.end() != (found = port_direction.find("clock"))) ||
+     (port_direction.end() != (found = port_direction.find("clk"))))
+    return found->first;
+  else
+    return "";
+}
+
+std::string CodeTemplateGenerator::get_reset_port_name() const {
+  port_direction_type::const_iterator found;
+  if((port_direction.end() != (found = port_direction.find("reset"))) ||
+     (port_direction.end() != (found = port_direction.find("rst"))))
+    return found->first;
+  else
+    return "";
 }
 
 std::vector<std::string> CodeTemplateGenerator::get_inports() const {
   std::vector<std::string> ports;
   
-  BOOST_FOREACH(port_map_type::value_type const& p, port_map)
+  BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
     if(p.second == true) ports.push_back(p.first);
 
   return ports;
@@ -53,7 +75,7 @@ std::vector<std::string> CodeTemplateGenerator::get_inports() const {
 std::vector<std::string> CodeTemplateGenerator::get_outports() const {
   std::vector<std::string> ports;
   
-  BOOST_FOREACH(port_map_type::value_type const& p, port_map)
+  BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
     if(p.second == false) ports.push_back(p.first);
 
   return ports;

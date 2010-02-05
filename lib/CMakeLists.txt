@@ -89,6 +89,7 @@ set(SOURCES
 	Module.cc
 	CodeTemplateGenerator.cc
 	VHDLCodeTemplateGenerator.cc
+	VHDLTBCodeTemplateGenerator.cc
 
 	#
 	# importer / exporter

@@ -34,19 +34,20 @@ VHDLCodeTemplateGenerator::VHDLCodeTemplateGenerator(std::string const& entity_n
   CodeTemplateGenerator(entity_name, description, logic_class) {
 }
 
+
 VHDLCodeTemplateGenerator::~VHDLCodeTemplateGenerator() {
 }
 
 std::string VHDLCodeTemplateGenerator::generate() const {
   return 
     generate_header() + 
-    generate_entity() + 
-    generate_architecture(generate_impl(logic_class));
+    generate_entity(entity_name, generate_port_description()) + 
+    generate_architecture(entity_name, "", generate_impl(logic_class));
 }
 
 std::string VHDLCodeTemplateGenerator::generate_header() const {
   boost::format f("--\n"
-		  "-- This is VHDL code for a gate of type %1%\n"
+		  "-- This is a VHDL implementation for a gate of type %1%\n"
 		  "--\n"
 		  "-- Please customize this code template according to your needs.\n\n"
 		  "library ieee;\n"
@@ -55,16 +56,36 @@ std::string VHDLCodeTemplateGenerator::generate_header() const {
   return f.str();
 }
 
-std::string VHDLCodeTemplateGenerator::generate_entity() const {
+std::string VHDLCodeTemplateGenerator::generate_port_description() const {
+
+  boost::format f("  port(%1% : in std_logic;\n"
+		  "       %2% : out std_logic);\n");
+  f % boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_inports()), ", ")
+    % boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_outports()), ", ");
+  return f.str();
+}
+
+
+std::string VHDLCodeTemplateGenerator::generate_entity(std::string const& entity_name,
+						       std::string const& port_description) const {
   
   boost::format f("entity %1% is\n"
-		  "\tport(%2% : in std_logic;\n"
-		  "\t\t%3% : out std_logic);\n"
-		  "end %4%;\n\n");
+		  "%2%"
+		  "end %3%;\n\n");
   f % generate_identifier(entity_name) 
-    % boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_inports()), ", ")
-    % boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_outports()), ", ")
+    % port_description
     % generate_identifier(entity_name);
+  return f.str();
+}
+
+std::string VHDLCodeTemplateGenerator::generate_component(std::string const& entity_name,
+								  std::string const& port_description) const {
+
+  boost::format f("  component %1% is\n"
+		  "%2%"
+		  "  end component;\n\n");
+  f % generate_identifier(entity_name) 
+    % port_description;
   return f.str();
 }
 
@@ -75,16 +96,16 @@ std::string VHDLCodeTemplateGenerator::generate_impl(std::string const& logic_cl
 
   if(logic_class == "inverter" &&
      in.size() == 1 && out.size() == 1) {
-    boost::format f("\t%1% <= not %2%;");
+    boost::format f("  %1% <= not %2%;");
     f % generate_identifier(out[0]) % generate_identifier(in[0]);
     return f.str();
   }
   else if((logic_class == "xor" ||
 	   logic_class == "or" ||
 	   logic_class == "and" ||
-	   logic_class == "xnor" ||
 	   logic_class == "nor" ||
-	   logic_class == "nand") &&
+	   logic_class == "nand" ||
+	   logic_class == "xnor") &&
 	  in.size() >= 2 && out.size() == 1) {
 
     std::string inner_op, outer_op = "not";
@@ -97,7 +118,7 @@ std::string VHDLCodeTemplateGenerator::generate_impl(std::string const& logic_cl
       inner_op = logic_class;
     }
 
-    boost::format f("\t%1% <= %2%%3%%4%%5%;");
+    boost::format f("  %1% <= %2%%3%%4%%5%;");
     f % generate_identifier(out[0]) 
       % outer_op
       % (outer_op.empty() ? "" : "(")
@@ -109,19 +130,24 @@ std::string VHDLCodeTemplateGenerator::generate_impl(std::string const& logic_cl
   }
   else {
     return 
-      "\t-- \n"
-      "\t-- Please implement behaviour.\n"
-      "\t-- \n";
+      "  -- \n"
+      "  -- Please implement behaviour.\n"
+      "  -- \n";
   }
 }
 
-std::string VHDLCodeTemplateGenerator::generate_architecture(std::string const& impl) const {
+std::string VHDLCodeTemplateGenerator::generate_architecture(std::string const& entity_name,
+							     std::string const& header,
+							     std::string const& impl) const {
 
   boost::format f("architecture Behavioral of %1% is\n"
-		  "begin\n"
 		  "%2%\n"
+		  "begin\n"
+		  "%3%\n"
 		  "end Behavioral;\n\n");
-  f % generate_identifier(entity_name) % impl;
+  f % generate_identifier(entity_name) 
+    % header
+    % impl;
   return f.str();
 }
 
@@ -130,8 +156,9 @@ std::string VHDLCodeTemplateGenerator::generate_identifier(std::string const& na
   
   bool first_char = true;
   BOOST_FOREACH(char c, name) {
-    if(first_char && !isalpha(c)) {
-      identifier.append("entity_");
+    if(c == '/' || c == '!') identifier.append("not");
+    else if(first_char && !isalpha(c)) {
+      //identifier.append("entity_");
       identifier.push_back(c);
     }
     else if(isalnum(c)) identifier.push_back(c);
@@ -142,3 +169,22 @@ std::string VHDLCodeTemplateGenerator::generate_identifier(std::string const& na
   return identifier;
 }
 
+
+std::string VHDLCodeTemplateGenerator::generate_instance(std::string const& instance_name,
+							 std::string const& instance_type,
+							 port_map_type const& port_map) const {
+
+  std::list<std::string> port_map_str;
+
+  BOOST_FOREACH(port_map_type::value_type p, port_map) {
+    boost::format m("    %1% => %2%");
+    m % generate_identifier(p.first) % generate_identifier(p.second);
+    port_map_str.push_back(m.str());
+  }
+
+  boost::format f("  %1% : %2% port map (\n%3%\n  );\n\n\n");
+  f % generate_identifier(instance_name)
+    % generate_identifier(instance_type)
+    % boost::algorithm::join(port_map_str, ",\n");
+  return f.str();
+}
