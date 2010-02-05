@@ -94,6 +94,11 @@ std::string VHDLCodeTemplateGenerator::generate_impl(std::string const& logic_cl
   std::vector<std::string> in = get_inports();
   std::vector<std::string> out = get_outports();
 
+  std::string clock_name = get_clock_port_name();
+  if(clock_name.empty()) clock_name = "clock";
+  std::string reset_name = get_reset_port_name();
+  if(reset_name.empty()) reset_name = "reset";
+
   if(logic_class == "inverter" &&
      in.size() == 1 && out.size() == 1) {
     boost::format f("  %1% <= not %2%;");
@@ -126,6 +131,44 @@ std::string VHDLCodeTemplateGenerator::generate_impl(std::string const& logic_cl
 			       std::string(" ") + inner_op + std::string(" "))
       % (outer_op.empty() ? "" : ")");
 
+    return f.str();
+  }
+  else if(logic_class == "flipflop-async-rst") {
+    boost::format f(
+      "  -- \n"
+      "  -- Please implement behaviour.\n"
+      "  -- \n"
+      "  -- process(%1%, %2%)\n"
+      "  -- begin\n"
+      "  --  if %3% = '1' then   -- or '0' if RESET is active low...\n"
+      "  --    Q <= '0';\n"
+      "  --  elsif rising_edge(%4%) then\n"
+      "  --    if Enable = '1' then  -- or '0' if Enable is active low...\n"
+      "  --      Q <= D;\n"
+      "  --    end if;\n"
+      "  --   end if;\n"
+      "  -- end process;\n");
+    f % clock_name % reset_name
+      % reset_name
+      % clock_name;
+    return f.str();
+  }
+  else if(logic_class == "flipflop-sync-rst") {
+    boost::format f(
+      "  -- \n"
+      "  -- Please implement behaviour.\n"
+      "  -- \n"
+      "  -- process(%1%)\n"
+      "  -- begin\n"
+      "  --   if rising_edge(%2%) then\n"
+      "  --     if RESET = '1' then\n"
+      "  --       Q <= '0';\n"
+      "  --     elsif Enable = '1' then  -- or '0' if Enable is active low...\n"
+      "  --       Q <= D;\n"
+      "  --     end if;\n"
+      "  --   end if;\n"
+      "  -- end process;\n");
+    f % clock_name % clock_name;
     return f.str();
   }
   else {
