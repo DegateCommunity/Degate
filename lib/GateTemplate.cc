@@ -248,8 +248,13 @@ GateTemplate::IMPLEMENTATION_TYPE GateTemplate::get_impl_type_from_string(std::s
   else if(impl_type_str == "vhdl-testbench") return VHDL_TESTBENCH;
   else if(impl_type_str == "verilog") return VERILOG_TESTBENCH;
   else if(impl_type_str == "verilog-testbench") return VERILOG_TESTBENCH;
-  else if(impl_type_str == "undefined") return UNDEFINED;
-  else throw DegateRuntimeException("Can't parse implementation type.");
+  else if(impl_type_str == "undefined" ||
+	  impl_type_str == "") return UNDEFINED;
+  else {
+    boost::format f("Can't parse implementation type '%1%'.");
+    f % impl_type_str;
+    throw DegateRuntimeException(f.str());
+  }
 }
 
 void GateTemplate::set_logic_class(std::string const& logic_class) {
