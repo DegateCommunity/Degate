@@ -176,16 +176,16 @@ void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem,
   
   for(GateTemplate::implementation_iter iter = gate_tmpl->implementations_begin();
       iter != gate_tmpl->implementations_end(); ++iter) {
-    
-    xmlpp::Element* impl_elem = implementations_elem->add_child("implementation");
-    if(impl_elem == NULL) throw(std::runtime_error("Failed to create node."));
-    
+        
     
     GateTemplate::IMPLEMENTATION_TYPE t = iter->first;
     std::string const& code = iter->second;
 
     std::cout << "Code: " << code;
     if(t != GateTemplate::UNDEFINED && !code.empty()) {
+
+      xmlpp::Element* impl_elem = implementations_elem->add_child("implementation");
+      if(impl_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
       object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
       boost::format fmter("%1%%2%.%3%");
