@@ -192,9 +192,10 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 
     if(const xmlpp::Element* impl_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
       const std::string impl_type_str(impl_elem->get_attribute_value("type"));
-      const std::string impl_file(join_pathes(directory, impl_elem->get_attribute_value("file")));
+      const std::string impl_file_attr(impl_elem->get_attribute_value("file"));
+      const std::string impl_file(join_pathes(directory, impl_file_attr));
 
-      if(!impl_file.empty()) {
+      if(!impl_file_attr.empty()) {
 	GateTemplate::IMPLEMENTATION_TYPE impl_type;
 	try {
 	  impl_type = GateTemplate::get_impl_type_from_string(impl_type_str);
