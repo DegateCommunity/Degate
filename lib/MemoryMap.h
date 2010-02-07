@@ -170,11 +170,11 @@ namespace degate {
     case MAP_STORAGE_TYPE_TEMP_FILE:
       if(mem != NULL) {
 	if(msync(mem, filesize, MS_SYNC) == -1) {
-	  debug(TM, "msync() failed");
+	  perror("msync() failed");
 	}
 	
 	if(munmap(mem, filesize) == -1) {
-	  debug(TM, "munmap failed");
+	  perror("munmap failed");
 	}
 	
 	mem = NULL;
