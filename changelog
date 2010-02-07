@@ -4,7 +4,14 @@ degate (0.0.7) unstable; urgency=low
   * Degate now uses cmake to build the code.
   * Degate now uses a tile based approach to handle large images.
   * Implemented autosave.
-	
+  * Added support for behavioural description of standard cells in VHDL, Verilog and free text.
+  * Added support for the autogeneration of VHDL and VHDL testbench code.
+  * Support for enabling/disabling and re-ordering of layers added.
+  * Annotations (a kind of 2D-boomarks) added.
+  * Basic support for module hierarchy added.
+  * Support for subprojects added.
+  * Basic support for wire matching added.
+
  -- Martin Schobert <martin@weltregierung.de>  Sun, 15 Nov 2009 23:42:00 +0100
 	
 degate (0.0.6) unstable; urgency=low
