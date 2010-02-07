@@ -166,8 +166,13 @@ bool MainWin::on_idle() {
   }
 
   if(main_project != NULL) {
-    if(autosave_project(main_project))
-      m_statusbar.push("Autosaving project data ... done.");
+    try {
+      if(autosave_project(main_project))
+	m_statusbar.push("Autosaving project data ... done.");
+    }
+    catch(DegateRuntimeException const& ex) {
+      error_dialog("Error", "Can't save project.");
+    }
   }
 
   return true;
@@ -425,10 +430,15 @@ void MainWin::on_export_finished(bool success) {
 
 void MainWin::on_menu_project_save() {
   if(main_project) {
-    ProjectExporter exporter;
-    exporter.export_all(main_project->get_project_directory(), main_project);
-    main_project->set_changed(false);
-    update_title();
+    try {
+      ProjectExporter exporter;
+      exporter.export_all(main_project->get_project_directory(), main_project);
+      main_project->set_changed(false);
+      update_title();
+    }
+    catch(DegateRuntimeException const& ex) {
+      error_dialog("Error", "Can't save project.");
+    }
   }
 }
 
@@ -880,9 +890,13 @@ void MainWin::on_algorithm_finished(int slot_pos) {
 
   project_changed();
 
-  if(autosave_project(main_project, 0))
-    m_statusbar.push("Autosaving project data ... done.");
-
+  try {
+    if(autosave_project(main_project, 0))
+      m_statusbar.push("Autosaving project data ... done.");
+  }
+  catch(DegateRuntimeException const& ex) {
+    error_dialog("Error", "Can't save project.");
+  }
 }
 
 
