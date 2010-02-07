@@ -77,7 +77,8 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       if(pTreeView_ports) {
 	pTreeView_ports->set_model(refListStore_ports);
 	pTreeView_ports->append_column("Port ID", port_model_columns.m_col_id);
-	pTreeView_ports->append_column_editable("Port Name", port_model_columns.m_col_text);
+	pTreeView_ports->append_column_editable("Port Name", port_model_columns.m_col_name);
+	pTreeView_ports->append_column_editable("Port Description", port_model_columns.m_col_description);
 	pTreeView_ports->append_column_editable("In", port_model_columns.m_col_inport);
 	pTreeView_ports->append_column_editable("Out", port_model_columns.m_col_outport);
       }
@@ -137,7 +138,8 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 
 	row[port_model_columns.m_col_inport] = tmpl_port->is_inport();
 	row[port_model_columns.m_col_outport] = tmpl_port->is_outport();
-	row[port_model_columns.m_col_text] = tmpl_port->get_name();
+	row[port_model_columns.m_col_name] = tmpl_port->get_name();
+	row[port_model_columns.m_col_description] = tmpl_port->get_description();
 	row[port_model_columns.m_col_id] = tmpl_port->get_object_id();
 
 	original_ports.push_back(tmpl_port);
@@ -318,7 +320,7 @@ void GateConfigWin::on_codegen_button_clicked() {
   type_children children = refListStore_ports->children();
   for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
     Gtk::TreeModel::Row row = *iter;
-    Glib::ustring port_name = row[port_model_columns.m_col_text];
+    Glib::ustring port_name = row[port_model_columns.m_col_name];
     codegen->add_port(port_name, row[port_model_columns.m_col_inport]);
   }
   code_textview->get_buffer()->set_text(codegen->generate());
@@ -331,7 +333,7 @@ bool GateConfigWin::run() {
 }
 
 void GateConfigWin::on_ok_button_clicked() {
-  Glib::ustring name_str;
+  Glib::ustring name_str, descr_str;
   object_id_t id;
   GateTemplatePort::PORT_TYPE port_type;
 
@@ -344,7 +346,8 @@ void GateConfigWin::on_ok_button_clicked() {
   type_children children = refListStore_ports->children();
   for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
     Gtk::TreeModel::Row row = *iter;
-    name_str = row[port_model_columns.m_col_text];
+    name_str = row[port_model_columns.m_col_name];
+    descr_str = row[port_model_columns.m_col_name];
     id = row[port_model_columns.m_col_id];
     
     if(row[port_model_columns.m_col_inport] == true &&
@@ -359,12 +362,14 @@ void GateConfigWin::on_ok_button_clicked() {
 
       new_template_port->set_object_id(lmodel->get_new_object_id());
       new_template_port->set_name(name_str);
+      new_template_port->set_description(descr_str);
 
       lmodel->add_template_port_to_gate_template(gate_template, new_template_port);
     }
     else {
       GateTemplatePort_shptr tmpl_port = gate_template->get_template_port(id);
       tmpl_port->set_name(name_str);
+      tmpl_port->set_description(descr_str);
       tmpl_port->set_port_type(port_type);
       original_ports.remove(tmpl_port);      
     }
@@ -433,7 +438,7 @@ void GateConfigWin::on_port_add_button_clicked() {
   row[port_model_columns.m_col_id] = 0;
 
   if(children_size == 0) {
-    row[port_model_columns.m_col_text] = "y";
+    row[port_model_columns.m_col_name] = "y";
     row[port_model_columns.m_col_outport] = true;
   }
   else {
@@ -441,10 +446,10 @@ void GateConfigWin::on_port_add_button_clicked() {
       unsigned char symbol = 'a' + children_size - 1;
       boost::format f("%1%");
       f % symbol;
-      row[port_model_columns.m_col_text] = f.str();
+      row[port_model_columns.m_col_name] = f.str();
     }
     else
-      row[port_model_columns.m_col_text] = "click to edit";
+      row[port_model_columns.m_col_name] = "click to edit";
 
     row[port_model_columns.m_col_inport] = true;
   }

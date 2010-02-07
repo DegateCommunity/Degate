@@ -39,13 +39,15 @@ protected:
     
     PortModelColumns() { 
       add(m_col_id); 
-      add(m_col_text); 
+      add(m_col_name); 
+      add(m_col_description); 
       add(m_col_inport); 
       add(m_col_outport); 
     }
     
     Gtk::TreeModelColumn<degate::object_id_t> m_col_id;
-    Gtk::TreeModelColumn<Glib::ustring> m_col_text;
+    Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+    Gtk::TreeModelColumn<Glib::ustring> m_col_description;
     Gtk::TreeModelColumn<bool> m_col_inport; 
     Gtk::TreeModelColumn<bool> m_col_outport; 
   };
