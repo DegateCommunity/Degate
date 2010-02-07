@@ -1427,9 +1427,9 @@ bool MainWin::on_key_press_event_received(GdkEventKey * event) {
     control_key_pressed = false;
     //debug(TM, "ctrl as modifier pressed");
   }
-  //else {
-  //debug(TM, "any key  pressed");
-  //}
+  else if(event->keyval == GDK_space) {
+    menu_manager->toggle_select_move_tool();
+  }
 
   //debug(TM, "key press: %d %d", event->state, event->keyval);
   return false;

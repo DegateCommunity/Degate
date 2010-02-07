@@ -196,6 +196,11 @@ void MenuManager::create_and_bind_view_menu() {
 
 }
 
+void MenuManager::toggle_select_move_tool() {
+  if(m_refChoice_Select->get_active()) m_refChoice_Move->activate();
+  else if(m_refChoice_Move->get_active()) m_refChoice_Select->activate();
+}
+
 void MenuManager::create_and_bind_tools_menu() {
 
   // Choices menu, to demonstrate Radio items
@@ -205,8 +210,8 @@ void MenuManager::create_and_bind_tools_menu() {
   m_refChoice_Select = Gtk::RadioAction::create(group_tools, "ToolSelect", "Select");
   m_refActionGroup->add(m_refChoice_Select, sigc::mem_fun(*window, &MainWin::on_menu_tools_select) );
 
-  m_refChoice_Select = Gtk::RadioAction::create(group_tools, "ToolMove", "Move");
-  m_refActionGroup->add(m_refChoice_Select, sigc::mem_fun(*window, &MainWin::on_menu_tools_move) );
+  m_refChoice_Move = Gtk::RadioAction::create(group_tools, "ToolMove", "Move");
+  m_refActionGroup->add(m_refChoice_Move, sigc::mem_fun(*window, &MainWin::on_menu_tools_move) );
 
   m_refChoice_Wire = Gtk::RadioAction::create(group_tools, "ToolWire", "Wire");
   m_refActionGroup->add(m_refChoice_Wire, sigc::mem_fun(*window, &MainWin::on_menu_tools_wire) );
