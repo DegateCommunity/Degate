@@ -87,6 +87,9 @@ namespace degate {
   class PlacedLogicModelObject;
   typedef std::tr1::shared_ptr<PlacedLogicModelObject> PlacedLogicModelObject_shptr;
 
+  class RemoteObject;
+  typedef std::tr1::shared_ptr<RemoteObject> RemoteObject_shptr;
+
   class Net;
   typedef std::tr1::shared_ptr<Net> Net_shptr;  
 
@@ -123,7 +126,8 @@ namespace degate {
   /** defines the type for colors */
   typedef uint32_t color_t;
   
-  typedef unsigned long object_id_t;
+  typedef unsigned long long object_id_t;
+  typedef unsigned long long transaction_id_t;
   typedef unsigned int diameter_t;
   typedef unsigned int length_t;
   typedef int pos_t;

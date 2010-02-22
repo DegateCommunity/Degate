@@ -93,6 +93,8 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_project_recent_projects();
   virtual void on_menu_project_create_subproject();
   virtual void on_menu_project_open_parent();
+  virtual void on_menu_project_push_changes();
+  virtual void on_menu_project_pull_changes();
   
   virtual void on_menu_view_zoom_in();
   virtual void on_menu_view_zoom_out();

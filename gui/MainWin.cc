@@ -59,6 +59,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <LogicModelHelper.h>
 #include <SubProjectAnnotation.h>
 #include <ProjectArchiver.h>
+#include <XmlRpc.h>
 
 #define ZOOM_STEP 1.3
 #define ZOOM_STEP_MOUSE_SCROLL 2.0
@@ -2059,4 +2060,20 @@ void MainWin::project_changed() {
 
   if(main_project != NULL) main_project->set_changed();
   update_title();
+}
+
+void MainWin::on_menu_project_push_changes() {
+  if(main_project != NULL) {
+    push_changes_to_server(main_project->get_server_url(), 
+			   main_project->get_logic_model());
+  }
+}
+
+void MainWin::on_menu_project_pull_changes() {
+  if(main_project != NULL) {
+    transaction_id_t tid = pull_changes_from_server(main_project->get_server_url(), 
+						    main_project->get_logic_model(),
+						    main_project->get_last_pulled_tid() + 1);
+    main_project->set_last_pulled_tid(tid);
+  }
 }

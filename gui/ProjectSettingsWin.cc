@@ -82,7 +82,10 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
       snprintf(str, sizeof(str), "%d", project->get_default_wire_diameter());
       entry_wire_diameter->set_text(str);
     }
-
+    refXml->get_widget("entry_server_url", entry_server_url);
+    if(entry_server_url) {
+      entry_server_url->set_text(project->get_server_url());
+    }
   }
 }
 
@@ -96,6 +99,7 @@ bool ProjectSettingsWin::run() {
     long r;
     project->set_name(entry_project_name->get_text().c_str());
     project->set_description(entry_project_description->get_text().c_str());
+    project->set_server_url(entry_server_url->get_text().c_str());
 
     if((r = atol(entry_lambda->get_text().c_str())) > 0)
       project->set_lambda(r);

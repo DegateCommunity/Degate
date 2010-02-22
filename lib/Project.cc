@@ -23,6 +23,9 @@
 #include "Project.h"
 
 #include <string>
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 using namespace degate;
@@ -196,7 +199,8 @@ void Project::init_default_valus() {
   default_pin_diameter = 5;
   default_wire_diameter = 5;
   lambda = 5;
-  
+  last_transaction_id = 0;
+
   set_changed(false);
   
   reset_last_saved_counter();
@@ -205,5 +209,30 @@ void Project::init_default_valus() {
   regular_vertical_grid = RegularGrid_shptr(new RegularGrid(Grid::VERTICAL));
   irregular_horizontal_grid = IrregularGrid_shptr(new IrregularGrid(Grid::HORIZONTAL));
   irregular_vertical_grid = IrregularGrid_shptr(new IrregularGrid(Grid::VERTICAL));
+
+  // Generate a server URL
+
+  srand(time(NULL));
+  std::string channel_ident;
+  while(channel_ident.size() <= 20)
+    channel_ident += (char)('a'+(int) (26.0*rand()/(RAND_MAX+1.0)));
+
+  server_url = string("http://localhost/cgi-bin/test.pl?channel=") + channel_ident;
 }
 
+
+void Project::set_server_url(std::string const& server_url) {
+  this->server_url = server_url;
+}
+
+std::string Project::get_server_url() const {
+  return server_url;
+}
+
+transaction_id_t Project::get_last_pulled_tid() const {
+  return last_transaction_id;
+}
+
+void Project::set_last_pulled_tid(transaction_id_t tid) {
+  last_transaction_id = tid;
+}

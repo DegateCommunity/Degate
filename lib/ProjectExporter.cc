@@ -171,6 +171,9 @@ void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem,
   prj_elem->set_attribute("pin-diameter", number_to_string<length_t>(prj->get_default_pin_diameter()));
   prj_elem->set_attribute("wire-diameter", number_to_string<length_t>(prj->get_default_wire_diameter()));
   
+  prj_elem->set_attribute("server-url", prj->get_server_url());
+  prj_elem->set_attribute("last-pulled-transaction-id", 
+			  number_to_string<transaction_id_t>(prj->get_last_pulled_tid()));
 }
 
 

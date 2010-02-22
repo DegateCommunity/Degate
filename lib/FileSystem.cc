@@ -219,8 +219,11 @@ char *realpath_alloc(const char *path)
   if (!result)
     return NULL;
   
-  realpath(path, result);
-  return result;
+  if(realpath(path, result) == NULL) {
+    free(result);
+    return NULL;
+  }
+  else return result;
 }
 
 

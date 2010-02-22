@@ -390,9 +390,18 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
   parent_prj->set_name(project_elem->get_attribute_value("name"));
   parent_prj->set_description(project_elem->get_attribute_value("description"));
 
+  if(!project_elem->get_attribute_value("server-url").empty())
+    parent_prj->set_server_url(project_elem->get_attribute_value("server-url"));
+
+  if(!project_elem->get_attribute_value("last-pulled-transaction-id").empty())
+    parent_prj->set_last_pulled_tid(parse_number<transaction_id_t>(project_elem, 
+								   "last-pulled-transaction-id"));
+  
   parent_prj->set_lambda(parse_number<length_t>(project_elem, "lambda"));
   parent_prj->set_default_pin_diameter(parse_number<diameter_t>(project_elem, "pin-diameter"));
   parent_prj->set_default_wire_diameter(parse_number<diameter_t>(project_elem, "wire-diameter"));
+
+
 
 
   const xmlpp::Element * e = get_dom_twig(project_elem, "grids");

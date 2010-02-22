@@ -19,14 +19,15 @@
  
 */
 
-#include "globals.h"
-#include "LogicModelObjectBase.h"
-#include "Net.h"
-#include "Layer.h"
-#include "LogicModel.h"
-#include "ConnectedLogicModelObject.h"
-#include "degate_exceptions.h"
-#include "Wire.h"
+#include <globals.h>
+#include <LogicModelObjectBase.h>
+#include <Net.h>
+#include <Layer.h>
+#include <LogicModel.h>
+#include <ConnectedLogicModelObject.h>
+#include <degate_exceptions.h>
+#include <Wire.h>
+#include <XmlRpc.h>
 
 using namespace degate;
 
@@ -52,4 +53,28 @@ const std::string Wire::get_object_type_name() const {
 }
 
 void Wire::print(std::ostream & os, int n_tabs) const {
+}
+
+void Wire::push_object_to_server(std::string const& server_url) {
+
+  try {
+
+    xmlrpc_c::paramList params;
+    params.add(xmlrpc_c::value_string("wire"));
+    params.add(xmlrpc_c::value_string("add"));
+    
+    int const transaction_id = 
+      xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
+    
+    set_remote_object_id(transaction_id);
+
+    std::cout << "Result of RPC: " << transaction_id << std::endl;
+  } 
+  catch(std::exception const& e) {
+    std::cerr << "Client threw error: " << e.what() << std::endl;
+  } 
+  catch (...) {
+    std::cerr << "Client threw unexpected error." << std::endl;
+  }
+
 }

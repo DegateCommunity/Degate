@@ -278,3 +278,6 @@ Layer_shptr degate::get_current_layer(Project_shptr project) throw(InvalidPointe
   assert(lmodel != NULL);
   return lmodel->get_current_layer();
 }
+
+
+
