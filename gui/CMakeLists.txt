@@ -22,6 +22,10 @@ include_directories(${CAIROMM_INCLUDE_DIRS})
 link_directories(${CAIROMM_LIBRARY_DIRS}) 
 set(LIBS ${LIBS} ${CAIROMM_LIBRARIES})
 
+PKG_CHECK_MODULES(GOOCANVASMM goocanvasmm-1.0)
+include_directories(${GOOCANVASMM_INCLUDE_DIRS})
+set(LIBS ${GOOCANVASMM_LIBRARIES})
+
 pkg_check_modules(LIBGLADEMM glibmm-2.4)
 include_directories(${LIBGLADEMM_INCLUDE_DIRS})
 link_directories(${LIBGLADEMM_LIBRARY_DIRS}) 
@@ -85,6 +89,7 @@ set(DEGATE_SRC
 	       ImageWin.cc
 	       MainWin.cc
 
+	       RenderArea.cc RenderWindow.cc
 )
 
 add_executable(degate_bin ${DEGATE_SRC})
