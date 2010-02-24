@@ -101,6 +101,13 @@ namespace degate {
 
     Annotation(int _min_x, int _max_x, int _min_y, int _max_y, 
 	       class_id_t _class_id = UNDEFINED);
+
+    /**
+     * Create a new annotation.
+     */
+
+    Annotation(BoundingBox const& bbox,
+	       class_id_t _class_id = UNDEFINED);
    
     
     /**

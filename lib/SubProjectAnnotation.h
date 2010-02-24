@@ -50,6 +50,13 @@ namespace degate {
     SubProjectAnnotation(int min_x, int max_x, int min_y, int max_y, 
 			 std::string const& subproject_path);
     
+
+    /**
+     * Create a new annotation.
+     */
+
+    SubProjectAnnotation(BoundingBox const& bbox, std::string const& subproject_path);
+    
     void set_path(std::string const& subproject_path);
 
     std::string get_path() const;

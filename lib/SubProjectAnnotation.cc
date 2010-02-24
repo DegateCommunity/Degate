@@ -32,6 +32,12 @@ SubProjectAnnotation::SubProjectAnnotation(int min_x, int max_x, int min_y, int 
   set_path(subproject_path);
 }
 
+SubProjectAnnotation::SubProjectAnnotation(BoundingBox const& bbox, 
+					   std::string const& subproject_path) :
+  Annotation(bbox, Annotation::SUBPROJECT) {
+
+  set_path(subproject_path);
+}
 
 void SubProjectAnnotation::set_path(std::string const& subproject_path) {
   Annotation::set_parameter("subproject-directory", subproject_path);

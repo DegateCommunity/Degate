@@ -31,6 +31,12 @@ Annotation::Annotation(int _min_x, int _max_x, int _min_y, int _max_y,
 
 }
 
+Annotation::Annotation(BoundingBox const& bbox, class_id_t _class_id) :
+  Rectangle(bbox.get_min_x(), bbox.get_max_x(),
+	    bbox.get_min_y(), bbox.get_max_y()), 
+  class_id(_class_id) {
+}
+
 Annotation::~Annotation() {
 }
 
