@@ -199,6 +199,12 @@ namespace degate {
      */
 
     qt_region_iterator region_begin(int min_x, int max_x, int min_y, int max_y);
+
+    /**
+     * Get an iterator to iterate over a region.
+     */
+
+    qt_region_iterator region_begin(BoundingBox const & bbox);
     
     /**
      * Get an end marker for region iteration.

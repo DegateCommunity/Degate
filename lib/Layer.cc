@@ -139,6 +139,10 @@ Layer::qt_region_iterator Layer::region_begin(int min_x, int max_x, int min_y, i
   return quadtree.region_iter_begin(min_x, max_x, min_y, max_y);
 }
 
+Layer::qt_region_iterator Layer::region_begin(BoundingBox const& bbox) {
+  return quadtree.region_iter_begin(bbox);
+}
+
 Layer::qt_region_iterator Layer::region_end() {
   return quadtree.region_iter_end();
 }
