@@ -278,3 +278,51 @@ Layer_shptr degate::get_current_layer(Project_shptr project) throw(InvalidPointe
   assert(lmodel != NULL);
   return lmodel->get_current_layer();
 }
+
+bool degate::is_logic_class(Gate_shptr gate, std::string const& logic_class) 
+  throw(InvalidPointerException) {
+
+  if(gate == NULL) 
+    throw InvalidPointerException("Invalid parameter for is_logic_class()");
+
+  if(gate->has_template()) {
+    GateTemplate_shptr gate_tmpl = gate->get_gate_template();
+    std::string const& lclass = gate_tmpl->get_logic_class();
+    if(logic_class == lclass) return true;
+    if(logic_class.size() < lclass.size()) {
+      if(lclass.substr(0, logic_class.size()) == logic_class) return true;
+    }
+  }
+
+  return false;
+}
+
+
+GateTemplatePort::PORT_TYPE degate::get_port_type(GatePort_shptr gate_port) 
+  throw(InvalidPointerException) {
+
+  if(gate_port == NULL) 
+    throw InvalidPointerException("Invalid parameter for get_port_type()");
+
+  if(gate_port->has_template_port()) {
+    GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
+    return tmpl_port->get_port_type();
+  }
+
+  return GateTemplatePort::PORT_TYPE_UNDEFINED;
+}
+
+
+std::string degate::get_template_port_name(GatePort_shptr gate_port)
+  throw(InvalidPointerException) {
+
+  if(gate_port == NULL) 
+    throw InvalidPointerException("Invalid parameter for get_template_port_name()");
+
+  if(gate_port->has_template_port()) {
+    GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
+    return tmpl_port->get_name();
+  }
+
+  return "";
+}
