@@ -79,15 +79,17 @@ namespace degate {
       Gate_shptr g = openlist.front();
       openlist.pop_front();
 
+      /*
       trace_recursive(g);
 
       BOOST_FOREACH(Gate_shptr gate, openlist) {
 
 	   
       }
+      */
     }
 
-    trace_recursive(Gate_shptr start_gate, std::set<Gate_shptr> & closed_list) {
+    void trace_recursive(Gate_shptr start_gate, std::set<Gate_shptr> & closed_list) {
       std::cout << "Gate " << start_gate->get_descriptive_identifier() << " connected with: " << std::endl;
 
       std::set<Gate_shptr> other_gates;
