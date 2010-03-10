@@ -37,6 +37,8 @@ if(CPPUNIT_FOUND)
 
 	      ScalingManagerTest.cc
 #	      ImageProcessingTest.cc
+
+	      LookupSubcircuitTest.cc
 	      )
 
 	set(TESTMAIN main.cc)
