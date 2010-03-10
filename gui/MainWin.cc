@@ -59,6 +59,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <LogicModelHelper.h>
 #include <SubProjectAnnotation.h>
 #include <ProjectArchiver.h>
+#include <XmlRpc.h>
 
 #define ZOOM_STEP 1.3
 #define ZOOM_STEP_MOUSE_SCROLL 2.0
@@ -166,8 +167,13 @@ bool MainWin::on_idle() {
   }
 
   if(main_project != NULL) {
-    if(autosave_project(main_project))
-      m_statusbar.push("Autosaving project data ... done.");
+    try {
+      if(autosave_project(main_project))
+	m_statusbar.push("Autosaving project data ... done.");
+    }
+    catch(DegateRuntimeException const& ex) {
+      error_dialog("Error", "Can't save project.");
+    }
   }
 
   return true;
@@ -425,10 +431,15 @@ void MainWin::on_export_finished(bool success) {
 
 void MainWin::on_menu_project_save() {
   if(main_project) {
-    ProjectExporter exporter;
-    exporter.export_all(main_project->get_project_directory(), main_project);
-    main_project->set_changed(false);
-    update_title();
+    try {
+      ProjectExporter exporter;
+      exporter.export_all(main_project->get_project_directory(), main_project);
+      main_project->set_changed(false);
+      update_title();
+    }
+    catch(DegateRuntimeException const& ex) {
+      error_dialog("Error", "Can't save project.");
+    }
   }
 }
 
@@ -880,9 +891,13 @@ void MainWin::on_algorithm_finished(int slot_pos) {
 
   project_changed();
 
-  if(autosave_project(main_project, 0))
-    m_statusbar.push("Autosaving project data ... done.");
-
+  try {
+    if(autosave_project(main_project, 0))
+      m_statusbar.push("Autosaving project data ... done.");
+  }
+  catch(DegateRuntimeException const& ex) {
+    error_dialog("Error", "Can't save project.");
+  }
 }
 
 
@@ -1413,9 +1428,9 @@ bool MainWin::on_key_press_event_received(GdkEventKey * event) {
     control_key_pressed = false;
     //debug(TM, "ctrl as modifier pressed");
   }
-  //else {
-  //debug(TM, "any key  pressed");
-  //}
+  else if(event->keyval == GDK_space) {
+    menu_manager->toggle_select_move_tool();
+  }
 
   //debug(TM, "key press: %d %d", event->state, event->keyval);
   return false;
@@ -2045,4 +2060,20 @@ void MainWin::project_changed() {
 
   if(main_project != NULL) main_project->set_changed();
   update_title();
+}
+
+void MainWin::on_menu_project_push_changes() {
+  if(main_project != NULL) {
+    push_changes_to_server(main_project->get_server_url(), 
+			   main_project->get_logic_model());
+  }
+}
+
+void MainWin::on_menu_project_pull_changes() {
+  if(main_project != NULL) {
+    transaction_id_t tid = pull_changes_from_server(main_project->get_server_url(), 
+						    main_project->get_logic_model(),
+						    main_project->get_last_pulled_tid() + 1);
+    main_project->set_last_pulled_tid(tid);
+  }
 }

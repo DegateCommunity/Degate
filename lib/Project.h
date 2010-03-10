@@ -59,7 +59,8 @@ namespace degate {
     std::string description;
     std::string degate_version;
     std::string directory;
-    
+    std::string server_url;
+
     RegularGrid_shptr regular_horizontal_grid;
     RegularGrid_shptr regular_vertical_grid;
     IrregularGrid_shptr irregular_horizontal_grid;
@@ -71,7 +72,8 @@ namespace degate {
     diameter_t default_pin_diameter;
     diameter_t default_wire_diameter;
     length_t lambda;
-    
+
+    transaction_id_t last_transaction_id;
     
     LogicModel_shptr logic_model;
 
@@ -102,7 +104,7 @@ namespace degate {
      * The destructor.
      */
 
-    ~Project();
+    virtual ~Project();
 
     /**
      * Set the project directory.
@@ -218,6 +220,32 @@ namespace degate {
      */
     
     void print_all(std::ostream &);
+
+    /**
+     * Set server url.
+     */
+
+    void set_server_url(std::string const& server_url);
+
+    /**
+     * Get server url.
+     */
+
+    std::string get_server_url() const;
+
+
+    /**
+     * Get the last pulled transaction ID.
+     */
+
+    transaction_id_t get_last_pulled_tid() const;
+
+    /**
+     * Set last pulled transaction ID.
+     */
+
+    void set_last_pulled_tid(transaction_id_t tid);
+
   };
   
 }

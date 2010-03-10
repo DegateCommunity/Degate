@@ -24,17 +24,18 @@
 
 #include <tr1/memory>
 
-#include "globals.h"
-#include "LogicModelObjectBase.h"
-#include "ConnectedLogicModelObject.h"
-#include "Line.h"
+#include <globals.h>
+#include <LogicModelObjectBase.h>
+#include <ConnectedLogicModelObject.h>
+#include <Line.h>
+#include <RemoteObject.h>
 
 namespace degate {
 
   /**
    * Represents a wire.
    */
-  class Wire : public Line, public ConnectedLogicModelObject {
+  class Wire : public Line, public ConnectedLogicModelObject, public RemoteObject {
 	
   public:
 
@@ -94,6 +95,10 @@ namespace degate {
     virtual bool in_shape(int x, int y) const {
       return Line::in_shape(x, y);
     }
+
+  protected:
+
+    virtual void push_object_to_server(std::string const& server_url);
 
   };
 

@@ -257,7 +257,7 @@ GridConfigWin::~GridConfigWin() {
 
 
 void GridConfigWin::update_grid_entries() {
-  unsigned int i;
+
   if(p_treeview_uvg != NULL) {
     ref_liststore_uvg->clear();
 

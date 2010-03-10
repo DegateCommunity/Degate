@@ -513,15 +513,10 @@ bool ImageWin::on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int
 
 bool ImageWin::on_key_press_event(GdkEventKey * event) {
   if(event->keyval == GDK_Escape) {
-    puts("escape");
     in_line_mode = false;
     draw_wire();
     
   }
-  else {
-    puts("key pressed");
-  }
-  //return true;
   return false;
 }
 

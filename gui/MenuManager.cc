@@ -110,6 +110,16 @@ void MenuManager::create_and_bind_project_menu() {
 					    "Open parent project"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_open_parent));
 
+  m_refActionGroup->add(Gtk::Action::create("ProjectPushChanges",
+					    "Push changes to server", 
+					    "Push changes to server"),
+			sigc::mem_fun(*window, &MainWin::on_menu_project_push_changes));
+
+  m_refActionGroup->add(Gtk::Action::create("ProjectPullChanges",
+					    "Pull changes from server", 
+					    "Pull changes from server"),
+			sigc::mem_fun(*window, &MainWin::on_menu_project_pull_changes));
+
 
   m_refActionGroup->add(Gtk::Action::create("ProjectSettings",
 					    Gtk::Stock::PREFERENCES,
@@ -196,6 +206,11 @@ void MenuManager::create_and_bind_view_menu() {
 
 }
 
+void MenuManager::toggle_select_move_tool() {
+  if(m_refChoice_Select->get_active()) m_refChoice_Move->activate();
+  else if(m_refChoice_Move->get_active()) m_refChoice_Select->activate();
+}
+
 void MenuManager::create_and_bind_tools_menu() {
 
   // Choices menu, to demonstrate Radio items
@@ -205,8 +220,8 @@ void MenuManager::create_and_bind_tools_menu() {
   m_refChoice_Select = Gtk::RadioAction::create(group_tools, "ToolSelect", "Select");
   m_refActionGroup->add(m_refChoice_Select, sigc::mem_fun(*window, &MainWin::on_menu_tools_select) );
 
-  m_refChoice_Select = Gtk::RadioAction::create(group_tools, "ToolMove", "Move");
-  m_refActionGroup->add(m_refChoice_Select, sigc::mem_fun(*window, &MainWin::on_menu_tools_move) );
+  m_refChoice_Move = Gtk::RadioAction::create(group_tools, "ToolMove", "Move");
+  m_refActionGroup->add(m_refChoice_Move, sigc::mem_fun(*window, &MainWin::on_menu_tools_move) );
 
   m_refChoice_Wire = Gtk::RadioAction::create(group_tools, "ToolWire", "Wire");
   m_refActionGroup->add(m_refChoice_Wire, sigc::mem_fun(*window, &MainWin::on_menu_tools_wire) );
@@ -403,6 +418,9 @@ void MenuManager::setup_menu_structure() {
         "      <separator/>"
         "      <menuitem action='ProjectCreateSubproject'/>"
         "      <menuitem action='ProjectOpenParent'/>"
+        "      <separator/>"
+        "      <menuitem action='ProjectPushChanges'/>"
+        "      <menuitem action='ProjectPullChanges'/>"
         "      <separator/>"
         "      <menuitem action='ProjectSettings'/>"
         "      <separator/>"
@@ -664,6 +682,8 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectSave", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectExportArchive", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectOpenParent", state);
+  set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectPushChanges", state);
+  set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectPullChanges", state);
 
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectSettings", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ExportViewAsGraphics", state);

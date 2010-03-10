@@ -23,6 +23,12 @@ if(Boost_FOUND)
 	set(LIBS ${LIBS} ${Boost_LIBRARIES})
 endif()
 
+find_package(XMLRPC COMPONENTS c++2 client)
+if(XMLRPC_FOUND)
+	include_directories(${XMLRPC_INCLUDE_DIRS})
+	set(LIBS ${LIBS} ${XMLRPC_LIBRARIES})
+endif()
+
 find_package(Freetype)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 message(STATUS ${FREETYPE_INCLUDE_DIRS})
@@ -82,6 +88,7 @@ set(SOURCES
 	LogicModelObjectBase.cc
 	ConnectedLogicModelObject.cc
 	PlacedLogicModelObject.cc
+	RemoteObject.cc
 	GatePort.cc
 	Gate.cc
 	GateTemplate.cc
@@ -90,6 +97,7 @@ set(SOURCES
 	CodeTemplateGenerator.cc
 	VHDLCodeTemplateGenerator.cc
 	VHDLTBCodeTemplateGenerator.cc
+	XmlRpc.cc
 
 	#
 	# importer / exporter

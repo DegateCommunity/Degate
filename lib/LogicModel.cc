@@ -257,6 +257,11 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPoin
   }
   else {
 
+    if(ConnectedLogicModelObject_shptr clmo = 
+       std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(o)) {
+      clmo->remove_net();
+    }
+
     if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
       remove_gate(gate);
     else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))

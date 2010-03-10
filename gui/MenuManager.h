@@ -43,6 +43,8 @@ class MenuManager {
 
   std::string get_recent_project_uri();
 
+  void toggle_select_move_tool();
+
  private:
 
   bool toolbar_visible;
