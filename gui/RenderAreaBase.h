@@ -13,8 +13,10 @@
  * be able to draw. To address pixels in this plane we use the term
  * "real" coordinates.
  *
- * We also have a viewport, to show a splice of the virtual area. The
+ * We also have a viewport, to show a slice of the virtual area. The
  * viewport is defined using "real" coordinates.
+ *
+ * The viewport is mapped to a drawing window.
  *
  * The transformation of objects within the viewport to the drawing area
  * creates its own coordinate system.
@@ -29,6 +31,8 @@ private:
 
   // viewport size in real coordinates
   int viewport_min_x, viewport_min_y, viewport_max_x, viewport_max_y;
+
+  unsigned int drawing_window_width, drawing_window_height;
 
 protected:
 
@@ -80,7 +84,12 @@ protected:
   }
   */
   double get_scaling() {
-    return (double)(get_viewport_width()) / (double)(get_virtual_width());
+    double s = (double)get_viewport_width() / (double)get_drawing_window_width();
+    /*
+    std::cout << "Viewport width " << get_viewport_width() << " Window width: " << get_drawing_window_width()
+	      << " s=" << s << std::endl;
+    */
+    return s;
   }
 
 public:
@@ -120,7 +129,7 @@ public:
 
   virtual void set_virtual_width(unsigned int w) { 
     virtual_width = w; 
-    update_virtual_dimension();
+    this->update_virtual_dimension();
   }
 
   /**
@@ -131,7 +140,19 @@ public:
 
   virtual void set_virtual_height(unsigned int  h) { 
     virtual_height = h; 
-    update_virtual_dimension();
+    this->update_virtual_dimension();
+  }
+
+  /**
+   * Set the width and height of the virtual area in "real" pixel units.
+   * It will call update_virtual_dimension().
+   * @see update_virtual_dimension()
+   */
+
+  virtual void set_virtual_size(unsigned int w, unsigned int  h) { 
+    virtual_width = w; 
+    virtual_height = h; 
+    this->update_virtual_dimension();
   }
 
   /**
@@ -144,7 +165,7 @@ public:
     assert(min_x < max_x);
     viewport_min_x = min_x;
     viewport_max_x = max_x;
-    update_viewport_dimension();
+    this->update_viewport_dimension();
   }
 
   /**
@@ -157,7 +178,7 @@ public:
     assert(min_y < max_y);
     viewport_min_y = min_y;
     viewport_max_y = max_y;
-    update_viewport_dimension();
+    this->update_viewport_dimension();
   }
 
 
@@ -174,7 +195,7 @@ public:
     viewport_min_y = min_y;
     viewport_max_y = max_y;
 
-    update_viewport_dimension();
+    this->update_viewport_dimension();
   }
 
   /**
@@ -227,7 +248,22 @@ public:
   }
 
 
-  
+  virtual void set_drawing_window_width(unsigned int width) {
+    drawing_window_width = width;
+  }
+
+  virtual void set_drawing_window_height(unsigned int height) {
+    drawing_window_height = height;
+  }
+
+  virtual unsigned int get_drawing_window_width() const {
+    return drawing_window_width;
+  }
+
+  virtual unsigned int get_drawing_window_height() const {
+    return drawing_window_height;
+  }
+
 };
 
 #endif

@@ -61,17 +61,10 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <ProjectArchiver.h>
 #include <XmlRpc.h>
 
-#define ZOOM_STEP 1.3
-#define ZOOM_STEP_MOUSE_SCROLL 2.0
-#define ZOOM_STEP_MOUSE_SCROLL_AND_SHIFT 1.1
 
 using namespace degate;
 
-MainWin::MainWin() : 
-  m_VAdjustment(0.0, 0.0, 101.0, 0.1, 1.0, 1.0), // value, lower, upper, step_increment, page_increment, page_size
-  m_HAdjustment(0.0, 0.0, 101.0, 0.1, 1.0, 1.0),
-  m_VScrollbar(m_VAdjustment),
-  m_HScrollbar(m_HAdjustment) {
+MainWin::MainWin() : render_window(editor) {
 
   // setup window
   set_default_size(1024, 700);
@@ -93,13 +86,15 @@ MainWin::MainWin() :
     m_Box.pack_start(*toolbar, Gtk::PACK_SHRINK);
   }
 
-  const std::vector<Glib::ustring> render_func_names = imgWin.get_renderer_func_names();
-  const std::vector<bool> render_func_states = imgWin.get_renderer_func_states();
+  //const std::vector<Glib::ustring> render_func_names = imgWin.get_renderer_func_names();
+  //const std::vector<bool> render_func_states = imgWin.get_renderer_func_states();
 
-  menu_manager->initialize_menu_render_funcs(render_func_names, render_func_states);
+  //menu_manager->initialize_menu_render_funcs(render_func_names, render_func_states);
   
 
-  initialize_image_window();
+  //render_window.set_virtual_size(100, 100);
+  m_Box.pack_start(render_window, Gtk::PACK_EXPAND_WIDGET);
+  on_menu_tools_select();
 
   // setup statusbar
   m_statusbar.push("");
@@ -111,9 +106,9 @@ MainWin::MainWin() :
   update_title();
   control_key_pressed = false;
   shift_key_pressed = false;
-  imgWin.set_shift_key_state(false);
+  //imgWin.set_shift_key_state(false);
   
-  imgWin.grab_focus();
+  render_window.grab_focus();
 
   project_to_open = NULL;
   //Glib::signal_idle().connect( sigc::mem_fun(*this, &MainWin::on_idle));
@@ -181,56 +176,23 @@ bool MainWin::on_idle() {
 
 void MainWin::on_view_info_layer_toggled(int slot_pos) {
   if(menu_manager->toggle_info_layer(slot_pos)) {
-    imgWin.toggle_render_info_layer(slot_pos);
-    imgWin.update_screen();
+    //imgWin.toggle_render_info_layer(slot_pos);
+    //imgWin.update_screen();
   }
 }
 
 void MainWin::on_menu_view_toggle_all_info_layers() {
  
-  const std::vector<bool> new_states = menu_manager->toggle_info_layer_visibility();
-  imgWin.set_renderer_info_layer_state(new_states);
-  imgWin.update_screen();
+  //const std::vector<bool> new_states = menu_manager->toggle_info_layer_visibility();
+  //imgWin.set_renderer_info_layer_state(new_states);
+  //imgWin.update_screen();
 }
 
 
 
 
-void MainWin::initialize_image_window() {
-  // @todo remove
-  m_VScrollbar.set_update_policy(Gtk::UPDATE_CONTINUOUS);
-  m_HScrollbar.set_update_policy(Gtk::UPDATE_CONTINUOUS);
-  
-  // @todo remove
-  m_VAdjustment.signal_value_changed().connect(sigc::mem_fun(*this, &MainWin::on_v_adjustment_changed));
-  m_HAdjustment.signal_value_changed().connect(sigc::mem_fun(*this, &MainWin::on_h_adjustment_changed));
 
-  imgWin.signal_drag_motion().connect(sigc::mem_fun(*this, &MainWin::on_drag_motion));
-  imgWin.signal_button_press_event().connect(sigc::mem_fun(*this, &MainWin::on_imgwin_clicked));
-  imgWin.signal_wire_tool_released().connect(sigc::mem_fun(*this, &MainWin::on_wire_tool_release));
-  imgWin.signal_selection_activated().connect(sigc::mem_fun(*this, &MainWin::on_selection_activated));
-  imgWin.signal_selection_revoked().connect(sigc::mem_fun(*this, &MainWin::on_selection_revoked));
-  imgWin.signal_mouse_scroll_up().connect(sigc::mem_fun(*this, &MainWin::on_mouse_scroll_up));
-  imgWin.signal_mouse_scroll_down().connect(sigc::mem_fun(*this, &MainWin::on_mouse_scroll_down));
 
-  // @todo remove
-  imgWin.signal_adjust_scrollbars().connect(sigc::mem_fun(*this, &MainWin::adjust_scrollbars));
-
-  m_displayBox.pack_start(imgWin, Gtk::PACK_EXPAND_WIDGET);
-  m_displayBox.pack_start(m_VScrollbar, Gtk::PACK_SHRINK);
-
-  m_Box.pack_start(m_displayBox, Gtk::PACK_EXPAND_WIDGET);
-
-  m_Box.pack_start(m_HScrollbar, Gtk::PACK_SHRINK);
-
-  tool = TOOL_SELECT;
-  imgWin.set_tool(tool);
-}
-
-bool MainWin::on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) {
-  //debug(TM, "drag");
-  return true;
-}
 
 void MainWin::add_to_recent_menu() {
 
@@ -325,12 +287,12 @@ void MainWin::on_menu_project_close() {
       }
     }
 
-    imgWin.disable_renderer();
+    //imgWin.disable_renderer();
 
     clear_selection();
 
     main_project.reset();
-    imgWin.update_screen();
+    editor.update_screen();
 
     update_title();
     
@@ -528,76 +490,39 @@ void MainWin::project_open_thread(Glib::ustring project_dir) {
   signal_project_open_finished_();
 }
 
-void MainWin::on_menu_project_export_view() {
-  if(main_project) {
-    Gtk::FileChooserDialog dialog("Please choose a file name", Gtk::FILE_CHOOSER_ACTION_SAVE);
-    dialog.set_transient_for(*this);
-    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-    dialog.add_button("Export", Gtk::RESPONSE_OK);
-    int result = dialog.run();
-    Glib::ustring filename = dialog.get_filename();
-    dialog.hide();
-
-    if(result == Gtk::RESPONSE_OK)
-      if(!imgWin.render_to_file(filename.c_str(), imgWin.get_min_x(),
-				imgWin.get_min_y(),
-				imgWin.get_max_x(),
-				imgWin.get_max_y())) {
-	Gtk::MessageDialog err_dialog(*this, "Can't export graphics", 
-				      false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
-	err_dialog.run();
-      }
-  }   
-}
-
-void MainWin::on_menu_project_export_layer() {
-  if(main_project) {
-    Gtk::FileChooserDialog dialog("Please choose a file name", Gtk::FILE_CHOOSER_ACTION_SAVE);
-    dialog.set_transient_for(*this);
-    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-    dialog.add_button("Export", Gtk::RESPONSE_OK);
-    int result = dialog.run();
-    Glib::ustring filename = dialog.get_filename();
-    dialog.hide();
-
-    if(result == Gtk::RESPONSE_OK)
-      if(!imgWin.render_to_file(filename.c_str(), 0, 0, 
-				main_project->get_width(), main_project->get_height())) {
-	Gtk::MessageDialog err_dialog(*this, "Can't export graphics", 
-				      false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
-	err_dialog.run();
-      }
-  }   
-}
 
 void MainWin::update_gui_for_loaded_project() {
 
   if(main_project) {
     
-    imgWin.set_view(0, 0, imgWin.get_width(), imgWin.get_height());
-    
+
     LogicModel_shptr lmodel = main_project->get_logic_model();
     int l_pos = get_first_enabled_layer(main_project->get_logic_model())->get_layer_pos();
     lmodel->set_current_layer(l_pos);
     Layer_shptr layer = lmodel->get_current_layer();
 
-    imgWin.set_render_logic_model(lmodel);
-    imgWin.reset_selection();
-    imgWin.set_current_layer(l_pos);
-    
+
+    editor.set_virtual_size(main_project->get_width(), main_project->get_height());
+    editor.set_viewport(0, 0, main_project->get_width(), main_project->get_height());
+    editor.set_logic_model(lmodel);
+    editor.set_layer(layer);
+
+    //render_window.set_virtual_size(main_project->get_width(), main_project->get_height());
+
+    /*
+
     imgWin.set_grid(main_project->get_regular_horizontal_grid(),
 		    main_project->get_regular_vertical_grid(),
 		    main_project->get_irregular_horizontal_grid(),
 		    main_project->get_irregular_vertical_grid());
-    
+    */
+
     menu_manager->set_widget_sensitivity(true);
     add_to_recent_menu();
 
     update_title();
 
-    adjust_scrollbars();
-    
-    on_selection_revoked();
+    on_area_selection_revoked();
 
 
     ciWin = std::tr1::shared_ptr<ConnectionInspectorWin>
@@ -624,7 +549,7 @@ void MainWin::update_gui_for_loaded_project() {
     lcWin->signal_on_background_import_finished().connect
       (sigc::mem_fun(*this, &MainWin::on_background_import_finished));
 
-    imgWin.update_screen();  
+    editor.update_screen();  
   }
 }
 
@@ -639,20 +564,21 @@ void MainWin::on_menu_project_create_subproject() {
   boost::format f("subproject_%1%");
   f % lmodel->get_new_object_id();
 
-  SubProjectAnnotation_shptr annotation
-    (new SubProjectAnnotation(imgWin.get_selection_min_x(),
-			      imgWin.get_selection_max_x(),
-			      imgWin.get_selection_min_y(),
-			      imgWin.get_selection_max_y(), 
-			      f.str()));
-  annotation->set_fill_color(0x7f0000ff);
+  GfxEditorToolSelection_shptr selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
 
-  lmodel->add_object(layer->get_layer_pos(), annotation);
+  if(selection_tool != NULL && selection_tool->has_selection()) {
+    SubProjectAnnotation_shptr annotation
+      (new SubProjectAnnotation(selection_tool->get_bounding_box(), f.str()));
+    annotation->set_fill_color(0x7f0000ff);
 
-  project_changed();
-  imgWin.update_screen();
+    lmodel->add_object(layer->get_layer_pos(), annotation);
 
-  if(alWin != NULL) alWin->refresh();
+    project_changed();
+    editor.update_screen();
+
+    if(alWin != NULL) alWin->refresh();
+  }
 }
 
 void MainWin::on_menu_project_open_parent() {
@@ -682,10 +608,10 @@ void MainWin::set_layer(unsigned int layer) {
 
   lmodel->set_current_layer(layer_ptr->get_layer_pos());
 
-  imgWin.set_current_layer(layer_ptr->get_layer_pos());
+  //imgWin.set_current_layer(layer_ptr->get_layer_pos());
   
   update_title();
-  imgWin.update_screen();
+  editor.update_screen();
 }
 
 void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
@@ -720,155 +646,69 @@ void MainWin::on_menu_view_prev_layer() {
   set_layer(get_prev_enabled_layer(lmodel));
 }
 
-// @todo just dispatch to RenderWindow
+
 void MainWin::on_menu_view_zoom_in() {
   if(main_project == NULL) return;
-
-  unsigned int center_x = imgWin.get_center_x();
-  unsigned int center_y = imgWin.get_center_y();
-
-  zoom(imgWin.get_real_width() > main_project->get_width() ? main_project->get_width() /2: center_x, 
-       imgWin.get_real_height() > main_project->get_height() ? main_project->get_height() / 2 : center_y,
-       1.0/ZOOM_STEP);
-  
+  render_window.zoom_in();
 }
 
-// @todo just dispatch to RenderWindow
 void MainWin::on_menu_view_zoom_out() {
   if(main_project == NULL) return;
-
-  unsigned int center_x = imgWin.get_center_x();
-  unsigned int center_y = imgWin.get_center_y();
-
-  zoom(imgWin.get_real_width() > main_project->get_width() ? main_project->get_width() /2: center_x, 
-       imgWin.get_real_height() > main_project->get_height() ? main_project->get_height() / 2 : center_y,
-       ZOOM_STEP);
+  render_window.zoom_out();
 }
 
 
-// @todo just dispatch to RenderWindow
-void MainWin::zoom(unsigned int center_x, unsigned int center_y, double zoom_factor) {
 
-  if(main_project == NULL) return;
-
-  double delta_x = imgWin.get_max_x() - imgWin.get_min_x();
-  double delta_y = imgWin.get_max_y() - imgWin.get_min_y();
-
-  unsigned int max_edge_length = MAX(main_project->get_width(), main_project->get_height());
-
-  if( ((delta_x < max_edge_length || delta_y < max_edge_length) && zoom_factor >= 1) ||
-      ((delta_x > 100 || delta_y > 100) && zoom_factor <= 1)  ) {
-    
-
-    double min_x = (double)center_x - zoom_factor * (delta_x/2.0);
-    double min_y = (double)center_y - zoom_factor * (delta_y/2.0);
-    double max_x = (double)center_x + zoom_factor * (delta_x/2.0);
-    double max_y = (double)center_y + zoom_factor * (delta_y/2.0);
-    if(min_x < 0) { max_x -= min_x; min_x = 0; }
-    if(min_y < 0) { max_y -= min_y; min_y = 0; }
-    
-    imgWin.set_view(min_x, min_y, max_x, max_y);
-    adjust_scrollbars();
-    imgWin.update_screen();
-  }
-}
-
-// @todo just dispatch to RenderWindow, preserve the layer param
 void MainWin::center_view(unsigned int center_x, unsigned int center_y, unsigned int layer) {
 
   if(main_project == NULL) return;
+  // XXX
+  render_window.center_view(center_x, center_y);
 
-  unsigned int width_half = (imgWin.get_max_x() - imgWin.get_min_x()) / 2;
-  unsigned int height_half = (imgWin.get_max_y() - imgWin.get_min_y()) / 2;
-
-  unsigned int min_x = center_x > width_half ? center_x - width_half : 0;
-  unsigned int min_y = center_y > height_half ? center_y - height_half : 0;
-  imgWin.set_view(min_x, min_y, min_x + (width_half << 1), min_y + (height_half << 1));
-  adjust_scrollbars();
-  
   set_layer(layer);
-}
-
-// @todo remove
-void MainWin::adjust_scrollbars() {
-
-  m_VAdjustment.set_lower(0);
-  m_HAdjustment.set_lower(0);
-
-  m_HAdjustment.set_upper(main_project ? main_project->get_width(): 0);
-  m_VAdjustment.set_upper(main_project ? main_project->get_height(): 0);
-
-  //m_VAdjustment.set_page_size(main_project ? main_project->width: 0);
-  //m_HAdjustment.set_page_size(main_project ? main_project->height: 0);
-
-  int delta_x = (imgWin.get_max_x() - imgWin.get_min_x());
-  int delta_y = (imgWin.get_max_y() - imgWin.get_min_y());
-
-  m_VAdjustment.set_page_size(delta_y);
-  m_HAdjustment.set_page_size(delta_x);
-
-  m_VAdjustment.set_step_increment((double)delta_y * 0.1);
-  m_HAdjustment.set_step_increment((double)delta_x * 0.1);
-
-  m_VAdjustment.set_page_increment(delta_y);
-  m_HAdjustment.set_page_increment(delta_x);
-
-  m_HAdjustment.set_value(main_project ? imgWin.get_min_x() : 0);
-  m_VAdjustment.set_value(main_project ? imgWin.get_min_y() : 0);
-
-}
-
-// @todo remove
-void MainWin::on_v_adjustment_changed() {
-  unsigned int val = (unsigned int) m_VAdjustment.get_value();
-  imgWin.set_view(imgWin.get_min_x(), val, 
-		  imgWin.get_max_x(), val + imgWin.get_real_height());
-  imgWin.update_screen();
-}
-
-// @todo remove
-void MainWin::on_h_adjustment_changed() {
-  unsigned int val = (unsigned int)m_HAdjustment.get_value();
-  imgWin.set_view(val, imgWin.get_min_y(),
-		  val + imgWin.get_real_width(), imgWin.get_max_y());
-
-  imgWin.update_screen();
 }
 
 
 void MainWin::on_menu_tools_select() {
-  Glib::RefPtr<Gdk::Window> window = imgWin.get_window();
-  window->set_cursor(Gdk::Cursor(Gdk::LEFT_PTR));
-  tool = TOOL_SELECT;
-  imgWin.set_tool(tool);
+  //Glib::RefPtr<Gdk::Window> window = editor.get_window();
+  //window->set_cursor(Gdk::Cursor(Gdk::LEFT_PTR));
+
+  GfxEditorToolSelection_shptr selection_tool(new GfxEditorToolSelection(editor));
+
+  selection_tool->signal_selection_activated().
+    connect(sigc::mem_fun(*this, &MainWin::on_area_selection_activated));
+
+  selection_tool->signal_selection_revoked().
+    connect(sigc::mem_fun(*this, &MainWin::on_area_selection_revoked));
+
+  selection_tool->signal_mouse_double_clicked().
+    connect(sigc::mem_fun(*this, &MainWin::selection_tool_double_clicked));
+
+  selection_tool->signal_mouse_clicked().
+    connect(sigc::mem_fun(*this, &MainWin::selection_tool_clicked));
+
+  editor.set_tool(selection_tool);
 }
 
 void MainWin::on_menu_tools_move() {
-  Glib::RefPtr<Gdk::Window> window = imgWin.get_window();
+  Glib::RefPtr<Gdk::Window> window = editor.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::FLEUR));
-  tool = TOOL_MOVE;
-  imgWin.set_tool(tool);
+
 }
 
 void MainWin::on_menu_tools_wire() {
-  Glib::RefPtr<Gdk::Window> window = imgWin.get_window();
+  Glib::RefPtr<Gdk::Window> window = editor.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::TCROSS));
-  tool = TOOL_WIRE;
-  imgWin.set_tool(tool);
 }
 
 void MainWin::on_menu_tools_via_up() {
-  Glib::RefPtr<Gdk::Window> window = imgWin.get_window();
+  Glib::RefPtr<Gdk::Window> window = editor.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::CROSS));
-  tool = TOOL_VIA_UP;
-  imgWin.set_tool(tool);
 }
 
 void MainWin::on_menu_tools_via_down() {
-  Glib::RefPtr<Gdk::Window> window = imgWin.get_window();
+  Glib::RefPtr<Gdk::Window> window = editor.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::CROSS));
-  tool = TOOL_VIA_DOWN;
-  imgWin.set_tool(tool);
 }
 
 
@@ -880,7 +720,7 @@ void MainWin::on_algorithm_finished(int slot_pos) {
     ipWin.reset();
   }
 
-  imgWin.update_screen();
+  editor.update_screen();
 
   debug(TM, "Algorithm finished.");
 
@@ -918,31 +758,30 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
     return;
   }
 
-  debug(TM, "algorithm clicked %d", slot_pos);
-
   RecognitionManager * rm = RecognitionManager::get_instance();
 
-  BoundingBox bbox(imgWin.get_selection_min_x(),
-		   imgWin.get_selection_max_x(),
-		   imgWin.get_selection_min_y(),
-		   imgWin.get_selection_max_y());
+  GfxEditorToolSelection_shptr selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
 
-  rm->init(slot_pos, this, bbox, main_project);
+  if(selection_tool != NULL && selection_tool->has_selection()) {
 
-  if(rm->before_dialog(slot_pos)) {
+    rm->init(slot_pos, this, selection_tool->get_bounding_box(), main_project);
 
-    ipWin = std::tr1::shared_ptr<InProgressWin>
-      (new InProgressWin(this, "Calculating", "Please wait while calculating."));
-    ipWin->show();
+    if(rm->before_dialog(slot_pos)) {
+
+      ipWin = std::tr1::shared_ptr<InProgressWin>
+	(new InProgressWin(this, "Calculating", "Please wait while calculating."));
+      ipWin->show();
+      
+      signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
+      
+      signal_algorithm_finished_->connect(sigc::bind(sigc::mem_fun(*this, 
+								   &MainWin::on_algorithm_finished),
+						     slot_pos));
     
-    signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
-
-    signal_algorithm_finished_->connect(sigc::bind(sigc::mem_fun(*this, 
-								 &MainWin::on_algorithm_finished),
-						   slot_pos));
-    
-    thread = Glib::Thread::create(sigc::bind(sigc::mem_fun(*this, &MainWin::algorithm_calc_thread), 
-					     slot_pos), false);
+      thread = Glib::Thread::create(sigc::bind(sigc::mem_fun(*this, &MainWin::algorithm_calc_thread), 
+					       slot_pos), false);
+    }
   }
 
 }
@@ -994,7 +833,7 @@ void MainWin::on_menu_gate_port_colors() {
 			main_project->get_port_color_manager());
     pcWin.run();
 
-    imgWin.update_screen();
+    editor.update_screen();
     project_changed();
   }
 }
@@ -1006,7 +845,7 @@ void MainWin::on_menu_gate_list() {
     glWin.run();
 
     project_changed();
-    imgWin.update_screen();
+    editor.update_screen();
 
     apply_colors_to_gate_ports(main_project->get_logic_model(), 
 			       main_project->get_port_color_manager());
@@ -1027,7 +866,7 @@ void MainWin::on_menu_gate_orientation() {
 	main_project->get_logic_model()->update_ports(gate);
       }
       else {
-	imgWin.update_screen();
+	editor.update_screen();
 	project_changed();
       }
     }
@@ -1068,7 +907,7 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 	  lmodel->remove_gate_template(gate_template);
       }
       
-      imgWin.update_screen();
+      editor.update_screen();
       project_changed();
     }
     
@@ -1102,7 +941,7 @@ void MainWin::on_menu_gate_set_as_master() {
 			   tmpl, gate->get_bounding_box(),
 			   gate->get_orientation());
 
-      imgWin.update_screen();
+      editor.update_screen();
       project_changed();
     }
   }
@@ -1119,7 +958,12 @@ void MainWin::on_menu_gate_set() {
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
 
-  if(imgWin.selection_active()) {
+  GfxEditorToolSelection_shptr selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+
+  if(selection_tool != NULL && selection_tool->has_selection()) {
+
+    BoundingBox bbox = selection_tool->get_bounding_box();
 
     GateSelectWin gsWin(this, main_project->get_logic_model());
     std::list<GateTemplate_shptr> tmpl_list = gsWin.get_selection(false);
@@ -1139,24 +983,19 @@ void MainWin::on_menu_gate_set() {
     GateTemplate_shptr tmpl = *(tmpl_list.begin());
 
     if(tmpl->get_width() == 0 && tmpl->get_height() == 0) {
-      tmpl->set_width(imgWin.get_selection_max_x() - imgWin.get_selection_min_x());
-      tmpl->set_height(imgWin.get_selection_max_y() - imgWin.get_selection_min_y());
+      tmpl->set_width(bbox.get_width());
+      tmpl->set_height(bbox.get_height());
     }
 
-
-    Gate_shptr new_gate(new Gate(imgWin.get_selection_min_x(), 
-				 imgWin.get_selection_min_x() + tmpl->get_width(),
-				 imgWin.get_selection_min_y(), 
-				 imgWin.get_selection_min_y() + tmpl->get_height() ));
+    Gate_shptr new_gate(new Gate(bbox));
     assert(new_gate != NULL);
-
 
     new_gate->set_gate_template(tmpl);
     lmodel->add_object(layer->get_layer_pos(), new_gate);
 
     new_gate->print();
-    imgWin.reset_selection();
-    imgWin.update_screen();
+    selection_tool->reset_selection();
+    editor.update_screen();
     project_changed();
 
   }
@@ -1173,7 +1012,7 @@ void MainWin::on_menu_gate_set() {
       
       gate->set_gate_template(tmpl);
 
-      imgWin.update_screen();
+      editor.update_screen();
       project_changed();
 
     }
@@ -1181,7 +1020,12 @@ void MainWin::on_menu_gate_set() {
 }
 
 void MainWin::on_menu_gate_create_by_selection() {
-  if(imgWin.selection_active() && main_project) {
+  if(main_project == NULL) return;
+
+  GfxEditorToolSelection_shptr selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+
+  if(selection_tool != NULL && selection_tool->has_selection()) {
 
     LogicModel_shptr lmodel = main_project->get_logic_model();
     Layer_shptr layer;
@@ -1194,18 +1038,12 @@ void MainWin::on_menu_gate_create_by_selection() {
 	return;
     }
 
-
-    BoundingBox bbox(imgWin.get_selection_min_x(), 
-		     imgWin.get_selection_max_x(), 
-		     imgWin.get_selection_min_y(), 
-		     imgWin.get_selection_max_y());
+    BoundingBox bbox = selection_tool->get_bounding_box();
 
     GateTemplate_shptr tmpl(new GateTemplate(bbox.get_width(),
 					     bbox.get_height() ));
 
-    bbox.print();
     grab_template_images(lmodel, tmpl, bbox);
-
 
     GateConfigWin gcWin(this, main_project->get_logic_model(), tmpl);
     
@@ -1217,8 +1055,8 @@ void MainWin::on_menu_gate_create_by_selection() {
       gate->set_gate_template(tmpl);
       lmodel->add_object(layer->get_layer_pos(), gate);
     
-      imgWin.reset_selection();
-      imgWin.update_screen();
+      selection_tool->reset_selection();
+      editor.update_screen();
       project_changed();
 
     }
@@ -1242,6 +1080,7 @@ void MainWin::on_menu_help_about() {
   about_dialog.run();
 }
 
+/* XXX
 void MainWin::on_wire_tool_release() {
   if(imgWin.get_wire_min_x() ==  imgWin.get_wire_max_x() &&
      imgWin.get_wire_min_y() ==  imgWin.get_wire_max_y()) return;
@@ -1261,8 +1100,8 @@ void MainWin::on_wire_tool_release() {
   project_changed();
   imgWin.update_screen();
 }
-
-void MainWin::on_selection_activated() {
+*/
+void MainWin::on_area_selection_activated(BoundingBox const& bbox) {
   if(main_project) {
 
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateCreateBySelection", true);
@@ -1273,11 +1112,7 @@ void MainWin::on_selection_activated() {
     LogicModel_shptr lmodel = main_project->get_logic_model();
     Layer_shptr layer = lmodel->get_current_layer();
 
-    for(Layer::qt_region_iterator iter = 
-	  layer->region_begin(imgWin.get_selection_min_x(), 
-			      imgWin.get_selection_max_x(), 
-			      imgWin.get_selection_min_y(), 
-			      imgWin.get_selection_max_y());
+    for(Layer::qt_region_iterator iter = layer->region_begin(bbox);
 	iter != layer->region_end(); ++iter) {
       
       PlacedLogicModelObject_shptr plo = *iter;
@@ -1291,7 +1126,7 @@ void MainWin::on_selection_activated() {
   }
 }
 
-void MainWin::on_selection_revoked() {
+void MainWin::on_area_selection_revoked() {
   if(main_project) {
 
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateCreateBySelection", false);
@@ -1302,105 +1137,48 @@ void MainWin::on_selection_revoked() {
   }
 }
 
-void MainWin::on_mouse_scroll_down(unsigned int clicked_real_x, unsigned int clicked_real_y) {
-  if(main_project != NULL) {
 
-    int real_dist_to_center_x = (int)clicked_real_x - (int)imgWin.get_center_x();
-    int real_dist_to_center_y = (int)clicked_real_y - (int)imgWin.get_center_y();
+void MainWin::via_up_tool_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) {
+  if(main_project == NULL) return;
+  Via_shptr new_via(new Via(real_x, real_y, main_project->get_default_pin_diameter(),
+			    Via::DIRECTION_UP));
+	  
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+  lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), new_via);
+  project_changed();
+  editor.update_screen();
+}
 
-    double zoom_factor = shift_key_pressed == true ? ZOOM_STEP_MOUSE_SCROLL_AND_SHIFT : ZOOM_STEP_MOUSE_SCROLL;
+void MainWin::via_down_tool_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) {
+  if(main_project == NULL) return;
+  Via_shptr new_via(new Via(real_x, real_y, main_project->get_default_pin_diameter(),
+			    Via::DIRECTION_DOWN));
+	  
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+  lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), new_via);
+  project_changed();
+  editor.update_screen();
+}
 
-    unsigned int new_center_x = (int)imgWin.get_center_x() + real_dist_to_center_x -
-      (double)real_dist_to_center_x * zoom_factor;
-
-    unsigned int new_center_y = (int)imgWin.get_center_y() + real_dist_to_center_y -
-      (double)real_dist_to_center_y * zoom_factor;
-
-    zoom(new_center_x, new_center_y, zoom_factor);
-
-    //zoom_out(center_x, center_y);
+void MainWin::selection_tool_clicked(unsigned int real_x, unsigned int real_y, unsigned int button) {
+  if(button == 3) {
+    menu_manager->show_popup_menu(button, 0);
+  }
+  else if(button == 1) {
+    //!imgWin.selection_active()
+    object_clicked(real_x, real_y);
+    char buf[42];
+    snprintf(buf, sizeof(buf), "%d, %d", real_x, real_y);
+    m_statusbar.push(buf);
   }
 }
 
-void MainWin::on_mouse_scroll_up(unsigned int clicked_real_x, unsigned int clicked_real_y) {
-  if(main_project != NULL) {
-
-    int real_dist_to_center_x = (int)clicked_real_x - (int)imgWin.get_center_x();
-    int real_dist_to_center_y = (int)clicked_real_y - (int)imgWin.get_center_y();
-
-    double zoom_factor = shift_key_pressed == true ? ZOOM_STEP_MOUSE_SCROLL_AND_SHIFT : ZOOM_STEP_MOUSE_SCROLL;
-
-    unsigned int new_center_x = (int)imgWin.get_center_x() + real_dist_to_center_x -
-      (double)real_dist_to_center_x / zoom_factor;
-
-    unsigned int new_center_y = (int)imgWin.get_center_y() + real_dist_to_center_y -
-      (double)real_dist_to_center_y / zoom_factor;
-
-    zoom(new_center_x, new_center_y, 1.0/zoom_factor);
-
-  }
-}
-
-// @todo should have two params with real coords. the prevents, that we need a coord transformation
-bool MainWin::on_imgwin_clicked(GdkEventButton * event) {
-
-  if(main_project != NULL) {
-
-    if(event->type == GDK_2BUTTON_PRESS) {
-
-      if(tool == TOOL_SELECT) {
-	debug(TM, "call object_double_clicked()");
-	unsigned int real_x, real_y;
-	imgWin.coord_screen_to_real
-	  ((unsigned int)(event->x), (unsigned int)(event->y), &real_x, &real_y);
-	object_double_clicked(real_x, real_y);
-      }
-    }
-    else if(event->type == GDK_BUTTON_PRESS) {
-      if(event->button == 3) {
-	imgWin.coord_screen_to_real
-	  ((unsigned int)(event->x), (unsigned int)(event->y), 
-	   &last_click_on_real_x, &last_click_on_real_y);
-	menu_manager->show_popup_menu(event->button, event->time);
-      }
-      else if(event->button == 1) {
-	unsigned int real_x, real_y;
-	imgWin.coord_screen_to_real
-	  ((unsigned int)(event->x), (unsigned int)(event->y), &real_x, &real_y);
-
-	if(tool == TOOL_SELECT && !imgWin.selection_active()) {
-	  debug(TM, "call object_clicked()");
-	  object_clicked(real_x, real_y);
-	}
-	else if(tool == TOOL_VIA_UP || tool == TOOL_VIA_DOWN) {
-	  
-	  Via_shptr new_via(new Via(real_x, real_y,
-				    main_project->get_default_pin_diameter(),
-				    tool == TOOL_VIA_UP ? Via::DIRECTION_UP : Via::DIRECTION_DOWN));
-	  
-	  assert(new_via);
-	  
-	  LogicModel_shptr lmodel = main_project->get_logic_model();
-	  
-	  lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), 
-			     new_via);
-	  
-	  project_changed();
-	  imgWin.update_screen();
-	  
-	}
-      }
-      
-    }
-  }
-  return true;
-}
 
 bool MainWin::on_key_release_event_received(GdkEventKey * event) {
   if((event->keyval ==  GDK_Shift_L || event->keyval == GDK_Shift_R)) {
     shift_key_pressed = false;
-    imgWin.set_shift_key_state(false);
-    if(tool == TOOL_WIRE) imgWin.update_screen();
+    //imgWin.set_shift_key_state(false);
+    //if(tool == TOOL_WIRE) imgWin.update_screen();
   }
   else if(event->state & GDK_CONTROL_MASK || 
 	  event->keyval == GDK_Control_L || 
@@ -1416,8 +1194,8 @@ bool MainWin::on_key_release_event_received(GdkEventKey * event) {
 bool MainWin::on_key_press_event_received(GdkEventKey * event) {
   if(event->keyval == GDK_Shift_L || event->keyval == GDK_Shift_R) {
     shift_key_pressed = true;
-    imgWin.set_shift_key_state(true);
-    if(tool == TOOL_WIRE) imgWin.update_screen();
+    //imgWin.set_shift_key_state(true);
+    //if(tool == TOOL_WIRE) imgWin.update_screen();
   }
   //else if(event->keyval == GDK_Control_L || event->keyval == GDK_Control_R) {
   else if(!(event->state & GDK_CONTROL_MASK) && (event->keyval == GDK_Control_L)) {
@@ -1444,6 +1222,11 @@ void MainWin::clear_selection() {
 void MainWin::update_gui_on_selection_change() {
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
 
+  
+  GfxEditorToolSelection_shptr selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+  bool selection_active = selection_tool != NULL && selection_tool->has_selection();
+
   if(selected_objects.size() == 1) {
     it = selected_objects.begin();
 
@@ -1453,7 +1236,7 @@ void MainWin::update_gui_on_selection_change() {
       menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", true);
     }
     else {
-      menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", imgWin.selection_active());
+      menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", selection_active);
     }
     
     if(ciWin != NULL) ciWin->set_object(*it);
@@ -1462,7 +1245,7 @@ void MainWin::update_gui_on_selection_change() {
   else {
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateOrientation", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSetAsMaster", false);
-    menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", imgWin.selection_active());
+    menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", selection_active);
 
     if(ciWin != NULL) ciWin->disable_inspection();
   }
@@ -1483,7 +1266,8 @@ void MainWin::update_gui_on_selection_change() {
 
 }
 
-void MainWin::object_double_clicked(unsigned int real_x, unsigned int real_y) {
+void MainWin::selection_tool_double_clicked(unsigned int real_x, unsigned int real_y,
+					    unsigned int button) {
   LogicModel_shptr lmodel = main_project->get_logic_model();
   Layer_shptr layer = lmodel->get_current_layer();
   PlacedLogicModelObject_shptr plo = layer->get_object_at_position(real_x, real_y);
@@ -1502,6 +1286,8 @@ void MainWin::object_double_clicked(unsigned int real_x, unsigned int real_y) {
 }
 
 void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
+
+  if(main_project == NULL) return;
 
   bool add_to_selection = false;
 
@@ -1551,7 +1337,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
     }
   }
  
-  imgWin.update_screen();
+  editor.update_screen();
   update_gui_on_selection_change();
 }
 
@@ -1659,7 +1445,7 @@ void MainWin::on_popup_menu_set_port() {
       lmodel->update_ports(gate_template);
 
       project_changed();
-      imgWin.update_screen();
+      editor.update_screen();
     }
   }
 }
@@ -1687,7 +1473,7 @@ void MainWin::on_popup_menu_set_name() {
 	(*it)->set_name(name);
       }
       project_changed();
-      imgWin.update_screen();
+      editor.update_screen();
     }
 
   }
@@ -1704,7 +1490,7 @@ void MainWin::on_popup_menu_add_vertical_grid_line() {
       g->add_offset(last_click_on_real_x);
       gcWin->update_grid_entries();
       project_changed();
-      imgWin.update_screen();
+      editor.update_screen();
     }
   }
 }
@@ -1720,7 +1506,7 @@ void MainWin::on_popup_menu_add_horizontal_grid_line() {
       g->add_offset(last_click_on_real_y);
       gcWin->update_grid_entries();
       project_changed();
-      imgWin.update_screen();
+      editor.update_screen();
     }
   }
 }
@@ -1799,7 +1585,7 @@ void MainWin::on_menu_logic_interconnect() {
       selected_objects.end());
 
     project_changed();
-    imgWin.update_screen();
+    editor.update_screen();
   }
 }
 
@@ -1818,7 +1604,7 @@ void MainWin::on_menu_logic_isolate() {
       selected_objects.end());
 
     project_changed();
-    imgWin.update_screen();
+    editor.update_screen();
   }
 
 }
@@ -1831,10 +1617,12 @@ void MainWin::on_menu_logic_connection_inspector() {
 void MainWin::on_menu_logic_create_annotation() {
   if(main_project == NULL) return;
 
-  Annotation_shptr annotation(new Annotation(imgWin.get_selection_min_x(),
-					     imgWin.get_selection_max_x(),
-					     imgWin.get_selection_min_y(),
-					     imgWin.get_selection_max_y()));
+  GfxEditorToolSelection_shptr selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+
+  if(selection_tool == NULL || !selection_tool->has_selection()) return;
+
+  Annotation_shptr annotation(new Annotation(selection_tool->get_bounding_box()));
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
   assert(lmodel != NULL);
@@ -1844,7 +1632,7 @@ void MainWin::on_menu_logic_create_annotation() {
   lmodel->add_object(layer->get_layer_pos(), annotation);
 
   project_changed();
-  imgWin.update_screen();
+  editor.update_screen();
 
   if(alWin != NULL) alWin->refresh();
 }
@@ -1895,7 +1683,7 @@ void MainWin::on_menu_view_grid_config() {
 void MainWin::on_grid_config_changed() {
   if(gcWin) {
     project_changed();
-    imgWin.update_screen();
+    editor.update_screen();
   }
 }
 
@@ -1990,7 +1778,7 @@ void MainWin::on_menu_logic_clear_logic_model() {
   case(Gtk::RESPONSE_OK):
     clear_logic_model(lmodel, lmodel->get_current_layer());
     project_changed();
-    imgWin.update_screen();
+    editor.update_screen();
     ciWin->objects_removed();
     break;
   case(Gtk::RESPONSE_CANCEL):
@@ -2015,7 +1803,7 @@ void MainWin::remove_objects() {
     highlighted_objects.clear();
 
     menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection", false);
-    imgWin.update_screen(); 
+    editor.update_screen(); 
     ciWin->objects_removed();
   }
 }
@@ -2033,7 +1821,7 @@ void MainWin::on_menu_layer_clear_background_image() {
       BackgroundImage_shptr img = layer->get_image();
       clear_image<BackgroundImage>(img);
       project_changed();
-      imgWin.update_screen();
+      editor.update_screen();
     }
   }
   

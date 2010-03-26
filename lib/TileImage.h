@@ -60,13 +60,6 @@ namespace degate {
 
   private:
 
-    /**
-     * Get the width / height of a single tile. The size is a power of two.
-     */
-
-    inline unsigned int get_tile_size() const {
-      return (1 << tile_width_exp);
-    }
 
     /**
      * Get the minimum width or height of an tile based image, that
@@ -76,12 +69,11 @@ namespace degate {
      * @return 
      */
     unsigned int calc_real_size(unsigned int requested_size,
-				unsigned int tile_width_exp) {
+				unsigned int tile_width_exp) const {
 
       // we can't use the get_tile_size() method here, because we use
       // this method during the base class constructor call.
-
-      unsigned int tile_size = (1 << tile_width_exp);
+      unsigned int tile_size = (1 << tile_width_exp);      
       unsigned int remainder = requested_size % tile_size;
       if(remainder == 0) return requested_size;
       else return requested_size - remainder + tile_size;
@@ -133,6 +125,15 @@ namespace degate {
     
 
     /**
+     * Get the width / height of a single tile. The size is a power of two.
+     */
+
+    inline unsigned int get_tile_size() const {
+      return (1 << tile_width_exp);
+    }
+
+
+    /**
      * Get the directory, where images are stored.
      */
     std::string get_directory() const { return directory; }
@@ -146,6 +147,14 @@ namespace degate {
     inline typename PixelPolicy::pixel_type get_pixel(unsigned int x, unsigned int y) const;
     
     inline void set_pixel(unsigned int x, unsigned int y, typename PixelPolicy::pixel_type new_val);
+
+    /**
+     * Copy the raw data from an image tile that has its upper left corner at x,y into a buffer.
+     */
+    void raw_copy(void * dst_buf, unsigned int x, unsigned int y) const {
+      MemoryMap_shptr mem = tile_cache.get_tile(x, y);
+      mem->raw_copy(dst_buf);
+    }
 
   };
 

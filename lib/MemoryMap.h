@@ -109,7 +109,9 @@ namespace degate {
 	
     inline void set(unsigned int x, unsigned int y, T new_val);
     inline T get(unsigned int x, unsigned int y) const;
-    
+
+    void raw_copy(void * buf) const;
+
     std::string const& get_filename() const { return filename; }
 	
     //ret_t deactivate_mapping();
@@ -375,6 +377,12 @@ namespace degate {
       return RET_ERR;
     }
     }*/
+
+  template <typename T>
+  void MemoryMap<T>::raw_copy(void * buf) const {
+    memcpy(buf, mem, width * height * sizeof(T));
+  }
+
   
   template <typename T>
   void * MemoryMap<T>::get_void_ptr(unsigned int x, unsigned int y) const {

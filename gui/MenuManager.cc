@@ -51,7 +51,7 @@ void MenuManager::create_popup_menu() {
 }
 
 void MenuManager::show_popup_menu(guint button, guint32  activate_time) {
-  popup_menu.popup(button, activate_time);
+  popup_menu.popup(0, gtk_get_current_event_time());
 
 }
 
@@ -130,14 +130,6 @@ void MenuManager::create_and_bind_project_menu() {
 					    Gtk::Stock::HARDDISK,
 					    "Create _archive", "Create an archive"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_export_archive));
-
-  m_refActionGroup->add(Gtk::Action::create("ExportViewAsGraphics",
-					    "Export current view as XPM-graphics", "Export view as graphics"),
-			sigc::mem_fun(*window, &MainWin::on_menu_project_export_view));
-
-  m_refActionGroup->add(Gtk::Action::create("ExportLayerAsGraphics",
-					    "Export current layer as XPM-graphics", "Export layer as graphics"),
-			sigc::mem_fun(*window, &MainWin::on_menu_project_export_layer));
 
   
   Glib::RefPtr<Gtk::RecentAction> recent_action_ptr = Gtk::RecentAction::create("ProjectRecentProjects", "_Recent projects");
@@ -424,9 +416,6 @@ void MenuManager::setup_menu_structure() {
         "      <separator/>"
         "      <menuitem action='ProjectSettings'/>"
         "      <separator/>"
-        "      <menuitem action='ExportViewAsGraphics'/>"
-        "      <menuitem action='ExportLayerAsGraphics'/>"
-        "      <separator/>"
         "      <menuitem action='ProjectQuit'/>"
         "    </menu>"
         "    <menu action='ViewMenu'>"
@@ -686,8 +675,6 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectPullChanges", state);
 
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectSettings", state);
-  set_menu_item_sensitivity("/MenuBar/ProjectMenu/ExportViewAsGraphics", state);
-  set_menu_item_sensitivity("/MenuBar/ProjectMenu/ExportLayerAsGraphics", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectCreateSubproject", state);
 
   set_menu_item_sensitivity("/MenuBar/ViewMenu/ViewZoomIn", state);

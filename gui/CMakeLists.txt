@@ -86,10 +86,9 @@ set(DEGATE_SRC
 	       WireMatchingGUI.cc
 
 	       AppHelper.cc
-	       ImageWin.cc
 	       MainWin.cc
 
-	       RenderArea.cc RenderWindow.cc
+	       RenderArea.cc RenderWindow.cc DegateRenderer.cc
 )
 
 add_executable(degate_bin ${DEGATE_SRC})

@@ -12,10 +12,10 @@ set(CMAKE_VERBOSE_MAKEFILE true)
 # global flags
 #
 #add_definitions(-ggdb -Wall -pg)
-#set(CMAKE_EXE_LINKER_FLAGS -pg)
-#set(CMAKE_SHARED_LINKER_FLAGS -pg)
+set(CMAKE_EXE_LINKER_FLAGS -pg)
+set(CMAKE_SHARED_LINKER_FLAGS -pg)
 
-add_definitions(-Wall -O3 -ggdb)
+add_definitions(-Wall -O3 -ggdb -pg)
 #set(CMAKE_EXE_LINKER_FLAGS)
 #set(CMAKE_SHARED_LINKER_FLAGS -O3)
 

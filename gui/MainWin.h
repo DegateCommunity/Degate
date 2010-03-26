@@ -23,7 +23,9 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #define __MAINWIN_H__
 
 #include <gtkmm.h>
-#include "ImageWin.h"
+#include "RenderWindow.h"
+#include "Editor.h"
+#include "DegateRenderer.h"
 #include "InProgressWin.h"
 #include "GridConfigWin.h"
 #include "ObjectMatchingWin.h"
@@ -76,10 +78,6 @@ class MainWin : public Gtk::Window  {
 
 
   //Signal handlers:
-  virtual void on_v_adjustment_changed();
-  virtual void on_h_adjustment_changed();
-  virtual void adjust_scrollbars();
-  virtual bool on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time);
 
   virtual void on_menu_project_new();
   virtual void on_menu_project_open();
@@ -88,8 +86,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_project_save();
   virtual void on_menu_project_settings();
   virtual void on_menu_project_export_archive();
-  virtual void on_menu_project_export_view();
-  virtual void on_menu_project_export_layer();
+
   virtual void on_menu_project_recent_projects();
   virtual void on_menu_project_create_subproject();
   virtual void on_menu_project_open_parent();
@@ -142,15 +139,20 @@ class MainWin : public Gtk::Window  {
   // Help menu
   virtual void on_menu_help_about();
 
-  virtual bool on_imgwin_clicked(GdkEventButton * event);
   void object_clicked(unsigned int real_x, unsigned int real_y);
-  void object_double_clicked(unsigned int real_x, unsigned int real_y);
+
+  void selection_tool_clicked(unsigned int real_x, unsigned int real_y, unsigned int button);
+
+  void selection_tool_double_clicked(unsigned int real_x, unsigned int real_y,
+				     unsigned int button);
+
+
+  void via_up_tool_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button);
+  void via_down_tool_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button);
   
-  virtual void on_wire_tool_release();
-  virtual void on_selection_activated(); // should be renamed to area selection
-  virtual void on_selection_revoked();
-  virtual void on_mouse_scroll_up(unsigned int center_x, unsigned int center_y);
-  virtual void on_mouse_scroll_down(unsigned int center_x, unsigned int center_y);
+  //virtual void on_wire_tool_release();
+  virtual void on_area_selection_activated(degate::BoundingBox const& bbox);
+  virtual void on_area_selection_revoked();
 
   virtual void goto_object(degate::PlacedLogicModelObject_shptr obj_ptr);
 
@@ -169,7 +171,10 @@ class MainWin : public Gtk::Window  {
 
   Gtk::Statusbar m_statusbar;
 
-  ImageWin imgWin;
+  GfxEditor<DegateRenderer> editor;
+  RenderWindow<GfxEditor<DegateRenderer> > render_window;
+
+
   std::tr1::shared_ptr<InProgressWin> ipWin;
   std::tr1::shared_ptr<ConnectionInspectorWin> ciWin;
   std::tr1::shared_ptr<ModuleWin> modWin;
@@ -178,10 +183,6 @@ class MainWin : public Gtk::Window  {
   std::tr1::shared_ptr<LayerConfigWin> lcWin;
 
   Gtk::HBox m_displayBox;
-  Gtk::Adjustment m_VAdjustment;
-  Gtk::Adjustment m_HAdjustment;
-  Gtk::VScrollbar m_VScrollbar;
-  Gtk::HScrollbar m_HScrollbar;
   
   std::tr1::shared_ptr<MenuManager> menu_manager;
 
@@ -189,12 +190,11 @@ class MainWin : public Gtk::Window  {
 
  private:
 
-
   bool shift_key_pressed;
   bool control_key_pressed;
 
   Glib::Thread * thread;
-  TOOL tool;
+
   std::set<degate::PlacedLogicModelObject_shptr> selected_objects;
   HlObjectSet highlighted_objects;
 
@@ -233,7 +233,7 @@ class MainWin : public Gtk::Window  {
   void update_gui_for_loaded_project();
 
   void initialize_menu();
-  void initialize_image_window();
+
   void initialize_menu_render_funcs();
   void initialize_menu_algorithm_funcs();
   void set_image_for_toolbar_widget(Glib::ustring toolbar_widget_path, Glib::ustring file_name);

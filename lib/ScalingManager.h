@@ -135,7 +135,7 @@ namespace degate {
       unsigned int w = last_img->get_width();
       unsigned int h = last_img->get_height();
 
-      for(int i = 2; (h > min_size) && (w > min_size) && 
+      for(int i = 2; ((h > min_size) || (w > min_size)) && 
 	    (i < (1<<24));  // max 24 scaling levels
 	  i*=2) {
 
