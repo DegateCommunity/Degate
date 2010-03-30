@@ -380,6 +380,7 @@ namespace degate {
 
   template <typename T>
   void MemoryMap<T>::raw_copy(void * buf) const {
+    assert(mem != NULL);
     memcpy(buf, mem, width * height * sizeof(T));
   }
 

@@ -4,7 +4,6 @@
 #include <BoundingBox.h>
 
 #include <tr1/memory>
-#include <goocanvasmm.h>
 
 #include <RenderArea.h>
 
@@ -26,7 +25,7 @@ typedef std::tr1::shared_ptr<GfxEditorTool> GfxEditorTool_shptr;
 
 class GfxEditorToolRectangle : public GfxEditorTool {
 private:
-  Glib::RefPtr<Goocanvas::Rect> rect;
+  //Glib::RefPtr<Goocanvas::Rect> rect;
   unsigned int start_x, start_y;
   RenderArea & renderer;
   bool drag_mode;
@@ -47,8 +46,8 @@ public:
 
       start_x = real_x;
       start_y = real_y;
-      rect = Goocanvas::Rect::create(real_x, real_y, 0, 0);
-      renderer.get_root_item()->add_child(rect);
+      //rect = Goocanvas::Rect::create(real_x, real_y, 0, 0);
+      //renderer.get_root_item()->add_child(rect);
       drag_mode = true;
     }
 
@@ -57,14 +56,15 @@ public:
     if(button == 1) {
       drag_mode = false;
       
-      assert(rect != NULL);
+      //assert(rect != NULL);
       degate::BoundingBox bbox = get_bounding_box();
       if(bbox.get_width() == 0 && bbox.get_height() == 0) reset();
     }
   }
 
   void on_mouse_motion(unsigned int real_x, unsigned int real_y) {
-    if(drag_mode && rect != NULL) {
+    //if(drag_mode && rect != NULL) {
+      /*
       Glib::PropertyProxy<double> x = rect->property_x();
       Glib::PropertyProxy<double> y = rect->property_y();
       Glib::PropertyProxy<double> w = rect->property_width();
@@ -87,13 +87,15 @@ public:
 	y.set_value(real_y);
 	h.set_value(start_y - real_y);
       }
-    }
+      */
+    //    }
   }
 
 
   degate::BoundingBox get_bounding_box() const {
     if(!has_rectangle()) return degate::BoundingBox();
     else {
+      /*
       Glib::PropertyProxy<double> x = rect->property_x();
       Glib::PropertyProxy<double> y = rect->property_y();
       Glib::PropertyProxy<double> w = rect->property_width();
@@ -103,6 +105,7 @@ public:
 				 x.get_value() + w.get_value(),
 				 y.get_value(),
 				 y.get_value() + h.get_value());
+      */
 
     }
   }
@@ -110,14 +113,15 @@ public:
  protected:
 
   virtual bool has_rectangle() const {
-    return rect != NULL;
+    //return rect != NULL;
+    return false;
   }
 
   virtual void reset() {
-    if(rect != NULL) {
-      rect->remove();
-      rect.reset();      
-    }
+    //if(rect != NULL) {
+      //rect->remove();
+      //rect.reset();      
+    //}
   }
 
 

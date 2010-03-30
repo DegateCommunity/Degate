@@ -13,7 +13,11 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/foreach.hpp>
 
-class DegateRenderer : public RenderArea {
+#include <gtkglmm.h>
+
+class DegateRenderer : 
+  public RenderArea,
+  public Gtk::GL::Widget<DegateRenderer> {
 
  private:
 
@@ -21,20 +25,49 @@ class DegateRenderer : public RenderArea {
   degate::Layer_shptr layer;
   double last_scaling;
 
-  typedef boost::tuple<unsigned int, unsigned int, Glib::RefPtr<Goocanvas::Image> > bg_tiles_type;
+  
+  typedef boost::tuple<unsigned int, unsigned int, GLuint> bg_tiles_type;
   std::list<bg_tiles_type> rendered_bg_tiles;
 
-  typedef std::map<degate::PlacedLogicModelObject_shptr, Glib::RefPtr<Goocanvas::Item> > rendered_objects_type;
+  /*
+  typedef std::map<degate::PlacedLogicModelObject_shptr, 
+    Glib::RefPtr<Goocanvas::Item> > rendered_objects_type;
   rendered_objects_type rendered_objects;
+  */
 
- public:
+  degate::BoundingBox background_bbox;
 
-  DegateRenderer() : last_scaling(0) {
-  }
+  bool realized;
+
+
+  double scale_font; // scaling factor for using glyph texture maps
+  int font_height; // requested font height for rasterization
+  GLuint * font_textures;
+  GLuint font_dlist_base;
+
+  GLuint background_dlist, gates_dlist, gate_details_dlist;
+
+  bool should_update_gates;
+  bool render_details;
+
+  bool idle_hook_enabled;
+  bool is_idle;
+
+protected:
+
+  void on_realize();
+  void update_viewport_dimension();
+
+public:
+
+  DegateRenderer();
+  virtual ~DegateRenderer();
+
   
 
   void set_logic_model(degate::LogicModel_shptr lmodel) {
     this->lmodel = lmodel;
+    should_update_gates = true;
   }
 
   void set_layer(degate::Layer_shptr layer) {
@@ -46,33 +79,20 @@ class DegateRenderer : public RenderArea {
   void set_grid(void) {}
 
   virtual void clear_objects() {
+    /*
     BOOST_FOREACH(rendered_objects_type::value_type const & p, rendered_objects) {
       p.second->remove();
     }
     rendered_objects.clear();
+    */
   }
 
   virtual void clear_object(degate::PlacedLogicModelObject_shptr o) {
   }
 
-  virtual void update_screen() {
-    RenderArea::update_screen();
-
-    update_viewport_dimension();
-    render_gates();
-  }
-
- protected:
-
-  /**
-   * Method is called after changes to the viewport.
-   */
-  virtual void update_viewport_dimension() {
-    RenderArea::update_viewport_dimension();
-    
-    render_background();
-  }
-
+  
+  virtual void update_screen();
+  
 
  private:
 
@@ -95,80 +115,42 @@ class DegateRenderer : public RenderArea {
    */
 
   bool check_tile_is_present(unsigned int x, unsigned int y) const {
+    
     BOOST_FOREACH(bg_tiles_type const & t, rendered_bg_tiles) {
       if(x == t.get<0>() && y == t.get<1>()) return true;
     }
+    
     return false;
   }
 
 
-  void create_and_add_tile(degate::BackgroundImage_shptr img, 
-			   unsigned int x, unsigned int y, unsigned int tile_width, double pre_scaling);
+  GLuint create_and_add_tile(degate::BackgroundImage_shptr img, 
+			     unsigned int x, unsigned int y, 
+			     unsigned int tile_width, 
+			     unsigned int pre_scaling) const;
 
 
-  void drop_tiles() {
-    std::cout << "drop tiles" << std::endl;
-    BOOST_FOREACH(bg_tiles_type const & t, rendered_bg_tiles) {
-      t.get<2>()->remove();
-    }
-    rendered_bg_tiles.clear();
+  void drop_tiles();
+
+  void render_background();
+
+  void render_gates(bool detail = false);
+  void render_gate(degate::Gate_shptr gate, bool details);
+
+  bool error_check() const;
+
+  void draw_string(int x, int y, std::string const& str);
+  void init_font(const char * fname, unsigned int h);
+  void create_font_textures(FT_Face face, char ch, GLuint list_base, GLuint * tex_base);
+
+  unsigned int get_font_height() const {
+    return (double)font_height*scale_font;
   }
 
-  void render_background() {
+  void set_color(degate::color_t col);
+  void draw_circle(int x, int y, int diameter, degate::color_t col);
 
-    if(layer == NULL || !layer->has_background_image()) return;
-
-  clock_t start, finish;
-  start = clock();
-
-    degate::ScalingManager_shptr smgr = layer->get_scaling_manager();
-    assert(smgr != NULL);
-    std::cout << "Requested scaling is " << get_scaling() << std::endl;
-    degate::ScalingManager<degate::BackgroundImage>::image_map_element  elem = smgr->get_image(get_scaling());
-    std::cout << "Tile scaling is: " << elem.first << std::endl;
-    if(last_scaling > 0 && last_scaling != elem.first) drop_tiles();
-    last_scaling = elem.first;
-
-    double pre_scaling = get_scaling() / elem.first;
-    std::cout << "Prescaling: " << pre_scaling << std::endl;
-    degate::BackgroundImage_shptr img = elem.second;
-
-    unsigned int tile_width = img->get_tile_size();
-
-    unsigned int 
-      min_x = to_lower_tile_offset(std::max(get_viewport_min_x(), 0), tile_width),
-      max_x = to_upper_tile_offset(std::min((unsigned int)std::max(get_viewport_max_x(), 0), 
-					    get_virtual_width()), tile_width),
-      min_y = to_lower_tile_offset(std::max(get_viewport_min_y(), 0), tile_width),
-      max_y = to_upper_tile_offset(std::min((unsigned int)std::max(get_viewport_max_y(), 0), 
-					    get_virtual_height()), tile_width);
-    
-    std::cout << "Check for tiles in range: " 
-	      << get_viewport_min_x() << ".." << get_viewport_max_x() << " / "
-	      << get_viewport_min_y() << ".." << get_viewport_max_y() << std::endl;
-    
-    // iterate over possible tile positions
-      for(unsigned int x = min_x; x < max_x; x+=tile_width) {
-
-	for(unsigned int y = min_y; y < max_y; y+=tile_width) {
-
-	std::cout << "\tCheck if there is a tile at " << x << " / " << y << std::endl;
-	// if there is not already a tile, create one
-	if(!check_tile_is_present(x, y)) {
-	  std::cout << "No. Create a tile." << std::endl;
-	  create_and_add_tile(img, x, y, tile_width, elem.first);
-	}
-      }
-    }
-      
-  finish = clock();
-  debug(TM, "rendering time: %f ms", 1000*(double(finish - start)/CLOCKS_PER_SEC));
-   
-  }
-
-  void render_gates();
-
-  Glib::RefPtr<Goocanvas::Rect> render_gate(degate::Gate_shptr gate);
+  void on_idle();
 
 };
 

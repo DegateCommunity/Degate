@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <iostream>
 
+#include <BoundingBox.h>
+
 /**
  * Abstract base class for render objects.
  *
@@ -56,8 +58,8 @@ protected:
     //*real_x = (unsigned int)(screen_x * get_scaling() + viewport_min_x);
     //*real_y = (unsigned int)(screen_y * get_scaling() + viewport_min_y);
 
-    *real_x = (unsigned int)(screen_x * get_scaling());
-    *real_y = (unsigned int)(screen_y * get_scaling());
+    *real_x = (unsigned int)(screen_x * get_scaling() + viewport_min_x);
+    *real_y = (unsigned int)(screen_y * get_scaling() + viewport_min_y);
 
     //std::cout << "that is real " << *real_x << std::endl;
     //std::cout << "scaling " << get_scaling() << std::endl;
@@ -247,6 +249,14 @@ public:
     return viewport_min_y + ((viewport_max_y - viewport_min_y) >> 1);
   }
 
+
+  /**
+   * Get the viewport definition as bounding box.
+   */
+  virtual degate::BoundingBox get_viewport() const {
+    return degate::BoundingBox(viewport_min_x, viewport_max_x, 
+			       viewport_min_y, viewport_max_y);
+  }
 
   virtual void set_drawing_window_width(unsigned int width) {
     drawing_window_width = width;

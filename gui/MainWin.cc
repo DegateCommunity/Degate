@@ -111,8 +111,7 @@ MainWin::MainWin() : render_window(editor) {
   render_window.grab_focus();
 
   project_to_open = NULL;
-  //Glib::signal_idle().connect( sigc::mem_fun(*this, &MainWin::on_idle));
-  Glib::signal_timeout().connect( sigc::mem_fun(*this, &MainWin::on_idle), 5000);
+  Glib::signal_timeout().connect( sigc::mem_fun(*this, &MainWin::on_timer), 5000);
 
 
   if(getuid() == 0) {
@@ -154,8 +153,7 @@ void MainWin::update_title() {
 
 }
 
-
-bool MainWin::on_idle() {
+bool MainWin::on_timer() {
   if(project_to_open != NULL) {
     open_project(project_to_open);
     project_to_open = NULL;

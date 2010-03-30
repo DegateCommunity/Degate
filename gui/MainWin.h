@@ -160,7 +160,7 @@ class MainWin : public Gtk::Window  {
   bool on_key_release_event_received(GdkEventKey * event);
 
   //virtual bool on_expose_event(GdkEventExpose * event);
-  bool on_idle();
+  bool on_timer();
   
 
   //Child widgets:

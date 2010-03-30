@@ -62,7 +62,7 @@ private:
    * This method is called, if the horizontal adjustment is changed.
    */
   void on_h_adjustment_changed() {
-    std::cout << "h-adj changed" << std::endl;
+    //std::cout << "h-adj changed" << std::endl;
     int x_offset = (int) h_adjustment.get_value();
     renderer.set_viewport_x_range(x_offset, 
 				  renderer.get_viewport_width() + x_offset);
@@ -183,11 +183,11 @@ template <typename RendererType>
 void RenderWindow<RendererType>::adjust_scrollbars() {
 
   unsigned int min_h = renderer.get_viewport_min_x();
-  unsigned int max_h = min_h + renderer.get_viewport_width();
+  unsigned int max_h = renderer.get_viewport_max_x(); //min_h + renderer.get_viewport_width();
   unsigned int min_v = renderer.get_viewport_min_y();
-  unsigned int max_v = min_v + renderer.get_viewport_height();
+  unsigned int max_v = renderer.get_viewport_max_y();//min_v + renderer.get_viewport_height();
 
-  std::cout << "adjust scrollbars, min_h = " << min_h << " max_h = " << max_h << std::endl;
+  //std::cout << "adjust scrollbars, min_h = " << min_h << " max_h = " << max_h << std::endl;
 
   disable_adjustment_events();
 
@@ -213,20 +213,29 @@ void RenderWindow<RendererType>::adjust_scrollbars() {
 
 
 template <typename RendererType>
-void RenderWindow<RendererType>::mouse_zoom(unsigned int clicked_real_x, unsigned int clicked_real_y, 
-			      double zoom_factor) {
-  int real_dist_to_center_x = (int)clicked_real_x - (int)renderer.get_viewport_center_x();
-  int real_dist_to_center_y = (int)clicked_real_y - (int)renderer.get_viewport_center_y();
-  int new_center_x = (int)renderer.get_viewport_center_x() + real_dist_to_center_x -
-    (double)real_dist_to_center_x * zoom_factor;
+void RenderWindow<RendererType>::mouse_zoom(unsigned int clicked_real_x, 
+					    unsigned int clicked_real_y, 
+					    double zoom_factor) {
+  //clicked_real_x = std::min(renderer.get_viewport_width(), (int)clicked_real_x);
+  //clicked_real_y = std::min(renderer.get_viewport_height(), (int)clicked_real_y);
 
-  int new_center_y = (int)renderer.get_viewport_center_y() + real_dist_to_center_y -
-    (double)real_dist_to_center_y * zoom_factor;
+
+  double real_dist_to_center_x = (int)clicked_real_x - (int)renderer.get_viewport_center_x();
+  double real_dist_to_center_y = (int)clicked_real_y - (int)renderer.get_viewport_center_y();
+  //std::cout << "dist_x = " << real_dist_to_center_x << std::endl
+  //<< "dist_y = " << real_dist_to_center_y << std::endl;
+
+  double new_center_x = (double)renderer.get_viewport_center_x() + real_dist_to_center_x -
+    real_dist_to_center_x * zoom_factor;
+
+  double new_center_y = (double)renderer.get_viewport_center_y() + real_dist_to_center_y -
+    real_dist_to_center_y * zoom_factor;
 
   if(new_center_x < 0) new_center_x = 0;
   if(new_center_y < 0) new_center_y = 0;
 
-  std::cout << "center: " << new_center_x << std::endl;
+  //std::cout << "center: " << new_center_x << "/" << new_center_y 
+  //<< " zoom=" << zoom_factor << std::endl;
   zoom(new_center_x, new_center_y, zoom_factor);
 }
 
@@ -310,26 +319,36 @@ void RenderWindow<RendererType>::zoom(double center_x, double center_y, double z
   double delta_x = renderer.get_viewport_width();
   double delta_y = renderer.get_viewport_height();
 
-  std::cout << "Zoom to center " << center_x << " / " << center_y 
-	    << " factor: " << zoom_factor << std::endl;
-
   unsigned int max_edge_length = std::max(renderer.get_virtual_width(), 
-					  renderer.get_virtual_height())*2;
+					  renderer.get_virtual_height());
+
 
   if( ((delta_x < max_edge_length && delta_y < max_edge_length) && zoom_factor >= 1) ||
-      (delta_x > 10 && delta_y > 10 && zoom_factor <= 1)  ) {
+      (delta_x > 30 && delta_y > 30 && zoom_factor <= 1)  ) {
     double min_x = center_x - zoom_factor * (delta_x/2.0);
     double min_y = center_y - zoom_factor * (delta_y/2.0);
     double max_x = center_x + zoom_factor * (delta_x/2.0);
     double max_y = center_y + zoom_factor * (delta_y/2.0);
+
+   
     if(min_x < 0) { max_x -= min_x; min_x = 0; }
     if(min_y < 0) { max_y -= min_y; min_y = 0; }
 
+    if(max_x >= renderer.get_virtual_width()) { 
+      double t = max_x - renderer.get_virtual_width();
+      max_x -= t;
+      min_x -= t;
+      if(min_x < 0) min_x = 0;
+    }
+
+    if(max_y >= renderer.get_virtual_height()) { 
+      double t = max_y - renderer.get_virtual_height();
+      max_y -= t;
+      min_y -= t;
+      if(min_y < 0) min_y = 0;
+    }
+
     renderer.set_viewport(min_x, min_y, max_x, max_y);
-    adjust_scrollbars();
-  }
-  else {
-    std::cout << "no scroll" << std::endl;
   }
 
 }

@@ -27,6 +27,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <dirent.h>
 #include <assert.h>
 #include "FileSystem.h"
+#include <gtkglmm.h>
 
 #include "MainWin.h"
 #include "SplashWin.h"
@@ -86,6 +87,8 @@ int main(int argc, char ** argv) {
   Gtk::Main::run(*splashWin);
   setlocale(LC_ALL, "C");
 
+  // Init gtkglextmm.
+  Gtk::GL::init(argc, argv);
 
   // create main window
   MainWin mainWin;

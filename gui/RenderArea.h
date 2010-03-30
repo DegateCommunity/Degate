@@ -4,12 +4,12 @@
 #include "RenderAreaBase.h"
 
 #include <gtkmm.h>
-#include <goocanvasmm.h>
+
 
 #include <assert.h>
 #include <iostream>
 
-class RenderArea : public Goocanvas::Canvas::Canvas,
+class RenderArea : public Gtk::DrawingArea,
 		   public RenderAreaBase {
 
 private:
@@ -21,51 +21,13 @@ private:
   sigc::signal<void, unsigned int, unsigned int, unsigned int>  signal_mouse_release_;
   sigc::signal<void, unsigned int, unsigned int>  signal_mouse_motion_;
 
+
 protected:
 
-  virtual void update_viewport_dimension() {
-    /*    std::cout << "Viewport changed: " 
-	      << get_viewport_min_x()
-	      << ".."
-	      << get_viewport_max_x()
-	      << " / "
-	      << get_viewport_min_y()
-	      << ".."
-	      << get_viewport_max_y()
-	      << "Scaling: " << (1.0/get_scaling())
-	      << std::endl;
-    */
+  virtual bool on_expose_event(GdkEventExpose* event);
 
-    set_scale(1.0/get_scaling());
-
-    scroll_to(get_viewport_min_x(),
-	      get_viewport_min_y());
-
-    Glib::PropertyProxy<double> x = property_x1();
-    Glib::PropertyProxy<double> y = property_y1();
-    
-    std::cout << "x=" << x.get_value() << "/" << get_viewport_min_x() << std::endl;
-
-
-    
-
-    if(!signal_adjust_scrollbars_.empty()) signal_adjust_scrollbars_();
-  }
-
-  virtual void update_virtual_dimension() {
-    /*
-    std::cout << "Virtual changed\n"
-	      << get_virtual_width()
-	      << " / "
-	      << get_virtual_height()
-	      << std::endl;
-    */
-    set_bounds(0 , 0, 
-	       //get_virtual_width() + get_viewport_width(), get_virtual_height() + get_viewport_height());
-	       get_virtual_width() * 2, get_virtual_height() * 2);
-    if(!signal_adjust_scrollbars_.empty()) signal_adjust_scrollbars_();
-  }
-
+  virtual void update_viewport_dimension();
+  virtual void update_virtual_dimension();
 
   bool on_scroll_event(GdkEventScroll* ev) {
     
@@ -120,8 +82,6 @@ public:
 
   virtual ~RenderArea();
 
-
-
   /**
    * Method to set a callback function, if the scrollbars are moved.
    */
@@ -163,8 +123,8 @@ public:
     update_virtual_dimension();
   }
 
-  virtual void update_screen() {
-  }
+  virtual void update_screen() = 0;
+  
 };
 
 #endif

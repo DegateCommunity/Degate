@@ -22,10 +22,6 @@ include_directories(${CAIROMM_INCLUDE_DIRS})
 link_directories(${CAIROMM_LIBRARY_DIRS}) 
 set(LIBS ${LIBS} ${CAIROMM_LIBRARIES})
 
-PKG_CHECK_MODULES(GOOCANVASMM goocanvasmm-1.0)
-include_directories(${GOOCANVASMM_INCLUDE_DIRS})
-set(LIBS ${GOOCANVASMM_LIBRARIES})
-
 pkg_check_modules(LIBGLADEMM glibmm-2.4)
 include_directories(${LIBGLADEMM_INCLUDE_DIRS})
 link_directories(${LIBGLADEMM_LIBRARY_DIRS}) 
@@ -41,10 +37,10 @@ pkg_check_modules(LIBXML++ libxml++-2.6)
 include_directories(${LIBXML++_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${LIBXML++_LIBRARIES})
 
-#pkg_check_modules(GTKGLEXTMM gtkglextmm-1.2 )
-#include_directories(${GTKGLEXTMM_INCLUDE_DIRS})
-#link_directories(${GTKGLEXTMM_LIBRARY_DIRS}) 
-#set(LIBS ${LIBS} ${GTKGLEXTMM_LIBRARIES})
+pkg_check_modules(GTKGLEXTMM gtkglextmm-1.2 )
+include_directories(${GTKGLEXTMM_INCLUDE_DIRS})
+link_directories(${GTKGLEXTMM_LIBRARY_DIRS}) 
+set(LIBS ${LIBS} ${GTKGLEXTMM_LIBRARIES})
 
 #
 # sources
