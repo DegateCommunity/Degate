@@ -348,7 +348,7 @@ void MenuManager::create_and_bind_gate_menu() {
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_set));
 
   m_refActionGroup->add(Gtk::Action::create("GateOrientation",
-					    Gtk::Stock::ORIENTATION_REVERSE_LANDSCAPE,
+					    //Gtk::Stock::ORIENTATION_REVERSE_LANDSCAPE,
 					    "Set gate orientation", 
 					    "Set gate orientation"),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_orientation));
