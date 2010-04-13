@@ -20,11 +20,11 @@ RenderArea::~RenderArea() {
 
 bool RenderArea::on_expose_event(GdkEventExpose* event) {
 
-  if(get_width() != get_drawing_window_width() ||
-     get_height() != get_drawing_window_height())
-    update_viewport_dimension();
-
-  //update_screen();
+  if(get_width() != (int)get_drawing_window_width() ||
+     get_height() != (int)get_drawing_window_height())
+    update_viewport_dimension(); // will trigger a screen update
+  else
+    update_screen();
   return true;
 }
 

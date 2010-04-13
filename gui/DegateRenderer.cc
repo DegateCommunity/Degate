@@ -13,6 +13,30 @@
 
 using namespace degate;
 
+static inline uint32_t highlight_color(uint32_t col) {
+  uint8_t r = MASK_R(col);
+  uint8_t g = MASK_G(col);
+  uint8_t b = MASK_B(col);
+  uint8_t a = MASK_A(col);
+  
+  return MERGE_CHANNELS((((255-r)>>1) + r),
+			(((255-g)>>1) + g),
+			(((255-b)>>1) + b), (a < 128 ? 128 : a));
+}
+
+
+// @todo fix
+static inline uint32_t highlight_color_by_state(uint32_t col, bool state) {
+  if(!state) return col;
+  else return highlight_color(col);
+  /*
+  if(state == SELECT_STATE_NOT) return col;
+  else if(state == SELECT_STATE_DIRECT) return highlight_color(highlight_color(col));
+  else if(state == SELECT_STATE_ADJ) return highlight_color(col);
+  return col;
+  */
+}
+
 
 struct GLConfigUtil {
 
@@ -99,7 +123,7 @@ void GLConfigUtil::examine_gl_attrib(const Glib::RefPtr<const Gdk::GL::Config>& 
 }
 
 DegateRenderer::DegateRenderer() : last_scaling(0), realized(false), 
-				   idle_hook_enabled(false), is_idle(true) {
+				   idle_hook_enabled(false), is_idle(true), lock_state(false) {
   //
   // Query OpenGL extension version.
   //
@@ -193,6 +217,21 @@ void DegateRenderer::on_realize() {
 
   gate_details_dlist = glGenLists(1);
   assert(error_check());
+
+  vias_dlist = glGenLists(1);
+  assert(error_check());
+
+  wires_dlist = glGenLists(1);
+  assert(error_check());
+
+  annotations_dlist = glGenLists(1);
+  assert(error_check());
+
+  annotation_details_dlist = glGenLists(1);
+  assert(error_check());
+
+  tool_dlist = glGenLists(1);
+  assert(error_check());
  
   glwindow->gl_end();
 
@@ -212,21 +251,31 @@ void DegateRenderer::on_idle() {
 
 void DegateRenderer::update_screen() {
 
+  if(lock_state == false) {
 
-  if(!idle_hook_enabled) {
-    idle_hook_enabled = true;
-    is_idle = false;
-    Glib::signal_idle().connect_once( sigc::mem_fun(*this, &DegateRenderer::on_idle), 
-				      Glib::PRIORITY_LOW);
-  }
-
-  if(is_idle || should_update_gates) {
-    render_background();
-    if(should_update_gates) {
+    if(!idle_hook_enabled) {
+      idle_hook_enabled = true;
+      is_idle = false;
+      Glib::signal_idle().connect_once(sigc::mem_fun(*this, &DegateRenderer::on_idle), 
+				       Glib::PRIORITY_LOW);
+    }
+    
+    if(is_idle || should_update_gates) {
+      render_background();
+      //if(should_update_gates) {
       // render gates with and without details into two different display lists
       render_gates(false);
       render_gates(true);
+
+      // same with annotations
+      render_annotations(false);
+      render_annotations(true);
+
+      render_vias();
+      render_wires();
+
       should_update_gates = false;
+      //}
     }
   }
 
@@ -236,7 +285,6 @@ void DegateRenderer::update_screen() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //glDisable(GL_BLEND);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
@@ -246,11 +294,29 @@ void DegateRenderer::update_screen() {
     glCallList(gates_dlist);
     assert(error_check());
 
-    if(render_details) {
+    glCallList(annotations_dlist);
+    assert(error_check());
+
+    if(!lock_state && render_details) {
       glCallList(gate_details_dlist);
       assert(error_check());
+
+      glCallList(annotation_details_dlist);
+      assert(error_check());
+
       render_details = false;
     }
+
+    if(is_idle) {
+      glCallList(wires_dlist);
+      assert(error_check());
+
+      glCallList(vias_dlist);
+      assert(error_check());
+    }
+
+    glCallList(tool_dlist);
+    assert(error_check());
 
     // Swap buffers.
     if(glwindow->is_double_buffered()) glwindow->swap_buffers();
@@ -350,8 +416,8 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
 
   unsigned int min_x = x * pre_scaling;
   unsigned int min_y = y * pre_scaling;
-  unsigned int max_x = min_x + tile_width * pre_scaling;
-  unsigned int max_y = min_y + tile_width * pre_scaling;
+  unsigned int max_x = min_x + tile_width * pre_scaling + 1;
+  unsigned int max_y = min_y + tile_width * pre_scaling + 1;
 
   glBindTexture(GL_TEXTURE_2D, texture);
   assert(error_check());
@@ -377,6 +443,111 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
   return texture;
 }
 
+void DegateRenderer::render_vias() {
+  if(lmodel == NULL) return;
+
+  glNewList(vias_dlist, GL_COMPILE);
+
+  for(Layer::object_iterator iter = layer->objects_begin();
+      iter != layer->objects_end(); ++iter) {
+
+    if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(*iter)) {
+      unsigned int diameter = via->get_diameter();
+      uint32_t col = via->get_direction() == Via::DIRECTION_UP ? 0xff12ffff : 0xff0000ff;
+
+      if(via->is_selected()) {
+	col = highlight_color_by_state(col, true);
+	diameter <<= 2;
+      }
+      
+      draw_circle(via->get_x(), via->get_y(), diameter, col);
+    }
+
+  }
+  glEndList();
+}
+
+void DegateRenderer::render_wires() {
+  if(lmodel == NULL) return;
+
+  glNewList(wires_dlist, GL_COMPILE);
+  for(Layer::object_iterator iter = layer->objects_begin();
+      iter != layer->objects_end(); ++iter) {
+
+    if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(*iter)) {
+      color_t col = wire->get_frame_color();
+      if(col == 0) col = 0xffff1200;
+
+      set_color(highlight_color_by_state(col, wire->is_selected()));
+
+      
+      glLineWidth((double)wire->get_diameter() / get_scaling());
+      glBegin(GL_LINES);
+      glVertex2i(wire->get_from_x(), wire->get_from_y());
+      glVertex2i(wire->get_to_x(), wire->get_to_y());
+      glEnd();      
+      
+
+      /*
+      int radius = wire->get_diameter() >> 1;
+
+      glBegin(GL_POLYGON);
+      glVertex2i((int)wire->get_from_x() - radius, (int)wire->get_from_y() - radius);
+      glVertex2i((int)wire->get_to_x() + radius, (int)wire->get_from_y() - radius);
+      glVertex2i((int)wire->get_to_x() + radius, (int)wire->get_to_y() + radius);
+      glVertex2i((int)wire->get_from_x() - radius, (int)wire->get_to_y() + radius);
+      glEnd();
+      */
+    }
+  }
+  glEndList();
+}
+
+void DegateRenderer::render_annotations(bool details) {
+
+  if(lmodel == NULL) return;
+
+  glNewList(details ? annotation_details_dlist : annotations_dlist, GL_COMPILE);
+
+  for(Layer::object_iterator iter = layer->objects_begin();
+      iter != layer->objects_end(); ++iter) {
+
+    if(Annotation_shptr a = std::tr1::dynamic_pointer_cast<Annotation>(*iter)) {
+      color_t fill_col = a->get_fill_color();
+      color_t frame_col = a->get_frame_color();
+
+      if(fill_col == 0) fill_col = 0xa0303030;
+      if(frame_col == 0) frame_col = fill_col;
+
+      if(!details) {
+	set_color(highlight_color_by_state(fill_col, a->is_selected()));
+	glLineWidth(1);
+	glBegin(GL_QUADS);
+	glVertex2i(a->get_min_x(), a->get_min_y());
+	glVertex2i(a->get_max_x(), a->get_min_y());
+	glVertex2i(a->get_max_x(), a->get_max_y());
+	glVertex2i(a->get_min_x(), a->get_max_y());
+	glEnd();
+    
+	set_color(highlight_color_by_state(frame_col, a->is_selected()));
+	glBegin(GL_LINE_LOOP);
+	glVertex2i(a->get_min_x(), a->get_min_y());
+	glVertex2i(a->get_max_x(), a->get_min_y());
+	glVertex2i(a->get_max_x(), a->get_max_y());
+	glVertex2i(a->get_min_x(), a->get_max_y());
+	glEnd();
+      }
+      else {
+	if(a->has_name())
+	  draw_string(a->get_min_x()+2, a->get_min_y()+2 + get_font_height(), a->get_name());
+      }
+
+    }
+  }
+  glEndList(); 
+}
+
+
 void DegateRenderer::render_gates(bool details) {
 
   if(lmodel == NULL) return;
@@ -400,7 +571,8 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
     if(fill_col == 0) fill_col = 0xa0303030;
     if(frame_col == 0) frame_col = fill_col;
 
-    set_color(fill_col);
+    set_color(highlight_color_by_state(fill_col, gate->is_selected()));
+    glLineWidth(1);
     glBegin(GL_QUADS);
     glVertex2i(gate->get_min_x(), gate->get_min_y());
     glVertex2i(gate->get_max_x(), gate->get_min_y());
@@ -408,7 +580,7 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
     glVertex2i(gate->get_min_x(), gate->get_max_y());
     glEnd();
     
-    set_color(frame_col);
+    set_color(highlight_color_by_state(frame_col, gate->is_selected()));
     glBegin(GL_LINE_LOOP);
     glVertex2i(gate->get_min_x(), gate->get_min_y());
     glVertex2i(gate->get_max_x(), gate->get_min_y());
@@ -440,6 +612,11 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
 	  unsigned int x = port->get_x(), y = port->get_y();
 	  unsigned int port_size = port->get_diameter();
 	  color_t port_color = tmpl_port->get_fill_color() == 0 ? 0xff0000ff : tmpl_port->get_fill_color();
+
+	  if(port->is_selected()) {
+	    port_color = highlight_color_by_state(port_color, true);
+	    port_size *= 2;
+	  }
 	  draw_circle(x, y, port_size, port_color);
 
 	  if(tmpl_port->has_name()) draw_string(x+2, y+2, tmpl_port->get_name());
@@ -514,6 +691,7 @@ void DegateRenderer::render_background() {
     glNewList(background_dlist, GL_COMPILE);
     assert(error_check());
     
+    glColor4ub(0, 0, 0, 0xff);
 
     // iterate over possible tile positions
     for(unsigned int x = min_x; x < max_x; x+=tile_width)
@@ -542,7 +720,7 @@ void DegateRenderer::drop_tiles() {
 bool DegateRenderer::error_check() const {
   GLenum errCode = glGetError();
   if(errCode != GL_NO_ERROR) {
-    std::cout << "OpenGL Error:" << gluErrorString(errCode) << std::endl;
+    std::cout << "OpenGL Error: " << gluErrorString(errCode) << std::endl;
     return false;
   }
   return true;

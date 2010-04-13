@@ -14,10 +14,13 @@
 #include <boost/foreach.hpp>
 
 #include <gtkglmm.h>
+#include <Editor.h>
 
 class DegateRenderer : 
   public RenderArea,
   public Gtk::GL::Widget<DegateRenderer> {
+
+  friend class GfxEditorTool<DegateRenderer>;
 
  private:
 
@@ -45,18 +48,41 @@ class DegateRenderer :
   GLuint * font_textures;
   GLuint font_dlist_base;
 
-  GLuint background_dlist, gates_dlist, gate_details_dlist;
+  GLuint background_dlist, gates_dlist, gate_details_dlist, 
+    vias_dlist, wires_dlist, 
+    annotations_dlist, annotation_details_dlist,
+    tool_dlist;
 
   bool should_update_gates;
   bool render_details;
 
   bool idle_hook_enabled;
   bool is_idle;
+  bool lock_state;
 
 protected:
 
   void on_realize();
   void update_viewport_dimension();
+
+  void start_tool() {
+    glNewList(tool_dlist, GL_COMPILE);
+    //assert(error_check());
+  }
+
+  void stop_tool() {
+    glEndList();
+    assert(error_check());
+    update_screen();
+  }
+
+  /**
+   * Set the lock state of the renderer.
+   */
+
+  void set_lock(bool lock_state) {
+    this->lock_state = lock_state;
+  }
 
 public:
 
@@ -73,6 +99,7 @@ public:
   void set_layer(degate::Layer_shptr layer) {
     this->layer = layer;
     clear_objects();
+    last_scaling = 0; // reset scaling
     drop_tiles();
   }
 
@@ -92,8 +119,11 @@ public:
 
   
   virtual void update_screen();
-  
 
+
+  void render_vias();
+  void render_wires();
+  
  private:
 
   /**
@@ -136,6 +166,8 @@ public:
 
   void render_gates(bool detail = false);
   void render_gate(degate::Gate_shptr gate, bool details);
+
+  void render_annotations(bool detail = false);
 
   bool error_check() const;
 

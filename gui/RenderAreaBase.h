@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <iostream>
+#include <math.h>
 
 #include <BoundingBox.h>
 
@@ -36,6 +37,14 @@ private:
 
   unsigned int drawing_window_width, drawing_window_height;
 
+  double get_scaling_x() {
+    return (double)get_viewport_width() / (double)get_drawing_window_width();
+  }
+
+  double get_scaling_y() {
+    return (double)get_viewport_height() / (double)get_drawing_window_height();
+  }
+
 protected:
 
   /**
@@ -48,43 +57,9 @@ protected:
    */
   virtual void update_virtual_dimension() = 0;
 
-  // coord trans that ca be used in derived classes
 
-  void coord_screen_to_real(unsigned int screen_x, unsigned int screen_y, 
-			    unsigned int * real_x, unsigned int * real_y) {
+  
 
-    //std::cout << "screen clicked at " << screen_x << std::endl;
-
-    //*real_x = (unsigned int)(screen_x * get_scaling() + viewport_min_x);
-    //*real_y = (unsigned int)(screen_y * get_scaling() + viewport_min_y);
-
-    *real_x = (unsigned int)(screen_x * get_scaling() + viewport_min_x);
-    *real_y = (unsigned int)(screen_y * get_scaling() + viewport_min_y);
-
-    //std::cout << "that is real " << *real_x << std::endl;
-    //std::cout << "scaling " << get_scaling() << std::endl;
-
-  }
-
-  /*
-  void coord_real_to_screen(unsigned int real_x, unsigned int real_y, 
-			    unsigned int * screen_x, unsigned int * screen_y) {
-
-    if((int)real_x >= viewport_min_x && (int)real_x <= viewport_max_x)
-      *screen_x = (unsigned int)((real_x - viewport_min_x) / get_scaling());
-    else if((int)real_x < viewport_min_x)
-      *screen_x = 0;
-    else
-      *screen_x = viewport_max_x - viewport_min_x;
-    
-    if((int)real_y >= viewport_min_y && (int)real_y <= viewport_max_y)
-      *screen_y = (unsigned int)((real_y - viewport_min_y) / get_scaling());
-    else if((int)real_y < viewport_min_y)
-      *screen_y = 0;
-    else
-      *screen_y = viewport_max_y - viewport_min_y;
-  }
-  */
   double get_scaling() {
     double s = (double)get_viewport_width() / (double)get_drawing_window_width();
     /*
@@ -251,6 +226,48 @@ public:
 
 
   /**
+   * Shift the viewport in x- and y-direction.
+   * This method performs a bounds check.
+   */
+  virtual void shift_viewport(int delta_x, int delta_y) {
+
+    assert(get_viewport_width() <= (int)get_virtual_width());
+    assert(get_viewport_height() <= (int)get_virtual_height());
+
+    int h = (int)virtual_height - 1;
+    int w = (int)virtual_width - 1;
+
+    int min_x = viewport_min_x + delta_x;
+    int max_x = viewport_max_x + delta_x;
+    int min_y = viewport_min_y + delta_y;
+    int max_y = viewport_max_y + delta_y;
+
+    if(min_x < 0) {
+      max_x -= min_x;
+      min_x = 0;
+    }
+
+    if(max_x >= w) {
+      int t = max_x - w;
+      min_x -= t;
+      max_x -= t;
+    }
+
+    if(min_y < 0) {
+      max_y -= min_y;
+      min_y = 0;
+    }
+
+    if(max_y >= h) {
+      int t = max_y - h;
+      min_y -= t;
+      max_y -= t;
+    }
+
+    set_viewport(min_x, min_y, max_x, max_y);
+  }
+
+  /**
    * Get the viewport definition as bounding box.
    */
   virtual degate::BoundingBox get_viewport() const {
@@ -272,6 +289,38 @@ public:
 
   virtual unsigned int get_drawing_window_height() const {
     return drawing_window_height;
+  }
+
+  virtual void coord_screen_to_real(unsigned int screen_x, unsigned int screen_y, 
+				    unsigned int * real_x, unsigned int * real_y) {
+
+    assert(real_x != NULL && real_y != NULL);
+    if(real_x != NULL && real_y != NULL) {
+      *real_x = (unsigned int)round((double)screen_x * get_scaling_x() + (double)viewport_min_x);
+      *real_y = (unsigned int)round((double)screen_y * get_scaling_y() + (double)viewport_min_y);
+    }
+  }
+
+  
+  virtual void coord_real_to_screen(unsigned int real_x, unsigned int real_y, 
+				    unsigned int * screen_x, unsigned int * screen_y) {
+
+    assert(screen_x != NULL && screen_y != NULL);
+    if(screen_x != NULL && screen_y != NULL) {
+      if((int)real_x >= viewport_min_x && (int)real_x <= viewport_max_x)
+	*screen_x = (unsigned int)((real_x - viewport_min_x) / get_scaling_x());
+      else if((int)real_x < viewport_min_x)
+	*screen_x = 0;
+      else
+	*screen_x = viewport_max_x - viewport_min_x;
+      
+      if((int)real_y >= viewport_min_y && (int)real_y <= viewport_max_y)
+	*screen_y = (unsigned int)((real_y - viewport_min_y) / get_scaling_y());
+      else if((int)real_y < viewport_min_y)
+	*screen_y = 0;
+      else
+	*screen_y = viewport_max_y - viewport_min_y;
+    }
   }
 
 };

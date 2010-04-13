@@ -87,8 +87,8 @@ private:
       win_width = get_width();
       win_height = get_height();
 
-      renderer.set_drawing_window_width(win_width);
-      renderer.set_drawing_window_height(win_height);
+      renderer.set_drawing_window_width(renderer.get_width());
+      renderer.set_drawing_window_height(renderer.get_height());
     }
 
     //adjust_scrollbars();
@@ -97,6 +97,12 @@ private:
     return true;
   }
 
+  /*
+  virtual void on_realize() {
+    renderer.set_drawing_window_width(get_width());
+    renderer.set_drawing_window_height(get_height());
+  }
+  */
 
   void enable_adjustment_events();
   void disable_adjustment_events();
@@ -334,15 +340,15 @@ void RenderWindow<RendererType>::zoom(double center_x, double center_y, double z
     if(min_x < 0) { max_x -= min_x; min_x = 0; }
     if(min_y < 0) { max_y -= min_y; min_y = 0; }
 
-    if(max_x >= renderer.get_virtual_width()) { 
-      double t = max_x - renderer.get_virtual_width();
+    if(max_x >= renderer.get_virtual_width() - 1) { 
+      double t = max_x - (renderer.get_virtual_width() - 1);
       max_x -= t;
       min_x -= t;
       if(min_x < 0) min_x = 0;
     }
 
-    if(max_y >= renderer.get_virtual_height()) { 
-      double t = max_y - renderer.get_virtual_height();
+    if(max_y >= renderer.get_virtual_height() - 1) { 
+      double t = max_y - (renderer.get_virtual_height() - 1);
       max_y -= t;
       min_y -= t;
       if(min_y < 0) min_y = 0;

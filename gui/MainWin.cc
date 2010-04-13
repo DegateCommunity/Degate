@@ -562,8 +562,8 @@ void MainWin::on_menu_project_create_subproject() {
   boost::format f("subproject_%1%");
   f % lmodel->get_new_object_id();
 
-  GfxEditorToolSelection_shptr selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool != NULL && selection_tool->has_selection()) {
     SubProjectAnnotation_shptr annotation
@@ -600,16 +600,15 @@ void MainWin::set_layer(unsigned int layer) {
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
 
-  if(lmodel->get_num_layers() == 0) return;
+  if(lmodel->get_num_layers() != 0) {
 
-  Layer_shptr layer_ptr = lmodel->get_layer(layer);
-
-  lmodel->set_current_layer(layer_ptr->get_layer_pos());
-
-  //imgWin.set_current_layer(layer_ptr->get_layer_pos());
+    Layer_shptr layer_ptr = lmodel->get_layer(layer);
+    lmodel->set_current_layer(layer_ptr->get_layer_pos());
+    editor.set_layer(layer_ptr);
   
-  update_title();
-  editor.update_screen();
+    update_title();
+    editor.update_screen();
+  }
 }
 
 void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
@@ -632,7 +631,7 @@ void MainWin::on_menu_view_next_layer() {
   if(main_project == NULL) return;
   
   LogicModel_shptr lmodel = main_project->get_logic_model();
-  if(lmodel->get_num_layers() == 0) return;
+  if(lmodel->get_num_layers() != 0) 
   set_layer(get_next_enabled_layer(lmodel));
 }
 
@@ -640,8 +639,8 @@ void MainWin::on_menu_view_prev_layer() {
   if(main_project == NULL) return;
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
-  if(lmodel->get_num_layers() == 0) return;
-  set_layer(get_prev_enabled_layer(lmodel));
+  if(lmodel->get_num_layers() != 0) 
+    set_layer(get_prev_enabled_layer(lmodel));
 }
 
 
@@ -668,10 +667,12 @@ void MainWin::center_view(unsigned int center_x, unsigned int center_y, unsigned
 
 
 void MainWin::on_menu_tools_select() {
-  //Glib::RefPtr<Gdk::Window> window = editor.get_window();
-  //window->set_cursor(Gdk::Cursor(Gdk::LEFT_PTR));
 
-  GfxEditorToolSelection_shptr selection_tool(new GfxEditorToolSelection(editor));
+  Glib::RefPtr<Gdk::Window> window = editor.get_window();
+  if(window != NULL) window->set_cursor(Gdk::Cursor(Gdk::LEFT_PTR));
+
+  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool
+    (new GfxEditorToolSelection<DegateRenderer>(editor));
 
   selection_tool->signal_selection_activated().
     connect(sigc::mem_fun(*this, &MainWin::on_area_selection_activated));
@@ -690,23 +691,46 @@ void MainWin::on_menu_tools_select() {
 
 void MainWin::on_menu_tools_move() {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
-  window->set_cursor(Gdk::Cursor(Gdk::FLEUR));
+  if(window != NULL) window->set_cursor(Gdk::Cursor(Gdk::FLEUR));
+ 
+  std::tr1::shared_ptr<GfxEditorToolMove<DegateRenderer> > move_tool
+    (new GfxEditorToolMove<DegateRenderer>(editor));
 
+  editor.set_tool(move_tool);
 }
 
 void MainWin::on_menu_tools_wire() {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::TCROSS));
+
+  std::tr1::shared_ptr<GfxEditorToolWire<DegateRenderer> > wire_tool
+    (new GfxEditorToolWire<DegateRenderer>(editor));
+
+  wire_tool->signal_wire_added().connect(sigc::mem_fun(*this, &MainWin::on_wire_added));
+  editor.set_tool(wire_tool);
 }
 
 void MainWin::on_menu_tools_via_up() {
-  Glib::RefPtr<Gdk::Window> window = editor.get_window();
-  window->set_cursor(Gdk::Cursor(Gdk::CROSS));
+  on_menu_tools_via(Via::DIRECTION_UP);
 }
 
 void MainWin::on_menu_tools_via_down() {
+  on_menu_tools_via(Via::DIRECTION_DOWN);
+}
+
+void MainWin::on_menu_tools_via(degate::Via::DIRECTION dir) {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::CROSS));
+
+  std::tr1::shared_ptr<GfxEditorToolVia<DegateRenderer> > via_tool
+    (new GfxEditorToolVia<DegateRenderer>(editor));
+
+  if(dir == Via::DIRECTION_DOWN) 
+    via_tool->signal_mouse_clicked().connect(sigc::mem_fun(*this, &MainWin::via_down_tool_clicked));
+  else
+    via_tool->signal_mouse_clicked().connect(sigc::mem_fun(*this, &MainWin::via_up_tool_clicked));
+
+  editor.set_tool(via_tool);
 }
 
 
@@ -758,8 +782,8 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
 
   RecognitionManager * rm = RecognitionManager::get_instance();
 
-  GfxEditorToolSelection_shptr selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool != NULL && selection_tool->has_selection()) {
 
@@ -956,8 +980,8 @@ void MainWin::on_menu_gate_set() {
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
 
-  GfxEditorToolSelection_shptr selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool != NULL && selection_tool->has_selection()) {
 
@@ -1020,8 +1044,8 @@ void MainWin::on_menu_gate_set() {
 void MainWin::on_menu_gate_create_by_selection() {
   if(main_project == NULL) return;
 
-  GfxEditorToolSelection_shptr selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool != NULL && selection_tool->has_selection()) {
 
@@ -1078,27 +1102,23 @@ void MainWin::on_menu_help_about() {
   about_dialog.run();
 }
 
-/* XXX
-void MainWin::on_wire_tool_release() {
-  if(imgWin.get_wire_min_x() ==  imgWin.get_wire_max_x() &&
-     imgWin.get_wire_min_y() ==  imgWin.get_wire_max_y()) return;
 
-  Wire_shptr new_wire(new Wire(imgWin.get_wire_min_x(), imgWin.get_wire_min_y(),
-			       imgWin.get_wire_max_x(), imgWin.get_wire_max_y(),
+void MainWin::on_wire_added(unsigned int from_x, unsigned int from_y,
+			    unsigned int to_x, unsigned int to_y) {
+
+  if(main_project == NULL) return;
+  Wire_shptr new_wire(new Wire(from_x, from_y, to_x, to_y,
 			       main_project->get_default_wire_diameter()));
 
   assert(new_wire);
 
-
   LogicModel_shptr lmodel = main_project->get_logic_model();
-  Layer_shptr layer = lmodel->get_current_layer();
-
-  lmodel->add_object(layer->get_layer_pos(), new_wire);
+  lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), new_wire);
 
   project_changed();
-  imgWin.update_screen();
+  editor.update_screen();
 }
-*/
+
 void MainWin::on_area_selection_activated(BoundingBox const& bbox) {
   if(main_project) {
 
@@ -1131,26 +1151,21 @@ void MainWin::on_area_selection_revoked() {
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicCreateAnnotation", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectCreateSubproject", false);
-
   }
 }
 
 
-void MainWin::via_up_tool_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) {
-  if(main_project == NULL) return;
-  Via_shptr new_via(new Via(real_x, real_y, main_project->get_default_pin_diameter(),
-			    Via::DIRECTION_UP));
-	  
-  LogicModel_shptr lmodel = main_project->get_logic_model();
-  lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), new_via);
-  project_changed();
-  editor.update_screen();
+void MainWin::via_up_tool_clicked(unsigned int real_x, unsigned int real_y, unsigned int button) {
+  via_tool_clicked(real_x, real_y, Via::DIRECTION_UP);
 }
 
-void MainWin::via_down_tool_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) {
+void MainWin::via_down_tool_clicked(unsigned int real_x, unsigned int real_y, unsigned int button) {
+  via_tool_clicked(real_x, real_y, Via::DIRECTION_DOWN);
+}
+
+void MainWin::via_tool_clicked(unsigned int real_x, unsigned int real_y, degate::Via::DIRECTION dir) {
   if(main_project == NULL) return;
-  Via_shptr new_via(new Via(real_x, real_y, main_project->get_default_pin_diameter(),
-			    Via::DIRECTION_DOWN));
+  Via_shptr new_via(new Via(real_x, real_y, main_project->get_default_pin_diameter(), dir));
 	  
   LogicModel_shptr lmodel = main_project->get_logic_model();
   lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), new_via);
@@ -1220,9 +1235,9 @@ void MainWin::clear_selection() {
 void MainWin::update_gui_on_selection_change() {
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
 
-  
-  GfxEditorToolSelection_shptr selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+
   bool selection_active = selection_tool != NULL && selection_tool->has_selection();
 
   if(selected_objects.size() == 1) {
@@ -1304,7 +1319,11 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
     }
   }
 
-  if(plo != NULL) add_to_selection = true;
+  if(plo != NULL) {
+    std::cout << "Object found." << std::endl;
+    plo->print();
+    add_to_selection = true;
+  }
 
 
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
@@ -1615,8 +1634,8 @@ void MainWin::on_menu_logic_connection_inspector() {
 void MainWin::on_menu_logic_create_annotation() {
   if(main_project == NULL) return;
 
-  GfxEditorToolSelection_shptr selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection>(editor.get_tool());
+  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool == NULL || !selection_tool->has_selection()) return;
 

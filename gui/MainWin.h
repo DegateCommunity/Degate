@@ -135,6 +135,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_tools_wire();
   virtual void on_menu_tools_via_up();
   virtual void on_menu_tools_via_down();
+  virtual void on_menu_tools_via(degate::Via::DIRECTION dir);
 
   // Help menu
   virtual void on_menu_help_about();
@@ -147,10 +148,12 @@ class MainWin : public Gtk::Window  {
 				     unsigned int button);
 
 
-  void via_up_tool_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button);
-  void via_down_tool_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button);
-  
-  //virtual void on_wire_tool_release();
+  void via_up_tool_clicked(unsigned int real_x, unsigned int real_y, unsigned int button);
+  void via_down_tool_clicked(unsigned int real_x, unsigned int real_y, unsigned int button);
+  void via_tool_clicked(unsigned int real_x, unsigned int real_y, degate::Via::DIRECTION dir);
+
+  virtual void on_wire_added(unsigned int from_x, unsigned int from_y,
+			     unsigned int to_x, unsigned int to_y);
   virtual void on_area_selection_activated(degate::BoundingBox const& bbox);
   virtual void on_area_selection_revoked();
 
