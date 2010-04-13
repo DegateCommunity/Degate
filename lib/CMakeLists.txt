@@ -119,7 +119,7 @@ set(SOURCES
 	#
 	# Images
 	#
-#	renderer.cc
+
 	FilterKernel.cc
 	EdgeDetection.cc
 	CannyEdgeDetection.cc
