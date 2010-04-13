@@ -70,7 +70,7 @@ namespace degate {
       
     };
     
-  private:
+  protected:
        
     void add_gate(Gate_shptr gate) throw(std::runtime_error);
     void add_via(Via_shptr via);

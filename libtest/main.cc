@@ -42,6 +42,7 @@
 #include "LogicModelDOTExporterTest.h"
 #include "ScalingManagerTest.h"
 #include "ImageProcessingTest.h"
+#include "LookupSubcircuitTest.h"
 
 using namespace degate;
 
@@ -62,7 +63,7 @@ int main(void) {
   // Test-Suite ueber die Registry im Test-Runner einfuegen
   CPPUNIT_NS :: TestRunner testrunner;
 
-
+  /*
   testrunner.addTest(FileSystemTest::suite());
   //testrunner.addTest(ShapeTest::suite());
   testrunner.addTest(MemoryMapTest::suite());
@@ -84,6 +85,9 @@ int main(void) {
   testrunner.addTest(ScalingManagerTest::suite());
 
   //  testrunner.addTest(ImageProcessingTest::suite());
+  */
+
+  testrunner.addTest(LookupSubcircuitTest::suite());
 
   testrunner.run(testresult);
 

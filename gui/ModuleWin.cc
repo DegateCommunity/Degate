@@ -118,7 +118,7 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
     if(treeview_ports) {
 
       treeview_ports->set_model(treemodel_ports);
-      treeview_ports->append_column_editable("Port Name", columns_ports.m_col_name);
+      treeview_ports->append_column_editable("Module Port Name", columns_ports.m_col_name);
       treeview_ports->append_column("Gate Port", columns_ports.m_col_gate_port);
       treeview_ports->append_column("Gate", columns_ports.m_col_gate);
 

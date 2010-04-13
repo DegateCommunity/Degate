@@ -3,12 +3,17 @@ degate (0.0.7) unstable; urgency=low
   * Core completely rewritten in C++. The core is now called libdegate.
   * Degate now uses cmake to build the code.
   * Degate now uses a tile based approach to handle large images.
-  * Implemented autosave and restore.
-  * Rewritten rendering engine: it uses OpenGL.
   * Added basic support for distributed wire tracing.
-  * Added annotations -- a kind of 2D bookmarks.
-  * Added support to describe standard cells behaviour in VHDL and Verilog.
-	
+  * Implemented autosave and restore.
+  * Added support for behavioural description of standard cells in VHDL, Verilog and free text.
+  * Added support for the autogeneration of VHDL and VHDL testbench code.
+  * Support for enabling/disabling and re-ordering of layers added.
+  * Annotations (a kind of 2D-boomarks) added.
+  * Basic support for module hierarchy added.
+  * Support for subprojects added.
+  * Basic support for wire matching added.
+  * Rewritten rendering engine: it uses OpenGL.
+
  -- Martin Schobert <martin@weltregierung.de>  Sun, 15 Nov 2009 23:42:00 +0100
 	
 degate (0.0.6) unstable; urgency=low

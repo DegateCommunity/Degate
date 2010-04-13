@@ -326,7 +326,35 @@ namespace degate {
   /**
    * Get the current layer.
    */
+
   Layer_shptr get_current_layer(Project_shptr project) throw(InvalidPointerException);
+
+
+  /**
+   * Check if a gate is of a specific logic class.
+   */
+
+  bool is_logic_class(Gate_shptr gate, std::string const& logic_class) 
+    throw(InvalidPointerException);
+
+
+  /**
+   * Get the port type of a gate port.
+   * @return Returns the port type or GateTemplatePort::PORT_TYPE_UNDEFINED if the port type
+   *   cannot be determined.
+   */
+
+  GateTemplatePort::PORT_TYPE get_port_type(GatePort_shptr gate_port)
+    throw(InvalidPointerException);
+
+  /**
+   * Get the name of a corresponding template port
+   * @return Returns the name of the corresponding template name. If there is no name
+   *   an empty string is returned.
+   */
+
+  std::string get_template_port_name(GatePort_shptr gate_port)
+    throw(InvalidPointerException);
 
 }
 
