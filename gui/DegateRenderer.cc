@@ -24,7 +24,6 @@
 #include <GL/glu.h>
 
 #include <ft2build.h>
-//#include FT_FREETYPE_H
 #include <freetype/freetype.h>
 #include <freetype/ftglyph.h>
 #include <freetype/ftoutln.h>
@@ -251,6 +250,9 @@ void DegateRenderer::on_realize() {
   annotation_details_dlist = glGenLists(1);
   assert(error_check());
 
+  grid_dlist = glGenLists(1);
+  assert(error_check());
+
   tool_dlist = glGenLists(1);
   assert(error_check());
  
@@ -283,10 +285,11 @@ void DegateRenderer::update_screen() {
     
     if(is_idle || should_update_gates) {
       render_background();
-      //if(should_update_gates) {
+
       // render gates with and without details into two different display lists
       render_gates(false);
       render_gates(true);
+      should_update_gates = false;
 
       // same with annotations
       render_annotations(false);
@@ -295,8 +298,9 @@ void DegateRenderer::update_screen() {
       render_vias();
       render_wires();
 
-      should_update_gates = false;
-      //}
+      render_grid();
+
+
     }
   }
 
@@ -316,6 +320,9 @@ void DegateRenderer::update_screen() {
     assert(error_check());
 
     glCallList(annotations_dlist);
+    assert(error_check());
+
+    glCallList(grid_dlist);
     assert(error_check());
 
     if(!lock_state && render_details) {
@@ -486,6 +493,43 @@ void DegateRenderer::render_vias() {
 
   }
   glEndList();
+}
+
+void DegateRenderer::render_grid() {
+  glNewList(grid_dlist, GL_COMPILE);
+
+  render_grid(regular_horizontal_grid);
+  render_grid(irregular_horizontal_grid);
+  render_grid(regular_vertical_grid);  
+  render_grid(irregular_vertical_grid);  
+
+  glEndList();
+}
+
+void DegateRenderer::render_grid(degate::Grid_shptr grid) {
+  if(grid == NULL || !grid->is_enabled()) return;
+
+  for(Grid::grid_iter iter = grid->begin(); iter != grid->end(); ++iter) {
+
+    set_color(0xffff1200);
+    glBegin(GL_QUADS);
+
+    if(grid->is_vertical()) { // vertical spacing == horizontal lines
+      int y = *iter;
+      glVertex2i(0, y);
+      glVertex2i(get_virtual_width() - 1, y);
+      glVertex2i(get_virtual_width() - 1, y + 1);
+      glVertex2i(0, y + 1);
+    }
+    else {
+      int x = *iter;
+      glVertex2i(x, 0);
+      glVertex2i(x+1, 0);
+      glVertex2i(x+1, get_virtual_height() - 1);
+      glVertex2i(x, get_virtual_height() - 1);
+    }
+    glEnd();
+  }
 }
 
 void DegateRenderer::render_wires() {

@@ -72,6 +72,7 @@ class DegateRenderer :
   GLuint background_dlist, gates_dlist, gate_details_dlist, 
     vias_dlist, wires_dlist, 
     annotations_dlist, annotation_details_dlist,
+    grid_dlist,
     tool_dlist;
 
   bool should_update_gates;
@@ -80,6 +81,11 @@ class DegateRenderer :
   bool idle_hook_enabled;
   bool is_idle;
   bool lock_state;
+
+  degate::RegularGrid_shptr regular_horizontal_grid;
+  degate::RegularGrid_shptr regular_vertical_grid;
+  degate::IrregularGrid_shptr irregular_horizontal_grid;
+  degate::IrregularGrid_shptr irregular_vertical_grid;
 
 protected:
 
@@ -124,7 +130,16 @@ public:
     drop_tiles();
   }
 
-  void set_grid(void) {}
+  void set_grid(degate::RegularGrid_shptr regular_horizontal_grid,
+		degate::RegularGrid_shptr regular_vertical_grid,
+		degate::IrregularGrid_shptr irregular_horizontal_grid,
+		degate::IrregularGrid_shptr irregular_vertical_grid) {
+
+    this->regular_horizontal_grid = regular_horizontal_grid;
+    this->regular_vertical_grid = regular_vertical_grid;
+    this->irregular_horizontal_grid = irregular_horizontal_grid;
+    this->irregular_vertical_grid = irregular_vertical_grid;
+  }
 
   virtual void clear_objects() {
     /*
@@ -144,6 +159,7 @@ public:
 
   void render_vias();
   void render_wires();
+  void render_grid();
   
  private:
 
@@ -204,6 +220,8 @@ public:
   void draw_circle(int x, int y, int diameter, degate::color_t col);
 
   void on_idle();
+
+  void render_grid(degate::Grid_shptr grid);
 
 };
 

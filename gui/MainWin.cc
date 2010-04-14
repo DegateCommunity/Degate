@@ -505,15 +505,11 @@ void MainWin::update_gui_for_loaded_project() {
     editor.set_logic_model(lmodel);
     editor.set_layer(layer);
 
-    //render_window.set_virtual_size(main_project->get_width(), main_project->get_height());
-
-    /*
-
-    imgWin.set_grid(main_project->get_regular_horizontal_grid(),
+    editor.set_grid(main_project->get_regular_horizontal_grid(),
 		    main_project->get_regular_vertical_grid(),
 		    main_project->get_irregular_horizontal_grid(),
 		    main_project->get_irregular_vertical_grid());
-    */
+    
 
     menu_manager->set_widget_sensitivity(true);
     add_to_recent_menu();
