@@ -289,6 +289,38 @@ public:
   }
 
   /**
+   * Shift the viewport to left.
+   * Method performs a bounds check.
+   */
+  virtual void shift_viewport_left(double part_of_page_width = 0.3) {
+    shift_viewport(-1.0 * (double)get_viewport_width() * part_of_page_width, 0);
+  }
+
+  /**
+   * Shift the viewport to right.
+   * Method performs a bounds check.
+   */
+  virtual void shift_viewport_right(double part_of_page_width = 0.3) {
+    shift_viewport((double)get_viewport_width() * part_of_page_width, 0);
+  }
+
+  /**
+   * Shift the viewport up.
+   * Method performs a bounds check.
+   */
+  virtual void shift_viewport_up(double part_of_page_height = 0.3) {
+    shift_viewport(0, -1.0 * (double)get_viewport_height() * part_of_page_height);
+  }
+
+  /**
+   * Shift the viewport down.
+   * Method performs a bounds check.
+   */
+  virtual void shift_viewport_down(double part_of_page_height = 0.3) {
+    shift_viewport(0, (double)get_viewport_height() * part_of_page_height);
+  }
+  
+  /**
    * Get the viewport definition as bounding box.
    */
   virtual degate::BoundingBox get_viewport() const {
