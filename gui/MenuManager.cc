@@ -561,7 +561,10 @@ void MenuManager::set_toolbar_images() {
   set_image_for_toolbar_widget("/ToolBar/ToolWire",    "tools_wire.png");
   set_image_for_toolbar_widget("/ToolBar/ToolViaUp",   "tools_via_up.png");
   set_image_for_toolbar_widget("/ToolBar/ToolViaDown", "tools_via_down.png");
-  //set_image_for_toolbar_widget("/ToolBar/LogicShowAnnotations", "annotation.png");
+  set_image_for_toolbar_widget("/ToolBar/GateList",    "gate_lib.png");
+  set_image_for_toolbar_widget("/ToolBar/LogicConnectionInspector", "con_insp.png");
+  set_image_for_toolbar_widget("/ToolBar/LogicShowAnnotations", "annotations.png");
+  set_image_for_toolbar_widget("/ToolBar/LogicShowModules", "modules.png");
 }
 
 
