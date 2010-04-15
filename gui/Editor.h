@@ -29,6 +29,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <gtkglmm.h>
+#include <math.h>
+#include <algorithm>
 
 template<typename RendererType>
 class GfxEditorTool {
@@ -127,8 +129,11 @@ protected:
       stop_y = real_y;
 
       GfxEditorTool<RendererType>::start_tool_drawing();
+      //glPushAttrib (GL_LINE_BIT);
+
       glColor4ub(0xff, 0xff, 0xff, 0xff);
       glLineWidth(1);
+      //glLineStipple(1, 0xf0f0);
 
       glBegin(GL_LINE_LOOP);
       glVertex2i(start_x, start_y);
@@ -136,6 +141,8 @@ protected:
       glVertex2i(real_x, real_y);
       glVertex2i(start_x, real_y);
       glEnd();
+
+      //glPopAttrib();
 
       GfxEditorTool<RendererType>::stop_tool_drawing();
 
@@ -329,6 +336,21 @@ private:
   sigc::signal<void, unsigned int, unsigned int, unsigned int, unsigned int>  signal_wire_added_;
 
 
+  void angle_snap(int start_x, int start_y, int stop_x, int stop_y, 
+		  unsigned int * out_x, unsigned int * out_y) {
+    assert(out_x != NULL && out_y != NULL);
+    int delta_x = stop_x - start_x;
+    int delta_y = stop_y - start_y;
+    double r = sqrt(delta_x * delta_x + delta_y * delta_y);
+    double theta = atan2(delta_y, delta_x); // -pi .. +pi
+    theta = round(theta / (M_PI/4.0)) * (M_PI/4.0);
+
+    int w = GfxEditorTool<RendererType>::get_renderer().get_virtual_width();
+    int h = GfxEditorTool<RendererType>::get_renderer().get_virtual_height();
+    *out_x = std::min(std::max((int)(start_x + r * cos(theta)), 0), w);
+    *out_y = std::min(std::max((int)(start_y + r * sin(theta)), 0), h);
+  }
+
 public:
 
   GfxEditorToolWire(RendererType & renderer) : 
@@ -348,16 +370,20 @@ protected:
   void on_mouse_motion(unsigned int real_x, unsigned int real_y) {
     if(have_start) {
 
+      unsigned int x, y;
+      angle_snap(start_x, start_y, real_x, real_y, &x, &y);
+
       GfxEditorTool<RendererType>::start_tool_drawing();
       glColor4ub(0xff, 0xff, 0xff, 0xff);
       glLineWidth(1);
 
       glBegin(GL_LINES);
       glVertex2i(start_x, start_y);
-      glVertex2i(real_x, real_y);
+      glVertex2i(x, y);
       glEnd();
 
       GfxEditorTool<RendererType>::stop_tool_drawing();
+
     }
   }
 
@@ -379,18 +405,21 @@ protected:
 
   void on_mouse_release(unsigned int real_x, unsigned int real_y, unsigned int button) {
     if(button == 1 && have_start) {
-      
-      if(real_x != start_x || real_y != start_y) {
+
+      unsigned int stop_x, stop_y;
+      angle_snap(start_x, start_y, real_x, real_y, &stop_x, &stop_y);
+
+      if(stop_x != start_x || stop_y != start_y) {
 
 	if(!signal_wire_added_.empty()) {
-	   signal_wire_added_(start_x, start_y, real_x, real_y);
+	   signal_wire_added_(start_x, start_y, stop_x, stop_y);
 	   GfxEditorTool<RendererType>::get_renderer().render_wires();
 	}
 
       }
 
-      start_x = real_x;
-      start_y = real_y;
+      start_x = stop_x;
+      start_y = stop_y;
     }
   }
 
