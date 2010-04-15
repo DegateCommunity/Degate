@@ -65,7 +65,7 @@ enum ret_t {
 #endif
 
 	
-#define DEGATE_VERSION "0.0.7"
+#define DEGATE_VERSION "0.0.8"
 
 }
 

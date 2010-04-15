@@ -1,3 +1,9 @@
+degate (0.0.8) unstable; urgency=low
+
+  * Rewritten rendering engine: it uses OpenGL.
+
+ -- Martin Schobert <martin@weltregierung.de>  Thu, 15 Apr 2010 09:51:00 +0100
+
 degate (0.0.7) unstable; urgency=low
 
   * Core completely rewritten in C++. The core is now called libdegate.
@@ -12,7 +18,6 @@ degate (0.0.7) unstable; urgency=low
   * Basic support for module hierarchy added.
   * Support for subprojects added.
   * Basic support for wire matching added.
-  * Rewritten rendering engine: it uses OpenGL.
 
  -- Martin Schobert <martin@weltregierung.de>  Sun, 15 Nov 2009 23:42:00 +0100
 	
