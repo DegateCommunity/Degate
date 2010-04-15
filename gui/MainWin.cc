@@ -596,7 +596,7 @@ void MainWin::set_layer(unsigned int layer) {
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
 
-  if(lmodel->get_num_layers() != 0) {
+  if(lmodel->get_num_layers() > 0 && layer < lmodel->get_num_layers()) {
 
     Layer_shptr layer_ptr = lmodel->get_layer(layer);
     lmodel->set_current_layer(layer_ptr->get_layer_pos());
@@ -1203,8 +1203,6 @@ bool MainWin::on_key_release_event_received(GdkEventKey * event) {
 bool MainWin::on_key_press_event_received(GdkEventKey * event) {
   if(event->keyval == GDK_Shift_L || event->keyval == GDK_Shift_R) {
     shift_key_pressed = true;
-    //imgWin.set_shift_key_state(true);
-    //if(tool == TOOL_WIRE) imgWin.update_screen();
   }
   //else if(event->keyval == GDK_Control_L || event->keyval == GDK_Control_R) {
   else if(!(event->state & GDK_CONTROL_MASK) && (event->keyval == GDK_Control_L)) {
@@ -1213,10 +1211,18 @@ bool MainWin::on_key_press_event_received(GdkEventKey * event) {
   }
   else if(event->state & GDK_CONTROL_MASK) {
     control_key_pressed = false;
-    //debug(TM, "ctrl as modifier pressed");
+    debug(TM, "ctrl as modifier released");
   }
-  else if(event->keyval == GDK_space) {
+  else if(event->keyval == GDK_space) { // should be removed
     menu_manager->toggle_select_move_tool();
+  }
+
+  else if(event->keyval == GDK_a) editor.shift_viewport_left();
+  else if(event->keyval == GDK_d) editor.shift_viewport_right();
+  else if(event->keyval == GDK_w) editor.shift_viewport_up();
+  else if(event->keyval == GDK_s) editor.shift_viewport_down();
+  else if(event->keyval >= GDK_1 && event->keyval <= GDK_9) {
+    set_layer(event->keyval - GDK_1);
   }
 
   //debug(TM, "key press: %d %d", event->state, event->keyval);
