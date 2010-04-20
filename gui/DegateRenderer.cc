@@ -604,7 +604,8 @@ void DegateRenderer::render_annotations(bool details) {
       }
       else {
 	if(a->has_name())
-	  draw_string(a->get_min_x()+2, a->get_min_y()+2 + get_font_height(), a->get_name());
+	  draw_string(a->get_min_x()+2, a->get_min_y()+2 + get_font_height(), a->get_name(), 
+		      a->get_width() > 4 ? a->get_width() - 4 : a->get_width());
       }
 
     }
@@ -658,7 +659,8 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
 
   if(gate->has_name())
     draw_string(gate->get_min_x()+2, 
-		gate->get_min_y()+2 + get_font_height(), gate->get_name());
+		gate->get_min_y()+2 + get_font_height() + 1, gate->get_name(), 
+		gate->get_width() > 4 ? gate->get_width() - 4 : gate->get_width());
 
   if(gate->has_template()) {
 
@@ -666,7 +668,8 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
 
     // render names for type and instance
     if(gate->get_gate_template()->has_name())
-      draw_string(gate->get_min_x()+2, gate->get_min_y()+2, tmpl->get_name());
+      draw_string(gate->get_min_x()+2, gate->get_min_y()+2, tmpl->get_name(), 
+		  gate->get_width() > 4 ? gate->get_width() - 4 : gate->get_width());
 
     if(gate->has_orientation()) {
       for(Gate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter) {
@@ -802,7 +805,23 @@ bool DegateRenderer::error_check() const {
 
    --------------------------------------------------------- */
 
-void DegateRenderer::draw_string(int x, int y, std::string const& str) {
+void DegateRenderer::draw_string(int x, int y, std::string const& str, unsigned int max_str_width) {
+
+  double adjusted_scaling = 1;
+
+  if(max_str_width != 0) {
+
+    unsigned int string_width = 0;
+
+    BOOST_FOREACH(unsigned char c, str) {
+      string_width += glyph_width[(int)c];
+    }
+  
+    string_width = round(scale_font * string_width);
+
+    if(string_width >= max_str_width)
+      adjusted_scaling = (double)max_str_width / (double)string_width;
+  }
 
   glColor4f(0,0,0,1);
 
@@ -819,9 +838,9 @@ void DegateRenderer::draw_string(int x, int y, std::string const& str) {
   glGetFloatv(GL_MODELVIEW_MATRIX, modelview_matrix);
   glLoadIdentity();
 
-  glTranslatef(x, y + (float)font_height * scale_font, 0);
+  glTranslatef(x, y + (float)font_height * scale_font * adjusted_scaling, 0);
   glMultMatrixf(modelview_matrix);
-  glScalef(scale_font, scale_font, 1);
+  glScalef(scale_font * adjusted_scaling, scale_font * adjusted_scaling, 1);
 
   glCallLists(str.length(), GL_UNSIGNED_BYTE, str.c_str());
 
@@ -860,13 +879,15 @@ void DegateRenderer::init_font(const char * fname, unsigned int h) {
   glGenTextures(128, font_textures);
   assert(error_check());
 
-  for(unsigned char i=0; i < 128; i++) create_font_textures(face, i, font_dlist_base, font_textures);
+  for(unsigned char i=0; i < 128; i++) {
+    glyph_width[(int)i] = create_font_textures(face, i, font_dlist_base, font_textures);
+  }
 
   FT_Done_Face(face);
   FT_Done_FreeType(library);
 }
 
-void DegateRenderer::create_font_textures(FT_Face face, char ch, GLuint list_base, GLuint * tex_base) {
+unsigned int DegateRenderer::create_font_textures(FT_Face face, char ch, GLuint list_base, GLuint * tex_base) {
 
   if(FT_Load_Glyph( face, FT_Get_Char_Index( face, ch ), FT_LOAD_DEFAULT ))
     throw std::runtime_error("FT_Load_Glyph failed");
@@ -937,4 +958,6 @@ void DegateRenderer::create_font_textures(FT_Face face, char ch, GLuint list_bas
   glEndList();
 
   FT_Done_Glyph(glyph);
+
+  return width;
 }
