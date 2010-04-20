@@ -665,7 +665,7 @@ void MainWin::center_view(unsigned int center_x, unsigned int center_y, unsigned
 void MainWin::on_menu_tools_select() {
 
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
-  if(window != NULL) window->set_cursor(Gdk::Cursor(Gdk::LEFT_PTR));
+  if(window) window->set_cursor(Gdk::Cursor(Gdk::LEFT_PTR));
 
   std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool
     (new GfxEditorToolSelection<DegateRenderer>(editor));
@@ -687,7 +687,7 @@ void MainWin::on_menu_tools_select() {
 
 void MainWin::on_menu_tools_move() {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
-  if(window != NULL) window->set_cursor(Gdk::Cursor(Gdk::FLEUR));
+  if(window) window->set_cursor(Gdk::Cursor(Gdk::FLEUR));
  
   std::tr1::shared_ptr<GfxEditorToolMove<DegateRenderer> > move_tool
     (new GfxEditorToolMove<DegateRenderer>(editor));
