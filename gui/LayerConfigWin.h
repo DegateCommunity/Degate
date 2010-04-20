@@ -120,7 +120,9 @@ class LayerConfigWin : private GladeFileLoader {
   Glib::Dispatcher _signal_bg_import_finished_; // class internal signal
 
   Glib::Dispatcher signal_on_background_import_finished_; // to notify third parties
-  
+
+  Glib::ustring last_filename;
+
   bool result;
 
   // Signal handlers:

@@ -101,8 +101,8 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
     refXml->get_widget("treeview_layers", pTreeView_layers);
     if(pTreeView_layers) {
       pTreeView_layers->set_model(refListStore_layers);
-      pTreeView_layers->append_column("Old #", m_Columns.m_col_old_position);
-      pTreeView_layers->append_column("New #", m_Columns.m_col_new_position);
+      //pTreeView_layers->append_column("Old #", m_Columns.m_col_old_position);
+      //pTreeView_layers->append_column("New #", m_Columns.m_col_new_position);
       pTreeView_layers->append_column_editable("Enabled", m_Columns.m_col_enabled);
       //pTreeView_layers->append_column_editable("Layer type", m_Columns.m_col_layer_type);
 
@@ -123,7 +123,7 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
 							&LayerConfigWin::on_cellrenderer_choice_edited) );
 
       pTreeView_layers->append_column_editable("Layer Description", m_Columns.m_col_description);
-      pTreeView_layers->append_column("New Background Image", m_Columns.m_col_filename);
+      //pTreeView_layers->append_column("New Background Image", m_Columns.m_col_filename);
     }
       
     
@@ -301,6 +301,7 @@ void LayerConfigWin::on_add_button_clicked() {
   row[m_Columns.m_col_layer_type_chosen] = Layer::get_layer_type_as_string(Layer::UNDEFINED);
   row[m_Columns.m_col_layer_type_choices] = m_refTreeModelCombo;
   row[m_Columns.m_col_filename] = "";
+  row[m_Columns.m_col_description] = "Click to edit description.";
   update_new_positions();
 }
 
@@ -328,13 +329,15 @@ void LayerConfigWin::on_bg_file_button_clicked() {
       Gtk::FileChooserDialog dialog("Please choose a background image");
       dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
       dialog.add_button("Select", Gtk::RESPONSE_OK);
+      if(!last_filename.empty()) dialog.set_filename(last_filename);
       add_image_file_filter_to_file_chooser(dialog);
 
       int result = dialog.run();
       dialog.hide();
 
       if(result == Gtk::RESPONSE_OK) {
-	row[m_Columns.m_col_filename] = dialog.get_filename();
+	last_filename = dialog.get_filename();
+	row[m_Columns.m_col_filename] = last_filename;
 	p_clear_bg_button->set_sensitive(true);
       }
 
