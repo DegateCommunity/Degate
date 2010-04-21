@@ -134,15 +134,6 @@ public:
     return signal_mouse_motion_;
   }
 
-  virtual void set_drawing_window_width(unsigned int width) {
-    RenderAreaBase::set_drawing_window_width(width);
-    update_virtual_dimension();
-  }
-
-  virtual void set_drawing_window_height(unsigned int height) {
-    RenderAreaBase::set_drawing_window_height(height);
-    update_virtual_dimension();
-  }
 
   virtual void update_screen() = 0;
   
