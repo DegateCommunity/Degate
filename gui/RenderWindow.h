@@ -108,8 +108,7 @@ private:
       win_width = get_width();
       win_height = get_height();
 
-      renderer.set_drawing_window_width(renderer.get_width());
-      renderer.set_drawing_window_height(renderer.get_height());
+      renderer.set_drawing_window_size(renderer.get_width(), renderer.get_height());
     }
 
     //adjust_scrollbars();
@@ -346,34 +345,36 @@ void RenderWindow<RendererType>::zoom(double center_x, double center_y, double z
   double delta_x = renderer.get_viewport_width();
   double delta_y = renderer.get_viewport_height();
 
-  unsigned int max_edge_length = std::max(renderer.get_virtual_width(), 
-					  renderer.get_virtual_height());
-
+  unsigned int max_edge_length = (double)std::max(renderer.get_virtual_width(), 
+						  renderer.get_virtual_height());
+  if(max_edge_length > 0) max_edge_length--;
+  
 
   if( ((delta_x < max_edge_length && delta_y < max_edge_length) && zoom_factor >= 1) ||
       (delta_x > 30 && delta_y > 30 && zoom_factor <= 1)  ) {
+
     double min_x = center_x - zoom_factor * (delta_x/2.0);
     double min_y = center_y - zoom_factor * (delta_y/2.0);
     double max_x = center_x + zoom_factor * (delta_x/2.0);
     double max_y = center_y + zoom_factor * (delta_y/2.0);
-
    
+    unsigned int render_max_x = renderer.get_virtual_width() > 0 ? renderer.get_virtual_width() - 1 : 0;
+    unsigned int render_max_y = renderer.get_virtual_height() > 0 ? renderer.get_virtual_height() - 1 : 0;
+
+    if(max_x > render_max_x) { 
+      double t = max_x - render_max_x;
+      max_x = render_max_x;
+      min_x -= t;
+    }
+
+    if(max_y > render_max_y) {
+      double t = max_y - render_max_y;
+      max_y = render_max_y;
+      min_y -= t;
+    }
+
     if(min_x < 0) { max_x -= min_x; min_x = 0; }
     if(min_y < 0) { max_y -= min_y; min_y = 0; }
-
-    if(max_x >= renderer.get_virtual_width() - 1) { 
-      double t = max_x - (renderer.get_virtual_width() - 1);
-      max_x -= t;
-      min_x -= t;
-      if(min_x < 0) min_x = 0;
-    }
-
-    if(max_y >= renderer.get_virtual_height() - 1) { 
-      double t = max_y - (renderer.get_virtual_height() - 1);
-      max_y -= t;
-      min_y -= t;
-      if(min_y < 0) min_y = 0;
-    }
 
     renderer.set_viewport(min_x, min_y, max_x, max_y);
   }

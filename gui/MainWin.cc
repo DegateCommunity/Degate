@@ -501,7 +501,7 @@ void MainWin::update_gui_for_loaded_project() {
 
 
     editor.set_virtual_size(main_project->get_width(), main_project->get_height());
-    editor.set_viewport(0, 0, main_project->get_width(), main_project->get_height());
+    editor.set_viewport(0, 0, editor.get_width(), editor.get_height());
     editor.set_logic_model(lmodel);
     editor.set_layer(layer);
 

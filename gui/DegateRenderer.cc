@@ -654,10 +654,9 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
     glVertex2i(gate->get_min_x(), gate->get_max_y());
     glEnd();
 
-    return;
   }
 
-  if(gate->has_name())
+  if(details && gate->has_name())
     draw_string(gate->get_min_x()+2, 
 		gate->get_min_y()+2 + get_font_height() + 1, gate->get_name(), 
 		gate->get_width() > 4 ? gate->get_width() - 4 : gate->get_width());
@@ -667,7 +666,7 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
     GateTemplate_shptr tmpl = gate->get_gate_template();
 
     // render names for type and instance
-    if(gate->get_gate_template()->has_name())
+    if(details && gate->get_gate_template()->has_name())
       draw_string(gate->get_min_x()+2, gate->get_min_y()+2, tmpl->get_name(), 
 		  gate->get_width() > 4 ? gate->get_width() - 4 : gate->get_width());
 
@@ -681,13 +680,14 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
 	  unsigned int port_size = port->get_diameter();
 	  color_t port_color = tmpl_port->get_fill_color() == 0 ? 0xff0000ff : tmpl_port->get_fill_color();
 
-	  if(port->is_selected()) {
+	  if(!details && port->is_selected()) {
 	    port_color = highlight_color_by_state(port_color, true);
 	    port_size *= 2;
 	  }
-	  draw_circle(x, y, port_size, port_color);
 
-	  if(tmpl_port->has_name()) draw_string(x+2, y+2, tmpl_port->get_name());
+	  if(!details) draw_circle(x, y, port_size, port_color);
+
+	  if(details && tmpl_port->has_name()) draw_string(x+2, y+2, tmpl_port->get_name());
 	  
 	}
       }

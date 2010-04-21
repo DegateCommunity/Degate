@@ -252,37 +252,33 @@ public:
    */
   virtual void shift_viewport(int delta_x, int delta_y) {
 
-    assert(get_viewport_width() <= (int)get_virtual_width());
-    assert(get_viewport_height() <= (int)get_virtual_height());
-
-    int h = (int)virtual_height - 1;
-    int w = (int)virtual_width - 1;
+    int h = virtual_height > 0 ? virtual_height - 1 : 0;
+    int w = virtual_width > 0 ? virtual_width - 1 : 0;
 
     int min_x = viewport_min_x + delta_x;
     int max_x = viewport_max_x + delta_x;
     int min_y = viewport_min_y + delta_y;
     int max_y = viewport_max_y + delta_y;
 
+    if(max_x > w) {
+      min_x -= max_x - w;
+      max_x = w;
+    }
+
+    if(max_y > h) {
+      min_y -= max_y - h;
+      max_y = h;
+    }
+
     if(min_x < 0) {
       max_x -= min_x;
       min_x = 0;
     }
 
-    if(max_x >= w) {
-      int t = max_x - w;
-      min_x -= t;
-      max_x -= t;
-    }
 
     if(min_y < 0) {
       max_y -= min_y;
       min_y = 0;
-    }
-
-    if(max_y >= h) {
-      int t = max_y - h;
-      min_y -= t;
-      max_y -= t;
     }
 
     set_viewport(min_x, min_y, max_x, max_y);
@@ -328,12 +324,14 @@ public:
 			       viewport_min_y, viewport_max_y);
   }
 
-  virtual void set_drawing_window_width(unsigned int width) {
-    drawing_window_width = width;
-  }
 
-  virtual void set_drawing_window_height(unsigned int height) {
+  virtual void set_drawing_window_size(unsigned int width, unsigned int height) {
+    drawing_window_width = width;
     drawing_window_height = height;
+    
+    viewport_max_x = viewport_min_x + width;
+    viewport_max_y = viewport_min_y + height;
+    this->update_virtual_dimension();
   }
 
   virtual unsigned int get_drawing_window_width() const {
