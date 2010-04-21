@@ -1,7 +1,9 @@
 degate (0.0.8) unstable; urgency=low
 
   * Rewritten rendering engine: it uses OpenGL.
-
+  * Added a jpeg image importer.
+  * Several bugfixes
+	
  -- Martin Schobert <martin@weltregierung.de>  Thu, 15 Apr 2010 09:51:00 +0100
 
 degate (0.0.7) unstable; urgency=low

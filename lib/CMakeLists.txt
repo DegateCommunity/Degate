@@ -11,9 +11,13 @@ link_directories(${LIBXML++_LIBRARY_DIRS})
 set(LIBS ${LIBS} ${LIBXML++_LIBRARIES})
 
 
-find_package(TIFF)
+find_package(TIFF REQUIRED)
 include_directories(${TIFF_INCLUDE_DIR})
 set(LIBS ${LIBS} ${TIFF_LIBRARIES})
+
+find_package(JPEG REQUIRED)
+include_directories(${JPEG_INCLUDE_DIR})
+set(LIBS ${LIBS} ${JPEG_LIBRARIES})
 
 #set(Boost_DEBUG ON)
 set(Boost_USE_STATIC_LIBS   OFF)

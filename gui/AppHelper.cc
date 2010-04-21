@@ -100,11 +100,26 @@ void restore_autosaved_project(boost::filesystem::path const& project_dir) {
 
 
 void add_image_file_filter_to_file_chooser(Gtk::FileChooserDialog & dialog) {
+
   Gtk::FileFilter filter;
-  filter.set_name("Tiff image");
+  filter.set_name("Any image");
   filter.add_pattern("*.tif");
   filter.add_pattern("*.tiff");
+  filter.add_pattern("*.jpg");
+  filter.add_pattern("*.jpeg");
   dialog.add_filter(filter);
+
+  Gtk::FileFilter filter_tiff;
+  filter_tiff.set_name("Tiff image");
+  filter_tiff.add_pattern("*.tif");
+  filter_tiff.add_pattern("*.tiff");
+  dialog.add_filter(filter_tiff);
+
+  Gtk::FileFilter filter_jpeg;
+  filter_jpeg.set_name("Jpeg image");
+  filter_jpeg.add_pattern("*.jpg");
+  filter_jpeg.add_pattern("*.jpeg");
+  dialog.add_filter(filter_jpeg);
 }
 
 

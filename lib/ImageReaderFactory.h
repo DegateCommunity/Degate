@@ -24,13 +24,14 @@
 
 #include <list>
 #include <tr1/memory>
-#include "degate_exceptions.h"
+#include <degate_exceptions.h>
 
-#include "StoragePolicies.h"
-#include "PixelPolicies.h"
-#include "FileSystem.h"
-#include "ImageReaderBase.h"
-#include "TIFFReader.h"
+#include <StoragePolicies.h>
+#include <PixelPolicies.h>
+#include <FileSystem.h>
+#include <ImageReaderBase.h>
+#include <TIFFReader.h>
+#include <JPEGReader.h>
 
 
 namespace degate{
@@ -56,6 +57,10 @@ namespace degate{
       // Tiff file format parser
       file_formats.push_back("tif");
       file_formats.push_back("tiff");
+
+      // Jpeg file format parser
+      file_formats.push_back("jpg");
+      file_formats.push_back("jpeg");
     }
 
 
@@ -103,7 +108,9 @@ namespace degate{
       if(suffix == "tif" || suffix == "tiff")
 	return std::tr1::shared_ptr<ImageReaderBase<ImageType> >
 	  (new TIFFReader<ImageType>(filename));
-
+      else if(suffix == "jpg" || suffix == "jpeg")
+	return std::tr1::shared_ptr<ImageReaderBase<ImageType> >
+	  (new JPEGReader<ImageType>(filename));
       else throw InvalidFileFormatException();
     }
     
