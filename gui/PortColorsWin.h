@@ -44,7 +44,6 @@ class PortColorsWin : private GladeFileLoader {
 
  public:
   PortColorsWin(Gtk::Window *parent, 
-		degate::LogicModel_shptr lmodel, 
 		degate::PortColorManager_shptr pcm);
 
   ~PortColorsWin();
@@ -53,7 +52,6 @@ class PortColorsWin : private GladeFileLoader {
  private:
 
   Gtk::Window *parent;
-  degate::LogicModel_shptr lmodel;
   degate::PortColorManager_shptr pcm;
 
   Gtk::Button* pEditButton;

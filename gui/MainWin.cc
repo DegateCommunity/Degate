@@ -846,10 +846,11 @@ void MainWin::on_menu_goto_gate_by_id() {
 
 void MainWin::on_menu_gate_port_colors() {
   if(main_project != NULL) {
-    PortColorsWin pcWin(this, 
-			main_project->get_logic_model(), 
-			main_project->get_port_color_manager());
+    PortColorsWin pcWin(this, main_project->get_port_color_manager());
     pcWin.run();
+
+    apply_port_color_settings(main_project->get_logic_model(), 
+			      main_project->get_port_color_manager());
 
     editor.update_screen();
     project_changed();
@@ -861,6 +862,9 @@ void MainWin::on_menu_gate_list() {
   if(main_project != NULL) {
     GateListWin glWin(this, main_project->get_logic_model());
     glWin.run();
+
+    apply_port_color_settings(main_project->get_logic_model(), 
+			      main_project->get_port_color_manager());
 
     project_changed();
     editor.update_screen();

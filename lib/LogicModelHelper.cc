@@ -326,3 +326,35 @@ std::string degate::get_template_port_name(GatePort_shptr gate_port)
 
   return "";
 }
+
+void degate::apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm)
+  throw(InvalidPointerException) {
+  if(lmodel == NULL || pcm == NULL)
+    throw InvalidPointerException("Invalid parameter for apply_port_color_settings()");
+
+  // iterate over gates
+
+  for(LogicModel::gate_collection::iterator gate_iter = lmodel->gates_begin();
+      gate_iter != lmodel->gates_end(); ++gate_iter) {
+    Gate_shptr gate = gate_iter->second;
+
+    // iterate over ports
+
+    for(Gate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter) {
+      GatePort_shptr port = *iter;
+
+      if(port->has_template_port()) {
+	GateTemplatePort_shptr tmpl_port = port->get_template_port();
+
+	std::string port_name = tmpl_port->get_name();
+	if(pcm->has_color_definition(port_name)) {
+	  tmpl_port->set_frame_color(pcm->get_frame_color(port_name));
+	  tmpl_port->set_fill_color(pcm->get_fill_color(port_name));
+	}
+	
+      }
+    }
+
+  }
+
+}

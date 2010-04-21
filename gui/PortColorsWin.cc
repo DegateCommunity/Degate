@@ -33,10 +33,9 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 using namespace degate;
 
 PortColorsWin::PortColorsWin(Gtk::Window *parent, 
-			     LogicModel_shptr lmodel, PortColorManager_shptr pcm) :
+			     PortColorManager_shptr pcm) :
   GladeFileLoader("port_colors.glade", "port_colors_dialog") {
 
-  this->lmodel = lmodel;
   this->pcm = pcm;
   this->parent = parent;
   

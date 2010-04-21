@@ -356,6 +356,12 @@ namespace degate {
   std::string get_template_port_name(GatePort_shptr gate_port)
     throw(InvalidPointerException);
 
+
+  /**
+   * Apply port color definitions to all gate template ports.
+   */
+  void apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm)
+    throw(InvalidPointerException);
 }
 
 #endif
