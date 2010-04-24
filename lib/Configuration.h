@@ -22,34 +22,32 @@
 #ifndef __CONFIGURATION_H__
 #define __CONFIGURATION_H__
 
-#include "globals.h"
+#include <globals.h>
+#include <SingletonBase.h>
 
 namespace degate {
 
   /**
    * Get the temp directory.
    * This is a shortcut for 
-   * \p (Configuration::get_instance())->get_temp_directory() .
+   * \p (Configuration::get_instance()).get_temp_directory() .
    */
 
   std::string get_temp_directory();
 
 
-  class Configuration {
+  class Configuration : public SingletonBase<Configuration> {
+
+    friend class SingletonBase<Configuration>;
 
   private:
-
-    static Configuration * instance;
-
-  protected:
 
     Configuration();
     
   public:
     
-    static Configuration * get_instance();
-
     std::string get_temp_directory() const;
+
   };
 
 }

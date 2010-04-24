@@ -19,27 +19,17 @@
  
 */
 
-#include "Configuration.h"
-#include "FileSystem.h"
+#include <Configuration.h>
+#include <FileSystem.h>
 
 using namespace degate;
 
 std::string degate::get_temp_directory() { 
-  Configuration * conf = Configuration::get_instance();
-  assert(conf != NULL);
-  return conf->get_temp_directory();
+  Configuration const & conf = Configuration::get_instance();
+  return conf.get_temp_directory();
 }
-
-Configuration * Configuration::instance = NULL;
 
 Configuration::Configuration() {
-}
-
-
-Configuration * Configuration::get_instance() {
-  if(instance == NULL)
-    instance = new Configuration();
-  return instance;
 }
 
 std::string Configuration::get_temp_directory() const {

@@ -5,7 +5,7 @@ include_directories (.)
 # Check libraries.
 #
 
-pkg_check_modules(LIBXML++ libxml++-2.6)
+pkg_check_modules(LIBXML++ REQUIRED libxml++-2.6)
 include_directories(${LIBXML++_INCLUDE_DIRS})
 link_directories(${LIBXML++_LIBRARY_DIRS}) 
 set(LIBS ${LIBS} ${LIBXML++_LIBRARIES})
@@ -21,7 +21,7 @@ set(LIBS ${LIBS} ${JPEG_LIBRARIES})
 
 #set(Boost_DEBUG ON)
 set(Boost_USE_STATIC_LIBS   OFF)
-find_package(Boost 1.38.0 COMPONENTS filesystem system)
+find_package(Boost 1.38.0 REQUIRED COMPONENTS filesystem system thread)
 if(Boost_FOUND)
 	include_directories(${Boost_INCLUDE_DIRS})
 	set(LIBS ${LIBS} ${Boost_LIBRARIES})
