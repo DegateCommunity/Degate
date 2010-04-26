@@ -22,7 +22,7 @@
 #ifndef __DEGATERENDERER_H__
 #define __DEGATERENDERER_H__
 
-#include <RenderArea.h>
+#include <OpenGLRendererBase.h>
 #include <LogicModel.h>
 #include <Layer.h>
 #include <LogicModelHelper.h>
@@ -34,12 +34,10 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/foreach.hpp>
 
-#include <gtkglmm.h>
 #include <Editor.h>
 
-class DegateRenderer : 
-  public RenderArea,
-  public Gtk::GL::Widget<DegateRenderer> {
+
+class DegateRenderer : public OpenGLRendererBase {
 
   friend class GfxEditorTool<DegateRenderer>;
 
@@ -53,22 +51,11 @@ class DegateRenderer :
   typedef boost::tuple<unsigned int, unsigned int, GLuint> bg_tiles_type;
   std::list<bg_tiles_type> rendered_bg_tiles;
 
-  /*
-  typedef std::map<degate::PlacedLogicModelObject_shptr, 
-    Glib::RefPtr<Goocanvas::Item> > rendered_objects_type;
-  rendered_objects_type rendered_objects;
-  */
-
   degate::BoundingBox background_bbox;
 
   bool realized;
 
 
-  double scale_font; // scaling factor for using glyph texture maps
-  int font_height; // requested font height for rasterization
-  unsigned int glyph_width[128];
-  GLuint * font_textures;
-  GLuint font_dlist_base;
 
   GLuint background_dlist, gates_dlist, gate_details_dlist, 
     vias_dlist, wires_dlist, 
@@ -207,33 +194,7 @@ public:
 
   void render_annotations(bool detail = false);
 
-  bool error_check() const;
 
-  /**
-   * Draw a string.
-   * @param x x-position
-   * @param y y-position
-   * @param str The string, that should be printed.
-   * @param max_str_width The maximum string width. If the real string width is larger,
-   *   then the font size is adjusted, so that the string fits. If \p max_str_width == 0
-   *   no adjustment will be performed.
-   */
-  void draw_string(int x, int y, std::string const& str, unsigned int max_str_width = 0);
-
-  void init_font(const char * fname, unsigned int h);
-
-  /**
-   * Create a font texture for a glyph.
-   * @return Returns the width of the created glyph
-   */
-  unsigned int create_font_textures(FT_Face face, char ch, GLuint list_base, GLuint * tex_base);
-
-  unsigned int get_font_height() const {
-    return (double)font_height*scale_font;
-  }
-
-  void set_color(degate::color_t col);
-  void draw_circle(int x, int y, int diameter, degate::color_t col);
 
   void on_idle();
 

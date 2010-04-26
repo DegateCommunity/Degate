@@ -38,16 +38,16 @@ GateSelectWin::GateSelectWin(Gtk::Window *parent, LogicModel_shptr lmodel) :
   this->lmodel = lmodel;
   this->parent = parent;
 
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateSelectWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", pOkButton);
+    get_widget("ok_button", pOkButton);
     if(pOkButton) {
       pOkButton->set_sensitive(false);
       pOkButton->signal_clicked().connect(sigc::mem_fun(*this, &GateSelectWin::on_ok_button_clicked) );         
@@ -55,7 +55,7 @@ GateSelectWin::GateSelectWin(Gtk::Window *parent, LogicModel_shptr lmodel) :
     
     refListStore = Gtk::ListStore::create(m_Columns);
     
-    refXml->get_widget("treeview", pTreeView);
+    get_widget("treeview", pTreeView);
     if(pTreeView) {
       pTreeView->set_model(refListStore);
       //pTreeView->append_column("ID", m_Columns.m_col_id);
@@ -131,7 +131,7 @@ GateSelectWin::get_selection(bool allow_multiple_selection) {
   if(allow_multiple_selection)
     refTreeSelection->set_mode(Gtk::SELECTION_MULTIPLE);
 
-  pDialog->run();
+  get_dialog()->run();
 
   if(ok_clicked) {
 
@@ -159,11 +159,11 @@ GateSelectWin::get_selection(bool allow_multiple_selection) {
 
 void GateSelectWin::on_ok_button_clicked() {
   ok_clicked = true;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void GateSelectWin::on_cancel_button_clicked() {
   ok_clicked = false;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 

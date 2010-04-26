@@ -25,17 +25,42 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <gtkmm.h>
 #include <libglademm.h>
 
+/**
+ * Helper class to load glade files.
+ *
+ * In order to use this class, you should inherit from it in private mode.
+ * That is a is-implemented-in-terms-of relationship.
+ */
 class GladeFileLoader {
 
  public:
 
+  // no public methods
+
+ private:
+
+  Gtk::Dialog * pDialog;
+  Glib::RefPtr<Gnome::Glade::Xml> refXml;
+
+ protected:
+
   GladeFileLoader(std::string const& glade_file, std::string const& dialog_name);
   virtual ~GladeFileLoader();
 
- protected:
-  Glib::RefPtr<Gnome::Glade::Xml> refXml;
+  template<typename DstType>
+  DstType * get_widget(const Glib::ustring & name) {
+    return static_cast<DstType *>(refXml->get_widget(name));
+  }
 
-  Gtk::Dialog * pDialog;
+  template<class T_Widget> 
+  T_Widget * get_widget(const Glib::ustring &name, T_Widget *&widget) {
+    return refXml->get_widget(name, widget);
+  }
+
+  Gtk::Dialog * get_dialog() { return pDialog; }
+
+
+
 };
 
 #endif

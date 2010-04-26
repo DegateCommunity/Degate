@@ -44,44 +44,44 @@ WireMatchingParamsWin::WireMatchingParamsWin(Gtk::Window *parent,
   this->parent = parent;
   ok_clicked = false;
 
-  if(pDialog != NULL) {
+  if(get_dialog() != NULL) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton != NULL)
       pButton->signal_clicked().connect
 	(sigc::mem_fun(*this, &WireMatchingParamsWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", pButton);
+    get_widget("ok_button", pButton);
     if(pButton != NULL)
       pButton->signal_clicked().connect
 	(sigc::mem_fun(*this, &WireMatchingParamsWin::on_ok_button_clicked) );
   
 
-    refXml->get_widget("entry_wire_diameter", entry_wire_diameter);
+    get_widget("entry_wire_diameter", entry_wire_diameter);
     if(entry_wire_diameter != NULL) {
       char txt[100];
       snprintf(txt, sizeof(txt), "%d", wire_diameter);
       entry_wire_diameter->set_text(strdup(txt));
     }
 
-    refXml->get_widget("entry_median_filter_width", entry_median_filter_width);
+    get_widget("entry_median_filter_width", entry_median_filter_width);
     if(entry_median_filter_width != NULL) {
       char txt[100];
       snprintf(txt, sizeof(txt), "%d", median_filter_width);
       entry_median_filter_width->set_text(strdup(txt));
     }
 
-    refXml->get_widget("entry_sigma", entry_sigma);
+    get_widget("entry_sigma", entry_sigma);
     if(entry_sigma != NULL) {
       char txt[100];
       snprintf(txt, sizeof(txt), "%f", sigma);
       entry_sigma->set_text(strdup(txt));
     }
 
-    refXml->get_widget("entry_min_edge_magnitude", entry_min_edge_magnitude);
+    get_widget("entry_min_edge_magnitude", entry_min_edge_magnitude);
     if(entry_min_edge_magnitude != NULL) {
       char txt[100];
       snprintf(txt, sizeof(txt), "%f", min_edge_magnitude);
@@ -107,7 +107,7 @@ bool WireMatchingParamsWin::run(unsigned int * wire_diameter,
 
 
   while(true) {
-    pDialog->run();
+    get_dialog()->run();
     if(ok_clicked) {
 
       *wire_diameter = atoi(entry_wire_diameter->get_text().c_str());
@@ -117,7 +117,7 @@ bool WireMatchingParamsWin::run(unsigned int * wire_diameter,
 
       if(*wire_diameter > 0 && *median_filter_width >= 0 && 
 	 sigma >= 0 && min_edge_magnitude > 0) {
-	pDialog->hide();
+	get_dialog()->hide();
 	return true;
       }
     }
@@ -133,6 +133,6 @@ void WireMatchingParamsWin::on_ok_button_clicked() {
 
 void WireMatchingParamsWin::on_cancel_button_clicked() {
   ok_clicked = false;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 

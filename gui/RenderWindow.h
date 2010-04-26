@@ -59,6 +59,8 @@ private:
 
   sigc::connection v_adjustment_signal, h_adjustment_signal;
 
+  bool enable_scrollbars, enable_ruler;
+
 private:
 
   /**
@@ -133,9 +135,8 @@ public:
 
   /**
    * The constructor.
-   * @todo Pass render params via this constructor to the ctor of RenderArea.
    */
-  RenderWindow(RendererType & _renderer) : 
+  RenderWindow(RendererType & _renderer, bool _enable_scrollbars = true, bool _enable_ruler = true) :
     renderer(_renderer),
     // value, lower, upper, step_increment, page_increment, page_size                
     v_adjustment(0.0, 0.0, 101.0, 0.1, 1.0, 1.0), 
@@ -144,7 +145,9 @@ public:
     h_scrollbar(h_adjustment),
     table(3, 3),
     win_width(0),
-    win_height(0) {
+    win_height(0),
+    enable_scrollbars(_enable_scrollbars),
+    enable_ruler(_enable_ruler) {
 
       adjust_scrollbars();
       init_window();
@@ -207,6 +210,8 @@ public:
 
 template <typename RendererType>
 void RenderWindow<RendererType>::adjust_scrollbars() {
+
+  if(!enable_scrollbars) return;
 
   unsigned int min_h = renderer.get_viewport_min_x();
   unsigned int max_h = renderer.get_viewport_max_x(); //min_h + renderer.get_viewport_width();
@@ -271,6 +276,7 @@ void RenderWindow<RendererType>::init_window() {
 
   add(table);
 
+  if(enable_ruler) {
   table.attach(h_ruler, 1, 2, 0, 1, 
 	       Gtk::FILL,
 	       Gtk::SHRINK,
@@ -280,63 +286,71 @@ void RenderWindow<RendererType>::init_window() {
 	       Gtk::SHRINK,
 	       Gtk::FILL,
 	       default_padding, default_padding);
-  
+  }
+
   table.attach(renderer, 1, 2, 1, 2, 
 	       Gtk::FILL | Gtk::EXPAND,
 	       Gtk::FILL | Gtk::EXPAND,
 	       default_padding, default_padding);
-  
-  table.attach(v_scrollbar, 2, 3, 1, 2, 
-	       Gtk::SHRINK,
-	       Gtk::FILL,
-	       default_padding, default_padding);
-  
-  table.attach(h_scrollbar, 1, 2, 2, 3, 
-	       Gtk::FILL,
-	       Gtk::SHRINK,
-	       default_padding, default_padding);
-  
-  // set scrollbar update policy
-  h_scrollbar.set_update_policy(Gtk::UPDATE_CONTINUOUS);
-  v_scrollbar.set_update_policy(Gtk::UPDATE_CONTINUOUS);
-  
-  // connect signals
-  v_adjustment_signal = v_adjustment.signal_value_changed().connect
-    (sigc::mem_fun(*this, &RenderWindow::on_v_adjustment_changed));
 
-  h_adjustment_signal = h_adjustment.signal_value_changed().connect
-    (sigc::mem_fun(*this, &RenderWindow::on_h_adjustment_changed));
-
-  // connect signals
-  renderer.signal_adjust_scrollbars().connect
-    (sigc::mem_fun(*this, &RenderWindow::adjust_scrollbars));
+  if(enable_scrollbars) {
+    table.attach(v_scrollbar, 2, 3, 1, 2, 
+		 Gtk::SHRINK,
+		 Gtk::FILL,
+		 default_padding, default_padding);
+    
+    table.attach(h_scrollbar, 1, 2, 2, 3, 
+		 Gtk::FILL,
+		 Gtk::SHRINK,
+		 default_padding, default_padding);
   
+    // set scrollbar update policy
+    h_scrollbar.set_update_policy(Gtk::UPDATE_CONTINUOUS);
+    v_scrollbar.set_update_policy(Gtk::UPDATE_CONTINUOUS);
+  
+    // connect signals
+    v_adjustment_signal = v_adjustment.signal_value_changed().connect
+      (sigc::mem_fun(*this, &RenderWindow::on_v_adjustment_changed));
+
+    h_adjustment_signal = h_adjustment.signal_value_changed().connect
+      (sigc::mem_fun(*this, &RenderWindow::on_h_adjustment_changed));
+    
+    // connect signals
+    renderer.signal_adjust_scrollbars().connect
+      (sigc::mem_fun(*this, &RenderWindow::adjust_scrollbars));
+  }
+
   renderer.signal_mouse_scroll_up().connect
     (sigc::mem_fun(*this, &RenderWindow::on_mouse_scroll_up));
   renderer.signal_mouse_scroll_down().connect
     (sigc::mem_fun(*this, &RenderWindow::on_mouse_scroll_down));
   
-  
-  // configure ruler
-  h_ruler.set_metric(Gtk::PIXELS);
-  v_ruler.set_metric(Gtk::PIXELS);
-  
+  if(enable_ruler) {
+    // configure ruler
+    h_ruler.set_metric(Gtk::PIXELS);
+    v_ruler.set_metric(Gtk::PIXELS);
+  }
+
   show_all_children();
 }
 
 template <typename RendererType>
 void RenderWindow<RendererType>::enable_adjustment_events() {
-  
-  v_adjustment_signal.unblock();
-  h_adjustment_signal.unblock();
+
+  if(enable_scrollbars) {
+    v_adjustment_signal.unblock();
+    h_adjustment_signal.unblock();
+  }
 
 }
 
 template <typename RendererType>
 void RenderWindow<RendererType>::disable_adjustment_events() {
 
-  v_adjustment_signal.block();
-  h_adjustment_signal.block();
+  if(enable_scrollbars) {
+    v_adjustment_signal.block();
+    h_adjustment_signal.block();
+  }
 
 }
 

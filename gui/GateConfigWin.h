@@ -25,10 +25,13 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <gtkmm.h>
 #include <list>
 
-#include "globals.h"
-#include "Project.h"
-#include "LogicModel.h"
-#include "GladeFileLoader.h"
+#include <globals.h>
+#include <Project.h>
+#include <LogicModel.h>
+#include <GladeFileLoader.h>
+#include <Editor.h>
+#include <RenderWindow.h>
+#include <GateRenderer.h>
 
 class GateConfigWin : private GladeFileLoader {
 
@@ -99,7 +102,6 @@ private:
   Gtk::ComboBox * combobox_logic_class;
 
 
-
   bool result;
 
   Gtk::Entry * entry_short_name;
@@ -112,6 +114,18 @@ private:
   Gtk::TextView * code_textview;
 
   std::string selected_logic_class;
+
+
+  // renderer stuff
+  GfxEditor<GateRenderer> editor_transistor;
+  RenderWindow<GfxEditor<GateRenderer> > render_window_transistor;
+
+  GfxEditor<GateRenderer> editor_m1;
+  RenderWindow<GfxEditor<GateRenderer> > render_window_m1;
+
+  GfxEditor<GateRenderer> editor_transistor_m1;
+  RenderWindow<GfxEditor<GateRenderer> > render_window_transistor_m1;
+
 
   // Signal handlers:
   virtual void on_ok_button_clicked();

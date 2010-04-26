@@ -39,20 +39,20 @@ SetOrientationWin::SetOrientationWin(Gtk::Window *parent, Gate::ORIENTATION orie
   this->orig_orientation = orientation;
   ok_clicked = false;
 
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &SetOrientationWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", pButton);
+    get_widget("ok_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &SetOrientationWin::on_ok_button_clicked) );
   
-    refXml->get_widget("combobox1", entry);
+    get_widget("combobox1", entry);
     if(entry) {
 
       m_refTreeModel = Gtk::ListStore::create(m_Columns);
@@ -90,7 +90,7 @@ SetOrientationWin::~SetOrientationWin() {
 
 
 Gate::ORIENTATION SetOrientationWin::run() {
-  pDialog->run();
+  get_dialog()->run();
   if(ok_clicked) return orientation;
   else return orig_orientation;
 }
@@ -103,13 +103,13 @@ void SetOrientationWin::on_ok_button_clicked() {
     Gtk::TreeModel::Row row = *iter;
     if(row) {
       orientation = row[m_Columns.m_col_id];
-      pDialog->hide();
+      get_dialog()->hide();
     }
   }
 }
 
 void SetOrientationWin::on_cancel_button_clicked() {
   ok_clicked = false;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 

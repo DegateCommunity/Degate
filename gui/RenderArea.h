@@ -35,12 +35,12 @@ class RenderArea : public Gtk::DrawingArea,
 
 private:
   sigc::signal<void>  signal_adjust_scrollbars_;
-  sigc::signal<void, unsigned int, unsigned int>  signal_mouse_scroll_down_;
-  sigc::signal<void, unsigned int, unsigned int>  signal_mouse_scroll_up_;
+  sigc::signal<void, unsigned int, unsigned int> signal_mouse_scroll_down_;
+  sigc::signal<void, unsigned int, unsigned int> signal_mouse_scroll_up_;
   sigc::signal<void, unsigned int, unsigned int, unsigned int>  signal_mouse_click_;
   sigc::signal<void, unsigned int, unsigned int, unsigned int>  signal_mouse_double_click_;
   sigc::signal<void, unsigned int, unsigned int, unsigned int>  signal_mouse_release_;
-  sigc::signal<void, unsigned int, unsigned int>  signal_mouse_motion_;
+  sigc::signal<void, unsigned int, unsigned int> signal_mouse_motion_;
 
 
 protected:

@@ -44,24 +44,24 @@ AnnotationListWin::AnnotationListWin(Gtk::Window *parent, degate::LogicModel_shp
   this->parent = parent;
   assert(lmodel);
 
-  if(pDialog) {
+  if(get_dialog()) {
 
     // connect signals
-    refXml->get_widget("close_button", pCloseButton);
+    get_widget("close_button", pCloseButton);
     if(pCloseButton)
       pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, &AnnotationListWin::on_close_button_clicked));
     
-    refXml->get_widget("goto_button", pGotoButton);
+    get_widget("goto_button", pGotoButton);
     if(pGotoButton) {
       pGotoButton->grab_focus();
       pGotoButton->signal_clicked().connect(sigc::mem_fun(*this, &AnnotationListWin::on_goto_button_clicked) );
     }
 
-    refXml->get_widget("entry_filter_by_layer", entry_filter_by_layer);
+    get_widget("entry_filter_by_layer", entry_filter_by_layer);
     if(entry_filter_by_layer)
       entry_filter_by_layer->signal_changed().connect(sigc::mem_fun(*this, &AnnotationListWin::on_entry_changed) );
 
-    refXml->get_widget("entry_filter_by_class", entry_filter_by_class);
+    get_widget("entry_filter_by_class", entry_filter_by_class);
     if(entry_filter_by_class)
       entry_filter_by_class->signal_changed().connect(sigc::mem_fun(*this, &AnnotationListWin::on_entry_changed) );
 
@@ -69,7 +69,7 @@ AnnotationListWin::AnnotationListWin(Gtk::Window *parent, degate::LogicModel_shp
    
     refListStore = Gtk::ListStore::create(m_Columns);
     
-    refXml->get_widget("treeview", pTreeView);
+    get_widget("treeview", pTreeView);
     if(pTreeView) {
       pTreeView->set_model(refListStore);
       
@@ -183,7 +183,7 @@ void AnnotationListWin::refresh() {
 void AnnotationListWin::show() {
 
   refresh();
-  pDialog->show();
+  get_dialog()->show();
 }
 
 void AnnotationListWin::clear_list() {
@@ -193,7 +193,7 @@ void AnnotationListWin::clear_list() {
 
 
 void AnnotationListWin::on_close_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void AnnotationListWin::on_goto_button_clicked() {

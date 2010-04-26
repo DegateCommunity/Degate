@@ -66,3 +66,4 @@ GladeFileLoader::~GladeFileLoader() {
   delete pDialog;
   pDialog = NULL;
 }
+

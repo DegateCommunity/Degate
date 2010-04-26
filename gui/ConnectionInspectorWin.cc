@@ -49,32 +49,32 @@ ConnectionInspectorWin::ConnectionInspectorWin(Gtk::Window *parent, degate::Logi
 
   set_opacity(0.5);
 
-  if(pDialog) {
+  if(get_dialog()) {
 
-    pDialog->set_opacity(0.5);
+    get_dialog()->set_opacity(0.5);
     
     // connect signals
-    refXml->get_widget("close_button", pCloseButton);
+    get_widget("close_button", pCloseButton);
     if(pCloseButton)
       pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, &ConnectionInspectorWin::on_close_button_clicked));
     
-    refXml->get_widget("goto_button", pGotoButton);
+    get_widget("goto_button", pGotoButton);
     if(pGotoButton) {
       pGotoButton->grab_focus();
       pGotoButton->signal_clicked().connect(sigc::mem_fun(*this, &ConnectionInspectorWin::on_goto_button_clicked) );
     }
     
-    refXml->get_widget("back_button", pBackButton);
+    get_widget("back_button", pBackButton);
     if(pBackButton) {
       pBackButton->signal_clicked().connect(sigc::mem_fun(*this, &ConnectionInspectorWin::on_back_button_clicked) );
     }
     
-    refXml->get_widget("current_object_label", current_object_label);
-    refXml->get_widget("current_object_type_label", current_object_type_label);
+    get_widget("current_object_label", current_object_label);
+    get_widget("current_object_type_label", current_object_type_label);
     
     refListStore = Gtk::ListStore::create(m_Columns);
     
-    refXml->get_widget("treeview", pTreeView);
+    get_widget("treeview", pTreeView);
     if(pTreeView) {
       pTreeView->set_model(refListStore);
       
@@ -142,7 +142,7 @@ ConnectionInspectorWin::ConnectionInspectorWin(Gtk::Window *parent, degate::Logi
     
   }
 
-  //pDialog->set_transient_for(*parent);
+  //get_dialog()->set_transient_for(*parent);
   disable_inspection();
 }
 
@@ -150,7 +150,7 @@ ConnectionInspectorWin::~ConnectionInspectorWin() {
 }
 
 void ConnectionInspectorWin::show() {
-  pDialog->show();
+  get_dialog()->show();
 }
 
 
@@ -302,7 +302,7 @@ void ConnectionInspectorWin::disable_inspection() {
 }
 
 void ConnectionInspectorWin::on_close_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void ConnectionInspectorWin::on_back_button_clicked() {

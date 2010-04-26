@@ -46,14 +46,13 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
 
   char tmp[50];
 
-  if(pDialog) {
+  if(get_dialog()) {
 
-    debug(TM, "Setup widgets for the GridConfigWin.");
-    pDialog->set_transient_for(*parent);
+    get_dialog()->set_transient_for(*parent);
 
     // connect signals
     
-    refXml->get_widget("close_button", p_close_button);
+    get_widget("close_button", p_close_button);
     assert(p_close_button != NULL);
     if(p_close_button != NULL) {
       p_close_button->grab_focus();
@@ -61,8 +60,8 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
     }
 
 
-    refXml->get_widget("regular_grid_radiobutton", p_regular_grid_rbutton);
-    refXml->get_widget("irregular_grid_radiobutton", p_irregular_grid_rbutton);
+    get_widget("regular_grid_radiobutton", p_regular_grid_rbutton);
+    get_widget("irregular_grid_radiobutton", p_irregular_grid_rbutton);
     assert(p_regular_grid_rbutton != NULL && p_irregular_grid_rbutton != NULL);
     if(p_regular_grid_rbutton != NULL && p_irregular_grid_rbutton != NULL) {
       // XXX
@@ -79,21 +78,21 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
 
     debug(TM, "Setup widgets for the regular grid.");
 
-    refXml->get_widget("horizontal_checkbutton", p_horizontal_checkbutton);
+    get_widget("horizontal_checkbutton", p_horizontal_checkbutton);
     assert(p_horizontal_checkbutton != NULL);
     if(p_horizontal_checkbutton != NULL) {
       p_horizontal_checkbutton->set_active(regular_horizontal_grid->is_enabled());
       p_horizontal_checkbutton->signal_clicked().connect(sigc::mem_fun(*this, &GridConfigWin::on_horz_checkb_clicked) );
     }
 
-    refXml->get_widget("vertical_checkbutton", p_vertical_checkbutton);
+    get_widget("vertical_checkbutton", p_vertical_checkbutton);
     assert(p_vertical_checkbutton != NULL);
     if(p_vertical_checkbutton != NULL) {
       p_vertical_checkbutton->set_active(regular_vertical_grid->is_enabled());
       p_vertical_checkbutton->signal_clicked().connect(sigc::mem_fun(*this, &GridConfigWin::on_vert_checkb_clicked) );
     }
 
-    refXml->get_widget("hscale_offset_x", p_scale_offset_x);
+    get_widget("hscale_offset_x", p_scale_offset_x);
     assert(p_scale_offset_x != NULL);
     if(p_scale_offset_x != NULL) {
       p_adj_offset_x = new Gtk::Adjustment(regular_horizontal_grid->get_min(), 0.0, 512.0, 1);
@@ -101,7 +100,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       p_adj_offset_x->signal_value_changed().connect(sigc::mem_fun(*this, &GridConfigWin::on_offset_x_changed));
     }
 
-    refXml->get_widget("hscale_offset_y", p_scale_offset_y);
+    get_widget("hscale_offset_y", p_scale_offset_y);
     assert(p_scale_offset_y != NULL);
     if(p_scale_offset_y != NULL) {
       p_adj_offset_y = new Gtk::Adjustment(regular_vertical_grid->get_min(), 0.0, 512.0, 1);
@@ -109,7 +108,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       p_adj_offset_y->signal_value_changed().connect(sigc::mem_fun(*this, &GridConfigWin::on_offset_y_changed));
     }
 
-    refXml->get_widget("hscale_distance_x", p_scale_dist_x);
+    get_widget("hscale_distance_x", p_scale_dist_x);
     assert(p_scale_dist_x != NULL);
     if(p_scale_dist_x != NULL) {
       p_adj_dist_x = new Gtk::Adjustment(regular_horizontal_grid->get_distance(), 0.0, 512.0, 1);
@@ -117,7 +116,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       p_adj_dist_x->signal_value_changed().connect(sigc::mem_fun(*this, &GridConfigWin::on_dist_x_changed));
     }
 
-    refXml->get_widget("hscale_distance_y", p_scale_dist_y);
+    get_widget("hscale_distance_y", p_scale_dist_y);
     assert(p_scale_dist_y != NULL);
     if(p_scale_dist_y != NULL) {
       p_adj_dist_y = new Gtk::Adjustment(regular_vertical_grid->get_distance(), 0.0, 512.0, 1);
@@ -125,7 +124,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       p_adj_dist_y->signal_value_changed().connect(sigc::mem_fun(*this, &GridConfigWin::on_dist_y_changed));
     }
 
-    refXml->get_widget("entry_distance_x", p_entry_dist_x);
+    get_widget("entry_distance_x", p_entry_dist_x);
     assert(p_entry_dist_x != NULL);
     if(p_entry_dist_x != NULL) {
       snprintf(tmp, sizeof(tmp), "%f", regular_horizontal_grid->get_distance());
@@ -133,7 +132,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       p_entry_dist_x->signal_changed().connect(sigc::mem_fun(*this, &GridConfigWin::on_entry_dist_x_changed));
     }
 
-    refXml->get_widget("entry_distance_y", p_entry_dist_y);
+    get_widget("entry_distance_y", p_entry_dist_y);
     assert(p_entry_dist_y != NULL);
     if(p_entry_dist_y != NULL) {
       snprintf(tmp, sizeof(tmp), "%f", regular_vertical_grid->get_distance());
@@ -150,7 +149,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
 
     debug(TM, "Setup widgets for the irregular grid.");
 
-    refXml->get_widget("uhg_checkbutton", p_uhg_checkbutton);
+    get_widget("uhg_checkbutton", p_uhg_checkbutton);
     assert(p_uhg_checkbutton != NULL);
     if(p_uhg_checkbutton != NULL) {
       p_uhg_checkbutton->set_active(irregular_horizontal_grid->is_enabled());
@@ -158,7 +157,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
     }
 
     ref_liststore_uhg = Gtk::ListStore::create(m_columns_uhg);
-    refXml->get_widget("uhg_treeview", p_treeview_uhg);
+    get_widget("uhg_treeview", p_treeview_uhg);
     assert(p_treeview_uhg != NULL);
     if(p_treeview_uhg != NULL) {
       p_treeview_uhg->set_model(ref_liststore_uhg);
@@ -178,13 +177,13 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       refTreeSelection->set_mode(Gtk::SELECTION_MULTIPLE);
     }
 
-    refXml->get_widget("button_add_uhg", p_button_add_uhg);
+    get_widget("button_add_uhg", p_button_add_uhg);
     assert(p_button_add_uhg != NULL);
     if(p_button_add_uhg != NULL) {
       p_button_add_uhg->signal_clicked().connect(sigc::mem_fun(*this, &GridConfigWin::on_button_add_uhg_clicked) );
     }
 
-    refXml->get_widget("button_remove_uhg", p_button_remove_uhg);
+    get_widget("button_remove_uhg", p_button_remove_uhg);
     assert(p_button_remove_uhg != NULL);
     if(p_button_remove_uhg != NULL) {
       p_button_remove_uhg->signal_clicked().connect(sigc::mem_fun(*this, &GridConfigWin::on_button_remove_uhg_clicked) );
@@ -196,7 +195,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
 
     debug(TM, "Setup widgets for the irregular vertical grid.");
 
-    refXml->get_widget("uvg_checkbutton", p_uvg_checkbutton);
+    get_widget("uvg_checkbutton", p_uvg_checkbutton);
     assert(p_uvg_checkbutton != NULL);
     if(p_uvg_checkbutton != NULL) {
       p_uvg_checkbutton->set_active(irregular_vertical_grid->is_enabled());
@@ -204,7 +203,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
     }
 
     ref_liststore_uvg = Gtk::ListStore::create(m_columns_uvg);
-    refXml->get_widget("uvg_treeview", p_treeview_uvg);
+    get_widget("uvg_treeview", p_treeview_uvg);
     assert(p_treeview_uvg != NULL);
     if(p_treeview_uvg != NULL) {
       p_treeview_uvg->set_model(ref_liststore_uvg);
@@ -225,13 +224,13 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       refTreeSelection->set_mode(Gtk::SELECTION_MULTIPLE);
     }
 
-    refXml->get_widget("button_add_uvg", p_button_add_uvg);
+    get_widget("button_add_uvg", p_button_add_uvg);
     assert(p_button_add_uvg != NULL);
     if(p_button_add_uvg != NULL) {
       p_button_add_uvg->signal_clicked().connect(sigc::mem_fun(*this, &GridConfigWin::on_button_add_uvg_clicked) );
     }
 
-    refXml->get_widget("button_remove_uvg", p_button_remove_uvg);
+    get_widget("button_remove_uvg", p_button_remove_uvg);
     assert(p_button_remove_uvg != NULL);
     if(p_button_remove_uvg != NULL) {
       p_button_remove_uvg->signal_clicked().connect(sigc::mem_fun(*this, &GridConfigWin::on_button_remove_uvg_clicked) );
@@ -328,11 +327,11 @@ void GridConfigWin::on_uvg_edited(const Glib::ustring& path, const Glib::ustring
 }
 
 void GridConfigWin::show() {
-  pDialog->show();
+  get_dialog()->show();
 }
 
 void GridConfigWin::on_close_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
   signal_changed_();
 }
 

@@ -90,7 +90,12 @@ set(DEGATE_SRC
 	       AppHelper.cc
 	       MainWin.cc
 
-	       RenderArea.cc RenderWindow.cc DegateRenderer.cc
+	       RenderArea.cc 
+	       RenderWindow.cc 
+	       OpenGLRendererBase.cc
+	       DegateRenderer.cc 
+	       GateRenderer.cc 
+
 )
 
 add_executable(degate_bin ${DEGATE_SRC})

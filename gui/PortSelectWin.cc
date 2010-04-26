@@ -40,16 +40,16 @@ PortSelectWin::PortSelectWin(Gtk::Window *parent, Gate_shptr gate) :
   this->parent = parent;
   this->gate = gate;
 
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &PortSelectWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", pButton);
+    get_widget("ok_button", pButton);
     if(pButton) {
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &PortSelectWin::on_ok_button_clicked) );
       pButton->grab_focus();
@@ -57,7 +57,7 @@ PortSelectWin::PortSelectWin(Gtk::Window *parent, Gate_shptr gate) :
 
     refListStore = Gtk::ListStore::create(m_Columns);
   
-    refXml->get_widget("treeview", pTreeView);
+    get_widget("treeview", pTreeView);
     if(pTreeView) {
       pTreeView->set_model(refListStore);
       pTreeView->append_column("ID", m_Columns.m_col_id);
@@ -84,7 +84,7 @@ PortSelectWin::~PortSelectWin() {
 
 
 GateTemplatePort_shptr PortSelectWin::run() {
-  pDialog->run();
+  get_dialog()->run();
   return template_port;
 }
 
@@ -100,12 +100,12 @@ void PortSelectWin::on_ok_button_clicked() {
 
       GateTemplate_shptr tmpl = gate->get_gate_template();
       template_port = tmpl->get_template_port(port_id);
-      pDialog->hide();
+      get_dialog()->hide();
     }
   }
 }
 
 void PortSelectWin::on_cancel_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
 }
 

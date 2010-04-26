@@ -41,18 +41,18 @@ GenericTextInputWin::GenericTextInputWin(Gtk::Window *parent,
   ok_clicked = false;
   orig_text = preset_text;
 
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
-    pDialog->set_title(title);
+    get_dialog()->set_title(title);
 
     // connect signals
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GenericTextInputWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", p_ok_button);
+    get_widget("ok_button", p_ok_button);
     if(p_ok_button != NULL) {
       p_ok_button->signal_clicked().connect(sigc::mem_fun(*this, &GenericTextInputWin::on_ok_button_clicked) );
       p_ok_button->grab_focus();
@@ -60,12 +60,12 @@ GenericTextInputWin::GenericTextInputWin(Gtk::Window *parent,
     else return;
 
 
-    refXml->get_widget("label", label);
+    get_widget("label", label);
     if(label != NULL) {
       label->set_text(label_text);
     }
 
-    refXml->get_widget("entry", entry);
+    get_widget("entry", entry);
     if(entry != NULL) {
       entry->grab_focus();
       entry->set_text(preset_text);
@@ -86,7 +86,7 @@ void GenericTextInputWin::on_entry_text_changed() {
 }
 
 bool GenericTextInputWin::run(Glib::ustring & new_value) {
-  pDialog->run();
+  get_dialog()->run();
   if(ok_clicked) {
     new_value = entry->get_text();
     return true;
@@ -99,11 +99,11 @@ bool GenericTextInputWin::run(Glib::ustring & new_value) {
 
 void GenericTextInputWin::on_ok_button_clicked() {
   ok_clicked = true;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void GenericTextInputWin::on_cancel_button_clicked() {
   ok_clicked = false;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 

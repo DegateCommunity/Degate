@@ -44,29 +44,29 @@ SelectModuleWin::SelectModuleWin(Gtk::Window *parent, degate::LogicModel_shptr l
   assert(parent);
   assert(lmodel);
 
-  if(pDialog) {
+  if(get_dialog()) {
 
     // connect signals
-    refXml->get_widget("cancel_button", cancel_button);
+    get_widget("cancel_button", cancel_button);
     assert(cancel_button != NULL);
     if(cancel_button)
       cancel_button->signal_clicked().connect(sigc::mem_fun(*this, &SelectModuleWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", ok_button);
+    get_widget("ok_button", ok_button);
     assert(ok_button != NULL);
     if(ok_button) {
       ok_button->signal_clicked().connect(sigc::mem_fun(*this, &SelectModuleWin::on_ok_button_clicked) );
       ok_button->set_sensitive(false);
     }
     
-    refXml->get_widget("add_button", add_button);
+    get_widget("add_button", add_button);
     assert(add_button != NULL);
     if(add_button) {
       add_button->signal_clicked().connect(sigc::mem_fun(*this, &SelectModuleWin::on_add_button_clicked) );
       add_button->set_sensitive(false);
     }
 
-    refXml->get_widget("remove_button", remove_button);
+    get_widget("remove_button", remove_button);
     assert(remove_button != NULL);
     if(remove_button) {
       remove_button->signal_clicked().connect(sigc::mem_fun(*this, &SelectModuleWin::on_remove_button_clicked) );
@@ -75,7 +75,7 @@ SelectModuleWin::SelectModuleWin(Gtk::Window *parent, degate::LogicModel_shptr l
 
        
     treemodel_modules = TreeStoreModuleHierarchy::create();
-    refXml->get_widget("treeview_modules", treeview_modules);
+    get_widget("treeview_modules", treeview_modules);
     assert(treeview_modules != NULL);
     if(treeview_modules) {
 
@@ -131,7 +131,7 @@ void SelectModuleWin::update_logic_model(Gtk::TreeModel::Children const& childre
 
 
 degate::Module_shptr SelectModuleWin::show() {
-  pDialog->run();
+  get_dialog()->run();
   update_logic_model(treemodel_modules->children(), Module_shptr());
   return selected_module;
 }
@@ -197,12 +197,12 @@ void SelectModuleWin::on_module_selection_changed() {
 }
 
 void SelectModuleWin::on_cancel_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
   selected_module.reset();
 }
 
 void SelectModuleWin::on_ok_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void SelectModuleWin::on_add_button_clicked() {

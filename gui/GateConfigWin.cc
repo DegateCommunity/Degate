@@ -23,6 +23,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "GladeFileLoader.h"
 #include <VHDLCodeTemplateGenerator.h>
 #include <VHDLTBCodeTemplateGenerator.h>
+#include <RenderWindow.h>
 
 #include <gdkmm/window.h>
 #include <gtkmm/stock.h>
@@ -41,39 +42,42 @@ using namespace boost;
 GateConfigWin::GateConfigWin(Gtk::Window *parent, 
 			     LogicModel_shptr lmodel,
 			     GateTemplate_shptr gate_template) :
-  GladeFileLoader("gate_create.glade", "gate_create_dialog") {
+  GladeFileLoader("gate_create.glade", "gate_create_dialog"),
+  render_window_transistor(editor_transistor, false, false),
+  render_window_m1(editor_m1, false, false),
+  render_window_transistor_m1(editor_transistor_m1, false, false) {
 
   this->lmodel = lmodel;
   this->gate_template = gate_template;
 
   this->parent = parent;
 
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", pButton);
+    get_widget("ok_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_ok_button_clicked) );
 
     
-    refXml->get_widget("port_add_button", pButton);
+    get_widget("port_add_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_port_add_button_clicked) );
     
-    refXml->get_widget("port_remove_button", pButton);
+    get_widget("port_remove_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_port_remove_button_clicked) );
     
    
       refListStore_ports = Gtk::ListStore::create(port_model_columns);
       
-      refXml->get_widget("treeview_ports", pTreeView_ports);
+      get_widget("treeview_ports", pTreeView_ports);
       if(pTreeView_ports) {
 	pTreeView_ports->set_model(refListStore_ports);
 	pTreeView_ports->append_column("Port ID", port_model_columns.m_col_id);
@@ -87,7 +91,7 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       color_t frame_color = gate_template->get_frame_color();
       color_t fill_color = gate_template->get_fill_color();
 
-      refXml->get_widget("colorbutton_fill_color", colorbutton_fill_color);
+      get_widget("colorbutton_fill_color", colorbutton_fill_color);
       if(colorbutton_fill_color != NULL) {
 	Gdk::Color c;
 	if(fill_color != 0) {
@@ -106,7 +110,7 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 	}
       }
 
-      refXml->get_widget("colorbutton_frame_color", colorbutton_frame_color);
+      get_widget("colorbutton_frame_color", colorbutton_frame_color);
       if(colorbutton_frame_color != NULL) {
 	Gdk::Color c;
 	if(frame_color != 0) {
@@ -145,17 +149,17 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 	original_ports.push_back(tmpl_port);
       }
       
-      refXml->get_widget("entry_short_name", entry_short_name);
+      get_widget("entry_short_name", entry_short_name);
       assert(entry_short_name != NULL);
       if(entry_short_name) 
 	entry_short_name->set_text(gate_template->get_name());
 
-      refXml->get_widget("entry_description", entry_description);
+      get_widget("entry_description", entry_description);
       assert(entry_description != NULL);
       if(entry_description) 
 	entry_description->set_text(gate_template->get_description());
 
-      refXml->get_widget("combobox_logic_class", combobox_logic_class);
+      get_widget("combobox_logic_class", combobox_logic_class);
       assert(combobox_logic_class != NULL);
       if(combobox_logic_class) {
 	refListStore_lclass = Gtk::ListStore::create(lclass_model_columns);
@@ -177,7 +181,7 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
        * page 2
        */
       
-      refXml->get_widget("combobox_lang", combobox_lang);
+      get_widget("combobox_lang", combobox_lang);
       assert(combobox_lang != NULL);
       if(combobox_lang != NULL) {
 	for(GateTemplate::implementation_iter iter = gate_template->implementations_begin();
@@ -187,14 +191,14 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       }
       
 
-      refXml->get_widget("generate_code_button", codegen_button);
+      get_widget("generate_code_button", codegen_button);
       assert(codegen_button != NULL);
       if(codegen_button) {
 	codegen_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_codegen_button_clicked));
 	codegen_button->set_sensitive(false);
       }
 
-      refXml->get_widget("code_textview", code_textview);
+      get_widget("code_textview", code_textview);
       assert(code_textview != NULL);
       if(code_textview) {
 	code_textview->modify_font(Pango::FontDescription("courier"));
@@ -206,6 +210,28 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 
       combobox_lang->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_language_changed));
 
+      /*
+       * page 3
+       */
+      Gtk::HBox * hbox_renderer = get_widget<Gtk::HBox>("hbox_renderer");
+      assert(hbox_renderer != NULL);
+      if(hbox_renderer) {
+
+	hbox_renderer->pack_start(render_window_m1, Gtk::PACK_EXPAND_WIDGET);
+	hbox_renderer->pack_start(render_window_transistor_m1, Gtk::PACK_EXPAND_WIDGET);
+	hbox_renderer->pack_start(render_window_transistor, Gtk::PACK_EXPAND_WIDGET);
+	hbox_renderer->show_all();
+
+	editor_transistor.set_gate_template(gate_template);
+	editor_transistor.add_layer_type(Layer::TRANSISTOR);
+
+	editor_transistor_m1.set_gate_template(gate_template);
+	editor_transistor_m1.add_layer_type(Layer::TRANSISTOR);
+	editor_transistor_m1.add_layer_type(Layer::LOGIC);
+
+	editor_m1.set_gate_template(gate_template);
+	editor_m1.add_layer_type(Layer::LOGIC);
+      }
 
   }
 }
@@ -328,7 +354,7 @@ void GateConfigWin::on_codegen_button_clicked() {
 
 
 bool GateConfigWin::run() {
-  pDialog->run();
+  get_dialog()->run();
   return result;
 }
 
@@ -409,7 +435,7 @@ void GateConfigWin::on_ok_button_clicked() {
   BOOST_FOREACH(code_text_map_type::value_type &p, code_text)
     gate_template->set_implementation(p.first, p.second);
 
-  pDialog->hide();
+  get_dialog()->hide();
   result = true;
 }
 
@@ -425,7 +451,7 @@ void GateConfigWin::on_logic_class_changed() {
 }
 
 void GateConfigWin::on_cancel_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
   result = false;
 }
 

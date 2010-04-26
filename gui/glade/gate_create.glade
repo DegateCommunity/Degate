@@ -342,11 +342,33 @@ Verilog/Testbench</property>
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <widget class="GtkVBox" id="vbox_drawingarea">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <widget class="GtkHBox" id="hbox_renderer">
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">2</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <widget class="GtkLabel" id="label7">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Layout</property>
+              </widget>
               <packing>
+                <property name="position">2</property>
+                <property name="tab_fill">False</property>
                 <property name="type">tab</property>
               </packing>
             </child>

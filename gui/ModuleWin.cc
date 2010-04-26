@@ -43,33 +43,33 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
   this->parent = parent;
   assert(lmodel);
 
-  if(pDialog) {
+  if(get_dialog()) {
 
     // connect signals
-    refXml->get_widget("close_button", close_button);
+    get_widget("close_button", close_button);
     if(close_button)
       close_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_close_button_clicked));
     
     
-    refXml->get_widget("add_button", add_button);
+    get_widget("add_button", add_button);
     if(add_button) {
       add_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_add_button_clicked) );
       add_button->set_sensitive(false);
     }
 
-    refXml->get_widget("remove_button", remove_button);
+    get_widget("remove_button", remove_button);
     if(remove_button) {
       remove_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_remove_button_clicked) );
       remove_button->set_sensitive(false);
     }
 
-    refXml->get_widget("edit_button", edit_button);
+    get_widget("edit_button", edit_button);
     if(edit_button) {
       edit_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_edit_button_clicked) );
       edit_button->set_sensitive(false);
     }
     
-    refXml->get_widget("goto_button", goto_button);
+    get_widget("goto_button", goto_button);
     if(goto_button) {
       goto_button->grab_focus();
       goto_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_goto_button_clicked) );
@@ -77,7 +77,7 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
     }
     
     treemodel_modules = TreeStoreModuleHierarchy::create();
-    refXml->get_widget("treeview_modules", treeview_modules);
+    get_widget("treeview_modules", treeview_modules);
     if(treeview_modules) {
 
       treeview_modules->set_model(treemodel_modules);
@@ -91,7 +91,7 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
     }    
 
     treemodel_gates = Gtk::TreeStore::create(columns_gates);
-    refXml->get_widget("treeview_gates", treeview_gates);
+    get_widget("treeview_gates", treeview_gates);
     if(treeview_gates) {
 
       treeview_gates->set_model(treemodel_gates);
@@ -114,7 +114,7 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
 
 
     treemodel_ports = Gtk::TreeStore::create(columns_ports);
-    refXml->get_widget("treeview_ports", treeview_ports);
+    get_widget("treeview_ports", treeview_ports);
     if(treeview_ports) {
 
       treeview_ports->set_model(treemodel_ports);
@@ -148,7 +148,7 @@ ModuleWin::~ModuleWin() {
 }
 
 void ModuleWin::show() {
-  pDialog->show();
+  get_dialog()->show();
 }
 
 
@@ -276,7 +276,7 @@ void ModuleWin::on_port_selection_changed() {
 
 
 void ModuleWin::on_close_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
   update_logic_model(treemodel_modules->children(), Module_shptr());
 }
 

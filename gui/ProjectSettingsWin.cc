@@ -40,16 +40,16 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
   ok_clicked = false;
   this->project = project;
 
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &ProjectSettingsWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", pButton);
+    get_widget("ok_button", pButton);
     if(pButton) {
       pButton->grab_focus();
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &ProjectSettingsWin::on_ok_button_clicked) );
@@ -57,32 +57,32 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
 
     char str[100];
 
-    refXml->get_widget("entry_project_name", entry_project_name);
+    get_widget("entry_project_name", entry_project_name);
     if(entry_project_name != NULL) {
       entry_project_name->set_text(project->get_name());
     }
 
-    refXml->get_widget("entry_project_description", entry_project_description);
+    get_widget("entry_project_description", entry_project_description);
     if(entry_project_description != NULL) {
       entry_project_description->set_text(project->get_description());
     }
 
-    refXml->get_widget("entry_lambda", entry_lambda);
+    get_widget("entry_lambda", entry_lambda);
     if(entry_lambda) {
       snprintf(str, sizeof(str), "%d", project->get_lambda());
       entry_lambda->set_text(str);
     }
-    refXml->get_widget("entry_via_diameter", entry_via_diameter);
+    get_widget("entry_via_diameter", entry_via_diameter);
     if(entry_via_diameter) {
       snprintf(str, sizeof(str), "%d", project->get_default_pin_diameter());
       entry_via_diameter->set_text(str);
     }
-    refXml->get_widget("entry_wire_diameter", entry_wire_diameter);
+    get_widget("entry_wire_diameter", entry_wire_diameter);
     if(entry_wire_diameter) {
       snprintf(str, sizeof(str), "%d", project->get_default_wire_diameter());
       entry_wire_diameter->set_text(str);
     }
-    refXml->get_widget("entry_server_url", entry_server_url);
+    get_widget("entry_server_url", entry_server_url);
     if(entry_server_url) {
       entry_server_url->set_text(project->get_server_url());
     }
@@ -94,7 +94,7 @@ ProjectSettingsWin::~ProjectSettingsWin() {
 
 
 bool ProjectSettingsWin::run() {
-  pDialog->run();
+  get_dialog()->run();
   if(ok_clicked) {
     long r;
     project->set_name(entry_project_name->get_text().c_str());
@@ -117,11 +117,11 @@ bool ProjectSettingsWin::run() {
 
 void ProjectSettingsWin::on_ok_button_clicked() {
   ok_clicked = true;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void ProjectSettingsWin::on_cancel_button_clicked() {
   ok_clicked = false;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 

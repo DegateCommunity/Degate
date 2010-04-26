@@ -39,27 +39,27 @@ PortColorsWin::PortColorsWin(Gtk::Window *parent,
   this->pcm = pcm;
   this->parent = parent;
   
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton;
 
     // connect signals
-    refXml->get_widget("close_button", pButton);
+    get_widget("close_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &PortColorsWin::on_close_button_clicked));
     
-    refXml->get_widget("add_button", pButton);
+    get_widget("add_button", pButton);
     if(pButton) {
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &PortColorsWin::on_add_button_clicked) );
     }
     
-    refXml->get_widget("remove_button", pRemoveButton);
+    get_widget("remove_button", pRemoveButton);
     if(pRemoveButton) {
       pRemoveButton->signal_clicked().connect(sigc::mem_fun(*this, &PortColorsWin::on_remove_button_clicked) );
       pRemoveButton->set_sensitive(false);
     }
     
-    refXml->get_widget("edit_button", pEditButton);
+    get_widget("edit_button", pEditButton);
     if(pEditButton) {
       pEditButton->signal_clicked().connect(sigc::mem_fun(*this, &PortColorsWin::on_edit_button_clicked) );
       pEditButton->set_sensitive(false);
@@ -68,7 +68,7 @@ PortColorsWin::PortColorsWin(Gtk::Window *parent,
     refListStore = Gtk::ListStore::create(m_Columns);
     
     
-    refXml->get_widget("treeview", pTreeView);
+    get_widget("treeview", pTreeView);
     if(pTreeView) {
       
       Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = pTreeView->get_selection();
@@ -120,7 +120,7 @@ PortColorsWin::~PortColorsWin() {
 }
 
 void PortColorsWin::run() {
-  pDialog->run();
+  get_dialog()->run();
 }
 
 void PortColorsWin::on_close_button_clicked() {
@@ -141,7 +141,7 @@ void PortColorsWin::on_close_button_clicked() {
     pcm->set_color(port_name, col, col);
   }
 
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void PortColorsWin::on_add_button_clicked() {

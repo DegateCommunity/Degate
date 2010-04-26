@@ -45,39 +45,39 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
   this->lmodel = lmodel;
   this->project_dir = project_dir;
 
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
 
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", p_ok_button);
+    get_widget("ok_button", p_ok_button);
     if(p_ok_button)
       p_ok_button->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_ok_button_clicked) );
 
 
     
-    refXml->get_widget("add_button", pButton);
+    get_widget("add_button", pButton);
     if(pButton) 
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_add_button_clicked) );
     
-    refXml->get_widget("remove_button", p_remove_button);
+    get_widget("remove_button", p_remove_button);
     if(p_remove_button) {
       p_remove_button->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_remove_button_clicked) );
       p_remove_button->set_sensitive(false);
     }
 
-    refXml->get_widget("bg_file_button", p_bg_file_button);
+    get_widget("bg_file_button", p_bg_file_button);
     if(p_bg_file_button) {
       p_bg_file_button->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_bg_file_button_clicked) );
       p_bg_file_button->set_sensitive(false);
     }
 
-    refXml->get_widget("clear_bg_button", p_clear_bg_button);
+    get_widget("clear_bg_button", p_clear_bg_button);
     if(p_clear_bg_button) {
       p_clear_bg_button->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_clear_bg_button_clicked) );
       p_clear_bg_button->set_sensitive(false);
@@ -98,7 +98,7 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
    
     refListStore_layers = Gtk::ListStore::create(m_Columns);
       
-    refXml->get_widget("treeview_layers", pTreeView_layers);
+    get_widget("treeview_layers", pTreeView_layers);
     if(pTreeView_layers) {
       pTreeView_layers->set_model(refListStore_layers);
       //pTreeView_layers->append_column("Old #", m_Columns.m_col_old_position);
@@ -181,7 +181,7 @@ void LayerConfigWin::on_cellrenderer_choice_edited(const Glib::ustring& path_str
 
 
 bool LayerConfigWin::run() {
-  pDialog->run();
+  get_dialog()->run();
   debug(TM, "return from run()");
   return result;
 }
@@ -254,7 +254,7 @@ void LayerConfigWin::on_ok_button_clicked() {
   }
   else {
     debug(TM, "closing window");
-    pDialog->hide();
+    get_dialog()->hide();
   }
 
 }
@@ -266,7 +266,7 @@ void LayerConfigWin::_on_background_import_finished() {
     delete ipWin;
     ipWin = NULL;
   }
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void LayerConfigWin::background_import_thread(image_list l) {
@@ -286,7 +286,7 @@ void LayerConfigWin::background_import_thread(image_list l) {
 }
 
 void LayerConfigWin::on_cancel_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
   result = false;
 }
 

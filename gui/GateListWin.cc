@@ -46,30 +46,30 @@ GateListWin::GateListWin(Gtk::Window *parent, LogicModel_shptr lmodel) :
   this->parent = parent;
   assert(lmodel);
   
-  if(pDialog) {
+  if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
-    refXml->get_widget("close_button", pButton);
+    get_widget("close_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateListWin::on_close_button_clicked));
     
-    refXml->get_widget("add_button", pButton);
+    get_widget("add_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateListWin::on_add_button_clicked) );
     
-    refXml->get_widget("remove_button", pButton);
+    get_widget("remove_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateListWin::on_remove_button_clicked) );
     
-    refXml->get_widget("edit_button", pButton);
+    get_widget("edit_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateListWin::on_edit_button_clicked) );
     
     refListStore = Gtk::ListStore::create(m_Columns);
     
-    refXml->get_widget("treeview", pTreeView);
+    get_widget("treeview", pTreeView);
     if(pTreeView) {
       pTreeView->set_model(refListStore);
       //pTreeView->append_column("ID", m_Columns.m_col_id);
@@ -165,11 +165,11 @@ GateListWin::~GateListWin() {
 
 void GateListWin::run() {
   
-  pDialog->run();
+  get_dialog()->run();
 }
 
 void GateListWin::on_close_button_clicked() {
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void GateListWin::on_add_button_clicked() {

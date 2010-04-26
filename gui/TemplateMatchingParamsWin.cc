@@ -45,38 +45,38 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
   this->parent = parent;
   ok_clicked = false;
 
-  if(pDialog != NULL) {
+  if(get_dialog() != NULL) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
     
     // connect signals
-    refXml->get_widget("cancel_button", pButton);
+    get_widget("cancel_button", pButton);
     if(pButton != NULL)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &TemplateMatchingParamsWin::on_cancel_button_clicked));
     
-    refXml->get_widget("ok_button", pButton);
+    get_widget("ok_button", pButton);
     if(pButton != NULL)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &TemplateMatchingParamsWin::on_ok_button_clicked) );
   
 
-    refXml->get_widget("hscale_threshold_hc", hscale_threshold_hc);
+    get_widget("hscale_threshold_hc", hscale_threshold_hc);
     if(hscale_threshold_hc != NULL) {
       hscale_threshold_hc->set_value(threshold_hc);
     }
 
-    refXml->get_widget("hscale_threshold_detection", hscale_threshold_detection);
+    get_widget("hscale_threshold_detection", hscale_threshold_detection);
     if(hscale_threshold_detection != NULL) {
       hscale_threshold_detection->set_value(threshold_detection);
     }
 
-    refXml->get_widget("entry_step_size_search", entry_step_size_search);
+    get_widget("entry_step_size_search", entry_step_size_search);
     if(entry_step_size_search != NULL) {
       char txt[100];
       snprintf(txt, sizeof(txt), "%d", max_step_size_search);
       entry_step_size_search->set_text(strdup(txt));
     }
 
-    refXml->get_widget("combobox_scale_down", combobox_scale_down);
+    get_widget("combobox_scale_down", combobox_scale_down);
     if(combobox_scale_down != NULL) {
 
       m_refTreeModel_scalings = Gtk::ListStore::create(m_Columns_scalings);
@@ -102,7 +102,7 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
     }
 
 
-    refXml->get_widget("combobox_tmpl_orientations", combobox_tmpl_orientations);
+    get_widget("combobox_tmpl_orientations", combobox_tmpl_orientations);
     if(combobox_tmpl_orientations != NULL) {
       m_refTreeModel_orientations = Gtk::ListStore::create(m_Columns_orientations);
       combobox_tmpl_orientations->set_model(m_refTreeModel_orientations);
@@ -175,7 +175,7 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
   *scale_down = 0;
 
   while(*max_step_size_search == 0 || *scale_down == 0) {
-    pDialog->run();
+    get_dialog()->run();
     if(ok_clicked) {
 
       *max_step_size_search = atoi(entry_step_size_search->get_text().c_str());
@@ -202,7 +202,7 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
       }
 
       if(*max_step_size_search > 0 && *scale_down > 0) {
-	pDialog->hide();
+	get_dialog()->hide();
 	return true;
       }
     }
@@ -218,7 +218,7 @@ void TemplateMatchingParamsWin::on_ok_button_clicked() {
 
 void TemplateMatchingParamsWin::on_cancel_button_clicked() {
   ok_clicked = false;
-  pDialog->hide();
+  get_dialog()->hide();
 }
 
 void TemplateMatchingParamsWin::on_combo_changed() {
