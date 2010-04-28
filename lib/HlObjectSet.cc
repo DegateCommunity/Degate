@@ -28,8 +28,8 @@ using namespace degate;
 
 
 void HlObjectSet::clear() {
-  ObjectSet::clear();
   highlight(false);
+  ObjectSet::clear();
 }
 
 void HlObjectSet::highlight(bool state) {

@@ -182,7 +182,7 @@ namespace degate {
 	typename image_map::iterator found = images.find(factor);
 	assert(found != images.end());
 	//debug(TM, "requested scaling is %f. nearest scaling is %d. found image with scaling %f", request_scaling, factor, found->first);
-	return (*found);
+	return *found;
       }
       
       debug(TM, "return normal image");

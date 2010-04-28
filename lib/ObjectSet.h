@@ -69,7 +69,8 @@ namespace degate {
     iterator end() { return objects.end(); }
     
     bool empty() const { return objects.empty(); }
-    
+
+    bool contains(PlacedLogicModelObject_shptr o) const { return objects.find(o) != objects.end(); }
     /**
      * Check if all objects evaluate to true for a check.
      * If there are no objects, false is returned.

@@ -30,6 +30,9 @@
 #include <StoragePolicies.h>
 #include <Image.h>
 
+#include <set>
+#include <boost/foreach.hpp>
+
 namespace degate {
 
 
@@ -120,6 +123,56 @@ namespace degate {
     save_image<ImageType>(path, normalized_img);
   }
 
+
+  /**
+   * Merge images.
+   */
+  template<typename ImageType>
+  std::tr1::shared_ptr<ImageType> merge_images(std::list<std::tr1::shared_ptr<ImageType> > const & images) {
+
+    std::tr1::shared_ptr<ImageType> new_img;
+    if(images.empty()) return new_img;
+
+    const std::tr1::shared_ptr<ImageType> img = images.front();
+
+    unsigned int w = img->get_width(), h = img->get_height();
+    std::vector<double> i_tmp(4 * w * h);
+    
+    BOOST_FOREACH(const std::tr1::shared_ptr<ImageType> i, images) {
+    
+      // verify that all images have the same dimensions
+      if(w != i->get_width() || h != i->get_height()) return new_img;
+
+      for(unsigned int y = 0; y < h; y++)
+      for(unsigned int x = 0; x < w; x++) {
+	color_t pix = i->get_pixel_as<color_t>(x, y);
+	unsigned int offs = 4 * (y * w + x);
+	i_tmp[offs] += MASK_R(pix);
+	i_tmp[offs+1] += MASK_G(pix);
+	i_tmp[offs+2] += MASK_B(pix);
+	i_tmp[offs+3] += MASK_A(pix);
+      }
+    }
+  
+    const double elems = images.size();
+
+    new_img = std::tr1::shared_ptr<ImageType>(new GateTemplateImage(img->get_width(), img->get_height()));
+    assert(new_img != NULL);
+  
+    for(unsigned int y = 0; y < h; y++)
+      for(unsigned int x = 0; x < w; x++) {
+	unsigned int offs = 4 * (y * w + x);
+	color_t pix = MERGE_CHANNELS(lround(i_tmp[offs] / elems),
+				     lround(i_tmp[offs+1] / elems),
+				     lround(i_tmp[offs+2] / elems),
+				     lround(i_tmp[offs+3] / elems));
+	new_img->set_pixel(x, y, pix);
+      }
+
+    return new_img;
+  }
+  
+  
 }
 
 #endif

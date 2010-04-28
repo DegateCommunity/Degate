@@ -920,7 +920,6 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 
 	lmodel->remove_gates_by_template_type(gate_template);
 
-	
 	Gtk::MessageDialog dialog2(*this, "Do you want to remove the gate definition, too?",
 				  true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
 	dialog2.set_title("Warning");
@@ -938,35 +937,14 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 }
 
 void MainWin::on_menu_gate_set_as_master() {
-  if(main_project) {
-  
-    if(Gate_shptr gate = selected_objects.get_single_object<Gate>()) {
-    
-      GateTemplate_shptr tmpl = gate->get_gate_template();
+  if(main_project == NULL) return;
 
-      if(tmpl == NULL) {
-	error_dialog("Error", "The gate should be the master template, but you have not defined of which type. "
-		     "Please set a gate type for the gate.");
-	return;
-      }
-
-      Gate::ORIENTATION orig_orient = gate->get_orientation();
-      if(orig_orient == Gate::ORIENTATION_UNDEFINED) {
-	error_dialog("Error", "The gate orientation is undefined. Please define it.");
-	return;
-      }
-
-      // aquire an image an flip it so that the image has normal orientation
-      LogicModel_shptr lmodel = main_project->get_logic_model();
-      
-      grab_template_images(lmodel, 
-			   tmpl, gate->get_bounding_box(),
-			   gate->get_orientation());
-
-      editor.update_screen();
-      project_changed();
-    }
+  if(!selected_objects.check_for_all(&is_of_object_type<Gate>)) {
+    error_dialog("Error", "Can't continue, because the selection contains non gate objects.");
+    return;
   }
+
+  merge_gate_images(main_project->get_logic_model(), selected_objects);
 }
 
 /**
@@ -1246,7 +1224,6 @@ void MainWin::update_gui_on_selection_change() {
 
     if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it)) {
       menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateOrientation", true);
-      menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSetAsMaster", true);
       menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", true);
     }
     else {
@@ -1258,7 +1235,6 @@ void MainWin::update_gui_on_selection_change() {
   }
   else {
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateOrientation", false);
-    menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSetAsMaster", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", selection_active);
 
     if(ciWin != NULL) ciWin->disable_inspection();
@@ -1277,7 +1253,8 @@ void MainWin::update_gui_on_selection_change() {
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicMoveGateIntoModule", 
 					  selected_objects.check_for_all(&is_of_object_type<Gate>));
-
+  menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSetAsMaster",
+					  selected_objects.check_for_all(&is_of_object_type<Gate>));
 }
 
 void MainWin::selection_tool_double_clicked(unsigned int real_x, unsigned int real_y,
@@ -1330,7 +1307,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
 
   // try to remove a single object
-  if(plo != NULL && control_key_pressed == true) {
+  if(plo != NULL && control_key_pressed == true && selected_objects.contains(plo)) {
 
     selected_objects.remove(plo);
     highlighted_objects.remove(plo);

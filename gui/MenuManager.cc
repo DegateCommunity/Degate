@@ -375,8 +375,8 @@ void MenuManager::create_and_bind_gate_menu() {
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_orientation));
 
   m_refActionGroup->add(Gtk::Action::create("GateSetAsMaster",
-					    "Set gate as master", 
-					    "Set gate as master"),
+					    "Use images of selected gates", 
+					    "Use images of selected gates"),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_set_as_master));
 
   m_refActionGroup->add(Gtk::Action::create("GateRemoveGateByType",

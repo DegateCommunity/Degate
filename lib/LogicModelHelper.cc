@@ -23,6 +23,7 @@
 #include <LogicModelHelper.h>
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 
 using namespace degate;
 
@@ -103,13 +104,10 @@ void degate::apply_colors_to_gate_ports(LogicModel_shptr lmodel,
 }
 
 
-void degate::grab_template_images(LogicModel_shptr lmodel,
-				  GateTemplate_shptr gate_template,
-				  BoundingBox const& bounding_box,
-				  Gate::ORIENTATION orientation) {
+
+std::list<Layer_shptr> degate::get_available_standard_layers(LogicModel_shptr lmodel) {
 
   std::list<Layer_shptr> layers;
-
   Layer_shptr l;
 
   try {
@@ -135,6 +133,17 @@ void degate::grab_template_images(LogicModel_shptr lmodel,
   catch(CollectionLookupException const& ex) {
     debug(TM, "Got an exception. A layer is not available. I will ignore it: %s", ex.what());
   }
+
+  return layers;
+}
+
+
+void degate::grab_template_images(LogicModel_shptr lmodel,
+				  GateTemplate_shptr gate_template,
+				  BoundingBox const& bounding_box,
+				  Gate::ORIENTATION orientation) {
+
+  std::list<Layer_shptr> layers = get_available_standard_layers(lmodel);
 
   for(std::list<Layer_shptr>::iterator iter = layers.begin();
       iter != layers.end(); ++iter) {
@@ -357,4 +366,82 @@ void degate::apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager
 
   }
 
+}
+
+
+void degate::merge_gate_images(LogicModel_shptr lmodel,
+			       Layer_shptr layer,
+			       GateTemplate_shptr tmpl, 
+			       std::list<Gate_shptr> const& gates) {
+
+  if(gates.empty()) return;
+  
+  std::list<GateTemplateImage_shptr> images;
+  
+  BOOST_FOREACH(const Gate_shptr g, gates) {
+    
+    GateTemplateImage_shptr tmpl_img = 
+      grab_image<GateTemplateImage>(lmodel, layer, g->get_bounding_box());
+    assert(tmpl_img != NULL);
+    
+    // flip
+    switch(g->get_orientation()) {
+    case Gate::ORIENTATION_FLIPPED_UP_DOWN:
+      flip_up_down<GateTemplateImage>(tmpl_img);
+      break;
+    case Gate::ORIENTATION_FLIPPED_LEFT_RIGHT:
+      flip_left_right<GateTemplateImage>(tmpl_img);
+      break;
+    case Gate::ORIENTATION_FLIPPED_BOTH:
+      flip_up_down<GateTemplateImage>(tmpl_img);
+      flip_left_right<GateTemplateImage>(tmpl_img);
+      break;
+    default:
+      // do nothing
+      break;
+    }
+    
+    images.push_back(tmpl_img);
+  }
+  
+  GateTemplateImage_shptr merged_img = merge_images<GateTemplateImage>(images);
+  
+  tmpl->set_image(layer->get_layer_type(), merged_img);
+}
+
+void degate::merge_gate_images(LogicModel_shptr lmodel,
+			       ObjectSet gates) {
+
+  /*
+   * Classify gates by their standard cell object ID.
+   */
+  typedef std::map<object_id_t, std::list<Gate_shptr> > gate_sets_type;
+  gate_sets_type gate_sets;
+  
+  BOOST_FOREACH(PlacedLogicModelObject_shptr plo, gates) {
+    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(plo)) {
+      GateTemplate_shptr tmpl = gate->get_gate_template();
+      if(tmpl) // ignore gates, that have no standard cell
+	gate_sets[tmpl->get_object_id()].push_back(gate);
+    }
+  }
+  
+  /*
+   * Iterate over layers.
+   */
+  
+  BOOST_FOREACH(Layer_shptr layer, get_available_standard_layers(lmodel)) {
+    
+    /*
+     * Iterate over standard cell classes.
+     */
+    for(gate_sets_type::iterator iter = gate_sets.begin(); iter != gate_sets.end(); ++iter) {
+      
+      Gate_shptr g = iter->second.front();
+      assert(g != NULL);
+      
+      merge_gate_images(lmodel, layer, g->get_gate_template(), iter->second);
+    }
+  }
+  
 }

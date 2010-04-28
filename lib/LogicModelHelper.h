@@ -26,6 +26,7 @@
 #include <ImageHelper.h>
 #include <ConnectedLogicModelObject.h>
 #include <Project.h>
+#include <ObjectSet.h>
 
 namespace degate {
 
@@ -78,6 +79,11 @@ namespace degate {
 
 
   /**
+   * Get layer pointers for the first transistor layer and M1 and M2, if they are available.
+   */
+  std::list<Layer_shptr> get_available_standard_layers(LogicModel_shptr lmodel);
+
+  /**
    * Extract a partial image from the background image for a layer.
    * @exception DegateLogicException Is thrown if the layer has no
    *   background image set.
@@ -101,6 +107,19 @@ namespace degate {
 
     return new_img;
   }
+
+  /**
+   * Merge images.
+   */
+  void merge_gate_images(LogicModel_shptr lmodel,
+			 Layer_shptr layer,
+			 GateTemplate_shptr tmpl, std::list<Gate_shptr> const& gates);
+
+  /**
+   * Merge images.
+   */
+  void merge_gate_images(LogicModel_shptr lmodel,
+			 ObjectSet gates);
 
   /**
    * Extract a partial image from the background images for several layers
