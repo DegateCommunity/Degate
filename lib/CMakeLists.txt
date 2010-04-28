@@ -97,6 +97,8 @@ set(SOURCES
 	VHDLCodeTemplateGenerator.cc
 	VHDLTBCodeTemplateGenerator.cc
 	XmlRpc.cc
+	ObjectSet.cc
+	HlObjectSet.cc
 
 	#
 	# importer / exporter

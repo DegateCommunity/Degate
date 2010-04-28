@@ -59,7 +59,6 @@ set(DEGATE_SRC
 	       ProjectSettingsWin.cc
 	       GladeFileLoader.cc
 	       GridConfigWin.cc
-	       HlObjectSet.cc
 	       GenericTextInputWin.cc
 
 	       GateConfigWin.cc

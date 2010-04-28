@@ -875,10 +875,11 @@ void MainWin::on_menu_gate_list() {
 }
 
 
+
 void MainWin::on_menu_gate_orientation() {
-  if(main_project && (selected_objects.size() == 1)) {
-    std::set<PlacedLogicModelObject_shptr>::const_iterator it = selected_objects.begin();
-    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it)) {
+  if(main_project) {
+   
+    if(Gate_shptr gate = selected_objects.get_single_object<Gate>()) {
       
       SetOrientationWin oWin(this, gate->get_orientation());
       Gate::ORIENTATION new_ori = oWin.run();
@@ -892,7 +893,6 @@ void MainWin::on_menu_gate_orientation() {
 	project_changed();
       }
     }
-    
   }
 }
 
@@ -938,9 +938,9 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 }
 
 void MainWin::on_menu_gate_set_as_master() {
-  if(main_project && (selected_objects.size() == 1)) {
-    std::set<PlacedLogicModelObject_shptr>::const_iterator it = selected_objects.begin();
-    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it)) {
+  if(main_project) {
+  
+    if(Gate_shptr gate = selected_objects.get_single_object<Gate>()) {
     
       GateTemplate_shptr tmpl = gate->get_gate_template();
 
@@ -1021,23 +1021,19 @@ void MainWin::on_menu_gate_set() {
     project_changed();
 
   }
-  else if(selected_objects.size() == 1) {
+  else if(Gate_shptr gate = selected_objects.get_single_object<Gate>()) {
     
-    std::set<PlacedLogicModelObject_shptr>::const_iterator it = selected_objects.begin();
-    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it)) {
+    GateSelectWin gsWin(this, main_project->get_logic_model());
+    std::list<GateTemplate_shptr> tmpl_list = gsWin.get_selection(false);
     
-      GateSelectWin gsWin(this, main_project->get_logic_model());
-      std::list<GateTemplate_shptr> tmpl_list = gsWin.get_selection(false);
-
-      if(tmpl_list.size() == 0) return;
-      GateTemplate_shptr tmpl = *(tmpl_list.begin());
-      
-      gate->set_gate_template(tmpl);
-
-      editor.update_screen();
-      project_changed();
-
-    }
+    if(tmpl_list.size() == 0) return;
+    GateTemplate_shptr tmpl = *(tmpl_list.begin());
+    
+    gate->set_gate_template(tmpl);
+    
+    editor.update_screen();
+    project_changed();
+    
   }
 }
 
@@ -1136,7 +1132,7 @@ void MainWin::on_area_selection_activated(BoundingBox const& bbox) {
       PlacedLogicModelObject_shptr plo = *iter;
       assert(plo != NULL);
 
-      selected_objects.insert(plo);
+      selected_objects.add(plo);
       highlighted_objects.add(plo);
     }
     
@@ -1239,7 +1235,6 @@ void MainWin::clear_selection() {
 }
 
 void MainWin::update_gui_on_selection_change() {
-  std::set<PlacedLogicModelObject_shptr>::const_iterator it;
 
   std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
     std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
@@ -1247,7 +1242,7 @@ void MainWin::update_gui_on_selection_change() {
   bool selection_active = selection_tool != NULL && selection_tool->has_selection();
 
   if(selected_objects.size() == 1) {
-    it = selected_objects.begin();
+    ObjectSet::const_iterator it = selected_objects.begin();
 
     if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it)) {
       menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateOrientation", true);
@@ -1270,18 +1265,18 @@ void MainWin::update_gui_on_selection_change() {
   }
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection", 
-					  selected_objects_are_removable());
+					  selected_objects.check_for_all(&is_removable));
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicInterconnect", 
 					  selected_objects.size() >= 2 && 
-					  selected_objects_are_interconnectable());
+					  selected_objects.check_for_all(&is_interconnectable));
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicIsolate", 
 					  selected_objects.size() >= 1 && 
-					  selected_objects_are_interconnectable());
+					  selected_objects.check_for_all(&is_interconnectable));
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicMoveGateIntoModule", 
-					  selected_objects_are_gates());
+					  selected_objects.check_for_all(&is_of_object_type<Gate>));
 
 }
 
@@ -1336,14 +1331,10 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
 
   // try to remove a single object
   if(plo != NULL && control_key_pressed == true) {
-    //debug(TM, "remove single object from selection");      
-    it = selected_objects.find(plo);
-    if(it != selected_objects.end()) {
 
-      selected_objects.erase(*it);
-      highlighted_objects.remove(plo);
-      add_to_selection = false;
-    }
+    selected_objects.remove(plo);
+    highlighted_objects.remove(plo);
+    add_to_selection = false;
   }
 
   if(control_key_pressed == false){
@@ -1355,7 +1346,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
   if(add_to_selection) {
     // add to selection
     if(plo != NULL) {
-      selected_objects.insert(plo);
+      selected_objects.add(plo);
       highlighted_objects.add(plo);
     }
   }
@@ -1364,43 +1355,6 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
   update_gui_on_selection_change();
 }
 
-// XXX put into a selection class
-bool MainWin::selected_objects_are_interconnectable() {
-  std::set<PlacedLogicModelObject_shptr>::const_iterator it;
-
-  for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
-    if(std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*it) == NULL) {
-      return false;
-    }
-  }
-  return true;
-}
-
-// XXX put into a selection class
-bool MainWin::selected_objects_are_removable() {
-  std::set<PlacedLogicModelObject_shptr>::const_iterator it;
-
-  if(selected_objects.size() == 0) return false;
-  for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
-    if(std::tr1::dynamic_pointer_cast<GatePort>(*it) != NULL) {
-      return false;
-    }
-  }
-  return true;
-}
-
-// XXX put into a selection class
-bool MainWin::selected_objects_are_gates() {
-  std::set<PlacedLogicModelObject_shptr>::const_iterator it;
-
-  if(selected_objects.size() == 0) return false;
-  for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
-    if(std::tr1::dynamic_pointer_cast<Gate>(*it) == NULL) {
-      return false;
-    }
-  }
-  return true;
-}
 
 
 void MainWin::on_popup_menu_set_port() {
@@ -1476,23 +1430,21 @@ void MainWin::on_popup_menu_set_port() {
 void MainWin::on_popup_menu_set_name() {
   if(main_project) {
 
-    std::set<PlacedLogicModelObject_shptr>::const_iterator it;
     Glib::ustring name;
 
-    if(selected_objects.size() == 0) {
+    if(selected_objects.empty()) {
       error_dialog("Error", "Please select one or more objects.");
       return;
     }
-    else if(selected_objects.size() == 1) {
-      it = selected_objects.begin();
-      name = (*it)->get_name();
+    else if(PlacedLogicModelObject_shptr plo = selected_objects.get_single_object<PlacedLogicModelObject>()) {
+      name = plo->get_name();
     }
 
     GenericTextInputWin input(this, "Set name", "Please set a name", name);
     Glib::ustring str;
     if(input.run(name) == true) {
     
-      for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
+      for(ObjectSet::const_iterator it = selected_objects.begin(); it != selected_objects.end(); it++) {
 	(*it)->set_name(name);
       }
       project_changed();
@@ -1598,14 +1550,12 @@ void MainWin::on_menu_logic_interconnect() {
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
   if(selected_objects.size() >= 2) {
 
-    if(!selected_objects_are_interconnectable()) {
+    if(!selected_objects.check_for_all(&is_interconnectable)) {
       error_dialog("Error", "One of the objects you selected can not have connections at all.");
       return;
     }
 
-    connect_objects<std::set<PlacedLogicModelObject_shptr>::iterator>(main_project->get_logic_model(),
-      selected_objects.begin(),
-      selected_objects.end());
+    connect_objects(main_project->get_logic_model(), selected_objects.begin(), selected_objects.end());
 
     project_changed();
     editor.update_screen();
@@ -1616,7 +1566,7 @@ void MainWin::on_menu_logic_isolate() {
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
   if(selected_objects.size() >= 1) {
 
-    if(!selected_objects_are_interconnectable()) {
+    if(!selected_objects.check_for_all(&is_interconnectable)) {
       error_dialog("Error", "One of the objects you selected can not have connections at all.");
       return;
     }
@@ -1669,7 +1619,7 @@ void MainWin::on_menu_logic_show_modules() {
 }
 
 void MainWin::on_menu_move_gate_into_module() {
-  if(main_project == NULL && !selected_objects_are_gates()) return;
+  if(main_project == NULL && !selected_objects.check_for_all(is_of_object_type<Gate>)) return;
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
 
@@ -1677,7 +1627,7 @@ void MainWin::on_menu_move_gate_into_module() {
   Module_shptr mod = smWin.show();
   if(mod != NULL) {
 
-    for(std::set<PlacedLogicModelObject_shptr>::const_iterator it = selected_objects.begin(); 
+    for(ObjectSet::const_iterator it = selected_objects.begin(); 
 	it != selected_objects.end(); it++) {
 
       Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it);

@@ -22,10 +22,10 @@
 #ifndef __PLACEDLOGICMODELOBJECT_H__
 #define __PLACEDLOGICMODELOBJECT_H__
 
-#include "globals.h"
-#include "LogicModelObjectBase.h"
-#include "Layer.h"
-#include "Shape.h"
+#include <globals.h>
+#include <LogicModelObjectBase.h>
+#include <Layer.h>
+#include <Shape.h>
 
 namespace degate {
 
@@ -98,7 +98,6 @@ namespace degate {
      */
 
     virtual void print(std::ostream & os = std::cout, int n_tabs = 0) const = 0;
-
 
   };
 

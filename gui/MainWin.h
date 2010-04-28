@@ -32,7 +32,8 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "ConnectionInspectorWin.h"
 #include "ModuleWin.h"
 #include "AnnotationListWin.h"
-#include "HlObjectSet.h"
+#include <HlObjectSet.h>
+#include <ObjectSet.h>
 #include "MenuManager.h"
 #include "LayerConfigWin.h"
 
@@ -71,10 +72,6 @@ class MainWin : public Gtk::Window  {
   void center_view(unsigned int center_x, unsigned int center_y, unsigned int layer);
   void set_layer(degate::Layer_shptr layer);
   void set_layer(unsigned int layer);
-
-  bool selected_objects_are_interconnectable();
-  bool selected_objects_are_removable();
-  bool selected_objects_are_gates();
 
 
   //Signal handlers:
@@ -198,8 +195,8 @@ class MainWin : public Gtk::Window  {
 
   Glib::Thread * thread;
 
-  std::set<degate::PlacedLogicModelObject_shptr> selected_objects;
-  HlObjectSet highlighted_objects;
+  degate::ObjectSet selected_objects;
+  degate::HlObjectSet highlighted_objects;
 
   unsigned int last_click_on_real_x, last_click_on_real_y;
 
