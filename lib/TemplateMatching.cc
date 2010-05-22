@@ -262,8 +262,7 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
   prep.tmpl_img_scaled = TempImage_GS_BYTE_shptr(new TempImage_GS_BYTE(scaled_tmpl_width, 
 								       scaled_tmpl_height));
   
-  scale_bicubical<TempImage_GS_BYTE, GateTemplateImage>(prep.tmpl_img_scaled, tmpl_img);
-
+  scale_down_by_2<TempImage_GS_BYTE, GateTemplateImage>(prep.tmpl_img_scaled, tmpl_img);
 
   // create zero-mean templates
   prep.zero_mean_template_normal = TempImage_GS_DOUBLE_shptr(new TempImage_GS_DOUBLE(w, h));

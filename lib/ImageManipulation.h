@@ -28,19 +28,9 @@
 #include <Statistics.h>
 
 #include <boost/format.hpp>
+#include <ImageScalingOpenCL.h>
 
 namespace degate {
-
-#define P3(s) (s < 0 ? 0 : pow(s, 3))
-#define CUBICAL_WEIGHTING(s) (1.0/6.0 * ( P3(s+2.) - 4.*P3(s+1.) + 6.*P3(s) - 4.*P3(s-1.)))
-
-  inline static uint8_t ROUND_AND_CHECK_LIMITS(double val) {
-    int v = rint(val);
-    if(v > 255) return 255;
-    else if(v < 0) return 0;
-    else return v;
-  }
-
 
   /**
    * Flip image in place from left to right.
@@ -311,58 +301,37 @@ namespace degate {
 
 
   /**
-   * Scale a source image, so that it fits into the destination image.
+   * Scale a source image down by factor 2.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void scale_bicubical(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void scale_down_by_2(std::tr1::shared_ptr<ImageTypeDst> dst, 
 		       std::tr1::shared_ptr<ImageTypeSrc> src) {
     
-    unsigned int dst_x, dst_y;
-    double scaling_x = src->get_width() / dst->get_width();
-    double scaling_y = src->get_height() / dst->get_height();
 
-
+    unsigned int dst_x, dst_y, src_x, src_y;
+    
     for(dst_y = 0; dst_y < dst->get_height(); dst_y++) {
-      double src_y = (double)dst_y * scaling_y;
-      int src_j = lrint(src_y);
-      double src_dy = src_y - src_j;
       
+      src_y = dst_y * 2;
+
       for(dst_x = 0; dst_x < dst->get_width(); dst_x++) {
-	double src_x = (double)dst_x * scaling_x;
-	int src_i = lrint(src_x);
-	double src_dx = src_x - src_i;
 
-	int m, n;
-	double F_dsti_dstj_R = 0;
-	double F_dsti_dstj_G = 0;
-	double F_dsti_dstj_B = 0;
-	double weight;
-	rgba_pixel_t pix;
-
-	for(m = -1; m <= 2; m++)
-	  for(n = -1; n <= 2; n++) {
-
-	    pix = 0;
-	    if(src_x > 1 && src_y > 1 &&
-	       src_x < src->get_width() - 2 && src_y < src->get_height() - 2) 
-	      pix = src->get_pixel_as<rgba_pixel_t>(src_x + m, src_y + n);
-	    
-	    weight = 
-	      CUBICAL_WEIGHTING((double)m - src_dx) * 
-	      CUBICAL_WEIGHTING(src_dy - (double)n);
-
-	    F_dsti_dstj_R += (double)MASK_R(pix) * weight;
-	    F_dsti_dstj_G += (double)MASK_G(pix) * weight;
-	    F_dsti_dstj_B += (double)MASK_B(pix) * weight;
-	  }
+	src_x = dst_x * 2;
 	
-	pix = MERGE_CHANNELS(ROUND_AND_CHECK_LIMITS(F_dsti_dstj_R),
-			     ROUND_AND_CHECK_LIMITS(F_dsti_dstj_G),
-			     ROUND_AND_CHECK_LIMITS(F_dsti_dstj_B),
-			     MASK_A(pix));
+	// 1 2
+	// 3 4
+	rgba_pixel_t pix1 = src->get_pixel_as<rgba_pixel_t>(src_x, src_y);
+	rgba_pixel_t pix2 = src->get_pixel_as<rgba_pixel_t>(src_x + 1, src_y);
+	rgba_pixel_t pix3 = src->get_pixel_as<rgba_pixel_t>(src_x, src_y + 1);
+	rgba_pixel_t pix4 = src->get_pixel_as<rgba_pixel_t>(src_x + 1, src_y + 1);
 
-	//set_pixel_as<rgba_pixel_t, ImageTypeSrc>(dst, dst_x, dst_y, pix);
-	dst->set_pixel_as<rgba_pixel_t>(dst_x, dst_y, pix);
+	unsigned int r = (MASK_R(pix1) + MASK_R(pix2) + MASK_R(pix3) + MASK_R(pix4)) >> 2;
+	unsigned int g = (MASK_G(pix1) + MASK_G(pix2) + MASK_G(pix3) + MASK_G(pix4)) >> 2;
+	unsigned int b = (MASK_B(pix1) + MASK_B(pix2) + MASK_B(pix3) + MASK_B(pix4)) >> 2;
+	unsigned int a = (MASK_A(pix1) + MASK_A(pix2) + MASK_A(pix3) + MASK_A(pix4)) >> 2;
+
+	dst->set_pixel_as<rgba_pixel_t>(dst_x, dst_y, MERGE_CHANNELS(r, g, b, a));
+
       }
     }
   }

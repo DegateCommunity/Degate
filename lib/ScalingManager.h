@@ -34,9 +34,9 @@ namespace degate {
    * The ScalingManager creates prescaled images for a master image.
    * You can use the ScalingManager only for images of type TileImage.
    * If you want to scale images for yourself, please check out method
-   * scale_bicubical().
+   * scale_down().
    *
-   * @see ImageManipulation::scale_bicubical()
+   * @see ImageManipulation::scale_down()
    */
   template<class ImageType>
   class ScalingManager {
@@ -155,7 +155,7 @@ namespace degate {
 	  std::tr1::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
 								images[1]->is_persistent()));
 
-	  scale_bicubical<ImageType, ImageType>(new_img, last_img);
+	  scale_down_by_2<ImageType, ImageType>(new_img, last_img);
 	  last_img = new_img;
 	}
 	else {
