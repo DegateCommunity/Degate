@@ -302,6 +302,7 @@ namespace degate {
 
   /**
    * Scale a source image down by factor 2.
+   * You can scale images in place.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
   void scale_down_by_2(std::tr1::shared_ptr<ImageTypeDst> dst, 
@@ -336,6 +337,35 @@ namespace degate {
     }
   }
 
+
+  /**
+   * Scale a source image down by factor 2.
+   */
+  template<typename ImageTypeDst, typename ImageTypeSrc>
+  void scale_down_by_power_of_2(std::tr1::shared_ptr<ImageTypeDst> dst, 
+				std::tr1::shared_ptr<ImageTypeSrc> src) throw(DegateRuntimeException) {
+
+    if(dst->get_width() == 0) throw DegateRuntimeException("Invalid image dimension for destination image.");
+  
+    unsigned int scaling = lrint((double)src->get_width() / (double)dst->get_width());
+    std::cout << "Scaling " << scaling << std::endl;
+
+    if(scaling == 1)
+      copy_image<ImageTypeDst, ImageTypeSrc>(dst, src);
+    else if(scaling == 2)
+      scale_down_by_2<ImageTypeDst, ImageTypeSrc>(dst, src);
+    else {
+      std::tr1::shared_ptr<ImageTypeDst> tmp(new ImageTypeDst(src->get_width(), src->get_height()));
+      copy_image<ImageTypeDst, ImageTypeSrc>(tmp, src);
+
+      scaling >>= 1;
+      for(int i = 0; i < scaling - 1; i*=2) {
+	scale_down_by_2<ImageTypeDst, ImageTypeDst>(tmp, tmp);
+      }
+      scale_down_by_2<ImageTypeDst, ImageTypeDst>(dst, tmp);
+    }
+
+  }
 
   /**
    * Clear an image.
