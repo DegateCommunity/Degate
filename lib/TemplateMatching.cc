@@ -141,6 +141,7 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
     extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_scaled, 
 							      img_scaled, 
 							      scaled_bounding_box);
+
 }
 
 void TemplateMatching::prepare_sum_tables(TileImage_GS_BYTE_shptr gs_img_normal,
@@ -182,10 +183,11 @@ void TemplateMatching::run() {
       iter != tmpl_set.end(); ++iter) {
 
     GateTemplate_shptr tmpl = *iter;
-    debug(TM, "check template: %s", tmpl->get_name().c_str());
 
     for(std::list<Gate::ORIENTATION>::const_iterator iter = tmpl_orientations.begin();
 	iter != tmpl_orientations.end(); ++iter) {
+
+      debug(TM, "check template %s for orientation %d", tmpl->get_name().c_str(), *iter);
 
       prepared_template prep_tmpl_img = prepare_template(tmpl, *iter);
       match_single_template(prep_tmpl_img);
@@ -199,6 +201,8 @@ double TemplateMatching::subtract_mean(TempImage_GS_BYTE_shptr img,
 				       TempImage_GS_DOUBLE_shptr zero_mean_img) const {
   
   double mean = average<TempImage_GS_BYTE>(img);
+  std::cout << "mean is: " << mean << std::endl;
+
   double sum_over_zero_mean_img = 0;
   unsigned int x, y;
 
@@ -208,6 +212,7 @@ double TemplateMatching::subtract_mean(TempImage_GS_BYTE_shptr img,
       zero_mean_img->set_pixel(x, y, tmp);
       sum_over_zero_mean_img += tmp * tmp;
     }
+
 
   return sum_over_zero_mean_img;
 }
@@ -262,12 +267,14 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
   prep.tmpl_img_scaled = TempImage_GS_BYTE_shptr(new TempImage_GS_BYTE(scaled_tmpl_width, 
 								       scaled_tmpl_height));
   
-  scale_down_by_2<TempImage_GS_BYTE, GateTemplateImage>(prep.tmpl_img_scaled, tmpl_img);
+  scale_down_by_power_of_2<TempImage_GS_BYTE, GateTemplateImage>(prep.tmpl_img_scaled, tmpl_img);
+
 
   // create zero-mean templates
   prep.zero_mean_template_normal = TempImage_GS_DOUBLE_shptr(new TempImage_GS_DOUBLE(w, h));
   prep.zero_mean_template_scaled = TempImage_GS_DOUBLE_shptr(new TempImage_GS_DOUBLE(scaled_tmpl_width, 
-										   scaled_tmpl_height));
+										     scaled_tmpl_height));
+
 
   // subtract mean
   
@@ -275,6 +282,7 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
 							  prep.zero_mean_template_normal);
   prep.sum_over_zero_mean_template_scaled = subtract_mean(prep.tmpl_img_scaled, 
 							  prep.zero_mean_template_scaled);
+
 
   assert(prep.sum_over_zero_mean_template_normal > 0);
   assert(prep.sum_over_zero_mean_template_scaled > 0);
@@ -312,12 +320,14 @@ void TemplateMatching::add_gate(unsigned int x, unsigned int y,
 
 void TemplateMatching::match_single_template(struct prepared_template & tmpl) {
 
-  debug(TM, "match_single_template()");
+  debug(TM, "match_single_template(): start iterating over background image");
   search_state state;
   state.x = 0;
   state.y = 0;
   state.step_size_search = get_max_step_size();
   state.search_area = bounding_box;
+
+  double max_corr_for_search = -1;
 
   do { // works on unscaled, but cropped image
 
@@ -328,6 +338,9 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl) {
 					tmpl.sum_over_zero_mean_template_scaled, 
 					lrint((double)state.x / get_scaling_factor()),
 					lrint((double)state.y / get_scaling_factor()));
+
+    if(corr_val > max_corr_for_search) max_corr_for_search = corr_val;
+
 
     adjust_step_size(state, corr_val);  
     
@@ -350,6 +363,8 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl) {
     }
 
   } while(get_next_pos(&state, tmpl));
+
+  std::cout << "The maximum correlation value for the current template and orientation is " << max_corr_for_search << std::endl;
 
 }
 
@@ -444,7 +459,7 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
   unsigned int 
     x_plus_w = local_x + zero_mean_template->get_width() -1,
     y_plus_h = local_y + zero_mean_template->get_height() -1,
-    lxm1 = local_x - 1,
+    lxm1 = local_x - 1, // can wrap, it's checked later
     lym1 = local_y - 1;
   
   // calculate denominator
@@ -482,10 +497,13 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
   }
   
   double q = nummerator/denominator;
+
+  //debug(TM, "x=%d,y=%d a=%f, nummerator=%f, denominator=%f, q=%f", local_x, local_y, a, nummerator, denominator, q);
+
   if(!(q >= -1.000001 && q <= 1.000001)) {
     debug(TM, "nummerator = %f / denominator = %f", nummerator, denominator);
   }
-  assert(q >= -1 && q <= 1);
+  assert(q >= -1.1 && q <= 1.1);
   return q;
 }
 
