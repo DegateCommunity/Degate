@@ -1746,7 +1746,8 @@ void MainWin::remove_objects() {
     LogicModel_shptr lmodel = main_project->get_logic_model();
 
     for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
-      lmodel->remove_object(*it);
+      if(std::tr1::dynamic_pointer_cast<GatePort>(*it) == NULL) // gate ports can't be removed directly
+	lmodel->remove_object(*it);
     }
       
     selected_objects.clear();
