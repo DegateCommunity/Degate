@@ -1754,6 +1754,7 @@ void MainWin::remove_objects() {
     highlighted_objects.clear();
 
     menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection", false);
+    project_changed();
     editor.update_screen(); 
     ciWin->objects_removed();
   }
