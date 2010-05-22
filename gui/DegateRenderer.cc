@@ -216,8 +216,8 @@ void DegateRenderer::update_screen() {
 
 void DegateRenderer::update_viewport_dimension() {
 
-  clock_t start, finish;
-  start = clock();
+  //clock_t start, finish;
+  //start = clock();
 
   if(realized) {
     Glib::RefPtr<Gdk::GL::Window> glwindow = get_gl_window();
@@ -244,8 +244,8 @@ void DegateRenderer::update_viewport_dimension() {
   }
   RenderArea::update_viewport_dimension();
 
-  finish = clock();
-  debug(TM, "rendering time: %f ms", 1000*(double(finish - start)/CLOCKS_PER_SEC));
+  //finish = clock();
+  //debug(TM, "rendering time: %f ms", 1000*(double(finish - start)/CLOCKS_PER_SEC));
 
 }
 

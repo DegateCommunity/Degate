@@ -185,7 +185,7 @@ namespace degate {
 	return *found;
       }
       
-      debug(TM, "return normal image");
+      //debug(TM, "return normal image");
       return image_map_element(1, images[1]);
     }
 
