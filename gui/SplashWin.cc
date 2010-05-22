@@ -45,7 +45,7 @@ SplashWin::SplashWin( int delay_msec) :
   set_resizable (false);
   set_type_hint (Gdk::WINDOW_TYPE_HINT_SPLASHSCREEN);
   set_decorated (false);
-  set_opacity(0.5);
+  set_opacity(0.9);
   set_app_paintable (true);
   add_events (Gdk::ALL_EVENTS_MASK);
   set_size_request (m_image_w, m_image_h);
