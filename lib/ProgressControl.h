@@ -90,6 +90,7 @@ namespace degate {
     virtual void reset_progress() {
       time_started = time(NULL);
       canceled = false;
+      progress = 0;
 
       for(int i = 0; i < averaging_buf_size; i++) estimated[i] = -1;
 
