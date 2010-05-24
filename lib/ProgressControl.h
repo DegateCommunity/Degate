@@ -23,6 +23,7 @@
 #define __PROGRESSCONTROL_H__
 
 #include <tr1/memory>
+#include <time.h>
 
 namespace degate {
   
@@ -33,32 +34,66 @@ namespace degate {
     
   private:
 
+    const static int averaging_buf_size = 30;
+
     double progress;
     bool canceled;
 
     double step_size;
+    time_t time_started;
+
+    time_t estimated[averaging_buf_size];
+    int estimated_idx;
+
+  private:
+
+    virtual time_t get_time_left_averaged() {
+      estimated[estimated_idx++] = get_time_left();
+      estimated_idx %= averaging_buf_size;
+
+      unsigned int sum = 0, valid_values = 0;
+      for(int i = 0; i < averaging_buf_size; i++) 
+	if(estimated[i] != -1) {
+	  sum += estimated[i];
+	  valid_values++;
+	}
+    
+      return valid_values > 0 ? sum / valid_values : get_time_left_averaged();
+    }
 
   protected:
 
     /**
      * Set progress.
      */
-    void set_progress(double progress) {
+    virtual void set_progress(double progress) {
       this->progress = progress;
     }
 
     /**
      * Set step size.
      */
-    void set_progress_step_size(double step_size) {
+    virtual void set_progress_step_size(double step_size) {
       this->step_size = step_size;
     }
 
     /**
-     *
+     * Increase progress.
      */
-    void progress_step_done() {
+    virtual void progress_step_done() {
       progress += step_size;
+    }
+
+    /**
+     * Reset progress and cancel state.
+     */
+    virtual void reset_progress() {
+      time_started = time(NULL);
+      canceled = false;
+
+      for(int i = 0; i < averaging_buf_size; i++) estimated[i] = -1;
+
+      estimated_idx = 0;
     }
 
   public:
@@ -67,7 +102,9 @@ namespace degate {
      * The constructor
      */
 
-    ProgressControl() : progress(0), canceled(false) {}
+    ProgressControl() {
+      reset_progress();
+    }
 
     /**
      * The destructor for a plugin.
@@ -100,6 +137,43 @@ namespace degate {
     virtual double get_progress() const {
       return progress;
     }
+
+    /**
+     * Get (real) time since the progress counter was resetted.
+     */
+    virtual time_t get_time_passed() const {
+      return time(NULL) - time_started;
+    }
+
+    /**
+     * Get estimated time left in seconds.
+     * @return Returns the time to go in seconds or -1, if
+     *   that time cannot be calculated.
+     */
+    virtual time_t get_time_left() const {
+      if(progress < 1.0)
+	return progress > 0 ? (1.0 - progress) * get_time_passed() / progress : -1;
+      return 0;
+    }
+
+    virtual std::string get_time_left_as_string() {
+      time_t time_left = get_time_left_averaged();
+      if(time_left == -1) return std::string("-");
+      else {
+	char buf[100];
+	if(time_left < 60)
+	  snprintf(buf, sizeof(buf), "%d s", (int)time_left);
+	else if(time_left < 60*60)
+	  snprintf(buf, sizeof(buf), "%d:%02d m", (int)time_left / 60, (int)time_left % 60);
+	else {
+	  unsigned int minutes = (int)time_left / 60;
+	  snprintf(buf, sizeof(buf), "%d:%02d h", minutes / 60, (int)time_left % 60);
+	}
+	return std::string(buf);
+      }
+      
+    }
+
 
   };
 

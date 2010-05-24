@@ -27,7 +27,7 @@ using namespace degate;
 
 WireMatchingGUI::WireMatchingGUI(degate::WireMatching_shptr _matching, 
 				 std::string const& name) : 
-  RecognitionGUIBase(name),
+  RecognitionGUIBase(name, _matching),
   matching(_matching) {
 
 }

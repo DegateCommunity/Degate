@@ -93,7 +93,7 @@ void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr proje
   prepare_background_images(sm, bounding_box, get_scaling_factor());
   prepare_sum_tables(gs_img_normal, gs_img_scaled);
 
-  set_progress(0);
+  reset_progress();
 }
 
 

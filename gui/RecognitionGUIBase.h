@@ -34,16 +34,50 @@ class RecognitionGUIBase : public degate::ProgressControl {
 private:
 
   std::string name;
+  degate::ProgressControl_shptr pc;
 
 public:
-  RecognitionGUIBase(std::string const& _name) : name(_name) {}
+  RecognitionGUIBase(std::string const& _name, degate::ProgressControl_shptr _pc) : 
+    name(_name), pc(_pc) {}
 
   virtual ~RecognitionGUIBase() {}
-  virtual void init(Gtk::Window *parent, degate::BoundingBox const& bouding_box, degate::Project_shptr project) = 0;
+  virtual void init(Gtk::Window *parent, degate::BoundingBox const& bouding_box, 
+		    degate::Project_shptr project) = 0;
   virtual bool before_dialog() = 0;
   virtual void run() = 0;
   virtual void after_dialog() = 0;
   virtual std::string get_name() const { return name; }
+
+
+  /*
+    Here we wrap methods of ProgressControl. So the GUI code can work with
+    underlying objects from degate lib without knowing them.    
+   */
+
+  virtual double get_progress() const { 
+    return pc ? pc->get_progress() : 0; 
+  }
+
+  virtual time_t get_time_passed() const {
+    return pc ? pc->get_time_passed() : 0; 
+  }
+
+  virtual time_t get_time_left() const {
+    return pc ? pc->get_time_left() : 0; 
+  }
+
+  virtual std::string get_time_left_as_string() const {
+    return pc ? pc->get_time_left_as_string() : std::string("-");
+  }
+
+  virtual void cancel() { 
+    if(pc) pc->cancel(); 
+  }
+
+  virtual bool is_canceled() const {
+    if(pc) return pc->is_canceled(); 
+    else return false;
+  }
 
 };
 

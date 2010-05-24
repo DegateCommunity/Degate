@@ -47,13 +47,14 @@ void InProgressWin::init(Gtk::Window *parent, const Glib::ustring& title, const 
   m_ProgressBar.set_pulse_step(0.02);
   m_Box.pack_start(m_ProgressBar, Gtk::PACK_SHRINK, 10);
 
+  unsigned int mseconds = 100;
   if(pc) {
     cancel_button.signal_clicked().connect(sigc::mem_fun(*this, &InProgressWin::on_cancel_button_clicked));
     m_Box.pack_start(cancel_button, Gtk::PACK_SHRINK, 10);
-    
+    mseconds = 1000;
   }
 
-  Glib::signal_timeout().connect( sigc::mem_fun(*this, &InProgressWin::update_progress_bar), 50);
+  Glib::signal_timeout().connect( sigc::mem_fun(*this, &InProgressWin::update_progress_bar), mseconds);
 
   show_all_children();
 }
@@ -86,8 +87,14 @@ bool InProgressWin::update_progress_bar() {
 
   if(pc) {
     double progress = pc->get_progress();
-    if(progress > 0) m_ProgressBar.set_fraction(progress);
-    else m_ProgressBar.pulse();
+    if(progress > 0) {
+      m_ProgressBar.set_fraction(progress);
+      m_ProgressBar.set_text(pc->get_time_left_as_string());
+    }
+    else {
+      m_ProgressBar.pulse();
+      m_ProgressBar.set_text("");
+    }
   }
   else
     m_ProgressBar.pulse();
