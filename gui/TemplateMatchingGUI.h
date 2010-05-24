@@ -83,7 +83,12 @@ class TemplateMatchingGUI : public RecognitionGUIBase {
   virtual bool before_dialog();
   virtual void run();
   virtual void after_dialog() {}
-  
+
+  virtual double get_progress() const { return matching ? matching->get_progress() : 0; }
+  virtual void cancel() { if(matching) matching->cancel(); 
+    std::cout << "Cancel pressed" << std::endl;
+  }
+
 };
 
 

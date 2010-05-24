@@ -742,8 +742,8 @@ void MainWin::on_algorithm_finished(int slot_pos) {
 
   debug(TM, "Algorithm finished.");
 
-  RecognitionManager * rm = RecognitionManager::get_instance();
-  rm->after_dialog(slot_pos);
+  RecognitionManager & rm = RecognitionManager::get_instance();
+  rm.after_dialog(slot_pos);
 
   signal_algorithm_finished_.reset();
 
@@ -762,9 +762,9 @@ void MainWin::on_algorithm_finished(int slot_pos) {
 void MainWin::algorithm_calc_thread(int slot_pos) {
 
   debug(TM, "Calculating ...");
-  RecognitionManager * rm = RecognitionManager::get_instance();
+  RecognitionManager & rm = RecognitionManager::get_instance();
 
-  rm->run(slot_pos);
+  rm.run(slot_pos);
 
   signal_algorithm_finished_->emit();
 }
@@ -776,19 +776,19 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
     return;
   }
 
-  RecognitionManager * rm = RecognitionManager::get_instance();
+  RecognitionManager & rm = RecognitionManager::get_instance();
 
   std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
     std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool != NULL && selection_tool->has_selection()) {
 
-    rm->init(slot_pos, this, selection_tool->get_bounding_box(), main_project);
+    rm.init(slot_pos, this, selection_tool->get_bounding_box(), main_project);
 
-    if(rm->before_dialog(slot_pos)) {
+    if(rm.before_dialog(slot_pos)) {
 
       ipWin = std::tr1::shared_ptr<InProgressWin>
-	(new InProgressWin(this, "Calculating", "Please wait while calculating."));
+	(new InProgressWin(this, "Calculating", "Please wait while calculating.", rm.get_progress_control(slot_pos)));
       ipWin->show();
       
       signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);

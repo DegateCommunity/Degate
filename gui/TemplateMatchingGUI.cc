@@ -58,6 +58,7 @@ bool TemplateMatchingGUI::run_matching_param_dialog() {
   double threshold_detection = 0.7;
   unsigned int max_step_size_search = std::max((length_t)1, project->get_lambda() >> 1);
   unsigned int scale_down = 2;
+  unsigned int threshold_steps = 1;
 
   std::list<Gate::ORIENTATION> tmpl_orientations;
 
@@ -66,18 +67,22 @@ bool TemplateMatchingGUI::run_matching_param_dialog() {
 				      matching->get_threshold_hc(), 
 				      matching->get_threshold_detection(),
 				      matching->get_max_step_size(), 
-				      matching->get_scaling_factor());
+				      matching->get_scaling_factor(),
+				      matching->get_threshold_steps());
+
   if(paramsWin.run(&threshold_hc, 
 		   &threshold_detection,
 		   &max_step_size_search, 
 		   &scale_down,
-		   tmpl_orientations)) {
+		   tmpl_orientations,
+		   &threshold_steps)) {
 
     matching->set_threshold_hc(threshold_hc);
     matching->set_threshold_detection(threshold_detection);
     matching->set_max_step_size(max_step_size_search);
     matching->set_scaling_factor(scale_down);
     matching->set_orientations(tmpl_orientations);
+    matching->set_threshold_steps(threshold_steps);
 
     return true;
   }

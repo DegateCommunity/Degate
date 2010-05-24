@@ -69,7 +69,8 @@ class WireMatchingGUI : public RecognitionGUIBase {
   virtual void run();
 
   virtual void after_dialog();
-  
+
+  virtual double get_progress() const { return matching ? matching->get_progress() : 0; }  
 };
 
 

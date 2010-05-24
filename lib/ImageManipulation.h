@@ -28,7 +28,6 @@
 #include <Statistics.h>
 
 #include <boost/format.hpp>
-#include <ImageScalingOpenCL.h>
 
 namespace degate {
 
@@ -359,7 +358,7 @@ namespace degate {
       copy_image<ImageTypeDst, ImageTypeSrc>(tmp, src);
 
       scaling >>= 1;
-      for(int i = 0; i < scaling - 1; i*=2) {
+      for(unsigned int i = 0; i < scaling - 1; i*=2) {
 	scale_down_by_2<ImageTypeDst, ImageTypeDst>(tmp, tmp);
       }
       scale_down_by_2<ImageTypeDst, ImageTypeDst>(dst, tmp);

@@ -25,8 +25,6 @@
 
 using namespace degate;
 
-RecognitionManager * RecognitionManager::instance = NULL;
-
 
 RecognitionManager::RecognitionManager() {
 
@@ -34,31 +32,22 @@ RecognitionManager::RecognitionManager() {
   TemplateMatchingInRows_shptr tm_in_rows(new TemplateMatchingInRows());
   TemplateMatchingInCols_shptr tm_in_cols(new TemplateMatchingInCols());
 
-  plugins.push_back(new TemplateMatchingGUI(tm_normal, 
-					    "Template matching") );
-
-  plugins.push_back(new TemplateMatchingGUI(tm_in_rows, 
-					    "Template matching along grid in rows") );
-
-  plugins.push_back(new TemplateMatchingGUI(tm_in_cols, 
-					    "Template matching along grid in columns") );
-
+  plugins.push_back(RecognitionGUIBase_shptr(new TemplateMatchingGUI(tm_normal, 
+								     "Template matching")));
+  
+  plugins.push_back(RecognitionGUIBase_shptr(new TemplateMatchingGUI(tm_in_rows, 
+								     "Template matching along grid in rows")));
+  
+  plugins.push_back(RecognitionGUIBase_shptr(new TemplateMatchingGUI(tm_in_cols, 
+								     "Template matching along grid in columns")));
+  
   WireMatching_shptr wire_matching(new WireMatching());
-  plugins.push_back(new WireMatchingGUI(wire_matching, "Wire matching") );
+  plugins.push_back(RecognitionGUIBase_shptr(new WireMatchingGUI(wire_matching, "Wire matching")));
 }
 
 RecognitionManager::~RecognitionManager() {
-  for(plugin_list::iterator iter = plugins.begin();
-      iter != plugins.end(); ++iter) {
-    delete *iter;
-  }
 }
 
-RecognitionManager * RecognitionManager::get_instance() {
-  if(instance == NULL)
-    instance = new RecognitionManager();
-  return instance;
-}
 
 RecognitionManager::plugin_list RecognitionManager::get_plugins() {
   return plugins;

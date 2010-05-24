@@ -23,27 +23,32 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #define __INPROGRESSWIN_H__
 
 #include <gtkmm.h>
+#include <ProgressControl.h>
 
 class InProgressWin : public Gtk::Window {
  public:
   InProgressWin(Gtk::Window *parent, const Glib::ustring& title, const Glib::ustring& message);
+  InProgressWin(Gtk::Window *parent, const Glib::ustring& title, const Glib::ustring& message, 
+		degate::ProgressControl_shptr pc);
   virtual ~InProgressWin();
   void close();
 
  private:
 
+  degate::ProgressControl_shptr pc;
+
   bool running;
-#ifdef IMPL_WITH_THREAD
-  Glib::Thread * thread;
-  Glib::Dispatcher   signal_progress_;
-  void progress_thread();
-#endif
 
   Gtk::VBox m_Box;
   Gtk::Label m_Label_Message;
   Gtk::ProgressBar m_ProgressBar;
+  Gtk::Button cancel_button;
 
   bool update_progress_bar();
+
+  void init(Gtk::Window *parent, const Glib::ustring& title, const Glib::ustring& message);
+
+  void on_cancel_button_clicked();
 };
 
 #endif

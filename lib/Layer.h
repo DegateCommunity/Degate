@@ -310,6 +310,20 @@ namespace degate {
 
 
     /**
+     * Check for placed gates in a region and return the distance to
+     * the boundary.
+     * @return Returns the distance from \p x to the right boundary or 
+     *   from \p y to the bottom boundary depending on \p query_horizontal_distance.
+     *   If there is no gate, this method returns 0.
+     */
+    
+    unsigned int get_distance_to_gate_boundary(unsigned int x, unsigned int y,
+					       bool query_horizontal_distance = true,
+					       unsigned int width = 0,
+					       unsigned int height = 0);
+    
+
+    /**
      * Enable a layer.
      */
 

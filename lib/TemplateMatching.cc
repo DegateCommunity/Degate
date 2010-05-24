@@ -19,6 +19,7 @@
  
 */
 
+
 #include <TemplateMatching.h>
 #include <Image.h>
 #include <globals.h>
@@ -37,6 +38,7 @@ TemplateMatching::TemplateMatching() {
   threshold_detection = 0.7;
   max_step_size_search = 3;
   scale_down = 2;
+  threshold_steps = 1;
 }
 
 TemplateMatching::~TemplateMatching() {
@@ -90,6 +92,8 @@ void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr proje
   
   prepare_background_images(sm, bounding_box, get_scaling_factor());
   prepare_sum_tables(gs_img_normal, gs_img_scaled);
+
+  set_progress(0);
 }
 
 
@@ -163,8 +167,13 @@ void TemplateMatching::prepare_sum_tables(TileImage_GS_BYTE_shptr gs_img_normal,
 }
 
 
+bool compare_template_size(const GateTemplate_shptr lhs, const GateTemplate_shptr rhs) {
+  return lhs->get_width() * lhs->get_height() > rhs->get_width() * rhs->get_height();
+} 
+
 void TemplateMatching::set_templates(std::list<GateTemplate_shptr> tmpl_set) {
   this->tmpl_set = tmpl_set;
+  this->tmpl_set.sort(compare_template_size);
 }
 
 void TemplateMatching::set_orientations(std::list<Gate::ORIENTATION> tmpl_orientations) {
@@ -177,23 +186,41 @@ void TemplateMatching::set_orientations(std::list<Gate::ORIENTATION> tmpl_orient
 
 void TemplateMatching::run() {
 
+
   debug(TM, "run template matching");
 
-  for(std::list<GateTemplate_shptr>::const_iterator iter = tmpl_set.begin();
-      iter != tmpl_set.end(); ++iter) {
+  set_progress_step_size(1.0/(threshold_steps * tmpl_set.size() * tmpl_orientations.size()));
 
-    GateTemplate_shptr tmpl = *iter;
+  for(unsigned int i = 1; i <= threshold_steps; i++) {
 
-    for(std::list<Gate::ORIENTATION>::const_iterator iter = tmpl_orientations.begin();
-	iter != tmpl_orientations.end(); ++iter) {
+    for(std::list<GateTemplate_shptr>::const_iterator iter = tmpl_set.begin();
+	iter != tmpl_set.end(); ++iter) {
 
-      debug(TM, "check template %s for orientation %d", tmpl->get_name().c_str(), *iter);
+      GateTemplate_shptr tmpl = *iter;
+      
+      for(std::list<Gate::ORIENTATION>::const_iterator iter = tmpl_orientations.begin();
+	  iter != tmpl_orientations.end(); ++iter) {
+	
+	double 
+	  t_hc = get_current_threshold(get_threshold_hc(), threshold_steps, i),
+	  t_det = get_current_threshold(get_threshold_detection(), threshold_steps, i);
 
-      prepared_template prep_tmpl_img = prepare_template(tmpl, *iter);
-      match_single_template(prep_tmpl_img);
+	debug(TM, 
+	      "check template %s for orientation %d.\n"
+	      "threshold for hill climbing = %f\n"
+	      "threshold for detection = %f\n", tmpl->get_name().c_str(), *iter, t_hc, t_det);
+	
+	prepared_template prep_tmpl_img = prepare_template(tmpl, *iter);
+	match_single_template(prep_tmpl_img, t_hc, t_det);
+
+
+	progress_step_done();
+	if(is_canceled()) return;
+      }
+      
     }
-    
   }
+
 }
 
 
@@ -201,7 +228,6 @@ double TemplateMatching::subtract_mean(TempImage_GS_BYTE_shptr img,
 				       TempImage_GS_DOUBLE_shptr zero_mean_img) const {
   
   double mean = average<TempImage_GS_BYTE>(img);
-  std::cout << "mean is: " << mean << std::endl;
 
   double sum_over_zero_mean_img = 0;
   unsigned int x, y;
@@ -304,6 +330,8 @@ void TemplateMatching::adjust_step_size(struct search_state & state, double corr
 void TemplateMatching::add_gate(unsigned int x, unsigned int y,
 				struct prepared_template & tmpl) {
 
+  // XXXX critical section
+
   if(!layer_insert->exists_gate_in_region(x, x + tmpl.gate_template->get_width(),
 					  y, y + tmpl.gate_template->get_height())) {
 
@@ -318,7 +346,8 @@ void TemplateMatching::add_gate(unsigned int x, unsigned int y,
   }
 }
 
-void TemplateMatching::match_single_template(struct prepared_template & tmpl) {
+void TemplateMatching::match_single_template(struct prepared_template & tmpl,
+					     double threshold_hc, double threshold_detection) {
 
   debug(TM, "match_single_template(): start iterating over background image");
   search_state state;
@@ -344,7 +373,7 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl) {
 
     adjust_step_size(state, corr_val);  
     
-    if(corr_val >= get_threshold_hc()) {
+    if(corr_val >= threshold_hc) {
       debug(TM, "start hill climbing at(%d,%d), corr=%f", state.x, state.y, corr_val);
       unsigned int max_corr_x, max_corr_y;
       double curr_max_val;
@@ -354,7 +383,7 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl) {
 		    tmpl.sum_over_zero_mean_template_normal);
 
       debug(TM, "hill climbing returned for (%d,%d) corr=%f", max_corr_x, max_corr_y, curr_max_val);
-      if(curr_max_val >= get_threshold_detection()) {
+      if(curr_max_val >= threshold_detection) {
 	add_gate(max_corr_x + bounding_box.get_min_x(),
 		 max_corr_y + bounding_box.get_min_y(),
 		 tmpl);
@@ -362,7 +391,7 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl) {
 
     }
 
-  } while(get_next_pos(&state, tmpl));
+  } while(get_next_pos(&state, tmpl) && !is_canceled());
 
   std::cout << "The maximum correlation value for the current template and orientation is " << max_corr_for_search << std::endl;
 
@@ -483,7 +512,11 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
   double denominator = sqrt((f2 - f1*f1/template_size) * sum_over_zero_mean_template);
   
   // calculate nummerator
-  assert(!isinf(denominator) && !isnan(denominator));
+  if(isinf(denominator) || isnan(denominator)) {
+    debug(TM, "ERROR: The denominator is not a valid number: f1=%f f2=%f template_size=%d sum=%f",
+	  f1, f2, template_size, sum_over_zero_mean_template);
+    return -1.0;
+  }
 
   unsigned int _x, _y;
   double nummerator = 0;
@@ -519,19 +552,34 @@ bool TemplateMatchingNormal::get_next_pos(struct search_state * state,
 
   unsigned int step = state->step_size_search;
 
-  if(layer_insert->exists_gate_in_region(state->x, state->x + get_max_step_size(), 
-					 state->y, state->y + get_max_step_size() )) {
-    step = get_max_step_size(); // XXX
-  }
+  bool there_was_a_gate = false;
 
-  if( state->x + step < state->search_area.get_width() - tmpl_w) 
-    state->x += step;
-  else {
-    state->x = 0;
-    if(state->y + step < state->search_area.get_height() - tmpl_h) 
-      state->y += step;
-    else return false;
-  }
+  do {
+    if(state->x + step < state->search_area.get_width() - tmpl_w) 
+      state->x += step;
+    else {
+      state->x = 0;
+      if(state->y + step < state->search_area.get_height() - tmpl_h) 
+	state->y += step;
+      else return false;
+    }
+    
+    unsigned int dist_x = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
+								      state->y + state->search_area.get_min_y(), 
+								      true, tmpl_w, tmpl_h);
+    
+    if(dist_x > 0) {
+      debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d horizontal pixels",
+	    state->x + state->search_area.get_min_x(),
+	    state->y + state->search_area.get_min_y(),
+	    dist_x);
+      state->x += dist_x;
+      there_was_a_gate = true;
+      step = 1;
+    }
+    else there_was_a_gate = false;
+
+  }while(there_was_a_gate);
 
   return true;
 }
@@ -592,15 +640,37 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
   if(state->x == 0 && state->y == 0) { // state condition
     state->y = *(state->iter) - state->search_area.get_min_y();
   }
+
+  bool there_was_a_gate = false;
+
+  do {
+
+    if(state->x + step < state->search_area.get_width()) 
+      state->x += step;
+    else {
+      state->x = 0;
+      state->y = *(state->iter) - state->search_area.get_min_y();
+      ++state->iter;
+      if(state->iter == state->iter_end) return false;
+    }
+    
+    unsigned int dist_x = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
+								      state->y + state->search_area.get_min_y(), 
+								      true, tmpl_w, tmpl_h);
+    
+    if(dist_x > 0) {
+      debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d horizontal pixels",
+	    state->x + state->search_area.get_min_x(),
+	    state->y + state->search_area.get_min_y(),
+	    dist_x);
+      state->x += dist_x;
+      there_was_a_gate = true;
+      step = 1;
+    }
+    else there_was_a_gate = false;
+
+  }while(there_was_a_gate);
   
-  if(state->x + step < state->search_area.get_width()) 
-    state->x += step;
-  else {
-    state->x = 0;
-    state->y = *(state->iter) - state->search_area.get_min_y();
-    ++state->iter;
-    if(state->iter == state->iter_end) return false;
-  }
   
   return true;
 }
@@ -630,16 +700,36 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state * state,
   if(state->x == 0 && state->y == 0) { // state condition
     state->x = *(state->iter) - state->search_area.get_min_x();
   }
-  
-  if(state->y + step < state->search_area.get_height()) 
-    state->y += step;
-  else {
-    state->x = *(state->iter) - state->search_area.get_min_x();
-    state->y = 0;
-    ++state->iter;
-    if(state->iter == state->iter_end) return false;
-  }
-  
+
+  bool there_was_a_gate = false;
+
+  do {
+    if(state->y + step < state->search_area.get_height()) 
+      state->y += step;
+    else {
+      state->x = *(state->iter) - state->search_area.get_min_x();
+      state->y = 0;
+      ++state->iter;
+      if(state->iter == state->iter_end) return false;
+    }
+
+    unsigned int dist_y = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
+								      state->y + state->search_area.get_min_y(), 
+								      false, tmpl_w, tmpl_h);
+    
+    if(dist_y > 0) {
+      debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d vertical pixels",
+	    state->x + state->search_area.get_min_x(),
+	    state->y + state->search_area.get_min_y(),
+	    dist_y);
+      state->y += dist_y;
+      there_was_a_gate = true;
+      step = 1;
+    }
+    else there_was_a_gate = false;
+
+  }while(there_was_a_gate);
+
   return true;
 }
 

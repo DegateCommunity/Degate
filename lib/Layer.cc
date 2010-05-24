@@ -255,6 +255,30 @@ bool Layer::exists_gate_in_region(unsigned int min_x, unsigned int max_x,
   return false;
 }
 
+unsigned int Layer::get_distance_to_gate_boundary(unsigned int x, unsigned int y,
+						  bool query_horizontal_distance,
+						  unsigned int width,
+						  unsigned int height) {
+
+  for(Layer::qt_region_iterator iter = quadtree.region_iter_begin(x, x + width, y, y + height);
+      iter != quadtree.region_iter_end(); ++iter) {
+    
+    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*iter)) {
+
+      if(query_horizontal_distance) {
+	assert(gate->get_max_x() >= (int)x);
+	return gate->get_max_x() - x;
+      }
+      else {
+	assert(gate->get_max_y() >= (int)y);
+	return gate->get_max_y() - y;
+      }
+    }
+  }
+  
+  return 0;
+}
+
 
 void Layer::set_enabled(bool state) {
   enabled = state;

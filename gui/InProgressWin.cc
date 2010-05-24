@@ -27,18 +27,9 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <assert.h>
 
-#ifdef IMPL_WITH_THREAD
-Glib::StaticMutex mutex = GLIBMM_STATIC_MUTEX_INIT; 
-#endif
 
-
-InProgressWin::InProgressWin(Gtk::Window *parent, const Glib::ustring& title, const Glib::ustring& message) {
-
+void InProgressWin::init(Gtk::Window *parent, const Glib::ustring& title, const Glib::ustring& message) {
   running = true;
-
-#ifdef IMPL_WITH_THREAD
-  thread = NULL;
-#endif
 
   set_title(title);
   set_default_size(220, 100);
@@ -56,14 +47,31 @@ InProgressWin::InProgressWin(Gtk::Window *parent, const Glib::ustring& title, co
   m_ProgressBar.set_pulse_step(0.02);
   m_Box.pack_start(m_ProgressBar, Gtk::PACK_SHRINK, 10);
 
-  #ifdef IMPL_WITH_THREAD
-  signal_progress_.connect(sigc::mem_fun(*this, &InProgressWin::update_progress_bar));
-  assert((thread = Glib::Thread::create(sigc::mem_fun(*this, &InProgressWin::progress_thread), true)) != NULL);
-  #else
+  if(pc) {
+    cancel_button.signal_clicked().connect(sigc::mem_fun(*this, &InProgressWin::on_cancel_button_clicked));
+    m_Box.pack_start(cancel_button, Gtk::PACK_SHRINK, 10);
+    
+  }
+
   Glib::signal_timeout().connect( sigc::mem_fun(*this, &InProgressWin::update_progress_bar), 50);
-  #endif
 
   show_all_children();
+}
+
+
+InProgressWin::InProgressWin(Gtk::Window *parent, 
+			     const Glib::ustring& title, 
+			     const Glib::ustring& message, 
+			     degate::ProgressControl_shptr pc) : cancel_button(Gtk::Stock::CANCEL) {
+  this->pc = pc;
+
+  init(parent, title, message);
+}
+
+InProgressWin::InProgressWin(Gtk::Window *parent, 
+			     const Glib::ustring& title, 
+			     const Glib::ustring& message) {
+  init(parent, title, message);
 }
 
 InProgressWin::~InProgressWin() {
@@ -71,41 +79,23 @@ InProgressWin::~InProgressWin() {
 
 void InProgressWin::close() {
   hide_all();
-#ifdef IMPL_WITH_THREAD
-  { 
-    Glib::Mutex::Lock lock(mutex);
-    running = false;
-  }
-  if(thread) {
-    puts("InProgressWin: wait for thread.");
-    //if(thread->joinable()) thread->join();
-    puts("after join");
-  }
-#else
   running = false;
-#endif
 }
 
 bool InProgressWin::update_progress_bar() {
-  //puts("update");
-  m_ProgressBar.pulse();
+
+  if(pc) {
+    double progress = pc->get_progress();
+    if(progress > 0) m_ProgressBar.set_fraction(progress);
+    else m_ProgressBar.pulse();
+  }
+  else
+    m_ProgressBar.pulse();
+
   return running;
 }
 
-#ifdef IMPL_WITH_THREAD
-void InProgressWin::progress_thread() {
-  signal_progress_();
-  while(1) {
-    signal_progress_();
-    Glib::usleep(50000);
-    { 
-      Glib::Mutex::Lock lock(mutex);
-      if(!running) {
-	Glib::usleep(1000000);
-	return;
-      }
-    }
-  }
-}
-#endif
 
+void InProgressWin::on_cancel_button_clicked() {
+  if(pc) pc->cancel();
+}

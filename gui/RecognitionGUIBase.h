@@ -28,9 +28,9 @@
 
 #include <BoundingBox.h>
 #include <Project.h>
+#include <ProgressControl.h>
 
-
-class RecognitionGUIBase {
+class RecognitionGUIBase : public degate::ProgressControl {
 private:
 
   std::string name;
@@ -44,9 +44,10 @@ public:
   virtual void run() = 0;
   virtual void after_dialog() = 0;
   virtual std::string get_name() const { return name; }
+
 };
 
-
+typedef std::tr1::shared_ptr<RecognitionGUIBase> RecognitionGUIBase_shptr;
 
 
 

@@ -22,6 +22,8 @@
 #ifndef __PROGRESSCONTROL_H__
 #define __PROGRESSCONTROL_H__
 
+#include <tr1/memory>
+
 namespace degate {
   
   /**
@@ -32,6 +34,9 @@ namespace degate {
   private:
 
     double progress;
+    bool canceled;
+
+    double step_size;
 
   protected:
 
@@ -42,13 +47,27 @@ namespace degate {
       this->progress = progress;
     }
 
+    /**
+     * Set step size.
+     */
+    void set_progress_step_size(double step_size) {
+      this->step_size = step_size;
+    }
+
+    /**
+     *
+     */
+    void progress_step_done() {
+      progress += step_size;
+    }
+
   public:
 
     /**
      * The constructor
      */
 
-    ProgressControl() : progress(0) {}
+    ProgressControl() : progress(0), canceled(false) {}
 
     /**
      * The destructor for a plugin.
@@ -57,16 +76,20 @@ namespace degate {
     virtual ~ProgressControl() {}
 
     /**
-     * Start the processing.
+     * Check if the process is canceled.
      */
     
-    //virtual void run() 
+    virtual bool is_canceled() const {
+      return canceled;
+    }
 
     /**
      * Stop the processing.
      */
 
-    //virtual void halt() = 0;
+    virtual void cancel() {
+      canceled = true;
+    }
 
 
     /**
@@ -74,12 +97,13 @@ namespace degate {
      * @return Returns a value between 0 and 100 percent.
      */
 
-    double get_progress() const {
+    virtual double get_progress() const {
       return progress;
     }
 
   };
 
+  typedef std::tr1::shared_ptr<ProgressControl> ProgressControl_shptr;
 }
 
 #endif

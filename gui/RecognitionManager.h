@@ -24,18 +24,19 @@
 
 #include <RecognitionGUIBase.h>
 #include <list>
+#include <SingletonBase.h>
 
+// Todo: Use singleton class
+class RecognitionManager : public degate::SingletonBase<RecognitionManager> {
 
-class RecognitionManager {
+  friend class degate::SingletonBase<RecognitionManager>;
 
  public:
 
-  typedef std::vector<RecognitionGUIBase *> plugin_list;
+  typedef std::vector<RecognitionGUIBase_shptr> plugin_list;
 
  private:
-
-  static RecognitionManager * instance;
-    
+   
   plugin_list plugins;
   
   RecognitionManager();
@@ -43,9 +44,7 @@ class RecognitionManager {
  public:
   
   ~RecognitionManager();
-  
-  static RecognitionManager * get_instance();
-  
+   
   plugin_list get_plugins();
   
   void init(unsigned int slot, 
@@ -72,6 +71,11 @@ class RecognitionManager {
     plugins[slot]->after_dialog();
   }
   
+  degate::ProgressControl_shptr get_progress_control(unsigned int slot) { 
+    assert(slot < plugins.size());
+    return plugins[slot];
+  }
+
 };
 
 

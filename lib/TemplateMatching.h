@@ -25,13 +25,14 @@
 #include <Image.h>
 #include <Project.h>
 #include <Layer.h>
+#include <ProgressControl.h>
 
 namespace degate {
 
   /**
    * Base class for matching alorithms.
    */
-  class Matching {
+  class Matching : public ProgressControl {
   public:
     virtual ~Matching() {}
     virtual void init(BoundingBox const& bounding_box, Project_shptr project) = 0;
@@ -83,6 +84,7 @@ namespace degate {
     double threshold_detection;
     unsigned int max_step_size_search;
     unsigned int scale_down;
+    unsigned int threshold_steps;
 
 
     // background images in greyscale
@@ -145,7 +147,8 @@ namespace degate {
      */
     void adjust_step_size(struct search_state & state, double corr_val) const;
 
-    void match_single_template(struct prepared_template & tmpl);
+    void match_single_template(struct prepared_template & tmpl,
+			       double threshold_hc, double threshold_detection);
     
     
     /**
@@ -187,11 +190,22 @@ namespace degate {
 
     virtual bool get_next_pos(struct search_state * state,
 			      struct prepared_template const& tmpl) const = 0;
+
+
+    double get_current_threshold(double min_threshold, int num_steps, int step_i) const { 
+      double delta_thresh = (1.0 - min_threshold) / (double)num_steps;
+      return min_threshold + delta_thresh * (double)(num_steps - step_i);
+    }
+
+
   public:
 
     TemplateMatching();
 
     virtual ~TemplateMatching();
+
+    void set_threshold_steps(unsigned int steps) { threshold_steps = steps; }
+    unsigned int get_threshold_steps() const { return threshold_steps; }
 
     /**
      * Get the correlation threshold for the hill climbing start phase.
@@ -265,6 +279,7 @@ namespace degate {
 
     /**
      * Set templates that should be matched.
+     * Templates become sorted, so that larger templates are matched first.
      */
 
     void set_templates(std::list<GateTemplate_shptr> tmpl_set);

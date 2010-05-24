@@ -607,12 +607,12 @@ void MenuManager::initialize_menu_algorithm_funcs() {
 
       // create
       unsigned int i = 0;
-      RecognitionManager * rm = RecognitionManager::get_instance();
-      RecognitionManager::plugin_list plugins = rm->get_plugins();
+      RecognitionManager & rm = RecognitionManager::get_instance();
+      RecognitionManager::plugin_list plugins = rm.get_plugins();
       for(RecognitionManager::plugin_list::iterator iter = plugins.begin();
 	  iter != plugins.end(); ++iter, i++) {
 
-	RecognitionGUIBase * ui = *iter;
+	RecognitionGUIBase_shptr ui = *iter;
 	assert(ui != NULL);
 
 	Gtk::MenuItem *menuItem = new Gtk::MenuItem(ui->get_name());
