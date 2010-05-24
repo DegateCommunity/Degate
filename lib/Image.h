@@ -215,16 +215,14 @@ namespace degate {
 
     Image(unsigned int _width, 
 	  unsigned int _height,
-	  unsigned int _tile_width_exp = 10,
-	  unsigned int _max_cache_tiles = 4) : 
+	  unsigned int _tile_width_exp = 10) : 
       ImageBase(_width, _height),
       StoragePolicy_Tile<PixelPolicy>(_width, _height,
 				      create_temp_directory
 				      (generate_temp_file_pattern
 				       (get_temp_directory())),
 				      false,
-				      _tile_width_exp,
-				      _max_cache_tiles) {}
+				      _tile_width_exp) {}
     
     /**
      * Constructor for persistent virtual images.
@@ -234,14 +232,12 @@ namespace degate {
 	  unsigned int _height,
 	  std::string const& directory,
 	  bool persistent = true,
-	  unsigned int _tile_width_exp = 10,
-	  unsigned int _max_cache_tiles = 4) : 
+	  unsigned int _tile_width_exp = 10) : 
       ImageBase(_width, _height),
       StoragePolicy_Tile<PixelPolicy>(_width, _height, 
 				      directory,
 				      persistent,
-				      _tile_width_exp,
-				      _max_cache_tiles) {}
+				      _tile_width_exp) {}
 
     /**
      * The dtor.

@@ -98,19 +98,16 @@ namespace degate {
      *      value is specified as an exponent to the base 2. This means for
      *      example that if you want to use a width of 1024 pixel, you have
      *      to give a value of 10, because 2^10 is 1024.
-     * @param _max_cache_tiles The number of tiles that should be cached.
-     *      The value must be >=1. It is passed to the ctor of TileCache.
      */
     StoragePolicy_Tile(unsigned int _width, unsigned int _height,
 		       std::string const& _directory,
 		       bool _persistent = false,
-		       unsigned int _tile_width_exp = 10,
-		       unsigned int _max_cache_tiles = 4) :
+		       unsigned int _tile_width_exp = 10) :
       persistent(_persistent),
       tile_width_exp(_tile_width_exp),
       offset_bitmask((1 << _tile_width_exp) - 1),
       directory(_directory),
-      tile_cache(_directory, _tile_width_exp, _persistent, _max_cache_tiles) {
+      tile_cache(_directory, _tile_width_exp, _persistent) {
 
       if(!file_exists(_directory)) create_directory(_directory);
 
@@ -151,10 +148,11 @@ namespace degate {
     /**
      * Copy the raw data from an image tile that has its upper left corner at x,y into a buffer.
      */
-    void raw_copy(void * dst_buf, unsigned int x, unsigned int y) const {
-      MemoryMap_shptr mem = tile_cache.get_tile(x, y);
+    void raw_copy(void * dst_buf, unsigned int src_x, unsigned int src_y) const {
+      MemoryMap_shptr mem = tile_cache.get_tile(src_x, src_y);
       mem->raw_copy(dst_buf);
     }
+
 
   };
 

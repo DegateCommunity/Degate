@@ -80,14 +80,12 @@ void ImageTest::test_type_traits(void) {
 
 TileImage_RGBA_shptr ImageTest::read_image(std::tr1::shared_ptr<degate::ImageReaderBase
 			   <degate::TileImage_RGBA> > reader, 
-			   unsigned int tile_size_exp,
-			   unsigned int max_cache_elems) {
+			   unsigned int tile_size_exp) {
   clock_t start_time = clock();
 
   TileImage_RGBA_shptr img(new TileImage_RGBA(reader->get_width(), 
 					      reader->get_height(),
-					      tile_size_exp,
-					      max_cache_elems));
+					      tile_size_exp));
 
   CPPUNIT_ASSERT(img->get_directory().size() > 0);
 
@@ -98,8 +96,7 @@ TileImage_RGBA_shptr ImageTest::read_image(std::tr1::shared_ptr<degate::ImageRea
        << (1 << tile_size_exp)
        << "x"
        << (1 << tile_size_exp)
-       << " and " << max_cache_elems
-       <<" cached tile elements is: " 
+       <<" is: " 
        << elapsed_time << " seconds." << std::endl;
   
   CPPUNIT_ASSERT(state == true);
@@ -145,14 +142,10 @@ void ImageTest::test_image_reader(void) {
   CPPUNIT_ASSERT(tiff_reader->get_height() > 0);
 
 
-  read_image(tiff_reader, 
-	     8 /* tiles of size 256x256 */, 
-	     16 /* cache size */);
-
+  read_image(tiff_reader, 8 /* tiles of size 256x256 */);
 
   TileImage_RGBA_shptr img = read_image(tiff_reader, 
-					10 /* tiles of size 1024x1024 */, 
-					4 /* cache size */);
+					10 /* tiles of size 1024x1024 */);
 
   std::string tiff_out(join_pathes(get_temp_directory(), "degate_image_test.tif"));
   if(file_exists(tiff_out)) remove_file(tiff_out);

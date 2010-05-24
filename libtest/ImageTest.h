@@ -60,8 +60,7 @@ protected:
 private:
   degate::TileImage_RGBA_shptr read_image(std::tr1::shared_ptr<
 					  degate::ImageReaderBase<degate::TileImage_RGBA> > reader, 
-					  unsigned int tile_size_exp,
-					  unsigned int max_cache_elems);
+					  unsigned int tile_size_exp);
   
 };
 
