@@ -43,6 +43,12 @@ private:
   sigc::signal<void, unsigned int, unsigned int> signal_mouse_motion_;
 
 
+private:
+
+  unsigned int crop_pos(gdouble i) const {
+    return i <= 0 ? 0 : lrint(i);
+  }
+
 protected:
 
   virtual bool on_expose_event(GdkEventExpose* event);
@@ -53,7 +59,7 @@ protected:
   bool on_scroll_event(GdkEventScroll* ev) {
     
     unsigned int x, y;
-    coord_screen_to_real(ev->x, ev->y, &x, &y);
+    coord_screen_to_real(crop_pos(ev->x), crop_pos(ev->y), &x, &y);
 
     if(ev->direction == GDK_SCROLL_UP) {
       if(!signal_mouse_scroll_up_.empty()) signal_mouse_scroll_up_(x, y);
@@ -67,7 +73,7 @@ protected:
 
   bool on_button_press_event(GdkEventButton * ev) {
     unsigned int x, y;
-    coord_screen_to_real(ev->x, ev->y, &x, &y);
+    coord_screen_to_real(crop_pos(ev->x), crop_pos(ev->y), &x, &y);
     unsigned int b = ev->button;
 
     if(!signal_mouse_double_click_.empty() && ev->type == GDK_2BUTTON_PRESS)
@@ -81,7 +87,7 @@ protected:
   bool on_button_release_event(GdkEventButton * ev) {
     if(!signal_mouse_release_.empty()) {
       unsigned int x, y;
-      coord_screen_to_real(ev->x, ev->y, &x, &y);
+      coord_screen_to_real(crop_pos(ev->x), crop_pos(ev->y), &x, &y);
       unsigned int b = ev->button;
       signal_mouse_release_(x, y, b);
     }
@@ -91,7 +97,7 @@ protected:
   bool on_motion_notify_event(GdkEventMotion * ev) {
     if(!signal_mouse_motion_.empty()) {
       unsigned int x, y;
-      coord_screen_to_real(ev->x, ev->y, &x, &y);
+      coord_screen_to_real(crop_pos(ev->x), crop_pos(ev->y), &x, &y);
       signal_mouse_motion_(x, y);
     }
     return false;
