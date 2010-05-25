@@ -22,8 +22,9 @@
 #ifndef __TILECACHE_H__
 #define __TILECACHE_H__
 
-#include "MemoryMap.h"
-#include "FileSystem.h"
+#include <MemoryMap.h>
+#include <FileSystem.h>
+#include <Configuration.h>
 
 #include <string>
 #include <map>
@@ -44,7 +45,7 @@ namespace degate {
 
   private:
 
-    const static size_t max_cache_memory = 128 * 1024 * 1024;
+    size_t max_cache_memory;
     size_t allocated_memory;
 
     typedef std::pair<clock_t, size_t> cache_entry_t;
@@ -55,6 +56,8 @@ namespace degate {
   private:
     
     GlobalTileCache() : allocated_memory(0) {
+      Configuration & conf = Configuration::get_instance();
+      max_cache_memory = conf.get_max_tile_cache_size() * 1024 *1024;
     }
 
     void remove_oldest() {
@@ -72,10 +75,27 @@ namespace degate {
       if(oldest) oldest->cleanup_cache();
       else {
 	debug(TM, "there is nothing to free.");
+	print_table();
       }
     }
 
   public:
+
+    void print_table() const {
+
+      printf("Global Image Tile Cache:\n"
+	     "Used memory : %ld bytes\n"
+	     "Max memory: %ld bytes\n\n"
+	     "Holder           | Last access | Amount in bytes\n",
+	     allocated_memory, max_cache_memory);
+
+      for(cache_t::const_iterator iter = cache.begin(); iter != cache.end(); ++iter) {
+	cache_entry_t const& entry = iter->second;
+	printf("%16p | %11ld | %ld\n", iter->first, entry.first, entry.second);
+      }
+
+      printf("\n");
+    }
 
     bool request_cache_memory(TileCacheBase * requestor, size_t amount) {
 
@@ -90,18 +110,23 @@ namespace degate {
 
 	cache_t::iterator found = cache.find(requestor);
 	if(found == cache.end()) {
-	  cache[requestor] = std::make_pair(amount, clock());
+
+	  cache[requestor] = std::make_pair(clock(), amount);
 	}
 	else {
 	  cache_entry_t & entry = found->second;
-	  entry.second += amount;
 	  entry.first = clock();
+	  entry.second += amount;
 	}
 
 	allocated_memory += amount;
 
 	return true;
       }
+
+      debug(TM, "Cant free memory.");
+
+      print_table();
       return false;
     }
 
@@ -113,8 +138,12 @@ namespace degate {
       if(found != cache.end()) {
 	cache_entry_t & entry = found->second;
 
-	assert(entry.second >= amount);
+	
 	if(entry.second >= amount) entry.second -= amount;
+	else {
+	  print_table();
+	  assert(entry.second >= amount); // will break
+	}
 
 	if(entry.second == 0) {
 	  debug(TM, "Memory completely released. Remove entry from global cache.");
@@ -137,9 +166,6 @@ namespace degate {
    * requirement is around 
    * \p _min_cache_tiles*sizeof(PixelPolicy::pixel_type)*(2^_tile_width_exp)^2 ,
    * where \p sizeof(PixelPolicy::pixel_type) is the size of a pixel.
-   * @todo Extent the TileCache and let it use a global tile cache. Then it will be easier
-   *   to control memory consumtion. You will be abe to set a global maximum, how much
-   *   memory can be used for caching.
    */
 
   template<class PixelPolicy>
@@ -222,7 +248,8 @@ namespace degate {
 	if(iter == cache.end()) {
 	  //cleanup_cache();
 	  GlobalTileCache & gtc = GlobalTileCache::get_instance();
-	  gtc.request_cache_memory(this, get_image_size());
+	  bool ok = gtc.request_cache_memory(this, get_image_size());
+	  assert(ok == true);
 	  cache[filename] = std::make_pair(load(filename), clock());
 	}
 
@@ -242,22 +269,24 @@ namespace degate {
      */
     void cleanup_cache() {
 	
-	clock_t oldest_clock_val = clock();
-	typename cache_type::iterator oldest = cache.begin();
+      if(cache.size() == 0) return;
 
-	for(typename cache_type::iterator iter = cache.begin();
-	    iter != cache.end(); ++iter) {
-	  clock_t clock_val = (*iter).second.second;
-	  if(clock_val < oldest_clock_val) {
-	    oldest_clock_val = clock_val;
-	    oldest = iter;
-	  }
+      clock_t oldest_clock_val = clock();
+      typename cache_type::iterator oldest = cache.begin();
+      
+      for(typename cache_type::iterator iter = cache.begin();
+	  iter != cache.end(); ++iter) {
+	clock_t clock_val = (*iter).second.second;
+	if(clock_val < oldest_clock_val) {
+	  oldest_clock_val = clock_val;
+	  oldest = iter;
 	}
+      }
 
-	cache.erase(oldest);
+      cache.erase(oldest);
 
-	GlobalTileCache & gtc = GlobalTileCache::get_instance();
-	gtc.release_cache_memory(this, get_image_size());
+      GlobalTileCache & gtc = GlobalTileCache::get_instance();
+      gtc.release_cache_memory(this, get_image_size());
 
     }
     
