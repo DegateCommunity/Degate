@@ -203,6 +203,7 @@ public:
 
 protected:
 
+  
   void on_mouse_click(unsigned int real_x, unsigned int real_y, 
 		      unsigned int button) {
     GfxEditorToolRectangle<RendererType>::on_mouse_click(real_x, real_y, button);
@@ -210,7 +211,7 @@ protected:
     if(!signal_mouse_clicked_.empty())
       signal_mouse_clicked_(real_x, real_y, button);
   }
-
+  
   void on_mouse_double_click(unsigned int real_x, unsigned int real_y, 
 			     unsigned int button) {
     GfxEditorToolRectangle<RendererType>::on_mouse_double_click(real_x, real_y, button);
@@ -220,7 +221,7 @@ protected:
   }
 
   void on_mouse_release(unsigned int real_x, unsigned int real_y, unsigned int button) {
-    GfxEditorToolRectangle<RendererType>::on_mouse_release(real_x, real_y, button);   
+    GfxEditorToolRectangle<RendererType>::on_mouse_release(real_x, real_y, button);
 
     if(button == 1) {
 
@@ -229,11 +230,12 @@ protected:
 	if(!signal_selection_activated_.empty()) 
 	  signal_selection_activated_(GfxEditorToolRectangle<RendererType>::get_bounding_box());
       }
+      /*
       else {
 	if(!signal_mouse_clicked_.empty())
 	  signal_mouse_clicked_(real_x, real_y, button);
       }
-
+      */
       GfxEditorToolRectangle<RendererType>::get_renderer().update_screen();
     }
   }
