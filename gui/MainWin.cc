@@ -939,10 +939,12 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 void MainWin::on_menu_gate_set_as_master() {
   if(main_project == NULL) return;
 
+  /*
   if(!selected_objects.check_for_all(&is_of_object_type<Gate>)) {
     error_dialog("Error", "Can't continue, because the selection contains non gate objects.");
     return;
   }
+  */
 
   merge_gate_images(main_project->get_logic_model(), selected_objects);
 }
@@ -1113,9 +1115,7 @@ void MainWin::on_area_selection_activated(BoundingBox const& bbox) {
       selected_objects.add(plo);
       highlighted_objects.add(plo);
     }
-    
-
-  }
+   }
 }
 
 void MainWin::on_area_selection_revoked() {
@@ -1253,8 +1253,7 @@ void MainWin::update_gui_on_selection_change() {
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicMoveGateIntoModule", 
 					  selected_objects.check_for_all(&is_of_object_type<Gate>));
-  menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSetAsMaster",
-					  selected_objects.check_for_all(&is_of_object_type<Gate>));
+
 }
 
 void MainWin::selection_tool_double_clicked(unsigned int real_x, unsigned int real_y,
@@ -1299,7 +1298,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
 
   if(plo != NULL) {
     std::cout << "Object found." << std::endl;
-    plo->print();
+    //plo->print();
     add_to_selection = true;
     
     boost::format f("object: %1%, description: %2%");
@@ -1312,7 +1311,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
 
   // try to remove a single object
   if(plo != NULL && control_key_pressed == true && selected_objects.contains(plo)) {
-
+    std::cout << "remove from selection\n";
     selected_objects.remove(plo);
     highlighted_objects.remove(plo);
     add_to_selection = false;

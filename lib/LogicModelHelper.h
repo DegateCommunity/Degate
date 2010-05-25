@@ -117,6 +117,8 @@ namespace degate {
 
   /**
    * Merge images.
+   * @param lmodel
+   * @param gates A set of objects. It can contain non-gate types too.
    */
   void merge_gate_images(LogicModel_shptr lmodel,
 			 ObjectSet gates);
