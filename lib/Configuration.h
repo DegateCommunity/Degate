@@ -48,6 +48,10 @@ namespace degate {
     
     std::string get_temp_directory() const;
 
+    /**
+     * Get the cache size for image tiles in MB.
+     */
+    size_t get_max_tile_cache_size() const;
   };
 
 }

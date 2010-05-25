@@ -35,3 +35,7 @@ Configuration::Configuration() {
 std::string Configuration::get_temp_directory() const {
   return get_realpath(std::string("/tmp")); 
 }
+
+size_t Configuration::get_max_tile_cache_size() const {
+  return 128;
+}
