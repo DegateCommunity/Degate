@@ -85,8 +85,9 @@ namespace degate {
 
       printf("Global Image Tile Cache:\n"
 	     "Used memory : %ld bytes\n"
-	     "Max memory: %ld bytes\n\n"
-	     "Holder           | Last access | Amount in bytes\n",
+	     "Max memory  : %ld bytes\n\n"
+	     "Holder           | Last access | Amount in bytes\n"
+	     "-----------------+-------------+------------------------------------\n",
 	     allocated_memory, max_cache_memory);
 
       for(cache_t::const_iterator iter = cache.begin(); iter != cache.end(); ++iter) {
@@ -110,7 +111,6 @@ namespace degate {
 
 	cache_t::iterator found = cache.find(requestor);
 	if(found == cache.end()) {
-
 	  cache[requestor] = std::make_pair(clock(), amount);
 	}
 	else {
@@ -135,11 +135,25 @@ namespace degate {
       debug(TM, "Local cache %p releases %d bytes.", requestor, amount);
 
       cache_t::iterator found = cache.find(requestor);
-      if(found != cache.end()) {
-	cache_entry_t & entry = found->second;
 
+      if(found == cache.end()) {
+	debug(TM, "Unknown memory should be released.");
+	print_table();
+	assert(1==0);
+      }
+      else {
+	cache_entry_t & entry = found->second;
 	
-	if(entry.second >= amount) entry.second -= amount;
+	if(entry.second >= amount) {
+	  entry.second -= amount;
+	  assert(allocated_memory >= amount);
+	  if(allocated_memory >= amount)  allocated_memory -= amount;
+	  else {
+	    debug(TM, "More mem to release than available.");
+	    print_table();
+	    assert(1==0);
+	  }
+	}
 	else {
 	  print_table();
 	  assert(entry.second >= amount); // will break
@@ -213,8 +227,10 @@ namespace degate {
      */
 
     ~TileCache() {
-      GlobalTileCache & gtc = GlobalTileCache::get_instance();
-      gtc.release_cache_memory(this, cache.size() * get_image_size());
+      if(cache.size() > 0) {
+	GlobalTileCache & gtc = GlobalTileCache::get_instance();
+	gtc.release_cache_memory(this, cache.size() * get_image_size());
+      }
     }
 
     
