@@ -47,7 +47,7 @@ sub compare_placements {
 	
 	foreach my $gate_id2 (keys %{$lmodel2->{'gates'}->{gate}}) {
 	    
-	    my $gate2 = $lmodel1->{'gates'}->{gate}->{$gate_id2};
+	    my $gate2 = $lmodel2->{'gates'}->{gate}->{$gate_id2};
 	    my $x2 = $gate2->{"min-x"};
 	    my $y2 = $gate2->{"min-y"};
 	    my $name2 = $gate2->{"name"};
