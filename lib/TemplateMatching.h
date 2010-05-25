@@ -179,7 +179,8 @@ namespace degate {
 
 
     void add_gate(unsigned int x, unsigned int y,
-		  struct prepared_template & tmpl);
+		  struct prepared_template & tmpl,
+		  double corr_val = 0);
 
   protected:
 

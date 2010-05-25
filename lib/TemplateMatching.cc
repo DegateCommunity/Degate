@@ -328,7 +328,8 @@ void TemplateMatching::adjust_step_size(struct search_state & state, double corr
 }
 
 void TemplateMatching::add_gate(unsigned int x, unsigned int y,
-				struct prepared_template & tmpl) {
+				struct prepared_template & tmpl, 
+				double corr_val) {
 
   // XXXX critical section
 
@@ -338,6 +339,11 @@ void TemplateMatching::add_gate(unsigned int x, unsigned int y,
     Gate_shptr gate(new Gate(x, x + tmpl.gate_template->get_width(),
 			     y, y + tmpl.gate_template->get_height(),
 			     tmpl.orientation));
+
+    char dsc[100];
+    snprintf(dsc, sizeof(dsc), "matched with corr=%.2f", corr_val);
+    gate->set_description(dsc);
+
     gate->set_gate_template(tmpl.gate_template);
     
     LogicModel_shptr lmodel = project->get_logic_model();
@@ -386,7 +392,7 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl,
       if(curr_max_val >= threshold_detection) {
 	add_gate(max_corr_x + bounding_box.get_min_x(),
 		 max_corr_y + bounding_box.get_min_y(),
-		 tmpl);
+		 tmpl, curr_max_val);
       }
 
     }
@@ -564,15 +570,18 @@ bool TemplateMatchingNormal::get_next_pos(struct search_state * state,
       else return false;
     }
     
-    unsigned int dist_x = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
-								      state->y + state->search_area.get_min_y(), 
-								      true, tmpl_w, tmpl_h);
+    unsigned int dist_x = 
+      layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
+						  state->y + state->search_area.get_min_y(), 
+						  true, tmpl_w, tmpl_h);
     
     if(dist_x > 0) {
+      /*
       debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d horizontal pixels",
 	    state->x + state->search_area.get_min_x(),
 	    state->y + state->search_area.get_min_y(),
 	    dist_x);
+      */
       state->x += dist_x;
       there_was_a_gate = true;
       step = 1;
