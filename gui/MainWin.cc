@@ -1153,10 +1153,10 @@ void MainWin::selection_tool_clicked(unsigned int real_x, unsigned int real_y, u
   }
   else if(button == 1) {
     //!imgWin.selection_active()
-    object_clicked(real_x, real_y);
     char buf[42];
     snprintf(buf, sizeof(buf), "%d, %d", real_x, real_y);
     m_statusbar.push(buf);
+    object_clicked(real_x, real_y);
   }
 }
 
@@ -1301,6 +1301,10 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
     std::cout << "Object found." << std::endl;
     plo->print();
     add_to_selection = true;
+    
+    boost::format f("object: %1%, description: %2%");
+    f % plo->get_descriptive_identifier() % plo->get_description();
+    m_statusbar.push(f.str());
   }
 
 
