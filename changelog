@@ -4,6 +4,8 @@ degate (0.0.8) unstable; urgency=low
   * Added a jpeg image importer.
   * Several bugfixes
   * Merging of standard cell template images
+  * global tile cache manager
+  * template matching with decreasing threshold values	
 	
  -- Martin Schobert <martin@weltregierung.de>  Thu, 15 Apr 2010 09:51:00 +0100
 
