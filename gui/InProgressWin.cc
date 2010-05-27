@@ -32,7 +32,7 @@ void InProgressWin::init(Gtk::Window *parent, const Glib::ustring& title, const 
   running = true;
 
   set_title(title);
-  set_default_size(220, 100);
+  set_default_size(350, 150);
   set_border_width(5);
   set_transient_for(*parent);
   set_modal(true);
@@ -90,6 +90,8 @@ bool InProgressWin::update_progress_bar() {
     if(progress > 0) {
       m_ProgressBar.set_fraction(progress);
       m_ProgressBar.set_text(pc->get_time_left_as_string());
+      m_Label_Message.set_label(pc->get_log_message());
+
     }
     else {
       m_ProgressBar.pulse();

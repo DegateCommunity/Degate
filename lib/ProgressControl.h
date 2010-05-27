@@ -45,6 +45,8 @@ namespace degate {
     time_t estimated[averaging_buf_size];
     int estimated_idx;
 
+    std::string log_message;
+
   private:
 
     virtual time_t get_time_left_averaged() {
@@ -175,6 +177,14 @@ namespace degate {
       
     }
 
+
+    virtual void set_log_message(std::string const& msg) {
+      log_message = msg;
+    }
+
+    virtual std::string get_log_message() const {
+      return log_message;
+    }
 
   };
 

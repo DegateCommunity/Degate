@@ -70,6 +70,10 @@ public:
     return pc ? pc->get_time_left_as_string() : std::string("-");
   }
 
+  virtual std::string get_log_message() const {
+    return pc ? pc->get_log_message() : std::string("");
+  }
+
   virtual void cancel() { 
     if(pc) pc->cancel(); 
   }
