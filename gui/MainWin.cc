@@ -1150,6 +1150,9 @@ void MainWin::via_tool_clicked(unsigned int real_x, unsigned int real_y, degate:
 void MainWin::selection_tool_clicked(unsigned int real_x, unsigned int real_y, unsigned int button) {
   if(button == 3) {
     menu_manager->show_popup_menu(button, 0);
+    // position is only needed for popup actions
+    last_click_on_real_x = real_x; 
+    last_click_on_real_y = real_y;
   }
   else if(button == 1) {
     //!imgWin.selection_active()
