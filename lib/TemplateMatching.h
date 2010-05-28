@@ -76,6 +76,15 @@ namespace degate {
       Grid::grid_iter iter, iter_begin, iter_end;
     };
 
+  public:
+
+    typedef struct {
+      unsigned int x, y; // absolut coordinates of the left upper corner
+      GateTemplate_shptr tmpl;
+      Gate::ORIENTATION orientation;
+      double correlation; // the correlation value 
+      double t_hc;
+    } match_found;
 
   private:
 
@@ -84,8 +93,6 @@ namespace degate {
     double threshold_detection;
     unsigned int max_step_size_search;
     unsigned int scale_down;
-    unsigned int threshold_steps;
-
 
     // background images in greyscale
     TileImage_GS_BYTE_shptr gs_img_normal;
@@ -103,6 +110,8 @@ namespace degate {
     std::list<Gate::ORIENTATION> tmpl_orientations; // template orientations to match
 
     clock_t start, finish;
+
+    std::list<match_found> matches;
 
   protected:
 
@@ -147,8 +156,9 @@ namespace degate {
      */
     void adjust_step_size(struct search_state & state, double corr_val) const;
 
-    void match_single_template(struct prepared_template & tmpl,
-			       double threshold_hc, double threshold_detection);
+    std::list<match_found> match_single_template(struct prepared_template & tmpl,
+						 double threshold_hc, 
+						 double threshold_detection);
     
     
     /**
@@ -178,9 +188,14 @@ namespace degate {
 			     unsigned int local_y) const;
 
 
-    void add_gate(unsigned int x, unsigned int y,
-		  struct prepared_template & tmpl,
-		  double corr_val = 0);
+    bool add_gate(unsigned int x, unsigned int y,
+		  GateTemplate_shptr tmpl,
+		  Gate::ORIENTATION orientation,
+		  double corr_val = 0, double t_hc = 0);
+
+    match_found keep_gate_match(unsigned int x, unsigned int y,
+				struct prepared_template & tmpl,
+				double corr_val = 0, double t_hc = 0) const;
 
   protected:
 
@@ -193,20 +208,11 @@ namespace degate {
 			      struct prepared_template const& tmpl) const = 0;
 
 
-    double get_current_threshold(double min_threshold, int num_steps, int step_i) const { 
-      double delta_thresh = (1.0 - min_threshold) / (double)num_steps;
-      return min_threshold + delta_thresh * (double)(num_steps - step_i);
-    }
-
-
   public:
 
     TemplateMatching();
 
     virtual ~TemplateMatching();
-
-    void set_threshold_steps(unsigned int steps) { threshold_steps = steps; }
-    unsigned int get_threshold_steps() const { return threshold_steps; }
 
     /**
      * Get the correlation threshold for the hill climbing start phase.

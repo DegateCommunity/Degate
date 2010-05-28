@@ -26,19 +26,22 @@
 #include <algorithm>
 #include <Statistics.h>
 #include <ImageHelper.h>
+#include <MedianFilter.h>
 
 #include <utility>
-
+#include <boost/foreach.hpp>
 #include <math.h>
 
 using namespace degate;
 
+#define USE_MEDIAN_FILER 1
+
+
 TemplateMatching::TemplateMatching() {
   threshold_hc = 0.45;
-  threshold_detection = 0.7;
+  threshold_detection = 0.5;
   max_step_size_search = 3;
   scale_down = 2;
-  threshold_steps = 1;
 }
 
 TemplateMatching::~TemplateMatching() {
@@ -123,28 +126,63 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
   BackgroundImage_shptr img_normal = i1.second;
   BackgroundImage_shptr img_scaled = i2.second;
 
-
   // Create a greyscaled image for the normal
   // unscaled background image and the scaled version.
   BoundingBox scaled_bounding_box = 
     get_scaled_bounding_box(bounding_box, scaling_factor);
 
+
   gs_img_normal = TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
 								bounding_box.get_height()));
 
-  gs_img_scaled = TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
-								bounding_box.get_height()));
+#ifdef USE_MEDIAN_FILER
+  TileImage_GS_BYTE_shptr tmp;
+ 
+  tmp =  TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
+						       bounding_box.get_height()));;
+
+  extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(tmp, 
+							    img_normal, 
+							    bounding_box);
+
+  median_filter<TileImage_GS_BYTE, TileImage_GS_BYTE>(gs_img_normal, tmp, 2);
+
+
+#else
 
   extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_normal, 
 							    img_normal, 
 							    bounding_box);
+#endif
+
+
 
   if(scaling_factor == 1)
     gs_img_scaled = gs_img_normal;
-  else
+  else {
+
+    gs_img_scaled = TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(scaled_bounding_box.get_width(),
+								  scaled_bounding_box.get_height()));
+
+#ifdef USE_MEDIAN_FILER
+    tmp =  TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
+							 bounding_box.get_height()));;
+  
+    extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(tmp, 
+							      img_scaled, 
+							      scaled_bounding_box);
+
+    median_filter<TileImage_GS_BYTE, TileImage_GS_BYTE>(gs_img_scaled, tmp, 2);
+#else
+
     extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_scaled, 
 							      img_scaled, 
 							      scaled_bounding_box);
+#endif
+  }
+
+  save_image<TileImage_GS_BYTE>("/tmp/xxx1.tif", gs_img_normal);
+  save_image<TileImage_GS_BYTE>("/tmp/xxx2.tif", gs_img_scaled);
 
 }
 
@@ -171,6 +209,11 @@ bool compare_template_size(const GateTemplate_shptr lhs, const GateTemplate_shpt
   return lhs->get_width() * lhs->get_height() > rhs->get_width() * rhs->get_height();
 } 
 
+bool compare_correlation(TemplateMatching::match_found const& lhs, 
+			 TemplateMatching::match_found const&  rhs) {
+  return lhs.correlation > rhs.correlation;
+} 
+
 void TemplateMatching::set_templates(std::list<GateTemplate_shptr> tmpl_set) {
   this->tmpl_set = tmpl_set;
   this->tmpl_set.sort(compare_template_size);
@@ -188,38 +231,44 @@ void TemplateMatching::run() {
 
 
   debug(TM, "run template matching");
+  std::list<match_found> matches;
 
-  set_progress_step_size(1.0/(threshold_steps * tmpl_set.size() * tmpl_orientations.size()));
+  set_progress_step_size(1.0/(tmpl_set.size() * tmpl_orientations.size()));
 
-  for(unsigned int i = 1; i <= threshold_steps; i++) {
+  BOOST_FOREACH(GateTemplate_shptr tmpl, tmpl_set) {
+    
+    BOOST_FOREACH(Gate::ORIENTATION orientation, tmpl_orientations) {
 
-    for(std::list<GateTemplate_shptr>::const_iterator iter = tmpl_set.begin();
-	iter != tmpl_set.end(); ++iter) {
-
-      GateTemplate_shptr tmpl = *iter;
+      boost::format f("Check cell \"%1%\"");
+      f % tmpl->get_name();
+      set_log_message(f.str());
       
-      for(std::list<Gate::ORIENTATION>::const_iterator iter = tmpl_orientations.begin();
-	  iter != tmpl_orientations.end(); ++iter) {
-	
-	double 
-	  t_hc = get_current_threshold(get_threshold_hc(), threshold_steps, i),
-	  t_det = get_current_threshold(get_threshold_detection(), threshold_steps, i);
-
-	debug(TM, 
-	      "check template %s for orientation %d.\n"
-	      "threshold for hill climbing = %f\n"
-	      "threshold for detection = %f\n", tmpl->get_name().c_str(), *iter, t_hc, t_det);
-	
-	prepared_template prep_tmpl_img = prepare_template(tmpl, *iter);
-	match_single_template(prep_tmpl_img, t_hc, t_det);
-
-
-	progress_step_done();
-	if(is_canceled()) return;
-      }
+      prepared_template prep_tmpl_img = prepare_template(tmpl, orientation);
+      //match_single_template(prep_tmpl_img, t_hc, t_det);
       
+      
+      std::list<match_found> m = match_single_template(prep_tmpl_img, 
+						       threshold_hc, 
+						       threshold_detection);
+      
+      
+      matches.insert(matches.end(), m.begin(), m.end());
+      
+      progress_step_done();
+      if(is_canceled()) return;
     }
+    
   }
+  
+  matches.sort(compare_correlation);
+
+  BOOST_FOREACH(match_found const& m, matches) {
+    std::cout << "Try to insert gate of type " << m.tmpl->get_name() << " with corr=" 
+	      << m.correlation << " at " << m.x << "," << m.y << std::endl;
+    if(add_gate(m.x, m.y, m.tmpl, m.orientation, m.correlation, m.t_hc)) 
+      std::cout << "\tInserted gate of type " << m.tmpl->get_name() << std::endl;
+  }
+
 
 }
 
@@ -263,7 +312,14 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
 
   // get image according to orientation
   GateTemplateImage_shptr tmpl_img(new GateTemplateImage(w, h));
+
+  //#ifdef USE_MEDIAN_FILERX
+  //  median_filter<GateTemplateImage, GateTemplateImage>(tmpl_img, tmpl_img_orig, 3);
+  //#else
   copy_image<GateTemplateImage, GateTemplateImage>(tmpl_img, tmpl_img_orig);
+  //#endif
+  
+  save_image<GateTemplateImage>("/tmp/xxx3.tif", tmpl_img);
 
   switch(orientation) {
   case Gate::ORIENTATION_FLIPPED_UP_DOWN:
@@ -327,33 +383,51 @@ void TemplateMatching::adjust_step_size(struct search_state & state, double corr
   else state.step_size_search = get_max_step_size();
 }
 
-void TemplateMatching::add_gate(unsigned int x, unsigned int y,
-				struct prepared_template & tmpl, 
-				double corr_val) {
+TemplateMatching::match_found 
+TemplateMatching::keep_gate_match(unsigned int x, unsigned int y,
+				  struct prepared_template & tmpl, 
+				  double corr_val, double threshold_hc) const {
+  match_found hit;
+  hit.x = x;
+  hit.y = y;
+  hit.tmpl = tmpl.gate_template;
+  hit.correlation = corr_val;
+  hit.t_hc = threshold_hc;
+  hit.orientation = tmpl.orientation;
+  return hit;
+}
+
+bool TemplateMatching::add_gate(unsigned int x, unsigned int y,
+				GateTemplate_shptr tmpl,
+				Gate::ORIENTATION orientation,
+				double corr_val, double threshold_hc) {
 
   // XXXX critical section
 
-  if(!layer_insert->exists_gate_in_region(x, x + tmpl.gate_template->get_width(),
-					  y, y + tmpl.gate_template->get_height())) {
+  if(!layer_insert->exists_gate_in_region(x, x + tmpl->get_width(),
+					  y, y + tmpl->get_height())) {
 
-    Gate_shptr gate(new Gate(x, x + tmpl.gate_template->get_width(),
-			     y, y + tmpl.gate_template->get_height(),
-			     tmpl.orientation));
+    Gate_shptr gate(new Gate(x, x + tmpl->get_width(),
+			     y, y + tmpl->get_height(),
+			     orientation));
 
     char dsc[100];
-    snprintf(dsc, sizeof(dsc), "matched with corr=%.2f", corr_val);
+    snprintf(dsc, sizeof(dsc), "matched with corr=%.2f t_hc=%.2f", corr_val, threshold_hc);
     gate->set_description(dsc);
 
-    gate->set_gate_template(tmpl.gate_template);
+    gate->set_gate_template(tmpl);
     
     LogicModel_shptr lmodel = project->get_logic_model();
     lmodel->add_object(layer_insert->get_layer_pos(), gate);
     lmodel->update_ports(gate);
+    return true;
   }
+  return false;
 }
 
-void TemplateMatching::match_single_template(struct prepared_template & tmpl,
-					     double threshold_hc, double threshold_detection) {
+std::list<TemplateMatching::match_found> 
+TemplateMatching::match_single_template(struct prepared_template & tmpl,
+					double threshold_hc, double threshold_detection) {
 
   debug(TM, "match_single_template(): start iterating over background image");
   search_state state;
@@ -361,6 +435,7 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl,
   state.y = 0;
   state.step_size_search = get_max_step_size();
   state.search_area = bounding_box;
+  std::list<match_found> matches;
 
   double max_corr_for_search = -1;
 
@@ -390,9 +465,9 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl,
 
       debug(TM, "hill climbing returned for (%d,%d) corr=%f", max_corr_x, max_corr_y, curr_max_val);
       if(curr_max_val >= threshold_detection) {
-	add_gate(max_corr_x + bounding_box.get_min_x(),
-		 max_corr_y + bounding_box.get_min_y(),
-		 tmpl, curr_max_val);
+	matches.push_back(keep_gate_match(max_corr_x + bounding_box.get_min_x(),
+					  max_corr_y + bounding_box.get_min_y(),
+					  tmpl, curr_max_val, threshold_hc));
       }
 
     }
@@ -401,6 +476,7 @@ void TemplateMatching::match_single_template(struct prepared_template & tmpl,
 
   std::cout << "The maximum correlation value for the current template and orientation is " << max_corr_for_search << std::endl;
 
+  return matches;
 }
 
 
@@ -488,8 +564,7 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
 					   unsigned int local_y) const {
 
   double template_size = zero_mean_template->get_width() * zero_mean_template->get_height();
-  assert(template_size > 0);
-  
+  assert(zero_mean_template->get_width() > 0 && zero_mean_template->get_height() > 0);
 
   unsigned int 
     x_plus_w = local_x + zero_mean_template->get_width() -1,
@@ -518,9 +593,12 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
   double denominator = sqrt((f2 - f1*f1/template_size) * sum_over_zero_mean_template);
   
   // calculate nummerator
-  if(isinf(denominator) || isnan(denominator)) {
-    debug(TM, "ERROR: The denominator is not a valid number: f1=%f f2=%f template_size=%d sum=%f",
-	  f1, f2, template_size, sum_over_zero_mean_template);
+  if(isinf(denominator) || isnan(denominator) || denominator == 0) {
+    debug(TM, 
+	  "ERROR: The denominator is not a valid number: f1=%f f2=%f template_size=%f sum=%f "
+	  "local_x=%d local_y=%d x_plus_w=%d y_plus_h=%d lxm1=%d lym1=%d",
+	  f1, f2, template_size, sum_over_zero_mean_template,
+	  local_x, local_y, x_plus_w, y_plus_h, lxm1, lym1);
     return -1.0;
   }
 

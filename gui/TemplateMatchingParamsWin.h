@@ -65,8 +65,7 @@ class TemplateMatchingParamsWin : private GladeFileLoader {
 			    double threshold_hc,
 			    double threshold_detection,
 			    unsigned int max_step_size_search,
-			    unsigned int preselected_scale_down,
-			    unsigned int threshold_steps);
+			    unsigned int preselected_scale_down);
   ~TemplateMatchingParamsWin();
   
   /**
@@ -78,8 +77,7 @@ class TemplateMatchingParamsWin : private GladeFileLoader {
 	   double * threshold_detection,
 	   unsigned int * max_step_size_search,
 	   unsigned int * scale_down,
-	   std::list<degate::Gate::ORIENTATION> & tmpl_orientations,
-	   unsigned int * threshold_steps);
+	   std::list<degate::Gate::ORIENTATION> & tmpl_orientations);
   
  private:
   Gtk::Window *parent;
@@ -87,7 +85,6 @@ class TemplateMatchingParamsWin : private GladeFileLoader {
   Gtk::HScale * hscale_threshold_hc;
   Gtk::HScale * hscale_threshold_detection;
   Gtk::Entry  * entry_step_size_search;
-  Gtk::Entry  * entry_threshold_steps;
   Gtk::ComboBox * combobox_scale_down;
   Gtk::ComboBox * combobox_tmpl_orientations;
 

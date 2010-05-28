@@ -38,8 +38,7 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
 						     double threshold_hc,
 						     double threshold_detection,
 						     unsigned int max_step_size_search,
-						     unsigned int preselected_scale_down,
-						     unsigned int threshold_steps) :
+						     unsigned int preselected_scale_down) :
   GladeFileLoader("template_matching_params.glade", "set_template_matching_params_dialog") {
 
   assert(parent);
@@ -115,13 +114,6 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
       
     }
 
-    get_widget("entry_threshold_steps", entry_threshold_steps);
-    if(entry_threshold_steps != NULL) {
-      char txt[100];
-      snprintf(txt, sizeof(txt), "%d", threshold_steps);
-      entry_threshold_steps->set_text(strdup(txt));
-    }
-
   }
 }
 
@@ -172,8 +164,7 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
 				    double * threshold_detection,
 				    unsigned int * max_step_size_search,
 				    unsigned int * scale_down,
-				    std::list<Gate::ORIENTATION> & tmpl_orientations,
-				    unsigned int * threshold_steps) {
+				    std::list<Gate::ORIENTATION> & tmpl_orientations) {
   assert(threshold_hc != NULL);
   assert(threshold_detection != NULL);
   assert(max_step_size_search != NULL);
@@ -181,9 +172,8 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
 
   *max_step_size_search = 0;
   *scale_down = 0;
-  *threshold_steps = 0;
   
-  while(*max_step_size_search == 0 || *scale_down == 0 || *threshold_steps == 0) {
+  while(*max_step_size_search == 0 || *scale_down == 0) {
 
     get_dialog()->run();
     if(ok_clicked) {
@@ -192,8 +182,6 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
 
       *threshold_hc = hscale_threshold_hc->get_value();
       *threshold_detection = hscale_threshold_detection->get_value();
-
-      *threshold_steps = atoi(entry_threshold_steps->get_text().c_str());
 
       Gtk::TreeModel::iterator iter;
       
@@ -218,10 +206,6 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
 	return true;
       }
 
-      if(*threshold_steps > 0 && *threshold_steps > 0) {
-	get_dialog()->hide();
-	return true;
-      }
     }
     else return false;
   }
