@@ -46,6 +46,7 @@ namespace degate {
     int estimated_idx;
 
     std::string log_message;
+    bool log_message_set;
 
   private:
 
@@ -105,7 +106,7 @@ namespace degate {
      * The constructor
      */
 
-    ProgressControl() {
+    ProgressControl() : log_message_set(false) {
       reset_progress();
     }
 
@@ -180,12 +181,16 @@ namespace degate {
 
     virtual void set_log_message(std::string const& msg) {
       log_message = msg;
+      log_message_set = true;
     }
 
     virtual std::string get_log_message() const {
       return log_message;
     }
 
+    virtual bool has_log_message() const {
+      return log_message_set;
+    }
   };
 
   typedef std::tr1::shared_ptr<ProgressControl> ProgressControl_shptr;
