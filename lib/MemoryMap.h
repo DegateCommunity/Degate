@@ -250,7 +250,6 @@ namespace degate {
     
     fd = mkstemp(tmp_filename);
     
-    debug(TM, "temp file: [%s]\n", tmp_filename);
     if(fd == -1) {
       debug(TM, "mkstemp() failed");
       ret = RET_ERR;
