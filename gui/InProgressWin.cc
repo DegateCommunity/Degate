@@ -90,7 +90,8 @@ bool InProgressWin::update_progress_bar() {
     if(progress > 0) {
       m_ProgressBar.set_fraction(progress);
       m_ProgressBar.set_text(pc->get_time_left_as_string());
-      m_Label_Message.set_label(pc->get_log_message());
+      if(pc->has_log_message())
+	m_Label_Message.set_label(pc->get_log_message());
 
     }
     else {

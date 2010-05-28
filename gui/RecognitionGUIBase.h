@@ -74,6 +74,10 @@ public:
     return pc ? pc->get_log_message() : std::string("");
   }
 
+  virtual bool has_log_message() const {
+    return pc ? pc->has_log_message() : false;
+  }
+
   virtual void cancel() { 
     if(pc) pc->cancel(); 
   }
