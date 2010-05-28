@@ -347,7 +347,6 @@ namespace degate {
     if(dst->get_width() == 0) throw DegateRuntimeException("Invalid image dimension for destination image.");
   
     unsigned int scaling = lrint((double)src->get_width() / (double)dst->get_width());
-    std::cout << "Scaling " << scaling << std::endl;
 
     if(scaling == 1)
       copy_image<ImageTypeDst, ImageTypeSrc>(dst, src);
