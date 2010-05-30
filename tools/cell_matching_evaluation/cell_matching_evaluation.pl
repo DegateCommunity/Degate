@@ -21,15 +21,25 @@ print "-----------------------------------------------------------------------\n
 my $score2 = compare_placements($lmodel2, $lib2, $lmodel1, $lib1, $dist_threshold);
 print "-----------------------------------------------------------------------\n";
 
-print "Score1 = $score1\n";
-print "Score2 = $score2\n";
-print "Score = ", ($score1 + $score2), "\n";
+my $max_mismatches = count($lmodel1) + count($lmodel2);
+my $score = ($score1 + $score2);
+print "Logic model 1 has " . count($lmodel1) . " gates\n";
+print "Logic model 2 has " . count($lmodel2) . " gates\n";
+print "Found $score1 gates from lmodel 1 in lmodel 2\n";
+print "Found $score2 gates from lmodel 2 in lmodel 1\n";
+print "Score = $score\n";
+print "Possible number of mismatches = ", $max_mismatches, "\n";
+print "Recognition rate = " . (100 * $score / $max_mismatches) . "\n";
 
+sub count {
+    my $lmodel = shift;
+    return scalar(keys %{$lmodel->{'gates'}->{gate}});
+}
 
 sub compare_placements {
     my ($lmodel1, $lib1, $lmodel2, $lib2, $dist_threshold) = @_;
 
-    my $score = scalar(keys %{$lmodel1->{'gates'}->{gate}});
+    my $matches = 0;
 
     foreach my $gate_id1 (keys %{$lmodel1->{'gates'}->{gate}}) {
 
@@ -60,12 +70,12 @@ sub compare_placements {
 
 	    if(sqrt($dx*$dx + $dy*$dy) < $dist_threshold) {
 		print "    found corresponding gate: $type_name2 id=$gate_id2 x=$x2 y=$y2\n";
-		$score--;
+		$matches++;
 	    }
 	}
     }
 
-    return $score;
+    return $matches;
 }
 
 sub get_cell {
