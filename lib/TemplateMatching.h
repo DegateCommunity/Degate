@@ -72,8 +72,10 @@ namespace degate {
       unsigned int step_size_search;
       BoundingBox search_area; // on unscaled uncropped image
 
-      Grid_shptr grid;
-      Grid::grid_iter iter, iter_begin, iter_end;
+      Grid_shptr grid; // pointer to grid
+      Grid::grid_iter iter,  // current position
+	iter_begin, // first grid offset that is larger than x or y
+	iter_end; // last entry grid that is less than x+w or y+h
     };
 
   public:
@@ -340,7 +342,8 @@ namespace degate {
 
     bool initialize_state_struct(struct search_state * state,
 				 int offs_min,
-				 int offs_max) const;
+				 int offs_max,
+				 bool is_horizontal_grid) const;
 
     virtual bool get_next_pos(struct search_state * state,
 			      struct prepared_template const& tmpl) const = 0;

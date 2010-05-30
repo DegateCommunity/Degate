@@ -27,6 +27,7 @@
 #include <Statistics.h>
 #include <ImageHelper.h>
 #include <MedianFilter.h>
+#include <DegateHelper.h>
 
 #include <utility>
 #include <boost/foreach.hpp>
@@ -34,7 +35,7 @@
 
 using namespace degate;
 
-#define USE_MEDIAN_FILER 1
+//#define USE_MEDIAN_FILER 1
 
 
 TemplateMatching::TemplateMatching() {
@@ -90,6 +91,13 @@ void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr proje
   
   this->project = project;
   this->bounding_box = bounding_box;
+
+  // limit bounding box
+  if(this->bounding_box.get_max_x() + 1 > (int)project->get_width())
+    this->bounding_box.set_max_x(LENGTH_TO_MAX(project->get_width()));
+
+  if(this->bounding_box.get_max_y() + 1 > (int)project->get_height())
+    this->bounding_box.set_max_y(LENGTH_TO_MAX(project->get_height()));
 
   ScalingManager_shptr sm = layer_matching->get_scaling_manager();
   
@@ -235,6 +243,15 @@ void TemplateMatching::run() {
 
   set_progress_step_size(1.0/(tmpl_set.size() * tmpl_orientations.size()));
 
+  /*
+  BOOST_FOREACH(GateTemplate_shptr tmpl, tmpl_set) {
+    BOOST_FOREACH(Gate::ORIENTATION orientation, tmpl_orientations) {
+      add_task( run2, parameter)
+    }
+  }
+
+  wait;
+  */
   BOOST_FOREACH(GateTemplate_shptr tmpl, tmpl_set) {
     
     BOOST_FOREACH(Gate::ORIENTATION orientation, tmpl_orientations) {
@@ -431,8 +448,9 @@ TemplateMatching::match_single_template(struct prepared_template & tmpl,
 
   debug(TM, "match_single_template(): start iterating over background image");
   search_state state;
-  state.x = 0;
-  state.y = 0;
+  memset(&state, 0, sizeof(search_state));
+  state.x = 1;
+  state.y = 1;
   state.step_size_search = get_max_step_size();
   state.search_area = bounding_box;
   std::list<match_found> matches;
@@ -449,6 +467,12 @@ TemplateMatching::match_single_template(struct prepared_template & tmpl,
 					lrint((double)state.x / get_scaling_factor()),
 					lrint((double)state.y / get_scaling_factor()));
 
+    /*
+    debug(TM, "%d,%d  == %d,%d  -> %f", state.x, state.y, 
+	  lrint((double)state.x / get_scaling_factor()),
+	  lrint((double)state.y / get_scaling_factor()),
+	  corr_val);
+    */
     if(corr_val > max_corr_for_search) max_corr_for_search = corr_val;
 
 
@@ -642,7 +666,7 @@ bool TemplateMatchingNormal::get_next_pos(struct search_state * state,
     if(state->x + step < state->search_area.get_width() - tmpl_w) 
       state->x += step;
     else {
-      state->x = 0;
+      state->x = 1;
       if(state->y + step < state->search_area.get_height() - tmpl_h) 
 	state->y += step;
       else return false;
@@ -674,31 +698,53 @@ bool TemplateMatchingNormal::get_next_pos(struct search_state * state,
 
 bool TemplateMatchingAlongGrid::initialize_state_struct(struct search_state * state,
 							int offs_min,
-							int offs_max) const {
+							int offs_max,
+							bool is_horizontal_grid) const {
   if(state->grid == NULL) {
-    const RegularGrid_shptr rg = project->get_regular_horizontal_grid();
-    const IrregularGrid_shptr ig = project->get_irregular_horizontal_grid();
+    const RegularGrid_shptr rg = is_horizontal_grid ? 
+      project->get_regular_horizontal_grid() : project->get_regular_vertical_grid();
+    const IrregularGrid_shptr ig = is_horizontal_grid ? 
+      project->get_irregular_horizontal_grid() : project->get_irregular_vertical_grid();
 
     if(rg->is_enabled()) state->grid = rg;
     else if(ig->is_enabled()) state->grid = ig;
 
     if(state->grid != NULL) {
 
+      debug(TM, "check grid from %d to %d", offs_min, offs_max);
+
+      // iterate over grid and find first and last offset
+      state->iter_begin = state->grid->begin();
+      state->iter_end = state->grid->begin();
       for(Grid::grid_iter iter = state->grid->begin(); 
 	  iter != state->grid->end(); ++iter) {
-	if(*iter <= offs_min) state->iter_begin = iter;
-	if(*iter <= offs_max) state->iter_end = iter;
+	debug(TM, "\tcheck %d", *iter);
+	if(*iter < offs_min) state->iter_begin = iter;
+	if(*iter < offs_max) state->iter_end = iter;
       }
 
-      if(state->iter_begin != state->grid->end()) state->iter_begin++;
-      if(state->iter_end != state->grid->end()) state->iter_end++;
+      if(*(state->iter_begin) < offs_min && 
+	 state->iter_begin != state->grid->end()) state->iter_begin++;
+
+      //if(state->iter_end != state->grid->end()) state->iter_end++;
+
+      if(state->iter_begin != state->grid->end())
+	debug(TM, "first grid offset %d", *(state->iter_begin) );
+      //      if(state->iter_end != state->grid->end())
+      debug(TM, "last  grid offset %d", *(state->iter_end));
 
       if(state->iter_begin == state->grid->end() ||
-	 state->iter_end == state->grid->end()) return false;
+	 state->iter_end == state->grid->end()) {
+	debug(TM, "failed");
+	return false;
+      }
 
       state->iter = state->iter_begin;
     }
-    else return false;
+    else {
+      debug(TM, "There is no grid enabled.");
+      return false;
+    }
   }
   return true;
 }
@@ -720,11 +766,14 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
   if(state->grid == NULL && 
      initialize_state_struct(state,
 			     state->search_area.get_min_y(),
-			     state->search_area.get_max_y() - tmpl_h) == false) 
+			     state->search_area.get_max_y() - tmpl_h,
+			     false) == false) {
+    debug(TM, "Can't initialize search structure.");
     return false;
+  }
   
 
-  if(state->x == 0 && state->y == 0) { // state condition
+  if(state->x == 1 && state->y == 1) { // start condition
     state->y = *(state->iter) - state->search_area.get_min_y();
   }
 
@@ -732,13 +781,20 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
 
   do {
 
-    if(state->x + step < state->search_area.get_width()) 
+    if(state->x + step < state->search_area.get_width() - tmpl_w) 
       state->x += step;
     else {
-      state->x = 0;
+      debug(TM, "next line");
+      ++(state->iter);
+      state->x = 1;
       state->y = *(state->iter) - state->search_area.get_min_y();
-      ++state->iter;
-      if(state->iter == state->iter_end) return false;
+
+      if(*(state->iter) > *(state->iter_end) || 
+	 state->y >= state->search_area.get_height() - tmpl_h) {
+	debug(TM, "will not check %d", *(state->iter));
+	return false;
+      }
+
     }
     
     unsigned int dist_x = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
@@ -780,24 +836,27 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state * state,
   if(state->grid == NULL && 
      initialize_state_struct(state,
 			     state->search_area.get_min_x(),
-			     state->search_area.get_max_x() - tmpl_w) == false) 
+			     state->search_area.get_max_x() - tmpl_w,
+			     true) == false) 
     return false;
   
 
-  if(state->x == 0 && state->y == 0) { // state condition
+  if(state->x == 1 && state->y == 1) { // start condition
     state->x = *(state->iter) - state->search_area.get_min_x();
   }
 
   bool there_was_a_gate = false;
 
   do {
-    if(state->y + step < state->search_area.get_height()) 
+    if(state->y + step < state->search_area.get_height() - tmpl_h) 
       state->y += step;
     else {
-      state->x = *(state->iter) - state->search_area.get_min_x();
-      state->y = 0;
       ++state->iter;
-      if(state->iter == state->iter_end) return false;
+      state->x = *(state->iter) - state->search_area.get_min_x();
+      state->y = 1;
+      if(*(state->iter) > *(state->iter_end) || 
+	 state->x >= state->search_area.get_width() - tmpl_w) return false;
+
     }
 
     unsigned int dist_y = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
