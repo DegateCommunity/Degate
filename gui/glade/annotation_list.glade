@@ -9,7 +9,6 @@
     <property name="default_height">400</property>
     <property name="type_hint">dialog</property>
     <property name="deletable">False</property>
-    <property name="opacity">0.5</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
@@ -101,7 +100,7 @@
                 <property name="visible">True</property>
                 <child>
                   <widget class="GtkButton" id="goto_button">
-                    <property name="label" translatable="yes">gtk-jump-to</property>
+                    <property name="label">gtk-jump-to</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="has_focus">True</property>
@@ -136,7 +135,7 @@
             <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="close_button">
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
