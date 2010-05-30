@@ -67,7 +67,7 @@ namespace degate {
       for(cache_t::iterator iter = cache.begin(); iter != cache.end(); ++iter) {
 	cache_entry_t & entry = iter->second;
 	if(entry.first < now) {
-	  now = clock();
+	  now = entry.first;
 	  oldest = iter->first;
 	}
       }
@@ -86,13 +86,14 @@ namespace degate {
       printf("Global Image Tile Cache:\n"
 	     "Used memory : %ld bytes\n"
 	     "Max memory  : %ld bytes\n\n"
-	     "Holder           | Last access | Amount in bytes\n"
+	     "Holder           | Last access | Amount of memory\n"
 	     "-----------------+-------------+------------------------------------\n",
 	     allocated_memory, max_cache_memory);
 
       for(cache_t::const_iterator iter = cache.begin(); iter != cache.end(); ++iter) {
 	cache_entry_t const& entry = iter->second;
-	printf("%16p | %11ld | %ld\n", iter->first, entry.first, entry.second);
+	printf("%16p | %11ld | %ld M (%ld bytes)\n", 
+	       iter->first, entry.first, entry.second/(1024*1024), entry.second);
       }
 
       printf("\n");
@@ -102,12 +103,12 @@ namespace degate {
 
       debug(TM, "Local cache %p requests %d bytes.", requestor, amount);
 
-      while(allocated_memory + amount > max_cache_memory) {
+      while(allocated_memory + amount >= max_cache_memory) {
 	debug(TM, "Try to free memory");
 	remove_oldest();
       }
 
-      if(allocated_memory + amount < max_cache_memory) {
+      if(allocated_memory + amount <= max_cache_memory) {
 
 	cache_t::iterator found = cache.find(requestor);
 	if(found == cache.end()) {
