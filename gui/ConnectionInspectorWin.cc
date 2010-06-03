@@ -48,9 +48,7 @@ ConnectionInspectorWin::ConnectionInspectorWin(Gtk::Window *parent, degate::Logi
   assert(lmodel);
 
   if(get_dialog()) {
-
-    get_dialog()->set_opacity(0.5);
-    
+   
     // connect signals
     get_widget("close_button", pCloseButton);
     if(pCloseButton)
