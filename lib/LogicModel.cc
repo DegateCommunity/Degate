@@ -362,7 +362,7 @@ void LogicModel::update_ports(Gate_shptr gate) throw(InvalidPointerException) {
 
   GateTemplate_shptr gate_template = gate->get_gate_template();
 
-  debug(TM, "upate ports on gate %d", gate->get_object_id());
+  //  debug(TM, "upate ports on gate %d", gate->get_object_id());
 
   if(gate->has_template()) {
     // iterate over template ports
@@ -371,7 +371,7 @@ void LogicModel::update_ports(Gate_shptr gate) throw(InvalidPointerException) {
       GateTemplatePort_shptr tmpl_port = *tmpl_port_iter;
       
       if(!gate->has_template_port(tmpl_port) && gate->has_orientation()) {
-	debug(TM, "adding a port to gate");
+	//debug(TM, "adding a port to gate");
 	GatePort_shptr new_gate_port(new GatePort(gate, tmpl_port));
 	new_gate_port->set_object_id(get_new_object_id());
 	gate->add_port(new_gate_port); // will set coordinates, too
@@ -389,7 +389,7 @@ void LogicModel::update_ports(Gate_shptr gate) throw(InvalidPointerException) {
   for(Gate::port_iterator port_iter = gate->ports_begin();
       port_iter != gate->ports_end(); ++port_iter) {
     
-    debug(TM, "iterating over ports");
+    //debug(TM, "iterating over ports");
     GatePort_shptr gate_port = *port_iter;
     assert(gate_port != NULL);
 
