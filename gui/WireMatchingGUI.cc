@@ -53,7 +53,8 @@ bool WireMatchingGUI::before_dialog() {
   
   Layer_shptr layer = lmodel->get_current_layer();
   assert(layer != NULL);
-  
+
+  /*
   if(layer->get_layer_type() != Layer::METAL) {
     Gtk::MessageDialog dialog(*parent, 
 			      "The wire tracing must be called for a metal layer (>= M2).", 
@@ -62,7 +63,8 @@ bool WireMatchingGUI::before_dialog() {
     dialog.run();  
     return false;
   }
-  
+  */
+
   if(bounding_box.get_max_x() == 0 && bounding_box.get_max_y() == 0) {
     Gtk::MessageDialog dialog(*parent, 
 			      "You did not select an area for the wire matching. "
