@@ -614,11 +614,12 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
     const BoundingBox & bbox = obj_ptr->get_bounding_box();
     Layer_shptr layer = obj_ptr->get_layer();
 
+    highlighted_objects.clear();
     highlighted_objects.add(obj_ptr);
 
     center_view(bbox.get_center_x(), bbox.get_center_y(), layer->get_layer_pos());
 
-    highlighted_objects.remove(obj_ptr);
+    
     
   }
 }

@@ -166,13 +166,10 @@ void ConnectionInspectorWin::set_object(degate::PlacedLogicModelObject_shptr obj
     current_object_type_label->set_text(obj_ptr->get_object_type_name());
     clear_list();
 
-    obj_ptr->print();
-
     back_list.push_back(obj_ptr);
 
 
     if(Gate_shptr g = std::tr1::dynamic_pointer_cast<Gate>(obj_ptr)) {
-      debug(TM, "is a gate");
       for(Gate::port_iterator iter = g->ports_begin();
 	  iter != g->ports_end(); ++iter) {
 	Glib::ustring current_color = MY_WHITE;
@@ -203,7 +200,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
   
   Net_shptr net = src_curr_obj->get_net();
   if(net == NULL) {
-    disable_inspection();
+    //disable_inspection();
     return;
   }
 
@@ -338,6 +335,8 @@ void ConnectionInspectorWin::on_goto_button_clicked() {
 	object_ptr = gate_port->get_gate();
       
       set_object(object_ptr);
+
+      if(back_list.size() > 0) pBackButton->set_sensitive(true);
 
       signal_goto_button_clicked_(object_ptr);
     }
