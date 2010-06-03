@@ -47,8 +47,6 @@ ConnectionInspectorWin::ConnectionInspectorWin(Gtk::Window *parent, degate::Logi
   this->parent = parent;
   assert(lmodel);
 
-  set_opacity(0.5);
-
   if(get_dialog()) {
 
     get_dialog()->set_opacity(0.5);
