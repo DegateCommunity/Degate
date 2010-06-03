@@ -256,8 +256,15 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
 					   unsigned int pre_scaling) const {
   
   //if(img == NULL) return;
-  
+
+  // real pixel coordinates
+  unsigned int min_x = x * pre_scaling;
+  unsigned int min_y = y * pre_scaling;
+  unsigned int max_x = min_x + tile_width * pre_scaling /* + 1 */;
+  unsigned int max_y = min_y + tile_width * pre_scaling /* + 1 */;
+
   guint32 * data = new guint32[tile_width * tile_width];
+  memset(data, 0, tile_width * tile_width * sizeof(guint32));
   img->raw_copy(data, x, y);
 
   GLuint texture = 0;
@@ -301,10 +308,6 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
 
   delete[] data;
 
-  unsigned int min_x = x * pre_scaling;
-  unsigned int min_y = y * pre_scaling;
-  unsigned int max_x = min_x + tile_width * pre_scaling + 1;
-  unsigned int max_y = min_y + tile_width * pre_scaling + 1;
 
   glBindTexture(GL_TEXTURE_2D, texture);
   assert(error_check());
@@ -564,6 +567,7 @@ void DegateRenderer::render_background() {
   degate::ScalingManager_shptr smgr = layer->get_scaling_manager();
   assert(smgr != NULL);
 
+
   degate::ScalingManager<degate::BackgroundImage>::image_map_element elem = 
     smgr->get_image(get_scaling());
 
@@ -579,12 +583,20 @@ void DegateRenderer::render_background() {
     unsigned int tile_width = img->get_tile_size();
   
     unsigned int // scaled coordinates
-      min_x = to_lower_tile_offset(std::max(get_viewport_min_x(), 0), tile_width) / pre_scaling,
-      max_x = to_upper_tile_offset(std::min((unsigned int)std::max(get_viewport_max_x(), 0), 
-					    get_virtual_width()), tile_width) / pre_scaling,
-      min_y = to_lower_tile_offset(std::max(get_viewport_min_y(), 0), tile_width) / pre_scaling,
-      max_y = to_upper_tile_offset(std::min((unsigned int)std::max(get_viewport_max_y(), 0), 
-					    get_virtual_height()), tile_width) / pre_scaling;
+
+      min_x = to_lower_tile_offset(std::max(get_viewport_min_x()  / pre_scaling, (unsigned int)0), tile_width),
+
+      max_x = to_upper_tile_offset(std::min(std::max(get_viewport_max_x() / pre_scaling, (unsigned int)0), 
+					    get_virtual_width() / pre_scaling), tile_width),
+      min_y = to_lower_tile_offset(std::max(get_viewport_min_y()  / pre_scaling, (unsigned int)0), tile_width),
+      max_y = to_upper_tile_offset(std::min(std::max(get_viewport_max_y() / pre_scaling, (unsigned int)0), 
+					    get_virtual_height() / pre_scaling), tile_width);
+
+    /*
+    debug(TM, "render tiles for area: %d..%d, %d..%d", 
+	  get_viewport_min_x(), get_viewport_max_x(), get_viewport_min_y(), get_viewport_max_y());
+    debug(TM, "render tiles for area: %d..%d, %d..%d", min_x, max_x, min_y, max_y);
+    */
 
     // screen coordinates
     background_bbox.set(min_x * pre_scaling, 
@@ -601,6 +613,7 @@ void DegateRenderer::render_background() {
     for(unsigned int x = min_x; x < max_x; x+=tile_width)
     
       for(unsigned int y = min_y; y < max_y; y+=tile_width) {
+
 	GLuint texture = create_and_add_tile(img, x, y, tile_width, elem.first);
 	rendered_bg_tiles.push_back(boost::make_tuple(x, y, texture));
       }
