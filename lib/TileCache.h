@@ -48,7 +48,7 @@ namespace degate {
     size_t max_cache_memory;
     size_t allocated_memory;
 
-    typedef std::pair<clock_t, size_t> cache_entry_t;
+    typedef std::pair<struct timespec, size_t> cache_entry_t;
     typedef std::map<TileCacheBase *, cache_entry_t> cache_t;
 
     cache_t cache;
@@ -61,13 +61,16 @@ namespace degate {
     }
 
     void remove_oldest() {
-      clock_t now = clock();
+      struct timespec now;
+      clock_gettime(CLOCK_MONOTONIC, &now);
+
       TileCacheBase * oldest = NULL;
 
       for(cache_t::iterator iter = cache.begin(); iter != cache.end(); ++iter) {
 	cache_entry_t & entry = iter->second;
-	if(entry.first < now) {
-	  now = entry.first;
+	if(entry.first.tv_sec <= now.tv_sec && entry.first.tv_nsec <= now.tv_nsec) {
+	  now.tv_sec = entry.first.tv_sec;
+	  now.tv_nsec = entry.first.tv_nsec;
 	  oldest = iter->first;
 	}
       }
@@ -86,14 +89,14 @@ namespace degate {
       printf("Global Image Tile Cache:\n"
 	     "Used memory : %ld bytes\n"
 	     "Max memory  : %ld bytes\n\n"
-	     "Holder           | Last access | Amount of memory\n"
-	     "-----------------+-------------+------------------------------------\n",
+	     "Holder           | Last access (sec,nsec)    | Amount of memory\n"
+	     "-----------------+---------------------------+------------------------------------\n",
 	     allocated_memory, max_cache_memory);
 
       for(cache_t::const_iterator iter = cache.begin(); iter != cache.end(); ++iter) {
 	cache_entry_t const& entry = iter->second;
-	printf("%16p | %11ld | %ld M (%ld bytes)\n", 
-	       iter->first, entry.first, entry.second/(1024*1024), entry.second);
+	printf("%16p | %12ld.%12ld | %ld M (%ld bytes)\n", 
+	       iter->first, entry.first.tv_sec, entry.first.tv_nsec, entry.second/(1024*1024), entry.second);
       }
 
       printf("\n");
@@ -109,19 +112,22 @@ namespace degate {
       }
 
       if(allocated_memory + amount <= max_cache_memory) {
+	struct timespec now;
+	clock_gettime(CLOCK_MONOTONIC, &now);
 
 	cache_t::iterator found = cache.find(requestor);
 	if(found == cache.end()) {
-	  cache[requestor] = std::make_pair(clock(), amount);
+	  cache[requestor] = std::make_pair(now, amount);
 	}
 	else {
 	  cache_entry_t & entry = found->second;
-	  entry.first = clock();
+	  entry.first = now;
 	  entry.second += amount;
 	}
 
 	allocated_memory += amount;
 
+	print_table();
 	return true;
       }
 
@@ -192,7 +198,7 @@ namespace degate {
 
     typedef std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> > MemoryMap_shptr;
     typedef std::map< std::string, // filename
-		      std::pair<MemoryMap_shptr, clock_t> > cache_type;
+		      std::pair<MemoryMap_shptr, struct timespec> > cache_type;
 
     const std::string directory;
     const unsigned int tile_width_exp;
@@ -267,7 +273,9 @@ namespace degate {
 	  GlobalTileCache & gtc = GlobalTileCache::get_instance();
 	  bool ok = gtc.request_cache_memory(this, get_image_size());
 	  assert(ok == true);
-	  cache[filename] = std::make_pair(load(filename), clock());
+	  struct timespec now;
+	  clock_gettime(CLOCK_MONOTONIC, &now);
+	  cache[filename] = std::make_pair(load(filename), now);
 	}
 
 	current_tile = cache[filename].first;
@@ -288,14 +296,19 @@ namespace degate {
 	
       if(cache.size() == 0) return;
 
-      clock_t oldest_clock_val = clock();
+      struct timespec oldest_clock_val;
+      clock_gettime(CLOCK_MONOTONIC, &oldest_clock_val);
+
       typename cache_type::iterator oldest = cache.begin();
       
       for(typename cache_type::iterator iter = cache.begin();
 	  iter != cache.end(); ++iter) {
-	clock_t clock_val = (*iter).second.second;
-	if(clock_val < oldest_clock_val) {
-	  oldest_clock_val = clock_val;
+
+	struct timespec clock_val = (*iter).second.second;
+	if(clock_val.tv_sec <= oldest_clock_val.tv_sec &&
+	   clock_val.tv_nsec <= oldest_clock_val.tv_nsec) {
+	  oldest_clock_val.tv_sec = clock_val.tv_sec;
+	  oldest_clock_val.tv_nsec = clock_val.tv_nsec;
 	  oldest = iter;
 	}
       }
