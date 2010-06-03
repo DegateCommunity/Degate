@@ -75,7 +75,8 @@ namespace degate {
       Grid_shptr grid; // pointer to grid
       Grid::grid_iter iter,  // current position
 	iter_begin, // first grid offset that is larger than x or y
-	iter_end; // last entry grid that is less than x+w or y+h
+	iter_last, // last entry grid that is less than x+w or y+h
+	iter_end; 
     };
 
   public:

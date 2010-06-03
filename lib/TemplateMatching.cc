@@ -3,7 +3,7 @@
   This file is part of the IC reverse engineering tool degate.
  
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+` 
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -35,8 +35,12 @@
 
 using namespace degate;
 
-//#define USE_MEDIAN_FILER 1
+//#define USE_MEDIAN_FILTER 2
+//#define USE_GAUSS_FILTER 5
 
+#if defined(USE_MEDIAN_FILTER) || defined(USE_GAUSS_FILTER)
+#define USE_FILTER
+#endif
 
 TemplateMatching::TemplateMatching() {
   threshold_hc = 0.45;
@@ -100,8 +104,10 @@ void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr proje
     this->bounding_box.set_max_y(LENGTH_TO_MAX(project->get_height()));
 
   ScalingManager_shptr sm = layer_matching->get_scaling_manager();
-  
+ 
+  debug(TM, "Prepare background.");
   prepare_background_images(sm, bounding_box, get_scaling_factor());
+  debug(TM, "Prepare sum tabes.");
   prepare_sum_tables(gs_img_normal, gs_img_scaled);
 
   reset_progress();
@@ -143,7 +149,8 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
   gs_img_normal = TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
 								bounding_box.get_height()));
 
-#ifdef USE_MEDIAN_FILER
+#ifdef USE_FILTER
+
   TileImage_GS_BYTE_shptr tmp;
  
   tmp =  TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
@@ -153,11 +160,25 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 							    img_normal, 
 							    bounding_box);
 
-  median_filter<TileImage_GS_BYTE, TileImage_GS_BYTE>(gs_img_normal, tmp, 2);
+  #ifdef USE_MEDIAN_FILTER
 
+  median_filter<TileImage_GS_BYTE, TileImage_GS_BYTE>(gs_img_normal, tmp, USE_MEDIAN_FILTER);
+
+
+  #elif defined(USE_GAUSS_FILTER)
+
+  int blur_kernel_size = USE_GAUSS_FILTER;
+
+  std::tr1::shared_ptr<GaussianBlur> 
+    gaussian_blur_kernel(new GaussianBlur(blur_kernel_size, blur_kernel_size, 1.1));
+
+  gaussian_blur_kernel->print();
+
+  convolve<TileImage_GS_BYTE, TileImage_GS_BYTE>(gs_img_normal, tmp, gaussian_blur_kernel);
+
+  #endif
 
 #else
-
   extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_normal, 
 							    img_normal, 
 							    bounding_box);
@@ -172,7 +193,7 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
     gs_img_scaled = TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(scaled_bounding_box.get_width(),
 								  scaled_bounding_box.get_height()));
 
-#ifdef USE_MEDIAN_FILER
+#ifdef USE_MEDIAN_FILTER
     tmp =  TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
 							 bounding_box.get_height()));;
   
@@ -180,7 +201,7 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 							      img_scaled, 
 							      scaled_bounding_box);
 
-    median_filter<TileImage_GS_BYTE, TileImage_GS_BYTE>(gs_img_scaled, tmp, 2);
+    median_filter<TileImage_GS_BYTE, TileImage_GS_BYTE>(gs_img_scaled, tmp, USE_MEDIAN_FILTER);
 #else
 
     extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_scaled, 
@@ -272,11 +293,15 @@ void TemplateMatching::run() {
       matches.insert(matches.end(), m.begin(), m.end());
       
       progress_step_done();
-      if(is_canceled()) return;
+      if(is_canceled()) {
+	reset_progress();
+	return;
+      }
     }
     
   }
   
+ 
   matches.sort(compare_correlation);
 
   BOOST_FOREACH(match_found const& m, matches) {
@@ -286,7 +311,7 @@ void TemplateMatching::run() {
       std::cout << "\tInserted gate of type " << m.tmpl->get_name() << std::endl;
   }
 
-
+  reset_progress();
 }
 
 
@@ -479,7 +504,7 @@ TemplateMatching::match_single_template(struct prepared_template & tmpl,
     adjust_step_size(state, corr_val);  
     
     if(corr_val >= threshold_hc) {
-      debug(TM, "start hill climbing at(%d,%d), corr=%f", state.x, state.y, corr_val);
+      //debug(TM, "start hill climbing at(%d,%d), corr=%f", state.x, state.y, corr_val);
       unsigned int max_corr_x, max_corr_y;
       double curr_max_val;
       hill_climbing(state.x, state.y, corr_val,
@@ -487,7 +512,7 @@ TemplateMatching::match_single_template(struct prepared_template & tmpl,
 		    gs_img_normal, tmpl.zero_mean_template_normal,
 		    tmpl.sum_over_zero_mean_template_normal);
 
-      debug(TM, "hill climbing returned for (%d,%d) corr=%f", max_corr_x, max_corr_y, curr_max_val);
+      //debug(TM, "hill climbing returned for (%d,%d) corr=%f", max_corr_x, max_corr_y, curr_max_val);
       if(curr_max_val >= threshold_detection) {
 	matches.push_back(keep_gate_match(max_corr_x + bounding_box.get_min_x(),
 					  max_corr_y + bounding_box.get_min_y(),
@@ -715,26 +740,28 @@ bool TemplateMatchingAlongGrid::initialize_state_struct(struct search_state * st
 
       // iterate over grid and find first and last offset
       state->iter_begin = state->grid->begin();
-      state->iter_end = state->grid->begin();
+      state->iter_last = state->grid->begin();
+      state->iter_end = state->grid->end();
+
       for(Grid::grid_iter iter = state->grid->begin(); 
 	  iter != state->grid->end(); ++iter) {
 	debug(TM, "\tcheck %d", *iter);
 	if(*iter < offs_min) state->iter_begin = iter;
-	if(*iter < offs_max) state->iter_end = iter;
+	if(*iter < offs_max) state->iter_last = iter;
       }
 
       if(*(state->iter_begin) < offs_min && 
 	 state->iter_begin != state->grid->end()) state->iter_begin++;
 
-      //if(state->iter_end != state->grid->end()) state->iter_end++;
+      //if(state->iter_last != state->grid->end()) state->iter_last++;
 
       if(state->iter_begin != state->grid->end())
 	debug(TM, "first grid offset %d", *(state->iter_begin) );
-      //      if(state->iter_end != state->grid->end())
-      debug(TM, "last  grid offset %d", *(state->iter_end));
+      //      if(state->iter_last != state->grid->end())
+      debug(TM, "last  grid offset %d", *(state->iter_last));
 
       if(state->iter_begin == state->grid->end() ||
-	 state->iter_end == state->grid->end()) {
+	 state->iter_last == state->grid->end()) {
 	debug(TM, "failed");
 	return false;
       }
@@ -784,16 +811,15 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
     if(state->x + step < state->search_area.get_width() - tmpl_w) 
       state->x += step;
     else {
-      debug(TM, "next line");
       ++(state->iter);
-      state->x = 1;
-      state->y = *(state->iter) - state->search_area.get_min_y();
 
-      if(*(state->iter) > *(state->iter_end) || 
-	 state->y >= state->search_area.get_height() - tmpl_h) {
-	debug(TM, "will not check %d", *(state->iter));
+      if(state->iter == state->iter_end ||
+	 *(state->iter) > *(state->iter_last)) {
 	return false;
       }
+
+      state->x = 1;
+      state->y = *(state->iter) - state->search_area.get_min_y();
 
     }
     
@@ -852,10 +878,12 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state * state,
       state->y += step;
     else {
       ++state->iter;
+
+      if(state->iter == state->iter_end ||
+	 *(state->iter) > *(state->iter_last)) return false;
+
       state->x = *(state->iter) - state->search_area.get_min_x();
       state->y = 1;
-      if(*(state->iter) > *(state->iter_end) || 
-	 state->x >= state->search_area.get_width() - tmpl_w) return false;
 
     }
 
