@@ -173,10 +173,12 @@ bool MainWin::on_timer() {
 }
 
 void MainWin::on_view_info_layer_toggled(int slot_pos) {
-  if(menu_manager->toggle_info_layer(slot_pos)) {
+  
+  error_dialog("Error", "Feature deactivated.");
+  //if(menu_manager->toggle_info_layer(slot_pos)) {
     //imgWin.toggle_render_info_layer(slot_pos);
     //imgWin.update_screen();
-  }
+  //}
 }
 
 void MainWin::on_menu_view_toggle_all_info_layers() {
@@ -704,6 +706,7 @@ void MainWin::on_menu_tools_wire() {
     (new GfxEditorToolWire<DegateRenderer>(editor));
 
   wire_tool->signal_wire_added().connect(sigc::mem_fun(*this, &MainWin::on_wire_added));
+  wire_tool->signal_via_added().connect(sigc::mem_fun(*this, &MainWin::via_tool_clicked));
   editor.set_tool(wire_tool);
 }
 

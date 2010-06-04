@@ -24,6 +24,7 @@
 
 #include <BoundingBox.h>
 #include <RenderArea.h>
+#include <Via.h>
 #include <tr1/memory>
 
 #include <GL/gl.h>
@@ -344,6 +345,7 @@ private:
   bool have_start;
 
   sigc::signal<void, unsigned int, unsigned int, unsigned int, unsigned int>  signal_wire_added_;
+  sigc::signal<void, unsigned int, unsigned int, degate::Via::DIRECTION>  signal_via_added_;
 
 
   void angle_snap(int start_x, int start_y, int stop_x, int stop_y, 
@@ -375,6 +377,13 @@ public:
     return signal_wire_added_;
   }
 
+  /**
+   * Signal for a single mouse click.
+   */
+  sigc::signal<void, unsigned int, unsigned int, degate::Via::DIRECTION> & signal_via_added() {
+    return signal_via_added_;
+  }
+
 protected:
 
   void on_mouse_motion(unsigned int real_x, unsigned int real_y) {
@@ -398,7 +407,7 @@ protected:
   }
 
   void on_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) { 
-    if(button == 1 && have_start == false) {
+    if((button == 1 || button == 2) && have_start == false) {
       start_x = real_x;
       start_y = real_y;
       have_start = true;
@@ -414,22 +423,31 @@ protected:
   }
 
   void on_mouse_release(unsigned int real_x, unsigned int real_y, unsigned int button) {
-    if(button == 1 && have_start) {
+    if(have_start) {
 
-      unsigned int stop_x, stop_y;
-      angle_snap(start_x, start_y, real_x, real_y, &stop_x, &stop_y);
+      if(button == 1 || button == 2) {
 
-      if(stop_x != start_x || stop_y != start_y) {
+	unsigned int stop_x, stop_y;
+	angle_snap(start_x, start_y, real_x, real_y, &stop_x, &stop_y);
 
-	if(!signal_wire_added_.empty()) {
-	   signal_wire_added_(start_x, start_y, stop_x, stop_y);
-	   GfxEditorTool<RendererType>::get_renderer().render_wires();
+	if(!signal_via_added_.empty() && button == 2) {
+	  signal_via_added_(stop_x, stop_y, degate::Via::DIRECTION_DOWN);
+	  GfxEditorTool<RendererType>::get_renderer().render_vias();
 	}
 
+	if(stop_x != start_x || stop_y != start_y) {
+
+	  if(!signal_wire_added_.empty()) {
+	    signal_wire_added_(start_x, start_y, stop_x, stop_y);
+	    GfxEditorTool<RendererType>::get_renderer().render_wires();
+	  }
+
+	}
+
+	start_x = stop_x;
+	start_y = stop_y;
       }
 
-      start_x = stop_x;
-      start_y = stop_y;
     }
   }
 
