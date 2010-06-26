@@ -47,7 +47,7 @@ ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in,
 
   run_edge_detection(img_in);
   TileImage_GS_DOUBLE_shptr edge_image = get_edge_image(probability_map);
-  TileImage_GS_DOUBLE_shptr edge_magnitude_image = get_edge_magnitude_image(probability_map);
+  //TileImage_GS_DOUBLE_shptr edge_magnitude_image = get_edge_magnitude_image(probability_map); 
   
   TileImage_GS_DOUBLE_shptr zero_cross_img = 
     analyze_edge_image(edge_image, probability_map, min_d, max_d);
@@ -109,6 +109,7 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
       *start_y = y;
       s = POS_EDGE;
     }
+
     else if(s == POS_EDGE) {
       if(p > max_pix) {
 	*start_x = x; 
@@ -139,7 +140,7 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
 	if( !((d_x > min_d && d_x < max_d) ||
 	      (d_y > min_d && d_y < max_d))) return false;
 	
-	s = END;
+	s = END;		// 
 	*mag = sqrt(pow(max_pix,2) + pow(min_pix, 2));
 	
 	double p_center = edge_image->get_pixel(*start_x + (*stop_x - *start_x)/2,
