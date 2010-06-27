@@ -62,6 +62,16 @@ void Wire::push_object_to_server(std::string const& server_url) {
     xmlrpc_c::paramList params;
     params.add(xmlrpc_c::value_string("wire"));
     params.add(xmlrpc_c::value_string("add"));
+
+    Layer_shptr layer = get_layer();
+    assert(layer != NULL);
+    params.add(xmlrpc_c::value_int(layer->get_layer_id()));
+
+    params.add(xmlrpc_c::value_int(get_from_x()));
+    params.add(xmlrpc_c::value_int(get_from_y()));
+    params.add(xmlrpc_c::value_int(get_to_x()));
+    params.add(xmlrpc_c::value_int(get_to_y()));
+    params.add(xmlrpc_c::value_int(get_diameter()));
     
     int const transaction_id = 
       xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
