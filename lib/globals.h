@@ -127,6 +127,7 @@ namespace degate {
   typedef uint32_t color_t;
   
   typedef unsigned long long object_id_t;
+  typedef unsigned long long layer_id_t;
   typedef unsigned long long transaction_id_t;
   typedef unsigned int diameter_t;
   typedef unsigned int length_t;
