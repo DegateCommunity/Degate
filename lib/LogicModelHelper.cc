@@ -269,6 +269,8 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel)
   if(curr_layer == NULL)
     throw DegateRuntimeException("Error: there is no current layer.");
 
+  if(lmodel->get_num_layers() == 1) return curr_layer;
+
   for(unsigned int l_pos = curr_layer->get_layer_pos() + lmodel->get_num_layers() - 1; 
       l_pos > 0; l_pos--) {
     Layer_shptr layer = lmodel->get_layer(l_pos % lmodel->get_num_layers());
