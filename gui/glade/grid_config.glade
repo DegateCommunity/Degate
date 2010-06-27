@@ -4,8 +4,9 @@
   <!-- interface-naming-policy project-wide -->
   <widget class="GtkDialog" id="grid_config_dialog">
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">Grid configuration</property>
+    <property name="title" translatable="yes">Grid Configuration</property>
     <property name="default_width">500</property>
+    <property name="default_height">500</property>
     <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
