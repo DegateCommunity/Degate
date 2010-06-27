@@ -56,7 +56,8 @@ Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type) :
   quadtree(bbox, 100), 
   layer_type(_layer_type), 
   layer_pos(0),
-  enabled(true)  {
+  enabled(true),
+  layer_id(0) {
 }
 
 Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type, 
@@ -64,7 +65,8 @@ Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type,
   quadtree(bbox, 100), 
   layer_type(_layer_type), 
   layer_pos(0),
-  enabled(true) {
+  enabled(true),
+  layer_id(0) {
 
   set_image(img);
 }

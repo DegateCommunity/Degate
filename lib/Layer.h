@@ -77,7 +77,9 @@ namespace degate {
 
     bool enabled;
     std::string description;
-        
+       
+    layer_id_t layer_id;
+ 
   protected:
     
     /**
@@ -354,6 +356,24 @@ namespace degate {
      * Set layer position.
      */
     void set_layer_pos(layer_position_t pos) { layer_pos = pos; }
+
+    /**
+     * Set the layer ID.
+     */
+
+    virtual void set_layer_id(layer_id_t lid) { layer_id = lid; }
+
+    /**
+     * Get the layer ID.
+     */
+  
+    virtual layer_id_t get_layer_id() const { return layer_id; }
+
+    /**
+     * Check if the layer has a valid layer ID.
+     */
+
+    virtual bool has_valid_layer_id() const { return layer_id != 0; }
 
   };
 
