@@ -32,6 +32,19 @@
 #include <ctime>
 #include <utility> // for make_pair
 
+#ifdef __APPLE__
+  #include <sys/time.h> // for gettimeofday
+  #define GET_CLOCK(dst_variable) \
+  { \
+     struct timeval tv; \
+     gettimeofday(&tv, NULL); \
+     dst_variable.tv_sec = tv.tv_sec; \
+     dst_variable.tv_nsec = tv.tv_usec * 1000; \
+  }
+#else
+  clock_gettime(CLOCK_MONOTONIC,  &dst_variable);
+#endif
+
 namespace degate {
 
   class TileCacheBase {
@@ -62,7 +75,7 @@ namespace degate {
 
     void remove_oldest() {
       struct timespec now;
-      clock_gettime(CLOCK_MONOTONIC, &now);
+      GET_CLOCK(now);
 
       TileCacheBase * oldest = NULL;
 
@@ -113,7 +126,7 @@ namespace degate {
 
       if(allocated_memory + amount <= max_cache_memory) {
 	struct timespec now;
-	clock_gettime(CLOCK_MONOTONIC, &now);
+	GET_CLOCK(now);
 
 	cache_t::iterator found = cache.find(requestor);
 	if(found == cache.end()) {
@@ -274,7 +287,8 @@ namespace degate {
 	  bool ok = gtc.request_cache_memory(this, get_image_size());
 	  assert(ok == true);
 	  struct timespec now;
-	  clock_gettime(CLOCK_MONOTONIC, &now);
+	  GET_CLOCK(now);
+
 	  cache[filename] = std::make_pair(load(filename), now);
 	}
 
@@ -297,7 +311,7 @@ namespace degate {
       if(cache.size() == 0) return;
 
       struct timespec oldest_clock_val;
-      clock_gettime(CLOCK_MONOTONIC, &oldest_clock_val);
+      GET_CLOCK(oldest_clock_val);
 
       typename cache_type::iterator oldest = cache.begin();
       
