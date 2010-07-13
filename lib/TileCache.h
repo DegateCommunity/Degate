@@ -36,13 +36,14 @@
   #include <sys/time.h> // for gettimeofday
   #define GET_CLOCK(dst_variable) \
   { \
-     struct timeval tv; \
-     gettimeofday(&tv, NULL); \
-     dst_variable.tv_sec = tv.tv_sec; \
-     dst_variable.tv_nsec = tv.tv_usec * 1000; \
+      struct timeval tv; \
+      gettimeofday(&tv, NULL); \
+      dst_variable.tv_sec = tv.tv_sec; \
+      dst_variable.tv_nsec = tv.tv_usec * 1000; \
   }
 #else
-  clock_gettime(CLOCK_MONOTONIC,  &dst_variable);
+  #define GET_CLOCK(dst_variable) \
+      clock_gettime(CLOCK_MONOTONIC,  &dst_variable);
 #endif
 
 namespace degate {
