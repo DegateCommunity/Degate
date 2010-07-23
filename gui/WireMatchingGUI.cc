@@ -68,7 +68,7 @@ bool WireMatchingGUI::before_dialog() {
   if(bounding_box.get_max_x() == 0 && bounding_box.get_max_y() == 0) {
     Gtk::MessageDialog dialog(*parent, 
 			      "You did not select an area for the wire matching. "
-			      "Do you really wan't to run template matching on the whole "
+			      "Do you really wan't to run wire matching on the whole "
 			      "image? It will take a lot of time.",
 			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
     dialog.set_title("Warning");      
