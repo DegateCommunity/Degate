@@ -140,6 +140,7 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
       row[m_Columns.m_col_layer_type_chosen] = layer->get_layer_type_as_string();
       row[m_Columns.m_col_layer_type_choices] = m_refTreeModelCombo;
       row[m_Columns.m_col_filename] = "";
+      row[m_Columns.m_col_description] = layer->get_description();
     }
 
     // signal
