@@ -103,8 +103,22 @@ namespace degate {
       boost::format fmter("Error in save_image(): Canot write file %1%.");
       fmter % path;
       throw DegateRuntimeException(fmter.str());
-    }
-    
+    }    
+  }
+
+  /**
+   * Save a part of an image.
+   */
+  template<typename ImageType>
+  void save_part_of_image(std::string const& path, 
+			  std::tr1::shared_ptr<ImageType> img, 
+			  BoundingBox const& bounding_box) {
+
+    std::tr1::shared_ptr<ImageType> part(new ImageType(bounding_box.get_width(),
+						       bounding_box.get_height()));
+
+    extract_partial_image(part, img, bounding_box);
+    save_image(path, part);
   }
 
   /**
