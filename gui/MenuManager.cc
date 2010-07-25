@@ -261,6 +261,11 @@ void MenuManager::create_and_bind_layer_menu() {
 					    "Clear background image for current layer"),
 			sigc::mem_fun(*window, &MainWin::on_menu_layer_clear_background_image));
 
+  m_refActionGroup->add(Gtk::Action::create("LayerExportBackgroundImage",
+					    Gtk::Stock::CLEAR, "Export (part of) background image", 
+					    "Export background image for current layer"),
+			sigc::mem_fun(*window, &MainWin::on_menu_layer_export_background_image));
+
 
   m_refActionGroup->add(Gtk::Action::create("LayerConfiguration",
 					    "Layer configuration", "Layer configuration"),
@@ -462,6 +467,7 @@ void MenuManager::setup_menu_structure() {
         "    <menu action='LayerMenu'>"
         "      <menuitem action='LayerImportBackground'/>"
         "      <menuitem action='LayerClearBackgroundImage'/>"
+        "      <menuitem action='LayerExportBackgroundImage'/>"
         "      <separator/>"
         "      <menuitem action='LayerConfiguration'/>"
         "    </menu>"
@@ -716,6 +722,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
 
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerImportBackground", state);
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerClearBackgroundImage", state);
+  set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerExportBackgroundImage", state);
   set_menu_item_sensitivity("/MenuBar/LayerMenu/LayerConfiguration", state);
 
   if(state == false) {

@@ -1654,7 +1654,7 @@ void MainWin::on_menu_layer_import_background() {
 
   dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
   dialog.add_button("Select", Gtk::RESPONSE_OK);
-  add_image_file_filter_to_file_chooser(dialog);  
+  add_image_file_filter_to_file_chooser_for_reading(dialog);  
 
   int result = dialog.run();
 
@@ -1768,6 +1768,45 @@ void MainWin::remove_objects() {
     editor.update_screen(); 
     ciWin->objects_removed();
   }
+}
+
+void MainWin::on_menu_layer_export_background_image() {
+  if(main_project != NULL) {
+    Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
+    if(layer->has_background_image()) {
+
+
+      Gtk::FileChooserDialog dialog("Please select a file name", Gtk::FILE_CHOOSER_ACTION_OPEN);
+      dialog.set_transient_for(*this);
+
+      dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+      dialog.add_button("Select", Gtk::RESPONSE_OK);
+      add_image_file_filter_to_file_chooser_for_writing(dialog);  
+
+      int result = dialog.run();
+
+      Glib::ustring filename = dialog.get_filename();
+      dialog.hide();
+  
+      if(result == Gtk::RESPONSE_OK) {
+
+	ScalingManager_shptr sm = layer->get_scaling_manager();
+	assert(sm != NULL);
+	
+	BackgroundImage_shptr img = sm->get_image(1).second;
+	assert(img != NULL);
+
+	std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+	  std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+
+	if(selection_tool != NULL && selection_tool->has_selection())
+	  save_part_of_image(filename, img, selection_tool->get_bounding_box());
+	else
+	  save_image(filename, img);
+	
+      }
+    }
+  }  
 }
 
 void MainWin::on_menu_layer_clear_background_image() {

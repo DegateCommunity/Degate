@@ -102,6 +102,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_layer_import_background();
   virtual void on_menu_layer_configuration();
   virtual void on_menu_layer_clear_background_image();
+  virtual void on_menu_layer_export_background_image();
 
   // Logic menu
   virtual void on_menu_logic_interconnect();
