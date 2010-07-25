@@ -34,7 +34,7 @@
  * some automation in your manual reverse engineering process. 
  *
  * Please have a look on the project website to learn more about degate.
- * @see http://degate.zfch.de
+ * @see http://www.degate.org
  *
  *
  * @section intro_libdegate_sec What is libdegate?
