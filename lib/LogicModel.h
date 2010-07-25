@@ -244,6 +244,11 @@ namespace degate {
     void add_object(int layer_pos, PlacedLogicModelObject_shptr o) 
       throw(DegateLogicException, InvalidPointerException);
 
+    void add_object(Layer_shptr layer, PlacedLogicModelObject_shptr o) 
+      throw(DegateLogicException, InvalidPointerException) {
+      add_object(layer->get_layer_pos(), o);
+    }
+
 
     /**
      * Remove a generic logic model object from the logic model.
