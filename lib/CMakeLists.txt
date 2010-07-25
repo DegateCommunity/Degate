@@ -60,6 +60,7 @@ set(SOURCES
 	RegularGrid.cc
 	IrregularGrid.cc
 	Configuration.cc
+	DegateHelper.cc
 
 	#
 	# shape related
@@ -127,7 +128,7 @@ set(SOURCES
 	ZeroCrossingEdgeDetection.cc
 	WireMatching.cc
 	TemplateMatching.cc
-	
+	ExternalMatching.cc
 )
 
 

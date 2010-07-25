@@ -81,10 +81,10 @@ set(DEGATE_SRC
 	       
 	       TemplateMatchingParamsWin.cc
 	       WireMatchingParamsWin.cc
-
 	       RecognitionManager.cc
 	       TemplateMatchingGUI.cc
 	       WireMatchingGUI.cc
+	       ExternalMatchingGUI.cc
 
 	       AppHelper.cc
 	       MainWin.cc

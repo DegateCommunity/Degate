@@ -26,7 +26,6 @@
 #include <list>
 #include <SingletonBase.h>
 
-// Todo: Use singleton class
 class RecognitionManager : public degate::SingletonBase<RecognitionManager> {
 
   friend class degate::SingletonBase<RecognitionManager>;
