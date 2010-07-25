@@ -1780,11 +1780,17 @@ void MainWin::on_menu_layer_clear_background_image() {
   if(result == Gtk::RESPONSE_OK) {
     Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
     if(layer->has_background_image()) {
+      layer->unset_image();
+      /*
       BackgroundImage_shptr img = layer->get_image();
       clear_image<BackgroundImage>(img);
+      */
       project_changed();
-      editor.update_screen();
+      //editor.update_screen();
+      set_layer(layer); // easiest way to update the renderer
     }
+    else 
+      debug(TM, "Has no background image. There is nothing to clear.");
   }
   
 }
