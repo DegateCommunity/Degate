@@ -38,6 +38,14 @@ namespace degate {
     return rval;
   }
 
+  /**
+   * Tokenize a string.
+   * @param str That is the string to tokenize, e.g.
+   *    "hello world. \"foo bar\"". This would result
+   *    in three tokens.
+   */
+  std::vector<std::string> tokenize(std::string const& str);
+
 }
 
 #endif
