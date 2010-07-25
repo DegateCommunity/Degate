@@ -64,8 +64,6 @@ std::string ExternalMatching::get_command() const {
 }
 
 void ExternalMatching::run() {
-  BackgroundImage_shptr part(new BackgroundImage(bounding_box.get_width(),
-						 bounding_box.get_height()));
 
   // create a temp dir
   std::string dir = create_temp_directory();
@@ -77,10 +75,7 @@ void ExternalMatching::run() {
   std::string results_file = dir;
   results_file.append("/results.dat");
 
-
-  extract_partial_image(part, img, bounding_box);
-  save_image(image_file, part);
-
+  save_part_of_image(image_file, img, bounding_box);
 
   boost::format f("%1% --image %2% --results %3% "
 		  "--start-x %4% --start-y %5% --width %6% --height %7%");
