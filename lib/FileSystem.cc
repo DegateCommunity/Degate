@@ -19,8 +19,9 @@
  
 */
 
-#include "FileSystem.h"
-#include "degate_exceptions.h"
+#include <FileSystem.h>
+#include <Configuration.h>
+#include <degate_exceptions.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -135,6 +136,10 @@ void degate::create_directory(std::string const& directory, mode_t mode)
     throw degate::FileSystemException(strerror(errno));
   }
 
+}
+
+std::string degate::create_temp_directory() {
+  return create_temp_directory(generate_temp_file_pattern(get_temp_directory()));
 }
 
 std::string degate::create_temp_directory(std::string const & directory_pattern) {

@@ -135,6 +135,10 @@ namespace degate{
   void create_directory(std::string const& directory, mode_t mode = 0700) 
     throw(degate::FileSystemException);
 
+  /**
+   * Create a temp directory.
+   */
+  std::string create_temp_directory();
 
   /**
    * Create a temporary directory based on a path pattern specification.

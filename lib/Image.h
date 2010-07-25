@@ -218,9 +218,7 @@ namespace degate {
 	  unsigned int _tile_width_exp = 10) : 
       ImageBase(_width, _height),
       StoragePolicy_Tile<PixelPolicy>(_width, _height,
-				      create_temp_directory
-				      (generate_temp_file_pattern
-				       (get_temp_directory())),
+				      create_temp_directory(),
 				      false,
 				      _tile_width_exp) {}
     
