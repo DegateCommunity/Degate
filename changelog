@@ -3,10 +3,11 @@ degate (0.0.8) unstable; urgency=low
   * Rewritten rendering engine: it uses OpenGL.
   * Added a jpeg image importer.
   * Several bugfixes
-  * Merging of standard cell template images
-  * global tile cache manager
-  * template matching with decreasing threshold values	
-	
+  * Merging of standard cell template images. That will increase the recognition rate and reduces false-positive matches.
+  * Added global tile cache manager.
+  * template matching improved
+  * Implemented interface to use external tools for the wire and via matching.
+
  -- Martin Schobert <martin@weltregierung.de>  Thu, 15 Apr 2010 09:51:00 +0100
 
 degate (0.0.7) unstable; urgency=low
@@ -25,7 +26,7 @@ degate (0.0.7) unstable; urgency=low
   * Basic support for wire matching added.
 
  -- Martin Schobert <martin@weltregierung.de>  Sun, 15 Nov 2009 23:42:00 +0100
-	
+
 degate (0.0.6) unstable; urgency=low
 
   * improved grid configuration
@@ -42,7 +43,7 @@ degate (0.0.6) unstable; urgency=low
   * handling unregular grids
   * naming gate objects by position
   * precompiler macro fix: improved architecture detection (thanks to mazzoo)
-	
+
  -- Martin Schobert <martin@weltregierung.de>  Wed, 30 Mar 2009 12:00:00 +0100
 
 degate (0.0.5) unstable; urgency=low
@@ -62,7 +63,7 @@ degate (0.0.4) unstable; urgency=low
   * several Bugfixes
 
  -- Martin Schobert <martin@weltregierung.de>  Fri, 13 Mar 2009 17:30:23 +0100
-	
+
 degate (0.0.3) unstable; urgency=low
 
   * Problem with shift-release event fixed
