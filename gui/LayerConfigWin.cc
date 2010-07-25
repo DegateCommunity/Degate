@@ -331,7 +331,7 @@ void LayerConfigWin::on_bg_file_button_clicked() {
       dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
       dialog.add_button("Select", Gtk::RESPONSE_OK);
       if(!last_filename.empty()) dialog.set_filename(last_filename);
-      add_image_file_filter_to_file_chooser(dialog);
+      add_image_file_filter_to_file_chooser_for_reading(dialog);
 
       int result = dialog.run();
       dialog.hide();

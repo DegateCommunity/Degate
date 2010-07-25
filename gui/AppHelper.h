@@ -55,7 +55,14 @@ bool autosave_project(degate::Project_shptr project, time_t interval = 5 * 60);
  * @todo Lookup available image importer.
  */
 
-void add_image_file_filter_to_file_chooser(Gtk::FileChooserDialog & dialog);
+void add_image_file_filter_to_file_chooser_for_reading(Gtk::FileChooserDialog & dialog);
+
+/**
+ * Add file filter for background images to a Gtk::FileChooserDialog.
+ * @todo Lookup available image importer.
+ */
+
+void add_image_file_filter_to_file_chooser_for_writing(Gtk::FileChooserDialog & dialog);
 
 /**
  * Check if there are autosaved files in \p project_dir that are newer than the
