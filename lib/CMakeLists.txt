@@ -129,6 +129,11 @@ set(SOURCES
 	WireMatching.cc
 	TemplateMatching.cc
 	ExternalMatching.cc
+
+	#
+	# Design Rule Checks
+	#
+	DRCOpenPorts.cc
 )
 
 

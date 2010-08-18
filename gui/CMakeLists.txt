@@ -77,6 +77,7 @@ set(DEGATE_SRC
 	       NewProjectWin.cc
 	       ObjectMatchingWin.cc
 	       ConnectionInspectorWin.cc
+	       DRCViolationsWin.cc
 	       MenuManager.cc	       
 	       
 	       TemplateMatchingParamsWin.cc
@@ -94,7 +95,7 @@ set(DEGATE_SRC
 	       OpenGLRendererBase.cc
 	       DegateRenderer.cc 
 	       GateRenderer.cc 
-
+	       
 )
 
 add_executable(degate_bin ${DEGATE_SRC})
