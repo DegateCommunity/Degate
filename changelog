@@ -7,7 +7,8 @@ degate (0.0.8) unstable; urgency=low
   * Added global tile cache manager.
   * template matching improved
   * Implemented interface to use external tools for the wire and via matching.
-
+  * Added library and GUI code to perform Design Rule Checks.
+	
  -- Martin Schobert <martin@weltregierung.de>  Thu, 15 Apr 2010 09:51:00 +0100
 
 degate (0.0.7) unstable; urgency=low
