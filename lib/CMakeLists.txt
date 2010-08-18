@@ -134,6 +134,7 @@ set(SOURCES
 	# Design Rule Checks
 	#
 	DRCOpenPorts.cc
+	DRCNet.cc
 )
 
 

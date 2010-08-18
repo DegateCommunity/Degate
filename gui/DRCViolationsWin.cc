@@ -19,7 +19,7 @@
  
 */
 
-#include <DRCBase.h>
+#include <DesignRuleChecker.h>
 #include "DRCViolationsWin.h"
 
 #include <gdkmm/window.h>
@@ -34,10 +34,8 @@
 
 #include <globals.h>
 
-#define MY_GREY "#808080"
 #define MY_WHITE "#ffffff"
 #define MY_BLUE  "#d0d0ff"
-#define DEFAULT_WIDTH 90
 
 using namespace degate;
 
@@ -81,34 +79,24 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
       Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText()); 
       Gtk::TreeView::Column * pColumn;
       
+      
       /*
        * col 0
        */
-
-      pTreeView->append_column("Name", *pRenderer);
-      pColumn = pTreeView->get_column(0);
-      pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_name);
-      pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
-      pColumn->set_resizable(true);
-      pColumn->set_sort_column(m_Columns.m_col_name);
-      
-      /*
-       * col 1
-       */
       
       pTreeView->append_column("Class", *pRenderer);
-      pColumn = pTreeView->get_column(1);
+      pColumn = pTreeView->get_column(0);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_class);
       pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
       pColumn->set_resizable(true);
       pColumn->set_sort_column(m_Columns.m_col_violation_class);
       
       /*
-       * col 2
+       * col 1
        */
       
       pTreeView->append_column("Description", *pRenderer);
-      pColumn = pTreeView->get_column(2);
+      pColumn = pTreeView->get_column(1);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_description);
       pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
       pColumn->set_resizable(true);
