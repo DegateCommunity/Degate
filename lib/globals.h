@@ -81,6 +81,15 @@ void debug(const char * const module, int line, const char * const format, ...);
 namespace degate {
   // we need some forward declerations here
 
+  class Circle;
+  typedef std::tr1::shared_ptr<Circle> Circle_shptr;
+
+  class Line;
+  typedef std::tr1::shared_ptr<Line> Line_shptr;
+
+  class Rectangle;
+  typedef std::tr1::shared_ptr<Rectangle> Rectangle_shptr;
+
   class ConnectedLogicModelObject;
   typedef std::tr1::shared_ptr<ConnectedLogicModelObject> ConnectedLogicModelObject_shptr;
 
