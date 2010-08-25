@@ -66,9 +66,7 @@ bool Line::in_shape(int x, int y) const {
   */
   
   if(is_vertical() || is_horizontal()) {
-    return 
-      from_x < x && x < to_x &&
-      from_y < y && y < to_y;
+    return bounding_box.in_shape(x, y);
   }
   else {
     
@@ -167,7 +165,17 @@ void Line::shift_x(int delta_x) {
 
 
 void Line::calculate_bounding_box() {
-  bounding_box = BoundingBox(from_x, to_x, from_y, to_y);	     
+  int radius = diameter >> 1;
+
+  if(is_vertical())
+    bounding_box = BoundingBox(std::max(from_x  - radius, 0), 
+			       std::max(to_x + radius, 0), from_y, to_y);
+  else if(is_horizontal())
+    bounding_box = BoundingBox(from_x, to_x, 
+			       std::max(from_y - radius, 0), 
+			       std::max(to_y + radius, 0));
+  else
+    bounding_box = BoundingBox(from_x, to_x, from_y, to_y);
 }
 
 

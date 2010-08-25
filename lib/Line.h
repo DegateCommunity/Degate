@@ -38,6 +38,16 @@ namespace degate {
 	
     BoundingBox bounding_box;
 
+  private:
+
+    /**
+     * Recalulate the bounding box of a line.
+     * If the line is either horizontally nor vertically
+     * aligned, the bounding box corresponds exactly to
+     * the area, the line spans. If the line is horizontal
+     * or vertical, the bounding box also depends on the
+     * diameter.
+     */
     void calculate_bounding_box();
 
   public:
