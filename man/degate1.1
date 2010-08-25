@@ -1,4 +1,4 @@
-.TH degate 1 "Januar 10, 2009" "Version 0.0.7"
+.TH degate 1 "August 23, 2010" "Version 0.0.9"
 .SH NAME
 degate \- reverse engineering of logic gates
 .SH SYNOPSIS
@@ -15,7 +15,13 @@ Path to files, that are used at runtime (usually /usr/share/degate). See FILES.
 .TP
 $DEGATE_HOME
 This directory contains files, that are used at runtime.
+.TP
+$DEGATE_TEMP_DIR
+You can set this environment variable, if you want to specify a directory for temporary files, that should be used.
+.TP
+$DEGATE_CACHE_SIZE
+Use this environment variable in order to set the global cache size for image tiles. The unit is megabyte.
 .SH AUTHOR
 Martin Schobert <martin@weltregierung.de>
 .SH SEE ALSO
-Degate project website: http://degate.zfch.de/
+Degate project website: http://www.degate.org/

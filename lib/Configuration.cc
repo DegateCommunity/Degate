@@ -22,6 +22,8 @@
 #include <Configuration.h>
 #include <FileSystem.h>
 
+#include <boost/lexical_cast.hpp>
+
 using namespace degate;
 
 std::string degate::get_temp_directory() { 
@@ -33,9 +35,13 @@ Configuration::Configuration() {
 }
 
 std::string Configuration::get_temp_directory() const {
-  return get_realpath(std::string("/tmp")); 
+  char * td = getenv("DEGATE_TEMP_DIR");
+  if(td == NULL) return get_realpath(std::string("/tmp"));
+  return get_realpath(std::string(td)); 
 }
 
 size_t Configuration::get_max_tile_cache_size() const {
-  return 128;
+  char * cs = getenv("DEGATE_CACHE_SIZE");
+  if(cs == NULL) return 256;
+  return boost::lexical_cast<size_t>(cs);
 }

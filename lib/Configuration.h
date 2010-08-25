@@ -46,10 +46,19 @@ namespace degate {
     
   public:
     
+    /**
+     * Get the temp directory for degate.
+     * @return If the environment variable DEGATE_TEMP_DIR is set,
+     *   its value is used. Else the default temp directory "/tmp"
+     *   is returned.
+     */
     std::string get_temp_directory() const;
 
     /**
      * Get the cache size for image tiles in MB.
+     * @return If the environment variable DEGATE_CACHE_SIZE is set,
+     *   its value is used. Else the default cache size is returned.
+     *   That is 256 MB.
      */
     size_t get_max_tile_cache_size() const;
   };
