@@ -1581,6 +1581,8 @@ void MainWin::on_menu_logic_autointerconnect() {
   BoundingBox bbox = get_selection_bounding_box(editor, main_project);
   LogicModel_shptr lmodel = main_project->get_logic_model();
   autoconnect_objects(lmodel, lmodel->get_current_layer(), bbox);
+
+  project_changed();
 }
 
 void MainWin::on_menu_logic_autointerconnect_interlayer() {
@@ -1591,6 +1593,9 @@ void MainWin::on_menu_logic_autointerconnect_interlayer() {
   autoconnect_interlayer_objects(lmodel, 
 				 lmodel->get_current_layer(),
 				 get_selection_bounding_box(editor, main_project));
+
+  project_changed();
+
 }
 
 void MainWin::on_menu_logic_connection_inspector() {
