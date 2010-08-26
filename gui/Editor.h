@@ -495,6 +495,10 @@ public:
     return tool;
   }
 
+  std::tr1::shared_ptr<GfxEditorTool<RendererType> > get_tool() const {
+    return tool;
+  }
+
   void on_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) {
     if(tool != NULL) tool->on_mouse_click(real_x, real_y, button);
   }
