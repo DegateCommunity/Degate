@@ -344,6 +344,8 @@ private:
   unsigned int start_x , start_y;
   bool have_start;
 
+  bool shift_state;
+
   sigc::signal<void, unsigned int, unsigned int, unsigned int, unsigned int>  signal_wire_added_;
   sigc::signal<void, unsigned int, unsigned int, degate::Via::DIRECTION>  signal_via_added_;
 
@@ -367,7 +369,13 @@ public:
 
   GfxEditorToolWire(RendererType & renderer) : 
     GfxEditorTool<RendererType>(renderer),
-    have_start(false) {
+    have_start(false),
+    shift_state(false) {
+  }
+
+
+  void set_shift_state(bool state) {
+    shift_state = state;
   }
 
   /**
@@ -431,7 +439,9 @@ protected:
 	angle_snap(start_x, start_y, real_x, real_y, &stop_x, &stop_y);
 
 	if(!signal_via_added_.empty() && button == 2) {
-	  signal_via_added_(stop_x, stop_y, degate::Via::DIRECTION_DOWN);
+	  signal_via_added_(stop_x, stop_y, 
+			    shift_state ? degate::Via::DIRECTION_UP : 
+			    degate::Via::DIRECTION_DOWN);
 	  GfxEditorTool<RendererType>::get_renderer().render_vias();
 	}
 

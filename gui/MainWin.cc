@@ -1177,6 +1177,12 @@ void MainWin::selection_tool_clicked(unsigned int real_x, unsigned int real_y, u
 bool MainWin::on_key_release_event_received(GdkEventKey * event) {
   if((event->keyval ==  GDK_Shift_L || event->keyval == GDK_Shift_R)) {
     shift_key_pressed = false;
+
+    std::tr1::shared_ptr<GfxEditorToolWire<DegateRenderer> > tool =
+      std::tr1::dynamic_pointer_cast<GfxEditorToolWire<DegateRenderer> >(editor.get_tool());
+
+    if(tool != NULL) tool->set_shift_state(false);
+
     //imgWin.set_shift_key_state(false);
     //if(tool == TOOL_WIRE) imgWin.update_screen();
   }
@@ -1194,6 +1200,12 @@ bool MainWin::on_key_release_event_received(GdkEventKey * event) {
 bool MainWin::on_key_press_event_received(GdkEventKey * event) {
   if(event->keyval == GDK_Shift_L || event->keyval == GDK_Shift_R) {
     shift_key_pressed = true;
+
+    std::tr1::shared_ptr<GfxEditorToolWire<DegateRenderer> > tool =
+      std::tr1::dynamic_pointer_cast<GfxEditorToolWire<DegateRenderer> >(editor.get_tool());
+
+    if(tool != NULL) tool->set_shift_state(true);
+
   }
   //else if(event->keyval == GDK_Control_L || event->keyval == GDK_Control_R) {
   else if(!(event->state & GDK_CONTROL_MASK) && (event->keyval == GDK_Control_L)) {
