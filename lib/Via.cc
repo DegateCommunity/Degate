@@ -55,7 +55,7 @@ const std::string Via::get_descriptive_identifier() const {
     return fmter.str();
   }
   else {
-    boost::format fmter("wire (%1%)");
+    boost::format fmter("via (%1%)");
     fmter % get_object_id();
     return fmter.str();
   }
