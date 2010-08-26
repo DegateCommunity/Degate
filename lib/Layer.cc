@@ -235,7 +235,10 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y) {
   for(qt_region_iterator iter = quadtree.region_iter_begin(x, x, y, y);
       iter != quadtree.region_iter_end(); ++iter) {
 
-    if(plo == NULL) plo = *iter;
+    if((*iter)->in_shape(x, y)) {
+      plo = *iter;
+    }
+
     if(std::tr1::dynamic_pointer_cast<GatePort>(*iter) != NULL) {
       return *iter;
     }
