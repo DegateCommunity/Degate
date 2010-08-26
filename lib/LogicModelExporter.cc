@@ -109,9 +109,16 @@ void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lm
   for(LogicModel::net_collection::iterator net_iter = lmodel->nets_begin();
       net_iter != lmodel->nets_end(); ++net_iter) {
     
-    Net_shptr net = (*net_iter).second;
     xmlpp::Element* net_elem = nets_elem->add_child("net");
-    net_elem->set_attribute("id", number_to_string<object_id_t>(oid_rewriter->get_new_object_id(net->get_object_id())));
+
+    Net_shptr net = net_iter->second;
+    assert(net != NULL);
+
+    object_id_t old_net_id = net->get_object_id();
+    assert(old_net_id != 0);
+    object_id_t new_net_id = oid_rewriter->get_new_object_id(old_net_id);
+    
+    net_elem->set_attribute("id", number_to_string<object_id_t>(new_net_id));
 
     for(Net::connection_iterator conn_iter = net->begin(); 
 	conn_iter != net->end(); ++conn_iter) {
