@@ -19,8 +19,10 @@
  
 */
 
+#include <globals.h>
 #include <degate.h>
 #include <LogicModelHelper.h>
+#include <TangencyCheck.h>
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
@@ -446,4 +448,57 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
     }
   }
   
+}
+
+
+void degate::connect_objects(LogicModel_shptr lmodel, 
+			     ConnectedLogicModelObject_shptr o1,
+			     ConnectedLogicModelObject_shptr o2) {
+
+  std::vector<ConnectedLogicModelObject_shptr> v(2);
+  v[0] = o1;
+  v[1] = o2;
+  connect_objects(lmodel, v.begin(), v.end());
+}
+
+
+void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
+				 BoundingBox const& search_bbox) throw () {
+
+  if(lmodel == NULL || layer == NULL)
+    throw InvalidPointerException("You passed an invalid shared pointer.");
+
+  // iterate over connectable objects
+  for(Layer::qt_region_iterator iter = layer->region_begin(search_bbox);
+      iter != layer->region_end(); ++iter) {
+   
+    ConnectedLogicModelObject_shptr clmo1;
+
+    if((clmo1 = std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*iter)) != NULL) {
+      
+      BoundingBox const& bb = clmo1->get_bounding_box();
+      
+      /* Iterate over connectable objects in the region identified
+	 by bounding box bb.
+      */
+      for(Layer::qt_region_iterator siter = layer->region_begin(bb);
+	  siter != layer->region_end(); ++siter) {
+
+	ConnectedLogicModelObject_shptr clmo2;
+	if((clmo2 = 
+	    std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*siter)) != NULL) {
+
+	  if((clmo1->get_net() == NULL || 
+	      clmo2->get_net() == NULL ||
+	      clmo1->get_net() != clmo2->get_net()) && // excludes identical objects, too
+	     check_object_tangency(std::tr1::dynamic_pointer_cast<PlacedLogicModelObject>(clmo1), 
+				   std::tr1::dynamic_pointer_cast<PlacedLogicModelObject>(clmo2)))
+	    
+	    connect_objects(lmodel, clmo1, clmo2); 
+	  	    
+	  	      	  
+	}
+      }      
+    }
+  }
 }

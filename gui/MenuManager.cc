@@ -279,8 +279,8 @@ void MenuManager::create_and_bind_logic_menu() {
   m_refActionGroup->add( Gtk::Action::create("LogicMenu", "Logic"));
 
   m_refActionGroup->add(Gtk::Action::create("LogicInterconnect",
-					    Gtk::Stock::CONNECT, "Interconnect objects", 
-					    "Interconnect objects"),
+					    Gtk::Stock::CONNECT, "Force interconnect", 
+					    "Force interconnect"),
 			Gtk::AccelKey("<control>A"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_interconnect));
 
@@ -289,6 +289,11 @@ void MenuManager::create_and_bind_logic_menu() {
 					    "Isolate object(s)"),
 			Gtk::AccelKey("<control>U"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_isolate));
+
+  m_refActionGroup->add(Gtk::Action::create("LogicAutoInterconnect",
+					    Gtk::Stock::CONNECT, "Auto-Interconnect objects", 
+					    "Auto-Interconnect objects"),
+			sigc::mem_fun(*window, &MainWin::on_menu_logic_autointerconnect));
 
   m_refActionGroup->add(Gtk::Action::create("LogicClearLogicModel",
 					    Gtk::Stock::CLEAR, "Clear logic model", 
@@ -480,6 +485,7 @@ void MenuManager::setup_menu_structure() {
         "    <menu action='LogicMenu'>"
         "      <menuitem action='LogicInterconnect'/>"
         "      <menuitem action='LogicIsolate'/>"
+        "      <menuitem action='LogicAutoInterconnect'/>"
         "      <separator/>"
         "      <menuitem action='LogicClearLogicModel'/>"
         "      <menuitem action='LogicClearLogicModelInSelection'/>"
@@ -737,6 +743,8 @@ void MenuManager::set_widget_sensitivity(bool state) {
     set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicInterconnect", state);
     set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicIsolate", state);
   }
+
+  set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicAutoInterconnect", state);
 
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModel", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicConnectionInspector", state);

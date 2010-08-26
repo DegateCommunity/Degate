@@ -91,7 +91,7 @@ ConnectionInspectorWin::ConnectionInspectorWin(Gtk::Window *parent, degate::Logi
       pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
       pColumn->set_min_width(DEFAULT_WIDTH);
       
-      if(pColumn) pColumn->set_sort_column(m_Columns.m_col_prev_name);
+      pColumn->set_sort_column(m_Columns.m_col_prev_name);
       //refListStore->set_sort_column(m_Columns.m_col_prev_name, Gtk::SORT_ASCENDING);
       
       /*
@@ -108,7 +108,7 @@ ConnectionInspectorWin::ConnectionInspectorWin(Gtk::Window *parent, degate::Logi
       pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
       pColumn->set_min_width(DEFAULT_WIDTH);
       
-      if(pColumn) pColumn->set_sort_column(m_Columns.m_col_curr_name_sort);
+      pColumn->set_sort_column(m_Columns.m_col_curr_name_sort);
       //refListStore->set_sort_column(m_Columns.m_col_curr_name_sort, Gtk::SORT_ASCENDING);
       
       /*
@@ -125,8 +125,9 @@ ConnectionInspectorWin::ConnectionInspectorWin(Gtk::Window *parent, degate::Logi
       pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
       pColumn->set_min_width(DEFAULT_WIDTH);
       
-      if(pColumn) pColumn->set_sort_column(m_Columns.m_col_next_name);
+      pColumn->set_sort_column(m_Columns.m_col_next_name);
       //refListStore->set_sort_column(m_Columns.m_col_next_name, Gtk::SORT_ASCENDING);
+
       
       refListStore->set_sort_column_id(m_Columns.m_col_curr_name_sort, Gtk::SORT_ASCENDING);
 	

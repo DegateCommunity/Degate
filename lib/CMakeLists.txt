@@ -71,6 +71,7 @@ set(SOURCES
 	Point.cc
 	Line.cc
 	Rectangle.cc
+	TangencyCheck.cc
 
 	#
 	# logic model related

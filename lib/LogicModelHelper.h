@@ -217,6 +217,13 @@ namespace degate {
 
 
 
+  /**
+   * Connect objects.
+   */
+  void connect_objects(LogicModel_shptr lmodel, 
+		       ConnectedLogicModelObject_shptr o1, 
+		       ConnectedLogicModelObject_shptr o2);
+   
 
   /**
    * Connect objects.
@@ -228,6 +235,8 @@ namespace degate {
    *   connected with anything.
    * @exception InvalidPointerException If you pass an invalid shared pointer for the
    *   logic model, then this exception is raised.
+   * @see connect_objects()
+   * @see autoconnect_objects()
    */
 
   template<class InputIterator>
@@ -288,6 +297,19 @@ namespace degate {
 
     lmodel->add_net(new_net);
   }
+
+
+  /**
+   * Autoconnect objects that tangent each other from a layer within the bounding box.
+   *
+   * @exception InvalidPointerException If you pass an invalid shared pointer for the
+   *   logic model, then this exception is raised.
+   * @see connnect_objects()
+   */
+
+  void autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer, 
+			   BoundingBox const& search_bbox) throw ();
+  
 
   
   /**
@@ -383,6 +405,8 @@ namespace degate {
    */
   void apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm)
     throw(InvalidPointerException);
+
+
 }
 
 #endif

@@ -1575,6 +1575,26 @@ void MainWin::on_menu_logic_isolate() {
 
 }
 
+void MainWin::on_menu_logic_autointerconnect() {
+  if(main_project == NULL) return;
+
+  // get bounding box for working area
+  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+
+  BoundingBox bbox;
+
+  if(selection_tool != NULL && selection_tool->has_selection()) // selected area
+    bbox = selection_tool->get_bounding_box();
+  else // the whole area
+    bbox = main_project->get_bounding_box();
+
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+
+  autoconnect_objects(lmodel, lmodel->get_current_layer(), bbox);
+
+}
+
 void MainWin::on_menu_logic_connection_inspector() {
   if(main_project != NULL && ciWin != NULL) ciWin->show();
 }

@@ -62,8 +62,7 @@ class ConnectionInspectorWin : public Gtk::Window, private GladeFileLoader {
     Gtk::TreeModelColumn<Glib::ustring> m_col_prev_name;
     Gtk::TreeModelColumn<degate::PlacedLogicModelObject_shptr> m_col_prev_object_ptr;
 
-    Gtk::TreeModelColumn<Glib::ustring> color_; 
-
+    Gtk::TreeModelColumn<Glib::ustring> color_;
   };
 
 
