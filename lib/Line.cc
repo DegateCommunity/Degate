@@ -71,9 +71,10 @@ bool Line::in_shape(int x, int y) const {
   else {
     
     // check if x is outside the x-range
-    if(x < from_x || x > to_x) 
-      return false;
-    
+    if(x < std::min(from_x,to_x) || 
+       x > std::max(from_x, to_x))
+       return false;
+
     double m = d_y / d_x;
     double n = (double)from_y - m * (double)from_x;
     double y_dash = m * (double) x + n;
