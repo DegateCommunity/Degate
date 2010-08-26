@@ -1084,7 +1084,7 @@ void MainWin::on_menu_help_about() {
 			    "This software is released under the\nGNU General Public License Version 3.\n"
 			    "2010"
 			    );
-  about_dialog.set_website("http://degate.zfch.de/");
+  about_dialog.set_website("http://www.degate.org/");
   about_dialog.run();
 }
 
