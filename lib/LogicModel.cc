@@ -516,7 +516,9 @@ void LogicModel::set_gate_library(GateLibrary_shptr new_gate_lib) {
   gate_library = new_gate_lib;
 }
 
-void LogicModel::add_net(Net_shptr net) {
+void LogicModel::add_net(Net_shptr net) throw() {
+  if(net == NULL) throw InvalidPointerException();
+
   if(!net->has_valid_object_id()) net->set_object_id(get_new_object_id());
   nets[net->get_object_id()] = net;
 }

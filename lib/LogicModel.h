@@ -408,9 +408,11 @@ namespace degate {
     /**
      * Add a net to the logic model.
      * If the net object has no object ID, a new object ID is set to the net.
+     * @exception InvalidPointerException Is thrown, if an invalid pointer was
+     *   passed as argument.
      */
 
-    void add_net(Net_shptr net);
+    void add_net(Net_shptr net) throw();
 
     
     /**
