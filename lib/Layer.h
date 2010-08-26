@@ -333,6 +333,7 @@ namespace degate {
 
     /**
      * Check if a layer is enabled.
+     * Enabled means, that the layer is visible to the user.
      */
 
     bool is_enabled() const;
