@@ -34,6 +34,8 @@
 
 #include <globals.h>
 
+#include <boost/lexical_cast.hpp>
+
 #define MY_WHITE "#ffffff"
 #define MY_BLUE  "#d0d0ff"
 
@@ -84,19 +86,30 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
        * col 0
        */
       
-      pTreeView->append_column("Class", *pRenderer);
+      pTreeView->append_column("Layer", *pRenderer);
       pColumn = pTreeView->get_column(0);
+      pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_layer);
+      pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
+      pColumn->set_resizable(true);
+      pColumn->set_sort_column(m_Columns.m_col_layer);
+
+      /*
+       * col 1
+       */
+      
+      pTreeView->append_column("Class", *pRenderer);
+      pColumn = pTreeView->get_column(1);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_class);
       pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
       pColumn->set_resizable(true);
       pColumn->set_sort_column(m_Columns.m_col_violation_class);
       
       /*
-       * col 1
+       * col 2
        */
       
       pTreeView->append_column("Description", *pRenderer);
-      pColumn = pTreeView->get_column(1);
+      pColumn = pTreeView->get_column(2);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_description);
       pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
       pColumn->set_resizable(true);
@@ -130,7 +143,9 @@ void DRCViolationsWin::run_checks() {
   BOOST_FOREACH(DRCBase::container_type::value_type v, drc.get_drc_violations()) {
     row = *(refListStore->append()); 
 
-    row[m_Columns.m_col_object_ptr] = v->get_object();
+    PlacedLogicModelObject_shptr plo = v->get_object();
+    row[m_Columns.m_col_object_ptr] = plo;
+    row[m_Columns.m_col_layer] = boost::lexical_cast<Glib::ustring>(plo->get_layer()->get_layer_pos());
     row[m_Columns.m_col_violation_class] = v->get_drc_violation_class();
     row[m_Columns.m_col_violation_description] = v->get_problem_description();
 

@@ -36,6 +36,7 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
     DRCViolationsModelColumns() {
 
       add(m_col_object_ptr);
+      add(m_col_layer);      
       add(m_col_violation_class);
       add(m_col_violation_description);
 
@@ -43,6 +44,7 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
     }
 
     Gtk::TreeModelColumn<degate::PlacedLogicModelObject_shptr> m_col_object_ptr;
+    Gtk::TreeModelColumn<Glib::ustring> m_col_layer;
     Gtk::TreeModelColumn<Glib::ustring> m_col_violation_class;
     Gtk::TreeModelColumn<Glib::ustring> m_col_violation_description;
 
