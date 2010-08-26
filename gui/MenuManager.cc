@@ -291,9 +291,14 @@ void MenuManager::create_and_bind_logic_menu() {
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_isolate));
 
   m_refActionGroup->add(Gtk::Action::create("LogicAutoInterconnect",
-					    Gtk::Stock::CONNECT, "Auto-Interconnect objects", 
-					    "Auto-Interconnect objects"),
+					    Gtk::Stock::CONNECT, "Auto-Interconnect objects on current layer", 
+					    "Auto-Interconnect objects on current layer"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_autointerconnect));
+
+  m_refActionGroup->add(Gtk::Action::create("LogicAutoInterconnectInterLayer",
+					    Gtk::Stock::CONNECT, "Interlayer autoconnect objects", 
+					    "Interlayer autoconnect objects"),
+			sigc::mem_fun(*window, &MainWin::on_menu_logic_autointerconnect_interlayer));
 
   m_refActionGroup->add(Gtk::Action::create("LogicClearLogicModel",
 					    Gtk::Stock::CLEAR, "Clear logic model", 
@@ -486,6 +491,7 @@ void MenuManager::setup_menu_structure() {
         "      <menuitem action='LogicInterconnect'/>"
         "      <menuitem action='LogicIsolate'/>"
         "      <menuitem action='LogicAutoInterconnect'/>"
+        "      <menuitem action='LogicAutoInterconnectInterLayer'/>"
         "      <separator/>"
         "      <menuitem action='LogicClearLogicModel'/>"
         "      <menuitem action='LogicClearLogicModelInSelection'/>"
@@ -745,6 +751,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
   }
 
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicAutoInterconnect", state);
+  set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicAutoInterconnectInterLayer", state);
 
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModel", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicConnectionInspector", state);

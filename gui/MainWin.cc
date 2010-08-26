@@ -1578,21 +1578,19 @@ void MainWin::on_menu_logic_isolate() {
 void MainWin::on_menu_logic_autointerconnect() {
   if(main_project == NULL) return;
 
-  // get bounding box for working area
-  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  BoundingBox bbox = get_selection_bounding_box(editor, main_project);
+  LogicModel_shptr lmodel = main_project->get_logic_model();
+  autoconnect_objects(lmodel, lmodel->get_current_layer(), bbox);
+}
 
-  BoundingBox bbox;
-
-  if(selection_tool != NULL && selection_tool->has_selection()) // selected area
-    bbox = selection_tool->get_bounding_box();
-  else // the whole area
-    bbox = main_project->get_bounding_box();
+void MainWin::on_menu_logic_autointerconnect_interlayer() {
+  if(main_project == NULL) return;
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
 
-  autoconnect_objects(lmodel, lmodel->get_current_layer(), bbox);
-
+  autoconnect_interlayer_objects(lmodel, 
+				 lmodel->get_current_layer(),
+				 get_selection_bounding_box(editor, main_project));
 }
 
 void MainWin::on_menu_logic_connection_inspector() {

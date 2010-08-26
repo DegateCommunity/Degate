@@ -311,7 +311,16 @@ namespace degate {
 			   BoundingBox const& search_bbox) throw ();
   
 
-  
+  /**
+   * Autoconnect vias on adjacent enabled layers.
+   * @exception InvalidPointerException If you pass an invalid shared pointer for the
+   *   logic model, then this exception is raised.
+   */
+  void autoconnect_interlayer_objects(LogicModel_shptr lmodel, 
+				      Layer_shptr layer,
+				      BoundingBox const& search_bbox) throw ();
+
+
   /**
    * Load an image in a common image format as background image for a layer.
    * If there is already a background image, it will be unset and removed from
@@ -345,26 +354,50 @@ namespace degate {
   
   /**
    * Get next enabled layer.
+   * @return Returns the "next" visible layer relative to the current layer. If
+   *   the current layer is the top layer, the bottom layer is returned.
    * @exception InvalidPointerException If you pass an invalid shared pointer for
    *   \p layer, then this exception is raised.
    * @exception CollectionLookupException Is thrown, if all layers are disabled.
    * @exception DegateRuntimeException Is thrown, if there is no current layer.
    */
 
-  Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel) 
-    throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException);
+  Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel) throw();
+
+
+  /**
+   * Get the next enabled layer, that is above \p layer. The method will not
+   * turn around in the layer stack.
+   * @return Returns the next layer. If there is no next layer, a NULL pointer
+   *   is returned.
+   * @exception InvalidPointerException If you pass an invalid shared pointer, 
+   *   then this exception is raised.
+   */
+  Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) throw();
 
   /**
    * Get previous enabled layer.
+   * @return Returns the "previous" visible layer relative to the current layer. If
+   *   the current layer is the bottom layer, the top layer is returned.
    * @exception InvalidPointerException If you pass an invalid shared pointer for
    *   \p layer, then this exception is raised.
    * @exception CollectionLookupException Is thrown, if all layers are disabled.
    * @exception DegateRuntimeException Is thrown, if there is no current layer.
    */
 
-  Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel) 
-    throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException);
+  Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel) throw();
 
+
+  /**
+   * Get the previous enabled layer, that is below \p layer. The method will not
+   * turn around in the layer stack.
+   * @return Returns the previous layer. If there is no previous layer, a NULL pointer
+   *   is returned.
+   * @exception InvalidPointerException If you pass an invalid shared pointer, 
+   *   then this exception is raised.
+   */
+
+  Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) throw();
 
   /**
    * Get the current layer.

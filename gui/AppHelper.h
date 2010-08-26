@@ -30,7 +30,8 @@
 #include <ctime>
 #include <Project.h>
 #include <ProjectExporter.h>
-
+#include <Editor.h>
+#include <DegateRenderer.h>
 #include <gtkmm.h>
 
 /**
@@ -75,5 +76,12 @@ bool check_for_autosaved_project(boost::filesystem::path const& project_dir);
  */
 void restore_autosaved_project(boost::filesystem::path const& project_dir);
 
+
+/**
+ * Get the selected area as bounding box. If nothing is selected a bounding box
+ * is retunred that represents the whole project area.
+ */
+degate::BoundingBox get_selection_bounding_box(GfxEditor<DegateRenderer> const& editor,
+					       const degate::Project_shptr project);
 
 #endif

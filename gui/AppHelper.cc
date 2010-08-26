@@ -140,3 +140,20 @@ void add_image_file_filter_to_file_chooser_for_writing(Gtk::FileChooserDialog & 
 }
 
 
+
+degate::BoundingBox get_selection_bounding_box(GfxEditor<DegateRenderer> const& editor, 
+					       const degate::Project_shptr project) {
+
+  // get bounding box for working area
+  const std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  
+  BoundingBox bbox;
+
+  if(selection_tool != NULL && selection_tool->has_selection()) // selected area
+    bbox = selection_tool->get_bounding_box();
+  else // the whole area
+    bbox = project->get_bounding_box();
+
+  return bbox;
+}

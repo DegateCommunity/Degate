@@ -244,8 +244,7 @@ Layer_shptr degate::get_first_enabled_layer(LogicModel_shptr lmodel)
   throw InvalidPointerException("Error: all layers are disabled.");
 }
 
-Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel) 
-  throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException) {
+Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel) throw() {
   if(lmodel == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_next_enabled_layer()");
 
@@ -262,8 +261,23 @@ Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel)
   return Layer_shptr(); // to avoid compiler warning
 }
 
-Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel) 
-  throw(InvalidPointerException, CollectionLookupException, DegateRuntimeException) {
+
+Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) throw() {
+
+  if(lmodel == NULL || layer == NULL) 
+    throw InvalidPointerException("Error: you passed an invalid pointer to get_next_enabled_layer()");
+
+  for(unsigned int l_pos = layer->get_layer_pos() + 1; 
+      l_pos <= lmodel->get_num_layers(); l_pos++) {
+    Layer_shptr l = lmodel->get_layer(l_pos);
+    if(l->is_enabled()) return l;
+  }
+  
+  return Layer_shptr();
+}
+
+Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel) throw() {
+
   if(lmodel == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_prev_enabled_layer()");
 
@@ -281,6 +295,19 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel)
   throw InvalidPointerException("Error: all layers are disabled.");
   return Layer_shptr(); // to avoid compiler warning
 
+}
+
+Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) throw() {
+
+  if(lmodel == NULL || layer == NULL) 
+    throw InvalidPointerException("Error: you passed an invalid pointer to get_prev_enabled_layer()");
+
+  for(unsigned int l_pos = layer->get_layer_pos(); l_pos > 0; l_pos--) {
+    
+    Layer_shptr l = lmodel->get_layer(l_pos - 1);
+    if(l->is_enabled()) return l;
+  }
+  return Layer_shptr();
 }
 
 Layer_shptr degate::get_current_layer(Project_shptr project) throw(InvalidPointerException) {
@@ -501,4 +528,68 @@ void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
       }      
     }
   }
+}
+
+void autoconnect_interlayer_objects_helper(LogicModel_shptr lmodel, 
+					   Layer_shptr adjacent_layer,
+					   BoundingBox const& search_bbox,
+					   Via_shptr v1,
+					   Via::DIRECTION v1_dir_criteria,
+					   Via::DIRECTION v2_dir_criteria) throw () {
+
+  Via_shptr v2;
+
+  for(Layer::qt_region_iterator siter = adjacent_layer->region_begin(search_bbox);
+      siter != adjacent_layer->region_end(); ++siter) {
+    
+    if((v2 = std::tr1::dynamic_pointer_cast<Via>(*siter)) != NULL) {
+      
+      if((v1->get_net() == NULL || v2->get_net() == NULL ||
+	  v1->get_net() != v2->get_net()) &&
+	 v1->get_direction() == v1_dir_criteria &&
+	 v2->get_direction() == v2_dir_criteria &&
+	 check_object_tangency(std::tr1::dynamic_pointer_cast<Circle>(v1), 
+			       std::tr1::dynamic_pointer_cast<Circle>(v2)))
+	connect_objects(lmodel, 
+			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v1), 
+			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v2));
+    }
+  }      
+
+}
+
+void degate::autoconnect_interlayer_objects(LogicModel_shptr lmodel, 
+					    Layer_shptr layer,
+					    BoundingBox const& search_bbox) throw () {
+  if(lmodel == NULL || layer == NULL)
+    throw InvalidPointerException("You passed an invalid shared pointer.");
+
+  Layer_shptr 
+    layer_above = get_next_enabled_layer(lmodel, layer),
+    layer_below = get_prev_enabled_layer(lmodel, layer);
+
+  Via_shptr v1;
+
+  // iterate over objects
+  for(Layer::qt_region_iterator iter = layer->region_begin(search_bbox);
+      iter != layer->region_end(); ++iter) {
+  
+    if((v1 = std::tr1::dynamic_pointer_cast<Via>(*iter)) != NULL) {
+      
+      BoundingBox const& bb = v1->get_bounding_box();
+      
+      /* Iterate over vias one layer above and one layer below
+	 in the region identified by bounding box bb. */
+
+      if(layer_above != NULL)
+	autoconnect_interlayer_objects_helper(lmodel, layer_above, bb, v1, 
+					      Via::DIRECTION_UP, Via::DIRECTION_DOWN);
+
+      if(layer_below != NULL)
+	autoconnect_interlayer_objects_helper(lmodel, layer_below, bb, v1, 
+					      Via::DIRECTION_DOWN, Via::DIRECTION_UP);
+
+    }
+  }
+
 }
