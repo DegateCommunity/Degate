@@ -121,58 +121,76 @@ bool degate::check_object_tangency(Circle_shptr o1,
   return o1->get_bounding_box().intersects(o2->get_bounding_box());
 }
 
-bool degate::check_object_tangency(Line_shptr o1,
-				   Rectangle_shptr o2) {
+bool degate::check_object_tangency(Line_shptr l,
+				   Rectangle_shptr r) {
 
+    
   // http://stackoverflow.com/questions/99353/how-to-test-if-a-line-segment-intersects-an-axis-aligned-rectange-in-2d
 
   // Let the segment endpoints be p1=(x1 y1) and p2=(x2 y2).
   // Let the rectangle's corners be (xBL yBL) and (xTR yTR).
 
-  //F(x y) = (y2-y1)x + (x1-x2)y + (x2*y1-x1*y2)
+  int x1, x2, y1, y2;
 
-  int dy = o1->get_to_y() - o1->get_from_y();
-  int dx = o1->get_from_x() - o1->get_to_x();
-  int i = o1->get_to_x() * o1->get_from_y() - o1->get_from_x() * o1->get_to_y();
+  if(l->get_from_x() < l->get_to_x()) {
+    x1 = l->get_from_x();
+    y1 = l->get_from_y();
+    x2 = l->get_to_x();
+    y2 = l->get_to_y();
+  }
+  else {  
+    x2 = l->get_from_x();
+    y2 = l->get_from_y();
+    x1 = l->get_to_x();
+    y1 = l->get_to_y();
+  }
+
+  // F(x y) = (y2-y1)x + (x1-x2)y + (x2*y1-x1*y2)
+
+  int dy = y2 - y1;
+  int dx = x1 - x2;
+  int i = x2 * y1 - x1 * y2;
 
   // Calculate F(x,y) for each corner of the rectangle.
   // If any of the values f[i] is 0, the corner is on the line.
-  int f1 = dy * o2->get_min_x() + dx * o2->get_min_y() + i;
+  int f1 = dy * r->get_min_x() + dx * r->get_min_y() + i;
   if(f1 == 0) return true;
-  int f2 = dy * o2->get_min_x() + dx * o2->get_max_y() + i;
+  int f2 = dy * r->get_min_x() + dx * r->get_max_y() + i;
   if(f2 == 0) return true;
-  int f3 = dy * o2->get_max_x() + dx * o2->get_min_y() + i;
+  int f3 = dy * r->get_max_x() + dx * r->get_min_y() + i;
   if(f3 == 0) return true;
-  int f4 = dy * o2->get_max_x() + dx * o2->get_max_y() + i;
+  int f4 = dy * r->get_max_x() + dx * r->get_max_y() + i;
   if(f4 == 0) return true;
 
   /* If all corners are "below" or "above" the line, the
      objects can't intersect. */
   if((f1 < 0 && f2 < 0 && f3 < 0 && f4 < 0) ||
-     (f1 > 0 && f2 > 0 && f3 > 0 && f4 > 0)) return false;
+     (f1 > 0 && f2 > 0 && f3 > 0 && f4 > 0)) {
+    return false;
+  }
 
   /*
     Project the endpoint onto the x axis, and check if the 
     segment's shadow intersects the polygon's shadow. Repeat on the y axis:
   */
-
-  if((o1->get_from_x() > o2->get_max_x() && 
-      o1->get_to_x()   > o2->get_max_x()) ||
-     // no intersection (line is to right of rectangle).
-
-     (o1->get_from_x() > o2->get_min_x() && 
-      o1->get_to_x()   > o2->get_min_x()) ||
-     // no intersection (line is to left of rectangle).
-
-     (o1->get_from_y() > o2->get_min_y() && 
-      o1->get_to_y()   > o2->get_min_y()) ||
-     // no intersection (line is above rectangle).
-
-     (o1->get_from_y() > o2->get_max_y() && 
-      o1->get_to_y()   > o2->get_max_y())
-     //no intersection (line is below rectangle).
-     )    
+  if( (x1 > r->get_max_x() && 
+       x2 > r->get_max_x()) &&
+      // no intersection (line is to right of rectangle).
+      
+      !(x1 > r->get_min_x() && 
+	x2 > r->get_min_x()) &&
+      // no intersection (line is to left of rectangle).
+      
+      !(y1 > r->get_max_y() && 
+	y2 > r->get_max_y()) &&
+      // no intersection (line is above rectangle).
+      
+      !(y1 < r->get_min_y() && 
+	y2 < r->get_min_y())
+      //no intersection (line is below rectangle).
+      ) {
     return false;
+  }
     
   else // there is an intersection
     return true;

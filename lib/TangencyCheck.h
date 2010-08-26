@@ -57,8 +57,8 @@ namespace degate {
   bool check_object_tangency(Circle_shptr o1,
 			     Rectangle_shptr o2);
   
-  bool check_object_tangency(Line_shptr o1,
-			     Rectangle_shptr o2);
+  bool check_object_tangency(Line_shptr l,
+			     Rectangle_shptr r);
 
 
 
