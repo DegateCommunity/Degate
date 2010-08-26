@@ -156,8 +156,8 @@ namespace degate {
 	std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
 
       if(clo == NULL) {
-	throw DegateRuntimeException("Error in connect_objecs(). One of the object "
-				     "cannot be connected with anything");
+	throw DegateRuntimeException("Error in connect_objecs(). One of the objects "
+				     "cannot be connected with anything.");
       }
       else {
 	Net_shptr net = clo->get_net();
