@@ -268,7 +268,7 @@ Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_next_enabled_layer()");
 
   for(unsigned int l_pos = layer->get_layer_pos() + 1; 
-      l_pos <= lmodel->get_num_layers(); l_pos++) {
+      l_pos < lmodel->get_num_layers(); l_pos++) {
     Layer_shptr l = lmodel->get_layer(l_pos);
     if(l->is_enabled()) return l;
   }
@@ -482,9 +482,9 @@ void degate::connect_objects(LogicModel_shptr lmodel,
 			     ConnectedLogicModelObject_shptr o1,
 			     ConnectedLogicModelObject_shptr o2) {
 
-  std::vector<ConnectedLogicModelObject_shptr> v(2);
-  v[0] = o1;
-  v[1] = o2;
+  std::list<ConnectedLogicModelObject_shptr> v;
+  v.push_back(o1);
+  v.push_back(o2);
   connect_objects(lmodel, v.begin(), v.end());
 }
 
@@ -530,12 +530,12 @@ void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
   }
 }
 
-void autoconnect_interlayer_objects_helper(LogicModel_shptr lmodel, 
-					   Layer_shptr adjacent_layer,
-					   BoundingBox const& search_bbox,
-					   Via_shptr v1,
-					   Via::DIRECTION v1_dir_criteria,
-					   Via::DIRECTION v2_dir_criteria) throw () {
+void autoconnect_interlayer_objects_via_via(LogicModel_shptr lmodel, 
+					    Layer_shptr adjacent_layer,
+					    BoundingBox const& search_bbox,
+					    Via_shptr v1,
+					    Via::DIRECTION v1_dir_criteria,
+					    Via::DIRECTION v2_dir_criteria) throw () {
 
   Via_shptr v2;
 
@@ -551,6 +551,32 @@ void autoconnect_interlayer_objects_helper(LogicModel_shptr lmodel,
 	 check_object_tangency(std::tr1::dynamic_pointer_cast<Circle>(v1), 
 			       std::tr1::dynamic_pointer_cast<Circle>(v2)))
 	connect_objects(lmodel, 
+			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v1), 
+			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v2));
+    }
+  }      
+
+}
+
+void autoconnect_interlayer_objects_via_gport(LogicModel_shptr lmodel, 
+					      Layer_shptr adjacent_layer,
+					      BoundingBox const& search_bbox,
+					      Via_shptr v1,
+					      Via::DIRECTION v1_dir_criteria) throw () {
+
+  GatePort_shptr v2;
+
+  for(Layer::qt_region_iterator siter = adjacent_layer->region_begin(search_bbox);
+      siter != adjacent_layer->region_end(); ++siter) {
+    
+    if((v2 = std::tr1::dynamic_pointer_cast<GatePort>(*siter)) != NULL) {
+      
+      if((v1->get_net() == NULL || v2->get_net() == NULL ||
+	  v1->get_net() != v2->get_net()) &&
+	 v1->get_direction() == v1_dir_criteria &&
+	 check_object_tangency(std::tr1::dynamic_pointer_cast<Circle>(v1), 
+			       std::tr1::dynamic_pointer_cast<Circle>(v2)))
+	connect_objects(lmodel,
 			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v1), 
 			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v2));
     }
@@ -582,12 +608,15 @@ void degate::autoconnect_interlayer_objects(LogicModel_shptr lmodel,
 	 in the region identified by bounding box bb. */
 
       if(layer_above != NULL)
-	autoconnect_interlayer_objects_helper(lmodel, layer_above, bb, v1, 
-					      Via::DIRECTION_UP, Via::DIRECTION_DOWN);
+	autoconnect_interlayer_objects_via_via(lmodel, layer_above, bb, v1, 
+					       Via::DIRECTION_UP, Via::DIRECTION_DOWN);
 
-      if(layer_below != NULL)
-	autoconnect_interlayer_objects_helper(lmodel, layer_below, bb, v1, 
-					      Via::DIRECTION_DOWN, Via::DIRECTION_UP);
+      if(layer_below != NULL) {
+	autoconnect_interlayer_objects_via_via(lmodel, layer_below, bb, v1, 
+					       Via::DIRECTION_DOWN, Via::DIRECTION_UP);
+	autoconnect_interlayer_objects_via_gport(lmodel, layer_below, bb, v1, 
+						 Via::DIRECTION_DOWN);
+      }
 
     }
   }
