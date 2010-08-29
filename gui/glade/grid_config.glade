@@ -8,7 +8,6 @@
     <property name="default_width">500</property>
     <property name="default_height">500</property>
     <property name="type_hint">normal</property>
-    <property name="has_separator">False</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
@@ -430,6 +429,8 @@
                       <widget class="GtkTreeView" id="uhg_treeview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="rules_hint">True</property>
+                        <property name="fixed_height_mode">True</property>
                       </widget>
                       <packing>
                         <property name="padding">10</property>
@@ -545,6 +546,8 @@
                       <widget class="GtkTreeView" id="uvg_treeview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="rules_hint">True</property>
+                        <property name="fixed_height_mode">True</property>
                       </widget>
                       <packing>
                         <property name="padding">10</property>

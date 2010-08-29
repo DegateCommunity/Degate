@@ -12,16 +12,15 @@
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <widget class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <widget class="GtkTreeView" id="treeview_layers">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="rules_hint">True</property>
               </widget>
               <packing>
                 <property name="position">0</property>
@@ -32,7 +31,7 @@
                 <property name="visible">True</property>
                 <child>
                   <widget class="GtkButton" id="add_button">
-                    <property name="label" translatable="yes">gtk-add</property>
+                    <property name="label">gtk-add</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -47,7 +46,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="remove_button">
-                    <property name="label" translatable="yes">gtk-remove</property>
+                    <property name="label">gtk-remove</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -62,7 +61,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="bg_file_button">
-                    <property name="label" translatable="yes">gtk-open</property>
+                    <property name="label">gtk-open</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -77,7 +76,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="clear_bg_button">
-                    <property name="label" translatable="yes">gtk-clear</property>
+                    <property name="label">gtk-clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -109,7 +108,7 @@
             <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="cancel_button">
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -123,7 +122,7 @@
             </child>
             <child>
               <widget class="GtkButton" id="ok_button">
-                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>

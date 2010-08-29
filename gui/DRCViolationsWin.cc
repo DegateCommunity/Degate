@@ -36,9 +36,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-#define MY_WHITE "#ffffff"
-#define MY_BLUE  "#d0d0ff"
-
 using namespace degate;
 
 
@@ -89,7 +86,6 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
       pTreeView->append_column("Layer", *pRenderer);
       pColumn = pTreeView->get_column(0);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_layer);
-      pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
       pColumn->set_resizable(true);
       pColumn->set_sort_column(m_Columns.m_col_layer);
 
@@ -100,7 +96,6 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
       pTreeView->append_column("Class", *pRenderer);
       pColumn = pTreeView->get_column(1);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_class);
-      pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
       pColumn->set_resizable(true);
       pColumn->set_sort_column(m_Columns.m_col_violation_class);
       
@@ -111,7 +106,6 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
       pTreeView->append_column("Description", *pRenderer);
       pColumn = pTreeView->get_column(2);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_description);
-      pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
       pColumn->set_resizable(true);
       pColumn->set_sort_column(m_Columns.m_col_violation_description);
      
@@ -138,8 +132,6 @@ void DRCViolationsWin::run_checks() {
   clear_list();
   Gtk::TreeModel::Row row;
 
-  Glib::ustring current_color = MY_WHITE;
-
   BOOST_FOREACH(DRCBase::container_type::value_type v, drc.get_drc_violations()) {
     row = *(refListStore->append()); 
 
@@ -149,10 +141,6 @@ void DRCViolationsWin::run_checks() {
     row[m_Columns.m_col_violation_class] = v->get_drc_violation_class();
     row[m_Columns.m_col_violation_description] = v->get_problem_description();
 
-    row[m_Columns.color_] = current_color;
-
-    if(current_color == MY_BLUE) current_color = MY_WHITE;
-    else current_color = MY_BLUE;
   }
 }
 

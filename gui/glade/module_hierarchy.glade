@@ -29,6 +29,7 @@
                       <widget class="GtkTreeView" id="treeview_modules">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="rules_hint">True</property>
                         <property name="enable_tree_lines">True</property>
                       </widget>
                     </child>
@@ -48,6 +49,7 @@
                       <widget class="GtkTreeView" id="treeview_gates">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="rules_hint">True</property>
                         <property name="enable_tree_lines">True</property>
                       </widget>
                     </child>
@@ -67,6 +69,7 @@
                       <widget class="GtkTreeView" id="treeview_ports">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="rules_hint">True</property>
                         <property name="enable_tree_lines">True</property>
                       </widget>
                     </child>
