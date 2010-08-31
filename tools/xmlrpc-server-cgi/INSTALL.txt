@@ -1,0 +1,14 @@
+Put the file xmlrpc-server-cgi.pl into the directory cgi-bin of
+your webserver.
+
+Install these perl modules (under freebsd they are all in the ports tree):
+
+Frontier::RPC2
+Data::Dumper
+Data::Serializer
+Tie::File
+
+Just run the script via command line to check if all required modules
+are installed. It will generate a runtime error message, but it should
+compile.
+
