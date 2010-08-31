@@ -28,8 +28,9 @@ sub push {
     print STDERR "push-request: " . Dumper(\@_);
 
     my @transactions;
-    tie @transactions, 'Tie::File', $filename or 
+    my $o = tie @transactions, 'Tie::File', $filename or 
 	die "Can't open channel file '$filename': $!\n";
+    $o->flock();
 
     my $tid = $#transactions + 1;
     $tid = 1 if($tid == 0);
@@ -47,8 +48,9 @@ sub pull {
     print STDERR "pull-request: " . Dumper(\@_);
 
     my @transactions;
-    tie @transactions, 'Tie::File', $filename or 
+    my $o = tie @transactions, 'Tie::File', $filename or 
 	die "Can't open channel file '$filename': $!\n";
+    $o->flock();
 
     my @results =  @transactions[$start_tid .. ($#transactions )];
 
