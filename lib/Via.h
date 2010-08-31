@@ -31,6 +31,7 @@
 #include "degate_exceptions.h"
 #include "Wire.h"
 #include "Circle.h"
+#include <RemoteObject.h>
 
 #include <tr1/memory>
 
@@ -39,7 +40,7 @@ namespace degate {
   /**
    * Representation of a via that interconnects layers of a chip.
    */
-  class Via : public Circle, public ConnectedLogicModelObject {
+  class Via : public Circle, public ConnectedLogicModelObject, public RemoteObject {
 
   public:
 
@@ -92,7 +93,14 @@ namespace degate {
      */
 
     virtual const std::string get_direction_as_string() const;
-  
+
+
+    /**
+     * Parse a via direction string and return it as enum value.
+     */
+    static Via::DIRECTION get_via_direction_from_string(std::string const& via_direction_str) 
+      throw();
+
     /**
      * Get a human readable string that describes the whole
      * logic model object. The string should be unique in order
@@ -134,6 +142,10 @@ namespace degate {
     virtual bool in_shape(int x, int y) const {
       return Circle::in_shape(x, y);
     }
+
+  protected:
+
+    virtual object_id_t push_object_to_server(std::string const& server_url);
   
   };
 

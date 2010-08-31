@@ -77,8 +77,7 @@ object_id_t Wire::push_object_to_server(std::string const& server_url) {
       xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
     
     set_remote_object_id(transaction_id);
-
-    std::cout << "Pushed wire to server. rmote id is: " << transaction_id << std::endl;
+    std::cout << "Pushed wire to server. remote id is: " << transaction_id << std::endl;
     return transaction_id;
   } 
   catch(std::exception const& e) {

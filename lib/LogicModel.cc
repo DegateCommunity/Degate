@@ -249,46 +249,37 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
 
 
 void LogicModel::remove_remote_object(object_id_t remote_id) throw() {
-
   debug(TM, "Should remove object with remote ID %d from lmodel.", remote_id);
 
   if(remote_id == 0) 
     throw InvalidObjectIDException("Parameter passed to remove_remote_object() is invalid.");
-
+  
   debug(TM, "Should remove object with remote ID %d from lmodel - 2.", remote_id);
-
-  Wire_shptr w;
-
+  
   BOOST_FOREACH(object_collection::value_type const& p, objects) {
-
-    if((w = std::tr1::dynamic_pointer_cast<Wire>(p.second)) != NULL) {
+    
+    PlacedLogicModelObject_shptr plo = p.second;
+    RemoteObject_shptr ro;
       
-      debug(TM, "found wire.");
+    if(ro = std::tr1::dynamic_pointer_cast<RemoteObject>(plo)) {
 
-      RemoteObject_shptr ro;
-
-      if(((ro = std::tr1::dynamic_pointer_cast<RemoteObject>(w)) != NULL)) {
-
-	  debug(TM, "found remote object with remote ID %d and local ID = %d.", 
-		w->get_remote_object_id(), w->get_object_id());
-
-	if(ro->get_remote_object_id() == remote_id) {
-
-	  debug(TM, "found ro.");
+      object_id_t local_id = plo->get_object_id();
 	  
-	  object_id_t local_id = w->get_object_id();
+	debug(TM, "found remote object with remote ID %d and local ID = %d.", 
+	      ro->get_remote_object_id(), local_id);
+	
+	if(ro->get_remote_object_id() == remote_id) {
+	  
 	  debug(TM, "Removed object with remote ID %d and local ID = %d from lmodel.", 
 		remote_id, local_id);
-	  remove_object(w, false);
+	  remove_object(plo, false);
 	  
 	  object_collection::iterator found = objects.find(local_id);
 	  assert(found == objects.end());
 	  
 	  return;
 	}
-      }
-
-    }
+    }	    
   }
 }
 
@@ -309,17 +300,18 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
 
     if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
       remove_gate(gate);
-    else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o)) {
-      if(add_to_remove_list) 
-	removed_remote_oids.push_back(wire->get_remote_object_id());
+    else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
       remove_wire(wire);
-    }
     else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
       remove_via(via);
     else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
       remove_annotation(annotation);
 
     
+    if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>(o)) {
+      if(add_to_remove_list) removed_remote_oids.push_back(ro->get_remote_object_id());
+    }
+
     layer->remove_object(o);
   }
   objects.erase(o->get_object_id());

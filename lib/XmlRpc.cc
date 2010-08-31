@@ -21,6 +21,7 @@
 
 #include <XmlRpc.h>
 #include <Wire.h>
+#include <Via.h>
 
 #include <boost/foreach.hpp>
 
@@ -111,7 +112,6 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
     const std::string obj_type_str = xmlrpc_c::value_string(command[1]);
 
     if(!obj_type_str.compare("wire")) {
-
       if(command.size() < 8) 
 	throw XMLRPCException("Command wire add has less then 8 parameters.");
     
@@ -125,6 +125,20 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
       Wire_shptr w(new Wire(from_x, from_y, to_x, to_y, diameter));
       w->set_remote_object_id(transaction_id);
       lmodel->add_object(layer_id, w);
+    }
+    else if(!obj_type_str.compare("via")) {
+      if(command.size() < 7) 
+	throw XMLRPCException("Command via add has less then 8 parameters.");
+    
+      int layer_id = xmlrpc_c::value_int(command[2]);
+      int x = xmlrpc_c::value_int(command[3]);
+      int y = xmlrpc_c::value_int(command[4]);
+      unsigned int diameter = xmlrpc_c::value_int(command[5]);
+      const std::string direction = xmlrpc_c::value_string(command[6]);
+      
+      Via_shptr v(new Via(x, y, diameter, Via::get_via_direction_from_string(direction)));
+      v->set_remote_object_id(transaction_id);
+      lmodel->add_object(layer_id, v);
     }
   }
 

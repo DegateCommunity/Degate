@@ -20,6 +20,7 @@
 */
 
 #include "Via.h"
+#include <XmlRpc.h>
 #include <boost/format.hpp>
 
 using namespace degate;
@@ -46,6 +47,14 @@ const std::string Via::get_direction_as_string() const {
   case DIRECTION_UNDEFINED:
   default: return std::string("undefined");
   }
+}
+
+Via::DIRECTION Via::get_via_direction_from_string(std::string const& via_direction_str) throw() {
+
+  if(via_direction_str == "up") return Via::DIRECTION_UP;
+  else if(via_direction_str == "down") return Via::DIRECTION_DOWN;
+  else if(via_direction_str == "undefined") return Via::DIRECTION_UNDEFINED;
+  else throw DegateRuntimeException("Can't parse via direction type.");
 }
 
 const std::string Via::get_descriptive_identifier() const {
@@ -105,4 +114,41 @@ void Via::set_y(int y) {
 void Via::set_diameter(unsigned int diameter) {
   Circle::set_diameter(diameter);
   notify_shape_change();
+}
+
+
+object_id_t Via::push_object_to_server(std::string const& server_url) {
+
+  try {
+
+    xmlrpc_c::paramList params;
+    params.add(xmlrpc_c::value_string("add"));
+    params.add(xmlrpc_c::value_string("via"));
+
+    Layer_shptr layer = get_layer();
+    assert(layer != NULL);
+    params.add(xmlrpc_c::value_int(layer->get_layer_id()));
+
+    params.add(xmlrpc_c::value_int(get_x()));
+    params.add(xmlrpc_c::value_int(get_y()));
+    params.add(xmlrpc_c::value_int(get_diameter()));
+    params.add(xmlrpc_c::value_string(get_direction_as_string()));
+    
+    int const transaction_id = 
+      xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
+    
+    set_remote_object_id(transaction_id);
+
+    std::cout << "Pushed via to server. remote id is: " << transaction_id << std::endl;
+    return transaction_id;
+  } 
+  catch(std::exception const& e) {
+    std::cerr << "Client threw error: " << e.what() << std::endl;
+    throw;
+  } 
+  catch (...) {
+    std::cerr << "Client threw unexpected error." << std::endl;
+    throw;
+  }
+
 }
