@@ -201,6 +201,9 @@ void LogicModelExporter::add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, l
   wire_elem->set_attribute("fill-color", to_color_string(wire->get_fill_color()));
   wire_elem->set_attribute("frame-color", to_color_string(wire->get_frame_color()));
 
+  wire_elem->set_attribute("remote-id", 
+			   number_to_string<object_id_t>(wire->get_remote_object_id()));
+
 }
 
 void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos) 
@@ -223,6 +226,8 @@ void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer
   via_elem->set_attribute("frame-color", to_color_string(via->get_frame_color()));
 
   via_elem->set_attribute("direction", via->get_direction_as_string());
+  via_elem->set_attribute("remote-id", 
+			  number_to_string<object_id_t>(via->get_remote_object_id()));
 }
 
 

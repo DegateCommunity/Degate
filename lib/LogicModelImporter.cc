@@ -190,6 +190,7 @@ void LogicModelImporter::parse_wires_element(const xmlpp::Element * const wires_
       int to_y = parse_number<int>(wire_elem, "to-y");
       int diameter = parse_number<int>(wire_elem, "diameter");
       int layer = parse_number<int>(wire_elem, "layer");
+      int remote_id = parse_number<object_id_t>(wire_elem, "remote-id", 0);
 
       const Glib::ustring name(wire_elem->get_attribute_value("name"));
       const Glib::ustring description(wire_elem->get_attribute_value("description"));
@@ -204,6 +205,7 @@ void LogicModelImporter::parse_wires_element(const xmlpp::Element * const wires_
       wire->set_fill_color(parse_color_string(fill_color_str));
       wire->set_frame_color(parse_color_string(frame_color_str));
 
+      wire->set_remote_object_id(remote_id);
       lmodel->add_object(layer, wire);
     }
   }
@@ -229,6 +231,7 @@ void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_el
       int y = parse_number<int>(via_elem, "y");
       int diameter = parse_number<int>(via_elem, "diameter");
       int layer = parse_number<int>(via_elem, "layer");
+      int remote_id = parse_number<object_id_t>(via_elem, "remote-id", 0);
 
       const Glib::ustring name(via_elem->get_attribute_value("name"));
       const Glib::ustring description(via_elem->get_attribute_value("description"));
@@ -248,6 +251,8 @@ void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_el
       via->set_object_id(object_id);
       via->set_fill_color(parse_color_string(fill_color_str));
       via->set_frame_color(parse_color_string(frame_color_str));
+
+      via->set_remote_object_id(remote_id);
 
       lmodel->add_object(layer, via);
     }
