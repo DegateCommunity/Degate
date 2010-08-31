@@ -49,7 +49,7 @@ namespace degate {
    */
 
   transaction_id_t pull_changes_from_server(std::string const& server_url, LogicModel_shptr lmodel,
-					    transaction_id_t start_tid) throw();
+					    transaction_id_t start_tid);
 
   /**
    * Parse an execute a command.
@@ -57,7 +57,7 @@ namespace degate {
    */
   void process_changelog_command(LogicModel_shptr lmodel,
 				 transaction_id_t transaction_id,
-				 std::vector<xmlrpc_c::value> const& command) throw();
+				 std::vector<xmlrpc_c::value> const& command);
 }
 
 #endif

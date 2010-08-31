@@ -82,7 +82,7 @@ void degate::push_changes_to_server(std::string const& server_url, LogicModel_sh
 
 void degate::process_changelog_command(LogicModel_shptr lmodel,
 				       transaction_id_t transaction_id,
-				       std::vector<xmlrpc_c::value> const& command) throw() {
+				       std::vector<xmlrpc_c::value> const& command) {
 
   debug(TM, "XMLRPC: process received command for transaction %d", transaction_id);
 
@@ -153,11 +153,10 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
 
 transaction_id_t degate::pull_changes_from_server(std::string const& server_url, 
 						  LogicModel_shptr lmodel,
-						  transaction_id_t start_tid) throw() {
+						  transaction_id_t start_tid) {
   try {
     xmlrpc_c::paramList params;
-    params.add(xmlrpc_c::value_int(start_tid));
-    
+    params.add(xmlrpc_c::value_int(start_tid));    
     xmlrpc_c::value_array ret(remote_method_call(server_url, "degate.pull", params));
     
     std::vector<xmlrpc_c::value> v(ret.vectorValueValue());
@@ -169,10 +168,13 @@ transaction_id_t degate::pull_changes_from_server(std::string const& server_url,
     unsigned int pos = 0;
     for(std::vector<xmlrpc_c::value>::const_iterator iter = v.begin();
 	iter != v.end(); ++iter, pos++) {
-      std::cout << "type " << (*iter).type() << std::endl;
-
       xmlrpc_c::value_array const& command(*iter);
       process_changelog_command(lmodel, start_tid + pos, command.vectorValueValue());
+
+      /* If the process_changelog_command() fails with an exception, changes
+	 were already made to the logic model. That is no problem, because
+	 process_changelog_command() checks this case.
+      */
     }
 
     return start_tid + v.size();

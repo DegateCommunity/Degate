@@ -230,6 +230,12 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
   else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
     add_annotation(layer_pos, annotation);
 
+
+  // if it is a RemoteObject, update remote-to-local-id mapping
+  if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>(o)) {
+    update_roid_mapping(ro->get_remote_object_id(), o->get_object_id());
+  }
+
   if(objects.find(object_id) != objects.end()) {
     std::ostringstream stm;
     stm << "Logic model object with id " << object_id << " is already stored in the logic model.";
@@ -309,7 +315,11 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
 
     
     if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>(o)) {
+      // remember to send a was-removed-message to the collaboration server
       if(add_to_remove_list) removed_remote_oids.push_back(ro->get_remote_object_id());
+
+      // remove entry from remote-to-local-id mapping
+      roid_mapping.erase(ro->get_remote_object_id());
     }
 
     layer->remove_object(o);
@@ -320,10 +330,6 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
 void LogicModel::remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPointerException) {
   remove_object(o, true);
 }
-
-
-
-
 
 
 void LogicModel::add_gate_template(GateTemplate_shptr tmpl) 

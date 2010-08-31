@@ -28,6 +28,7 @@
 #include <degate_exceptions.h>
 #include <Wire.h>
 #include <XmlRpc.h>
+#include <exception>
 
 using namespace degate;
 
@@ -82,11 +83,11 @@ object_id_t Wire::push_object_to_server(std::string const& server_url) {
   } 
   catch(std::exception const& e) {
     std::cerr << "Client threw error: " << e.what() << std::endl;
-    throw;
-  } 
-  catch (...) {
-    std::cerr << "Client threw unexpected error." << std::endl;
-    throw;
+    throw XMLRPCException(e.what());
   }
+  catch(...) {
+    std::cerr << "Client threw unexpected error." << std::endl;
+    throw XMLRPCException("Client threw unexpected error.");
+  }   
 
 }

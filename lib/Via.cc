@@ -144,11 +144,11 @@ object_id_t Via::push_object_to_server(std::string const& server_url) {
   } 
   catch(std::exception const& e) {
     std::cerr << "Client threw error: " << e.what() << std::endl;
-    throw;
-  } 
-  catch (...) {
-    std::cerr << "Client threw unexpected error." << std::endl;
-    throw;
+    throw XMLRPCException(e.what());
   }
+  catch(...) {
+    std::cerr << "Client threw unexpected error." << std::endl;
+    throw XMLRPCException("Client threw unexpected error.");
+  }   
 
 }
