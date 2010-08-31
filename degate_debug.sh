@@ -22,6 +22,9 @@ export DEGATE_CACHE_SIZE=256
 # Set the temp directory.
 export DEGATE_TEMP=/tmp
 
+# Set the URI pattern for the collaboration server.
+export DEGATE_SERVER_URI_PATTERN=http://degate.org/cgi-bin/xmlrpc-server-cgi.pl?channel=%1%
+
 # Launch degate.
 gdb -x .gdb_commands -q $DEGATE_HOME/degate_bin
 

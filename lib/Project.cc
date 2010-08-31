@@ -217,7 +217,10 @@ void Project::init_default_valus() {
   while(channel_ident.size() <= 20)
     channel_ident += (char)('a'+(int) (26.0*rand()/(RAND_MAX+1.0)));
 
-  server_url = string("http://localhost/cgi-bin/test.pl?channel=") + channel_ident;
+  
+  boost::format f(Configuration::get_instance().get_servers_uri_pattern());
+  f % channel_ident;
+  server_url = f.str();
 }
 
 

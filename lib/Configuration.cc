@@ -45,3 +45,9 @@ size_t Configuration::get_max_tile_cache_size() const {
   if(cs == NULL) return 256;
   return boost::lexical_cast<size_t>(cs);
 }
+
+std::string Configuration::get_servers_uri_pattern() const {
+  char * uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
+  if(uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
+  return uri_pattern;
+}
