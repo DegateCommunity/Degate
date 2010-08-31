@@ -98,7 +98,7 @@ namespace degate {
 
   protected:
 
-    virtual void push_object_to_server(std::string const& server_url);
+    virtual object_id_t push_object_to_server(std::string const& server_url);
 
   };
 

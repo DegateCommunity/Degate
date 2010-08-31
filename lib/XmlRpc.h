@@ -45,14 +45,19 @@ namespace degate {
 
   /**
    * Pull objects from a remote server into the logic model.
+   * @exception XMLRPCException This exception is thrown, if the XMLRPC fails for some reason.
    */
 
   transaction_id_t pull_changes_from_server(std::string const& server_url, LogicModel_shptr lmodel,
-					    transaction_id_t start_tid);
+					    transaction_id_t start_tid) throw();
 
+  /**
+   * Parse an execute a command.
+   * @exception XMLRPCException This exception is thrown, if commands cannot be parsed.
+   */
   void process_changelog_command(LogicModel_shptr lmodel,
 				 transaction_id_t transaction_id,
-				 std::vector<xmlrpc_c::value> const& command);
+				 std::vector<xmlrpc_c::value> const& command) throw();
 }
 
 #endif

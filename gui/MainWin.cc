@@ -1909,16 +1909,30 @@ void MainWin::project_changed() {
 
 void MainWin::on_menu_project_push_changes() {
   if(main_project != NULL) {
-    push_changes_to_server(main_project->get_server_url(), 
-			   main_project->get_logic_model());
+    try {
+      push_changes_to_server(main_project->get_server_url(), 
+			     main_project->get_logic_model());
+      project_changed();
+      editor.update_screen();
+    }
+    catch(XMLRPCException const& e) {
+      error_dialog("XMLRPC failed", e.what());
+    }
   }
 }
 
 void MainWin::on_menu_project_pull_changes() {
   if(main_project != NULL) {
-    transaction_id_t tid = pull_changes_from_server(main_project->get_server_url(), 
-						    main_project->get_logic_model(),
-						    main_project->get_last_pulled_tid() + 1);
-    main_project->set_last_pulled_tid(tid);
+    try {
+      transaction_id_t tid = pull_changes_from_server(main_project->get_server_url(), 
+						      main_project->get_logic_model(),
+						      main_project->get_last_pulled_tid());
+      main_project->set_last_pulled_tid(tid);
+      project_changed();
+      editor.update_screen();
+    }
+    catch(XMLRPCException const& e) {
+      error_dialog("XMLRPC failed", e.what());
+    }
   }
 }

@@ -95,6 +95,19 @@ namespace degate {
      */
     object_id_t object_id_counter;
 
+
+    /**
+     * List of remote objects, that were deleted from the logic model.
+     */
+    std::list<object_id_t> removed_remote_oids;
+
+    typedef std::map<object_id_t, object_id_t> roid_mapping_t;
+
+    /**
+     * Mapping from remote OIDs to local OIDs.
+     */    
+    roid_mapping_t roid_mapping;
+
   private:
 
     /**
@@ -180,6 +193,13 @@ namespace degate {
     void remove_annotation(Annotation_shptr o) throw(InvalidPointerException);
 
 
+    /**
+     * Remove an onject from the logic model and control if the operation
+     * should be remembered in delete log.
+     */
+    void remove_object(PlacedLogicModelObject_shptr o,  bool add_to_remove_list) 
+      throw(InvalidPointerException);
+
   public:
 
     /**
@@ -257,6 +277,13 @@ namespace degate {
      */
     
     void remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPointerException);
+
+    /**
+     * Remove a remote object.
+     * @exception InvalidObjectIDException This exception is thrown, if remote_id is invalid.
+     */
+    
+    void remove_remote_object(object_id_t remote_id) throw();
 
    
     /**
@@ -532,6 +559,16 @@ namespace degate {
 
     Module_shptr get_main_module() const;
 
+    /**
+     *
+     */
+    void reset_removed_remote_objetcs_list();
+
+    std::list<object_id_t> const & get_removed_remote_objetcs_list();
+
+    void update_roid_mapping(object_id_t remote_oid, object_id_t local_oid);
+
+    object_id_t get_local_oid_for_roid(object_id_t remote_oid);
   };
 
 

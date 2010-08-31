@@ -33,6 +33,8 @@
 
 #include <LogicModel.h>
 
+#include <boost/foreach.hpp>
+
 using namespace std;
 using namespace degate;
 
@@ -123,8 +125,7 @@ unsigned int LogicModel::get_height() const {
 PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id) 
   throw(CollectionLookupException) {
 
-  std::map<object_id_t, PlacedLogicModelObject_shptr>::iterator found = 
-    objects.find(object_id);
+  object_collection::iterator found = objects.find(object_id);
 
   if(found == objects.end()) {
     std::ostringstream stm;
@@ -202,6 +203,7 @@ void LogicModel::remove_wire(Wire_shptr o) throw(InvalidPointerException) {
 void LogicModel::remove_via(Via_shptr o) throw(InvalidPointerException) {
   if(o == NULL) throw InvalidPointerException();
   vias.erase(o->get_object_id());
+  //removed_remote_oids.push_back(o->get_remote_object_id());
 }
 
 void LogicModel::remove_annotation(Annotation_shptr o) throw(InvalidPointerException) {
@@ -246,9 +248,52 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
 }
 
 
+void LogicModel::remove_remote_object(object_id_t remote_id) throw() {
 
+  debug(TM, "Should remove object with remote ID %d from lmodel.", remote_id);
 
-void LogicModel::remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPointerException) {
+  if(remote_id == 0) 
+    throw InvalidObjectIDException("Parameter passed to remove_remote_object() is invalid.");
+
+  debug(TM, "Should remove object with remote ID %d from lmodel - 2.", remote_id);
+
+  Wire_shptr w;
+
+  BOOST_FOREACH(object_collection::value_type const& p, objects) {
+
+    if((w = std::tr1::dynamic_pointer_cast<Wire>(p.second)) != NULL) {
+      
+      debug(TM, "found wire.");
+
+      RemoteObject_shptr ro;
+
+      if(((ro = std::tr1::dynamic_pointer_cast<RemoteObject>(w)) != NULL)) {
+
+	  debug(TM, "found remote object with remote ID %d and local ID = %d.", 
+		w->get_remote_object_id(), w->get_object_id());
+
+	if(ro->get_remote_object_id() == remote_id) {
+
+	  debug(TM, "found ro.");
+	  
+	  object_id_t local_id = w->get_object_id();
+	  debug(TM, "Removed object with remote ID %d and local ID = %d from lmodel.", 
+		remote_id, local_id);
+	  remove_object(w, false);
+	  
+	  object_collection::iterator found = objects.find(local_id);
+	  assert(found == objects.end());
+	  
+	  return;
+	}
+      }
+
+    }
+  }
+}
+
+void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remove_list) 
+  throw(InvalidPointerException) {
 
   if(o == NULL) throw InvalidPointerException();
   Layer_shptr layer = o->get_layer();
@@ -264,16 +309,24 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPoin
 
     if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
       remove_gate(gate);
-    else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
+    else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o)) {
+      if(add_to_remove_list) 
+	removed_remote_oids.push_back(wire->get_remote_object_id());
       remove_wire(wire);
+    }
     else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
       remove_via(via);
     else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
       remove_annotation(annotation);
+
     
     layer->remove_object(o);
   }
   objects.erase(o->get_object_id());
+}
+
+void LogicModel::remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPointerException) {
+  remove_object(o, true);
 }
 
 
@@ -609,4 +662,26 @@ unsigned int LogicModel::get_num_layers() const {
 
 Module_shptr LogicModel::get_main_module() const {
   return main_module;
+}
+
+void LogicModel::reset_removed_remote_objetcs_list() {
+  removed_remote_oids.clear();
+}
+
+std::list<object_id_t> const & LogicModel::get_removed_remote_objetcs_list() {
+  return removed_remote_oids;
+}
+
+void LogicModel::update_roid_mapping(object_id_t remote_oid, object_id_t local_oid) {
+  roid_mapping[remote_oid] = local_oid;
+}
+
+object_id_t LogicModel::get_local_oid_for_roid(object_id_t remote_oid) {
+  roid_mapping_t::const_iterator found = roid_mapping.find(remote_oid);
+  if(found == roid_mapping.end())
+    return 0;
+  else {
+    assert(found->second != 0);
+    return found->second;
+  }
 }

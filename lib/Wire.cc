@@ -55,13 +55,13 @@ const std::string Wire::get_object_type_name() const {
 void Wire::print(std::ostream & os, int n_tabs) const {
 }
 
-void Wire::push_object_to_server(std::string const& server_url) {
+object_id_t Wire::push_object_to_server(std::string const& server_url) {
 
   try {
 
     xmlrpc_c::paramList params;
-    params.add(xmlrpc_c::value_string("wire"));
     params.add(xmlrpc_c::value_string("add"));
+    params.add(xmlrpc_c::value_string("wire"));
 
     Layer_shptr layer = get_layer();
     assert(layer != NULL);
@@ -78,13 +78,16 @@ void Wire::push_object_to_server(std::string const& server_url) {
     
     set_remote_object_id(transaction_id);
 
-    std::cout << "Result of RPC: " << transaction_id << std::endl;
+    std::cout << "Pushed wire to server. rmote id is: " << transaction_id << std::endl;
+    return transaction_id;
   } 
   catch(std::exception const& e) {
     std::cerr << "Client threw error: " << e.what() << std::endl;
+    throw;
   } 
   catch (...) {
     std::cerr << "Client threw unexpected error." << std::endl;
+    throw;
   }
 
 }

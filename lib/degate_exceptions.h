@@ -169,6 +169,17 @@ namespace degate {
     ZipException(std::string const & str) : DegateRuntimeException(str) {}
   };
 
+  /**
+   * Indicates a runtime exception from the XML parser.
+   */
+  
+  class XMLRPCException : public DegateRuntimeException {
+  public:
+    XMLRPCException() : DegateRuntimeException("XMLRPC failed." ) {}
+    XMLRPCException(std::string const & str) : DegateRuntimeException(str) {}
+  };
+  
+
 }
 
 #endif

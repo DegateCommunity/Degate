@@ -20,10 +20,12 @@
 */
 
 #include <XmlRpc.h>
+#include <Wire.h>
+
+#include <boost/foreach.hpp>
 
 using namespace degate;
 using namespace std;
-
 
 
 xmlrpc_c::value degate::remote_method_call(std::string const& server_url,
@@ -50,31 +52,94 @@ void degate::push_changes_to_server(std::string const& server_url, LogicModel_sh
   for(LogicModel::object_collection::iterator iter = lmodel->objects_begin();
       iter != lmodel->objects_end(); ++iter) {
 
+    object_id_t local_oid = iter->second->get_object_id();
+
     if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>((*iter).second)) {
       
       if(!ro->has_remote_object_id()) { 
-	std::cout << "Push object to server" << std::endl;
-	ro->push(server_url);
+	std::cout << "Push object to server." << std::endl;
+	object_id_t remote_oid = ro->push(server_url);
+
+	lmodel->update_roid_mapping(remote_oid, local_oid);
       }
     }
   }
 
+  BOOST_FOREACH(object_id_t id, lmodel->get_removed_remote_objetcs_list()) {
+    xmlrpc_c::paramList params;
+    params.add(xmlrpc_c::value_string("remove"));
+    params.add(xmlrpc_c::value_int(id));
+
+    remote_method_call(server_url, "degate.push", params);
+
+    debug(TM, "Send remove message for object with remote ID %d", id);
+  }
+
+  lmodel->reset_removed_remote_objetcs_list();
 }
+
 
 void degate::process_changelog_command(LogicModel_shptr lmodel,
 				       transaction_id_t transaction_id,
-				       std::vector<xmlrpc_c::value> const& command) {
+				       std::vector<xmlrpc_c::value> const& command) throw() {
 
+  debug(TM, "XMLRPC: process received command for transaction %d", transaction_id);
+
+  if(lmodel->get_local_oid_for_roid(transaction_id) != 0) {
+    debug(TM, "XMLRPC: transaction %d aready known.", transaction_id);
+    return;
+  }
+
+	
+  if(command.size() < 2) throw XMLRPCException("Command has not enough parameters.");
+
+  if(command[0].type() != xmlrpc_c::value::TYPE_STRING)
+    throw XMLRPCException("Command parameter is not a string");
+
+  const std::string command_str = xmlrpc_c::value_string(command[0]);
+  std::cout << " cmd: " << command_str << std::endl;
+  
+  if(!command_str.compare("remove")) {
+    if(command.size() < 2) 
+      throw XMLRPCException("Command wire add has less then 8 parameters.");    
+    int ro_id = xmlrpc_c::value_int(command[1]);   
+    lmodel->remove_remote_object(ro_id);
+  }
+
+  else if( !command_str.compare("add")) {
+
+    const std::string obj_type_str = xmlrpc_c::value_string(command[1]);
+
+    if(!obj_type_str.compare("wire")) {
+
+      if(command.size() < 8) 
+	throw XMLRPCException("Command wire add has less then 8 parameters.");
+    
+      int layer_id = xmlrpc_c::value_int(command[2]);
+      int from_x = xmlrpc_c::value_int(command[3]);
+      int from_y = xmlrpc_c::value_int(command[4]);
+      int to_x = xmlrpc_c::value_int(command[5]);
+      int to_y = xmlrpc_c::value_int(command[6]);
+      unsigned int diameter = xmlrpc_c::value_int(command[7]);
+      
+      Wire_shptr w(new Wire(from_x, from_y, to_x, to_y, diameter));
+      w->set_remote_object_id(transaction_id);
+      lmodel->add_object(layer_id, w);
+    }
+  }
+
+  /*
   for(std::vector<xmlrpc_c::value>::const_iterator iter = command.begin();
-      iter != command.end(); ++iter) {
+      iter != command.end(); ++iter) 
     std::cout << "\ttype " << (*iter).type() << std::endl;
   }
+  */
 
 }
 
 transaction_id_t degate::pull_changes_from_server(std::string const& server_url, 
 						  LogicModel_shptr lmodel,
-						  transaction_id_t start_tid) {
+						  transaction_id_t start_tid) throw() {
   try {
     xmlrpc_c::paramList params;
     params.add(xmlrpc_c::value_int(start_tid));
@@ -82,6 +147,8 @@ transaction_id_t degate::pull_changes_from_server(std::string const& server_url,
     xmlrpc_c::value_array ret(remote_method_call(server_url, "degate.pull", params));
     
     std::vector<xmlrpc_c::value> v(ret.vectorValueValue());
+
+    if(start_tid == 0) ++start_tid;
 
     debug(TM, "Received %d changes since transaction %ld", v.size(), start_tid);
 
@@ -96,11 +163,16 @@ transaction_id_t degate::pull_changes_from_server(std::string const& server_url,
 
     return start_tid + v.size();
   }
+  catch(XMLRPCException const& e) {
+    throw;
+  }
   catch(exception const& e) {
     cerr << "Client threw error: " << e.what() << endl;
+    throw XMLRPCException(e.what());
   }
   catch(...) {
     cerr << "Client threw unexpected error." << endl;
+    throw XMLRPCException("Client threw unexpected error.");
   }   
 
   return start_tid;

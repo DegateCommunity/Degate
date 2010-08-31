@@ -38,7 +38,7 @@ namespace degate {
     
   protected:
 
-    virtual void push_object_to_server(std::string const& server_url) = 0;
+    virtual object_id_t push_object_to_server(std::string const& server_url) = 0;
 
   public:
 
@@ -62,12 +62,15 @@ namespace degate {
     }
 
 
-    virtual bool push(std::string const& server_url) {
+    virtual object_id_t push(std::string const& server_url) {
       if(remote_oid == 0) {
-	push_object_to_server(server_url);
-	return true;
+	debug(TM, "RemoteObject::push(): push object to server.");
+	return push_object_to_server(server_url);
       }
-      return false;
+      else {
+	debug(TM, "RemoteObject::push(): object is already pushed to server.");
+	return 0;
+      }
     }
 
   };
