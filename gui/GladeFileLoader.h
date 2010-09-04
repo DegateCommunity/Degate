@@ -48,16 +48,16 @@ class GladeFileLoader {
   virtual ~GladeFileLoader();
 
   template<typename DstType>
-  DstType * get_widget(const Glib::ustring & name) {
+  DstType * get_widget(const Glib::ustring & name) const {
     return static_cast<DstType *>(refXml->get_widget(name));
   }
 
   template<class T_Widget> 
-  T_Widget * get_widget(const Glib::ustring &name, T_Widget *&widget) {
+  T_Widget * get_widget(const Glib::ustring &name, T_Widget *&widget) const {
     return refXml->get_widget(name, widget);
   }
 
-  Gtk::Dialog * get_dialog() { return pDialog; }
+  Gtk::Dialog * get_dialog() const { return pDialog; }
 
 
 
