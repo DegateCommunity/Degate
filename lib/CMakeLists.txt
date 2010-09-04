@@ -128,6 +128,7 @@ set(SOURCES
 	CannyEdgeDetection.cc
 	ZeroCrossingEdgeDetection.cc
 	WireMatching.cc
+	ViaMatching.cc
 	TemplateMatching.cc
 	ExternalMatching.cc
 

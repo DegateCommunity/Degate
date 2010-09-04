@@ -22,6 +22,7 @@
 #include <RecognitionManager.h>
 #include <TemplateMatchingGUI.h>
 #include <WireMatchingGUI.h>
+#include <ViaMatchingGUI.h>
 #include <ExternalMatchingGUI.h>
 
 using namespace degate;
@@ -33,18 +34,25 @@ RecognitionManager::RecognitionManager() {
   TemplateMatchingInRows_shptr tm_in_rows(new TemplateMatchingInRows());
   TemplateMatchingInCols_shptr tm_in_cols(new TemplateMatchingInCols());
 
-  plugins.push_back(RecognitionGUIBase_shptr(new TemplateMatchingGUI(tm_normal, 
-								     "Template matching")));
+  plugins.push_back(RecognitionGUIBase_shptr
+		    (new TemplateMatchingGUI(tm_normal, 
+					     "Template matching")));
   
-  plugins.push_back(RecognitionGUIBase_shptr(new TemplateMatchingGUI(tm_in_rows, 
-								     "Template matching along grid in rows")));
+  plugins.push_back(RecognitionGUIBase_shptr
+		    (new TemplateMatchingGUI(tm_in_rows, 
+					     "Template matching along grid in rows")));
   
-  plugins.push_back(RecognitionGUIBase_shptr(new TemplateMatchingGUI(tm_in_cols, 
-								     "Template matching along grid in columns")));
+  plugins.push_back(RecognitionGUIBase_shptr
+		    (new TemplateMatchingGUI(tm_in_cols, 
+					     "Template matching along grid in columns")));
   
 
   WireMatching_shptr wire_matching(new WireMatching());
   plugins.push_back(RecognitionGUIBase_shptr(new WireMatchingGUI(wire_matching, "Wire matching")));
+
+
+  ViaMatching_shptr via_matching(new ViaMatching());
+  plugins.push_back(RecognitionGUIBase_shptr(new ViaMatchingGUI(via_matching, "Via matching")));
 
 
   // Create a new matching object.
@@ -54,12 +62,13 @@ RecognitionManager::RecognitionManager() {
   plugins.push_back(RecognitionGUIBase_shptr
 		    (new ExternalMatchingGUI(extern_matching, 
 					     "Extern matching")));
+  
 }
 
 RecognitionManager::~RecognitionManager() {
 }
 
-
 RecognitionManager::plugin_list RecognitionManager::get_plugins() {
   return plugins;
 }
+
