@@ -26,7 +26,6 @@ using namespace degate;
 
 EdgeDetection::EdgeDetection(unsigned int _min_x, unsigned int _max_x, 
 			     unsigned int _min_y, unsigned int _max_y,
-			     unsigned int _feature_size,
 			     unsigned int _median_filter_width,
 			     unsigned int _blur_kernel_size,
 			     double _sigma) :
@@ -34,7 +33,6 @@ EdgeDetection::EdgeDetection(unsigned int _min_x, unsigned int _max_x,
   max_x(_max_x), 
   min_y(_min_y), 
   max_y(_max_y),
-  feature_size(_feature_size),
   median_filter_width(_median_filter_width),
   blur_kernel_size(_blur_kernel_size), 
   border(_blur_kernel_size >> 1),

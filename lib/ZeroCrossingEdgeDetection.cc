@@ -26,7 +26,6 @@ using namespace degate;
 
 ZeroCrossingEdgeDetection::ZeroCrossingEdgeDetection(unsigned int min_x, unsigned int max_x, 
 						     unsigned int min_y, unsigned int max_y,
-						     unsigned int wire_diameter,
 						     unsigned int median_filter_width,
 						     unsigned int blur_kernel_size,
 						     double sigma,
@@ -34,7 +33,7 @@ ZeroCrossingEdgeDetection::ZeroCrossingEdgeDetection(unsigned int min_x, unsigne
 						     unsigned int _max_d,
 						     double _edge_threshold, 
 						     double _zero_threshold) : 
-  EdgeDetection(min_x, max_x, min_y, max_y, wire_diameter, median_filter_width, blur_kernel_size, sigma),
+  EdgeDetection(min_x, max_x, min_y, max_y, median_filter_width, blur_kernel_size, sigma),
   min_d(_min_d), 
   max_d(_max_d),
   edge_threshold(_edge_threshold),

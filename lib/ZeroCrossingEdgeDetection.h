@@ -58,7 +58,6 @@ namespace degate {
 
     ZeroCrossingEdgeDetection(unsigned int min_x, unsigned int max_x, 
 			      unsigned int min_y, unsigned int max_y,
-			      unsigned int wire_diameter = 5,
 			      unsigned int median_filter_width = 3,
 			      unsigned int blur_kernel_size = 10,
 			      double sigma = 0.5,

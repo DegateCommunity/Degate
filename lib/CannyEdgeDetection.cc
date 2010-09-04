@@ -38,7 +38,7 @@ CannyEdgeDetection::CannyEdgeDetection(unsigned int min_x, unsigned int max_x,
 				       double sigma,
 				       double _hysteresis_min,
 				       double _hysteresis_max) : 
-  EdgeDetection(min_x, max_x, min_y, max_y, wire_diameter, median_filter_width, blur_kernel_size, sigma),
+  EdgeDetection(min_x, max_x, min_y, max_y, median_filter_width, blur_kernel_size, sigma),
   hysteresis_min(_hysteresis_min),
   hysteresis_max(_hysteresis_max) {
   }

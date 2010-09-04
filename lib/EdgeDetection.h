@@ -42,7 +42,6 @@ namespace degate {
     IPPipe pipe;
 
     unsigned int min_x, max_x, min_y, max_y;
-    unsigned int feature_size;
     unsigned int median_filter_width;
 
     unsigned int blur_kernel_size, border;
@@ -53,11 +52,10 @@ namespace degate {
     std::string directory; // path for storing debug images
     bool has_path;
 
-  private:
+  public:
 
     void setup_pipe();
 
-  protected:
 
     unsigned int get_width() const;
     unsigned int get_height() const;
@@ -82,7 +80,6 @@ namespace degate {
 
     EdgeDetection(unsigned int _min_x, unsigned int _max_x, 
 		  unsigned int _min_y, unsigned int _max_y,
-		  unsigned int _feature_size = 5,
 		  unsigned int median_filter_width = 3,
 		  unsigned int _blur_kernel_size = 10,
 		  double _sigma = 0.5);
