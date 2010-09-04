@@ -252,7 +252,7 @@ void ProjectExporter::add_colors(xmlpp::Element* prj_elem, Project_shptr prj) {
     switch(p.first) {
     case DEFAULT_COLOR_WIRE: o = "wire"; break;
     case DEFAULT_COLOR_VIA_UP: o = "via-up"; break;
-    case DEFAULT_COLOR_VIA_DOWN: o = "via-dpwn"; break;
+    case DEFAULT_COLOR_VIA_DOWN: o = "via-down"; break;
     case DEFAULT_COLOR_GRID: o = "grid"; break;
     case DEFAULT_COLOR_ANNOTATION: o = "annotation"; break;
     case DEFAULT_COLOR_ANNOTATION_FRAME: o = "annotation-frame"; break;
