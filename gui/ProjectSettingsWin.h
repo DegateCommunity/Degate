@@ -54,6 +54,9 @@ class ProjectSettingsWin : private GladeFileLoader {
   virtual void on_ok_button_clicked();
   virtual void on_cancel_button_clicked();
 
+  void set_color_for_button(Gtk::ColorButton * pCButton, degate::color_t c);
+  degate::color_t get_color_for_button(std::string const & button_name) const;
+
 };
 
 #endif

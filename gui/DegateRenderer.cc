@@ -342,7 +342,8 @@ void DegateRenderer::render_vias() {
 
     if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(*iter)) {
       unsigned int diameter = via->get_diameter();
-      uint32_t col = via->get_direction() == Via::DIRECTION_UP ? 0xff12ffff : 0xff0000ff;
+      uint32_t col = via->get_direction() == Via::DIRECTION_UP ? 
+	default_colors[DEFAULT_COLOR_VIA_UP] : default_colors[DEFAULT_COLOR_VIA_DOWN];
 
       if(via->is_selected()) {
 	col = highlight_color_by_state(col, true);
@@ -372,7 +373,7 @@ void DegateRenderer::render_grid(degate::Grid_shptr grid) {
 
   for(Grid::grid_iter iter = grid->begin(); iter != grid->end(); ++iter) {
 
-    set_color(0xffff1200);
+    set_color(default_colors[DEFAULT_COLOR_GRID]);
     glBegin(GL_QUADS);
 
     if(grid->is_vertical()) { // vertical spacing == horizontal lines
@@ -402,7 +403,7 @@ void DegateRenderer::render_wires() {
 
     if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(*iter)) {
       color_t col = wire->get_frame_color();
-      if(col == 0) col = 0xffff1200;
+      if(col == 0) col = default_colors[DEFAULT_COLOR_WIRE];
 
       set_color(highlight_color_by_state(col, wire->is_selected()));
 
@@ -442,7 +443,7 @@ void DegateRenderer::render_annotations(bool details) {
       color_t fill_col = a->get_fill_color();
       color_t frame_col = a->get_frame_color();
 
-      if(fill_col == 0) fill_col = 0xa0303030;
+      if(fill_col == 0) fill_col = default_colors[DEFAULT_COLOR_ANNOTATION];
       if(frame_col == 0) frame_col = fill_col;
 
       if(!details) {
@@ -495,7 +496,7 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
     color_t fill_col = gate->has_template() ? gate->get_gate_template()->get_fill_color() : 0;
     color_t frame_col = gate->has_template() ? gate->get_gate_template()->get_frame_color() : 0;
 
-    if(fill_col == 0) fill_col = 0xa0303030;
+    if(fill_col == 0) fill_col = default_colors[DEFAULT_COLOR_GATE];
     if(frame_col == 0) frame_col = fill_col;
 
     set_color(highlight_color_by_state(fill_col, gate->is_selected()));
@@ -539,7 +540,8 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
 	if(tmpl_port && tmpl_port->get_x() != 0 && tmpl_port->get_y() != 0) {
 	  unsigned int x = port->get_x(), y = port->get_y();
 	  unsigned int port_size = port->get_diameter();
-	  color_t port_color = tmpl_port->get_fill_color() == 0 ? 0xff0000ff : tmpl_port->get_fill_color();
+	  color_t port_color = tmpl_port->get_fill_color() == 0 ? 
+	    default_colors[DEFAULT_COLOR_GATE_PORT] : tmpl_port->get_fill_color();
 
 	  if(!details && port->is_selected()) {
 	    port_color = highlight_color_by_state(port_color, true);

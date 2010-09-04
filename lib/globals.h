@@ -26,8 +26,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <tr1/memory>
+#include <map>
 #include <assert.h>
-
 #include "degate_exceptions.h"
 
 /**
@@ -144,6 +144,22 @@ namespace degate {
 
 
   std::string gen_tabs(int n);
+
+
+  enum ENTITY_COLOR {
+    DEFAULT_COLOR_WIRE,
+    DEFAULT_COLOR_VIA_UP,
+    DEFAULT_COLOR_VIA_DOWN,
+    DEFAULT_COLOR_GRID,
+    DEFAULT_COLOR_ANNOTATION,
+    DEFAULT_COLOR_ANNOTATION_FRAME,
+    DEFAULT_COLOR_GATE,
+    DEFAULT_COLOR_GATE_FRAME,
+    DEFAULT_COLOR_GATE_PORT
+  };
+
+  typedef std::map<ENTITY_COLOR, color_t> default_colors_t;
+
 }
 
 #endif

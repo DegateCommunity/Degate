@@ -38,6 +38,7 @@
 #include <stdexcept>
 #include <list>
 #include <tr1/memory>
+#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace degate;
@@ -90,6 +91,7 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
 
     add_layers(root_elem, prj->get_logic_model(), prj->get_project_directory());
     add_grids(root_elem, prj);
+    add_colors(root_elem, prj);
     add_port_colors(root_elem, prj->get_port_color_manager());
 
     doc.write_to_file_formatted(filename, "ISO-8859-1");
@@ -230,9 +232,39 @@ void ProjectExporter::add_port_colors(xmlpp::Element* prj_elem,
 
     color_elem->set_attribute("fill-color", to_color_string(fill_color));
     color_elem->set_attribute("frame-color", to_color_string(frame_color));
-
-
   }
 
+}
+
+void ProjectExporter::add_colors(xmlpp::Element* prj_elem, Project_shptr prj) {
+
+  if(prj == NULL) throw InvalidPointerException();
+
+  xmlpp::Element* colors_elem = prj_elem->add_child("default-colors");
+  if(colors_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
+  BOOST_FOREACH(default_colors_t::value_type const& p, prj->get_default_colors()) {
+
+    xmlpp::Element* color_elem = colors_elem->add_child("color");
+    if(color_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
+    std::string o;
+    switch(p.first) {
+    case DEFAULT_COLOR_WIRE: o = "wire"; break;
+    case DEFAULT_COLOR_VIA_UP: o = "via-up"; break;
+    case DEFAULT_COLOR_VIA_DOWN: o = "via-dpwn"; break;
+    case DEFAULT_COLOR_GRID: o = "grid"; break;
+    case DEFAULT_COLOR_ANNOTATION: o = "annotation"; break;
+    case DEFAULT_COLOR_ANNOTATION_FRAME: o = "annotation-frame"; break;
+    case DEFAULT_COLOR_GATE: o = "gate"; break;
+    case DEFAULT_COLOR_GATE_FRAME: o = "gate-frame"; break;
+    case DEFAULT_COLOR_GATE_PORT: o = "gate-port"; break;
+    default:
+      throw std::runtime_error("Invalid object type.");
+    }
+
+    color_elem->set_attribute("object", o);
+    color_elem->set_attribute("color", to_color_string(p.second));
+  }
 
 }

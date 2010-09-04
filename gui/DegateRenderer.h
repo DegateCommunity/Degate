@@ -75,6 +75,8 @@ class DegateRenderer : public OpenGLRendererBase {
   degate::IrregularGrid_shptr irregular_horizontal_grid;
   degate::IrregularGrid_shptr irregular_vertical_grid;
 
+  degate::default_colors_t default_colors;
+
 protected:
 
   void on_realize();
@@ -148,6 +150,10 @@ public:
   void render_vias();
   void render_wires();
   void render_grid();
+
+  void set_default_colors(degate::default_colors_t const& c) {
+    default_colors = c;
+  }
   
  private:
 
@@ -199,6 +205,8 @@ public:
   void on_idle();
 
   void render_grid(degate::Grid_shptr grid);
+
+
 
 };
 

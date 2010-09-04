@@ -59,6 +59,8 @@ namespace degate {
     
     void add_port_colors(xmlpp::Element* prj_elem, 
 			 PortColorManager_shptr port_color_manager) throw(InvalidPointerException, std::runtime_error );
+
+    void add_colors(xmlpp::Element* prj_elem, Project_shptr prj);
     
     
     //void add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos) throw(std::runtime_error );

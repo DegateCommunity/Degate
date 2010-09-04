@@ -34,7 +34,7 @@ Project::Project(length_t width, length_t height) :
   bounding_box(width, height),
   logic_model(new LogicModel(width, height)),
   port_color_manager(new PortColorManager()) {
-  init_default_valus();
+  init_default_values();
 }
 
 
@@ -43,7 +43,7 @@ Project::Project(length_t width, length_t height, std::string const& _directory,
   directory(_directory),
   logic_model(new LogicModel(width, height, layers)),
   port_color_manager(new PortColorManager()) {
-  init_default_valus();
+  init_default_values();
 }
 
 Project::~Project() {
@@ -195,11 +195,22 @@ void Project::print_all(std::ostream & os) {
     logic_model->print(os);
 }
 
-void Project::init_default_valus() {
+void Project::init_default_values() {
   default_pin_diameter = 5;
   default_wire_diameter = 5;
   lambda = 5;
   last_transaction_id = 0;
+
+  // A B G R
+  default_colors[DEFAULT_COLOR_WIRE] = 0xff00a3fb;
+  default_colors[DEFAULT_COLOR_VIA_UP] = 0xffff8900;
+  default_colors[DEFAULT_COLOR_VIA_DOWN] = 0xff0023ff;
+  default_colors[DEFAULT_COLOR_GRID] = 0xffff1200;
+  default_colors[DEFAULT_COLOR_ANNOTATION] = 0xa0303030;
+  default_colors[DEFAULT_COLOR_ANNOTATION_FRAME] = 0xa032d932;
+  default_colors[DEFAULT_COLOR_GATE] = 0xa0303030;
+  default_colors[DEFAULT_COLOR_GATE_FRAME] = 0xa032b0d9;
+  default_colors[DEFAULT_COLOR_GATE_PORT] = 0xff0000ff;
 
   set_changed(false);
   
@@ -239,3 +250,20 @@ transaction_id_t Project::get_last_pulled_tid() const {
 void Project::set_last_pulled_tid(transaction_id_t tid) {
   last_transaction_id = tid;
 }
+
+
+void Project::set_default_color(ENTITY_COLOR e, color_t c) {
+  default_colors[e] = c;
+}
+
+color_t Project::get_default_color(ENTITY_COLOR e) const {
+  default_colors_t::const_iterator i = default_colors.find(e);
+  if(i == default_colors.end()) return 0;
+  else return i->second;
+}
+
+const default_colors_t Project::get_default_colors() const {
+  return default_colors;
+}
+
+

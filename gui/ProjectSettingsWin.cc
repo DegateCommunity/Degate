@@ -86,12 +86,77 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
     if(entry_server_url) {
       entry_server_url->set_text(project->get_server_url());
     }
+
+
+    Gtk::ColorButton * pCButton;
+
+    get_widget("colorbutton_wire", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_WIRE));
+
+    get_widget("colorbutton_via_up", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_VIA_UP));
+
+    get_widget("colorbutton_via_down", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_VIA_DOWN));
+
+    get_widget("colorbutton_grid", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_GRID));
+
+    get_widget("colorbutton_annotation", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_ANNOTATION));
+
+    get_widget("colorbutton_annotation_frame", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
+
+    get_widget("colorbutton_gate", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_GATE));
+
+    get_widget("colorbutton_gate_frame", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
+
+    get_widget("colorbutton_gate_port", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_GATE_PORT));
+   
   }
 }
+
+void ProjectSettingsWin::set_color_for_button(Gtk::ColorButton * pCButton, color_t c) {
+  Gdk::Color col;
+  col.set_red(MASK_R(c) << 8);
+  col.set_green(MASK_G(c) << 8);
+  col.set_blue(MASK_B(c) << 8);
+  pCButton->set_color(col);
+  pCButton->set_alpha(MASK_A(c) << 8);
+}
+
 
 ProjectSettingsWin::~ProjectSettingsWin() {
 }
 
+
+degate::color_t ProjectSettingsWin::get_color_for_button(std::string const & button_name) const {
+  Gtk::ColorButton * pCButton;
+  get_widget(button_name, pCButton);
+  if(pCButton) {
+    Gdk::Color col = pCButton->get_color();
+    color_t c = MERGE_CHANNELS( (col.get_red() >> 8),				
+				(col.get_green() >> 8),
+				(col.get_blue() >> 8),
+				(pCButton->get_alpha() >> 8));
+    return c;
+  }
+
+  return 0;
+}
 
 bool ProjectSettingsWin::run() {
   get_dialog()->run();
@@ -107,6 +172,27 @@ bool ProjectSettingsWin::run() {
       project->set_default_pin_diameter(r);
     if((r = atol(entry_wire_diameter->get_text().c_str())) > 0)
       project->set_default_wire_diameter(r);
+
+
+    project->set_default_color(DEFAULT_COLOR_WIRE, 
+			       get_color_for_button("colorbutton_wire"));
+    project->set_default_color(DEFAULT_COLOR_VIA_UP, 
+			       get_color_for_button("colorbutton_via_up"));
+    project->set_default_color(DEFAULT_COLOR_VIA_DOWN, 
+			       get_color_for_button("colorbutton_via_down"));
+    project->set_default_color(DEFAULT_COLOR_GRID, 
+			       get_color_for_button("colorbutton_grid"));
+    project->set_default_color(DEFAULT_COLOR_ANNOTATION, 
+			       get_color_for_button("colorbutton_annotation"));
+    project->set_default_color(DEFAULT_COLOR_ANNOTATION_FRAME, 
+			       get_color_for_button("colorbutton_annotation_frame"));
+    project->set_default_color(DEFAULT_COLOR_GATE, 
+			       get_color_for_button("colorbutton_gate"));
+    project->set_default_color(DEFAULT_COLOR_GATE_FRAME, 
+			       get_color_for_button("colorbutton_gate_frame"));
+    project->set_default_color(DEFAULT_COLOR_GATE_PORT, 
+			       get_color_for_button("colorbutton_gate_port"));
+
 
     project->set_changed();
 

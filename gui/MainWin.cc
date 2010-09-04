@@ -312,6 +312,7 @@ void MainWin::on_menu_project_settings() {
   if(main_project) {
     ProjectSettingsWin psWin(this, main_project);
     if(psWin.run()) {
+      editor.set_default_colors(main_project->get_default_colors());
       project_changed();
     }
   }
@@ -513,6 +514,7 @@ void MainWin::update_gui_for_loaded_project() {
 		    main_project->get_irregular_horizontal_grid(),
 		    main_project->get_irregular_vertical_grid());
     
+    editor.set_default_colors(main_project->get_default_colors());
 
     menu_manager->set_widget_sensitivity(true);
     add_to_recent_menu();

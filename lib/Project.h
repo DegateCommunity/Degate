@@ -50,7 +50,7 @@ namespace degate {
    */
   
   class Project {
-    
+
   private:
     
     BoundingBox bounding_box;
@@ -79,9 +79,11 @@ namespace degate {
 
     PortColorManager_shptr port_color_manager;
 
+    default_colors_t default_colors;
+
   private:
 
-    void init_default_valus();
+    void init_default_values();
 
   public:
 
@@ -169,6 +171,23 @@ namespace degate {
     void set_default_wire_diameter(diameter_t wire_diameter);
     diameter_t get_default_wire_diameter() const;
     
+
+    /**
+     * Set the default color for an entity.
+     */
+    void set_default_color(ENTITY_COLOR e, color_t c);
+
+    /**
+     * Get the default color for an entity.
+     * @return Returns the default color. If there is no default setting
+     *   0 is returned.
+     */
+    color_t get_default_color(ENTITY_COLOR e) const;
+
+    /**
+     * Get all color defaults.
+     */
+    const default_colors_t get_default_colors() const;
 
     /**
      * Set changed flag to indicate that the project data was changed.

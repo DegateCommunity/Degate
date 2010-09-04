@@ -46,6 +46,8 @@ private:
   void parse_grids_element(const xmlpp::Element * const project_node, Project_shptr prj);
   void parse_layers_element(const xmlpp::Element * const layers_node, Project_shptr prj) throw(std::runtime_error);
   void parse_port_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj) throw(std::runtime_error);
+
+  void parse_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj);
   
   std::string get_project_filename(std::string const& dir) const;
 

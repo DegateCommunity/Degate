@@ -320,6 +320,40 @@ void ProjectImporter::parse_port_colors_element(const xmlpp::Element * const por
   
 }
 
+void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_colors_elem, 
+					   Project_shptr prj) {
+
+  const xmlpp::Node::NodeList color_list = port_colors_elem->get_children("color");
+
+  for(xmlpp::Node::NodeList::const_iterator iter = color_list.begin();
+      iter != color_list.end(); 
+      ++iter) {
+
+    if(const xmlpp::Element* color_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
+
+      const std::string object_name(color_elem->get_attribute_value("object"));
+      const std::string color_str(color_elem->get_attribute_value("color"));
+      ENTITY_COLOR o;
+
+      if(!object_name.compare("wire")) o = DEFAULT_COLOR_WIRE;
+      else if(!object_name.compare("via-up")) o = DEFAULT_COLOR_VIA_UP;
+      else if(!object_name.compare("via-down")) o = DEFAULT_COLOR_VIA_DOWN;
+      else if(!object_name.compare("grid")) o = DEFAULT_COLOR_GRID;
+      else if(!object_name.compare("annotation")) o = DEFAULT_COLOR_ANNOTATION;
+      else if(!object_name.compare("annotation-frame")) o = DEFAULT_COLOR_ANNOTATION_FRAME;
+      else if(!object_name.compare("gate")) o = DEFAULT_COLOR_GATE;
+      else if(!object_name.compare("gate-frame")) o = DEFAULT_COLOR_GATE_FRAME;
+      else if(!object_name.compare("gate-port")) o = DEFAULT_COLOR_GATE_PORT;
+
+      else throw XMLAttributeParseException("Can't parse object type.");
+
+      prj->set_default_color(o, parse_color_string(color_str));
+
+    }
+  }
+  
+}
+
 void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_elem, Project_shptr prj) {
 
   xmlpp::Node::NodeList::const_iterator iter;
@@ -401,9 +435,6 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
   parent_prj->set_default_pin_diameter(parse_number<diameter_t>(project_elem, "pin-diameter"));
   parent_prj->set_default_wire_diameter(parse_number<diameter_t>(project_elem, "wire-diameter"));
 
-
-
-
   const xmlpp::Element * e = get_dom_twig(project_elem, "grids");
   if(e != NULL) parse_grids_element(e, parent_prj);
 
@@ -412,5 +443,8 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
 
   e = get_dom_twig(project_elem, "port-colors");
   if(e != NULL) parse_port_colors_element(e, parent_prj);
+
+  e = get_dom_twig(project_elem, "default-colors");
+  if(e != NULL) parse_colors_element(e, parent_prj);
   
 }
