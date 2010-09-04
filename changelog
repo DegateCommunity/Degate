@@ -1,6 +1,7 @@
 degate (0.0.9) unstable; urgency=low
 
   * Scan for vias on adjacent layers and connect them.
+  * Integrated color settings for wires, vias, ... into project settings.
 	
  -- Martin Schobert <martin@weltregierung.de>  Thu, 26 Aug 2010 12:00:00 +0100
 	
