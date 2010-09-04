@@ -81,7 +81,6 @@ void WireMatching::run() {
 			       bounding_box.get_max_x(),
 			       bounding_box.get_min_y(),
 			       bounding_box.get_max_y(),
-			       wire_diameter,
 			       median_filter_width,
 			       sigma > 0 ? 10 : 0,
 			       sigma,
