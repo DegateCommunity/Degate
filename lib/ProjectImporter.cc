@@ -435,6 +435,8 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
   parent_prj->set_default_pin_diameter(parse_number<diameter_t>(project_elem, "pin-diameter"));
   parent_prj->set_default_wire_diameter(parse_number<diameter_t>(project_elem, "wire-diameter"));
 
+  parent_prj->set_pixel_per_um(parse_number<double>(project_elem, "pixel-per-um", 0));
+
   const xmlpp::Element * e = get_dom_twig(project_elem, "grids");
   if(e != NULL) parse_grids_element(e, parent_prj);
 

@@ -47,6 +47,7 @@ class ProjectSettingsWin : private GladeFileLoader {
   Gtk::Entry * entry_wire_diameter;
   Gtk::Entry * entry_via_diameter;
   Gtk::Entry * entry_server_url;
+  Gtk::Entry * entry_pixel_per_um;
 
   bool ok_clicked;
 

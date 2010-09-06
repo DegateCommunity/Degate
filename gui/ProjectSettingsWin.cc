@@ -86,6 +86,11 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
     if(entry_server_url) {
       entry_server_url->set_text(project->get_server_url());
     }
+    get_widget("entry_pixel_per_um", entry_pixel_per_um);
+    if(entry_pixel_per_um) {
+      snprintf(str, sizeof(str), "%f", project->get_pixel_per_um());
+      entry_pixel_per_um->set_text(str);
+    }
 
 
     Gtk::ColorButton * pCButton;
@@ -162,6 +167,7 @@ bool ProjectSettingsWin::run() {
   get_dialog()->run();
   if(ok_clicked) {
     long r;
+    double d;
     project->set_name(entry_project_name->get_text().c_str());
     project->set_description(entry_project_description->get_text().c_str());
     project->set_server_url(entry_server_url->get_text().c_str());
@@ -172,6 +178,9 @@ bool ProjectSettingsWin::run() {
       project->set_default_pin_diameter(r);
     if((r = atol(entry_wire_diameter->get_text().c_str())) > 0)
       project->set_default_wire_diameter(r);
+
+    if((d = atof(entry_pixel_per_um->get_text().c_str())) >= 0)
+      project->set_pixel_per_um(d);
 
 
     project->set_default_color(DEFAULT_COLOR_WIRE, 

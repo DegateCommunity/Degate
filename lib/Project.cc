@@ -266,4 +266,11 @@ const default_colors_t Project::get_default_colors() const {
   return default_colors;
 }
 
+double Project::get_pixel_per_um() const {
+  return pixel_per_um;
+}
+
+void Project::set_pixel_per_um(double pix_per_um) {
+  pixel_per_um = pix_per_um;
+}
 
