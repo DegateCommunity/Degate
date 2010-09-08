@@ -81,6 +81,8 @@ namespace degate {
 
     default_colors_t default_colors;
 
+    double pixel_per_um;
+
   private:
 
     void init_default_values();
@@ -264,6 +266,18 @@ namespace degate {
      */
 
     void set_last_pulled_tid(transaction_id_t tid);
+
+
+    /**
+     * Get the ratio of pixels per micrometer.
+     */
+    double get_pixel_per_um() const;
+
+    /**
+     * Get the ratio of pixels per micrometer.
+     */
+    void set_pixel_per_um(double pix_per_um);
+
 
   };
   
