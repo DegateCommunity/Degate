@@ -1632,19 +1632,24 @@ void MainWin::on_menu_logic_create_annotation() {
 
   if(selection_tool == NULL || !selection_tool->has_selection()) return;
 
-  Annotation_shptr annotation(new Annotation(selection_tool->get_bounding_box()));
+  GenericTextInputWin input(this, "Add an Annotation", "Please enter a description.", "");
+  Glib::ustring str;
+  if(input.run(str)) {
 
-  LogicModel_shptr lmodel = main_project->get_logic_model();
-  assert(lmodel != NULL);
-  Layer_shptr layer = lmodel->get_current_layer();
-  assert(layer != NULL);
+    Annotation_shptr annotation(new Annotation(selection_tool->get_bounding_box()));
+    annotation->set_name(str);
+    LogicModel_shptr lmodel = main_project->get_logic_model();
+    assert(lmodel != NULL);
+    Layer_shptr layer = lmodel->get_current_layer();
+    assert(layer != NULL);
 
-  lmodel->add_object(layer->get_layer_pos(), annotation);
+    lmodel->add_object(layer->get_layer_pos(), annotation);
+    
+    project_changed();
+    editor.update_screen();
 
-  project_changed();
-  editor.update_screen();
-
-  if(alWin != NULL) alWin->refresh();
+    if(alWin != NULL) alWin->refresh();
+  }
 }
 
 void MainWin::on_menu_logic_show_annotations() {
