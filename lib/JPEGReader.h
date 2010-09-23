@@ -42,6 +42,7 @@ namespace degate {
   private:
 
     unsigned char * image_buffer;
+    int depth;
 
   public:
 
@@ -72,7 +73,7 @@ namespace degate {
     struct jpeg_decompress_struct cinfo;
     struct jpeg_error_mgr jerr;
     FILE * infile;     /* source file */
-    int depth = 0;
+    depth = 0;
 
     JSAMPARRAY buffer; /* Output row buffer */
     int row_stride;    /* physical row width in output buffer */
@@ -93,9 +94,8 @@ namespace degate {
     
     set_width(cinfo.output_width);
     set_height(cinfo.output_height);
-    depth = cinfo.num_components; //should always be 3
+    depth = cinfo.num_components;
 
-    assert(depth == 3);
     debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
 
     image_buffer = (unsigned char *)malloc(depth * get_width() * get_height());
@@ -133,10 +133,17 @@ namespace degate {
     for(unsigned int y = 0; y < get_height(); y++) {
       for(unsigned int x = 0; x < get_width(); x++) {
 
-	uint8 v1 = image_buffer[3 * (y * get_width() + x)];
-	uint8 v2 = image_buffer[3 * (y * get_width() + x) + 1];
-	uint8 v3 = image_buffer[3 * (y * get_width() + x) + 2];
-
+	uint8_t v1, v2, v3;
+	if(depth == 1) {
+	  v1 = v2 = v3 = image_buffer[(y * get_width() + x)];
+	}
+	else if(depth == 3) {
+	  v1 = image_buffer[depth * (y * get_width() + x)];
+	  v2 = image_buffer[depth * (y * get_width() + x) + 1];
+	  v3 = image_buffer[depth * (y * get_width() + x) + 2];
+	}
+	else throw std::runtime_error("Unexpected number of channels in JPG file.");
+	  
 	img->set_pixel(x, y, MERGE_CHANNELS(v1, v2, v3, 0xff));
 
       }
