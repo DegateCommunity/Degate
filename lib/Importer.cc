@@ -48,7 +48,7 @@ ret_t Importer::check_file(std::string const& filename) const {
 }
 
 
-bool Importer::parse_bool(std::string const & str) const throw(XMLAttributeParseException) {
+bool Importer::parse_bool(std::string const & str) const {
   if(str == "true" || str == "enabled") return true;
   else if(str == "false" || str == "disabled") return false;
   else {

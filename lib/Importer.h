@@ -26,6 +26,7 @@
 
 #include <stdexcept>
 #include <sstream>
+#include <boost/format.hpp>
 
 namespace degate {
 
@@ -49,17 +50,21 @@ namespace degate {
      * @return Returns a C++ bool, depending on the parsed string.
      * @throw std::invalid_argument The exception is thrown, if the string can not be parsed.
      */
-    virtual bool parse_bool(std::string const& str) const throw(XMLAttributeParseException);
+    virtual bool parse_bool(std::string const& str) const;
 
     /**
      * Parse a string that represents a number.
      * @throw XMLAttributeParseException This exception is thrown, if the string can't be parsed.
      */
-    template <typename T> T parse_number(std::string const& str) const throw(XMLAttributeParseException) {
+    template <typename T> T parse_number(std::string const& str) const {
       std::stringstream strm(str);
       T v;
       strm >> v;
-      if(!strm) throw XMLAttributeParseException();
+      if(!strm) {
+	boost::format f("Can't parse number in Importer::parse_number(). Value is %1%");
+	f % str;
+	throw XMLAttributeParseException(f.str());
+      }
       else return v;
     }
     
@@ -68,12 +73,12 @@ namespace degate {
     /**
      * Create a new text importer object.
      */
-    Importer() {};
+    Importer() {}
 
     /**
      * Destroy a text importer object.
      */
-    virtual ~Importer() {};
+    virtual ~Importer() {}
   };
 
 }

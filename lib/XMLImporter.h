@@ -42,8 +42,7 @@ class XMLImporter : public Importer {
    * @return Returns the number in type T.
    */
   template <typename T> 
-    T parse_number(const xmlpp::Element * const node, std::string const& attribute_str) 
-    const throw(InvalidPointerException, XMLAttributeMissingException) {
+    T parse_number(const xmlpp::Element * const node, std::string const& attribute_str) const {
 
     assert(node != NULL);
     if(node == NULL) throw InvalidPointerException("Parameter must be != NULL.");
@@ -61,8 +60,7 @@ class XMLImporter : public Importer {
    */
 
   template <typename T> 
-    T parse_number(const xmlpp::Element * const node, std::string const& attribute_str, T default_value)
-    const throw(InvalidPointerException) {
+    T parse_number(const xmlpp::Element * const node, std::string const& attribute_str, T default_value) {
 
     assert(node != NULL);
     if(node == NULL) throw InvalidPointerException();
