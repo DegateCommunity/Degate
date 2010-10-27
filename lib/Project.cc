@@ -201,6 +201,8 @@ void Project::init_default_values() {
   lambda = 5;
   last_transaction_id = 0;
 
+  pixel_per_um = 0;
+
   // A B G R
   default_colors[DEFAULT_COLOR_WIRE] = 0xff00a3fb;
   default_colors[DEFAULT_COLOR_VIA_UP] = 0xffff8900;
