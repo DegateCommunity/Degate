@@ -337,11 +337,11 @@ void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_col
       else if(!object_name.compare("gate")) o = DEFAULT_COLOR_GATE;
       else if(!object_name.compare("gate-frame")) o = DEFAULT_COLOR_GATE_FRAME;
       else if(!object_name.compare("gate-port")) o = DEFAULT_COLOR_GATE_PORT;
-
-      boost::format f("Can't parse object type. '%1%'");
-      f % object_name;
-      else throw XMLAttributeParseException(f.str());
-
+      else {
+	boost::format f("Can't parse object type. '%1%'");
+	f % object_name;
+	throw XMLAttributeParseException(f.str());
+      }
       prj->set_default_color(o, parse_color_string(color_str));
 
     }
