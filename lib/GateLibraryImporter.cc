@@ -39,8 +39,7 @@
 using namespace std;
 using namespace degate;
 
-GateLibrary_shptr GateLibraryImporter::import(std::string const& filename) 
-  throw( InvalidPathException, std::runtime_error ) {
+GateLibrary_shptr GateLibraryImporter::import(std::string const& filename) {
 
   if(RET_IS_NOT_OK(check_file(filename))) {
     debug(TM, "Problem: file %s not found.", filename.c_str());
@@ -91,8 +90,7 @@ GateLibrary_shptr GateLibraryImporter::parse_gate_library_element(const xmlpp::E
 
 void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * const gate_template_element, 
 						       GateLibrary_shptr gate_lib,
-						       std::string const& directory) 
-  throw(XMLAttributeParseException, InvalidPointerException) {
+						       std::string const& directory) {
 
   if(gate_template_element == NULL || gate_lib == NULL) throw(InvalidPointerException("Invalid pointer"));
 
@@ -154,8 +152,7 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
 
 void GateLibraryImporter::parse_template_images_element(const xmlpp::Element * const template_images_element, 
 							GateTemplate_shptr gate_tmpl,
-							std::string const& directory) 
-  throw(XMLAttributeParseException, InvalidPointerException) {
+							std::string const& directory) {
 
   if(template_images_element == NULL || 
      gate_tmpl == NULL) throw InvalidPointerException("Invalid pointer");
@@ -180,8 +177,7 @@ void GateLibraryImporter::parse_template_images_element(const xmlpp::Element * c
 
 void GateLibraryImporter::parse_template_implementations_element(const xmlpp::Element * const implementations_element, 
 								 GateTemplate_shptr gate_tmpl,
-								 std::string const& directory) 
-  throw(XMLAttributeParseException, InvalidPointerException) {
+								 std::string const& directory) {
 
   if(implementations_element == NULL || 
      gate_tmpl == NULL) throw InvalidPointerException("Invalid pointer");
@@ -201,7 +197,9 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 	  impl_type = GateTemplate::get_impl_type_from_string(impl_type_str);
 	}
 	catch(DegateRuntimeException const &ex) {
-	  throw XMLAttributeParseException(ex.what());
+	  boost::format f("Can't interprete attribute %1% while reading gate library (%2%)");
+	  f % impl_type_str % ex.what();
+	  throw XMLAttributeParseException(f.str());
 	}
 	
 	debug(TM, "Parsing file '%s'", impl_file.c_str());
@@ -230,8 +228,7 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 
 
 void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element * const template_ports_element, 
-						       GateTemplate_shptr gate_tmpl) 
-  throw(XMLAttributeParseException, InvalidPointerException) {
+						       GateTemplate_shptr gate_tmpl) {
   
   if(template_ports_element == NULL || 
      gate_tmpl == NULL) throw InvalidPointerException("Invalid pointer");

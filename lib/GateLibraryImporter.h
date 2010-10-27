@@ -43,31 +43,26 @@ private:
 
   void parse_gate_templates_element(const xmlpp::Element * const gate_templates_element, 
 				    GateLibrary_shptr gate_lib,
-				    std::string const& directory) 
-    throw(XMLAttributeParseException, InvalidPointerException);
+				    std::string const& directory);
 
   
   void parse_template_images_element(const xmlpp::Element * const template_images_element, 
 				     GateTemplate_shptr gate_tmpl,
-				     std::string const& directory) 
-    throw(XMLAttributeParseException, InvalidPointerException);
+				     std::string const& directory);
 
   void parse_template_implementations_element(const xmlpp::Element * const implementations_element, 
 					      GateTemplate_shptr gate_tmpl,
-					      std::string const& directory) 
-    throw(XMLAttributeParseException, InvalidPointerException);
+					      std::string const& directory);
 
 
   void parse_template_ports_element(const xmlpp::Element * const template_ports_element, 
-				    GateTemplate_shptr gate_tmpl) 
-    throw(XMLAttributeParseException, InvalidPointerException);
+				    GateTemplate_shptr gate_tmpl);
   
 public:
   GateLibraryImporter() {}
   ~GateLibraryImporter() {}
   
-  GateLibrary_shptr import(std::string const& filename) 
-    throw( InvalidPathException, std::runtime_error );
+  GateLibrary_shptr import(std::string const& filename);
   
 };
 

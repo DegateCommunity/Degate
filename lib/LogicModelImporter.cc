@@ -39,8 +39,7 @@ using namespace std;
 using namespace degate;
 
 void LogicModelImporter::import_into(LogicModel_shptr lmodel,
-				     std::string const& filename) 
-  throw( InvalidPathException, std::exception ) {
+				     std::string const& filename) {
   if(RET_IS_NOT_OK(check_file(filename))) {
     debug(TM, "Problem: file %s not found.", filename.c_str());
     throw InvalidPathException("Can't load logic model from file.");
@@ -73,8 +72,7 @@ void LogicModelImporter::import_into(LogicModel_shptr lmodel,
 
 }
 
-LogicModel_shptr LogicModelImporter::import(std::string const& filename) 
-  throw( InvalidPathException, std::exception ) {
+LogicModel_shptr LogicModelImporter::import(std::string const& filename) {
 
   LogicModel_shptr lmodel(new LogicModel(width, height));
   assert(lmodel != NULL);
@@ -106,10 +104,10 @@ void LogicModelImporter::parse_logic_model_element(const xmlpp::Element * const 
 }
 
 void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_element, 
-					    LogicModel_shptr lmodel) 
-  throw(XMLAttributeParseException, InvalidPointerException, CollectionLookupException) {
+					    LogicModel_shptr lmodel) {
 
-  if(nets_element == NULL || lmodel == NULL) throw InvalidPointerException();
+  if(nets_element == NULL || lmodel == NULL) 
+    throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_nets_element()");
 
   const xmlpp::Node::NodeList net_list = nets_element->get_children("net");
   for(xmlpp::Node::NodeList::const_iterator iter = net_list.begin();
@@ -169,10 +167,10 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
 }
 
 void LogicModelImporter::parse_wires_element(const xmlpp::Element * const wires_element, 
-					    LogicModel_shptr lmodel) 
-  throw(XMLAttributeParseException, InvalidPointerException) {
+					    LogicModel_shptr lmodel) {
 
-  if(wires_element == NULL || lmodel == NULL) throw InvalidPointerException();
+  if(wires_element == NULL || lmodel == NULL) 
+    throw InvalidPointerException("Null pointer in LogicModelImporter::parse_wires_element()");
 
   const xmlpp::Node::NodeList wire_list = wires_element->get_children("wire");
   for(xmlpp::Node::NodeList::const_iterator iter = wire_list.begin();
@@ -212,8 +210,7 @@ void LogicModelImporter::parse_wires_element(const xmlpp::Element * const wires_
 }
 
 void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_element, 
-					    LogicModel_shptr lmodel) 
-  throw(XMLAttributeParseException, InvalidPointerException) {
+					    LogicModel_shptr lmodel) {
 
   if(vias_element == NULL || lmodel == NULL) throw InvalidPointerException();
 
@@ -243,7 +240,11 @@ void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_el
       if(direction_str == "undefined") direction = Via::DIRECTION_UNDEFINED;
       else if(direction_str == "up") direction = Via::DIRECTION_UP;
       else if(direction_str == "down") direction = Via::DIRECTION_DOWN;
-      else throw XMLAttributeParseException("Can't parse via direction type.");
+      else {
+	boost::format f("Can't parse via direction type: %1%");
+	f % direction_str;
+	throw XMLAttributeParseException(f.str());
+      }
 
       Via_shptr via(new Via(x, y, diameter, direction));
       via->set_name(name.c_str());
@@ -260,8 +261,7 @@ void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_el
 }
 
 void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_element, 
-					     LogicModel_shptr lmodel) 
-  throw(XMLAttributeParseException, InvalidPointerException) {
+					     LogicModel_shptr lmodel) {
 
   if(gates_element == NULL || lmodel == NULL) throw InvalidPointerException();
 
@@ -346,8 +346,7 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
 
 
 void LogicModelImporter::parse_annotations_element(const xmlpp::Element * const annotations_element, 
-						   LogicModel_shptr lmodel) 
-  throw(InvalidPointerException) {
+						   LogicModel_shptr lmodel) {
 
   if(annotations_element == NULL || lmodel == NULL) throw InvalidPointerException();
 

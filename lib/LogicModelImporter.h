@@ -42,24 +42,19 @@ private:
   void parse_logic_model_element(const xmlpp::Element * const lm_element,
 				 LogicModel_shptr lmodel);
 
-  void parse_gates_element(const xmlpp::Element * const gates_element, LogicModel_shptr lmodel) 
-    throw(XMLAttributeParseException, InvalidPointerException);
+  void parse_gates_element(const xmlpp::Element * const gates_element, LogicModel_shptr lmodel);
 
   void parse_vias_element(const xmlpp::Element * const vias_element, 
-			  LogicModel_shptr lmodel) 
-    throw(XMLAttributeParseException, InvalidPointerException);
+			  LogicModel_shptr lmodel) ;
 
   void parse_wires_element(const xmlpp::Element * const wires_element, 
-			   LogicModel_shptr lmodel) 
-    throw(XMLAttributeParseException, InvalidPointerException);
+			   LogicModel_shptr lmodel);
 
   void parse_nets_element(const xmlpp::Element * const nets_element, 
-			  LogicModel_shptr lmodel) 
-    throw(XMLAttributeParseException, InvalidPointerException, CollectionLookupException);
+			  LogicModel_shptr lmodel);
 
   void parse_annotations_element(const xmlpp::Element * const annotations_element, 
-				 LogicModel_shptr lmodel) 
-    throw(InvalidPointerException);
+				 LogicModel_shptr lmodel) ;
 
 public:
   
@@ -97,15 +92,13 @@ public:
   /**
    * import a logic model.
    */
-  LogicModel_shptr import(std::string const& filename) 
-    throw( InvalidPathException, std::exception);
+  LogicModel_shptr import(std::string const& filename);
 
   
   /**
    * Import a logic model that is stored in a XML file into an existing logic model.
    */
-  void import_into(LogicModel_shptr lmodel, std::string const& filename) 
-    throw( InvalidPathException, std::exception);
+  void import_into(LogicModel_shptr lmodel, std::string const& filename);
 
 };
 

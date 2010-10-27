@@ -91,7 +91,7 @@ namespace degate {
   
   class InvalidXMLException : public DegateRuntimeException {
   public:
-    InvalidXMLException() : DegateRuntimeException("Can't parse XML attribute value." ) {}
+    InvalidXMLException() : DegateRuntimeException("XML is invalid." ) {}
     InvalidXMLException(std::string const & str) : DegateRuntimeException(str) {}
   };
   

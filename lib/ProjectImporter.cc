@@ -59,7 +59,6 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
 
   if(prj != NULL) {
 
-    try {
       GateLibraryImporter gl_importer;
       
       GateLibrary_shptr gate_lib;
@@ -106,16 +105,12 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
       debug(TM, "Project loaded.");
       //prj->print_all(cout);
 
-    }
-    catch(const std::exception & ex) {
-      throw;
-    }
   }
 
   return prj;
 }
 
-Project_shptr ProjectImporter::import(std::string const& directory) throw( InvalidPathException, InvalidXMLException ) {
+Project_shptr ProjectImporter::import(std::string const& directory)  {
 
   string filename = get_project_filename(directory);
   if(RET_IS_NOT_OK(check_file(filename))) {
@@ -155,7 +150,7 @@ Project_shptr ProjectImporter::import(std::string const& directory) throw( Inval
 }
 
 
-void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_elem, Project_shptr prj) throw(std::runtime_error) {
+void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_elem, Project_shptr prj) {
   debug(TM, "parsing layers");
 
   const xmlpp::Node::NodeList layer_list = layers_elem->get_children("layer");
@@ -198,8 +193,7 @@ void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_e
 
 void ProjectImporter::load_background_image(Layer_shptr layer, 
 					    std::string const& image_filename, 
-					    Project_shptr prj) 
-  throw(DegateRuntimeException) {
+					    Project_shptr prj) {
 
   debug(TM, "try to load image [%s]", image_filename.c_str());
   if(!image_filename.empty()) {
@@ -293,8 +287,7 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 }
 
 
-void ProjectImporter::parse_port_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj) 
-  throw(std::runtime_error) {
+void ProjectImporter::parse_port_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj) {
 
   const xmlpp::Node::NodeList color_list = port_colors_elem->get_children("port-color");
 
@@ -345,7 +338,9 @@ void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_col
       else if(!object_name.compare("gate-frame")) o = DEFAULT_COLOR_GATE_FRAME;
       else if(!object_name.compare("gate-port")) o = DEFAULT_COLOR_GATE_PORT;
 
-      else throw XMLAttributeParseException("Can't parse object type.");
+      boost::format f("Can't parse object type. '%1%'");
+      f % object_name;
+      else throw XMLAttributeParseException(f.str());
 
       prj->set_default_color(o, parse_color_string(color_str));
 

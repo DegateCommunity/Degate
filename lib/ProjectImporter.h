@@ -44,8 +44,8 @@ private:
 	
   void parse_project_element(Project_shptr parent_prj, const xmlpp::Element * const project_node);
   void parse_grids_element(const xmlpp::Element * const project_node, Project_shptr prj);
-  void parse_layers_element(const xmlpp::Element * const layers_node, Project_shptr prj) throw(std::runtime_error);
-  void parse_port_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj) throw(std::runtime_error);
+  void parse_layers_element(const xmlpp::Element * const layers_node, Project_shptr prj);
+  void parse_port_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj);
 
   void parse_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj);
   
@@ -58,8 +58,7 @@ private:
    */
   void load_background_image(Layer_shptr layer, 
 			     std::string const& image_filename,
-			     Project_shptr prj)
-    throw(DegateRuntimeException);
+			     Project_shptr prj);
 
 public:
   ProjectImporter() {}
@@ -73,7 +72,7 @@ public:
    * @exception InvalidXMLException This exception is raised if there is a parsing error.
    * @return Returns a pointer to a project object.
    */
-  Project_shptr import(std::string const& path) throw( InvalidPathException, InvalidXMLException );
+  Project_shptr import(std::string const& path);
 
   /**
    * Import a complete degate project, including the default gate library and the logic model.
