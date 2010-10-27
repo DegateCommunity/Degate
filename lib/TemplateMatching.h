@@ -30,6 +30,20 @@
 namespace degate {
 
   /**
+   * Helper structure for the collection of statistical values.
+   */
+
+  struct TemplateMatchingStatistics {
+
+    /** Number of template matches. */
+    unsigned int hits;
+
+    void reset() {
+      hits = 0;
+    }
+  };
+
+  /**
    * Base class for matching alorithms.
    */
   class Matching : public ProgressControl {
@@ -78,6 +92,8 @@ namespace degate {
 	iter_last, // last entry grid that is less than x+w or y+h
 	iter_end; 
     };
+
+    struct TemplateMatchingStatistics stats;
 
   public:
 
@@ -309,6 +325,10 @@ namespace degate {
     void set_layers(Layer_shptr layer_matching, Layer_shptr layer_insert) {
       this->layer_matching = layer_matching;
       this->layer_insert = layer_insert;
+    }
+
+    unsigned int get_number_of_hits() const {
+      return stats.hits;
     }
 
   };

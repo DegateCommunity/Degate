@@ -43,10 +43,10 @@ using namespace degate;
 #endif
 
 TemplateMatching::TemplateMatching() {
-  threshold_hc = 0.45;
-  threshold_detection = 0.5;
+  threshold_hc = 0.40;
+  threshold_detection = 0.70;
   max_step_size_search = 3;
-  scale_down = 2;
+  scale_down = 1;
 }
 
 TemplateMatching::~TemplateMatching() {
@@ -262,6 +262,7 @@ void TemplateMatching::run() {
   debug(TM, "run template matching");
   std::list<match_found> matches;
 
+  stats.reset();
   set_progress_step_size(1.0/(tmpl_set.size() * tmpl_orientations.size()));
 
   /*
@@ -444,8 +445,6 @@ bool TemplateMatching::add_gate(unsigned int x, unsigned int y,
 				Gate::ORIENTATION orientation,
 				double corr_val, double threshold_hc) {
 
-  // XXXX critical section
-
   if(!layer_insert->exists_gate_in_region(x, x + tmpl->get_width(),
 					  y, y + tmpl->get_height())) {
 
@@ -462,6 +461,8 @@ bool TemplateMatching::add_gate(unsigned int x, unsigned int y,
     LogicModel_shptr lmodel = project->get_logic_model();
     lmodel->add_object(layer_insert->get_layer_pos(), gate);
     lmodel->update_ports(gate);
+
+    stats.hits++;
     return true;
   }
   return false;

@@ -83,7 +83,7 @@ class TemplateMatchingGUI : public RecognitionGUIBase {
 		    degate::Project_shptr project);
   virtual bool before_dialog();
   virtual void run();
-  virtual void after_dialog() {}
+  virtual void after_dialog();
 
 };
 

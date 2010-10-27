@@ -193,3 +193,15 @@ void TemplateMatchingGUI::run() {
 }
 
 
+void TemplateMatchingGUI::after_dialog() {
+
+  if(!matching->is_canceled()) {
+    boost::format f("Found %1% matches.");
+    f % matching->get_number_of_hits();
+    Glib::ustring message(f.str());
+    Gtk::MessageDialog dialog(message, true, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+    dialog.set_title("Statistic");
+    dialog.run();
+  }
+}
+
