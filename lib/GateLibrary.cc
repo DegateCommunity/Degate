@@ -63,6 +63,17 @@ GateTemplate_shptr GateLibrary::get_template(object_id_t id)
 }
 
 
+bool GateLibrary::is_name_in_use(std::string const & name) const {
+
+  for(const_template_iterator iter = begin(); iter != end(); ++iter) {
+    if((*iter).second->has_name() && (*iter).second->get_name() == name)
+      return true;
+  }
+
+  return false;
+}
+
+
 GateTemplatePort_shptr GateLibrary::get_template_port(object_id_t port_id) 
   throw(CollectionLookupException) {
 
@@ -88,6 +99,15 @@ GateLibrary::template_iterator GateLibrary::begin() {
 
 
 GateLibrary::template_iterator GateLibrary::end() {
+  return templates.end();
+}
+
+GateLibrary::const_template_iterator GateLibrary::begin() const {
+  return templates.begin();
+}
+
+
+GateLibrary::const_template_iterator GateLibrary::end() const {
   return templates.end();
 }
 

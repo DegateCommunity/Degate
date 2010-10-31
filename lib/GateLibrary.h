@@ -43,6 +43,7 @@ namespace degate {
     
     typedef std::map<object_id_t, GateTemplate_shptr> gate_lib_collection_t;
     typedef gate_lib_collection_t::iterator template_iterator;
+    typedef gate_lib_collection_t::const_iterator const_template_iterator;
     
   private:
     
@@ -79,7 +80,7 @@ namespace degate {
       throw(InvalidObjectIDException, InvalidPointerException);
 
     /**
-     * Get a gate template from the library
+     * Get a gate template from the library.
      * @exception CollectionLookupException This exception is thrown if
      *  there is no gate template that has ID \p id.
      * @exception InvalidObjectIDException This exception is thrown if the
@@ -91,6 +92,13 @@ namespace degate {
 
     GateTemplate_shptr get_template(object_id_t id) 
       throw(InvalidObjectIDException, CollectionLookupException);
+
+    /**
+     * Check for a name in the gate library.
+     * @return Returns true, if a template name is already used for a template.
+     */
+
+    bool is_name_in_use(std::string const & name) const;
 
 
     /**
@@ -113,6 +121,18 @@ namespace degate {
      */
 
     template_iterator end();
+
+    /** 
+     * Get an iterator in order to iterate over gate templates.
+     */
+
+    const_template_iterator begin() const;
+    
+    /**
+     * Get the end marker for the iteration.
+     */
+
+    const_template_iterator end() const;
 
     /**
      * print the gate library.
