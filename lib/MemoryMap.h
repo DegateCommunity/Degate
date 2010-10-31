@@ -397,6 +397,7 @@ namespace degate {
   
   template <typename T>
   inline void MemoryMap<T>::set(unsigned int x, unsigned int y, T new_val) {
+    assert(x < width && y < height);
     mem[y * width + x] = new_val;
     /*
     if(x + y * width < width * height)
@@ -410,6 +411,7 @@ namespace degate {
   
   template <typename T>
   inline T MemoryMap<T>::get(unsigned int x, unsigned int y) const {
+    assert(x < width && y < height);
     return mem[y * width + x];
     /*
     if(x + y * width < width * height)
