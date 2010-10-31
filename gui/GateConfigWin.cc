@@ -61,9 +61,9 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_cancel_button_clicked));
     
-    get_widget("ok_button", pButton);
-    if(pButton)
-      pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_ok_button_clicked) );
+    get_widget("ok_button", ok_button);
+    if(ok_button)
+      ok_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_ok_button_clicked) );
 
     
     get_widget("port_add_button", pButton);
@@ -151,8 +151,11 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       
       get_widget("entry_short_name", entry_short_name);
       assert(entry_short_name != NULL);
-      if(entry_short_name) 
+      if(entry_short_name) {
 	entry_short_name->set_text(gate_template->get_name());
+	entry_short_name->signal_changed().connect(sigc::mem_fun(*this, 
+								 &GateConfigWin::on_entry_short_name_changed) );
+      }
 
       get_widget("entry_description", entry_description);
       assert(entry_description != NULL);
@@ -488,5 +491,20 @@ void GateConfigWin::on_port_remove_button_clicked() {
     Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
     if(*iter) refListStore_ports->erase(iter);
   }
+}
+
+
+void GateConfigWin::on_entry_short_name_changed() {
+
+  GateLibrary_shptr lib = lmodel->get_gate_library();
+  Glib::ustring const & s = entry_short_name->get_text();
+
+  if(!s.empty() && !lib->is_name_in_use(s.c_str())) {
+    
+    ok_button->set_sensitive(true);
+  }
+  else
+    ok_button->set_sensitive(false);
+
 }
 
