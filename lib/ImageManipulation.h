@@ -320,18 +320,49 @@ namespace degate {
 	
 	// 1 2
 	// 3 4
-	rgba_pixel_t pix1 = src->get_pixel_as<rgba_pixel_t>(src_x, src_y);
-	rgba_pixel_t pix2 = src->get_pixel_as<rgba_pixel_t>(src_x + 1, src_y);
-	rgba_pixel_t pix3 = src->get_pixel_as<rgba_pixel_t>(src_x, src_y + 1);
-	rgba_pixel_t pix4 = src->get_pixel_as<rgba_pixel_t>(src_x + 1, src_y + 1);
 
-	unsigned int r = (MASK_R(pix1) + MASK_R(pix2) + MASK_R(pix3) + MASK_R(pix4)) >> 2;
-	unsigned int g = (MASK_G(pix1) + MASK_G(pix2) + MASK_G(pix3) + MASK_G(pix4)) >> 2;
-	unsigned int b = (MASK_B(pix1) + MASK_B(pix2) + MASK_B(pix3) + MASK_B(pix4)) >> 2;
-	unsigned int a = (MASK_A(pix1) + MASK_A(pix2) + MASK_A(pix3) + MASK_A(pix4)) >> 2;
+	int i = 1;
+	unsigned int r = 0, g = 0, b = 0, a = 0;
+
+	rgba_pixel_t pix = src->get_pixel_as<rgba_pixel_t>(src_x, src_y);
+	r += MASK_R(pix);
+	g += MASK_G(pix);
+	b += MASK_B(pix);
+	a += MASK_A(pix);
+
+	if(src_x + 1 < src->get_width()) {
+	  pix = src->get_pixel_as<rgba_pixel_t>(src_x + 1, src_y);
+	  i++;
+	  r += MASK_R(pix);
+	  g += MASK_G(pix);
+	  b += MASK_B(pix);
+	  a += MASK_A(pix);
+	}
+
+	if(src_y + 1 < src->get_height()) {
+	  pix = src->get_pixel_as<rgba_pixel_t>(src_x, src_y + 1);
+	  i++;
+	  r += MASK_R(pix);
+	  g += MASK_G(pix);
+	  b += MASK_B(pix);
+	  a += MASK_A(pix);
+	}
+
+	if(src_x + 1 < src->get_width() && src_y + 1 < src->get_height()) {
+	  pix = src->get_pixel_as<rgba_pixel_t>(src_x + 1, src_y + 1);
+	  i++;
+	  r += MASK_R(pix);
+	  g += MASK_G(pix);
+	  b += MASK_B(pix);
+	  a += MASK_A(pix);
+	}
+
+	r /= i;
+	g /= i;
+	b /= i;
+	a /= i;
 
 	dst->set_pixel_as<rgba_pixel_t>(dst_x, dst_y, MERGE_CHANNELS(r, g, b, a));
-
       }
     }
   }
