@@ -5,7 +5,7 @@
 #
 
 use strict;
-use XML::Simple;
+use XML::DOM;
 use Data::Dumper;
 use Getopt::Long;
 
@@ -16,7 +16,7 @@ use Getopt::Long;
 my $project_dir;
 my $out_dir = ".";
 my $help = '';
-my $resize = 100;
+my $resize = 200;
 
 GetOptions ("project=s" => \$project_dir,
 	    "out=s" => \$out_dir,
@@ -51,8 +51,11 @@ if(! -d $out_dir) {
 
 my $html = '';
 my $gate_lib_file = $project_dir . '/gate_library.xml';
-my $lib = parse($gate_lib_file);
-if(not defined $lib) {
+
+my $parser = new XML::DOM::Parser;
+my $doc = $parser->parsefile($gate_lib_file);
+
+if(not defined $doc) {
     print "Can't read gate library file $gate_lib_file\n";
 }
 
@@ -60,24 +63,64 @@ if(not defined $lib) {
 # Generate HTML data
 #
 
-foreach my $gate_id (keys %{$lib->{'gate-templates'}->{gate}}) {
-    my $tmpl = $lib->{'gate-templates'}->{gate}->{$gate_id};
 
-    $html .= "<h3>$tmpl->{name}: $tmpl->{description}</h3>\n";
+my @matching_gates = $doc->getElementsByTagName("gate");
+foreach my $gate (@matching_gates) {
 
-    my $images = $tmpl->{images};
+    $html .= 
+	"<h3>" . $gate->getAttribute('name') .
+	": " . $gate->getAttribute('description') . "</h3>\n";
+
 
     my %images;
-    foreach my $img (@$images) {
-	$images{$img->{image}->{'layer-type'}} = $img->{image}->{image};
+    my @images = $gate->getElementsByTagName("image");
+    foreach my $img (@images) {
+	$images{$img->getAttribute('layer-type')} =  
+	    $img->getAttribute('image');
     }
 
-    $html .= render_images($project_dir,
-			   $out_dir,
-			   $images{transistor},
-			   $images{logic},
-			   $images{metal},
-			   $resize);
+    my @avail_layers = 
+	grep { exists($images{$_}) } qw(transistor logic metal);
+
+    my @processed_images = map { 
+	render_images($project_dir,
+		      $out_dir,
+		      $images{$_},
+		      $resize,
+		      $gate) } @avail_layers;
+
+    foreach my $img (@processed_images) {
+	$html .= "<img src=\"$img\"/>\n";
+    }
+
+    # merge images
+    my @merged_images;
+
+    if(exists($images{transistor}) &&
+       exists($images{logic})) {
+	push(@merged_images, merge_images($project_dir,
+					  $out_dir,
+					  $images{transistor}, 
+					  $images{logic},
+					  $resize,
+					  $gate));
+    }
+
+    if(exists($images{logic}) &&
+       exists($images{metal})) {
+	push(@merged_images, merge_images($project_dir,
+					  $out_dir,
+					  $images{logic}, 
+					  $images{metal},
+					  $resize,
+					  $gate));
+    }
+       
+    $html .= "<br/>";
+    foreach my $img (@merged_images) {
+	$html .= "<img src=\"$img\"/>\n";
+    }
+    
 }
 
 #
@@ -104,49 +147,95 @@ sub render_images {
     my $project_dir = shift;
     my $out_dir = shift;
     my $f1 = shift;
-    my $f2 = shift;
-    my $f3 = shift;
     my $resize = shift;
+    my $node = shift;
 
-    my $ret = '';
+    my $radius = 1;
+    my @params = ('-resize', "${resize}%",
+		  '-strokewidth', 1);
 
-    my @params = ('-resize', "${resize}%");
+
+    my @ports = $node->getElementsByTagName("port");
+    foreach my $port (@ports) {
+	my $x = $port->getAttribute('x') * $resize / 100;
+	my $y = $port->getAttribute('y') * $resize / 100;
+	my $name = $port->getAttribute('name');
+	push(@params, 
+	     '-fill', 'red', '-stroke', 'red',
+	     '-draw', sprintf('circle %d,%d %d,%d',
+			      $x, $y, $x, $y+$radius),
+	     '-fill', 'white', '-stroke', 'white',
+	     '-draw', sprintf('text %d,%d "%s"', 
+			      $x + $radius, $y + $radius, $name));
+    }
+    
 
     if(defined $f1) {
+	my $out_file = $f1;
+	$out_file =~ s!\.tif$!.png!;
+
 	print "Convert image $f1.\n";
-	if((system("convert", 
-		   $project_dir . '/' . $f1,  
+	if((system("convert",
+		   $project_dir . '/' . $f1,
 		   @params,
-		   $out_dir . '/' . $f1 .".png") >> 8)) {
-	    die "system() failed\n";
+		   $out_dir . '/' . $out_file) >> 8)) {
+	    die "system() failed: $!\n";
 	}
-	$ret .= "<img src=\"$f1.png\"/>\n";
+	return $out_file;
     }
 
-    if(defined $f2) {
-	print "Convert image $f2.\n";
-	if((system("convert", 
-		   $project_dir . '/' . $f2,  
-		   @params,
-		   $out_dir . '/' . $f2 .".png") >> 8)) {
-	    die "system() failed\n";
-	}
-	$ret .= "<img src=\"$f2.png\"/>\n";
+    return undef;
+}
+
+
+sub merge_images {
+    my $project_dir = shift;
+    my $out_dir = shift;
+    my $f1 = shift;
+    my $f2 = shift;
+    my $resize = shift;
+    my $node = shift;
+
+    
+    if(defined($f1) && defined($f2)) {
 	
-    }
+	my $out_file = 'merged_' . $f1;
+	$out_file =~ s!\.tif$!.png!;
 
-    if(defined $f3) {
-	print "Convert image $f3.\n";
-	if((system("convert", 
-		   $project_dir . '/' . $f3,  
-		   @params,
-		   $out_dir . '/' . $f3 .".png") >> 8)) {
-	    die "system() failed\n";
+	my $radius = 1;
+	my @params = ('-resize', "${resize}%",
+		      '-alpha', 'Set',
+		      '-compose', 'dissolve',
+		      '-set', 'option:compose:args', '50,50',
+		      '-composite',);
+
+	my @ports = $node->getElementsByTagName("port");
+	foreach my $port (@ports) {
+	    my $x = $port->getAttribute('x') * $resize / 100;
+	    my $y = $port->getAttribute('y') * $resize / 100;
+	    my $name = $port->getAttribute('name');
+	    push(@params, 
+		 '-fill', 'red', '-stroke', 'red',
+		 '-draw', sprintf('circle %d,%d %d,%d',
+				  $x, $y, $x, $y+$radius),
+		 '-fill', 'white', '-stroke', 'white',
+		 '-draw', sprintf('text %d,%d "%s"', 
+				  $x + $radius, $y + $radius, $name));
 	}
-	$ret .= "<img src=\"$f3.png\"/>\n";	
+	
+	print "Merge images $f1 and $f2.\n";
+	if((system("convert",
+		   $project_dir . '/' . $f1,
+		   $project_dir . '/' . $f2,
+		   @params,		   
+		   $out_dir . '/' . $out_file
+	    ) >> 8)) {
+	    die "system() failed: $!\n";
+	}
+	return $out_file;
     }
 
-    return $ret;
+    return undef;
 }
 
 sub render_html_header {
@@ -157,11 +246,3 @@ sub render_html_footer {
     return "</body></html>\n";
 }
 
-sub parse {
-    my $file = shift;
-    print "Read gate library from file $file\n";
-    my $response = XMLin($file, 
-			 KeyAttr => ['type-id', 'layer-type'], 
-			 ForceArray => ['images']);    
-    return $response;
-}
