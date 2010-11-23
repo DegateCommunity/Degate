@@ -1065,7 +1065,7 @@ void MainWin::on_menu_gate_create_by_selection() {
       
       lmodel->add_gate_template(tmpl);
       
-      Gate_shptr gate(new Gate(bbox), Gate::ORIENTATION_NORMAL);
+      Gate_shptr gate(new Gate(bbox, Gate::ORIENTATION_NORMAL));
       gate->set_gate_template(tmpl);
       lmodel->add_object(layer->get_layer_pos(), gate);
     
