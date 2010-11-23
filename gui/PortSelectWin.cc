@@ -62,6 +62,9 @@ PortSelectWin::PortSelectWin(Gtk::Window *parent, Gate_shptr gate) :
       pTreeView->set_model(refListStore);
       pTreeView->append_column("ID", m_Columns.m_col_id);
       pTreeView->append_column("Port Name", m_Columns.m_col_name);
+
+
+      refListStore->set_sort_column_id(m_Columns.m_col_name, Gtk::SORT_ASCENDING);
     }
     
     GateTemplate_shptr tmpl = gate->get_gate_template();
