@@ -233,14 +233,18 @@ void MainWin::on_menu_project_new() {
   dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
   dialog.add_button("Select", Gtk::RESPONSE_OK);
   
+  std::cout << "create project - raise file chooser"  << std::endl;
   int result = dialog.run();
+  std::cout << "create project -get file name"  << std::endl;
   std::string project_dir = dialog.get_filename();
+  std::cout << "create project " << project_dir << std::endl;
   dialog.hide();
+  std::cout << "create project - hide file chooser"  << std::endl;
 
   if(result == Gtk::RESPONSE_OK) {
     create_new_project(project_dir);
   }
-
+  std::cout << "create project - done \n";
 }
 
 void MainWin::create_new_project(std::string const& project_dir) {
@@ -1061,7 +1065,7 @@ void MainWin::on_menu_gate_create_by_selection() {
       
       lmodel->add_gate_template(tmpl);
       
-      Gate_shptr gate(new Gate(bbox));
+      Gate_shptr gate(new Gate(bbox), Gate::ORIENTATION_NORMAL);
       gate->set_gate_template(tmpl);
       lmodel->add_object(layer->get_layer_pos(), gate);
     
