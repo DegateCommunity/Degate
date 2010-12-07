@@ -609,7 +609,9 @@ void LogicModel::remove_net(Net_shptr net)
     }
     
     // remove the net
-    nets[net->get_object_id()].reset();
+    //nets[net->get_object_id()].reset();
+    size_t n = nets.erase(net->get_object_id());
+    assert(n == 1);
   }
 }
 
