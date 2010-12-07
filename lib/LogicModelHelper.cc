@@ -29,8 +29,7 @@
 
 using namespace degate;
 
-Layer_shptr degate::get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE layer_type) 
-  throw(InvalidPointerException, CollectionLookupException, DegateLogicException) {
+Layer_shptr degate::get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE layer_type) {
 
   if(layer_type == Layer::UNDEFINED) 
     throw DegateLogicException("Invalid layer type.");
@@ -51,8 +50,7 @@ Layer_shptr degate::get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE l
   throw CollectionLookupException(fmter.str());
 }
 
-Layer_shptr degate::get_first_logic_layer(LogicModel_shptr lmodel) 
-  throw(InvalidPointerException, CollectionLookupException) {
+Layer_shptr degate::get_first_logic_layer(LogicModel_shptr lmodel) {
 
   if(lmodel == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_first_logic_layer()");
@@ -187,7 +185,7 @@ void degate::grab_template_images(LogicModel_shptr lmodel,
 
 void degate::load_background_image(Layer_shptr layer, 
 				   std::string const& project_dir,
-				   std::string const& image_file) throw(InvalidPointerException) {
+				   std::string const& image_file) {
   
   if(layer == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to load_background_image()");
@@ -214,7 +212,7 @@ void degate::load_background_image(Layer_shptr layer,
 }
 
 
-void degate::clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer) throw(InvalidPointerException) {
+void degate::clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer) {
   if(lmodel == NULL || layer == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to clear_logc_model()");
 
@@ -230,8 +228,7 @@ void degate::clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer) throw
 
 }
 
-Layer_shptr degate::get_first_enabled_layer(LogicModel_shptr lmodel) 
-  throw(InvalidPointerException, CollectionLookupException) {
+Layer_shptr degate::get_first_enabled_layer(LogicModel_shptr lmodel) {
   if(lmodel == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_first_enabled_layer()");
 
@@ -244,7 +241,7 @@ Layer_shptr degate::get_first_enabled_layer(LogicModel_shptr lmodel)
   throw InvalidPointerException("Error: all layers are disabled.");
 }
 
-Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel) throw() {
+Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel) {
   if(lmodel == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_next_enabled_layer()");
 
@@ -262,7 +259,7 @@ Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel) throw() {
 }
 
 
-Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) throw() {
+Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) {
 
   if(lmodel == NULL || layer == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_next_enabled_layer()");
@@ -276,7 +273,7 @@ Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr 
   return Layer_shptr();
 }
 
-Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel) throw() {
+Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel) {
 
   if(lmodel == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_prev_enabled_layer()");
@@ -297,7 +294,7 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel) throw() {
 
 }
 
-Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) throw() {
+Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) {
 
   if(lmodel == NULL || layer == NULL) 
     throw InvalidPointerException("Error: you passed an invalid pointer to get_prev_enabled_layer()");
@@ -310,7 +307,7 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr 
   return Layer_shptr();
 }
 
-Layer_shptr degate::get_current_layer(Project_shptr project) throw(InvalidPointerException) {
+Layer_shptr degate::get_current_layer(Project_shptr project) {
   if(project == NULL) 
     throw InvalidPointerException("Invalid parameter for get_curent_layer()");
 
@@ -319,8 +316,7 @@ Layer_shptr degate::get_current_layer(Project_shptr project) throw(InvalidPointe
   return lmodel->get_current_layer();
 }
 
-bool degate::is_logic_class(Gate_shptr gate, std::string const& logic_class) 
-  throw(InvalidPointerException) {
+bool degate::is_logic_class(Gate_shptr gate, std::string const& logic_class) {
 
   if(gate == NULL) 
     throw InvalidPointerException("Invalid parameter for is_logic_class()");
@@ -338,8 +334,7 @@ bool degate::is_logic_class(Gate_shptr gate, std::string const& logic_class)
 }
 
 
-GateTemplatePort::PORT_TYPE degate::get_port_type(GatePort_shptr gate_port) 
-  throw(InvalidPointerException) {
+GateTemplatePort::PORT_TYPE degate::get_port_type(GatePort_shptr gate_port) {
 
   if(gate_port == NULL) 
     throw InvalidPointerException("Invalid parameter for get_port_type()");
@@ -353,8 +348,7 @@ GateTemplatePort::PORT_TYPE degate::get_port_type(GatePort_shptr gate_port)
 }
 
 
-std::string degate::get_template_port_name(GatePort_shptr gate_port)
-  throw(InvalidPointerException) {
+std::string degate::get_template_port_name(GatePort_shptr gate_port) {
 
   if(gate_port == NULL) 
     throw InvalidPointerException("Invalid parameter for get_template_port_name()");
@@ -367,8 +361,7 @@ std::string degate::get_template_port_name(GatePort_shptr gate_port)
   return "";
 }
 
-void degate::apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm)
-  throw(InvalidPointerException) {
+void degate::apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm) {
   if(lmodel == NULL || pcm == NULL)
     throw InvalidPointerException("Invalid parameter for apply_port_color_settings()");
 
@@ -490,7 +483,7 @@ void degate::connect_objects(LogicModel_shptr lmodel,
 
 
 void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
-				 BoundingBox const& search_bbox) throw () {
+				 BoundingBox const& search_bbox) {
 
   if(lmodel == NULL || layer == NULL)
     throw InvalidPointerException("You passed an invalid shared pointer.");
@@ -535,7 +528,7 @@ void autoconnect_interlayer_objects_via_via(LogicModel_shptr lmodel,
 					    BoundingBox const& search_bbox,
 					    Via_shptr v1,
 					    Via::DIRECTION v1_dir_criteria,
-					    Via::DIRECTION v2_dir_criteria) throw () {
+					    Via::DIRECTION v2_dir_criteria) {
 
   Via_shptr v2;
 
@@ -562,7 +555,7 @@ void autoconnect_interlayer_objects_via_gport(LogicModel_shptr lmodel,
 					      Layer_shptr adjacent_layer,
 					      BoundingBox const& search_bbox,
 					      Via_shptr v1,
-					      Via::DIRECTION v1_dir_criteria) throw () {
+					      Via::DIRECTION v1_dir_criteria) {
 
   GatePort_shptr v2;
 
@@ -586,7 +579,7 @@ void autoconnect_interlayer_objects_via_gport(LogicModel_shptr lmodel,
 
 void degate::autoconnect_interlayer_objects(LogicModel_shptr lmodel, 
 					    Layer_shptr layer,
-					    BoundingBox const& search_bbox) throw () {
+					    BoundingBox const& search_bbox) {
   if(lmodel == NULL || layer == NULL)
     throw InvalidPointerException("You passed an invalid shared pointer.");
 

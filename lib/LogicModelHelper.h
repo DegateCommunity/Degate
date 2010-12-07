@@ -42,8 +42,7 @@ namespace degate {
    *   layer of the requested type.
    */
 
-  Layer_shptr get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE layer_type) 
-    throw(InvalidPointerException, CollectionLookupException, DegateLogicException);
+  Layer_shptr get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE layer_type);
 
   /**
    * Get the first layer that is a logic layer. The search order is
@@ -55,8 +54,7 @@ namespace degate {
    *   logc layer.
    */
 
-  Layer_shptr get_first_logic_layer(LogicModel_shptr lmodel) 
-    throw(InvalidPointerException, CollectionLookupException);
+  Layer_shptr get_first_logic_layer(LogicModel_shptr lmodel);
 
 
 
@@ -91,8 +89,7 @@ namespace degate {
   template<typename ImageType>
   std::tr1::shared_ptr<ImageType> grab_image(LogicModel_shptr lmodel,
 					     Layer_shptr layer,
-					     BoundingBox const& bounding_box) 
-    throw(DegateLogicException) {
+					     BoundingBox const& bounding_box) {
 
     // create empty image with the size of the bounding box
     std::tr1::shared_ptr<ImageType> new_img(new ImageType(bounding_box.get_width(),
@@ -146,8 +143,7 @@ namespace degate {
    */
 
   template<class InputIterator>
-  std::set<Net_shptr> collect_nets(InputIterator first, InputIterator last) 
-    throw(DegateRuntimeException) {
+  std::set<Net_shptr> collect_nets(InputIterator first, InputIterator last) {
 
     std::set<Net_shptr> nets;
 
@@ -156,7 +152,7 @@ namespace degate {
 	std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
 
       if(clo == NULL) {
-	throw DegateRuntimeException("Error in connect_objecs(). One of the objects "
+	throw DegateRuntimeException("Error in collect_nets(). One of the objects "
 				     "cannot be connected with anything.");
       }
       else {
@@ -182,8 +178,7 @@ namespace degate {
    */
 
   template<class InputIterator>
-  void isolate_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last) 
-    throw (DegateRuntimeException, InvalidPointerException) {
+  void isolate_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last) {
 
     if(lmodel == NULL) 
       throw InvalidPointerException("You passed an invalid shared pointer for lmodel");
@@ -240,8 +235,7 @@ namespace degate {
    */
 
   template<class InputIterator>
-  void connect_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last) 
-    throw (DegateRuntimeException, InvalidPointerException) {
+  void connect_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last) {
 
     if(lmodel == NULL) 
       throw InvalidPointerException("You passed an invalid shared pointer for lmodel");
@@ -256,7 +250,7 @@ namespace degate {
     }
 
 
-    // collect object we want to join
+    // collect objects we want to join
     std::set<ConnectedLogicModelObject_shptr> objects;
 
     for(InputIterator it = first; it != last; ++it) {
@@ -308,7 +302,7 @@ namespace degate {
    */
 
   void autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer, 
-			   BoundingBox const& search_bbox) throw ();
+			   BoundingBox const& search_bbox);
   
 
   /**
@@ -318,7 +312,7 @@ namespace degate {
    */
   void autoconnect_interlayer_objects(LogicModel_shptr lmodel, 
 				      Layer_shptr layer,
-				      BoundingBox const& search_bbox) throw ();
+				      BoundingBox const& search_bbox);
 
 
   /**
@@ -331,7 +325,7 @@ namespace degate {
    */
   void load_background_image(Layer_shptr layer, 
 			     std::string const& project_dir,
-			     std::string const& image_file) throw(InvalidPointerException);
+			     std::string const& image_file);
 
   /**
    * Clear the logic model for a layer.
@@ -339,7 +333,7 @@ namespace degate {
    *   \p lmodel or \p layer, then this exception is raised.
    */
 
-  void clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer) throw(InvalidPointerException);
+  void clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer);
 
 
   /**
@@ -349,8 +343,7 @@ namespace degate {
    * @exception CollectionLookupException Is thrown, if all layers are disabled.
    */
 
-  Layer_shptr get_first_enabled_layer(LogicModel_shptr lmodel) 
-    throw(InvalidPointerException, CollectionLookupException);
+  Layer_shptr get_first_enabled_layer(LogicModel_shptr lmodel);
   
   /**
    * Get next enabled layer.
@@ -362,7 +355,7 @@ namespace degate {
    * @exception DegateRuntimeException Is thrown, if there is no current layer.
    */
 
-  Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel) throw();
+  Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel);
 
 
   /**
@@ -373,7 +366,7 @@ namespace degate {
    * @exception InvalidPointerException If you pass an invalid shared pointer, 
    *   then this exception is raised.
    */
-  Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) throw();
+  Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer);
 
   /**
    * Get previous enabled layer.
@@ -385,7 +378,7 @@ namespace degate {
    * @exception DegateRuntimeException Is thrown, if there is no current layer.
    */
 
-  Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel) throw();
+  Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel);
 
 
   /**
@@ -397,21 +390,20 @@ namespace degate {
    *   then this exception is raised.
    */
 
-  Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) throw();
+  Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer);
 
   /**
    * Get the current layer.
    */
 
-  Layer_shptr get_current_layer(Project_shptr project) throw(InvalidPointerException);
+  Layer_shptr get_current_layer(Project_shptr project);
 
 
   /**
    * Check if a gate is of a specific logic class.
    */
 
-  bool is_logic_class(Gate_shptr gate, std::string const& logic_class) 
-    throw(InvalidPointerException);
+  bool is_logic_class(Gate_shptr gate, std::string const& logic_class) ;
 
 
   /**
@@ -420,8 +412,7 @@ namespace degate {
    *   cannot be determined.
    */
 
-  GateTemplatePort::PORT_TYPE get_port_type(GatePort_shptr gate_port)
-    throw(InvalidPointerException);
+  GateTemplatePort::PORT_TYPE get_port_type(GatePort_shptr gate_port);
 
   /**
    * Get the name of a corresponding template port
@@ -429,15 +420,13 @@ namespace degate {
    *   an empty string is returned.
    */
 
-  std::string get_template_port_name(GatePort_shptr gate_port)
-    throw(InvalidPointerException);
+  std::string get_template_port_name(GatePort_shptr gate_port);
 
 
   /**
    * Apply port color definitions to all gate template ports.
    */
-  void apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm)
-    throw(InvalidPointerException);
+  void apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm);
 
 
 }
