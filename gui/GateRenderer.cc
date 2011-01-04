@@ -81,10 +81,13 @@ void GateRenderer::set_gate_template(degate::GateTemplate_shptr tmpl)
     throw InvalidPointerException("Invalid parameter for GateRenderer::set_gate_template().");
   this->tmpl = tmpl;
 
-  set_virtual_size(tmpl->get_width(), tmpl->get_height());
-  set_viewport(0, 0, 
-	       LENGTH_TO_MAX(tmpl->get_width()), 
-	       LENGTH_TO_MAX(tmpl->get_height()));
+  /* if the gate template is new it has no size and no image. */
+  if(tmpl->get_width() > 0 && tmpl->get_height() > 0) {
+    set_virtual_size(tmpl->get_width(), tmpl->get_height());
+    set_viewport(0, 0, 
+		 LENGTH_TO_MAX(tmpl->get_width()), 
+		 LENGTH_TO_MAX(tmpl->get_height()));
+  }
 
   //update_screen();
 }
