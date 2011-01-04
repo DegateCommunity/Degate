@@ -534,6 +534,31 @@ Layer_shptr LogicModel::get_layer(layer_position_t pos) {
 }
 
 void LogicModel::set_layers(layer_collection layers) {
+
+  std::list<Layer_shptr> layers_to_remove;
+
+
+  if(this->layers.size() > 0) { 
+    /*
+      We have a vector of old layers and should set a vector with new layers.
+      Therefore we need to get a list of layers to remove.
+    */
+
+    // iterate over present (old) layers
+    for(layer_collection::const_iterator i = this->layers.begin(); i != this->layers.end(); ++i) {
+
+      bool found_in_new = false;
+      for(layer_collection::const_iterator i2 = layers.begin(); i2 != layers.end(); ++i2) {
+	if((*i2)->get_layer_id() == (*i)->get_layer_id()) found_in_new = true;
+      }
+
+      if(!found_in_new) layers_to_remove.push_back(*i);
+    }
+  }
+
+  BOOST_FOREACH(Layer_shptr l, layers_to_remove) remove_layer(l);
+
+  // set new layers
   this->layers = layers;
 }
 
@@ -542,10 +567,23 @@ void LogicModel::remove_layer(layer_position_t pos) {
 }
 
 void LogicModel::remove_layer(Layer_shptr layer) {
-  /* 
-     XXX: gates / wires / vias / connections
-  */
-  layers.erase(remove(layers.begin(), layers.end(), layer), layers.end());
+
+  // Iterate over layer objects and place them in a remove list.
+  std::list<PlacedLogicModelObject_shptr> remove_list;
+
+  for(Layer::object_iterator i = layer->objects_begin();
+      i != layer->objects_end(); ++i) remove_list.push_back(*i);
+
+  // Remove objects from logic model.
+  BOOST_FOREACH(PlacedLogicModelObject_shptr o, remove_list) remove_object(o);
+
+  // Unset background image. It will remove the image files, too.
+  layer->unset_image();
+
+  // Remove layer container.
+  layers.erase(remove(layers.begin(), layers.end(), layer), 
+	       layers.end());
+
 }
 
 void LogicModel::set_current_layer(layer_position_t pos) {
