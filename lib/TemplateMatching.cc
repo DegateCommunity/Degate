@@ -643,7 +643,7 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
   double denominator = sqrt((f2 - f1*f1/template_size) * sum_over_zero_mean_template);
   
   // calculate nummerator
-  if(isinf(denominator) || isnan(denominator) || denominator == 0) {
+  if(std::isinf(denominator) || std::isnan(denominator) || denominator == 0) {
     debug(TM, 
 	  "ERROR: The denominator is not a valid number: f1=%f f2=%f template_size=%f sum=%f "
 	  "local_x=%d local_y=%d x_plus_w=%d y_plus_h=%d lxm1=%d lym1=%d",
