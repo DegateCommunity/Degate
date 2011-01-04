@@ -193,7 +193,7 @@ void degate::load_background_image(Layer_shptr layer,
     throw InvalidPointerException("Error: you passed an invalid pointer to load_background_image()");
   
   boost::format fmter("layer_%1%.dimg");
-  fmter % layer->get_layer_pos();
+  fmter % layer->get_layer_id(); // was get_layer_pos()
 
   std::string dir(join_pathes(project_dir, fmter.str()));
 
