@@ -38,6 +38,7 @@
 #include <limits.h>
 #include <math.h>
 #include <tr1/memory>
+#include <boost/utility.hpp>
 
 namespace degate {
 
@@ -52,12 +53,9 @@ namespace degate {
    * Storage for data objects, that is mapped from files into memory.
    *
    * You should not use this class directly.
-   *
-   * @todo: This class is a bit messy. Parts of the code might be moved
-   *    into the storage policy classes.
    */
   template<typename T>
-  class MemoryMap /* XXX : public MemoryMapBase */ {
+  class MemoryMap : boost::noncopyable {
 		
   private:
     unsigned int width, height;
@@ -91,31 +89,64 @@ namespace degate {
     
   public:
 
-	
+
+    /**
+     * Allocate a heap based memory chunk.
+     * @param width The width of a 2D map.
+     * @param height The height of a 2D map.
+     */
     MemoryMap(unsigned int width, unsigned int height);
+
+    /**
+     * Create a file based memory chunk. 
+     * The storage is filebases. The file is mapped into memory.
+     * @param width The width of a 2D map.
+     * @param height The height of a 2D map.
+     * @param mode Is either MAP_STORAGE_TYPE_PERSISTENT_FILE or MAP_STORAGE_TYPE_TEMP_FILE.
+     * @param file_to_map The name of the file, which should be mmap().
+     */
     MemoryMap(unsigned int width, unsigned int height, 
 	      MAP_STORAGE_TYPE mode, std::string const & file_to_map);
 
-    //MemoryMap(const MemoryMap &mm);
+    /**
+     * The destructor.
+     */
     ~MemoryMap();
 		
     int get_width() const { return width; }
     int get_height() const { return height; }
 	
-	
+    /**
+     * Cear the whole memory map.
+     */
     void clear();
+
     void clear_area(unsigned int min_x, unsigned int min_y, 
 		    unsigned int width, unsigned int height);
-	
+
+    /**
+     * Set the value of a memory element.
+     */
     inline void set(unsigned int x, unsigned int y, T new_val);
+
+    /**
+     * Get the value of an memory element.
+     */
     inline T get(unsigned int x, unsigned int y) const;
 
+    /**
+     * Copy the whole memory content into a buffer. Make sure that the buffer \p buf
+     * is large enough to hold get_width() * get_height() * sizeof(T) bytes.
+     */
     void raw_copy(void * buf) const;
 
+    /**
+     * Get the name of the mapped file.
+     * @returns Returns a string with the mapped file. If the memory
+     *   chunk is heap and not file based, an empty string is returned.
+     */
     std::string const& get_filename() const { return filename; }
 	
-    //ret_t deactivate_mapping();
-    //ret_t reactivate_mapping();
   };
 
   template <typename T>
@@ -125,6 +156,8 @@ namespace degate {
     mem(NULL),
     fd(-1),
     filesize(0) {
+
+    assert(width > 0 && height > 0);
     
     ret_t ret = alloc_memory();
     assert(ret == RET_OK);
@@ -142,7 +175,9 @@ namespace degate {
     
     assert(mode == MAP_STORAGE_TYPE_PERSISTENT_FILE ||
 	   mode == MAP_STORAGE_TYPE_TEMP_FILE);
-    
+
+    assert(width > 0 && height > 0);
+
     ret_t ret;
 		
     if(mode == MAP_STORAGE_TYPE_TEMP_FILE) {
@@ -397,6 +432,9 @@ namespace degate {
   
   template <typename T>
   inline void MemoryMap<T>::set(unsigned int x, unsigned int y, T new_val) {
+    if(x >= width || y >= height)  {
+      debug(TM, "error: out of bounds x=%d, y=%d / width=%d, height=%d", x, y, width, height);
+    }
     assert(x < width && y < height);
     mem[y * width + x] = new_val;
     /*
@@ -411,6 +449,10 @@ namespace degate {
   
   template <typename T>
   inline T MemoryMap<T>::get(unsigned int x, unsigned int y) const {
+    if(x >= width || y >= height)  {
+      debug(TM, "error: out of bounds x=%d, y=%d / width=%d, height=%d", x, y, width, height);
+    }
+
     assert(x < width && y < height);
     return mem[y * width + x];
     /*
