@@ -46,11 +46,24 @@
       clock_gettime(CLOCK_MONOTONIC,  &dst_variable);
 #endif
 
+/**
+ * Overloaded comparison operator for timespec-structs.
+ * @return Returns true, if \p a is completely before \p b. Else
+ *   false is returned.
+ */
+static bool operator<(struct timespec const & a, struct timespec const & b) {
+  if(a.tv_sec < b.tv_sec) return true;
+  else if(a.tv_sec == b.tv_sec && a.tv_nsec < b.tv_nsec) return true;
+  else return false;
+}
+
 namespace degate {
+
 
   class TileCacheBase {
   public:
     virtual void cleanup_cache() = 0;
+    virtual void print() const = 0;
   };
 
   class GlobalTileCache : public SingletonBase<GlobalTileCache> {
@@ -82,14 +95,17 @@ namespace degate {
 
       for(cache_t::iterator iter = cache.begin(); iter != cache.end(); ++iter) {
 	cache_entry_t & entry = iter->second;
-	if(entry.first.tv_sec <= now.tv_sec && entry.first.tv_nsec <= now.tv_nsec) {
+	if(entry.first < now) {
 	  now.tv_sec = entry.first.tv_sec;
 	  now.tv_nsec = entry.first.tv_nsec;
 	  oldest = iter->first;
 	}
       }
 
-      if(oldest) oldest->cleanup_cache();
+      if(oldest) {
+	debug(TM, "Will call cleanup on %p", oldest);
+	oldest->cleanup_cache();
+      }
       else {
 	debug(TM, "there is nothing to free.");
 	print_table();
@@ -111,16 +127,20 @@ namespace degate {
 	cache_entry_t const& entry = iter->second;
 	printf("%16p | %12ld.%12ld | %ld M (%ld bytes)\n", 
 	       iter->first, entry.first.tv_sec, entry.first.tv_nsec, entry.second/(1024*1024), entry.second);
+	iter->first->print();
       }
 
       printf("\n");
+      MemoryMapDirectory & mmd = MemoryMapDirectory::get_instance();
+      mmd.print();
+
     }
 
     bool request_cache_memory(TileCacheBase * requestor, size_t amount) {
 
       debug(TM, "Local cache %p requests %d bytes.", requestor, amount);
 
-      while(allocated_memory + amount >= max_cache_memory) {
+      while(allocated_memory + amount > max_cache_memory) {
 	debug(TM, "Try to free memory");
 	remove_oldest();
       }
@@ -135,7 +155,8 @@ namespace degate {
 	}
 	else {
 	  cache_entry_t & entry = found->second;
-	  entry.first = now;
+	  entry.first.tv_sec = now.tv_sec;
+	  entry.first.tv_nsec = now.tv_nsec;
 	  entry.second += amount;
 	}
 
@@ -145,7 +166,7 @@ namespace degate {
 	return true;
       }
 
-      debug(TM, "Cant free memory.");
+      debug(TM, "Can't free memory.");
 
       print_table();
       return false;
@@ -168,7 +189,7 @@ namespace degate {
 	if(entry.second >= amount) {
 	  entry.second -= amount;
 	  assert(allocated_memory >= amount);
-	  if(allocated_memory >= amount)  allocated_memory -= amount;
+	  if(allocated_memory >= amount) allocated_memory -= amount;
 	  else {
 	    debug(TM, "More mem to release than available.");
 	    print_table();
@@ -254,7 +275,18 @@ namespace degate {
       }
     }
 
-    
+    void print() const {
+      for(typename cache_type::const_iterator iter = cache.begin();
+	  iter != cache.end(); ++iter) {
+	std::cout << "\t+ " 
+		  << directory << "/" 
+		  << (*iter).first << " " 
+		  << (*iter).second.second.tv_sec 
+		  << "/" 
+		  << (*iter).second.second.tv_nsec 
+		  << std::endl;
+      }
+    }
 
     /**
      * Get a tile. If the tile is not in the cache, the tile is loaded.
@@ -291,6 +323,7 @@ namespace degate {
 	  GET_CLOCK(now);
 
 	  cache[filename] = std::make_pair(load(filename), now);
+	  gtc.print_table();
 	}
 
 	current_tile = cache[filename].first;
@@ -320,15 +353,17 @@ namespace degate {
 	  iter != cache.end(); ++iter) {
 
 	struct timespec clock_val = (*iter).second.second;
-	if(clock_val.tv_sec <= oldest_clock_val.tv_sec &&
-	   clock_val.tv_nsec <= oldest_clock_val.tv_nsec) {
+	if(clock_val < oldest_clock_val) {
 	  oldest_clock_val.tv_sec = clock_val.tv_sec;
 	  oldest_clock_val.tv_nsec = clock_val.tv_nsec;
 	  oldest = iter;
 	}
       }
 
+      assert(oldest != cache.end());
+      (*oldest).second.first.reset(); // explicit reset of smart pointer
       cache.erase(oldest);
+      debug(TM, "local cache: %d entries after remove\n", cache.size());
 
       GlobalTileCache & gtc = GlobalTileCache::get_instance();
       gtc.release_cache_memory(this, get_image_size());
