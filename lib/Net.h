@@ -67,15 +67,14 @@ namespace degate {
      *  if the object has an invalid object ID.
      */
 
-    virtual void add_object(ConnectedLogicModelObject_shptr o) 
-      throw(InvalidObjectIDException);
+    virtual void add_object(ConnectedLogicModelObject_shptr o);
 
 
     /**
      * Add an object to the net.
      * @see add_object()
      */
-    virtual void add_object(object_id_t oid) throw(InvalidObjectIDException);
+    virtual void add_object(object_id_t oid);
   
 
     /**
@@ -86,16 +85,14 @@ namespace degate {
      * @see add_object()
      */
 
-    virtual void remove_object(ConnectedLogicModelObject_shptr o) 
-      throw(CollectionLookupException, InvalidObjectIDException);
+    virtual void remove_object(ConnectedLogicModelObject_shptr o);
 
     /**
      * Remove object.
      * @see remove_object()
      */
 
-    virtual void remove_object(object_id_t o) 
-      throw(CollectionLookupException, InvalidObjectIDException);
+    virtual void remove_object(object_id_t o);
 
     
   public:

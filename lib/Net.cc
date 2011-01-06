@@ -43,8 +43,7 @@ Net::connection_iterator Net::end() {
   return connections.end(); 
 }
 
-void Net::remove_object(object_id_t oid) 
-  throw(CollectionLookupException, InvalidObjectIDException) {
+void Net::remove_object(object_id_t oid) {
 
   if(oid == 0) 
     throw InvalidObjectIDException("The object that has to be "
@@ -59,13 +58,12 @@ void Net::remove_object(object_id_t oid)
 				    "because it is not in the net.");
 }
 
-void Net::remove_object(ConnectedLogicModelObject_shptr o) 
-  throw(CollectionLookupException, InvalidObjectIDException) {
+void Net::remove_object(ConnectedLogicModelObject_shptr o) {
   remove_object(o->get_object_id());
 }
 
 
-void Net::add_object(object_id_t oid) throw(InvalidObjectIDException) {
+void Net::add_object(object_id_t oid) {
   if(oid == 0) 
     throw InvalidObjectIDException("The object that has to be "
 				   "added to the net has no object ID.");
@@ -73,8 +71,7 @@ void Net::add_object(object_id_t oid) throw(InvalidObjectIDException) {
     connections.insert(oid);
 }
 
-void Net::add_object(ConnectedLogicModelObject_shptr o) 
-  throw(InvalidObjectIDException) {
+void Net::add_object(ConnectedLogicModelObject_shptr o) {
   add_object(o->get_object_id());
 }
 
