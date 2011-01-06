@@ -30,12 +30,26 @@
 
 namespace degate {
 
+  /**
+   * This class represents a collection of highlighted objects.
+   */
   class HlObjectSet : public ObjectSet {
+
+  private:
+    void highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
+				    LogicModel_shptr lmodel);
+    void unhighlight_adjacent_objects();
+
+    void highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state);
+
+  private:
+    std::list<ConnectedLogicModelObject_shptr> adjacent_objects;
 
   public: 
     void clear();
-    void highlight(bool state = true);
     void add(degate::PlacedLogicModelObject_shptr object);
+    void add(degate::PlacedLogicModelObject_shptr object,
+	     LogicModel_shptr lmodel);
     void remove(degate::PlacedLogicModelObject_shptr object);
   };
 }

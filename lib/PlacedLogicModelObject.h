@@ -32,8 +32,9 @@ namespace degate {
   /**
    * Represents a placeable object.
    *
-   * Any class that represents a somewhere placeable objects should inherit from that base class.
-   * The term "placed objects" is related to real existent physical structures on the chip surface
+   * Any class that represents a somewhere placeable objects should inherit
+   * from that base class. The term "placed objects" is related to real
+   * existent physical structures on the chip surface
    * (e.g. wire, vias, ...) as well as logical objects (e.g. annotations).
    */
 
@@ -41,9 +42,17 @@ namespace degate {
 				 public LogicModelObjectBase,
 				 public ColoredObject {
 
+  public:
+
+    enum HIGHLIGHTING_STATE {
+      HLIGHTSTATE_NOT = 0,
+      HLIGHTSTATE_DIRECT = 1,
+      HLIGHTSTATE_ADJACENT = 2
+    };
+
   private:
 
-    bool select_state;
+    HIGHLIGHTING_STATE highlight_state;
     std::tr1::shared_ptr<Layer> layer;
 
   protected:
@@ -69,16 +78,22 @@ namespace degate {
     virtual ~PlacedLogicModelObject();
 
     /**
-     * A placed object is selectable. You can ask for its selection state with this method.
+     * A placed object is highlightable. You can ask for its
+     * state with this method.
      */
 
-    virtual bool is_selected() const;
-  
+    virtual HIGHLIGHTING_STATE get_highlighted() const;
+
+    /**
+     * Check if an object is highlighted at all.
+     */
+    virtual bool is_highlighted() const;
+
     /**
      * Set the selection state.
      */
 
-    virtual void set_selected(bool select_state = true);
+    virtual void set_highlighted(HIGHLIGHTING_STATE state);
   
     /**
      * Set the layer on which the object is placed.

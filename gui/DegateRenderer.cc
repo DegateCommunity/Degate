@@ -45,16 +45,18 @@ static inline uint32_t highlight_color(uint32_t col) {
 }
 
 
-// @todo fix
-static inline uint32_t highlight_color_by_state(uint32_t col, bool state) {
-  if(!state) return col;
-  else return highlight_color(col);
-  /*
-  if(state == SELECT_STATE_NOT) return col;
-  else if(state == SELECT_STATE_DIRECT) return highlight_color(highlight_color(col));
-  else if(state == SELECT_STATE_ADJ) return highlight_color(col);
-  return col;
-  */
+static inline uint32_t highlight_color_by_state(uint32_t col, 
+						PlacedLogicModelObject::HIGHLIGHTING_STATE state) {
+  
+  switch(state) {
+  case PlacedLogicModelObject::HLIGHTSTATE_DIRECT:
+    return highlight_color(highlight_color(col));
+  case PlacedLogicModelObject::HLIGHTSTATE_ADJACENT:    
+    return highlight_color(col);
+  case PlacedLogicModelObject::HLIGHTSTATE_NOT:
+  default:
+    return col;
+  }  
 }
 
 
@@ -345,12 +347,13 @@ void DegateRenderer::render_vias() {
       uint32_t col = via->get_direction() == Via::DIRECTION_UP ? 
 	default_colors[DEFAULT_COLOR_VIA_UP] : default_colors[DEFAULT_COLOR_VIA_DOWN];
 
-      if(via->is_selected()) {
-	col = highlight_color_by_state(col, true);
+      if(via->is_highlighted()) {
+	col = highlight_color_by_state(col, via->get_highlighted());
 	diameter <<= 2;
       }
       
-      draw_circle(via->get_x(), via->get_y(), diameter, col);
+      draw_circle(via->get_x(), via->get_y(), diameter, col, 
+		  via->is_connected());
     }
 
   }
@@ -405,7 +408,7 @@ void DegateRenderer::render_wires() {
       color_t col = wire->get_frame_color();
       if(col == 0) col = default_colors[DEFAULT_COLOR_WIRE];
 
-      set_color(highlight_color_by_state(col, wire->is_selected()));
+      set_color(highlight_color_by_state(col, wire->get_highlighted()));
 
       
       glLineWidth((double)wire->get_diameter() / get_scaling());
@@ -430,11 +433,12 @@ void DegateRenderer::render_wires() {
   glEndList();
 }
 
-void DegateRenderer::render_annotations(bool details) {
+void DegateRenderer::render_annotations(bool render_into_details_list) {
 
   if(lmodel == NULL) return;
 
-  glNewList(details ? annotation_details_dlist : annotations_dlist, GL_COMPILE);
+  glNewList(render_into_details_list ? annotation_details_dlist : 
+	    annotations_dlist, GL_COMPILE);
 
   for(Layer::object_iterator iter = layer->objects_begin();
       iter != layer->objects_end(); ++iter) {
@@ -446,8 +450,8 @@ void DegateRenderer::render_annotations(bool details) {
       if(fill_col == 0) fill_col = default_colors[DEFAULT_COLOR_ANNOTATION];
       if(frame_col == 0) frame_col = fill_col;
 
-      if(!details) {
-	set_color(highlight_color_by_state(fill_col, a->is_selected()));
+      if(!render_into_details_list) {
+	set_color(highlight_color_by_state(fill_col, a->get_highlighted()));
 	glLineWidth(1);
 	glBegin(GL_QUADS);
 	glVertex2i(a->get_min_x(), a->get_min_y());
@@ -456,7 +460,7 @@ void DegateRenderer::render_annotations(bool details) {
 	glVertex2i(a->get_min_x(), a->get_max_y());
 	glEnd();
     
-	set_color(highlight_color_by_state(frame_col, a->is_selected()));
+	set_color(highlight_color_by_state(frame_col, a->get_highlighted()));
 	glBegin(GL_LINE_LOOP);
 	glVertex2i(a->get_min_x(), a->get_min_y());
 	glVertex2i(a->get_max_x(), a->get_min_y());
@@ -466,7 +470,9 @@ void DegateRenderer::render_annotations(bool details) {
       }
       else {
 	if(a->has_name())
-	  draw_string(a->get_min_x()+2, a->get_min_y()+2 + get_font_height(), a->get_name(), 
+	  draw_string(a->get_min_x()+2, 
+		      a->get_min_y()+2 + get_font_height(), 
+		      a->get_name(), 
 		      a->get_width() > 4 ? a->get_width() - 4 : a->get_width());
       }
 
@@ -476,30 +482,34 @@ void DegateRenderer::render_annotations(bool details) {
 }
 
 
-void DegateRenderer::render_gates(bool details) {
+void DegateRenderer::render_gates(bool render_into_details_list) {
 
   if(lmodel == NULL) return;
 
-  glNewList(details ? gate_details_dlist : gates_dlist, GL_COMPILE);
+  glNewList(render_into_details_list ? 
+	    gate_details_dlist : gates_dlist, GL_COMPILE);
 
   for(LogicModel::gate_collection::iterator iter = lmodel->gates_begin();
       iter != lmodel->gates_end(); ++iter) {
-    render_gate(iter->second, details);
+    render_gate(iter->second, render_into_details_list);
   }
 
   glEndList(); 
 }
 
-void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
+void DegateRenderer::render_gate(degate::Gate_shptr gate, 
+				 bool render_into_details_list) {
 
-  if(!details) {
-    color_t fill_col = gate->has_template() ? gate->get_gate_template()->get_fill_color() : 0;
-    color_t frame_col = gate->has_template() ? gate->get_gate_template()->get_frame_color() : 0;
+  if(!render_into_details_list) {
+    color_t fill_col = gate->has_template() ? 
+      gate->get_gate_template()->get_fill_color() : 0;
+    color_t frame_col = gate->has_template() ? 
+      gate->get_gate_template()->get_frame_color() : 0;
 
     if(fill_col == 0) fill_col = default_colors[DEFAULT_COLOR_GATE];
     if(frame_col == 0) frame_col = fill_col;
 
-    set_color(highlight_color_by_state(fill_col, gate->is_selected()));
+    set_color(highlight_color_by_state(fill_col, gate->get_highlighted()));
     glLineWidth(1);
     glBegin(GL_QUADS);
     glVertex2i(gate->get_min_x(), gate->get_min_y());
@@ -508,7 +518,7 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
     glVertex2i(gate->get_min_x(), gate->get_max_y());
     glEnd();
     
-    set_color(highlight_color_by_state(frame_col, gate->is_selected()));
+    set_color(highlight_color_by_state(frame_col, gate->get_highlighted()));
     glBegin(GL_LINE_LOOP);
     glVertex2i(gate->get_min_x(), gate->get_min_y());
     glVertex2i(gate->get_max_x(), gate->get_min_y());
@@ -518,22 +528,28 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
 
   }
 
-  if(details && gate->has_name())
-    draw_string(gate->get_min_x()+2, 
-		gate->get_min_y()+2 + get_font_height() + 1, gate->get_name(), 
-		gate->get_width() > 4 ? gate->get_width() - 4 : gate->get_width());
+  if(render_into_details_list && gate->has_name())
+    draw_string(gate->get_min_x() + 2, 
+		gate->get_min_y() + 2 + get_font_height() + 1, 
+		gate->get_name(), 
+		gate->get_width() > 4 ? 
+		gate->get_width() - 4 : gate->get_width());
 
   if(gate->has_template()) {
 
     GateTemplate_shptr tmpl = gate->get_gate_template();
 
     // render names for type and instance
-    if(details && gate->get_gate_template()->has_name())
-      draw_string(gate->get_min_x()+2, gate->get_min_y()+2, tmpl->get_name(), 
-		  gate->get_width() > 4 ? gate->get_width() - 4 : gate->get_width());
+    if(render_into_details_list && gate->get_gate_template()->has_name())
+      draw_string(gate->get_min_x() + 2, 
+		  gate->get_min_y() + 2, 
+		  tmpl->get_name(), 
+		  gate->get_width() > 4 ? 
+		  gate->get_width() - 4 : gate->get_width());
 
     if(gate->has_orientation()) {
-      for(Gate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter) {
+      for(Gate::port_iterator iter = gate->ports_begin(); 
+	  iter != gate->ports_end(); ++iter) {
 	GatePort_shptr port = *iter;
 	GateTemplatePort_shptr tmpl_port = port->get_template_port();
 	
@@ -541,17 +557,24 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate, bool details) {
 	  unsigned int x = port->get_x(), y = port->get_y();
 	  unsigned int port_size = port->get_diameter();
 	  color_t port_color = tmpl_port->get_fill_color() == 0 ? 
-	    default_colors[DEFAULT_COLOR_GATE_PORT] : tmpl_port->get_fill_color();
+	    default_colors[DEFAULT_COLOR_GATE_PORT] : 
+	    tmpl_port->get_fill_color();
 
-	  if(!details && port->is_selected()) {
-	    port_color = highlight_color_by_state(port_color, true);
-	    port_size *= 2;
+	  if(!render_into_details_list) {
+
+	    if(port->is_highlighted()) {
+	      port_color = highlight_color_by_state(port_color, 
+						    port->get_highlighted());
+	      port_size *= 2;
+	    }
+	    
+	    draw_circle(x, y, port_size, port_color, port->is_connected());
+	  }
+	  else { // render_into_details_list
+	    if(tmpl_port->has_name()) 
+	      draw_string(x+2, y+2, tmpl_port->get_name());
 	  }
 
-	  if(!details) draw_circle(x, y, port_size, port_color);
-
-	  if(details && tmpl_port->has_name()) draw_string(x+2, y+2, tmpl_port->get_name());
-	  
 	}
       }
     }

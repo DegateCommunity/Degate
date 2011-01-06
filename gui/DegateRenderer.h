@@ -195,10 +195,10 @@ public:
 
   void render_background();
 
-  void render_gates(bool detail = false);
-  void render_gate(degate::Gate_shptr gate, bool details);
+  void render_gates(bool render_into_details_list = false);
+  void render_gate(degate::Gate_shptr gate, bool render_into_details_list);
 
-  void render_annotations(bool detail = false);
+  void render_annotations(bool render_into_details_list = false);
 
 
 

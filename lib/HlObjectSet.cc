@@ -28,22 +28,82 @@ using namespace degate;
 
 
 void HlObjectSet::clear() {
-  highlight(false);
+  highlight(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+  unhighlight_adjacent_objects();
+
   ObjectSet::clear();
 }
 
-void HlObjectSet::highlight(bool state) {
-  for(iterator it = begin(); it != end(); ++it) (*it)->set_selected(state);
+void HlObjectSet::highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state) {
+  for(iterator it = begin(); it != end(); ++it) 
+    (*it)->set_highlighted(state);
 }
 
 
 void HlObjectSet::add(std::tr1::shared_ptr<PlacedLogicModelObject> object) {
   ObjectSet::add(object);
-  object->set_selected();
+  object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_DIRECT);
+}
+
+void HlObjectSet::add(std::tr1::shared_ptr<PlacedLogicModelObject> object,
+		      LogicModel_shptr lmodel) {
+  add(object);
+
+  if(size() == 1) {
+    if(ConnectedLogicModelObject_shptr o = 
+       std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(object) ) {
+      // highlight adjacent objects     
+      highlight_adjacent_objects(o, lmodel);
+    }
+  }
+  else {
+    unhighlight_adjacent_objects();
+  }
 }
 
 
+void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
+					     LogicModel_shptr lmodel) {
+  Net_shptr net = o->get_net();
+  if(net == NULL) return;
+
+  // iterate over net
+  BOOST_FOREACH(object_id_t oid, *net) {
+    PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
+    ConnectedLogicModelObject_shptr clo =
+      std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
+    assert(clo != NULL);
+    // remember connnected objects in list
+    if(o != clo) {
+
+      assert(clo->get_highlighted() == 
+	     PlacedLogicModelObject::HLIGHTSTATE_NOT);
+
+      clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
+
+      adjacent_objects.push_back(clo);
+    }
+  }
+}
+
+void HlObjectSet::unhighlight_adjacent_objects() {
+  // iterate over list
+  BOOST_FOREACH(ConnectedLogicModelObject_shptr clo, adjacent_objects) {
+    assert(clo->get_highlighted() == 
+	   PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
+
+    clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+  }
+  adjacent_objects.clear();
+}
+
 void HlObjectSet::remove(std::tr1::shared_ptr<PlacedLogicModelObject> object) {
   ObjectSet::remove(object);
-  object->set_selected(false);
+  object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+  
+  /* If there is only a single object highlighted, we must call
+     unhighlight. If adjacent objects are not highlighted, calling
+     unhighlight will not harm and even might fix invalid situations.
+  */   
+  unhighlight_adjacent_objects();
 }

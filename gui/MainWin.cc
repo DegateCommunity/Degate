@@ -1359,7 +1359,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
     // add to selection
     if(plo != NULL) {
       selected_objects.add(plo);
-      highlighted_objects.add(plo);
+      highlighted_objects.add(plo, lmodel);
     }
   }
  

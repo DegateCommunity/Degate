@@ -71,6 +71,14 @@ namespace degate {
      * Get a shared pointer to the net.
      */
     virtual Net_shptr get_net();
+
+    /**
+     * Check if an connectable object is connected to
+     * another connectable object.
+     * @return Returns true, if this object is connected to
+     *   another object. Else false is returned.
+     */
+    virtual bool is_connected() const;
   };
 
 }

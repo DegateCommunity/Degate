@@ -205,16 +205,35 @@ void OpenGLRendererBase::set_color(color_t col) {
   glColor4ub(MASK_R(col), MASK_G(col), MASK_B(col), MASK_A(col));
 }
 
-void OpenGLRendererBase::draw_circle(int x, int y, int diameter, color_t col) {
+void OpenGLRendererBase::draw_circle(int x, int y, int diameter, 
+				     color_t col,
+				     bool render_distant_outline) {
   set_color(col);
   int r = diameter >> 1;
 
+  int 
+    min_x = x - r,
+    min_y = y - r,
+    max_x = x + r,
+    max_y = y + r;
+
   glBegin(GL_QUADS);
-  glVertex2i(x - r, y - r);
-  glVertex2i(x + r, y - r);
-  glVertex2i(x + r, y + r);
-  glVertex2i(x - r, y + r);
+  glVertex2i(min_x, min_y);
+  glVertex2i(max_x, min_y);
+  glVertex2i(max_x, max_y);
+  glVertex2i(min_x, max_y);
   glEnd();
+
+  if(render_distant_outline) {
+    glLineWidth(1);
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(min_x - 2, min_y - 2);
+    glVertex2i(max_x + 2, min_y - 2);
+    glVertex2i(max_x + 2, max_y + 2);
+    glVertex2i(min_x - 2, max_y + 2);
+    glEnd();
+  }
+
     /*
   glBegin(GL_POLYGON);
   for(float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / 6.0)

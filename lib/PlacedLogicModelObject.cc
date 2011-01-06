@@ -28,18 +28,22 @@
 
 using namespace degate;
 
-PlacedLogicModelObject::PlacedLogicModelObject() : select_state(false) {
+PlacedLogicModelObject::PlacedLogicModelObject() : highlight_state(HLIGHTSTATE_NOT) {
 }
 
 PlacedLogicModelObject::~PlacedLogicModelObject() {
 }
 
-bool PlacedLogicModelObject::is_selected() const { 
-  return select_state; 
+PlacedLogicModelObject::HIGHLIGHTING_STATE PlacedLogicModelObject::get_highlighted() const { 
+  return highlight_state; 
 }
 
-void PlacedLogicModelObject::set_selected(bool select_state) {
-  this->select_state = select_state;
+bool PlacedLogicModelObject::is_highlighted() const { 
+  return highlight_state != PlacedLogicModelObject::HLIGHTSTATE_NOT; 
+}
+
+void PlacedLogicModelObject::set_highlighted(PlacedLogicModelObject::HIGHLIGHTING_STATE state) {
+  highlight_state = state;
 }
 
 

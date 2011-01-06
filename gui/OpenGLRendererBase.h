@@ -62,7 +62,8 @@ private:
      *   then the font size is adjusted, so that the string fits. If \p max_str_width == 0
      *   no adjustment will be performed.
      */
-    void draw_string(int x, int y, std::string const& str, unsigned int max_str_width = 0);
+    void draw_string(int x, int y, std::string const& str, 
+		     unsigned int max_str_width = 0);
 
   private:
 
@@ -96,7 +97,13 @@ protected:
 
 
   void set_color(degate::color_t col);
-  void draw_circle(int x, int y, int diameter, degate::color_t col);
+
+  /**
+  * @param render_distant_outline If it is set, the renderer will draw
+  *   another circle around the centered filled circle.
+  */
+  void draw_circle(int x, int y, int diameter, degate::color_t col,
+		   bool render_distant_outline = false);
 
   /**
    * Draw a string.
