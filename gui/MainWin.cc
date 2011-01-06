@@ -1311,17 +1311,18 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
   if(main_project == NULL) return;
 
   bool add_to_selection = false;
+  const int max_distance = 3;
 
   // get info about selected object
   LogicModel_shptr lmodel = main_project->get_logic_model();
   Layer_shptr layer = lmodel->get_current_layer();
-  PlacedLogicModelObject_shptr plo = layer->get_object_at_position(real_x, real_y);
+  PlacedLogicModelObject_shptr plo = layer->get_object_at_position(real_x, real_y, max_distance);
 
-  // check if there is a gate on the logic layer
+  // check if there is a gate or gate port on the logic layer
   if(plo == NULL) {
     try {
       layer = get_first_logic_layer(lmodel);
-      plo = layer->get_object_at_position(real_x, real_y);
+      plo = layer->get_object_at_position(real_x, real_y, max_distance);
     }
     catch(CollectionLookupException const& ex) {
     }
