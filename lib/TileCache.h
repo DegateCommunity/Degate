@@ -31,6 +31,7 @@
 #include <tr1/memory>
 #include <ctime>
 #include <utility> // for make_pair
+#include <iostream>
 
 #ifdef __APPLE__
   #include <sys/time.h> // for gettimeofday
@@ -131,9 +132,6 @@ namespace degate {
       }
 
       printf("\n");
-      MemoryMapDirectory & mmd = MemoryMapDirectory::get_instance();
-      mmd.print();
-
     }
 
     bool request_cache_memory(TileCacheBase * requestor, size_t amount) {
