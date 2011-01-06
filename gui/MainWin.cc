@@ -1311,7 +1311,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
   if(main_project == NULL) return;
 
   bool add_to_selection = false;
-  const int max_distance = 3;
+  const int max_distance = 4;
 
   // get info about selected object
   LogicModel_shptr lmodel = main_project->get_logic_model();

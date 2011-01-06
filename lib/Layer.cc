@@ -232,13 +232,17 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
   debug(TM, "get_object_at_position %d, %d (max-dist: %d)", x, y, max_distance);
   PlacedLogicModelObject_shptr plo;
 
-  for(qt_region_iterator iter = quadtree.region_iter_begin(x, x, y, y);
+  for(qt_region_iterator iter = quadtree.region_iter_begin(x - max_distance, 
+							   x + max_distance, 
+							   y - max_distance, 
+							   y + max_distance);
       iter != quadtree.region_iter_end(); ++iter) {
 
     if((*iter)->in_shape(x, y, max_distance)) {
       plo = *iter;
     }
 
+    /* Prefer gate ports */
     if(std::tr1::dynamic_pointer_cast<GatePort>(*iter) != NULL) {
       return *iter;
     }
