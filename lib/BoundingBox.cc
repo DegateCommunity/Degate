@@ -58,8 +58,9 @@ BoundingBox const& BoundingBox::get_bounding_box() const {
   return *this;
 }
 
-bool BoundingBox::in_shape(int x, int y) const {
-  return (x >= min_x && x <= max_x && y >= min_y && y <= max_y) ? true : false;
+bool BoundingBox::in_shape(int x, int y, int max_distance) const {
+  return (x >= min_x - max_distance && x <= max_x + max_distance && 
+	  y >= min_y - max_distance && y <= max_y + max_distance) ? true : false;
 }
 
 bool BoundingBox::operator==(const BoundingBox& other) const {

@@ -40,10 +40,10 @@ Circle::Circle(int x, int y, unsigned int diameter) {
 }
 
 
-bool Circle::in_shape(int x, int y) const {
+bool Circle::in_shape(int x, int y, int max_distance) const {
   int delta_x = this->x - x;
   int delta_y = this->y - y;
-  return sqrt((double)(delta_x * delta_x + delta_y * delta_y)) <= diameter;
+  return sqrt((double)(delta_x * delta_x + delta_y * delta_y)) <= diameter + max_distance;
 }
 
 bool Circle::in_bounding_box(BoundingBox const& bbox) const {

@@ -298,8 +298,8 @@ namespace degate {
 
     
     
-    bool in_shape(int x, int y) const {
-      return Rectangle::in_shape(x,y);
+    bool in_shape(int x, int y, int max_distance = 0) const {
+      return Rectangle::in_shape(x, y, max_distance);
     }
 
     void shift_x(int delta_x) {

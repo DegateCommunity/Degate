@@ -34,26 +34,13 @@ namespace degate {
     
     
   public:
-    
-    /**
-     * The ctor for an empty shape.
-     */
-
-    //AbstractShape() {}
-    
-    
-    /**
-     * The dtor for a shape.
-     */
-
-    //virtual ~AbstractShape() {}
-    
+      
 
     /**
      * Check in the Point with coordinates x and y is within the area of the shape.
      */
 
-    virtual bool in_shape(int x, int y) const = 0;
+    virtual bool in_shape(int x, int y, int max_distance = 0) const = 0;
 
 
     /**

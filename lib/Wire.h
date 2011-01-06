@@ -92,8 +92,8 @@ namespace degate {
       return Line::get_bounding_box();
     }
 
-    virtual bool in_shape(int x, int y) const {
-      return Line::in_shape(x, y);
+    virtual bool in_shape(int x, int y, int max_distance = 0) const {
+      return Line::in_shape(x, y, max_distance);
     }
 
   protected:

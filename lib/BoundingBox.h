@@ -42,7 +42,7 @@ class BoundingBox {
   virtual ~BoundingBox();
 
   BoundingBox const& get_bounding_box() const;
-  bool in_shape(int x, int y) const;
+  bool in_shape(int x, int y, int max_distance = 0) const;
 
   /**
    * Check if this bounding box is completly within the bounding box given as parameter.

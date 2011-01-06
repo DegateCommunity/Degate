@@ -48,7 +48,7 @@ Line::Line(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diamete
   calculate_bounding_box();
 }
 
-bool Line::in_shape(int x, int y) const {
+bool Line::in_shape(int x, int y, int max_distance) const {
 	
   /*
     How to check if a point is on a line:
@@ -66,7 +66,7 @@ bool Line::in_shape(int x, int y) const {
   */
   
   if(is_vertical() || is_horizontal()) {
-    return bounding_box.in_shape(x, y);
+    return bounding_box.in_shape(x, y, max_distance);
   }
   else {
     
@@ -79,7 +79,7 @@ bool Line::in_shape(int x, int y) const {
     double n = (double)from_y - m * (double)from_x;
     double y_dash = m * (double) x + n;
     
-    if(fabs(y_dash - y) <= diameter / 2)
+    if(fabs(y_dash - y) <= diameter / 2 + max_distance)
       return true;
     else
       return false;

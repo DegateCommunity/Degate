@@ -57,7 +57,7 @@ namespace degate {
 	
     virtual ~Line() {}
 	
-    virtual bool in_shape(int x, int y) const;
+    virtual bool in_shape(int x, int y, int max_distance = 0) const;
     virtual bool in_bounding_box(BoundingBox const& bbox) const;
     virtual BoundingBox const& get_bounding_box() const;
 

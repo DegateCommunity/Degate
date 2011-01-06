@@ -169,8 +169,8 @@ namespace degate {
       return Rectangle::get_bounding_box();
     }
 
-    virtual bool in_shape(int x, int y) const {
-      return Rectangle::in_shape(x, y);
+    virtual bool in_shape(int x, int y, int max_distance = 0) const {
+      return Rectangle::in_shape(x, y, max_distance);
     }
 
 

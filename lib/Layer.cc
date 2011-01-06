@@ -227,15 +227,15 @@ void Layer::notify_shape_change(object_id_t object_id)
 }
 
 
-PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y) {
+PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance) {
 
-  debug(TM, "get_object_at_position %d, %d", x, y);
+  debug(TM, "get_object_at_position %d, %d (max-dist: %d)", x, y, max_distance);
   PlacedLogicModelObject_shptr plo;
 
   for(qt_region_iterator iter = quadtree.region_iter_begin(x, x, y, y);
       iter != quadtree.region_iter_end(); ++iter) {
 
-    if((*iter)->in_shape(x, y)) {
+    if((*iter)->in_shape(x, y, max_distance)) {
       plo = *iter;
     }
 
