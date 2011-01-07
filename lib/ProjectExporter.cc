@@ -261,6 +261,7 @@ void ProjectExporter::add_colors(xmlpp::Element* prj_elem, Project_shptr prj) {
     case DEFAULT_COLOR_GATE: o = "gate"; break;
     case DEFAULT_COLOR_GATE_FRAME: o = "gate-frame"; break;
     case DEFAULT_COLOR_GATE_PORT: o = "gate-port"; break;
+    case DEFAULT_COLOR_TEXT: o = "text"; break;
     default:
       throw std::runtime_error("Invalid object type.");
     }

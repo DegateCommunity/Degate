@@ -243,7 +243,8 @@ void OpenGLRendererBase::draw_circle(int x, int y, int diameter,
 }
 
 
-void OpenGLRendererBase::draw_string(int x, int y, std::string const& str, unsigned int max_str_width) {
+void OpenGLRendererBase::draw_string(int x, int y, degate::color_t col, std::string const& str, unsigned int max_str_width) {
+  set_color(col);
   FontRenderingHelper::get_instance().draw_string(x, y, str, max_str_width);
 }
 
@@ -282,7 +283,9 @@ OpenGLRendererBase::FontRenderingHelper::~FontRenderingHelper() {
 
    --------------------------------------------------------- */
 
-void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y, std::string const& str, unsigned int max_str_width) {
+void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y,
+							  std::string const& str,
+							  unsigned int max_str_width) {
 
   double adjusted_scaling = 1;
 
@@ -299,8 +302,6 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y, std::str
     if(string_width >= max_str_width)
       adjusted_scaling = (double)max_str_width / (double)string_width;
   }
-
-  glColor4f(0,0,0,1);
 
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
@@ -324,7 +325,6 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y, std::str
   glPopMatrix();
   glPopAttrib();          
 
-
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
 
@@ -338,7 +338,7 @@ void OpenGLRendererBase::FontRenderingHelper::init_font(const char * fname,
 
   font_textures = new GLuint[128];
 
-  scale_font = 0.5;
+  scale_font = 1;//0.5;
   font_height = h;
 
   if(FT_Init_FreeType( &library )) throw DegateRuntimeException("FT_Init_FreeType failed");
@@ -379,25 +379,32 @@ unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Fa
   int height = next_power_of_two( bitmap.rows );
 
   GLubyte* expanded_data = new GLubyte[ 2 * width * height];
+  memset(expanded_data, 0, 2 * width * height);
 
-  for(int j=0; j < height; j++) {
+  for(int j=0; j < height; j++) { // y
     for(int i=0; i < width; i++){
       unsigned int dst_offs = 2*(i+j*width);
-      expanded_data[dst_offs] = 255;
-      expanded_data[dst_offs + 1] =  (i>=bitmap.width || j>=bitmap.rows) ?
+      GLubyte v = (i>=bitmap.width || j>=bitmap.rows) ?
 	0 : bitmap.buffer[i + bitmap.width*j];
-    }
-  }
 
+      if(v == 0) printf(".. ");
+      else printf("%02X ", v);
+
+      expanded_data[dst_offs] =  0; // XXX was 255;
+      expanded_data[dst_offs + 1] = 255-v; //v > 128 ? 0 : 255; //255 - v; 
+    }
+    printf("\n");
+  }
+  printf("\n\n");
   
   glBindTexture( GL_TEXTURE_2D, tex_base[(int)ch]);
   assert(opengl_error_check());
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, DEFAULT_FILTER);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, DEFAULT_FILTER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   assert(glGetError() == GL_NO_ERROR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   assert(glGetError() == GL_NO_ERROR);
 
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -420,19 +427,23 @@ unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Fa
   float
     x=((float)bitmap.width / (float)width),
     y=((float)(bitmap.rows) / (float)height);
-  glBegin(GL_QUADS);
+
+  glBegin(GL_QUADS);  
   glTexCoord2f(0, 0); glVertex2f(0,0);
-  glTexCoord2f(x, 0); glVertex2f(bitmap.width, 0);
-  glTexCoord2f(x, y); glVertex2f(bitmap.width, bitmap.rows);
-  glTexCoord2f(0, y); glVertex2f(0, bitmap.rows);
+  glTexCoord2f(x, 0); glVertex2f(bitmap.width -1 , 0);
+  glTexCoord2f(x, y); glVertex2f(bitmap.width -1, bitmap.rows - 1);
+  glTexCoord2f(0, y); glVertex2f(0, bitmap.rows -1);
   glEnd();
   glPopMatrix();
 
-  glTranslatef(face->glyph->advance.x >> 6 ,0,0);
+  glTranslatef(face->glyph->advance.x >> 6, 0, 0);
 
   glEndList();
 
   FT_Done_Glyph(glyph);
+
+  //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  assert(glGetError() == GL_NO_ERROR);
 
   return width;
 }

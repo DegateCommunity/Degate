@@ -213,6 +213,7 @@ void Project::init_default_values() {
   default_colors[DEFAULT_COLOR_GATE] = 0xa0303030;
   default_colors[DEFAULT_COLOR_GATE_FRAME] = 0xa032b0d9;
   default_colors[DEFAULT_COLOR_GATE_PORT] = 0xff0000ff;
+  default_colors[DEFAULT_COLOR_TEXT] = 0xffffffff;
 
   set_changed(false);
   

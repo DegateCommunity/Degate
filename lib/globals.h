@@ -155,7 +155,8 @@ namespace degate {
     DEFAULT_COLOR_ANNOTATION_FRAME,
     DEFAULT_COLOR_GATE,
     DEFAULT_COLOR_GATE_FRAME,
-    DEFAULT_COLOR_GATE_PORT
+    DEFAULT_COLOR_GATE_PORT,
+    DEFAULT_COLOR_TEXT
   };
 
   typedef std::map<ENTITY_COLOR, color_t> default_colors_t;

@@ -109,12 +109,13 @@ protected:
    * Draw a string.
    * @param x x-position
    * @param y y-position
+   * @param col font color
    * @param str The string, that should be printed.
    * @param max_str_width The maximum string width. If the real string width is larger,
    *   then the font size is adjusted, so that the string fits. If \p max_str_width == 0
    *   no adjustment will be performed.
    */
-  void draw_string(int x, int y, std::string const& str, unsigned int max_str_width = 0);
+  void draw_string(int x, int y, degate::color_t col, std::string const& str, unsigned int max_str_width = 0);
 
   unsigned int get_font_height() const;
 

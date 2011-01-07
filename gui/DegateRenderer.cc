@@ -472,6 +472,7 @@ void DegateRenderer::render_annotations(bool render_into_details_list) {
 	if(a->has_name())
 	  draw_string(a->get_min_x()+2, 
 		      a->get_min_y()+2 + get_font_height(), 
+		      default_colors[DEFAULT_COLOR_TEXT],
 		      a->get_name(), 
 		      a->get_width() > 4 ? a->get_width() - 4 : a->get_width());
       }
@@ -531,6 +532,7 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate,
   if(render_into_details_list && gate->has_name())
     draw_string(gate->get_min_x() + 2, 
 		gate->get_min_y() + 2 + get_font_height() + 1, 
+		default_colors[DEFAULT_COLOR_TEXT],
 		gate->get_name(), 
 		gate->get_width() > 4 ? 
 		gate->get_width() - 4 : gate->get_width());
@@ -543,6 +545,7 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate,
     if(render_into_details_list && gate->get_gate_template()->has_name())
       draw_string(gate->get_min_x() + 2, 
 		  gate->get_min_y() + 2, 
+		  default_colors[DEFAULT_COLOR_TEXT],
 		  tmpl->get_name(), 
 		  gate->get_width() > 4 ? 
 		  gate->get_width() - 4 : gate->get_width());
@@ -572,7 +575,8 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate,
 	  }
 	  else { // render_into_details_list
 	    if(tmpl_port->has_name()) 
-	      draw_string(x+2, y+2, tmpl_port->get_name());
+	      draw_string(x+2, y+2,
+			  default_colors[DEFAULT_COLOR_TEXT], tmpl_port->get_name());
 	  }
 
 	}

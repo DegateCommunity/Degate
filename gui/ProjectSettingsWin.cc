@@ -130,6 +130,10 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
     get_widget("colorbutton_gate_port", pCButton);
     assert(pCButton != NULL);
     if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_GATE_PORT));
+
+    get_widget("colorbutton_text", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_TEXT));
    
   }
 }
@@ -201,6 +205,8 @@ bool ProjectSettingsWin::run() {
 			       get_color_for_button("colorbutton_gate_frame"));
     project->set_default_color(DEFAULT_COLOR_GATE_PORT, 
 			       get_color_for_button("colorbutton_gate_port"));
+    project->set_default_color(DEFAULT_COLOR_TEXT, 
+			       get_color_for_button("colorbutton_text"));
 
 
     project->set_changed();
