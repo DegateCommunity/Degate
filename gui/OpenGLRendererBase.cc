@@ -256,7 +256,7 @@ OpenGLRendererBase::FontRenderingHelper::FontRenderingHelper() {
   try {
     char font_file[PATH_MAX];
     snprintf(font_file, PATH_MAX, "%s/FreeSans.ttf", getenv("DEGATE_HOME"));
-    init_font(font_file, 16);
+    init_font(font_file, 18);
   }
   catch(degate::DegateRuntimeException const& ex) {
     // print and ignore exceptions
