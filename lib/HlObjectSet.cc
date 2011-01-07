@@ -89,8 +89,6 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
 void HlObjectSet::unhighlight_adjacent_objects() {
   // iterate over list
   BOOST_FOREACH(ConnectedLogicModelObject_shptr clo, adjacent_objects) {
-    assert(clo->get_highlighted() ==
-	   PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
 
     clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
   }
