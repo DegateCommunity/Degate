@@ -331,6 +331,11 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
   glEnd();
   assert(error_check());
 
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  assert(glGetError() == GL_NO_ERROR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  assert(glGetError() == GL_NO_ERROR);
+
   return texture;
 }
 
