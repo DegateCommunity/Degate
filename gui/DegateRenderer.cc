@@ -262,8 +262,8 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
   // real pixel coordinates
   unsigned int min_x = x * pre_scaling;
   unsigned int min_y = y * pre_scaling;
-  unsigned int max_x = min_x + tile_width * pre_scaling + 1;
-  unsigned int max_y = min_y + tile_width * pre_scaling + 1;
+  unsigned int max_x = min_x + tile_width * pre_scaling;
+  unsigned int max_y = min_y + tile_width * pre_scaling;
 
   guint32 * data = new guint32[tile_width * tile_width];
   memset(data, 0, tile_width * tile_width * sizeof(guint32));
@@ -287,9 +287,9 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, DEFAULT_FILTER);
   assert(glGetError() == GL_NO_ERROR);
   
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   assert(glGetError() == GL_NO_ERROR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   assert(glGetError() == GL_NO_ERROR);
 
   glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
