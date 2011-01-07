@@ -1,22 +1,22 @@
 /*
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <degate.h>
@@ -37,7 +37,7 @@
 using namespace std;
 using namespace degate;
 
-void LogicModelExporter::export_data(std::string const& filename, LogicModel_shptr lmodel) 
+void LogicModelExporter::export_data(std::string const& filename, LogicModel_shptr lmodel)
   throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
 
   if(lmodel == NULL) throw InvalidPointerException("Logic model pointer is NULL.");
@@ -48,7 +48,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
     xmlpp::Element * root_elem = doc.create_root_node("logic-model");
     assert(root_elem != NULL);
-		
+
     xmlpp::Element* gates_elem = root_elem->add_child("gates");
     if(gates_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
@@ -68,7 +68,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 	layer_iter != lmodel->layers_end(); ++layer_iter) {
 
       Layer_shptr layer = *layer_iter;
-      
+
       for(Layer::object_iterator iter = layer->objects_begin();
 	  iter != layer->objects_end(); ++iter) {
 
@@ -78,7 +78,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
 	if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
 	  add_gate(gates_elem, gate, layer_pos);
-	
+
 	else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
 	  add_via(vias_elem, via, layer_pos);
 
@@ -87,7 +87,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
 	else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
 	  add_annotation(annotations_elem, annotation, layer_pos);
-	
+
       }
     }
 
@@ -103,12 +103,12 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
 }
 
-void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel) 
+void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel)
   throw(std::runtime_error) {
 
   for(LogicModel::net_collection::iterator net_iter = lmodel->nets_begin();
       net_iter != lmodel->nets_end(); ++net_iter) {
-    
+
     xmlpp::Element* net_elem = nets_elem->add_child("net");
 
     Net_shptr net = net_iter->second;
@@ -117,18 +117,18 @@ void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lm
     object_id_t old_net_id = net->get_object_id();
     assert(old_net_id != 0);
     object_id_t new_net_id = oid_rewriter->get_new_object_id(old_net_id);
-    
+
     net_elem->set_attribute("id", number_to_string<object_id_t>(new_net_id));
 
-    for(Net::connection_iterator conn_iter = net->begin(); 
+    for(Net::connection_iterator conn_iter = net->begin();
 	conn_iter != net->end(); ++conn_iter) {
       object_id_t oid = *conn_iter;
 
-      const ConnectedLogicModelObject_shptr conn_obj = 
+      const ConnectedLogicModelObject_shptr conn_obj =
 	std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(lmodel->get_object(oid));
 
       xmlpp::Element* conn_elem = net_elem->add_child("connection");
-      conn_elem->set_attribute("object-id", 
+      conn_elem->set_attribute("object-id",
 			       number_to_string<object_id_t>(oid_rewriter->get_new_object_id(oid)));
 
     }
@@ -137,9 +137,9 @@ void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lm
 
 }
 
-void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos) 
+void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos)
   throw(std::runtime_error) {
-  
+
   xmlpp::Element* gate_elem = gates_elem->add_child("gate");
   if(gate_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
@@ -149,13 +149,13 @@ void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, l
   gate_elem->set_attribute("description", gate->get_description());
   gate_elem->set_attribute("layer", number_to_string<layer_position_t>(layer_pos));
   gate_elem->set_attribute("orientation", gate->get_orienation_type_as_string());
-  
+
   gate_elem->set_attribute("min-x", number_to_string<int>(gate->get_min_x()));
   gate_elem->set_attribute("min-y", number_to_string<int>(gate->get_min_y()));
   gate_elem->set_attribute("max-x", number_to_string<int>(gate->get_max_x()));
   gate_elem->set_attribute("max-y", number_to_string<int>(gate->get_max_y()));
 
-  gate_elem->set_attribute("type-id", 
+  gate_elem->set_attribute("type-id",
 			   number_to_string<object_id_t>(oid_rewriter->get_new_object_id(gate->get_template_type_id())));
 
 
@@ -169,7 +169,7 @@ void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, l
 
     object_id_t new_port_id = oid_rewriter->get_new_object_id(port->get_object_id());
     port_elem->set_attribute("id", number_to_string<object_id_t>(new_port_id));
-    
+
     if(port->get_name().size() > 0) port_elem->set_attribute("name", port->get_name());
     if(port->get_description().size() > 0) port_elem->set_attribute("description", port->get_description());
 
@@ -180,9 +180,9 @@ void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, l
 
 }
 
-void LogicModelExporter::add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos) 
+void LogicModelExporter::add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos)
   throw(std::runtime_error) {
-  
+
   xmlpp::Element* wire_elem = wires_elem->add_child("wire");
   if(wire_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
@@ -192,7 +192,7 @@ void LogicModelExporter::add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, l
   wire_elem->set_attribute("description", wire->get_description());
   wire_elem->set_attribute("layer", number_to_string<layer_position_t>(layer_pos));
   wire_elem->set_attribute("diameter", number_to_string<unsigned int>(wire->get_diameter()));
-  
+
   wire_elem->set_attribute("from-x", number_to_string<int>(wire->get_from_x()));
   wire_elem->set_attribute("from-y", number_to_string<int>(wire->get_from_y()));
   wire_elem->set_attribute("to-x", number_to_string<int>(wire->get_to_x()));
@@ -201,14 +201,14 @@ void LogicModelExporter::add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, l
   wire_elem->set_attribute("fill-color", to_color_string(wire->get_fill_color()));
   wire_elem->set_attribute("frame-color", to_color_string(wire->get_frame_color()));
 
-  wire_elem->set_attribute("remote-id", 
+  wire_elem->set_attribute("remote-id",
 			   number_to_string<object_id_t>(wire->get_remote_object_id()));
 
 }
 
-void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos) 
+void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos)
   throw(std::runtime_error) {
-  
+
   xmlpp::Element* via_elem = vias_elem->add_child("via");
   if(via_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
@@ -218,7 +218,7 @@ void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer
   via_elem->set_attribute("description", via->get_description());
   via_elem->set_attribute("layer", number_to_string<layer_position_t>(layer_pos));
   via_elem->set_attribute("diameter", number_to_string<unsigned int>(via->get_diameter()));
-  
+
   via_elem->set_attribute("x", number_to_string<int>(via->get_x()));
   via_elem->set_attribute("y", number_to_string<int>(via->get_y()));
 
@@ -226,14 +226,14 @@ void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer
   via_elem->set_attribute("frame-color", to_color_string(via->get_frame_color()));
 
   via_elem->set_attribute("direction", via->get_direction_as_string());
-  via_elem->set_attribute("remote-id", 
+  via_elem->set_attribute("remote-id",
 			  number_to_string<object_id_t>(via->get_remote_object_id()));
 }
 
 
-void LogicModelExporter::add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos) 
+void LogicModelExporter::add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos)
   throw(std::runtime_error) {
-  
+
   xmlpp::Element* annotation_elem = annotations_elem->add_child("annotation");
   if(annotation_elem == NULL) throw(std::runtime_error("Failed to create node."));
 

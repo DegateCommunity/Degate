@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __FILTERKERNEL_H__
@@ -126,7 +126,7 @@ namespace degate {
     }
     virtual ~SobelYOperator() {}
   };
-  
+
   typedef std::tr1::shared_ptr<SobelYOperator> SobelYOperator_shptr;
 
 
@@ -152,7 +152,7 @@ namespace degate {
 
   class GaussianBlur : public FilterKernel {
   public:
-    GaussianBlur(unsigned int width, unsigned int height, double sigma = 1.4) : 
+    GaussianBlur(unsigned int width, unsigned int height, double sigma = 1.4) :
       FilterKernel(width, height) {
       unsigned int x, y;
 
@@ -163,7 +163,7 @@ namespace degate {
 	  double _y = (double)y - (double)get_center_row();
 
 	  double v = 1.0/(2.0 * M_PI * pow(sigma, 2)) * exp(-(pow(_x, 2) + pow(_y, 2)) / (2*pow(sigma,2)));
-	 
+
 	  set(x, y, v);
 	}
 
@@ -186,12 +186,12 @@ namespace degate {
 
 	  double _x = (double)x - (double)get_center_column();
 	  double _y = (double)y - (double)get_center_row();
-	  
-	  double v = 
-	    -1.0/(M_PI * pow(sigma, 4)) * 
+
+	  double v =
+	    -1.0/(M_PI * pow(sigma, 4)) *
 	    (1.0 - (pow(_x, 2) + pow(_y, 2)) / (2.0*pow(sigma, 2))) *
 	    exp(-(pow(_x, 2) + pow(_y, 2)) / (2.0*pow(sigma,2)));
-	 
+
 	  set(x, y, v);
 	}
 

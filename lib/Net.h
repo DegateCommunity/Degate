@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __NET_H__
@@ -31,7 +31,7 @@
 
 namespace degate {
 
-  
+
   /**
    * The net class represents an electrical potential that is shared
    * between electrically adjacent objects.
@@ -50,13 +50,13 @@ namespace degate {
    * @see ConnectedLogicModelObject::remove_net()
    */
   class Net : public LogicModelObjectBase {
-    
+
     friend class ConnectedLogicModelObject;
 
   private:
-    
+
     std::set<object_id_t> connections;
-    
+
   protected:
 
     /**
@@ -75,7 +75,7 @@ namespace degate {
      * @see add_object()
      */
     virtual void add_object(object_id_t oid);
-  
+
 
     /**
      * Remove an object from a net.
@@ -94,36 +94,36 @@ namespace degate {
 
     virtual void remove_object(object_id_t o);
 
-    
+
   public:
-    
+
     typedef std::set<object_id_t>::iterator connection_iterator;
     typedef std::set<object_id_t>::iterator iterator;
     typedef std::set<object_id_t>::const_iterator const_iterator;
-    
+
     /**
      * Construct a new net.
      */
     Net();
-    
+
     /**
      * Destroy a net.
      * @see LogicModel::remove_net()
      */
     virtual ~Net();
-    
+
     /**
      * Get an iterator to iterate over all objects that are electrically connected with this net.
      * Be careful with iterator invalidation!
      */
     virtual connection_iterator begin();
-    
+
     /**
      * Get an end marker.
      */
     virtual connection_iterator end();
-    
-	
+
+
     /**
      * Get the number of objects that are connected with this net.
      */

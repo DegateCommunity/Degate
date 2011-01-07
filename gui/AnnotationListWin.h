@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #ifndef __ANNOTATIONLISTWIN_H__
@@ -33,8 +33,8 @@ class AnnotationListWin : public Gtk::Window, private GladeFileLoader {
 
   class AnnotationListModelColumns : public Gtk::TreeModelColumnRecord {
   public:
-    
-    AnnotationListModelColumns() { 
+
+    AnnotationListModelColumns() {
 
       add(m_col_layer_pos);
       add(m_col_annotation_class);
@@ -42,7 +42,7 @@ class AnnotationListWin : public Gtk::Window, private GladeFileLoader {
       add(m_col_description);
       add(m_col_object_ptr);
     }
-    
+
     Gtk::TreeModelColumn<degate::layer_position_t> m_col_layer_pos;
     Gtk::TreeModelColumn<degate::Annotation::class_id_t> m_col_annotation_class;
     Gtk::TreeModelColumn<Glib::ustring> m_col_name;
@@ -105,7 +105,7 @@ class AnnotationListWin : public Gtk::Window, private GladeFileLoader {
 
   virtual void on_selection_changed();
   virtual void on_entry_changed();
-  
+
   void on_edited_name(const Glib::ustring & path, const Glib::ustring & new_text);
   void on_edited_description(const Glib::ustring & path, const Glib::ustring & new_text);
 };

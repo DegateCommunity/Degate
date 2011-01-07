@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 
@@ -52,13 +52,13 @@ std::string VHDLTBCodeTemplateGenerator::generate() const {
   std::cout << "clock signal is : " << clock_signal_name << std::endl;
   if(!clock_signal_name.empty()) clock_process_impl += generate_clock_process(clock_signal_name);
 
-  return 
-    generate_header() + 
+  return
+    generate_header() +
     generate_entity(tb_entity_name) +
     generate_architecture(tb_entity_name,
 
-			  generate_component(entity_name, 
-					     generate_port_description()) + 
+			  generate_component(entity_name,
+					     generate_port_description()) +
 			  generate_signals(),
 
 			  generate_instance("uut", entity_name, port_map) +
@@ -91,7 +91,7 @@ std::string VHDLTBCodeTemplateGenerator::generate_impl(std::string const& logic_
 		  "    -- wait for clock_duration; \n"
 		  "    -- assert (signal_name_y == '0') report \"Got unexpected output.\" severity note;\n\n"
 		  "  END PROCESS tb_proc;\n\n\n");
- 
+
   return f.str();
 }
 

@@ -6,17 +6,17 @@ Copyright 2008, 2009, 2010 by Martin Schobert
 
 Degate is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #ifndef __LAYERCONFIGWIN_H__
@@ -42,10 +42,10 @@ class LayerConfigWin : private GladeFileLoader {
   class LayerConfigModelColumns : public Gtk::TreeModelColumnRecord {
 
   public:
-    
-    LayerConfigModelColumns() { 
-      add(m_col_old_position); 
-      add(m_col_new_position); 
+
+    LayerConfigModelColumns() {
+      add(m_col_old_position);
+      add(m_col_new_position);
       add(m_col_enabled);
       add(m_col_layer_type_chosen);
       add(m_col_layer_type_choices);
@@ -53,15 +53,15 @@ class LayerConfigWin : private GladeFileLoader {
       add(m_col_filename);
       add(m_col_exists);
     }
-    
+
     Gtk::TreeModelColumn<int> m_col_old_position;
     Gtk::TreeModelColumn<int> m_col_new_position;
-    Gtk::TreeModelColumn<bool> m_col_enabled; 
+    Gtk::TreeModelColumn<bool> m_col_enabled;
     Gtk::TreeModelColumn<Glib::ustring> m_col_layer_type_chosen;
     Gtk::TreeModelColumn<Glib::RefPtr<Gtk::TreeModel> > m_col_layer_type_choices;
     Gtk::TreeModelColumn<Glib::ustring> m_col_description;
     Gtk::TreeModelColumn<Glib::ustring> m_col_filename;
-    Gtk::TreeModelColumn<bool> m_col_exists; 
+    Gtk::TreeModelColumn<bool> m_col_exists;
   };
 
   class LayerConfigModelColumnsCombo : public Gtk::TreeModelColumnRecord {
@@ -72,7 +72,7 @@ class LayerConfigWin : private GladeFileLoader {
     Gtk::TreeModelColumn<Glib::ustring> m_col_choice;
   };
 
-  void on_cellrenderer_choice_edited(const Glib::ustring& path_string, 
+  void on_cellrenderer_choice_edited(const Glib::ustring& path_string,
 				     const Glib::ustring& new_text);
 
  public:
@@ -82,7 +82,7 @@ class LayerConfigWin : private GladeFileLoader {
 		 std::string const& project_dir);
 
   virtual ~LayerConfigWin();
-        
+
   bool run();
 
   /**
@@ -102,7 +102,7 @@ class LayerConfigWin : private GladeFileLoader {
   std::string project_dir;
 
   InProgressWin * ipWin;
-  
+
   Gtk::TreeView* pTreeView_layers;
 
   LayerConfigModelColumns m_Columns;
@@ -111,7 +111,7 @@ class LayerConfigWin : private GladeFileLoader {
   LayerConfigModelColumnsCombo m_ColumnsCombo;
   Glib::RefPtr<Gtk::ListStore> m_refTreeModelCombo;
 
-  Gtk::Button 
+  Gtk::Button
     * p_ok_button,
     * p_remove_button,
     * p_bg_file_button,
@@ -143,7 +143,7 @@ class LayerConfigWin : private GladeFileLoader {
   void _on_background_import_finished();
 
   // helper
-  
+
   virtual void update_new_positions();
   void check_at_least_one_layer_enabled();
 };

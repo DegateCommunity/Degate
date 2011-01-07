@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <GateRenderer.h>
@@ -46,7 +46,7 @@ GateRenderer::GateRenderer() : realized(false) {
 GateRenderer::~GateRenderer() {
 
   BOOST_FOREACH(layer_list_type::value_type & p, layers)
-    if(glIsTexture(p.second) == GL_TRUE) glDeleteTextures(1, &p.second);  
+    if(glIsTexture(p.second) == GL_TRUE) glDeleteTextures(1, &p.second);
 }
 
 void GateRenderer::on_realize() {
@@ -59,7 +59,7 @@ void GateRenderer::on_realize() {
   glDisable(GL_DEPTH_TEST);
 
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-	    
+
   glClearColor(0, 0, 0, 0);
   glEnable(GL_TEXTURE_2D);
 
@@ -74,18 +74,18 @@ void GateRenderer::add_layer_type(Layer::LAYER_TYPE layer_type) {
   layers.push_back(std::make_pair(layer_type, 0));
 }
 
-void GateRenderer::set_gate_template(degate::GateTemplate_shptr tmpl) 
+void GateRenderer::set_gate_template(degate::GateTemplate_shptr tmpl)
   throw(degate::InvalidPointerException) {
 
-  if(tmpl == NULL) 
+  if(tmpl == NULL)
     throw InvalidPointerException("Invalid parameter for GateRenderer::set_gate_template().");
   this->tmpl = tmpl;
 
   /* if the gate template is new it has no size and no image. */
   if(tmpl->get_width() > 0 && tmpl->get_height() > 0) {
     set_virtual_size(tmpl->get_width(), tmpl->get_height());
-    set_viewport(0, 0, 
-		 LENGTH_TO_MAX(tmpl->get_width()), 
+    set_viewport(0, 0,
+		 LENGTH_TO_MAX(tmpl->get_width()),
 		 LENGTH_TO_MAX(tmpl->get_height()));
   }
 
@@ -135,7 +135,7 @@ void GateRenderer::update_viewport_dimension() {
 
     Glib::RefPtr<Gdk::GL::Window> glwindow = get_gl_window();
     if(glwindow->gl_begin(get_gl_context())) {
-      
+
       glViewport(0, 0, get_width(), get_height());
 
       glMatrixMode(GL_PROJECTION);
@@ -150,7 +150,7 @@ void GateRenderer::update_viewport_dimension() {
 
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      
+
       glwindow->gl_end();
       update_screen();
     }
@@ -166,48 +166,48 @@ GLuint GateRenderer::create_texture(degate::GateTemplateImage_shptr img, uint8_t
   assert(img != NULL);
   if(img == NULL) return 0;
 
-  unsigned int 
+  unsigned int
     width = next_power_of_two(img->get_width()),
     height = next_power_of_two(img->get_height());
 
   guint32 * data = new guint32[width * height];
   if(data == NULL) return 0;
   memset(data, 0, width * height * sizeof(guint32));
-  
+
   for(unsigned int y = 0; y < img->get_height(); y++)
     for(unsigned int x = 0; x < img->get_width(); x++) {
       color_t c = img->get_pixel(x, y);
       data[y * width + x] = MERGE_CHANNELS(MASK_R(c), MASK_G(c), MASK_B(c), alpha);
     }
-  
-  
+
+
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   assert(error_check());
-  
+
   glGenTextures(1, &texture);
   assert(glGetError() == GL_NO_ERROR);
-  
+
   glBindTexture(GL_TEXTURE_2D, texture);
   assert(glGetError() == GL_NO_ERROR);
-  
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, DEFAULT_FILTER);
   assert(glGetError() == GL_NO_ERROR);
-  
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, DEFAULT_FILTER);
   assert(glGetError() == GL_NO_ERROR);
-  
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   assert(glGetError() == GL_NO_ERROR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   assert(glGetError() == GL_NO_ERROR);
-  
+
   glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
   assert(glGetError() == GL_NO_ERROR);
-  
+
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   assert(glGetError() == GL_NO_ERROR);
-  
-  glTexImage2D(GL_TEXTURE_2D, 
+
+  glTexImage2D(GL_TEXTURE_2D,
 	       0, // level
 	       GL_RGBA, // BGRA,
 	       width, height,
@@ -216,9 +216,9 @@ GLuint GateRenderer::create_texture(degate::GateTemplateImage_shptr img, uint8_t
 	       GL_UNSIGNED_BYTE,
 	       data);
   assert(glGetError() == GL_NO_ERROR);
-  
+
   delete[] data;
-  
+
   return texture;
 }
 
@@ -227,32 +227,32 @@ void GateRenderer::render_texture(degate::GateTemplateImage_shptr img, GLuint te
   assert(img != NULL);
   if(img == NULL) return;
 
-  unsigned int 
+  unsigned int
     width = next_power_of_two(img->get_width()),
     height = next_power_of_two(img->get_height());
 
-  double 
+  double
     w = (double)(LENGTH_TO_MAX(img->get_width())) / (double)LENGTH_TO_MAX(width),
     h = (double)(LENGTH_TO_MAX(img->get_height())) / (double)LENGTH_TO_MAX(height);
-  
+
   glBindTexture(GL_TEXTURE_2D, texture);
   assert(error_check());
-  
+
   glBegin(GL_QUADS);
   assert(error_check());
-  
+
   glTexCoord2i(0, 0);
   glVertex3i(0, 0, 0);
-  
+
   glTexCoord2f(w, 0);
   glVertex3i(LENGTH_TO_MAX(img->get_width()), 0, 0);
-  
+
   glTexCoord2f(w, h);
   glVertex3i(LENGTH_TO_MAX(img->get_width()), LENGTH_TO_MAX(img->get_height()), 0);
-  
+
   glTexCoord2f(0, h);
   glVertex3i(0, LENGTH_TO_MAX(img->get_height()), 0);
-  
+
   glEnd();
   assert(error_check());
 }
@@ -276,10 +276,10 @@ void GateRenderer::render_gate_template(degate::GateTemplate_shptr tmpl,
 	debug(TM, "new texture: %d for (%p)", p.second, this);
       }
 
-      
+
     }
   }
-  
+
   glNewList(dlist, GL_COMPILE);
 
 
@@ -302,7 +302,7 @@ void GateRenderer::render_gate_template(degate::GateTemplate_shptr tmpl,
     }
   }
 
-  glEndList(); 
+  glEndList();
 
 
   /*
@@ -321,7 +321,7 @@ void GateRenderer::render_gate_template(degate::GateTemplate_shptr tmpl,
     glVertex2i(gate->get_max_x(), gate->get_max_y());
     glVertex2i(gate->get_min_x(), gate->get_max_y());
     glEnd();
-    
+
     set_color(highlight_color_by_state(frame_col, gate->is_selected()));
     glBegin(GL_LINE_LOOP);
     glVertex2i(gate->get_min_x(), gate->get_min_y());
@@ -333,8 +333,8 @@ void GateRenderer::render_gate_template(degate::GateTemplate_shptr tmpl,
   }
 
   if(details && gate->has_name())
-    draw_string(gate->get_min_x()+2, 
-		gate->get_min_y()+2 + get_font_height() + 1, gate->get_name(), 
+    draw_string(gate->get_min_x()+2,
+		gate->get_min_y()+2 + get_font_height() + 1, gate->get_name(),
 		gate->get_width() > 4 ? gate->get_width() - 4 : gate->get_width());
 
   if(gate->has_template()) {
@@ -343,14 +343,14 @@ void GateRenderer::render_gate_template(degate::GateTemplate_shptr tmpl,
 
     // render names for type and instance
     if(details && gate->get_gate_template()->has_name())
-      draw_string(gate->get_min_x()+2, gate->get_min_y()+2, tmpl->get_name(), 
+      draw_string(gate->get_min_x()+2, gate->get_min_y()+2, tmpl->get_name(),
 		  gate->get_width() > 4 ? gate->get_width() - 4 : gate->get_width());
 
     if(gate->has_orientation()) {
       for(Gate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter) {
 	GatePort_shptr port = *iter;
 	GateTemplatePort_shptr tmpl_port = port->get_template_port();
-	
+
 	if(tmpl_port && tmpl_port->get_x() != 0 && tmpl_port->get_y() != 0) {
 	  unsigned int x = port->get_x(), y = port->get_y();
 	  unsigned int port_size = port->get_diameter();
@@ -364,7 +364,7 @@ void GateRenderer::render_gate_template(degate::GateTemplate_shptr tmpl,
 	  if(!details) draw_circle(x, y, port_size, port_color);
 
 	  if(details && tmpl_port->has_name()) draw_string(x+2, y+2, tmpl_port->get_name());
-	  
+
 	}
       }
     }

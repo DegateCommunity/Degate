@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #ifndef __MENUMANAGER_H__
@@ -46,7 +46,7 @@ class MenuManager {
   Gtk::Widget* get_menubar();
   Gtk::Widget* get_toolbar();
 
-  void initialize_menu_render_funcs(const std::vector<Glib::ustring> & func_names, 
+  void initialize_menu_render_funcs(const std::vector<Glib::ustring> & func_names,
 				    const std::vector<bool> & func_states);
 
 
@@ -78,8 +78,8 @@ class MenuManager {
   Glib::RefPtr<Gtk::UIManager> m_refUIManager;
 
   Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
-  Glib::RefPtr<Gtk::RadioAction> 
-    m_refChoice_Select, m_refChoice_Move, m_refChoice_Wire, 
+  Glib::RefPtr<Gtk::RadioAction>
+    m_refChoice_Select, m_refChoice_Move, m_refChoice_Wire,
     m_refChoice_via_up, m_refChoice_via_down;
   Glib::RefPtr<Gtk::RadioAction> m_refChoice_TransistorLayer, m_refChoice_LogicLayer, m_refChoice_MetalLayer;
 
@@ -88,7 +88,7 @@ class MenuManager {
   void create_popup_menu();
   void create_menu();
 
-  
+
   void create_and_bind_project_menu();
   void create_and_bind_view_menu();
   void create_and_bind_tools_menu();

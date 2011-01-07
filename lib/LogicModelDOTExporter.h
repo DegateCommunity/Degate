@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #ifndef __LOGICMODELDOTEXPORTER_H__
@@ -47,7 +47,7 @@ namespace degate {
     enum PROPERTY {
 
       /** default: false */
-      PRESERVE_GATE_POSITIONS, 
+      PRESERVE_GATE_POSITIONS,
 
       /** default: true */
       ENABLE_EDGES,
@@ -61,17 +61,17 @@ namespace degate {
       /** default: true */
       ENABLE_TEMPLATE_NAMES,
 
-      /** 
+      /**
        * Control whether the fill color of logic model objects is used
        * as fill color for shapes in the dot output.
-       * default: false 
+       * default: false
       */
       ENABLE_COLORS
-      
+
     };
-    
+
   protected:
-       
+
     void add_gate(Gate_shptr gate) throw(std::runtime_error);
     void add_via(Via_shptr via);
     //void add_wire(Wire_shptr wire);
@@ -98,7 +98,7 @@ namespace degate {
 
   public:
 
-    LogicModelDOTExporter(ObjectIDRewriter_shptr _oid_rewriter) : 
+    LogicModelDOTExporter(ObjectIDRewriter_shptr _oid_rewriter) :
       oid_rewriter(_oid_rewriter), scaling(1) {
 
       properties[PRESERVE_GATE_POSITIONS] = false;
@@ -111,15 +111,15 @@ namespace degate {
       fontsize = 0;
       penwidth = 0;
     }
-    
+
     ~LogicModelDOTExporter() {}
 
     /**
      * Export the logic model as DOT file.
      */
-    void export_data(std::string const& filename, LogicModel_shptr lmodel) 
+    void export_data(std::string const& filename, LogicModel_shptr lmodel)
       throw( InvalidPathException, InvalidPointerException, std::runtime_error );
-    
+
     /**
      * Set a property for the dot export.
      */
@@ -131,7 +131,7 @@ namespace degate {
      * Get the state of a property.
      * @see set_property()
      */
-    bool get_property(PROPERTY property) const { 
+    bool get_property(PROPERTY property) const {
 
       property_map::const_iterator found = properties.find(property);
 
@@ -139,7 +139,7 @@ namespace degate {
 	 filled up in the constructor with default settings.
 	 If we forget it we might notice it here. */
       assert(found != properties.end());
-      
+
       return (*found).second;
     }
 

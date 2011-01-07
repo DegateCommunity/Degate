@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #ifndef __JPEGREADER_H__
@@ -30,7 +30,7 @@
 #include "ImageReaderBase.h"
 
 namespace degate {
-   
+
 
   /**
    * The JPEGReader parses jpeg images.
@@ -52,8 +52,8 @@ namespace degate {
     using ImageReaderBase<ImageType>::get_width;
     using ImageReaderBase<ImageType>::get_height;
 
-    JPEGReader(std::string const& filename) : 
-      ImageReaderBase<ImageType>(filename), 
+    JPEGReader(std::string const& filename) :
+      ImageReaderBase<ImageType>(filename),
       image_buffer(NULL) {}
 
     ~JPEGReader() {
@@ -83,15 +83,15 @@ namespace degate {
       debug(TM, "can't open %s\n", get_filename().c_str());
       return false;
     }
-    
+
     cinfo.err = jpeg_std_error(&jerr);
-    
+
     jpeg_create_decompress(&cinfo);
     jpeg_stdio_src(&cinfo, infile);
-    
+
     jpeg_read_header(&cinfo, TRUE);
     jpeg_start_decompress(&cinfo);
-    
+
     set_width(cinfo.output_width);
     set_height(cinfo.output_height);
     depth = cinfo.num_components;
@@ -117,7 +117,7 @@ namespace degate {
 
       printf("Image read\n");
     }
-    
+
     jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
     fclose(infile);
@@ -143,16 +143,16 @@ namespace degate {
 	  v3 = image_buffer[depth * (y * get_width() + x) + 2];
 	}
 	else throw std::runtime_error("Unexpected number of channels in JPG file.");
-	  
+
 	img->set_pixel(x, y, MERGE_CHANNELS(v1, v2, v3, 0xff));
 
       }
     }
 
-    return true;    
+    return true;
   }
 
-  
+
 }
 
 #endif

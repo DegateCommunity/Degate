@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __QUADTREEREGIONITERATOR_H__
@@ -34,12 +34,12 @@ namespace degate {
   private:
     QuadTree<T> * node;
     bool done;
-  
+
     typename std::list<T>::iterator children_iter;
     typename std::list<T>::iterator children_iter_end;
-  
+
     std::list<QuadTree<T> *> open_list;
-  
+
     BoundingBox search_bb;
 
     void next_node();
@@ -64,12 +64,12 @@ namespace degate {
    * Construct an iterator end.
    */
   template<typename T>
-  region_iterator<T>::region_iterator() : 
+  region_iterator<T>::region_iterator() :
     node(NULL), done(true) {
   }
 
   template<typename T>
-  region_iterator<T>::region_iterator(QuadTree<T> * _node, BoundingBox const & bbox) : 
+  region_iterator<T>::region_iterator(QuadTree<T> * _node, BoundingBox const & bbox) :
     node(NULL),
     done(false),
     search_bb(bbox) {
@@ -99,31 +99,31 @@ namespace degate {
 #endif
 	node = open_list.front();
 	open_list.pop_front();
-	
+
 	// add subtree nodes to open list
 	for(typename std::vector<QuadTree<T> >::iterator it = node->subtree_nodes.begin();
 	    it != node->subtree_nodes.end();
 	    ++it) {
-	  
+
 	  if((*it).box.intersects(search_bb)) {
 #ifdef DEBUG_SHOW_ITER
 	    debug(TM, "Put into open list: %s", (*it).get_name().c_str());
 #endif
 	    open_list.push_back(&*it);
 	  }
-	  
+
 	}
-#ifdef DEBUG_SHOW_ITER	
+#ifdef DEBUG_SHOW_ITER
 	debug(TM, "Current node is %s", node->get_name().c_str());
-#endif	
+#endif
 	// reset iterator for current quadtree node
 	children_iter = node->children.begin();
 	children_iter_end = node->children.end();
-	
+
 	// the quadtree might contain empty nodes
       } while(children_iter == children_iter_end &&
 	      !open_list.empty());
-      
+
       if(children_iter == children_iter_end &&
 	 open_list.empty()) {
 	done = true;
@@ -154,18 +154,18 @@ namespace degate {
   // if the precond is stay on a bounding-box matching child, then postcond is stay on it, too
   template<typename T>
   void region_iterator<T>::skip_non_matching_children() {
-#ifdef DEBUG_SHOW_ITER	
+#ifdef DEBUG_SHOW_ITER
     debug(TM, "in increment() done = %d, node = %p", done ? 1 : 0, node);
 #endif
-    while(!done && 
+    while(!done &&
 	  !search_bb.intersects(get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(*children_iter))) {
-#ifdef DEBUG_SHOW_ITER	      
+#ifdef DEBUG_SHOW_ITER
       debug(TM, "iterating over children in %s", node->get_name().c_str());
 #endif
       next_child();
 
     }
-#ifdef DEBUG_SHOW_ITER	
+#ifdef DEBUG_SHOW_ITER
     debug(TM, "return from increment()");
 #endif
   }
@@ -173,7 +173,7 @@ namespace degate {
 
   template<typename T>
   region_iterator<T>& region_iterator<T>::operator++() {
-#ifdef DEBUG_SHOW_ITER	
+#ifdef DEBUG_SHOW_ITER
     debug(TM, "++ called");
 #endif
     next_child(); // one step ahead

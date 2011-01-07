@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <DegateRenderer.h>
@@ -38,30 +38,30 @@ static inline uint32_t highlight_color(uint32_t col) {
   uint8_t g = MASK_G(col);
   uint8_t b = MASK_B(col);
   uint8_t a = MASK_A(col);
-  
+
   return MERGE_CHANNELS((((255-r)>>1) + r),
 			(((255-g)>>1) + g),
 			(((255-b)>>1) + b), (a < 128 ? 128 : a));
 }
 
 
-static inline uint32_t highlight_color_by_state(uint32_t col, 
+static inline uint32_t highlight_color_by_state(uint32_t col,
 						PlacedLogicModelObject::HIGHLIGHTING_STATE state) {
-  
+
   switch(state) {
   case PlacedLogicModelObject::HLIGHTSTATE_DIRECT:
     return highlight_color(highlight_color(col));
-  case PlacedLogicModelObject::HLIGHTSTATE_ADJACENT:    
+  case PlacedLogicModelObject::HLIGHTSTATE_ADJACENT:
     return highlight_color(col);
   case PlacedLogicModelObject::HLIGHTSTATE_NOT:
   default:
     return col;
-  }  
+  }
 }
 
 
 
-DegateRenderer::DegateRenderer() : last_scaling(0), realized(false), 
+DegateRenderer::DegateRenderer() : last_scaling(0), realized(false),
 				   idle_hook_enabled(false), is_idle(true), lock_state(false) {
 
   show();
@@ -84,11 +84,11 @@ void DegateRenderer::on_realize() {
 
   //glDisbale(GL
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-	    
+
   glClearColor(0, 0, 0, 0);
   //glClearColor(0, 0, 0, 0);
   //glClearDepth(10);
-  
+
   glEnable(GL_TEXTURE_2D);
 
 
@@ -118,7 +118,7 @@ void DegateRenderer::on_realize() {
 
   tool_dlist = glGenLists(1);
   assert(error_check());
- 
+
   realized = true;
 }
 
@@ -140,10 +140,10 @@ void DegateRenderer::update_screen() {
     if(!idle_hook_enabled) {
       idle_hook_enabled = true;
       is_idle = false;
-      Glib::signal_idle().connect_once(sigc::mem_fun(*this, &DegateRenderer::on_idle), 
+      Glib::signal_idle().connect_once(sigc::mem_fun(*this, &DegateRenderer::on_idle),
 				       Glib::PRIORITY_LOW);
     }
-    
+
     if(is_idle || should_update_gates) {
       render_background();
 
@@ -224,7 +224,7 @@ void DegateRenderer::update_viewport_dimension() {
   if(realized) {
     Glib::RefPtr<Gdk::GL::Window> glwindow = get_gl_window();
     if(glwindow->gl_begin(get_gl_context())) {
-      
+
       glViewport(0, 0, get_width(), get_height());
 
       glMatrixMode(GL_PROJECTION);
@@ -239,7 +239,7 @@ void DegateRenderer::update_viewport_dimension() {
 
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      
+
       glwindow->gl_end();
       update_screen();
     }
@@ -252,11 +252,11 @@ void DegateRenderer::update_viewport_dimension() {
 }
 
 
-GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img, 
-					   unsigned int x, unsigned int y, 
-					   unsigned int tile_width, 
+GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
+					   unsigned int x, unsigned int y,
+					   unsigned int tile_width,
 					   unsigned int pre_scaling) const {
-  
+
   //if(img == NULL) return;
 
   // real pixel coordinates
@@ -271,7 +271,7 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
 
   GLuint texture = 0;
 
-  
+
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   assert(error_check());
 
@@ -286,7 +286,7 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, DEFAULT_FILTER);
   assert(glGetError() == GL_NO_ERROR);
-  
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   assert(glGetError() == GL_NO_ERROR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -298,7 +298,7 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   assert(glGetError() == GL_NO_ERROR);
 
-  glTexImage2D(GL_TEXTURE_2D, 
+  glTexImage2D(GL_TEXTURE_2D,
 	       0, // level
 	       GL_RGBA, // BGRA,
 	       tile_width, tile_width,
@@ -344,15 +344,15 @@ void DegateRenderer::render_vias() {
 
     if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(*iter)) {
       unsigned int diameter = via->get_diameter();
-      uint32_t col = via->get_direction() == Via::DIRECTION_UP ? 
+      uint32_t col = via->get_direction() == Via::DIRECTION_UP ?
 	default_colors[DEFAULT_COLOR_VIA_UP] : default_colors[DEFAULT_COLOR_VIA_DOWN];
 
       if(via->is_highlighted()) {
 	col = highlight_color_by_state(col, via->get_highlighted());
 	diameter <<= 2;
       }
-      
-      draw_circle(via->get_x(), via->get_y(), diameter, col, 
+
+      draw_circle(via->get_x(), via->get_y(), diameter, col,
 		  via->is_connected());
     }
 
@@ -365,8 +365,8 @@ void DegateRenderer::render_grid() {
 
   render_grid(regular_horizontal_grid);
   render_grid(irregular_horizontal_grid);
-  render_grid(regular_vertical_grid);  
-  render_grid(irregular_vertical_grid);  
+  render_grid(regular_vertical_grid);
+  render_grid(irregular_vertical_grid);
 
   glEndList();
 }
@@ -410,13 +410,13 @@ void DegateRenderer::render_wires() {
 
       set_color(highlight_color_by_state(col, wire->get_highlighted()));
 
-      
+
       glLineWidth((double)wire->get_diameter() / get_scaling());
       glBegin(GL_LINES);
       glVertex2i(wire->get_from_x(), wire->get_from_y());
       glVertex2i(wire->get_to_x(), wire->get_to_y());
-      glEnd();      
-      
+      glEnd();
+
 
       /*
       int radius = wire->get_diameter() >> 1;
@@ -437,7 +437,7 @@ void DegateRenderer::render_annotations(bool render_into_details_list) {
 
   if(lmodel == NULL) return;
 
-  glNewList(render_into_details_list ? annotation_details_dlist : 
+  glNewList(render_into_details_list ? annotation_details_dlist :
 	    annotations_dlist, GL_COMPILE);
 
   for(Layer::object_iterator iter = layer->objects_begin();
@@ -459,7 +459,7 @@ void DegateRenderer::render_annotations(bool render_into_details_list) {
 	glVertex2i(a->get_max_x(), a->get_max_y());
 	glVertex2i(a->get_min_x(), a->get_max_y());
 	glEnd();
-    
+
 	set_color(highlight_color_by_state(frame_col, a->get_highlighted()));
 	glBegin(GL_LINE_LOOP);
 	glVertex2i(a->get_min_x(), a->get_min_y());
@@ -470,16 +470,16 @@ void DegateRenderer::render_annotations(bool render_into_details_list) {
       }
       else {
 	if(a->has_name())
-	  draw_string(a->get_min_x()+2, 
-		      a->get_min_y()+2 + get_font_height(), 
+	  draw_string(a->get_min_x()+2,
+		      a->get_min_y()+2 + get_font_height(),
 		      default_colors[DEFAULT_COLOR_TEXT],
-		      a->get_name(), 
+		      a->get_name(),
 		      a->get_width() > 4 ? a->get_width() - 4 : a->get_width());
       }
 
     }
   }
-  glEndList(); 
+  glEndList();
 }
 
 
@@ -487,7 +487,7 @@ void DegateRenderer::render_gates(bool render_into_details_list) {
 
   if(lmodel == NULL) return;
 
-  glNewList(render_into_details_list ? 
+  glNewList(render_into_details_list ?
 	    gate_details_dlist : gates_dlist, GL_COMPILE);
 
   for(LogicModel::gate_collection::iterator iter = lmodel->gates_begin();
@@ -495,16 +495,16 @@ void DegateRenderer::render_gates(bool render_into_details_list) {
     render_gate(iter->second, render_into_details_list);
   }
 
-  glEndList(); 
+  glEndList();
 }
 
-void DegateRenderer::render_gate(degate::Gate_shptr gate, 
+void DegateRenderer::render_gate(degate::Gate_shptr gate,
 				 bool render_into_details_list) {
 
   if(!render_into_details_list) {
-    color_t fill_col = gate->has_template() ? 
+    color_t fill_col = gate->has_template() ?
       gate->get_gate_template()->get_fill_color() : 0;
-    color_t frame_col = gate->has_template() ? 
+    color_t frame_col = gate->has_template() ?
       gate->get_gate_template()->get_frame_color() : 0;
 
     if(fill_col == 0) fill_col = default_colors[DEFAULT_COLOR_GATE];
@@ -518,7 +518,7 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate,
     glVertex2i(gate->get_max_x(), gate->get_max_y());
     glVertex2i(gate->get_min_x(), gate->get_max_y());
     glEnd();
-    
+
     set_color(highlight_color_by_state(frame_col, gate->get_highlighted()));
     glBegin(GL_LINE_LOOP);
     glVertex2i(gate->get_min_x(), gate->get_min_y());
@@ -530,11 +530,11 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate,
   }
 
   if(render_into_details_list && gate->has_name())
-    draw_string(gate->get_min_x() + 2, 
-		gate->get_min_y() + 2 + get_font_height() + 1, 
+    draw_string(gate->get_min_x() + 2,
+		gate->get_min_y() + 2 + get_font_height() + 1,
 		default_colors[DEFAULT_COLOR_TEXT],
-		gate->get_name(), 
-		gate->get_width() > 4 ? 
+		gate->get_name(),
+		gate->get_width() > 4 ?
 		gate->get_width() - 4 : gate->get_width());
 
   if(gate->has_template()) {
@@ -543,38 +543,38 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate,
 
     // render names for type and instance
     if(render_into_details_list && gate->get_gate_template()->has_name())
-      draw_string(gate->get_min_x() + 2, 
-		  gate->get_min_y() + 2, 
+      draw_string(gate->get_min_x() + 2,
+		  gate->get_min_y() + 2,
 		  default_colors[DEFAULT_COLOR_TEXT],
-		  tmpl->get_name(), 
-		  gate->get_width() > 4 ? 
+		  tmpl->get_name(),
+		  gate->get_width() > 4 ?
 		  gate->get_width() - 4 : gate->get_width());
 
     if(gate->has_orientation()) {
-      for(Gate::port_iterator iter = gate->ports_begin(); 
+      for(Gate::port_iterator iter = gate->ports_begin();
 	  iter != gate->ports_end(); ++iter) {
 	GatePort_shptr port = *iter;
 	GateTemplatePort_shptr tmpl_port = port->get_template_port();
-	
+
 	if(tmpl_port && tmpl_port->get_x() != 0 && tmpl_port->get_y() != 0) {
 	  unsigned int x = port->get_x(), y = port->get_y();
 	  unsigned int port_size = port->get_diameter();
-	  color_t port_color = tmpl_port->get_fill_color() == 0 ? 
-	    default_colors[DEFAULT_COLOR_GATE_PORT] : 
+	  color_t port_color = tmpl_port->get_fill_color() == 0 ?
+	    default_colors[DEFAULT_COLOR_GATE_PORT] :
 	    tmpl_port->get_fill_color();
 
 	  if(!render_into_details_list) {
 
 	    if(port->is_highlighted()) {
-	      port_color = highlight_color_by_state(port_color, 
+	      port_color = highlight_color_by_state(port_color,
 						    port->get_highlighted());
 	      port_size *= 2;
 	    }
-	    
+
 	    draw_circle(x, y, port_size, port_color, port->is_connected());
 	  }
 	  else { // render_into_details_list
-	    if(tmpl_port->has_name()) 
+	    if(tmpl_port->has_name())
 	      draw_string(x+2, y+2,
 			  default_colors[DEFAULT_COLOR_TEXT], tmpl_port->get_name());
 	  }
@@ -597,7 +597,7 @@ void DegateRenderer::render_background() {
   assert(smgr != NULL);
 
 
-  degate::ScalingManager<degate::BackgroundImage>::image_map_element elem = 
+  degate::ScalingManager<degate::BackgroundImage>::image_map_element elem =
     smgr->get_image(get_scaling());
 
   if(last_scaling != elem.first ||
@@ -605,50 +605,50 @@ void DegateRenderer::render_background() {
 
     drop_tiles();
     last_scaling = elem.first;
-  
+
     unsigned int pre_scaling = elem.first;
     degate::BackgroundImage_shptr img = elem.second;
-    
+
     unsigned int tile_width = img->get_tile_size();
-  
+
     unsigned int // scaled coordinates
 
       min_x = to_lower_tile_offset(std::max(get_viewport_min_x()  / pre_scaling, (unsigned int)0), tile_width),
 
-      max_x = to_upper_tile_offset(std::min(std::max(get_viewport_max_x() / pre_scaling, (unsigned int)0), 
+      max_x = to_upper_tile_offset(std::min(std::max(get_viewport_max_x() / pre_scaling, (unsigned int)0),
 					    get_virtual_width() / pre_scaling), tile_width),
       min_y = to_lower_tile_offset(std::max(get_viewport_min_y()  / pre_scaling, (unsigned int)0), tile_width),
-      max_y = to_upper_tile_offset(std::min(std::max(get_viewport_max_y() / pre_scaling, (unsigned int)0), 
+      max_y = to_upper_tile_offset(std::min(std::max(get_viewport_max_y() / pre_scaling, (unsigned int)0),
 					    get_virtual_height() / pre_scaling), tile_width);
 
     /*
-    debug(TM, "render tiles for area: %d..%d, %d..%d", 
+    debug(TM, "render tiles for area: %d..%d, %d..%d",
 	  get_viewport_min_x(), get_viewport_max_x(), get_viewport_min_y(), get_viewport_max_y());
     debug(TM, "render tiles for area: %d..%d, %d..%d", min_x, max_x, min_y, max_y);
     */
 
     // screen coordinates
-    background_bbox.set(min_x * pre_scaling, 
-			max_x * pre_scaling, 
-			min_y * pre_scaling, 
+    background_bbox.set(min_x * pre_scaling,
+			max_x * pre_scaling,
+			min_y * pre_scaling,
 			max_y * pre_scaling);
 
     glNewList(background_dlist, GL_COMPILE);
     assert(error_check());
-    
+
     glColor4ub(0, 0, 0, 0xff);
 
     // iterate over possible tile positions
     for(unsigned int x = min_x; x < max_x; x+=tile_width)
-    
+
       for(unsigned int y = min_y; y < max_y; y+=tile_width) {
 
 	GLuint texture = create_and_add_tile(img, x, y, tile_width, elem.first);
 	rendered_bg_tiles.push_back(boost::make_tuple(x, y, texture));
       }
-  
+
     glEndList();
-  
+
   }
 }
 

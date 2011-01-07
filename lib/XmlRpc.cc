@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <XmlRpc.h>
@@ -35,14 +35,14 @@ xmlrpc_c::value degate::remote_method_call(std::string const& server_url,
 
   xmlrpc_c::clientXmlTransport_curl myTransport;
   xmlrpc_c::client_xml myClient(&myTransport);
-    
+
   xmlrpc_c::rpcPtr myRpcP(method_name, params);
   xmlrpc_c::carriageParm_curl0 myCarriageParam(server_url);
-    
+
   myRpcP->call(&myClient, &myCarriageParam);
-  
+
   assert(myRpcP->isFinished());
-  
+
   return myRpcP->getResult();
 }
 
@@ -56,8 +56,8 @@ void degate::push_changes_to_server(std::string const& server_url, LogicModel_sh
     object_id_t local_oid = iter->second->get_object_id();
 
     if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>((*iter).second)) {
-      
-      if(!ro->has_remote_object_id()) { 
+
+      if(!ro->has_remote_object_id()) {
 	std::cout << "Push object to server." << std::endl;
 	object_id_t remote_oid = ro->push(server_url);
 
@@ -91,7 +91,7 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
     return;
   }
 
-	
+
   if(command.size() < 2) throw XMLRPCException("Command has not enough parameters.");
 
   if(command[0].type() != xmlrpc_c::value::TYPE_STRING)
@@ -99,11 +99,11 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
 
   const std::string command_str = xmlrpc_c::value_string(command[0]);
   std::cout << " cmd: " << command_str << std::endl;
-  
+
   if(!command_str.compare("remove")) {
-    if(command.size() < 2) 
-      throw XMLRPCException("Command wire add has less then 8 parameters.");    
-    int ro_id = xmlrpc_c::value_int(command[1]);   
+    if(command.size() < 2)
+      throw XMLRPCException("Command wire add has less then 8 parameters.");
+    int ro_id = xmlrpc_c::value_int(command[1]);
     lmodel->remove_remote_object(ro_id);
   }
 
@@ -112,30 +112,30 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
     const std::string obj_type_str = xmlrpc_c::value_string(command[1]);
 
     if(!obj_type_str.compare("wire")) {
-      if(command.size() < 8) 
+      if(command.size() < 8)
 	throw XMLRPCException("Command wire add has less then 8 parameters.");
-    
+
       int layer_id = xmlrpc_c::value_int(command[2]);
       int from_x = xmlrpc_c::value_int(command[3]);
       int from_y = xmlrpc_c::value_int(command[4]);
       int to_x = xmlrpc_c::value_int(command[5]);
       int to_y = xmlrpc_c::value_int(command[6]);
       unsigned int diameter = xmlrpc_c::value_int(command[7]);
-      
+
       Wire_shptr w(new Wire(from_x, from_y, to_x, to_y, diameter));
       w->set_remote_object_id(transaction_id);
       lmodel->add_object(layer_id, w);
     }
     else if(!obj_type_str.compare("via")) {
-      if(command.size() < 7) 
+      if(command.size() < 7)
 	throw XMLRPCException("Command via add has less then 8 parameters.");
-    
+
       int layer_id = xmlrpc_c::value_int(command[2]);
       int x = xmlrpc_c::value_int(command[3]);
       int y = xmlrpc_c::value_int(command[4]);
       unsigned int diameter = xmlrpc_c::value_int(command[5]);
       const std::string direction = xmlrpc_c::value_string(command[6]);
-      
+
       Via_shptr v(new Via(x, y, diameter, Via::get_via_direction_from_string(direction)));
       v->set_remote_object_id(transaction_id);
       lmodel->add_object(layer_id, v);
@@ -144,21 +144,21 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
 
   /*
   for(std::vector<xmlrpc_c::value>::const_iterator iter = command.begin();
-      iter != command.end(); ++iter) 
+      iter != command.end(); ++iter)
     std::cout << "\ttype " << (*iter).type() << std::endl;
   }
   */
 
 }
 
-transaction_id_t degate::pull_changes_from_server(std::string const& server_url, 
+transaction_id_t degate::pull_changes_from_server(std::string const& server_url,
 						  LogicModel_shptr lmodel,
 						  transaction_id_t start_tid) {
   try {
     xmlrpc_c::paramList params;
-    params.add(xmlrpc_c::value_int(start_tid));    
+    params.add(xmlrpc_c::value_int(start_tid));
     xmlrpc_c::value_array ret(remote_method_call(server_url, "degate.pull", params));
-    
+
     std::vector<xmlrpc_c::value> v(ret.vectorValueValue());
 
     if(start_tid == 0) ++start_tid;
@@ -189,7 +189,7 @@ transaction_id_t degate::pull_changes_from_server(std::string const& server_url,
   catch(...) {
     cerr << "Client threw unexpected error." << endl;
     throw XMLRPCException("Client threw unexpected error.");
-  }   
+  }
 
   return start_tid;
 }

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <DesignRuleChecker.h>
@@ -47,18 +47,18 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
   assert(lmodel);
 
   if(get_dialog()) {
-   
+
     // connect signals
     get_widget("close_button", pCloseButton);
     if(pCloseButton)
       pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_close_button_clicked));
-    
+
     get_widget("goto_button", pGotoButton);
     if(pGotoButton) {
       pGotoButton->grab_focus();
       pGotoButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_goto_button_clicked) );
     }
-    
+
     get_widget("ignore_button", pIgnoreDRCButton);
     if(pIgnoreDRCButton) {
       pIgnoreDRCButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_ignore_button_clicked) );
@@ -68,21 +68,21 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
     if(pUpdateButton) {
       pUpdateButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_update_button_clicked) );
     }
-    
+
     refListStore = Gtk::ListStore::create(m_Columns);
-    
+
     get_widget("treeview", pTreeView);
     if(pTreeView) {
       pTreeView->set_model(refListStore);
-      
-      Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText()); 
+
+      Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText());
       Gtk::TreeView::Column * pColumn;
-      
-      
+
+
       /*
        * col 0
        */
-      
+
       pTreeView->append_column("Layer", *pRenderer);
       pColumn = pTreeView->get_column(0);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_layer);
@@ -92,28 +92,28 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
       /*
        * col 1
        */
-      
+
       pTreeView->append_column("Class", *pRenderer);
       pColumn = pTreeView->get_column(1);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_class);
       pColumn->set_resizable(true);
       pColumn->set_sort_column(m_Columns.m_col_violation_class);
-      
+
       /*
        * col 2
        */
-      
+
       pTreeView->append_column("Description", *pRenderer);
       pColumn = pTreeView->get_column(2);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_description);
       pColumn->set_resizable(true);
       pColumn->set_sort_column(m_Columns.m_col_violation_description);
-     
+
 
       // signal
       Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = pTreeView->get_selection();
-      refTreeSelection->signal_changed().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_selection_changed));      
-    }    
+      refTreeSelection->signal_changed().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_selection_changed));
+    }
 
     disable_widgets();
   }
@@ -133,7 +133,7 @@ void DRCViolationsWin::run_checks() {
   Gtk::TreeModel::Row row;
 
   BOOST_FOREACH(DRCBase::container_type::value_type v, drc.get_drc_violations()) {
-    row = *(refListStore->append()); 
+    row = *(refListStore->append());
 
     PlacedLogicModelObject_shptr plo = v->get_object();
     row[m_Columns.m_col_object_ptr] = plo;
@@ -189,7 +189,7 @@ void DRCViolationsWin::on_goto_button_clicked() {
 
       if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(object_ptr))
 	object_ptr = gate_port->get_gate();
-      
+
       signal_goto_button_clicked_(object_ptr);
     }
   }
@@ -205,7 +205,7 @@ void DRCViolationsWin::on_ignore_button_clicked() {
   dialog.run();
 }
 
-sigc::signal<void, degate::PlacedLogicModelObject_shptr>& 
+sigc::signal<void, degate::PlacedLogicModelObject_shptr>&
 DRCViolationsWin::signal_goto_button_clicked() {
   return signal_goto_button_clicked_;
 }

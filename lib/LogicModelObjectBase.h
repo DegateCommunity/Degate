@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __LOGICMODELOBJECTBASE_H__
@@ -28,20 +28,20 @@
 namespace degate {
 
   /**
-   * The class LogicModelObjectBase is the base class for basically every class 
+   * The class LogicModelObjectBase is the base class for basically every class
    * that represents a logic model object.
    */
   class LogicModelObjectBase {
-    
+
   private:
-	
+
     object_id_t object_id;
-  
+
     std::string name;
     std::string description;
 
   public:
-  
+
     /**
      * Create a new object.
      */
@@ -52,17 +52,17 @@ namespace degate {
      * The constructor.
      */
 
-    LogicModelObjectBase(std::string const& object_name, 
+    LogicModelObjectBase(std::string const& object_name,
 			 std::string const& object_description);
-    
+
     /**
      * The constructor.
      */
 
     LogicModelObjectBase(object_id_t oid,
-			 std::string const& object_name, 
+			 std::string const& object_name,
 			 std::string const& object_description);
-    
+
     /**
      * The dtor.
      */
@@ -80,15 +80,15 @@ namespace degate {
      * Set the description for a logic model object. It is up to the user
      * how the object is described.
      */
-  
+
     virtual void set_description(std::string const & description);
 
     /**
      * Get the name for a logic model object.
      */
-  
+
     virtual std::string const & get_name() const;
-  
+
     /**
      * Get the description for a logic model object.
      */
@@ -116,7 +116,7 @@ namespace degate {
     /**
      * Get the object ID for a logic model object.
      */
-  
+
     virtual object_id_t get_object_id() const;
 
     /**
@@ -136,7 +136,7 @@ namespace degate {
     virtual const std::string get_descriptive_identifier() const;
 
     /**
-     * Get a human readable string that names the object type, 
+     * Get a human readable string that names the object type,
      * e.g. "Wire" or "Gate port".
      */
 

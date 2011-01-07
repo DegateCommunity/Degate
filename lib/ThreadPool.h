@@ -23,7 +23,7 @@ private:
       while(running.size() < max_n && task_queue.size() > 0 ) {
 	FunctionType f(task_queue.front());
 	task_queue.pop_front();
-	
+
 	boost::thread * p = new boost::thread(f);
 	thread_shptr t = thread_shptr(p);
 	running.push_back(t);
@@ -46,20 +46,20 @@ public:
 
   void wait() {
 
-    while(task_queue.size() > 0 || running.size() > 0) { 
+    while(task_queue.size() > 0 || running.size() > 0) {
 
       spawn();
-    
+
       for(std::list<thread_shptr>::iterator iter = running.begin();
 	  iter != running.end(); ++iter) {
-	
+
 	//std::cout << "timed wait\n";
 	if((*iter)->timed_join(boost::posix_time::millisec( 1000 )   )) {
 	  std::list<thread_shptr>::iterator i(iter);
 	  ++iter;
 	  running.erase(i);
 	}
-	
+
       }
 
 

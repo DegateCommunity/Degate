@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __TILEIMAGE_H__
@@ -30,7 +30,7 @@
 
 namespace degate {
 
-  /** 
+  /**
    * Storage policy for image objects that consists of tiles.
    *
    * This implementation uses a TileCache.
@@ -66,14 +66,14 @@ namespace degate {
      * it at least requested_size pixel width / height.
      * @param requested_size The minimum size.
      * @param tile_width_exp The exponent (to base 2) that gives th
-     * @return 
+     * @return
      */
     unsigned int calc_real_size(unsigned int requested_size,
 				unsigned int tile_width_exp) const {
 
       // we can't use the get_tile_size() method here, because we use
       // this method during the base class constructor call.
-      unsigned int tile_size = (1 << tile_width_exp);      
+      unsigned int tile_size = (1 << tile_width_exp);
       unsigned int remainder = requested_size % tile_size;
       if(remainder == 0) return requested_size;
       else return requested_size - remainder + tile_size;
@@ -112,14 +112,14 @@ namespace degate {
       if(!file_exists(_directory)) create_directory(_directory);
 
     }
-    
+
     /**
      * The destructor.
      */
     virtual ~StoragePolicy_Tile() {
       if(persistent == false) remove_directory(directory);
     }
-    
+
 
     /**
      * Get the width / height of a single tile. The size is a power of two.
@@ -142,7 +142,7 @@ namespace degate {
 
 
     inline typename PixelPolicy::pixel_type get_pixel(unsigned int x, unsigned int y) const;
-    
+
     inline void set_pixel(unsigned int x, unsigned int y, typename PixelPolicy::pixel_type new_val);
 
     /**
@@ -157,16 +157,16 @@ namespace degate {
   };
 
   template<class PixelPolicy>
-  inline typename PixelPolicy::pixel_type 
-  StoragePolicy_Tile<PixelPolicy>::get_pixel(unsigned int x, 
+  inline typename PixelPolicy::pixel_type
+  StoragePolicy_Tile<PixelPolicy>::get_pixel(unsigned int x,
 					     unsigned int y) const {
     MemoryMap_shptr mem = tile_cache.get_tile(x, y);
     return mem->get(x & offset_bitmask, y & offset_bitmask);
   }
 
   template<class PixelPolicy>
-  inline void 
-  StoragePolicy_Tile<PixelPolicy>::set_pixel(unsigned int x, unsigned int y, 
+  inline void
+  StoragePolicy_Tile<PixelPolicy>::set_pixel(unsigned int x, unsigned int y,
 					     typename PixelPolicy::pixel_type new_val) {
 
     MemoryMap_shptr mem = tile_cache.get_tile(x, y);
@@ -179,7 +179,7 @@ namespace degate {
 
 }
 
-  
-  
+
+
 
 #endif

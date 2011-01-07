@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <AppHelper.h>
@@ -28,9 +28,9 @@ using namespace boost::filesystem;
 std::string get_date_and_time_as_file_prefix() {
   time_t tim = time(NULL);
   tm *now = localtime(&tim);
-    
+
   boost::format f("%4d-%02d-%02d_%02d%02d_");
-  f 
+  f
     % (now->tm_year+1900)
     % (now->tm_mon+1)
     % now->tm_mday
@@ -51,10 +51,10 @@ bool autosave_project(Project_shptr project, time_t interval) {
     std::string gatelib_file = "gate_library.xml";
 
     ProjectExporter exporter;
-    exporter.export_all(project->get_project_directory(), 
+    exporter.export_all(project->get_project_directory(),
 			project, false,
-			prefix + project_file, 
-			prefix + lmodel_file, 
+			prefix + project_file,
+			prefix + lmodel_file,
 			prefix + gatelib_file);
 
     path project_dir(project->get_project_directory());
@@ -68,7 +68,7 @@ bool autosave_project(Project_shptr project, time_t interval) {
     create_symlink(path(prefix + gatelib_file), project_dir / path(".gate_library.xml"));
 
     project->reset_last_saved_counter();
-    
+
     return true;
   }
   return false;
@@ -141,13 +141,13 @@ void add_image_file_filter_to_file_chooser_for_writing(Gtk::FileChooserDialog & 
 
 
 
-degate::BoundingBox get_selection_bounding_box(GfxEditor<DegateRenderer> const& editor, 
+degate::BoundingBox get_selection_bounding_box(GfxEditor<DegateRenderer> const& editor,
 					       const degate::Project_shptr project) {
 
   // get bounding box for working area
   const std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
     std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
-  
+
   BoundingBox bbox;
 
   if(selection_tool != NULL && selection_tool->has_selection()) // selected area

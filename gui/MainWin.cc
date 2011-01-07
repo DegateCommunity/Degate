@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include <gdkmm/window.h>
@@ -90,7 +90,7 @@ MainWin::MainWin() : render_window(editor) {
   //const std::vector<bool> render_func_states = imgWin.get_renderer_func_states();
 
   //menu_manager->initialize_menu_render_funcs(render_func_names, render_func_states);
-  
+
 
   //render_window.set_virtual_size(100, 100);
   m_Box.pack_start(render_window, Gtk::PACK_EXPAND_WIDGET);
@@ -107,7 +107,7 @@ MainWin::MainWin() : render_window(editor) {
   control_key_pressed = false;
   shift_key_pressed = false;
   //imgWin.set_shift_key_state(false);
-  
+
   render_window.grab_focus();
 
   project_to_open = NULL;
@@ -115,7 +115,7 @@ MainWin::MainWin() : render_window(editor) {
 
 
   if(getuid() == 0) {
-    warning_dialog("Security warning", 
+    warning_dialog("Security warning",
 		   "You started degate as superuser. I don't cause harm to you. "
 		   "But you should think about it. You should know: \"All your base are belong to us\". "
 		   "I will not drop privileges and I hope you know, what you do.");
@@ -142,7 +142,7 @@ void MainWin::update_title() {
 
     LogicModel_shptr lmodel = main_project->get_logic_model();
 
-    snprintf(_title, sizeof(_title), "degate -- [%s%s%s%s] [%d/%d]", 
+    snprintf(_title, sizeof(_title), "degate -- [%s%s%s%s] [%d/%d]",
 	     main_project->get_name().length() > 0 ? main_project->get_name().c_str() : "",
 	     main_project->get_name().length() > 0 ? ": " : "",
 	     main_project->get_project_directory().c_str(),
@@ -173,7 +173,7 @@ bool MainWin::on_timer() {
 }
 
 void MainWin::on_view_info_layer_toggled(int slot_pos) {
-  
+
   error_dialog("Error", "Feature deactivated.");
   //if(menu_manager->toggle_info_layer(slot_pos)) {
     //imgWin.toggle_render_info_layer(slot_pos);
@@ -182,7 +182,7 @@ void MainWin::on_view_info_layer_toggled(int slot_pos) {
 }
 
 void MainWin::on_menu_view_toggle_all_info_layers() {
- 
+
   //const std::vector<bool> new_states = menu_manager->toggle_info_layer_visibility();
   //imgWin.set_renderer_info_layer_state(new_states);
   //imgWin.update_screen();
@@ -198,7 +198,7 @@ void MainWin::add_to_recent_menu() {
 
   Glib::ustring str(main_project->get_project_directory());
   str += "/project.xml";
-  
+
   Gtk::RecentManager::Data data;
 
   data.app_exec = "degate %u";
@@ -232,7 +232,7 @@ void MainWin::on_menu_project_new() {
   dialog.set_transient_for(*this);
   dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
   dialog.add_button("Select", Gtk::RESPONSE_OK);
-  
+
   std::cout << "create project - raise file chooser"  << std::endl;
   int result = dialog.run();
   std::cout << "create project -get file name"  << std::endl;
@@ -255,7 +255,7 @@ void MainWin::create_new_project(std::string const& project_dir) {
   unsigned int width = npw_dialog.get_width();
   unsigned int height = npw_dialog.get_height();
   unsigned int layers = npw_dialog.get_layers();
-  
+
   if(width == 0 || height == 0 || layers == 0) {
     Gtk::MessageDialog dialog(*this, "Invalid value", true, Gtk::MESSAGE_ERROR);
     dialog.set_title("The values you entered are invalid.");
@@ -283,9 +283,9 @@ void MainWin::on_menu_project_close() {
 
     if(main_project->is_changed()) {
 
-      Gtk::MessageDialog dialog("Project data was modified. Should it be saved?", 
+      Gtk::MessageDialog dialog("Project data was modified. Should it be saved?",
 				true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-      dialog.set_title("Warning");      
+      dialog.set_title("Warning");
       if(dialog.run() == Gtk::RESPONSE_YES) {
 	on_menu_project_save();
       }
@@ -299,8 +299,8 @@ void MainWin::on_menu_project_close() {
     editor.update_screen();
 
     update_title();
-    
-    
+
+
     if(ciWin != NULL) ciWin.reset();
     if(drcWin != NULL) drcWin.reset();
     if(alWin != NULL) alWin.reset();
@@ -325,9 +325,9 @@ void MainWin::on_menu_project_settings() {
 void MainWin::on_menu_project_export_archive() {
   if(main_project) {
     if(main_project->is_changed()) {
-      Gtk::MessageDialog dialog_ask(*this, "Project data was modified. Should it be saved?", 
+      Gtk::MessageDialog dialog_ask(*this, "Project data was modified. Should it be saved?",
 				    true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-      dialog_ask.set_title("Warning");      
+      dialog_ask.set_title("Warning");
       if(dialog_ask.run() == Gtk::RESPONSE_YES) {
 	on_menu_project_save();
       }
@@ -362,11 +362,11 @@ void MainWin::on_menu_project_export_archive() {
     case Gtk::RESPONSE_CANCEL:
       break;
     }
-    
+
   }
 }
 
-void MainWin::project_export_thread(std::string project_dir, 
+void MainWin::project_export_thread(std::string project_dir,
 				    std::string dst_file) {
 
   ProjectArchiver archiver;
@@ -375,7 +375,7 @@ void MainWin::project_export_thread(std::string project_dir,
 
     std::string filename = get_filename_from_path(dst_file);
     assert(filename.length() > (get_file_suffix(filename).length() + 1));
-    std::string name = filename.substr(0, filename.length() - 
+    std::string name = filename.substr(0, filename.length() -
 				       (get_file_suffix(filename).length() + 1));
 
     archiver.export_data(project_dir.c_str(), dst_file.c_str(), name);
@@ -415,7 +415,7 @@ void MainWin::on_menu_project_open() {
 
   if(main_project) on_menu_project_close();
 
-  Gtk::FileChooserDialog dialog("Please choose a project folder", 
+  Gtk::FileChooserDialog dialog("Please choose a project folder",
 				Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
   dialog.set_transient_for(*this);
 
@@ -439,9 +439,9 @@ void MainWin::open_project(Glib::ustring project_dir) {
   if(check_for_autosaved_project(project_dir.c_str())) {
 
     Gtk::MessageDialog dialog("There are autosaved files that are newer than the project files. "
-			      "Should the project data be loaded from the autosaved files instead?", 
+			      "Should the project data be loaded from the autosaved files instead?",
 			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-    dialog.set_title("Question");      
+    dialog.set_title("Question");
     if(dialog.run() == Gtk::RESPONSE_YES)
       restore_autosaved_project(project_dir.c_str());
   }
@@ -449,10 +449,10 @@ void MainWin::open_project(Glib::ustring project_dir) {
   ipWin = std::tr1::shared_ptr<InProgressWin>
     (new InProgressWin(this, "Opening Project", "Please wait while opening project."));
   ipWin->show();
-  
+
   signal_project_open_finished_.connect(sigc::mem_fun(*this, &MainWin::on_project_load_finished));
   thread = Glib::Thread::create(sigc::bind<const Glib::ustring>
-				(sigc::mem_fun(*this, &MainWin::project_open_thread), 
+				(sigc::mem_fun(*this, &MainWin::project_open_thread),
 				 project_dir), false);
 }
 
@@ -460,14 +460,14 @@ void MainWin::open_project(Glib::ustring project_dir) {
 void MainWin::on_project_load_finished() {
 
   //thread->join();
-  
+
   if(ipWin) {
     ipWin->close();
     ipWin.reset();
   }
-  
+
   if(main_project == NULL) {
-    Gtk::MessageDialog err_dialog(*this, "Can't open project", 
+    Gtk::MessageDialog err_dialog(*this, "Can't open project",
 				  false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
     err_dialog.run();
   }
@@ -500,7 +500,7 @@ void MainWin::project_open_thread(Glib::ustring project_dir) {
 void MainWin::update_gui_for_loaded_project() {
 
   if(main_project) {
-    
+
 
     LogicModel_shptr lmodel = main_project->get_logic_model();
     int l_pos = get_first_enabled_layer(main_project->get_logic_model())->get_layer_pos();
@@ -517,7 +517,7 @@ void MainWin::update_gui_for_loaded_project() {
 		    main_project->get_regular_vertical_grid(),
 		    main_project->get_irregular_horizontal_grid(),
 		    main_project->get_irregular_vertical_grid());
-    
+
     editor.set_default_colors(main_project->get_default_colors());
 
     menu_manager->set_widget_sensitivity(true);
@@ -543,8 +543,8 @@ void MainWin::update_gui_for_loaded_project() {
     alWin = std::tr1::shared_ptr<AnnotationListWin>
       (new AnnotationListWin(this, main_project->get_logic_model()));
     alWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
-    
-    gcWin = std::tr1::shared_ptr<GridConfigWin>(new GridConfigWin(this, 
+
+    gcWin = std::tr1::shared_ptr<GridConfigWin>(new GridConfigWin(this,
 							  main_project->get_regular_horizontal_grid(),
 							  main_project->get_regular_vertical_grid(),
 							  main_project->get_irregular_horizontal_grid(),
@@ -552,12 +552,12 @@ void MainWin::update_gui_for_loaded_project() {
     gcWin->signal_changed().connect(sigc::mem_fun(*this, &MainWin::on_grid_config_changed));
 
 
-    lcWin = std::tr1::shared_ptr<LayerConfigWin>(new LayerConfigWin(this, main_project->get_logic_model(), 
+    lcWin = std::tr1::shared_ptr<LayerConfigWin>(new LayerConfigWin(this, main_project->get_logic_model(),
 							    main_project->get_project_directory()));
     lcWin->signal_on_background_import_finished().connect
       (sigc::mem_fun(*this, &MainWin::on_background_import_finished));
 
-    editor.update_screen();  
+    editor.update_screen();
   }
 }
 
@@ -591,7 +591,7 @@ void MainWin::on_menu_project_create_subproject() {
 
 void MainWin::on_menu_project_open_parent() {
   if(main_project == NULL) return;
-  
+
   std::string parent_dir = join_pathes(main_project->get_project_directory(), "..");
   if(file_exists(join_pathes(parent_dir, "project.xml"))) {
     open_project(parent_dir);
@@ -615,7 +615,7 @@ void MainWin::set_layer(unsigned int layer) {
     Layer_shptr layer_ptr = lmodel->get_layer(layer);
     lmodel->set_current_layer(layer_ptr->get_layer_pos());
     editor.set_layer(layer_ptr);
-  
+
     update_title();
     editor.update_screen();
   }
@@ -633,16 +633,16 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
 
     center_view(bbox.get_center_x(), bbox.get_center_y(), layer->get_layer_pos());
 
-    
-    
+
+
   }
 }
 
 void MainWin::on_menu_view_next_layer() {
   if(main_project == NULL) return;
-  
+
   LogicModel_shptr lmodel = main_project->get_logic_model();
-  if(lmodel->get_num_layers() != 0) 
+  if(lmodel->get_num_layers() != 0)
   set_layer(get_next_enabled_layer(lmodel));
 }
 
@@ -650,7 +650,7 @@ void MainWin::on_menu_view_prev_layer() {
   if(main_project == NULL) return;
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
-  if(lmodel->get_num_layers() != 0) 
+  if(lmodel->get_num_layers() != 0)
     set_layer(get_prev_enabled_layer(lmodel));
 }
 
@@ -703,7 +703,7 @@ void MainWin::on_menu_tools_select() {
 void MainWin::on_menu_tools_move() {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
   if(window) window->set_cursor(Gdk::Cursor(Gdk::FLEUR));
- 
+
   std::tr1::shared_ptr<GfxEditorToolMove<DegateRenderer> > move_tool
     (new GfxEditorToolMove<DegateRenderer>(editor));
 
@@ -737,7 +737,7 @@ void MainWin::on_menu_tools_via(degate::Via::DIRECTION dir) {
   std::tr1::shared_ptr<GfxEditorToolVia<DegateRenderer> > via_tool
     (new GfxEditorToolVia<DegateRenderer>(editor));
 
-  if(dir == Via::DIRECTION_DOWN) 
+  if(dir == Via::DIRECTION_DOWN)
     via_tool->signal_mouse_clicked().connect(sigc::mem_fun(*this, &MainWin::via_down_tool_clicked));
   else
     via_tool->signal_mouse_clicked().connect(sigc::mem_fun(*this, &MainWin::via_up_tool_clicked));
@@ -806,14 +806,14 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
       ipWin = std::tr1::shared_ptr<InProgressWin>
 	(new InProgressWin(this, "Calculating", "Please wait while calculating.", rm.get_progress_control(slot_pos)));
       ipWin->show();
-      
+
       signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
-      
-      signal_algorithm_finished_->connect(sigc::bind(sigc::mem_fun(*this, 
+
+      signal_algorithm_finished_->connect(sigc::bind(sigc::mem_fun(*this,
 								   &MainWin::on_algorithm_finished),
 						     slot_pos));
-    
-      thread = Glib::Thread::create(sigc::bind(sigc::mem_fun(*this, &MainWin::algorithm_calc_thread), 
+
+      thread = Glib::Thread::create(sigc::bind(sigc::mem_fun(*this, &MainWin::algorithm_calc_thread),
 					       slot_pos), false);
     }
   }
@@ -826,7 +826,7 @@ void MainWin::on_menu_goto_gate_by_name() {
     GenericTextInputWin input(this, "Goto gate by name", "Gate name", "");
     Glib::ustring str;
     if(input.run(str)) {
-    
+
       Gate_shptr gate = get_gate_by_name(main_project->get_logic_model(), str);
       if(gate == NULL) error_dialog("Error", "There is no gate with that name or the name is not unique.");
       else goto_object(gate);
@@ -839,7 +839,7 @@ void MainWin::on_menu_goto_gate_by_id() {
     GenericTextInputWin input(this, "Goto gate by ID", "Gate ID", "");
     Glib::ustring str;
     if(input.run(str)) {
-    
+
       unsigned int id = atol(str.c_str());
 
       LogicModel_shptr lmodel = main_project->get_logic_model();
@@ -854,7 +854,7 @@ void MainWin::on_menu_goto_gate_by_id() {
 
       if(gate == NULL) error_dialog("Error", "There is no gate with that ID.");
       else goto_object(gate);
-	 
+
     }
   }
 }
@@ -865,7 +865,7 @@ void MainWin::on_menu_gate_port_colors() {
     PortColorsWin pcWin(this, main_project->get_port_color_manager());
     pcWin.run();
 
-    apply_port_color_settings(main_project->get_logic_model(), 
+    apply_port_color_settings(main_project->get_logic_model(),
 			      main_project->get_port_color_manager());
 
     editor.update_screen();
@@ -879,13 +879,13 @@ void MainWin::on_menu_gate_list() {
     GateListWin glWin(this, main_project->get_logic_model());
     glWin.run();
 
-    apply_port_color_settings(main_project->get_logic_model(), 
+    apply_port_color_settings(main_project->get_logic_model(),
 			      main_project->get_port_color_manager());
 
     project_changed();
     editor.update_screen();
 
-    apply_colors_to_gate_ports(main_project->get_logic_model(), 
+    apply_colors_to_gate_ports(main_project->get_logic_model(),
 			       main_project->get_port_color_manager());
   }
 }
@@ -894,9 +894,9 @@ void MainWin::on_menu_gate_list() {
 
 void MainWin::on_menu_gate_orientation() {
   if(main_project) {
-   
+
     if(Gate_shptr gate = selected_objects.get_single_object<Gate>()) {
-      
+
       SetOrientationWin oWin(this, gate->get_orientation());
       Gate::ORIENTATION new_ori = oWin.run();
 
@@ -923,12 +923,12 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 
     if(tmpl_set.size() == 0) return;
 
-    Gtk::MessageDialog dialog(*this, "Are you sure you want to remove all gates by that type(s)?", 
+    Gtk::MessageDialog dialog(*this, "Are you sure you want to remove all gates by that type(s)?",
 			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
     dialog.set_title("Warning");
     if(dialog.run() == Gtk::RESPONSE_YES) {
       dialog.hide();
-      
+
       for(std::list<GateTemplate_shptr>::iterator iter = tmpl_set.begin();
 	  iter != tmpl_set.end(); ++iter) {
 
@@ -943,13 +943,13 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 	if(dialog2.run() == Gtk::RESPONSE_YES)
 	  lmodel->remove_gate_template(gate_template);
       }
-      
+
       editor.update_screen();
       project_changed();
     }
-    
+
   }
-  
+
 }
 
 void MainWin::on_menu_gate_set_as_master() {
@@ -1018,18 +1018,18 @@ void MainWin::on_menu_gate_set() {
 
   }
   else if(Gate_shptr gate = selected_objects.get_single_object<Gate>()) {
-    
+
     GateSelectWin gsWin(this, main_project->get_logic_model());
     std::list<GateTemplate_shptr> tmpl_list = gsWin.get_selection(false);
-    
+
     if(tmpl_list.size() == 0) return;
     GateTemplate_shptr tmpl = *(tmpl_list.begin());
-    
+
     gate->set_gate_template(tmpl);
-    
+
     editor.update_screen();
     project_changed();
-    
+
   }
 }
 
@@ -1060,15 +1060,15 @@ void MainWin::on_menu_gate_create_by_selection() {
     grab_template_images(lmodel, tmpl, bbox);
 
     GateConfigWin gcWin(this, main_project->get_logic_model(), tmpl);
-    
+
     if(gcWin.run() == true) {
-      
+
       lmodel->add_gate_template(tmpl);
-      
+
       Gate_shptr gate(new Gate(bbox, Gate::ORIENTATION_NORMAL));
       gate->set_gate_template(tmpl);
       lmodel->add_object(layer->get_layer_pos(), gate);
-    
+
       selection_tool->reset_selection();
       editor.update_screen();
       project_changed();
@@ -1124,7 +1124,7 @@ void MainWin::on_area_selection_activated(BoundingBox const& bbox) {
 
     for(Layer::qt_region_iterator iter = layer->region_begin(bbox);
 	iter != layer->region_end(); ++iter) {
-      
+
       PlacedLogicModelObject_shptr plo = *iter;
       assert(plo != NULL);
 
@@ -1156,7 +1156,7 @@ void MainWin::via_down_tool_clicked(unsigned int real_x, unsigned int real_y, un
 void MainWin::via_tool_clicked(unsigned int real_x, unsigned int real_y, degate::Via::DIRECTION dir) {
   if(main_project == NULL) return;
   Via_shptr new_via(new Via(real_x, real_y, main_project->get_default_pin_diameter(), dir));
-	  
+
   LogicModel_shptr lmodel = main_project->get_logic_model();
   lmodel->add_object(lmodel->get_current_layer()->get_layer_pos(), new_via);
   project_changed();
@@ -1167,7 +1167,7 @@ void MainWin::selection_tool_clicked(unsigned int real_x, unsigned int real_y, u
   if(button == 3) {
     menu_manager->show_popup_menu(button, 0);
     // position is only needed for popup actions
-    last_click_on_real_x = real_x; 
+    last_click_on_real_x = real_x;
     last_click_on_real_y = real_y;
   }
   else if(button == 1) {
@@ -1192,8 +1192,8 @@ bool MainWin::on_key_release_event_received(GdkEventKey * event) {
     //imgWin.set_shift_key_state(false);
     //if(tool == TOOL_WIRE) imgWin.update_screen();
   }
-  else if(event->state & GDK_CONTROL_MASK || 
-	  event->keyval == GDK_Control_L || 
+  else if(event->state & GDK_CONTROL_MASK ||
+	  event->keyval == GDK_Control_L ||
 	  event->keyval == GDK_Control_R) {
     control_key_pressed = false;
     //debug(TM, "ctrl release");
@@ -1260,7 +1260,7 @@ void MainWin::update_gui_on_selection_change() {
     else {
       menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", selection_active);
     }
-    
+
     if(ciWin != NULL) ciWin->set_object(*it);
 
   }
@@ -1271,18 +1271,18 @@ void MainWin::update_gui_on_selection_change() {
     if(ciWin != NULL) ciWin->disable_inspection();
   }
 
-  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection", 
+  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection",
 					  selected_objects.check_for_all(&is_removable));
 
-  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicInterconnect", 
-					  selected_objects.size() >= 2 && 
+  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicInterconnect",
+					  selected_objects.size() >= 2 &&
 					  selected_objects.check_for_all(&is_interconnectable));
 
-  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicIsolate", 
-					  selected_objects.size() >= 1 && 
+  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicIsolate",
+					  selected_objects.size() >= 1 &&
 					  selected_objects.check_for_all(&is_interconnectable));
 
-  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicMoveGateIntoModule", 
+  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicMoveGateIntoModule",
 					  selected_objects.check_for_all(&is_of_object_type<Gate>));
 
 }
@@ -1293,15 +1293,15 @@ void MainWin::selection_tool_double_clicked(unsigned int real_x, unsigned int re
   Layer_shptr layer = lmodel->get_current_layer();
   PlacedLogicModelObject_shptr plo = layer->get_object_at_position(real_x, real_y);
 
-  if(SubProjectAnnotation_shptr sp = 
+  if(SubProjectAnnotation_shptr sp =
      std::tr1::dynamic_pointer_cast<SubProjectAnnotation>(plo)) {
 
     std::string dir = join_pathes(main_project->get_project_directory(), sp->get_path());
     debug(TM, "Will open or create project at %s", dir.c_str());
-    
+
     if(file_exists(dir))
       open_project(dir);
-    else 
+    else
       create_new_project(dir);
   }
 }
@@ -1332,7 +1332,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
     std::cout << "Object found." << std::endl;
     //plo->print();
     add_to_selection = true;
-    
+
     boost::format f("object: %1%, description: %2%");
     f % plo->get_descriptive_identifier() % plo->get_description();
     m_statusbar.push(f.str());
@@ -1353,8 +1353,8 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
     clear_selection();
     highlighted_objects.clear();
   }
-  
-  
+
+
   if(add_to_selection) {
     // add to selection
     if(plo != NULL) {
@@ -1362,7 +1362,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
       highlighted_objects.add(plo, lmodel);
     }
   }
- 
+
   editor.update_screen();
   update_gui_on_selection_change();
 }
@@ -1421,10 +1421,10 @@ void MainWin::on_popup_menu_set_port() {
       return;
     }
 
-    unsigned int 
+    unsigned int
       x = gate->get_relative_x_position_within_gate(last_click_on_real_x - gate->get_min_x()),
       y = gate->get_relative_y_position_within_gate(last_click_on_real_y - gate->get_min_y());
-    
+
     PortSelectWin psWin(this, gate);
     GateTemplatePort_shptr template_port = psWin.run();
     if(template_port != NULL) {
@@ -1455,7 +1455,7 @@ void MainWin::on_popup_menu_set_name() {
     GenericTextInputWin input(this, "Set name", "Please set a name", name);
     Glib::ustring str;
     if(input.run(name) == true) {
-    
+
       for(ObjectSet::const_iterator it = selected_objects.begin(); it != selected_objects.end(); it++) {
 	(*it)->set_name(name);
       }
@@ -1502,7 +1502,7 @@ void MainWin::on_popup_menu_add_horizontal_grid_line() {
 void MainWin::on_menu_logic_auto_name_gates(AutoNameGates::ORIENTATION orientation) {
   if(main_project != NULL) {
 
-    Gtk::MessageDialog dialog(*this, "The operation may destroy previously set names. Are you sure you want name all gates?", 
+    Gtk::MessageDialog dialog(*this, "The operation may destroy previously set names. Are you sure you want name all gates?",
 			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
     dialog.set_title("Warning");
     if(dialog.run() == Gtk::RESPONSE_NO) return;
@@ -1517,14 +1517,14 @@ void MainWin::on_menu_logic_auto_name_gates(AutoNameGates::ORIENTATION orientati
       return;
     }
 
-    ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Naming gates", 
+    ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Naming gates",
 							  "Please wait while generating names."));
     ipWin->show();
 
     signal_auto_name_finished_.connect(sigc::mem_fun(*this, &MainWin::on_auto_name_finished));
     thread = Glib::Thread::create(sigc::bind<AutoNameGates::ORIENTATION>
-				  (sigc::mem_fun(*this, 
-						 &MainWin::auto_name_gates_thread), 
+				  (sigc::mem_fun(*this,
+						 &MainWin::auto_name_gates_thread),
 				   orientation), false);
 
   }
@@ -1582,7 +1582,7 @@ void MainWin::on_menu_logic_isolate() {
       error_dialog("Error", "One of the objects you selected can not have connections at all.");
       return;
     }
-    
+
 
     isolate_objects<std::set<PlacedLogicModelObject_shptr>::iterator>(main_project->get_logic_model(),
       selected_objects.begin(),
@@ -1609,7 +1609,7 @@ void MainWin::on_menu_logic_autointerconnect_interlayer() {
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
 
-  autoconnect_interlayer_objects(lmodel, 
+  autoconnect_interlayer_objects(lmodel,
 				 lmodel->get_current_layer(),
 				 get_selection_bounding_box(editor, main_project));
 
@@ -1649,7 +1649,7 @@ void MainWin::on_menu_logic_create_annotation() {
     assert(layer != NULL);
 
     lmodel->add_object(layer->get_layer_pos(), annotation);
-    
+
     project_changed();
     editor.update_screen();
 
@@ -1674,13 +1674,13 @@ void MainWin::on_menu_move_gate_into_module() {
   Module_shptr mod = smWin.show();
   if(mod != NULL) {
 
-    for(ObjectSet::const_iterator it = selected_objects.begin(); 
+    for(ObjectSet::const_iterator it = selected_objects.begin();
 	it != selected_objects.end(); it++) {
 
       Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it);
       assert(gate != NULL);
 
-      
+
       Module_shptr root_module = lmodel->get_main_module();
       root_module->remove_gate(gate);
       mod->add_gate(gate);
@@ -1689,7 +1689,7 @@ void MainWin::on_menu_move_gate_into_module() {
     modWin->update();
     project_changed();
   }
-  
+
 }
 
 void MainWin::on_menu_view_grid_config() {
@@ -1697,7 +1697,7 @@ void MainWin::on_menu_view_grid_config() {
   if(main_project != NULL && gcWin != NULL) {
     gcWin->show();
   }
- 
+
 }
 
 void MainWin::on_grid_config_changed() {
@@ -1714,20 +1714,20 @@ void MainWin::on_menu_layer_import_background() {
 
   dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
   dialog.add_button("Select", Gtk::RESPONSE_OK);
-  add_image_file_filter_to_file_chooser_for_reading(dialog);  
+  add_image_file_filter_to_file_chooser_for_reading(dialog);
 
   int result = dialog.run();
 
   //Glib::SListHandle<Glib::ustring> filenames = dialog.get_filenames();
   Glib::ustring filename = dialog.get_filename();
   dialog.hide();
-  
+
   switch(result) {
   case(Gtk::RESPONSE_OK):
 
     assert(ipWin == NULL);
     ipWin = std::tr1::shared_ptr<InProgressWin>
-      (new InProgressWin(this, "Importing", 
+      (new InProgressWin(this, "Importing",
 			 "Please wait while importing background image and calculating the prescaled images."));
     ipWin->show();
     project_changed();
@@ -1740,7 +1740,7 @@ void MainWin::on_menu_layer_import_background() {
   case(Gtk::RESPONSE_CANCEL):
     break;
   }
-  
+
 }
 
 
@@ -1757,16 +1757,16 @@ void MainWin::on_background_import_finished() {
   LogicModel_shptr lmodel = main_project->get_logic_model();
   Layer_shptr layer = lmodel->get_current_layer();
   assert(layer != NULL);
-  
+
   if(!layer->is_enabled()) set_layer(get_first_enabled_layer(lmodel));
   else set_layer(layer->get_layer_pos());
-  
+
 }
 
 
 void MainWin::background_import_thread(Glib::ustring bg_filename) {
   debug(TM, "Load background image.");
-  load_background_image(main_project->get_logic_model()->get_current_layer(), 			
+  load_background_image(main_project->get_logic_model()->get_current_layer(),
 			main_project->get_project_directory(),
 			bg_filename);
   debug(TM, "Background image loaded.");
@@ -1776,7 +1776,7 @@ void MainWin::background_import_thread(Glib::ustring bg_filename) {
 
 void MainWin::on_menu_layer_configuration() {
   if(main_project) {
-    
+
     if(lcWin->run()) {
       project_changed();
       set_layer(get_first_enabled_layer(main_project->get_logic_model()));
@@ -1820,13 +1820,13 @@ void MainWin::remove_objects() {
       if(std::tr1::dynamic_pointer_cast<GatePort>(*it) == NULL) // gate ports can't be removed directly
 	lmodel->remove_object(*it);
     }
-      
+
     selected_objects.clear();
     highlighted_objects.clear();
 
     menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection", false);
     project_changed();
-    editor.update_screen(); 
+    editor.update_screen();
     ciWin->objects_removed();
     drcWin->objects_removed();
   }
@@ -1843,18 +1843,18 @@ void MainWin::on_menu_layer_export_background_image() {
 
       dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
       dialog.add_button("Select", Gtk::RESPONSE_OK);
-      add_image_file_filter_to_file_chooser_for_writing(dialog);  
+      add_image_file_filter_to_file_chooser_for_writing(dialog);
 
       int result = dialog.run();
 
       Glib::ustring filename = dialog.get_filename();
       dialog.hide();
-  
+
       if(result == Gtk::RESPONSE_OK) {
 
 	ScalingManager_shptr sm = layer->get_scaling_manager();
 	assert(sm != NULL);
-	
+
 	BackgroundImage_shptr img = sm->get_image(1).second;
 	assert(img != NULL);
 
@@ -1865,10 +1865,10 @@ void MainWin::on_menu_layer_export_background_image() {
 	  save_part_of_image(filename, img, selection_tool->get_bounding_box());
 	else
 	  save_image(filename, img);
-	
+
       }
     }
-  }  
+  }
 }
 
 void MainWin::on_menu_layer_clear_background_image() {
@@ -1890,10 +1890,10 @@ void MainWin::on_menu_layer_clear_background_image() {
       //editor.update_screen();
       set_layer(layer); // easiest way to update the renderer
     }
-    else 
+    else
       debug(TM, "Has no background image. There is nothing to clear.");
   }
-  
+
 }
 
 
@@ -1922,7 +1922,7 @@ void MainWin::project_changed() {
 void MainWin::on_menu_project_push_changes() {
   if(main_project != NULL) {
     try {
-      push_changes_to_server(main_project->get_server_url(), 
+      push_changes_to_server(main_project->get_server_url(),
 			     main_project->get_logic_model());
       project_changed();
       editor.update_screen();
@@ -1936,7 +1936,7 @@ void MainWin::on_menu_project_push_changes() {
 void MainWin::on_menu_project_pull_changes() {
   if(main_project != NULL) {
     try {
-      transaction_id_t tid = pull_changes_from_server(main_project->get_server_url(), 
+      transaction_id_t tid = pull_changes_from_server(main_project->get_server_url(),
 						      main_project->get_logic_model(),
 						      main_project->get_last_pulled_tid());
       main_project->set_last_pulled_tid(tid);

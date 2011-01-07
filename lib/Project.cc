@@ -1,22 +1,22 @@
 /*
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #include "globals.h"
@@ -30,7 +30,7 @@
 using namespace std;
 using namespace degate;
 
-Project::Project(length_t width, length_t height) : 
+Project::Project(length_t width, length_t height) :
   bounding_box(width, height),
   logic_model(new LogicModel(width, height)),
   port_color_manager(new PortColorManager()) {
@@ -38,7 +38,7 @@ Project::Project(length_t width, length_t height) :
 }
 
 
-Project::Project(length_t width, length_t height, std::string const& _directory, unsigned int layers) : 
+Project::Project(length_t width, length_t height, std::string const& _directory, unsigned int layers) :
   bounding_box(width, height),
   directory(_directory),
   logic_model(new LogicModel(width, height, layers)),
@@ -57,20 +57,20 @@ std::string const& Project::get_project_directory() {
   return directory;
 }
 
-BoundingBox const& Project::get_bounding_box() const { 
-  return bounding_box; 
+BoundingBox const& Project::get_bounding_box() const {
+  return bounding_box;
 }
 
-unsigned int Project::get_width() const { 
-  return bounding_box.get_width(); 
+unsigned int Project::get_width() const {
+  return bounding_box.get_width();
 }
 
-unsigned int Project::get_height() const { 
-  return bounding_box.get_height(); 
+unsigned int Project::get_height() const {
+  return bounding_box.get_height();
 }
 
-LogicModel_shptr Project::get_logic_model() { 
-  return logic_model; 
+LogicModel_shptr Project::get_logic_model() {
+  return logic_model;
 }
 
 
@@ -79,63 +79,63 @@ void Project::set_logic_model(LogicModel_shptr _logic_model) {
 }
 
 
-void Project::set_name(std::string _name) { 
-  name = _name; 
+void Project::set_name(std::string _name) {
+  name = _name;
 }
 
-std::string const& Project::get_name() const { 
-  return name; 
-}
-    
-void Project::set_description(std::string _description) { 
-  description = _description; 
+std::string const& Project::get_name() const {
+  return name;
 }
 
-std::string const& Project::get_description() const { 
-  return description; 
-}
-    
-void Project::set_degate_version(std::string version_str) { 
-  degate_version = version_str; 
+void Project::set_description(std::string _description) {
+  description = _description;
 }
 
-std::string const& Project::get_degate_version() { 
-  return degate_version; 
-}
-    
-void Project::set_lambda(length_t l) { 
-  lambda = l; 
+std::string const& Project::get_description() const {
+  return description;
 }
 
-length_t Project::get_lambda() const { 
-  return lambda; 
-}
-    
-void Project::set_default_pin_diameter(diameter_t pin_diameter) { 
-  default_pin_diameter = pin_diameter; 
+void Project::set_degate_version(std::string version_str) {
+  degate_version = version_str;
 }
 
-diameter_t Project::get_default_pin_diameter() const { 
-  return default_pin_diameter; 
-}
-    
-void Project::set_default_wire_diameter(diameter_t wire_diameter) { 
-  default_wire_diameter = wire_diameter; 
+std::string const& Project::get_degate_version() {
+  return degate_version;
 }
 
-diameter_t Project::get_default_wire_diameter() const { 
-  return default_wire_diameter; 
+void Project::set_lambda(length_t l) {
+  lambda = l;
+}
+
+length_t Project::get_lambda() const {
+  return lambda;
+}
+
+void Project::set_default_pin_diameter(diameter_t pin_diameter) {
+  default_pin_diameter = pin_diameter;
+}
+
+diameter_t Project::get_default_pin_diameter() const {
+  return default_pin_diameter;
+}
+
+void Project::set_default_wire_diameter(diameter_t wire_diameter) {
+  default_wire_diameter = wire_diameter;
+}
+
+diameter_t Project::get_default_wire_diameter() const {
+  return default_wire_diameter;
 }
 
 
-void Project::set_changed(bool state) { 
-  changed = state; 
+void Project::set_changed(bool state) {
+  changed = state;
   if(state == false)
     reset_last_saved_counter();
 }
 
-bool Project::is_changed() const { 
-  return changed; 
+bool Project::is_changed() const {
+  return changed;
 }
 
 time_t Project::get_time_since_last_save() const {
@@ -146,31 +146,31 @@ void Project::reset_last_saved_counter() {
   last_persistent_version = time(NULL);
 }
 
-RegularGrid_shptr Project::get_regular_horizontal_grid() { 
-  return regular_horizontal_grid; 
+RegularGrid_shptr Project::get_regular_horizontal_grid() {
+  return regular_horizontal_grid;
 }
 
-RegularGrid_shptr Project::get_regular_vertical_grid() { 
-  return regular_vertical_grid; 
+RegularGrid_shptr Project::get_regular_vertical_grid() {
+  return regular_vertical_grid;
 }
 
-IrregularGrid_shptr Project::get_irregular_horizontal_grid() { 
-  return irregular_horizontal_grid; 
+IrregularGrid_shptr Project::get_irregular_horizontal_grid() {
+  return irregular_horizontal_grid;
 }
 
-IrregularGrid_shptr Project::get_irregular_vertical_grid() { 
-  return irregular_vertical_grid; 
+IrregularGrid_shptr Project::get_irregular_vertical_grid() {
+  return irregular_vertical_grid;
 }
-    
-PortColorManager_shptr Project::get_port_color_manager() { 
-  return port_color_manager; 
+
+PortColorManager_shptr Project::get_port_color_manager() {
+  return port_color_manager;
 }
 
 void Project::print(std::ostream & os) {
-  os 
+  os
     << endl
-    << "================================[ " 
-    << (name.empty() ? "Unnamed project" : name) 
+    << "================================[ "
+    << (name.empty() ? "Unnamed project" : name)
     << " ]=================================" << endl
     << "+ Project description: " << description << endl
     << "+ Degate version: " << degate_version << endl
@@ -216,7 +216,7 @@ void Project::init_default_values() {
   default_colors[DEFAULT_COLOR_TEXT] = 0xffffffff;
 
   set_changed(false);
-  
+
   reset_last_saved_counter();
 
   regular_horizontal_grid = RegularGrid_shptr(new RegularGrid(Grid::HORIZONTAL));
@@ -231,7 +231,7 @@ void Project::init_default_values() {
   while(channel_ident.size() <= 20)
     channel_ident += (char)('a'+(int) (26.0*rand()/(RAND_MAX+1.0)));
 
-  
+
   boost::format f(Configuration::get_instance().get_servers_uri_pattern());
   f % channel_ident;
   server_url = f.str();

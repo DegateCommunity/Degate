@@ -1,22 +1,22 @@
 /*
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <globals.h>
@@ -32,7 +32,7 @@
 
 using namespace degate;
 
-Wire::Wire(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diameter) : 
+Wire::Wire(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diameter) :
   Line(_from_x, _from_y, _to_x, _to_y, _diameter) {
 }
 
@@ -73,14 +73,14 @@ object_id_t Wire::push_object_to_server(std::string const& server_url) {
     params.add(xmlrpc_c::value_int(get_to_x()));
     params.add(xmlrpc_c::value_int(get_to_y()));
     params.add(xmlrpc_c::value_int(get_diameter()));
-    
-    int const transaction_id = 
+
+    int const transaction_id =
       xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
-    
+
     set_remote_object_id(transaction_id);
     std::cout << "Pushed wire to server. remote id is: " << transaction_id << std::endl;
     return transaction_id;
-  } 
+  }
   catch(std::exception const& e) {
     std::cerr << "Client threw error: " << e.what() << std::endl;
     throw XMLRPCException(e.what());
@@ -88,6 +88,6 @@ object_id_t Wire::push_object_to_server(std::string const& server_url) {
   catch(...) {
     std::cerr << "Client threw unexpected error." << std::endl;
     throw XMLRPCException("Client threw unexpected error.");
-  }   
+  }
 
 }

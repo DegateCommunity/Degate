@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #ifndef __TIFFREADER_H__
@@ -31,7 +31,7 @@
 #include "ImageReaderBase.h"
 
 namespace degate {
-   
+
 
   /**
    * The TIFFReader parses tiff images.
@@ -53,8 +53,8 @@ namespace degate {
     using ImageReaderBase<ImageType>::get_width;
     using ImageReaderBase<ImageType>::get_height;
 
-    TIFFReader(std::string const& filename) : 
-      ImageReaderBase<ImageType>(filename), 
+    TIFFReader(std::string const& filename) :
+      ImageReaderBase<ImageType>(filename),
       tif(NULL) {}
 
     ~TIFFReader() {
@@ -72,7 +72,7 @@ namespace degate {
   bool TIFFReader<ImageType>::read() {
     tif = TIFFOpen(get_filename().c_str(), "r");
     if(tif == NULL) return false;
-    
+
     uint32 w, h;
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
@@ -103,10 +103,10 @@ namespace degate {
 
     }
     _TIFFfree(raster);
-    return true;    
+    return true;
   }
 
-  
+
 }
 
 #endif

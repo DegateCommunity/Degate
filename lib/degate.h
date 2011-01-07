@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __DEGATE_H__
@@ -31,7 +31,7 @@
  * imagery given by graphical templates and it assists you in tracing circuit paths.
  *
  * Degate is not a completely automatic analyzing tool. Degate helps you with
- * some automation in your manual reverse engineering process. 
+ * some automation in your manual reverse engineering process.
  *
  * Please have a look on the project website to learn more about degate.
  * @see http://www.degate.org
@@ -62,8 +62,8 @@
  * @include read_a_project.cc
  *
  * @subsection example2 Example 2: Work with images
- * 
- * 
+ *
+ *
  *
  * This example will load a degate project. It will iterate over all positions where
  * vias are placed. It will grab each image region where a via is placed and store them

@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "SetOrientationWin.h"
@@ -42,16 +42,16 @@ SetOrientationWin::SetOrientationWin(Gtk::Window *parent, Gate::ORIENTATION orie
   if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
-    
+
     // connect signals
     get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &SetOrientationWin::on_cancel_button_clicked));
-    
+
     get_widget("ok_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &SetOrientationWin::on_ok_button_clicked) );
-  
+
     get_widget("combobox1", entry);
     if(entry) {
 

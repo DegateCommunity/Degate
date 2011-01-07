@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __MODULE_H__
@@ -35,21 +35,21 @@ namespace degate {
 
   class Module : public LogicModelObjectBase {
   public:
-    
+
     typedef std::set<Module_shptr> module_collection;
     typedef std::set<Gate_shptr> gate_collection;
 
     /**
      * This map defines module ports.
-     * A port is identified by a name. A module port is 'connected' to 
-     * a gate ports. The relationship between port name and gate port is 
+     * A port is identified by a name. A module port is 'connected' to
+     * a gate ports. The relationship between port name and gate port is
      * one to many in order to use it as a signal bus type.
      */
     typedef std::map<std::string, /* port name */
 		     std::list<GatePort_shptr> > port_collection;
 
   private:
-	
+
     module_collection modules;
     gate_collection gates;
     port_collection ports;
@@ -59,7 +59,7 @@ namespace degate {
 
   private:
 
-    void move_gates_recursive(Module * dst_mod) 
+    void move_gates_recursive(Module * dst_mod)
       throw(InvalidPointerException);
 
     void automove_gates();
@@ -82,7 +82,7 @@ namespace degate {
      */
 
     Module(std::string const& module_name = "", std::string const& _entity_name = "");
-	
+
     /**
      * Destroy the module.
      */
@@ -99,7 +99,7 @@ namespace degate {
 
     std::string get_entity_name() const;
 
-    
+
     void add_gate(Gate_shptr gate) throw(InvalidPointerException);
 
 

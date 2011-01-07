@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __RENDERWINDOW_H__
@@ -87,7 +87,7 @@ private:
   void on_h_adjustment_changed() {
     //std::cout << "h-adj changed" << std::endl;
     int x_offset = (int) h_adjustment.get_value();
-    renderer.set_viewport_x_range(x_offset, 
+    renderer.set_viewport_x_range(x_offset,
 				  renderer.get_viewport_width() + x_offset);
   }
 
@@ -138,8 +138,8 @@ public:
    */
   RenderWindow(RendererType & _renderer, bool _enable_scrollbars = true, bool _enable_ruler = true) :
     renderer(_renderer),
-    // value, lower, upper, step_increment, page_increment, page_size                
-    v_adjustment(0.0, 0.0, 101.0, 0.1, 1.0, 1.0), 
+    // value, lower, upper, step_increment, page_increment, page_size
+    v_adjustment(0.0, 0.0, 101.0, 0.1, 1.0, 1.0),
     h_adjustment(0.0, 0.0, 101.0, 0.1, 1.0, 1.0),
     v_scrollbar(v_adjustment),
     h_scrollbar(h_adjustment),
@@ -162,8 +162,8 @@ public:
    * Zoom in.
    */
   virtual void zoom_in() {
-    zoom(renderer.get_viewport_center_x(), 
-	 renderer.get_viewport_center_y(), 
+    zoom(renderer.get_viewport_center_x(),
+	 renderer.get_viewport_center_y(),
 	 zoom_step);
   }
 
@@ -171,8 +171,8 @@ public:
    * Zoom out.
    */
   virtual void zoom_out() {
-    zoom(renderer.get_viewport_center_x(), 
-	 renderer.get_viewport_center_y(), 
+    zoom(renderer.get_viewport_center_x(),
+	 renderer.get_viewport_center_y(),
 	 1.0/zoom_step);
   }
 
@@ -201,7 +201,7 @@ public:
     renderer.set_virtual_height(h);
   }
 
-  
+
 };
 
 
@@ -223,14 +223,14 @@ void RenderWindow<RendererType>::adjust_scrollbars() {
   disable_adjustment_events();
 
   h_adjustment.configure( min_h, // value
-			  0, // lower 
+			  0, // lower
 			  renderer.get_virtual_width(), // upper
 			  (double)renderer.get_viewport_width() * 0.1, // step_increment
 			  renderer.get_viewport_width(), // page_increment
 			  renderer.get_viewport_width()); // page_size
 
   v_adjustment.configure( min_v, // value
-			  0, // lower 
+			  0, // lower
 			  renderer.get_virtual_height(), // upper
 			  (double)renderer.get_viewport_height() * 0.1, // step_increment
 			  renderer.get_viewport_height(), // page_increment
@@ -244,8 +244,8 @@ void RenderWindow<RendererType>::adjust_scrollbars() {
 
 
 template <typename RendererType>
-void RenderWindow<RendererType>::mouse_zoom(unsigned int clicked_real_x, 
-					    unsigned int clicked_real_y, 
+void RenderWindow<RendererType>::mouse_zoom(unsigned int clicked_real_x,
+					    unsigned int clicked_real_y,
 					    double zoom_factor) {
   //clicked_real_x = std::min(renderer.get_viewport_width(), (int)clicked_real_x);
   //clicked_real_y = std::min(renderer.get_viewport_height(), (int)clicked_real_y);
@@ -265,7 +265,7 @@ void RenderWindow<RendererType>::mouse_zoom(unsigned int clicked_real_x,
   if(new_center_x < 0) new_center_x = 0;
   if(new_center_y < 0) new_center_y = 0;
 
-  //std::cout << "center: " << new_center_x << "/" << new_center_y 
+  //std::cout << "center: " << new_center_x << "/" << new_center_y
   //<< " zoom=" << zoom_factor << std::endl;
   zoom(new_center_x, new_center_y, zoom_factor);
 }
@@ -277,44 +277,44 @@ void RenderWindow<RendererType>::init_window() {
   add(table);
 
   if(enable_ruler) {
-  table.attach(h_ruler, 1, 2, 0, 1, 
+  table.attach(h_ruler, 1, 2, 0, 1,
 	       Gtk::FILL,
 	       Gtk::SHRINK,
 	       default_padding, default_padding);
-  
-  table.attach(v_ruler, 0, 1, 1, 2, 
+
+  table.attach(v_ruler, 0, 1, 1, 2,
 	       Gtk::SHRINK,
 	       Gtk::FILL,
 	       default_padding, default_padding);
   }
 
-  table.attach(renderer, 1, 2, 1, 2, 
+  table.attach(renderer, 1, 2, 1, 2,
 	       Gtk::FILL | Gtk::EXPAND,
 	       Gtk::FILL | Gtk::EXPAND,
 	       default_padding, default_padding);
 
   if(enable_scrollbars) {
-    table.attach(v_scrollbar, 2, 3, 1, 2, 
+    table.attach(v_scrollbar, 2, 3, 1, 2,
 		 Gtk::SHRINK,
 		 Gtk::FILL,
 		 default_padding, default_padding);
-    
-    table.attach(h_scrollbar, 1, 2, 2, 3, 
+
+    table.attach(h_scrollbar, 1, 2, 2, 3,
 		 Gtk::FILL,
 		 Gtk::SHRINK,
 		 default_padding, default_padding);
-  
+
     // set scrollbar update policy
     h_scrollbar.set_update_policy(Gtk::UPDATE_CONTINUOUS);
     v_scrollbar.set_update_policy(Gtk::UPDATE_CONTINUOUS);
-  
+
     // connect signals
     v_adjustment_signal = v_adjustment.signal_value_changed().connect
       (sigc::mem_fun(*this, &RenderWindow::on_v_adjustment_changed));
 
     h_adjustment_signal = h_adjustment.signal_value_changed().connect
       (sigc::mem_fun(*this, &RenderWindow::on_h_adjustment_changed));
-    
+
     // connect signals
     renderer.signal_adjust_scrollbars().connect
       (sigc::mem_fun(*this, &RenderWindow::adjust_scrollbars));
@@ -324,7 +324,7 @@ void RenderWindow<RendererType>::init_window() {
     (sigc::mem_fun(*this, &RenderWindow::on_mouse_scroll_up));
   renderer.signal_mouse_scroll_down().connect
     (sigc::mem_fun(*this, &RenderWindow::on_mouse_scroll_down));
-  
+
   if(enable_ruler) {
     // configure ruler
     h_ruler.set_metric(Gtk::PIXELS);
@@ -359,10 +359,10 @@ void RenderWindow<RendererType>::zoom(double center_x, double center_y, double z
   double delta_x = renderer.get_viewport_width();
   double delta_y = renderer.get_viewport_height();
 
-  unsigned int max_edge_length = (double)std::max(renderer.get_virtual_width(), 
+  unsigned int max_edge_length = (double)std::max(renderer.get_virtual_width(),
 						  renderer.get_virtual_height());
   if(max_edge_length > 0) max_edge_length--;
-  
+
 
   if( ((delta_x < max_edge_length && delta_y < max_edge_length) && zoom_factor >= 1) ||
       (delta_x > 30 && delta_y > 30 && zoom_factor <= 1)  ) {
@@ -371,11 +371,11 @@ void RenderWindow<RendererType>::zoom(double center_x, double center_y, double z
     double min_y = center_y - zoom_factor * (delta_y/2.0);
     double max_x = center_x + zoom_factor * (delta_x/2.0);
     double max_y = center_y + zoom_factor * (delta_y/2.0);
-   
+
     unsigned int render_max_x = renderer.get_virtual_width() > 0 ? renderer.get_virtual_width() - 1 : 0;
     unsigned int render_max_y = renderer.get_virtual_height() > 0 ? renderer.get_virtual_height() - 1 : 0;
 
-    if(max_x > render_max_x) { 
+    if(max_x > render_max_x) {
       double t = max_x - render_max_x;
       max_x = render_max_x;
       min_x -= t;
@@ -399,11 +399,11 @@ template <typename RendererType>
 void RenderWindow<RendererType>::center_view(unsigned int center_x, unsigned int center_y) {
   unsigned int width_half = renderer.get_viewport_width() / 2;
   unsigned int height_half = renderer.get_viewport_height() / 2;
-  
+
   unsigned int min_x = center_x > width_half ? center_x - width_half : 0;
   unsigned int min_y = center_y > height_half ? center_y - height_half : 0;
-  
-  renderer.set_viewport(min_x, min_y, 
+
+  renderer.set_viewport(min_x, min_y,
 			min_x + (width_half << 1), min_y + (height_half << 1));
   //adjust_scrollbars();
 }

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include "Via.h"
@@ -25,19 +25,19 @@
 
 using namespace degate;
 
-Via::Via(int _x, int _y, diameter_t _diameter, Via::DIRECTION _direction) : 
-  Circle(_x, _y, _diameter), 
+Via::Via(int _x, int _y, diameter_t _diameter, Via::DIRECTION _direction) :
+  Circle(_x, _y, _diameter),
   direction(_direction) {
 }
 
 Via::~Via() {}
 
-Via::DIRECTION Via::get_direction() const { 
-  return direction; 
+Via::DIRECTION Via::get_direction() const {
+  return direction;
 }
 
-void Via::set_direction(Via::DIRECTION dir) { 
-  direction = dir; 
+void Via::set_direction(Via::DIRECTION dir) {
+  direction = dir;
 }
 
 const std::string Via::get_direction_as_string() const {
@@ -84,7 +84,7 @@ void Via::print(std::ostream & os, int n_tabs) const {
     << gen_tabs(n_tabs) << "Bounding box      : " << Circle::get_bounding_box().to_string() << std::endl
     << std::endl;
     ;
- 
+
 }
 
 //bool Via::in_shape(int x, int y) const {
@@ -133,15 +133,15 @@ object_id_t Via::push_object_to_server(std::string const& server_url) {
     params.add(xmlrpc_c::value_int(get_y()));
     params.add(xmlrpc_c::value_int(get_diameter()));
     params.add(xmlrpc_c::value_string(get_direction_as_string()));
-    
-    int const transaction_id = 
+
+    int const transaction_id =
       xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
-    
+
     set_remote_object_id(transaction_id);
 
     std::cout << "Pushed via to server. remote id is: " << transaction_id << std::endl;
     return transaction_id;
-  } 
+  }
   catch(std::exception const& e) {
     std::cerr << "Client threw error: " << e.what() << std::endl;
     throw XMLRPCException(e.what());
@@ -149,6 +149,6 @@ object_id_t Via::push_object_to_server(std::string const& server_url) {
   catch(...) {
     std::cerr << "Client threw unexpected error." << std::endl;
     throw XMLRPCException("Client threw unexpected error.");
-  }   
+  }
 
 }

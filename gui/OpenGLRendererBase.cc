@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <OpenGLRendererBase.h>
@@ -43,7 +43,7 @@ struct GLConfigUtil {
                               const char* attrib_str,
                               int attrib,
                               bool is_boolean);
-  
+
   static void examine_gl_attrib(const Glib::RefPtr<const Gdk::GL::Config>& glconfig);
 };
 
@@ -140,7 +140,7 @@ OpenGLRendererBase::OpenGLRendererBase() {
   if(!glconfig) {
     std::cerr << "*** Cannot find the double-buffered visual.\n"
               << "*** Trying single-buffered visual.\n";
-    
+
     // Try single-buffered visual
     glconfig = Gdk::GL::Config::create(Gdk::GL::MODE_RGBA | Gdk::GL::MODE_DEPTH);
     if(!glconfig) {
@@ -205,13 +205,13 @@ void OpenGLRendererBase::set_color(color_t col) {
   glColor4ub(MASK_R(col), MASK_G(col), MASK_B(col), MASK_A(col));
 }
 
-void OpenGLRendererBase::draw_circle(int x, int y, int diameter, 
+void OpenGLRendererBase::draw_circle(int x, int y, int diameter,
 				     color_t col,
 				     bool render_distant_outline) {
   set_color(col);
   int r = diameter >> 1;
 
-  int 
+  int
     min_x = x - r,
     min_y = y - r,
     max_x = x + r,
@@ -296,7 +296,7 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y,
     BOOST_FOREACH(unsigned char c, str) {
       string_width += glyph_width[(int)c];
     }
-  
+
     string_width = round(scale_font * string_width);
 
     if(string_width >= max_str_width)
@@ -306,9 +306,9 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y,
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
 
-  glPushAttrib(GL_LIST_BIT | GL_CURRENT_BIT  | GL_ENABLE_BIT | GL_TRANSFORM_BIT); 
+  glPushAttrib(GL_LIST_BIT | GL_CURRENT_BIT  | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
   glListBase(font_dlist_base);
-  
+
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
 
@@ -323,7 +323,7 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y,
   glCallLists(str.length(), GL_UNSIGNED_BYTE, str.c_str());
 
   glPopMatrix();
-  glPopAttrib();          
+  glPopAttrib();
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
@@ -331,7 +331,7 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y,
 }
 
 
-void OpenGLRendererBase::FontRenderingHelper::init_font(const char * fname, 
+void OpenGLRendererBase::FontRenderingHelper::init_font(const char * fname,
 							unsigned int h) throw(DegateRuntimeException) {
   FT_Library library;
   FT_Face face;
@@ -342,7 +342,7 @@ void OpenGLRendererBase::FontRenderingHelper::init_font(const char * fname,
   font_height = h;
 
   if(FT_Init_FreeType( &library )) throw DegateRuntimeException("FT_Init_FreeType failed");
-  if(FT_New_Face( library, fname, 0, &face )) 
+  if(FT_New_Face( library, fname, 0, &face ))
     throw DegateRuntimeException("FT_New_Face failed (there is probably a problem with your font file)");
   FT_Set_Char_Size(face, font_height << 6, font_height << 6, 96, 96);
 
@@ -360,8 +360,8 @@ void OpenGLRendererBase::FontRenderingHelper::init_font(const char * fname,
   FT_Done_FreeType(library);
 }
 
-unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Face face, char ch, 
-									   GLuint list_base, GLuint * tex_base) 
+unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Face face, char ch,
+									   GLuint list_base, GLuint * tex_base)
   throw(DegateRuntimeException) {
 
   if(FT_Load_Glyph( face, FT_Get_Char_Index( face, ch ), FT_LOAD_DEFAULT ))
@@ -391,12 +391,12 @@ unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Fa
       else printf("%02X ", v);
 
       expanded_data[dst_offs] =  0; // XXX was 255;
-      expanded_data[dst_offs + 1] = 255-v; //v > 128 ? 0 : 255; //255 - v; 
+      expanded_data[dst_offs + 1] = 255-v; //v > 128 ? 0 : 255; //255 - v;
     }
     printf("\n");
   }
   printf("\n\n");
-  
+
   glBindTexture( GL_TEXTURE_2D, tex_base[(int)ch]);
   assert(opengl_error_check());
 
@@ -428,7 +428,7 @@ unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Fa
     x=((float)bitmap.width / (float)width),
     y=((float)(bitmap.rows) / (float)height);
 
-  glBegin(GL_QUADS);  
+  glBegin(GL_QUADS);
   glTexCoord2f(0, 0); glVertex2f(0,0);
   glTexCoord2f(x, 0); glVertex2f(bitmap.width -1 , 0);
   glTexCoord2f(x, y); glVertex2f(bitmap.width -1, bitmap.rows - 1);

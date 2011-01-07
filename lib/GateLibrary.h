@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __GATELIBRARY_H__
@@ -40,43 +40,43 @@ namespace degate {
   class GateLibrary {
 
   public:
-    
+
     typedef std::map<object_id_t, GateTemplate_shptr> gate_lib_collection_t;
     typedef gate_lib_collection_t::iterator template_iterator;
     typedef gate_lib_collection_t::const_iterator const_template_iterator;
-    
+
   private:
-    
+
     gate_lib_collection_t templates;
-    
+
   public:
-    
-    /** 
+
+    /**
      * Constructor for the gate library.
      */
 
     GateLibrary();
-    
+
     /**
      * The dtor.
      */
 
     virtual ~GateLibrary();
-    
+
     /**
      * Remove a template from the gate library.
      */
 
     void remove_template(GateTemplate_shptr gate_template);
-    
+
     /**
      * Add a template to the library.
      * @exception InvalidObjectIDException This exception is thrown if the
      *   template has no object ID.
-     * @exception InvalidPointerException 
+     * @exception InvalidPointerException
      */
 
-    void add_template(GateTemplate_shptr gate_template) 
+    void add_template(GateTemplate_shptr gate_template)
       throw(InvalidObjectIDException, InvalidPointerException);
 
     /**
@@ -90,7 +90,7 @@ namespace degate {
      *   was not found.
      */
 
-    GateTemplate_shptr get_template(object_id_t id) 
+    GateTemplate_shptr get_template(object_id_t id)
       throw(InvalidObjectIDException, CollectionLookupException);
 
     /**
@@ -106,28 +106,28 @@ namespace degate {
      * Check all templates in the library for a template port
      */
 
-    GateTemplatePort_shptr get_template_port(object_id_t port_id) 
+    GateTemplatePort_shptr get_template_port(object_id_t port_id)
       throw(CollectionLookupException);
 
-    
-    /** 
+
+    /**
      * Get an iterator in order to iterate over gate templates.
      */
 
     template_iterator begin();
-    
+
     /**
      * Get the end marker for the iteration.
      */
 
     template_iterator end();
 
-    /** 
+    /**
      * Get an iterator in order to iterate over gate templates.
      */
 
     const_template_iterator begin() const;
-    
+
     /**
      * Get the end marker for the iteration.
      */
@@ -142,7 +142,7 @@ namespace degate {
 
   };
 
-  
+
 
 }
 

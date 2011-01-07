@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <WireMatching.h>
@@ -28,29 +28,29 @@
 
 using namespace degate;
 
-WireMatching::WireMatching() : 
-  wire_diameter(5), 
-  median_filter_width(3), 
+WireMatching::WireMatching() :
+  wire_diameter(5),
+  median_filter_width(3),
   sigma(0.5),
   min_edge_magnitude(0.25) {
 }
 
 
-void WireMatching::init(BoundingBox const& bounding_box, Project_shptr project) 
+void WireMatching::init(BoundingBox const& bounding_box, Project_shptr project)
   throw(InvalidPointerException, DegateRuntimeException) {
-  
+
   this->bounding_box = bounding_box;
 
   if(project == NULL)
     throw InvalidPointerException("Invalid pointer for parameter project.");
-  
+
   lmodel = project->get_logic_model();
   assert(lmodel != NULL); // always has a logic model
-  
+
   layer = lmodel->get_current_layer();
   if(layer == NULL) throw DegateRuntimeException("No current layer in project.");
-  
-  
+
+
   ScalingManager_shptr sm = layer->get_scaling_manager();
   assert(sm != NULL);
 
@@ -100,9 +100,9 @@ void WireMatching::run() {
 
   BOOST_FOREACH(LineSegment_shptr ls, *line_segments) {
     debug(TM, "found  wire");
-    Wire_shptr w(new Wire(bounding_box.get_min_x() + ls->get_from_x(), 
+    Wire_shptr w(new Wire(bounding_box.get_min_x() + ls->get_from_x(),
 			  bounding_box.get_min_y() + ls->get_from_y(),
-			  bounding_box.get_min_x() + ls->get_to_x(), 
+			  bounding_box.get_min_x() + ls->get_to_x(),
 			  bounding_box.get_min_y() + ls->get_to_y(),
 			  wire_diameter));
 

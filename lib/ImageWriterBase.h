@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __IMAGEWRITERBASE_H__
@@ -46,7 +46,7 @@ namespace degate {
     unsigned int width, height;
 
   protected:
-    
+
     /**
      * Set the width of the image.
      * This method should be called by derived image readers to set
@@ -70,7 +70,7 @@ namespace degate {
      */
 
     ImageWriterBase(unsigned int _width,
-		    unsigned int _height, 
+		    unsigned int _height,
 		    std::string const & _filename) :
       filename(_filename),
       width(_width),
@@ -108,12 +108,12 @@ namespace degate {
      * Writer the image into a file.
      */
 
-    virtual bool write_image(std::tr1::shared_ptr<ImageType> img) 
+    virtual bool write_image(std::tr1::shared_ptr<ImageType> img)
       throw(FileSystemException) = 0;
 
   };
 
-  
+
 
 }
 

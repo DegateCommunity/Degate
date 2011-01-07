@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __ANNOTATION_H__
@@ -52,14 +52,14 @@ namespace degate {
    *
    * You can set a name and a description for the annotation as well.
    *
-   * This class is designed to be derived for concrete annotations. 
+   * This class is designed to be derived for concrete annotations.
    *
    * @see set_name()
    * @see set_description()
    */
-  
+
   class Annotation : public Rectangle, public PlacedLogicModelObject {
-    
+
   public:
 
     typedef unsigned int class_id_t;
@@ -67,12 +67,12 @@ namespace degate {
     /**
      * Enums to declare the type of annotation.
      */
-    
+
     enum ANNOTATION_TYPE {
       UNDEFINED = 0,
       SUBPROJECT = 1
     };
-    
+
     typedef std::map<std::string, /* param name */
 		     std::string  /* param value */ > parameter_set_type;
 
@@ -88,18 +88,18 @@ namespace degate {
      * Set a parameter.
      */
 
-    void set_parameter(std::string const& parameter_name, 
+    void set_parameter(std::string const& parameter_name,
 		       std::string const& parameter_value) {
       parameters[parameter_name] = parameter_value;
     }
 
   public:
-    
+
     /**
      * Create a new annotation.
      */
 
-    Annotation(int _min_x, int _max_x, int _min_y, int _max_y, 
+    Annotation(int _min_x, int _max_x, int _min_y, int _max_y,
 	       class_id_t _class_id = UNDEFINED);
 
     /**
@@ -108,33 +108,33 @@ namespace degate {
 
     Annotation(BoundingBox const& bbox,
 	       class_id_t _class_id = UNDEFINED);
-   
-    
+
+
     /**
      * The destructor for an annotaion.
      */
 
     virtual ~Annotation();
-    
+
     /**
      * Get the class ID for an annotation.
      */
 
     virtual class_id_t get_class_id() const;
-    
+
     /**
      * Set the class ID for an annotation.
      */
 
     virtual void set_class_id(class_id_t _class_id);
-    
+
     /**
      * Get a human readable string that describes the whole
      * logic model object. The string should be unique in order
      * to let the user identify the concrete object. But that
      * is not a must.
      */
-    
+
     virtual const std::string get_descriptive_identifier() const;
 
     /**
@@ -184,7 +184,7 @@ namespace degate {
      */
 
     template<typename NewType>
-    NewType get_parameter(std::string parameter_name) 
+    NewType get_parameter(std::string parameter_name)
       const throw(boost::bad_lexical_cast, CollectionLookupException) {
 
       parameter_set_type::const_iterator iter = parameters.find(parameter_name);

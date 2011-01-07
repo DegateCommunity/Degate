@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __EXTERNALMATCHING_H__
@@ -40,12 +40,12 @@ namespace degate {
    * Comment lines are starting with a hash mark ('#')
    *
    * Wire:
-   * 
+   *
    * Format: "wire" x1 y1 x2 y2 diameter
    * Example: wire 10 23 100 23 5
    *
    * Via:
-   * 
+   *
    * Format: "via" x y diameter direction
    * Example: via 42 23 5 up
    *
@@ -78,7 +78,7 @@ namespace degate {
      *   line does not represent a command.
      */
 
-    PlacedLogicModelObject_shptr parse_line(std::string const& line) 
+    PlacedLogicModelObject_shptr parse_line(std::string const& line)
       const throw(DegateRuntimeException);
 
 
@@ -86,7 +86,7 @@ namespace degate {
 
     ExternalMatching();
 
-    virtual void init(BoundingBox const& bounding_box, Project_shptr project) 
+    virtual void init(BoundingBox const& bounding_box, Project_shptr project)
       throw(InvalidPointerException, DegateRuntimeException);
 
     virtual void run();

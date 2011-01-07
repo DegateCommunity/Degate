@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __PROGRESSCONTROL_H__
@@ -27,12 +27,12 @@
 #include <boost/thread.hpp>
 
 namespace degate {
-  
+
   /**
    */
 
   class ProgressControl {
-    
+
   private:
 
     const static int averaging_buf_size = 30;
@@ -58,12 +58,12 @@ namespace degate {
       estimated_idx %= averaging_buf_size;
 
       unsigned int sum = 0, valid_values = 0;
-      for(int i = 0; i < averaging_buf_size; i++) 
+      for(int i = 0; i < averaging_buf_size; i++)
 	if(estimated[i] != -1) {
 	  sum += estimated[i];
 	  valid_values++;
 	}
-    
+
       return valid_values > 0 ? sum / valid_values : get_time_left_averaged();
     }
 
@@ -126,7 +126,7 @@ namespace degate {
     /**
      * Check if the process is canceled.
      */
-    
+
     virtual bool is_canceled() const {
       boost::recursive_mutex::scoped_lock(mtx);
       return canceled;
@@ -188,7 +188,7 @@ namespace degate {
 	}
 	return std::string(buf);
       }
-      
+
     }
 
 

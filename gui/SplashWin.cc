@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include <stdlib.h>
@@ -30,7 +30,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <sigc++/bind_return.h>
 
 
-SplashWin::SplashWin( int delay_msec) : 
+SplashWin::SplashWin( int delay_msec) :
   Gtk::Window(Gtk::WINDOW_TOPLEVEL) {
   char filename[PATH_MAX];
   snprintf(filename, PATH_MAX, "%s/icons/degate_splash.png", getenv("DEGATE_HOME"));
@@ -38,7 +38,7 @@ SplashWin::SplashWin( int delay_msec) :
   m_image = Gdk::Pixbuf::create_from_file(filename);
   m_image_w = m_image->get_width();
   m_image_h = m_image->get_height();
-  
+
 
   set_skip_taskbar_hint (true);
   set_position (Gtk::WIN_POS_CENTER);
@@ -75,7 +75,7 @@ bool SplashWin::on_expose_event(GdkEventExpose *event) {
     m_cr->set_source_rgba (.0, .0, .0, .0);
     m_cr->paint ();
 
-    
+
     gdk_cairo_set_source_pixbuf (m_cr->cobj(), m_image->gobj(), 0, 0);
     m_cr->paint ();
 
@@ -83,13 +83,13 @@ bool SplashWin::on_expose_event(GdkEventExpose *event) {
     //
     m_image->render_to_drawable(get_window(), get_style()->get_black_gc(),
 				0, 0, m_image->get_width(), m_image->get_height(),
-				m_image->get_width(), m_image->get_height(), 
+				m_image->get_width(), m_image->get_height(),
 				Gdk::RGB_DITHER_NONE, 0, 0);
 
 				m_cr->stroke();*/
   }
   return true;
-} 
+}
 
 
 void SplashWin::delay() {

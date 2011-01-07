@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __LAYER_H__
@@ -35,40 +35,40 @@
 #include <stdexcept>
 
 namespace degate {
- 
+
   /**
    * Representation of a chip layer.
    */
   class Layer {
 
     friend class LogicModel;
-    
+
   public:
 
     /**
      * Enums to declare the type of a layer.
      */
-    
+
     enum LAYER_TYPE {
       UNDEFINED = 0,
       METAL = 1,
       LOGIC = 2,
-      TRANSISTOR = 3	
+      TRANSISTOR = 3
     };
-    
+
     typedef std::tr1::shared_ptr<PlacedLogicModelObject> quadtree_element_type;
-    
+
     typedef region_iterator<quadtree_element_type> qt_region_iterator;
     typedef qt_region_iterator object_iterator;
 
   private:
-    
+
     QuadTree<quadtree_element_type> quadtree;
-    
+
     LAYER_TYPE layer_type;
-    
+
     layer_position_t layer_pos;
-    
+
     std::tr1::shared_ptr<ScalingManager<BackgroundImage> > scaling_manager;
 
     // store shared pointers to objects, that belong to the layer
@@ -77,65 +77,65 @@ namespace degate {
 
     bool enabled;
     std::string description;
-       
+
     layer_id_t layer_id;
- 
+
   protected:
-    
+
     /**
      * Add an logic model object into this layer.
      * @throw DegateRuntimeException Is thrown if the object
      *   cannot be inserted into the quadtree.
      */
 
-    void add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) 
+    void add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o)
       throw(DegateRuntimeException, DegateLogicException);
 
-    
+
     /**
      * Remove object from layer.
      * @throw DegateRuntimeException Is thrown if the object
      *   cannot be removed from the quadtree.
      */
 
-    void remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) 
+    void remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o)
       throw(DegateRuntimeException);
-    
-    
+
+
   public:
-    
-   
+
+
     /**
      * Create a new logic model layer.
      */
 
     Layer(BoundingBox const & bbox, LAYER_TYPE _layer_type = Layer::UNDEFINED);
-    
+
     /**
      * Create a new logic model layer.
      */
 
-    Layer(BoundingBox const & bbox, LAYER_TYPE _layer_type, 
+    Layer(BoundingBox const & bbox, LAYER_TYPE _layer_type,
 	  BackgroundImage_shptr img);
-    
+
     /**
      * Destruct a layer.
      */
 
     virtual ~Layer();
-    
+
     /**
      * Get the width of a layer.
      */
 
     unsigned int get_width() const;
-    
+
     /**
      * Get the height of a layer.
      */
 
     unsigned int get_height() const;
-    
+
     /**
      * Get layer type of this layer as human readable string, e.g. the string
      * "metal" for a layer of type Layer::METAL .
@@ -156,40 +156,40 @@ namespace degate {
     static LAYER_TYPE get_layer_type_from_string(std::string const& layer_type_str)
       throw(DegateRuntimeException);
 
-    
+
     /**
      * Get layer type.
      */
 
     LAYER_TYPE get_layer_type() const;
-    
+
     /**
      * Set layer type.
      */
 
     void set_layer_type(LAYER_TYPE _layer_type);
-    
-        
+
+
     /**
      * Check if a layer has logic model objects or not.
      */
 
     bool is_empty() const;
-    
-    
+
+
     /**
      * Get the position of the layer within the layer stack.
      */
 
     layer_position_t get_layer_pos() const;
 
-    
+
     /**
      * Get an iterator to iterate over all placed objects.
      */
 
     object_iterator objects_begin();
-    
+
     /**
      * Get an end iterator.
      */
@@ -207,7 +207,7 @@ namespace degate {
      */
 
     qt_region_iterator region_begin(BoundingBox const & bbox);
-    
+
     /**
      * Get an end marker for region iteration.
      */
@@ -228,7 +228,7 @@ namespace degate {
 
     /**
      * Get the background image.
-     * @return Returns a shared pointer to the background image. 
+     * @return Returns a shared pointer to the background image.
      * @exception DegateLogicException If you did not set the background image, then this
      *   exception is thrown.
      * @see set_image()
@@ -258,7 +258,7 @@ namespace degate {
      * the data from the project dir.
      * @exception DegateLogicException This excpetion is thrown if there is no background image.
      */
-    
+
     void unset_image() throw(DegateLogicException);
 
     /**
@@ -288,7 +288,7 @@ namespace degate {
      *    has an invalid ID.
      */
 
-    void notify_shape_change(object_id_t object_id) 
+    void notify_shape_change(object_id_t object_id)
       throw(CollectionLookupException, InvalidObjectIDException);
 
     /**
@@ -312,7 +312,7 @@ namespace degate {
      * Check for placed gates in a region.
      * @return Returns true, if there is a gate in the region. Else it returns false.
      */
-    
+
     bool exists_gate_in_region(unsigned int min_x, unsigned int max_x,
 			       unsigned int min_y, unsigned int max_y);
 
@@ -320,16 +320,16 @@ namespace degate {
     /**
      * Check for placed gates in a region and return the distance to
      * the boundary.
-     * @return Returns the distance from \p x to the right boundary or 
+     * @return Returns the distance from \p x to the right boundary or
      *   from \p y to the bottom boundary depending on \p query_horizontal_distance.
      *   If there is no gate, this method returns 0.
      */
-    
+
     unsigned int get_distance_to_gate_boundary(unsigned int x, unsigned int y,
 					       bool query_horizontal_distance = true,
 					       unsigned int width = 0,
 					       unsigned int height = 0);
-    
+
 
     /**
      * Enable a layer.
@@ -373,7 +373,7 @@ namespace degate {
     /**
      * Get the layer ID.
      */
-  
+
     virtual layer_id_t get_layer_id() const { return layer_id; }
 
     /**

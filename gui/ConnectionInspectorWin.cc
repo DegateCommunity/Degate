@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include "ConnectionInspectorWin.h"
@@ -48,95 +48,95 @@ ConnectionInspectorWin::ConnectionInspectorWin(Gtk::Window *parent, degate::Logi
   assert(lmodel);
 
   if(get_dialog()) {
-   
+
     // connect signals
     get_widget("close_button", pCloseButton);
     if(pCloseButton)
       pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, &ConnectionInspectorWin::on_close_button_clicked));
-    
+
     get_widget("goto_button", pGotoButton);
     if(pGotoButton) {
       pGotoButton->grab_focus();
       pGotoButton->signal_clicked().connect(sigc::mem_fun(*this, &ConnectionInspectorWin::on_goto_button_clicked) );
     }
-    
+
     get_widget("back_button", pBackButton);
     if(pBackButton) {
       pBackButton->signal_clicked().connect(sigc::mem_fun(*this, &ConnectionInspectorWin::on_back_button_clicked) );
     }
-    
+
     get_widget("current_object_label", current_object_label);
     get_widget("current_object_type_label", current_object_type_label);
-    
+
     refListStore = Gtk::ListStore::create(m_Columns);
-    
+
     get_widget("treeview", pTreeView);
     if(pTreeView) {
       pTreeView->set_model(refListStore);
-      
-      Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText()); 
+
+      Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText());
       Gtk::TreeView::Column * pColumn;
-      
+
       /*
        * col 0
        */
       pTreeView->append_column("Previous", *pRenderer);
-      
+
       pColumn = pTreeView->get_column(0);
       // text attribute is the text to show
-      pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_prev_name);  
-      pColumn->add_attribute(*pRenderer, "background", m_Columns.color_); 
-      
-      pColumn->set_resizable(true); 
+      pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_prev_name);
+      pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
+
+      pColumn->set_resizable(true);
       pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
       pColumn->set_min_width(DEFAULT_WIDTH);
-      
+
       pColumn->set_sort_column(m_Columns.m_col_prev_name);
       //refListStore->set_sort_column(m_Columns.m_col_prev_name, Gtk::SORT_ASCENDING);
-      
+
       /*
        * col 1
        */
-      
+
       pTreeView->append_column("Current", *pRenderer);
       pColumn = pTreeView->get_column(1);
       // text attribute is the text to show
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_curr_name);
       pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
-      
-      pColumn->set_resizable(true); 
+
+      pColumn->set_resizable(true);
       pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
       pColumn->set_min_width(DEFAULT_WIDTH);
-      
+
       pColumn->set_sort_column(m_Columns.m_col_curr_name_sort);
       //refListStore->set_sort_column(m_Columns.m_col_curr_name_sort, Gtk::SORT_ASCENDING);
-      
+
       /*
        * col 2
        */
-      
+
       pTreeView->append_column("Next", *pRenderer);
-      pColumn = pTreeView->get_column(2);	
+      pColumn = pTreeView->get_column(2);
       // text attribute is the text to show
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_next_name);
       pColumn->add_attribute(*pRenderer, "background", m_Columns.color_);
-      
-      pColumn->set_resizable(true); 
+
+      pColumn->set_resizable(true);
       pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
       pColumn->set_min_width(DEFAULT_WIDTH);
-      
+
       pColumn->set_sort_column(m_Columns.m_col_next_name);
       //refListStore->set_sort_column(m_Columns.m_col_next_name, Gtk::SORT_ASCENDING);
 
-      
+
       refListStore->set_sort_column_id(m_Columns.m_col_curr_name_sort, Gtk::SORT_ASCENDING);
-	
+
       // signal
       Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = pTreeView->get_selection();
       refTreeSelection->signal_changed().connect(sigc::mem_fun(*this, &ConnectionInspectorWin::on_selection_changed));
-      
+
     }
-    
+
   }
 
   //get_dialog()->set_transient_for(*parent);
@@ -182,7 +182,7 @@ void ConnectionInspectorWin::set_object(degate::PlacedLogicModelObject_shptr obj
 	else current_color = MY_BLUE;
       }
     }
-    else if(ConnectedLogicModelObject_shptr o = 
+    else if(ConnectedLogicModelObject_shptr o =
 	    std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(obj_ptr)) {
       show_connections(o, MY_WHITE);
     }
@@ -195,10 +195,10 @@ void ConnectionInspectorWin::set_object(degate::PlacedLogicModelObject_shptr obj
 void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_shptr src_curr_obj,
 					      Glib::ustring current_color) {
 
-  
+
   assert(src_curr_obj != NULL);
   Gtk::TreeModel::Row row;
-  
+
   Net_shptr net = src_curr_obj->get_net();
   if(net == NULL) {
     //disable_inspection();
@@ -208,14 +208,14 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
 
   for(Net::connection_iterator iter = net->begin();
       iter != net->end(); ++iter) {
-    
+
     object_id_t oid = *iter;
-    const ConnectedLogicModelObject_shptr obj_ptr = 
+    const ConnectedLogicModelObject_shptr obj_ptr =
       std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(lmodel->get_object(oid));
 
     if(obj_ptr != src_curr_obj) {
 
-      row = *(refListStore->append()); 
+      row = *(refListStore->append());
 
       row[m_Columns.color_] = current_color;
 
@@ -226,11 +226,11 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
       row[m_Columns.m_col_curr_name_sort] = src_curr_obj->get_descriptive_identifier();
 
       if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(src_curr_obj)) {
-	  
+
 	if(gate_port->has_template_port()) {
-	  
+
 	  GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-	  
+
 	  if(tmpl_port->is_tristate())
 	    row[m_Columns.m_col_curr_name_sort] = Glib::ustring("t") + row[m_Columns.m_col_curr_name_sort];
 	  else if(tmpl_port->is_outport())
@@ -242,7 +242,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
 
       // connected with
 
-      if(const GatePort_shptr gate_port = 
+      if(const GatePort_shptr gate_port =
 	 std::tr1::dynamic_pointer_cast<GatePort>(obj_ptr)) {
 
 	const GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
@@ -270,7 +270,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
       else {
 	row[m_Columns.m_col_next_name] = obj_ptr->get_descriptive_identifier();
 	row[m_Columns.m_col_prev_name] = obj_ptr->get_descriptive_identifier();
-	
+
 	row[m_Columns.m_col_next_object_ptr] = obj_ptr;
 	row[m_Columns.m_col_prev_object_ptr] = obj_ptr;
       }
@@ -334,7 +334,7 @@ void ConnectionInspectorWin::on_goto_button_clicked() {
 
       if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(object_ptr))
 	object_ptr = gate_port->get_gate();
-      
+
       set_object(object_ptr);
 
       if(back_list.size() > 0) pBackButton->set_sensitive(true);
@@ -344,7 +344,7 @@ void ConnectionInspectorWin::on_goto_button_clicked() {
   }
 }
 
-sigc::signal<void, degate::PlacedLogicModelObject_shptr>& 
+sigc::signal<void, degate::PlacedLogicModelObject_shptr>&
 ConnectionInspectorWin::signal_goto_button_clicked() {
   return signal_goto_button_clicked_;
 }

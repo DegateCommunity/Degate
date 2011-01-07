@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __PLACEDLOGICMODELOBJECT_H__
@@ -38,7 +38,7 @@ namespace degate {
    * (e.g. wire, vias, ...) as well as logical objects (e.g. annotations).
    */
 
-  class PlacedLogicModelObject : public AbstractShape, 
+  class PlacedLogicModelObject : public AbstractShape,
 				 public LogicModelObjectBase,
 				 public ColoredObject {
 
@@ -64,7 +64,7 @@ namespace degate {
     void notify_shape_change();
 
   public:
-	
+
     /**
      * The constructor.
      */
@@ -94,7 +94,7 @@ namespace degate {
      */
 
     virtual void set_highlighted(HIGHLIGHTING_STATE state);
-  
+
     /**
      * Set the layer on which the object is placed.
      */

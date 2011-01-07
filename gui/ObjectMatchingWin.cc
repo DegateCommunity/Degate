@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "ObjectMatchingWin.h"
@@ -27,7 +27,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace degate;
 
-ObjectMatchingWin::ObjectMatchingWin(Gtk::Window *parent) : 
+ObjectMatchingWin::ObjectMatchingWin(Gtk::Window *parent) :
   m_Frame_MatchHV("Match objects"),
 
   m_Frame_PinDia("Pin diameter"),
@@ -74,7 +74,7 @@ ObjectMatchingWin::ObjectMatchingWin(Gtk::Window *parent) :
   m_Frame_PinDia.add(m_Scale_PinDiameter);
   m_Adjustment_PinDiameter.signal_value_changed().connect(sigc::mem_fun(*this,
 									&ObjectMatchingWin::on_pin_diameter_changed));
- 
+
 
 
   m_Button_Cancel.signal_clicked().connect( sigc::mem_fun(*this, &ObjectMatchingWin::on_cancel_button_clicked) );
@@ -87,7 +87,7 @@ ObjectMatchingWin::ObjectMatchingWin(Gtk::Window *parent) :
   m_Button_Ok.set_use_stock(true);
   m_Button_Ok.set_relief(Gtk::RELIEF_NORMAL);
 
-  
+
   m_Box_Buttons.pack_start(m_Button_Cancel, Gtk::PACK_EXPAND_WIDGET);
   m_Box_Buttons.pack_start(m_Button_Ok, Gtk::PACK_EXPAND_WIDGET);
 

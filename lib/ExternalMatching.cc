@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <ExternalMatching.h>
@@ -32,21 +32,21 @@ using namespace degate;
 ExternalMatching::ExternalMatching() {}
 
 
-void ExternalMatching::init(BoundingBox const& bounding_box, Project_shptr project) 
+void ExternalMatching::init(BoundingBox const& bounding_box, Project_shptr project)
   throw(InvalidPointerException, DegateRuntimeException) {
-  
+
   this->bounding_box = bounding_box;
 
   if(project == NULL)
     throw InvalidPointerException("Invalid pointer for parameter project.");
-  
+
   lmodel = project->get_logic_model();
   assert(lmodel != NULL); // always has a logic model
-  
+
   layer = lmodel->get_current_layer();
   if(layer == NULL) throw DegateRuntimeException("No current layer in project.");
-  
-  
+
+
   ScalingManager_shptr sm = layer->get_scaling_manager();
   assert(sm != NULL);
 
@@ -68,7 +68,7 @@ void ExternalMatching::run() {
   // create a temp dir
   std::string dir = create_temp_directory();
   assert(is_directory(dir));
-  
+
   std::string image_file = dir;
   image_file.append("/image.tiff");
 
@@ -86,7 +86,7 @@ void ExternalMatching::run() {
     % bounding_box.get_min_y()
     % bounding_box.get_width()
     % bounding_box.get_height();
-		     
+
 
   debug(TM, "start external command: %s", f.str().c_str());
   exit_code = system(f.str().c_str());
@@ -94,7 +94,7 @@ void ExternalMatching::run() {
     debug(TM, "system() failed");
   }
   else {
-    BOOST_FOREACH(PlacedLogicModelObject_shptr plo, 
+    BOOST_FOREACH(PlacedLogicModelObject_shptr plo,
 		  parse_file(results_file)) {
       lmodel->add_object(layer, plo);
     }
@@ -120,7 +120,7 @@ std::list<PlacedLogicModelObject_shptr> ExternalMatching::parse_file(std::string
     while(!file.eof()) {
 
       getline(file, line);
-      
+
       PlacedLogicModelObject_shptr plo = parse_line(line);
       if(plo != NULL) list.push_back(plo);
     }
@@ -140,25 +140,25 @@ PlacedLogicModelObject_shptr ExternalMatching::parse_line(std::string const& lin
   else if(tokens[0].at(0) == '#') return plo;
   else if(tokens[0] == "wire" and tokens.size() >= 6) {
 
-    int 
+    int
       x1 = boost::lexical_cast<int>(tokens[1]),
       y1 = boost::lexical_cast<int>(tokens[2]),
       x2 = boost::lexical_cast<int>(tokens[3]),
       y2 = boost::lexical_cast<int>(tokens[4]),
       diameter = boost::lexical_cast<unsigned int>(tokens[5]);
-    
+
     return Wire_shptr(new Wire(x1, y1, x2, y2, diameter));
   }
   else if(tokens[0] == "via" and tokens.size() >= 6) {
 
-    int 
+    int
       x = boost::lexical_cast<int>(tokens[1]),
       y = boost::lexical_cast<int>(tokens[2]),
       diameter = boost::lexical_cast<unsigned int>(tokens[3]);
-    
-    Via::DIRECTION dir = tokens[4] == "up" ? 
+
+    Via::DIRECTION dir = tokens[4] == "up" ?
       Via::DIRECTION_UP : Via::DIRECTION_DOWN;
-    
+
     return Via_shptr(new Via(x, y, diameter, dir));
   }
 

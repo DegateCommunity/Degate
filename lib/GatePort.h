@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __GATEPORT_H__
@@ -33,7 +33,7 @@
 #include <tr1/memory>
 
 namespace degate {
-  
+
   /**
    * This class represents a port of a gate.
    * @todo Dispatch get_fill/frame_color() calls to
@@ -41,16 +41,16 @@ namespace degate {
    *   are updated when changes are made in the PortColorManager.
    */
   class GatePort : public Circle, public ConnectedLogicModelObject {
-    
+
   private:
-    
+
     std::tr1::shared_ptr<Gate> gate;
     std::tr1::shared_ptr<GateTemplatePort> gate_template_port;
     object_id_t template_port_id;
-    
+
   public:
 
-    
+
 
     /**
      * Create a gate port and set a "reference" to the the template port.
@@ -59,10 +59,10 @@ namespace degate {
      * @param _gate_template_port A shared pointer to a template port.
      * @param _diameter The diameter of the port.
      */
-    GatePort(std::tr1::shared_ptr<Gate> _gate, 
+    GatePort(std::tr1::shared_ptr<Gate> _gate,
 	     std::tr1::shared_ptr<GateTemplatePort> _gate_template_port,
 	     unsigned int _diameter = 5);
-    
+
     /**
      * Create a gate port.
      *
@@ -70,8 +70,8 @@ namespace degate {
      * @param diameter The diameter of the port.
      */
     GatePort(std::tr1::shared_ptr<Gate> _gate, unsigned int _diameter = 5);
-  
-    
+
+
     /**
      * The destructor.
      */
@@ -106,7 +106,7 @@ namespace degate {
      * Set the template port.
      */
 
-    virtual void set_template_port(std::tr1::shared_ptr<GateTemplatePort> 
+    virtual void set_template_port(std::tr1::shared_ptr<GateTemplatePort>
 				   _gate_template_port);
 
 
@@ -122,7 +122,7 @@ namespace degate {
      */
 
     virtual bool is_assigned_to_a_gate() const;
-      
+
 
     /**
      * Get the gate, this gate port belongs to.
@@ -140,7 +140,7 @@ namespace degate {
      * to let the user identify the concrete object. But that
      * is not a must.
      */
-    
+
     virtual const std::string get_descriptive_identifier() const;
 
     /**

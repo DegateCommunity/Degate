@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <SelectModuleWin.h>
@@ -51,14 +51,14 @@ SelectModuleWin::SelectModuleWin(Gtk::Window *parent, degate::LogicModel_shptr l
     assert(cancel_button != NULL);
     if(cancel_button)
       cancel_button->signal_clicked().connect(sigc::mem_fun(*this, &SelectModuleWin::on_cancel_button_clicked));
-    
+
     get_widget("ok_button", ok_button);
     assert(ok_button != NULL);
     if(ok_button) {
       ok_button->signal_clicked().connect(sigc::mem_fun(*this, &SelectModuleWin::on_ok_button_clicked) );
       ok_button->set_sensitive(false);
     }
-    
+
     get_widget("add_button", add_button);
     assert(add_button != NULL);
     if(add_button) {
@@ -73,7 +73,7 @@ SelectModuleWin::SelectModuleWin(Gtk::Window *parent, degate::LogicModel_shptr l
       remove_button->set_sensitive(false);
     }
 
-       
+
     treemodel_modules = TreeStoreModuleHierarchy::create();
     get_widget("treeview_modules", treeview_modules);
     assert(treeview_modules != NULL);
@@ -91,7 +91,7 @@ SelectModuleWin::SelectModuleWin(Gtk::Window *parent, degate::LogicModel_shptr l
 
       treeview_modules->set_reorderable();
 
-    }    
+    }
 
   }
 
@@ -104,7 +104,7 @@ SelectModuleWin::~SelectModuleWin() {
 
 void SelectModuleWin::update_logic_model(Gtk::TreeModel::Children const& children,
 					 Module_shptr parent_module) {
-  
+
   for(Gtk::TreeModel::Children::iterator iter = children.begin();
       iter != children.end(); ++iter) {
     Gtk::TreeModel::Row row = *iter;
@@ -152,7 +152,7 @@ void SelectModuleWin::insert_modules() {
   }
 }
 
-void SelectModuleWin::insert_module(Gtk::TreeModel::Row & row, 
+void SelectModuleWin::insert_module(Gtk::TreeModel::Row & row,
 				    Module_shptr module,
 				    Module_shptr parent_module) {
 
@@ -164,7 +164,7 @@ void SelectModuleWin::insert_module(Gtk::TreeModel::Row & row,
 
   for(Module::module_collection::iterator iter = module->modules_begin();
       iter != module->modules_end(); ++iter) {
-    
+
     Module_shptr child_module = *iter;
     Gtk::TreeModel::Row child_row = *(treemodel_modules->append(row.children()));
     insert_module(child_row, child_module, module);
@@ -242,7 +242,7 @@ void SelectModuleWin::on_remove_button_clicked() {
 	if(!root_module->remove_module(selected_module)) {
 	  Gtk::MessageDialog dialog(*parent, "Can't remove module.", true, Gtk::MESSAGE_ERROR);
 	  dialog.set_title("Error");
-	  dialog.run();	
+	  dialog.run();
 	}
 	else
 	  treemodel_modules->erase(iter);

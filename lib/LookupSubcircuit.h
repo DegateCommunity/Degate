@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __LOOKUPSUBCIRCUIT_H__
@@ -33,11 +33,11 @@
 
 namespace degate {
 
-  
+
   class LookupSubcircuit {
-    
+
   private:
-    
+
     LogicModel_shptr lmodel;
     std::list<Gate_shptr> openlist;
 
@@ -57,15 +57,15 @@ namespace degate {
     }
 
   public:
-    
-   
+
+
     /**
      * Construct a new net.
      */
 
     LookupSubcircuit(LogicModel_shptr _lmodel) : lmodel(_lmodel) {
     }
-    
+
     /**
      * Destroy.
      */
@@ -84,7 +84,7 @@ namespace degate {
 
       BOOST_FOREACH(Gate_shptr gate, openlist) {
 
-	   
+
       }
       */
     }
@@ -94,7 +94,7 @@ namespace degate {
 
       std::set<Gate_shptr> other_gates;
 
-      BOOST_FOREACH(Gate_shptr g, 
+      BOOST_FOREACH(Gate_shptr g,
 		    filter_connected_gates(start_gate, GateTemplatePort::PORT_TYPE_OUT, "Q",
 					   "flipflop", GateTemplatePort::PORT_TYPE_IN, "D"))
 	if(closed_list.find(g) != closed_list.end()) {
@@ -102,7 +102,7 @@ namespace degate {
 	  closed_list.insert(g);
 	}
 
-      BOOST_FOREACH(Gate_shptr g, 
+      BOOST_FOREACH(Gate_shptr g,
 		    filter_connected_gates(start_gate, GateTemplatePort::PORT_TYPE_IN, "D",
 					   "flipflop", GateTemplatePort::PORT_TYPE_OUT, "Q"))
 	if(closed_list.find(g) != closed_list.end()) {
@@ -117,19 +117,19 @@ namespace degate {
       }
     }
 
-    
+
     /**
      * Check if there is a port on \p gate of type \p src_port_type
      * that shares a net with another gate of type \p logic_class.
-     * 
+     *
      */
-    std::set<Gate_shptr> filter_connected_gates(Gate_shptr gate, 
+    std::set<Gate_shptr> filter_connected_gates(Gate_shptr gate,
 						GateTemplatePort::PORT_TYPE src_port_type,
 						std::string const& src_port_name,
-						std::string const& logic_class, 
+						std::string const& logic_class,
 						GateTemplatePort::PORT_TYPE dst_port_type,
 						std::string const& dst_port_name) const {
-      
+
       std::set<Gate_shptr> connected;
 
       for(Gate::port_iterator iter = gate->ports_begin();
@@ -154,13 +154,13 @@ namespace degate {
 		    if((src_port_name.empty() && dst_port_name.empty()) ||
 		       (src_port_name.empty() && dst_port_name == get_template_port_name(other_port)) ||
 		       (dst_port_name.empty() && src_port_name == get_template_port_name(gport)) ||
-		       (src_port_name == get_template_port_name(gport) && 
+		       (src_port_name == get_template_port_name(gport) &&
 			dst_port_name == get_template_port_name(other_port)))
 		      connected.insert(other_gate);
 		  }
 		}
 	      }
-	      
+
 	    }
 	  }
 	}

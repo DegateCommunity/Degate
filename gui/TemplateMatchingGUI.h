@@ -1,23 +1,23 @@
 
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __TEMPLATEMATCHINGGUI_H__
@@ -35,7 +35,7 @@
 #include <GateTemplate.h>
 
 class TemplateMatchingGUI : public RecognitionGUIBase {
-  
+
  private:
 
   Gtk::Window *parent;
@@ -60,7 +60,7 @@ class TemplateMatchingGUI : public RecognitionGUIBase {
    * @return Returns true if templates are ok. If it returns false, the template
    *   matching should be aborted.
    */
-  bool check_template_selection(std::list<degate::GateTemplate_shptr> & tmpl_set, 
+  bool check_template_selection(std::list<degate::GateTemplate_shptr> & tmpl_set,
 				degate::Layer::LAYER_TYPE layer_type);
 
 
@@ -72,14 +72,14 @@ class TemplateMatchingGUI : public RecognitionGUIBase {
   bool run_matching_param_dialog();
 
  public:
-  
+
   TemplateMatchingGUI(degate::TemplateMatching_shptr _matching, std::string const& name);
-  
+
   virtual ~TemplateMatchingGUI();
-  
- 
-  virtual void init(Gtk::Window *parent, 
-		    degate::BoundingBox const& bounding_box, 
+
+
+  virtual void init(Gtk::Window *parent,
+		    degate::BoundingBox const& bounding_box,
 		    degate::Project_shptr project);
   virtual bool before_dialog();
   virtual void run();

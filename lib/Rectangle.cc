@@ -1,22 +1,22 @@
 /*
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #include "Rectangle.h"
@@ -55,7 +55,7 @@ Rectangle::~Rectangle() {
 }
 
 bool Rectangle::in_shape(int x, int y, int max_distance) const {
-  return (x >= min_x - max_distance && x <= max_x + max_distance && 
+  return (x >= min_x - max_distance && x <= max_x + max_distance &&
 	  y >= min_y - max_distance && y <= max_y + max_distance) ? true : false;
 }
 
@@ -80,7 +80,7 @@ bool Rectangle::operator!=(const Rectangle& other) const {
  */
 
 bool Rectangle::in_bounding_box(BoundingBox const& bbox) const {
-  
+
   return ( bbox.get_min_x() <= min_x ||
 	   bbox.get_max_x() >= max_x ||
 	   bbox.get_min_y() <= min_y ||
@@ -186,5 +186,5 @@ void Rectangle::set_position(int min_x, int max_x, int min_y, int max_y) {
 }
 
 void Rectangle::calculate_bounding_box() {
-  bounding_box = BoundingBox(min_x, max_x, min_y, max_y);	     
+  bounding_box = BoundingBox(min_x, max_x, min_y, max_y);
 }

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __GRID_H__
@@ -38,7 +38,7 @@ namespace degate {
     /**
      * Enum to declare the type of a grid.
      */
-    
+
     enum ORIENTATION {
       HORIZONTAL = 1,
       VERTICAL = 2
@@ -52,7 +52,7 @@ namespace degate {
   public:
     typedef std::list<int> grid_set;
     typedef grid_set::const_iterator grid_iter;
-    
+
     /**
      * Create a new grid.
      * @param _orientation This parameter defines the orientation. E.g. a horizontal
@@ -61,8 +61,8 @@ namespace degate {
      *   control whether the grid is enabled od disabled.
      */
 
-    Grid(ORIENTATION _orientation, bool _enabled = false) : 
-      orientation(_orientation), 
+    Grid(ORIENTATION _orientation, bool _enabled = false) :
+      orientation(_orientation),
       enabled(_enabled) {}
 
     /**
@@ -88,7 +88,7 @@ namespace degate {
      */
 
     virtual void clear() = 0;
-    
+
     /**
      * Set the state, whether a grid is enabled or not.
      */
@@ -100,7 +100,7 @@ namespace degate {
      */
 
     virtual bool is_enabled() const { return enabled; }
-    
+
     /**
      * Get the nearest offset, that is on grid.
      */
@@ -112,7 +112,7 @@ namespace degate {
      */
 
     virtual ORIENTATION get_orientation() const { return orientation; }
-    
+
     /**
      * Check grid orientation: this is if the spacing is horizontal (vertical lines).
      */

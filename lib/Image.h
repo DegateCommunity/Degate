@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __IMAGE_H__
@@ -72,16 +72,16 @@ namespace degate {
      * Get the width of an image.
      */
 
-    inline unsigned int get_width() const { 
-      return bounding_box.get_width(); 
+    inline unsigned int get_width() const {
+      return bounding_box.get_width();
     }
-    
+
     /**
      * Get the height of an image.
      */
 
-    inline unsigned int get_height() const { 
-      return bounding_box.get_height(); 
+    inline unsigned int get_height() const {
+      return bounding_box.get_height();
     }
 
     /**
@@ -110,17 +110,17 @@ namespace degate {
    * the width and height of an image.
    */
 
-  template<class PixelPolicy, 
+  template<class PixelPolicy,
 	   template <class PixelPolicy> class StoragePolicy>
   class Image : public ImageBase,
 		public StoragePolicy<PixelPolicy> {
-    
+
   public:
 
     /**
      * The constructor.
      */
-    
+
     Image(unsigned int _width, unsigned int _height) :
       ImageBase(_width, _height),
       StoragePolicy<PixelPolicy>(_width, _height) {}
@@ -128,7 +128,7 @@ namespace degate {
     /**
      * The destructor.
      */
-    virtual ~Image() {}    
+    virtual ~Image() {}
 
 
     /**
@@ -144,12 +144,12 @@ namespace degate {
      */
     template<typename PixelTypeSrc>
     inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p) {
-      this->set_pixel(x, y, 
+      this->set_pixel(x, y,
 		      convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
     }
 
   };
-  
+
   typedef std::tr1::shared_ptr<ImageBase> ImageBase_shptr;
 
   /**
@@ -157,7 +157,7 @@ namespace degate {
    */
 
   template<class PixelPolicy>
-  class Image<PixelPolicy, StoragePolicy_PersistentFile> : 
+  class Image<PixelPolicy, StoragePolicy_PersistentFile> :
     public ImageBase,
     public StoragePolicy_PersistentFile<PixelPolicy> {
 
@@ -166,12 +166,12 @@ namespace degate {
     /**
      * @todo The third parameter must be optional. Create a temp image instead.
      */
-    Image(unsigned int _width, 
-	  unsigned int _height, 
-	  std::string const& filename) : 
+    Image(unsigned int _width,
+	  unsigned int _height,
+	  std::string const& filename) :
       ImageBase(_width, _height),
-      StoragePolicy_PersistentFile<PixelPolicy>(_width, 
-						_height, 
+      StoragePolicy_PersistentFile<PixelPolicy>(_width,
+						_height,
 						filename) {}
 
     virtual ~Image() {}
@@ -190,7 +190,7 @@ namespace degate {
      */
     template<typename PixelTypeSrc>
     inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p) {
-      this->set_pixel(x, y, 
+      this->set_pixel(x, y,
 		      convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
     }
 
@@ -203,7 +203,7 @@ namespace degate {
    */
 
   template<class PixelPolicy>
-  class Image<PixelPolicy, StoragePolicy_Tile> : 
+  class Image<PixelPolicy, StoragePolicy_Tile> :
     public ImageBase,
     public StoragePolicy_Tile<PixelPolicy> {
 
@@ -213,26 +213,26 @@ namespace degate {
      * Constructor for temporary virtual images.
      */
 
-    Image(unsigned int _width, 
+    Image(unsigned int _width,
 	  unsigned int _height,
-	  unsigned int _tile_width_exp = 10) : 
+	  unsigned int _tile_width_exp = 10) :
       ImageBase(_width, _height),
       StoragePolicy_Tile<PixelPolicy>(_width, _height,
 				      create_temp_directory(),
 				      false,
 				      _tile_width_exp) {}
-    
+
     /**
      * Constructor for persistent virtual images.
      */
 
-    Image(unsigned int _width, 
+    Image(unsigned int _width,
 	  unsigned int _height,
 	  std::string const& directory,
 	  bool persistent = true,
-	  unsigned int _tile_width_exp = 10) : 
+	  unsigned int _tile_width_exp = 10) :
       ImageBase(_width, _height),
-      StoragePolicy_Tile<PixelPolicy>(_width, _height, 
+      StoragePolicy_Tile<PixelPolicy>(_width, _height,
 				      directory,
 				      persistent,
 				      _tile_width_exp) {}
@@ -256,12 +256,12 @@ namespace degate {
      */
     template<typename PixelTypeSrc>
     inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p) {
-      this->set_pixel(x, y, 
+      this->set_pixel(x, y,
 		      convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
     }
   };
 
- 
+
   /**
    * Typedefs for common types of virtual images.
    */
@@ -287,7 +287,7 @@ namespace degate {
   typedef std::tr1::shared_ptr<TempImage_RGBA> TempImage_RGBA_shptr;
   typedef std::tr1::shared_ptr<TempImage_GS_DOUBLE> TempImage_GS_DOUBLE_shptr;
   typedef std::tr1::shared_ptr<TempImage_GS_BYTE> TempImage_GS_BYTE_shptr;
-  
+
 
   typedef Image<PixelPolicy_RGBA, StoragePolicy_PersistentFile> PersistentImage_RGBA;
   typedef std::tr1::shared_ptr<PersistentImage_RGBA> PersistentImage_RGBA_shptr;

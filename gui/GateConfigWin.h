@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #ifndef __GATECONFIGWIN_H__
@@ -36,31 +36,31 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 class GateConfigWin : private GladeFileLoader {
 
 protected:
-  
+
   class PortModelColumns : public Gtk::TreeModelColumnRecord {
   public:
-    
-    PortModelColumns() { 
-      add(m_col_id); 
-      add(m_col_name); 
-      add(m_col_description); 
-      add(m_col_inport); 
-      add(m_col_outport); 
+
+    PortModelColumns() {
+      add(m_col_id);
+      add(m_col_name);
+      add(m_col_description);
+      add(m_col_inport);
+      add(m_col_outport);
     }
-    
+
     Gtk::TreeModelColumn<degate::object_id_t> m_col_id;
     Gtk::TreeModelColumn<Glib::ustring> m_col_name;
     Gtk::TreeModelColumn<Glib::ustring> m_col_description;
-    Gtk::TreeModelColumn<bool> m_col_inport; 
-    Gtk::TreeModelColumn<bool> m_col_outport; 
+    Gtk::TreeModelColumn<bool> m_col_inport;
+    Gtk::TreeModelColumn<bool> m_col_outport;
   };
 
   class LClassModelColumns : public Gtk::TreeModel::ColumnRecord {
   public:
-    
-    LClassModelColumns() { 
-      add(m_col_ident); 
-      add(m_col_descr); 
+
+    LClassModelColumns() {
+      add(m_col_ident);
+      add(m_col_descr);
     }
 
     Gtk::TreeModelColumn<Glib::ustring> m_col_ident;
@@ -69,12 +69,12 @@ protected:
 
 
 public:
-  GateConfigWin(Gtk::Window *parent, 
-		degate::LogicModel_shptr lmodel, 
+  GateConfigWin(Gtk::Window *parent,
+		degate::LogicModel_shptr lmodel,
 		degate::GateTemplate_shptr gate_template);
 
   virtual ~GateConfigWin();
-        
+
   bool run();
 
 private:
@@ -114,7 +114,7 @@ private:
   Gtk::TextView * code_textview;
 
   Gtk::Button* ok_button;
-  
+
   std::string selected_logic_class;
 
 

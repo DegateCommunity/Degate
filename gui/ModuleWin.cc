@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <ModuleWin.h>
@@ -49,8 +49,8 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
     get_widget("close_button", close_button);
     if(close_button)
       close_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_close_button_clicked));
-    
-    
+
+
     get_widget("add_button", add_button);
     if(add_button) {
       add_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_add_button_clicked) );
@@ -68,14 +68,14 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
       edit_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_edit_button_clicked) );
       edit_button->set_sensitive(false);
     }
-    
+
     get_widget("goto_button", goto_button);
     if(goto_button) {
       goto_button->grab_focus();
       goto_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_goto_button_clicked) );
       remove_button->set_sensitive(false);
     }
-    
+
     treemodel_modules = TreeStoreModuleHierarchy::create();
     get_widget("treeview_modules", treeview_modules);
     if(treeview_modules) {
@@ -88,7 +88,7 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
       Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = treeview_modules->get_selection();
       refTreeSelection->signal_changed().
 	connect(sigc::mem_fun(*this, &ModuleWin::on_module_selection_changed));
-    }    
+    }
 
     treemodel_gates = Gtk::TreeStore::create(columns_gates);
     get_widget("treeview_gates", treeview_gates);
@@ -99,7 +99,7 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
       treeview_gates->append_column("Gate Type", columns_gates.m_col_type);
 
       Gtk::TreeView::Column * pColumn;
-      
+
       pColumn = treeview_gates->get_column(0);
       if(pColumn) pColumn->set_sort_column(columns_gates.m_col_name);
 
@@ -123,7 +123,7 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
       treeview_ports->append_column("Gate", columns_ports.m_col_gate);
 
       Gtk::TreeView::Column * pColumn;
-      
+
       pColumn = treeview_gates->get_column(0);
       if(pColumn) pColumn->set_sort_column(columns_ports.m_col_name);
 
@@ -167,7 +167,7 @@ void ModuleWin::insert_modules() {
   }
 }
 
-void ModuleWin::insert_module(Gtk::TreeModel::Row & row, 
+void ModuleWin::insert_module(Gtk::TreeModel::Row & row,
 			      Module_shptr module,
 			      Module_shptr parent_module) {
 
@@ -178,7 +178,7 @@ void ModuleWin::insert_module(Gtk::TreeModel::Row & row,
 
   for(Module::module_collection::iterator iter = module->modules_begin();
       iter != module->modules_end(); ++iter) {
-    
+
     Module_shptr child_module = *iter;
     Gtk::TreeModel::Row child_row = *(treemodel_modules->append(row.children()));
     insert_module(child_row, child_module, module);
@@ -192,7 +192,7 @@ void ModuleWin::insert_gates(Module_shptr module) {
 
   for(Module::gate_collection::iterator iter = module->gates_begin();
       iter != module->gates_end(); ++iter) {
-    
+
     Gate_shptr gate = *iter;
 
     Gtk::TreeModel::Row row = *(treemodel_gates->append());
@@ -266,7 +266,7 @@ void ModuleWin::on_gate_selection_changed() {
       goto_button->set_sensitive(true);
     }
   }
-  else 
+  else
     goto_button->set_sensitive(false);
 }
 
@@ -310,18 +310,18 @@ void ModuleWin::on_remove_button_clicked() {
                                 true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
       dialog.set_title("Warning");
       if(dialog.run() == Gtk::RESPONSE_YES) {
-      
+
 	Gtk::TreeModel::Row row = *iter;
 	Module_shptr mod = row[treemodel_modules->m_columns.m_col_object_ptr];
-	
-	
+
+
 	Module_shptr root_module = lmodel->get_main_module();
 	assert(root_module != NULL);
-	
+
 	if(!root_module->remove_module(mod)) {
 	  Gtk::MessageDialog dialog(*parent, "Can't remove module.", true, Gtk::MESSAGE_ERROR);
 	  dialog.set_title("Error");
-	  dialog.run();	
+	  dialog.run();
 	}
 	else {
 	  treemodel_modules->erase(iter);
@@ -350,10 +350,10 @@ void ModuleWin::on_goto_button_clicked() {
 
       if(!signal_goto_button_clicked_.empty()) signal_goto_button_clicked_(gate);
     }
-  } // 
+  } //
 }
 
-sigc::signal<void, degate::PlacedLogicModelObject_shptr>& 
+sigc::signal<void, degate::PlacedLogicModelObject_shptr>&
 ModuleWin::signal_goto_button_clicked() {
   return signal_goto_button_clicked_;
 }
@@ -366,7 +366,7 @@ void ModuleWin::update() {
 
 void ModuleWin::update_logic_model(Gtk::TreeModel::Children const& children,
 				   Module_shptr parent_module) {
-  
+
   for(Gtk::TreeModel::Children::iterator iter = children.begin();
       iter != children.end(); ++iter) {
     Gtk::TreeModel::Row row = *iter;

@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "LayerConfigWin.h"
@@ -48,23 +48,23 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
   if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
-    
+
     // connect signals
 
     get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_cancel_button_clicked));
-    
+
     get_widget("ok_button", p_ok_button);
     if(p_ok_button)
       p_ok_button->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_ok_button_clicked) );
 
 
-    
+
     get_widget("add_button", pButton);
-    if(pButton) 
+    if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_add_button_clicked) );
-    
+
     get_widget("remove_button", p_remove_button);
     if(p_remove_button) {
       p_remove_button->signal_clicked().connect(sigc::mem_fun(*this, &LayerConfigWin::on_remove_button_clicked) );
@@ -93,11 +93,11 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
     combo_row[m_ColumnsCombo.m_col_choice] = "logic";
     combo_row = *(m_refTreeModelCombo->append());
     combo_row[m_ColumnsCombo.m_col_choice] = "metal";
-    
-    
-   
+
+
+
     refListStore_layers = Gtk::ListStore::create(m_Columns);
-      
+
     get_widget("treeview_layers", pTreeView_layers);
     if(pTreeView_layers) {
       pTreeView_layers->set_model(refListStore_layers);
@@ -125,8 +125,8 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
       pTreeView_layers->append_column_editable("Layer Description", m_Columns.m_col_description);
       //pTreeView_layers->append_column("New Background Image", m_Columns.m_col_filename);
     }
-      
-    
+
+
     for(LogicModel::layer_collection::iterator iter = lmodel->layers_begin();
 	iter != lmodel->layers_end(); ++iter) {
       Layer_shptr layer = *iter;
@@ -156,7 +156,7 @@ LayerConfigWin::~LayerConfigWin() {
 }
 
 
-void LayerConfigWin::on_cellrenderer_choice_edited(const Glib::ustring& path_string, 
+void LayerConfigWin::on_cellrenderer_choice_edited(const Glib::ustring& path_string,
 						   const Glib::ustring& new_text) {
 
   Gtk::TreePath path(path_string);
@@ -166,11 +166,11 @@ void LayerConfigWin::on_cellrenderer_choice_edited(const Glib::ustring& path_str
   if(iter) {
     //Store the user's new text in the model:
     Gtk::TreeRow row = *iter;
-    
+
     try{
       std::cout << "Current: " << row[m_Columns.m_col_layer_type_chosen] << std::endl;
       std::cout << "New: " << new_text << std::endl;
-      
+
       Layer::get_layer_type_from_string(new_text); // try to parse
       row[m_Columns.m_col_layer_type_chosen] = new_text;
     }
@@ -191,7 +191,7 @@ void LayerConfigWin::on_ok_button_clicked() {
   result = true;
 
   // update data structures
-  
+
   std::vector<Layer_shptr> layers;
   type_children children = refListStore_layers->children();
 
@@ -205,7 +205,7 @@ void LayerConfigWin::on_ok_button_clicked() {
 
   if(need_progress_bar) {
     debug(TM, "progress bar");
-    ipWin = new InProgressWin(parent, "Importing", 
+    ipWin = new InProgressWin(parent, "Importing",
 			      "Please wait while importing background image and calculating the prescaled images.");
     ipWin->show();
   }
@@ -218,7 +218,7 @@ void LayerConfigWin::on_ok_button_clicked() {
 
   for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
     Gtk::TreeModel::Row row = *iter;
-    
+
     int old_pos = row[m_Columns.m_col_old_position];
     Layer_shptr layer;
     if(old_pos == -1) // create  new layer
@@ -250,7 +250,7 @@ void LayerConfigWin::on_ok_button_clicked() {
 
   if(need_progress_bar) {
     _signal_bg_import_finished_.connect(sigc::mem_fun(*this, &LayerConfigWin::_on_background_import_finished));
-    Glib::Thread::create(sigc::bind<image_list>(sigc::mem_fun(*this, &LayerConfigWin::background_import_thread), 
+    Glib::Thread::create(sigc::bind<image_list>(sigc::mem_fun(*this, &LayerConfigWin::background_import_thread),
 						images_to_load), false);
   }
   else {
@@ -275,7 +275,7 @@ void LayerConfigWin::background_import_thread(image_list l) {
   type_children children = refListStore_layers->children();
 
   for(image_list::iterator iter = l.begin(); iter != l.end(); ++iter) {
-    
+
       debug(TM, "Load background image.");
       assert(iter->first != NULL);
       load_background_image(iter->first, project_dir, iter->second);
@@ -369,7 +369,7 @@ void LayerConfigWin::update_new_positions() {
   type_children children = refListStore_layers->children();
   for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter, pos++) {
     Gtk::TreeModel::Row row = *iter;
-    
+
     row[m_Columns.m_col_new_position] = pos;
   }
 }
@@ -383,15 +383,15 @@ void LayerConfigWin::on_selection_changed() {
 
   p_remove_button->set_sensitive(new_state);
   p_bg_file_button->set_sensitive(new_state);
-  
-  
+
+
   p_clear_bg_button->set_sensitive(new_state);
 
   if(new_state == true && refTreeSelection) {
     Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
     if(*iter) {
       Gtk::TreeModel::Row row = *iter;
-      if(row[m_Columns.m_col_filename] != "") 
+      if(row[m_Columns.m_col_filename] != "")
 	p_clear_bg_button->set_sensitive(true);
       else p_clear_bg_button->set_sensitive(false);
     }

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include "globals.h"
@@ -35,12 +35,12 @@
 
 using namespace degate;
 
-GatePort::GatePort(std::tr1::shared_ptr<Gate> _gate, 
+GatePort::GatePort(std::tr1::shared_ptr<Gate> _gate,
 		   std::tr1::shared_ptr<GateTemplatePort> _gate_template_port,
-		   unsigned int _diameter) : 
-  Circle(_gate->get_min_x() + 
+		   unsigned int _diameter) :
+  Circle(_gate->get_min_x() +
 	 _gate->get_relative_x_position_within_gate(_gate_template_port->get_x()),
-	 _gate->get_min_y() + 
+	 _gate->get_min_y() +
 	 _gate->get_relative_y_position_within_gate(_gate_template_port->get_y()),
 	 _diameter),
   gate(_gate),
@@ -53,7 +53,7 @@ GatePort::GatePort(std::tr1::shared_ptr<Gate> _gate,
 GatePort::GatePort(std::tr1::shared_ptr<Gate> _gate, unsigned int _diameter) :
   Circle(0, 0, _diameter),
   gate(_gate),
-  template_port_id(0) { 
+  template_port_id(0) {
   //set_x(gate->get_min_x());
   //set_y(gate->get_min_y());
 }
@@ -76,10 +76,10 @@ const GateTemplatePort_shptr GatePort::get_template_port() const {
   return gate_template_port;
 }
 
-void GatePort::set_template_port(std::tr1::shared_ptr<GateTemplatePort> 
+void GatePort::set_template_port(std::tr1::shared_ptr<GateTemplatePort>
 				 _gate_template_port) {
   gate_template_port = _gate_template_port;
-  /* If the gate port is added to a gate afterwards, this caluclation will 
+  /* If the gate port is added to a gate afterwards, this caluclation will
    be ignored. But if the port already belongs to a gate and a a template is
    set afterwards, this calculation is used.
   */
@@ -106,12 +106,12 @@ std::tr1::shared_ptr<Gate> GatePort::get_gate() {
 
 const std::string GatePort::get_descriptive_identifier() const {
 
-  if(has_template_port() && is_assigned_to_a_gate() && 
+  if(has_template_port() && is_assigned_to_a_gate() &&
      gate->has_template()) {
 
     if(gate->has_name()) {
       boost::format fmter("%1%: %2% (%3%)");
-      fmter 
+      fmter
 	% gate->get_name()
 	% gate_template_port->get_name()
 	% gate->get_gate_template()->get_name();
@@ -119,7 +119,7 @@ const std::string GatePort::get_descriptive_identifier() const {
     }
     else {
       boost::format fmter("%1% (%2%, gate=%3%)");
-      fmter 
+      fmter
 	% gate_template_port->get_name()
 	% gate->get_gate_template()->get_name()
 	% gate->get_object_id();
@@ -131,7 +131,7 @@ const std::string GatePort::get_descriptive_identifier() const {
     fmter % get_object_id();
     return fmter.str();
   }
-  
+
 }
 
 
@@ -147,15 +147,15 @@ void GatePort::print(std::ostream & os, int n_tabs) const {
   os
     << gen_tabs(n_tabs) << "Gate port name    : " << get_name() << std::endl
     << gen_tabs(n_tabs) << "Object ID         : " << get_object_id() << std::endl
-    << gen_tabs(n_tabs) << "Template Port ID  : " << 
+    << gen_tabs(n_tabs) << "Template Port ID  : " <<
     (has_template_port() ? tmpl_port->get_object_id() : 0)  << std::endl
     << gen_tabs(n_tabs) << "Diameter          : " << get_diameter() << std::endl
     << gen_tabs(n_tabs) << "Port position     : " << get_x() << " / " << get_y() << std::endl
     << gen_tabs(n_tabs) << "Bounding box      : " << get_bounding_box().to_string() << std::endl
-    
+
     << std::endl;
     ;
- 
+
 }
 
 

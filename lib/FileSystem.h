@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #ifndef __FILESYSTEM_H__
@@ -38,7 +38,7 @@ namespace degate{
 
   /**
    * Check if a path is a directory.
-   * @return Returns true, if the path is a dirctory. 
+   * @return Returns true, if the path is a dirctory.
    * It returns false, if not or if the path doesn't exists.
    */
 
@@ -54,7 +54,7 @@ namespace degate{
 
   /**
    * Check if a path is a symlink.
-   * @return Returns true, if the path is a symlink. 
+   * @return Returns true, if the path is a symlink.
    *   It returns false, if not or if the path doesn't exist.
    */
 
@@ -107,7 +107,7 @@ namespace degate{
    * Get filename part of a path.
    */
   std::string get_filename_from_path(std::string const& path);
-  
+
 
   /**
    * Get the basename of a file. That is the substring without the directory
@@ -126,13 +126,13 @@ namespace degate{
    * Because this function is only for degate. We make some sanity checks.
    */
   void remove_directory(std::string const& path) throw(degate::FileSystemException);
- 
+
 
   /**
    * Create a directory.
    */
 
-  void create_directory(std::string const& directory, mode_t mode = 0700) 
+  void create_directory(std::string const& directory, mode_t mode = 0700)
     throw(degate::FileSystemException);
 
   /**
@@ -147,7 +147,7 @@ namespace degate{
    * @return Returns the path of the created directory.
    */
   std::string create_temp_directory(std::string const & directory_pattern);
-    
+
 
   /**
    * Generate a pattern within a basedir for temp files.
@@ -188,11 +188,11 @@ namespace degate{
    *
    */
 
-  std::string get_relative_path(std::string const& path, 
+  std::string get_relative_path(std::string const& path,
 				std::string const& relative_to);
 
 
-  
+
 
   /**
    * Strip the leading directory part from a path.

@@ -26,7 +26,7 @@ namespace degate{
 
   public:
 
-    LinearPrimitive(int from_x, int from_y, int to_x, int to_y) : 
+    LinearPrimitive(int from_x, int from_y, int to_x, int to_y) :
       Line(from_x, from_y, to_x, to_y, 1) {
       orientation = abs(from_x - to_x) > abs(from_y - to_y) ? HORIZONTAL : VERTICAL;
     }
@@ -34,7 +34,7 @@ namespace degate{
     ORIENTATION get_orientation() const { return orientation; }
 
     void print() {
-      debug(TM, "%d,%d --- %d,%d : %d", 
+      debug(TM, "%d,%d --- %d,%d : %d",
 	    get_from_x(), get_from_y(), get_to_x(), get_to_y(), get_length());
     }
 
@@ -46,7 +46,7 @@ namespace degate{
 
   class LineSegment;
   typedef std::tr1::shared_ptr<LineSegment> LineSegment_shptr;
-  
+
   /**
    * Line segment
    */
@@ -55,7 +55,7 @@ namespace degate{
   private:
     std::list<LinearPrimitive_shptr> segments;
   public:
-    LineSegment(LinearPrimitive_shptr lp) : 
+    LineSegment(LinearPrimitive_shptr lp) :
       LinearPrimitive(lp->get_from_x(), lp->get_from_y(), lp->get_to_x(), lp->get_to_y()) {
     }
 
@@ -76,7 +76,7 @@ namespace degate{
 
       // +-----------------+       +--------------+
       // A1                A2      B1             B2
-	
+
       if(a2b1 <= a1b1 && a2b1 <= a1b2 && a2b1 <= a2b2) {
 	set_p1(a1);set_p2(b2);
       }
@@ -154,13 +154,13 @@ namespace degate{
     const_iterator begin() const { return lines.begin(); }
     const_iterator end() const { return lines.end(); }
 
-    LineSegment_shptr find_adjacent(LineSegment_shptr elem, 
+    LineSegment_shptr find_adjacent(LineSegment_shptr elem,
 				    unsigned int search_radius_along,
 				    unsigned int search_radius_across) const {
 
       BOOST_FOREACH(LineSegment_shptr elem2, *this) {
 	if(elem != elem2 && elem2->get_orientation() == elem->get_orientation()) {
-	  
+
 	  Point a1 = elem->get_p1();
 	  Point a2 = elem->get_p2();
 	  Point b1 = elem2->get_p1();
@@ -173,20 +173,20 @@ namespace degate{
 	     a2.get_distance(b2) <= search_radius_along) {
 
 	    if(elem->get_orientation() == LineSegment::HORIZONTAL) {
-	      int _min = std::min(a1.get_y(), 
-				  std::min(a2.get_y(), 
+	      int _min = std::min(a1.get_y(),
+				  std::min(a2.get_y(),
 					   std::min(b1.get_y(), b2.get_y())));
-	      int _max = std::max(a1.get_y(), 
-				  std::max(a2.get_y(), 
+	      int _max = std::max(a1.get_y(),
+				  std::max(a2.get_y(),
 					   std::max(b1.get_y(), b2.get_y())));
 	      if((unsigned int)(_max - _min) < search_radius_across) return elem2;
 	    }
 	    else {
-	      int _min = std::min(a1.get_x(), 
-				  std::min(a2.get_x(), 
+	      int _min = std::min(a1.get_x(),
+				  std::min(a2.get_x(),
 					   std::min(b1.get_x(), b2.get_x())));
-	      int _max = std::max(a1.get_x(), 
-				  std::max(a2.get_x(), 
+	      int _max = std::max(a1.get_x(),
+				  std::max(a2.get_x(),
 					   std::max(b1.get_x(), b2.get_x())));
 
 	      if((unsigned int)(_max - _min) < search_radius_across) return elem2;
@@ -196,7 +196,7 @@ namespace degate{
       }
       return LineSegment_shptr();
     }
-	
+
     void merge(unsigned int search_radius_along,
 	       unsigned int search_radius_across) {
 
@@ -205,7 +205,7 @@ namespace degate{
       int distance = 1;
       int max_distance = search_radius_along;
       bool running = lines.size() > 0;
-      
+
       while(running) {
 	debug(TM, "#segments: %d", lines.size());
 	running = false;
@@ -218,7 +218,7 @@ namespace degate{
 	  running = true;
 	  // We could check here if line segments differ in their angles
 	  ls->merge(ls2);
-	  
+
 	  iterator found = find(lines.begin(), lines.end(), ls2);
 	  assert(found != lines.end());
 	  lines.erase(found);
@@ -239,20 +239,20 @@ namespace degate{
 
 	lines.push_back(ls);
       }
-      
+
 
     }
 
     void write() const {
       std::ofstream myfile;
       myfile.open ("/tmp/example.txt");
-      
+
       BOOST_FOREACH(LineSegment_shptr e, *this) {
 	if(e->get_length() > 0) {
-	  myfile << "line " 
-		 << e->get_from_x() << "," << e->get_from_y() 
-		 << " " 
-		 << e->get_to_x() << "," << e->get_to_y() 
+	  myfile << "line "
+		 << e->get_from_x() << "," << e->get_from_y()
+		 << " "
+		 << e->get_to_x() << "," << e->get_to_y()
 		 << std::endl;
 	}
 
@@ -307,7 +307,7 @@ namespace degate{
     void extract_primitives() {
       for(unsigned int y = border; y < height - border; y++)
 	for(unsigned int x = border; x < width - border; x++) {
-	  
+
 	  if(processed->get_pixel(x, y) > 0) {
 	    LinearPrimitive_shptr lp = trace_line_primitive(processed, x, y);
 	    if(lp != NULL) {
@@ -319,14 +319,14 @@ namespace degate{
 	}
     }
 
-    LinearPrimitive_shptr trace_line_primitive(std::tr1::shared_ptr<ImageType> img, 
+    LinearPrimitive_shptr trace_line_primitive(std::tr1::shared_ptr<ImageType> img,
 					       unsigned int x, unsigned int y) {
 
       LinearPrimitive_shptr segment;
 
       unsigned int _x = x;
       while(_x < width && img->get_pixel(_x, y) > 0) _x++;
-      
+
       if(_x - x > 1) {
 	segment = LinearPrimitive_shptr(new LinearPrimitive(x, y, _x, y));
 	_x = x;
@@ -336,7 +336,7 @@ namespace degate{
 	}
 	return segment;
       }
-      
+
       unsigned int _y = y;
       while(_y < height && img->get_pixel(x, _y) > 0) _y++;
 

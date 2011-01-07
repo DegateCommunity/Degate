@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "gui_globals.h"
@@ -51,23 +51,23 @@ void MenuManager::create_popup_menu() {
 
   Gtk::Menu::MenuList & l = popup_menu.items();
 
-  l.push_back( MenuElem("Set port on gate", 
+  l.push_back( MenuElem("Set port on gate",
 			sigc::mem_fun(*window, &MainWin::on_popup_menu_set_port) ));
-  
-  l.push_back( MenuElem("Set _name for object", 
+
+  l.push_back( MenuElem("Set _name for object",
 			sigc::mem_fun(*window, &MainWin::on_popup_menu_set_name) ));
-  
-  
+
+
   l.push_back( SeparatorElem());
-  
-  l.push_back( MenuElem("Add a horizontal grid line", 
+
+  l.push_back( MenuElem("Add a horizontal grid line",
 			sigc::mem_fun(*window, &MainWin::on_popup_menu_add_horizontal_grid_line) ));
-  
-  l.push_back( MenuElem("Add a vertical grid line", 
+
+  l.push_back( MenuElem("Add a vertical grid line",
 			sigc::mem_fun(*window, &MainWin::on_popup_menu_add_vertical_grid_line) ));
-  
-  
- 
+
+
+
   popup_menu.accelerate(*window);
 }
 
@@ -90,10 +90,10 @@ void MenuManager::create_menu() {
   create_and_bind_gate_menu();
   create_and_bind_recognition_menu();
   create_and_bind_help_menu();
-  
+
   m_refUIManager = Gtk::UIManager::create();
   m_refUIManager->insert_action_group(m_refActionGroup);
-  
+
   window->add_accel_group(m_refUIManager->get_accel_group());
 
   setup_menu_structure();
@@ -122,22 +122,22 @@ void MenuManager::create_and_bind_project_menu() {
 			sigc::mem_fun(*window, &MainWin::on_menu_project_save));
 
   m_refActionGroup->add(Gtk::Action::create("ProjectCreateSubproject",
-					    "Create subproject for selection", 
+					    "Create subproject for selection",
 					    "Create subproject for selection"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_create_subproject));
 
   m_refActionGroup->add(Gtk::Action::create("ProjectOpenParent",
-					    "Open parent project", 
+					    "Open parent project",
 					    "Open parent project"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_open_parent));
 
   m_refActionGroup->add(Gtk::Action::create("ProjectPushChanges",
-					    "Push changes to server", 
+					    "Push changes to server",
 					    "Push changes to server"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_push_changes));
 
   m_refActionGroup->add(Gtk::Action::create("ProjectPullChanges",
-					    "Pull changes from server", 
+					    "Pull changes from server",
 					    "Pull changes from server"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_pull_changes));
 
@@ -152,7 +152,7 @@ void MenuManager::create_and_bind_project_menu() {
 					    "Create _archive", "Create an archive"),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_export_archive));
 
-  
+
   Glib::RefPtr<Gtk::RecentAction> recent_action_ptr = Gtk::RecentAction::create("ProjectRecentProjects", "_Recent projects");
   recent_action_ptr->signal_item_activated().connect(sigc::mem_fun(*window, &MainWin::on_menu_project_recent_projects));
   m_refActionGroup->add(recent_action_ptr);
@@ -162,7 +162,7 @@ void MenuManager::create_and_bind_project_menu() {
   recent_action_ptr->set_filter(*recent_filter_ptr);
   recent_action_ptr->set_show_numbers(true);
   recent_action_ptr->set_sort_type(Gtk::RECENT_SORT_MRU);
-  
+
 
   m_refActionGroup->add(Gtk::Action::create("ProjectQuit", Gtk::Stock::QUIT),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_quit));
@@ -202,17 +202,17 @@ void MenuManager::create_and_bind_view_menu() {
 					    "Grid configuration", "Grid configuration"),
 			sigc::mem_fun(*window, &MainWin::on_menu_view_grid_config));
 
-  m_refActionGroup->add(Gtk::Action::create("ViewToggleInfoLayer", 
+  m_refActionGroup->add(Gtk::Action::create("ViewToggleInfoLayer",
 					    "Disable all info layers", "Disable all info layers"),
 			Gtk::AccelKey("<control>3"),
 			sigc::mem_fun(*window, &MainWin::on_menu_view_toggle_all_info_layers));
 
-  m_refActionGroup->add(Gtk::Action::create("ViewToggleToolbar", 
+  m_refActionGroup->add(Gtk::Action::create("ViewToggleToolbar",
 					    "Hide Toolbar", "Toggle toolbar visibility"),
 			Gtk::AccelKey("<control>T"),
 			sigc::mem_fun(*this, &MenuManager::toggle_toolbar_visibility));
 
-  /*  m_refActionGroup->add(Gtk::Action::create("ViewDistanceToColor", "Define color for similarity filter", 
+  /*  m_refActionGroup->add(Gtk::Action::create("ViewDistanceToColor", "Define color for similarity filter",
 					    "Define color for similarity filter"),
 			sigc::mem_fun(*window, &MainWin::on_menu_view_distance_to_color));
   */
@@ -229,7 +229,7 @@ void MenuManager::create_and_bind_tools_menu() {
   // Choices menu, to demonstrate Radio items
   m_refActionGroup->add( Gtk::Action::create("ToolsMenu", "Tools") );
   Gtk::RadioAction::Group group_tools;
-  
+
   m_refChoice_Select = Gtk::RadioAction::create(group_tools, "ToolSelect", "Select");
   m_refActionGroup->add(m_refChoice_Select, sigc::mem_fun(*window, &MainWin::on_menu_tools_select) );
 
@@ -252,17 +252,17 @@ void MenuManager::create_and_bind_layer_menu() {
 
   m_refActionGroup->add(Gtk::Action::create("LayerImportBackground",
 					    Gtk::Stock::MISSING_IMAGE,
-					    "_Import background image", 
+					    "_Import background image",
 					    "Import background for current layer"),
 			sigc::mem_fun(*window, &MainWin::on_menu_layer_import_background));
 
   m_refActionGroup->add(Gtk::Action::create("LayerClearBackgroundImage",
-					    Gtk::Stock::CLEAR, "Clear background image", 
+					    Gtk::Stock::CLEAR, "Clear background image",
 					    "Clear background image for current layer"),
 			sigc::mem_fun(*window, &MainWin::on_menu_layer_clear_background_image));
 
   m_refActionGroup->add(Gtk::Action::create("LayerExportBackgroundImage",
-					    Gtk::Stock::CLEAR, "Export (part of) background image", 
+					    Gtk::Stock::CLEAR, "Export (part of) background image",
 					    "Export background image for current layer"),
 			sigc::mem_fun(*window, &MainWin::on_menu_layer_export_background_image));
 
@@ -279,68 +279,68 @@ void MenuManager::create_and_bind_logic_menu() {
   m_refActionGroup->add( Gtk::Action::create("LogicMenu", "Logic"));
 
   m_refActionGroup->add(Gtk::Action::create("LogicInterconnect",
-					    Gtk::Stock::CONNECT, "Force interconnect", 
+					    Gtk::Stock::CONNECT, "Force interconnect",
 					    "Force interconnect"),
 			Gtk::AccelKey("<control>A"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_interconnect));
 
   m_refActionGroup->add(Gtk::Action::create("LogicIsolate",
-					    Gtk::Stock::DISCONNECT, "Isolate object(s)", 
+					    Gtk::Stock::DISCONNECT, "Isolate object(s)",
 					    "Isolate object(s)"),
 			Gtk::AccelKey("<control>U"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_isolate));
 
   m_refActionGroup->add(Gtk::Action::create("LogicAutoInterconnect",
-					    Gtk::Stock::CONNECT, "Auto-Interconnect objects on current layer", 
+					    Gtk::Stock::CONNECT, "Auto-Interconnect objects on current layer",
 					    "Auto-Interconnect objects on current layer"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_autointerconnect));
 
   m_refActionGroup->add(Gtk::Action::create("LogicAutoInterconnectInterLayer",
-					    Gtk::Stock::CONNECT, "Interlayer autoconnect objects", 
+					    Gtk::Stock::CONNECT, "Interlayer autoconnect objects",
 					    "Interlayer autoconnect objects"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_autointerconnect_interlayer));
 
   m_refActionGroup->add(Gtk::Action::create("LogicClearLogicModel",
-					    Gtk::Stock::CLEAR, "Clear logic model", 
+					    Gtk::Stock::CLEAR, "Clear logic model",
 					    "Clear logic model for current layer"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_clear_logic_model));
 
   m_refActionGroup->add(Gtk::Action::create("LogicClearLogicModelInSelection",
-					    Gtk::Stock::CLEAR, "Remove selected objects", 
+					    Gtk::Stock::CLEAR, "Remove selected objects",
 					    "Remove selected objects"),
 			Gtk::AccelKey("<control>C"),
 			sigc::mem_fun(*window, &MainWin::remove_objects));
 
-  m_refActionGroup->add(Gtk::Action::create("LogicConnectionInspector", 
-					    Gtk::Stock::EXECUTE, 
-					    "Connection inspector", 
+  m_refActionGroup->add(Gtk::Action::create("LogicConnectionInspector",
+					    Gtk::Stock::EXECUTE,
+					    "Connection inspector",
 					    "Connection inspector"),
 			Gtk::AccelKey("<control>I"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_connection_inspector));
 
-  m_refActionGroup->add(Gtk::Action::create("LogicDRC", 
-					    Gtk::Stock::EXECUTE, 
-					    "Design Rule Checks", 
+  m_refActionGroup->add(Gtk::Action::create("LogicDRC",
+					    Gtk::Stock::EXECUTE,
+					    "Design Rule Checks",
 					    "Design Rule Checks"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_drc));
 
-  m_refActionGroup->add(Gtk::Action::create("LogicCreateAnnotation", 
-					    "Create an annotation", 
+  m_refActionGroup->add(Gtk::Action::create("LogicCreateAnnotation",
+					    "Create an annotation",
 					    "Create an annotaion"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_create_annotation));
 
-  m_refActionGroup->add(Gtk::Action::create("LogicShowAnnotations", 
-					    "Annotations", 
+  m_refActionGroup->add(Gtk::Action::create("LogicShowAnnotations",
+					    "Annotations",
 					    "Show list of annotations"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_show_annotations));
 
-  m_refActionGroup->add(Gtk::Action::create("LogicShowModules", 
-					    "Modules", 
+  m_refActionGroup->add(Gtk::Action::create("LogicShowModules",
+					    "Modules",
 					    "Show list of modules"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_show_modules));
 
-  m_refActionGroup->add(Gtk::Action::create("LogicMoveGateIntoModule", 
-					    "Move gate(s) into module", 
+  m_refActionGroup->add(Gtk::Action::create("LogicMoveGateIntoModule",
+					    "Move gate(s) into module",
 					    "Move gate(s) into module"),
 			Gtk::AccelKey("<control>M"),
 			sigc::mem_fun(*window, &MainWin::on_menu_move_gate_into_module));
@@ -354,54 +354,54 @@ void MenuManager::create_and_bind_gate_menu() {
   // Gate menu
   m_refActionGroup->add( Gtk::Action::create("GateMenu", "Gate"));
   m_refActionGroup->add(Gtk::Action::create("GateCreateBySelection",
-					    "Create gate by selection", 
+					    "Create gate by selection",
 					    "Create a new gate"),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_create_by_selection));
 
   m_refActionGroup->add(Gtk::Action::create("GateList",
 					    Gtk::Stock::DND_MULTIPLE,
-					    "Gate library", 
+					    "Gate library",
 					    "Gate Library"),
 			Gtk::AccelKey("<control>L"),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_list));
 
   m_refActionGroup->add(Gtk::Action::create("GatePortColors",
 					    Gtk::Stock::SELECT_COLOR,
-					    "Port colors", 
+					    "Port colors",
 					    "Define port colors"),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_port_colors));
 
   m_refActionGroup->add(Gtk::Action::create("GateGotoGateByName",
 					    Gtk::Stock::JUMP_TO,
-					    "Goto gate by name", 
+					    "Goto gate by name",
 					    "Goto gate by name"),
 			Gtk::AccelKey("<control>G"),
 			sigc::mem_fun(*window, &MainWin::on_menu_goto_gate_by_name));
 
   m_refActionGroup->add(Gtk::Action::create("GateGotoGateByID",
 					    Gtk::Stock::JUMP_TO,
-					    "Goto gate by ID", 
+					    "Goto gate by ID",
 					    "Goto gate by ID"),
 			sigc::mem_fun(*window, &MainWin::on_menu_goto_gate_by_id));
 
   m_refActionGroup->add(Gtk::Action::create("GateSet",
-					    "Set gate for selection", 
+					    "Set gate for selection",
 					    "Set gate for selection"),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_set));
 
   m_refActionGroup->add(Gtk::Action::create("GateOrientation",
 					    //Gtk::Stock::ORIENTATION_REVERSE_LANDSCAPE,
-					    "Set gate orientation", 
+					    "Set gate orientation",
 					    "Set gate orientation"),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_orientation));
 
   m_refActionGroup->add(Gtk::Action::create("GateSetAsMaster",
-					    "Use images of selected gates", 
+					    "Use images of selected gates",
 					    "Use images of selected gates"),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_set_as_master));
 
   m_refActionGroup->add(Gtk::Action::create("GateRemoveGateByType",
-					    Gtk::Stock::CLEAR, "Remove gates by type ...", 
+					    Gtk::Stock::CLEAR, "Remove gates by type ...",
 					    "Remove gates by type ..."),
 			sigc::mem_fun(*window, &MainWin::on_menu_gate_remove_gate_by_type));
 
@@ -409,15 +409,15 @@ void MenuManager::create_and_bind_gate_menu() {
   m_refActionGroup->add(Gtk::Action::create("LogicAutoNameGatesAlongRows",
 					    "Generate names for gates along rows",
 					    "Generate names for gates along rows"),
-			sigc::bind<AutoNameGates::ORIENTATION>(sigc::mem_fun(*window, 
-									     &MainWin::on_menu_logic_auto_name_gates), 
+			sigc::bind<AutoNameGates::ORIENTATION>(sigc::mem_fun(*window,
+									     &MainWin::on_menu_logic_auto_name_gates),
 							       AutoNameGates::ALONG_ROWS) );
 
   m_refActionGroup->add(Gtk::Action::create("LogicAutoNameGatesAlongCols",
 					    "Generate names for gates along columns",
 					    "Generate names for gates along columns"),
-			sigc::bind<AutoNameGates::ORIENTATION>(sigc::mem_fun(*window, 
-									     &MainWin::on_menu_logic_auto_name_gates), 
+			sigc::bind<AutoNameGates::ORIENTATION>(sigc::mem_fun(*window,
+									     &MainWin::on_menu_logic_auto_name_gates),
 							       AutoNameGates::ALONG_COLS) );
 
 }
@@ -433,13 +433,13 @@ void MenuManager::create_and_bind_help_menu() {
   m_refActionGroup->add( Gtk::Action::create("HelpMenu", "Help") );
   m_refActionGroup->add( Gtk::Action::create("HelpAbout", Gtk::Stock::ABOUT, "About"),
 			 sigc::mem_fun(*window, &MainWin::on_menu_help_about) );
-  
+
 }
 
 void MenuManager::setup_menu_structure() {
-  
+
   // Layout the actions in a menubar and toolbar:
-  Glib::ustring ui_info = 
+  Glib::ustring ui_info =
         "<ui>"
         "  <menubar name='MenuBar'>"
         "    <menu action='ProjectMenu'>"
@@ -467,10 +467,10 @@ void MenuManager::setup_menu_structure() {
         "      <menuitem action='ViewNextLayer'/>"
         "      <menuitem action='ViewPrevLayer'/>"
         "      <separator/>"
-        "      <menuitem action='ViewGridConfiguration'/>"  
+        "      <menuitem action='ViewGridConfiguration'/>"
         "      <separator/>"
-        "      <menuitem action='ViewToggleInfoLayer'/>"  
-        "      <menuitem action='ViewToggleToolbar'/>"  
+        "      <menuitem action='ViewToggleInfoLayer'/>"
+        "      <menuitem action='ViewToggleToolbar'/>"
         "    </menu>"
         "    <menu action='ToolsMenu'>"
         "      <menuitem action='ToolSelect'/>"
@@ -502,9 +502,9 @@ void MenuManager::setup_menu_structure() {
         "      <menuitem action='LogicShowModules'/>"
         "      <menuitem action='LogicMoveGateIntoModule'/>"
         "      <separator/>"
-        "      <menuitem action='LogicConnectionInspector'/>"  
+        "      <menuitem action='LogicConnectionInspector'/>"
         "      <separator/>"
-        "      <menuitem action='LogicDRC'/>"  
+        "      <menuitem action='LogicDRC'/>"
         "    </menu>"
         "    <menu action='GateMenu'>"
         "      <menuitem action='GateCreateBySelection'/>"
@@ -565,7 +565,7 @@ void MenuManager::setup_menu_structure() {
 #endif //GLIBMM_EXCEPTIONS_ENABLED
 
   // Get the menubar and toolbar widgets, and add them to a container widget:
-  
+
 
 }
 
@@ -596,11 +596,11 @@ void MenuManager::set_toolbar_images() {
 
 
 
-void MenuManager::set_image_for_toolbar_widget(Glib::ustring toolbar_widget_path, 
+void MenuManager::set_image_for_toolbar_widget(Glib::ustring toolbar_widget_path,
 					       Glib::ustring image_file_name) {
 
   char path[PATH_MAX];
-  snprintf(path, PATH_MAX, "%s/icons/%s", 
+  snprintf(path, PATH_MAX, "%s/icons/%s",
 	   getenv("DEGATE_HOME"), image_file_name.c_str());
 
   assert(file_exists(path) == true);
@@ -610,7 +610,7 @@ void MenuManager::set_image_for_toolbar_widget(Glib::ustring toolbar_widget_path
 
   assert(pToolbarItem != NULL);
   if(pToolbarItem == NULL) return;
-  
+
   Gtk::Image * m_Image = Gtk::manage(new Gtk::Image(path));
   assert(m_Image != NULL);
   if(m_Image == NULL) return;
@@ -625,7 +625,7 @@ void MenuManager::initialize_menu_algorithm_funcs() {
 
   if(pMenuItem) {
 
-    Gtk::Menu* pMenu = pMenuItem->get_submenu(); 
+    Gtk::Menu* pMenu = pMenuItem->get_submenu();
     assert(pMenu != NULL);
 
     if(pMenu) {
@@ -643,9 +643,9 @@ void MenuManager::initialize_menu_algorithm_funcs() {
 
 	Gtk::MenuItem *menuItem = new Gtk::MenuItem(ui->get_name());
 	menuItem->show();
-	menuItem->signal_activate().connect(sigc::bind(sigc::mem_fun(*window, 
+	menuItem->signal_activate().connect(sigc::bind(sigc::mem_fun(*window,
 								     &MainWin::on_algorithms_func_clicked), i));
-    
+
 	pMenu->add(*menuItem);
 	pMenu->show();
 	pMenuItem->show();
@@ -657,11 +657,11 @@ void MenuManager::initialize_menu_algorithm_funcs() {
 
 
 
-void MenuManager::initialize_menu_render_funcs(const std::vector<Glib::ustring> & func_names, 
+void MenuManager::initialize_menu_render_funcs(const std::vector<Glib::ustring> & func_names,
 					       const std::vector<bool> & func_states) {
 
   assert(func_names.size() != 0);
-  
+
   Gtk::MenuItem * pMenuItem = dynamic_cast<Gtk::MenuItem*>(m_refUIManager->get_widget("/MenuBar/ViewMenu/ViewPrevLayer"));
   if(pMenuItem) {
     Gtk::Menu * pMenu = dynamic_cast<Gtk::Menu*>(pMenuItem->get_parent());
@@ -684,14 +684,14 @@ void MenuManager::initialize_menu_render_funcs(const std::vector<Glib::ustring> 
 	menuItem->set_active(func_states[slot_pos]);
 	pMenu->append(*menuItem);
 	menuItem->show();
-	menuItem->signal_toggled().connect(sigc::bind<int>(sigc::mem_fun(*window, &MainWin::on_view_info_layer_toggled), 
+	menuItem->signal_toggled().connect(sigc::bind<int>(sigc::mem_fun(*window, &MainWin::on_view_info_layer_toggled),
 							   slot_pos));
 
 	std::pair<Gtk::CheckMenuItem *, bool> p(menuItem, func_states[slot_pos]);
 	slot_states.push_back(p);
       }
 
-      
+
     }
   }
 
@@ -803,7 +803,7 @@ void MenuManager::toggle_toolbar_visibility() {
     if(pToolbar) {
       if(toolbar_visible == true)
 	pToolbar->hide();
-      else 
+      else
 	pToolbar->show();
 
       toolbar_visible = toggle_menu_item("/MenuBar/ViewMenu/ViewToggleToolbar", toolbar_visible,
@@ -813,13 +813,13 @@ void MenuManager::toggle_toolbar_visibility() {
 }
 
 
-bool MenuManager::toggle_menu_item(Glib::ustring path, bool state, 
+bool MenuManager::toggle_menu_item(Glib::ustring path, bool state,
 			       Glib::ustring text1, Glib::ustring text2) {
 
   Gtk::MenuItem * item = dynamic_cast<Gtk::MenuItem *>(m_refUIManager->get_widget(path));
   assert(item != NULL);
   if(item != NULL) {
-    Gtk::Label * lab = dynamic_cast<Gtk::Label*>( item->get_child() ); 
+    Gtk::Label * lab = dynamic_cast<Gtk::Label*>( item->get_child() );
     assert(lab != NULL);
     if(lab != NULL) lab->set_text(state == true ? text1 : text2);
   }
@@ -840,10 +840,10 @@ const std::vector<bool> MenuManager::toggle_info_layer_visibility() {
   if(slot_states.size() > 2) {
     new_states[i] = slot_states[i].second; i++;
     new_states[i] = slot_states[i].second; i++;
-    it++; it++; 
+    it++; it++;
   }
 
-  info_layers_checkbox_ignore_sig = true; 
+  info_layers_checkbox_ignore_sig = true;
 
   while(it != slot_states.end()) {
 

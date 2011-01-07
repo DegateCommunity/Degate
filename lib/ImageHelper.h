@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __IMAGEHELPER_H__
@@ -41,7 +41,7 @@ namespace degate {
    */
 
   template<typename ImageType>
-  std::tr1::shared_ptr<ImageType> load_image(std::string const& path) 
+  std::tr1::shared_ptr<ImageType> load_image(std::string const& path)
     throw(InvalidPathException, DegateRuntimeException) {
     if(!file_exists(path)) {
       boost::format fmter("Error in load_image(): file %1% does not exist.");
@@ -51,7 +51,7 @@ namespace degate {
     else {
       boost::format fmter("Error in load_image(): The image file %1% cannot be loaded.");
       fmter % path;
-      
+
       // get a reader
       ImageReaderFactory<ImageType> ir_factory;
       std::tr1::shared_ptr<ImageReaderBase<ImageType> > reader = ir_factory.get_reader(path);
@@ -64,9 +64,9 @@ namespace degate {
 	debug(TM, "reading image file: %s", path.c_str());
 
 	// create an empty image
-	std::tr1::shared_ptr<ImageType> img(new ImageType(reader->get_width(), 
+	std::tr1::shared_ptr<ImageType> img(new ImageType(reader->get_width(),
 							  reader->get_height()));
-	if(reader->get_image(img) == true) 
+	if(reader->get_image(img) == true)
 	  return img;
 	else
 	  throw DegateRuntimeException(fmter.str());
@@ -79,14 +79,14 @@ namespace degate {
    */
 
   template<typename ImageType>
-  void load_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) 
+  void load_image(std::string const& path, std::tr1::shared_ptr<ImageType> img)
     throw(InvalidPathException, DegateRuntimeException) {
-	
+
     std::tr1::shared_ptr<ImageType> i = load_image<ImageType>(path);
     copy_image<ImageType, ImageType>(img, i);
   }
 
-  
+
   /**
    * Store an image in a common file format.
    * Only the tiff file format is supported.
@@ -94,24 +94,24 @@ namespace degate {
    */
 
   template<typename ImageType>
-  void save_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) 
+  void save_image(std::string const& path, std::tr1::shared_ptr<ImageType> img)
     throw(InvalidPathException, DegateRuntimeException) {
-    
-    TIFFWriter<ImageType> tiff_writer(img->get_width(), 
+
+    TIFFWriter<ImageType> tiff_writer(img->get_width(),
 				      img->get_height(), path);
     if(tiff_writer.write_image(img) != true) {
       boost::format fmter("Error in save_image(): Canot write file %1%.");
       fmter % path;
       throw DegateRuntimeException(fmter.str());
-    }    
+    }
   }
 
   /**
    * Save a part of an image.
    */
   template<typename ImageType>
-  void save_part_of_image(std::string const& path, 
-			  std::tr1::shared_ptr<ImageType> img, 
+  void save_part_of_image(std::string const& path,
+			  std::tr1::shared_ptr<ImageType> img,
 			  BoundingBox const& bounding_box) {
 
     std::tr1::shared_ptr<ImageType> part(new ImageType(bounding_box.get_width(),
@@ -128,8 +128,8 @@ namespace degate {
 
   template<typename ImageType>
   void save_normalized_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) {
-    
-    std::tr1::shared_ptr<ImageType> normalized_img(new ImageType(img->get_width(), 
+
+    std::tr1::shared_ptr<ImageType> normalized_img(new ImageType(img->get_width(),
 								 img->get_height()));
 
     normalize<ImageType, ImageType>(normalized_img, img, 0, 255);
@@ -151,9 +151,9 @@ namespace degate {
 
     unsigned int w = img->get_width(), h = img->get_height();
     std::vector<double> i_tmp(4 * w * h);
-    
+
     BOOST_FOREACH(const std::tr1::shared_ptr<ImageType> i, images) {
-    
+
       // verify that all images have the same dimensions
       if(w != i->get_width() || h != i->get_height()) return new_img;
 
@@ -167,12 +167,12 @@ namespace degate {
 	i_tmp[offs+3] += MASK_A(pix);
       }
     }
-  
+
     const double elems = images.size();
 
     new_img = std::tr1::shared_ptr<ImageType>(new GateTemplateImage(img->get_width(), img->get_height()));
     assert(new_img != NULL);
-  
+
     for(unsigned int y = 0; y < h; y++)
       for(unsigned int x = 0; x < w; x++) {
 	unsigned int offs = 4 * (y * w + x);
@@ -185,8 +185,8 @@ namespace degate {
 
     return new_img;
   }
-  
-  
+
+
 }
 
 #endif

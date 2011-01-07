@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __RENDERAREABASE_H__
@@ -79,7 +79,7 @@ protected:
   virtual void update_virtual_dimension() = 0;
 
 
-  
+
 
   double get_scaling() {
     double s = (double)get_viewport_width() / (double)get_drawing_window_width();
@@ -98,7 +98,7 @@ public:
   RenderAreaBase() {
     viewport_min_x = viewport_min_y = 0;
     viewport_max_x = viewport_max_y = 10;
-    
+
     virtual_width = virtual_height = 100;
   }
 
@@ -125,8 +125,8 @@ public:
    * @see update_virtual_dimension()
    */
 
-  virtual void set_virtual_width(unsigned int w) { 
-    virtual_width = w; 
+  virtual void set_virtual_width(unsigned int w) {
+    virtual_width = w;
     this->update_virtual_dimension();
   }
 
@@ -136,8 +136,8 @@ public:
    * @see update_virtual_dimension()
    */
 
-  virtual void set_virtual_height(unsigned int  h) { 
-    virtual_height = h; 
+  virtual void set_virtual_height(unsigned int  h) {
+    virtual_height = h;
     this->update_virtual_dimension();
   }
 
@@ -147,9 +147,9 @@ public:
    * @see update_virtual_dimension()
    */
 
-  virtual void set_virtual_size(unsigned int w, unsigned int  h) { 
-    virtual_width = w; 
-    virtual_height = h; 
+  virtual void set_virtual_size(unsigned int w, unsigned int  h) {
+    virtual_width = w;
+    virtual_height = h;
     this->update_virtual_dimension();
   }
 
@@ -234,14 +234,14 @@ public:
   /**
    * Get the center of the viewport for x in "real" pixel units.
    */
-  virtual int get_viewport_center_x() const { 
+  virtual int get_viewport_center_x() const {
     return viewport_min_x + ((viewport_max_x - viewport_min_x) >> 1);
   }
 
   /**
    * Get the center of the viewport for y in "real" pixel units.
    */
-  virtual int get_viewport_center_y() const { 
+  virtual int get_viewport_center_y() const {
     return viewport_min_y + ((viewport_max_y - viewport_min_y) >> 1);
   }
 
@@ -315,12 +315,12 @@ public:
   virtual void shift_viewport_down(double part_of_page_height = 0.15) {
     shift_viewport(0, (double)get_viewport_height() * part_of_page_height);
   }
-  
+
   /**
    * Get the viewport definition as bounding box.
    */
   virtual degate::BoundingBox get_viewport() const {
-    return degate::BoundingBox(viewport_min_x, viewport_max_x, 
+    return degate::BoundingBox(viewport_min_x, viewport_max_x,
 			       viewport_min_y, viewport_max_y);
   }
 
@@ -328,7 +328,7 @@ public:
   virtual void set_drawing_window_size(unsigned int width, unsigned int height) {
     drawing_window_width = width;
     drawing_window_height = height;
-    
+
     viewport_max_x = viewport_min_x + width;
     viewport_max_y = viewport_min_y + height;
     this->update_virtual_dimension();
@@ -342,7 +342,7 @@ public:
     return drawing_window_height;
   }
 
-  virtual void coord_screen_to_real(unsigned int screen_x, unsigned int screen_y, 
+  virtual void coord_screen_to_real(unsigned int screen_x, unsigned int screen_y,
 				    unsigned int * real_x, unsigned int * real_y) {
 
     assert(real_x != NULL && real_y != NULL);
@@ -352,8 +352,8 @@ public:
     }
   }
 
-  
-  virtual void coord_real_to_screen(unsigned int real_x, unsigned int real_y, 
+
+  virtual void coord_real_to_screen(unsigned int real_x, unsigned int real_y,
 				    unsigned int * screen_x, unsigned int * screen_y) {
 
     assert(screen_x != NULL && screen_y != NULL);
@@ -364,7 +364,7 @@ public:
 	*screen_x = 0;
       else
 	*screen_x = viewport_max_x - viewport_min_x;
-      
+
       if((int)real_y >= viewport_min_y && (int)real_y <= viewport_max_y)
 	*screen_y = (unsigned int)((real_y - viewport_min_y) / get_scaling_y());
       else if((int)real_y < viewport_min_y)

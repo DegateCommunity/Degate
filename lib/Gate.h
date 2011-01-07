@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __GATE_H__
@@ -46,7 +46,7 @@ namespace degate {
   class Gate : public Rectangle, public PlacedLogicModelObject {
 
   public:
-  
+
     enum ORIENTATION {
       ORIENTATION_UNDEFINED = 0,
       ORIENTATION_NORMAL = 1,
@@ -54,34 +54,34 @@ namespace degate {
       ORIENTATION_FLIPPED_LEFT_RIGHT = 3,
       ORIENTATION_FLIPPED_BOTH = 4
     };
-    
+
     typedef std::set< GatePort_shptr >::iterator port_iterator;
     typedef std::set< GatePort_shptr >::const_iterator port_const_iterator;
-    
+
   private:
-    
+
     GateTemplate_shptr gate_template;
-    
+
     std::set<GatePort_shptr> gate_ports;
-    
+
     ORIENTATION orientation;
-    
+
     object_id_t template_type_id;
-    
+
   public:
 
-   
+
     /**
      * Create a gate.
      */
-    Gate(int _min_x, int _max_x, int _min_y, int _max_y, 
+    Gate(int _min_x, int _max_x, int _min_y, int _max_y,
 	 ORIENTATION _orientation = ORIENTATION_UNDEFINED);
 
     /**
      * Create a gate.
      */
 
-    Gate(BoundingBox const& bounding_box, 
+    Gate(BoundingBox const& bounding_box,
 	 ORIENTATION _orientation = ORIENTATION_UNDEFINED);
 
 
@@ -90,7 +90,7 @@ namespace degate {
      */
 
     virtual ~Gate();
-    
+
     /**
      * Add a gate port.
      *
@@ -103,7 +103,7 @@ namespace degate {
      *   orientation.
      * @see LogicModel::update_ports()
      */
-    
+
     virtual void add_port(GatePort_shptr gate_port) throw(InvalidObjectIDException, DegateLogicException);
 
     /**
@@ -111,17 +111,17 @@ namespace degate {
      * @se add_port()
      * @see LogicModel::update_ports()
      */
-    
+
     virtual void remove_port(GatePort_shptr gate_port) throw(CollectionLookupException);
-    
+
     /**
      * Get a gate port by a template port.
      */
 
-    virtual GatePort_shptr get_port_by_template_port(GateTemplatePort_shptr template_port) 
+    virtual GatePort_shptr get_port_by_template_port(GateTemplatePort_shptr template_port)
       throw(CollectionLookupException);
-    
-    
+
+
     /**
      * Set the ID of the corresponding template.
      *
@@ -142,15 +142,15 @@ namespace degate {
      */
 
     virtual void set_template_type_id(object_id_t template_type_id);
-    
+
     /**
      * Get the ID of the corresponding template.
      * @see set_template_type_id()
      */
 
     virtual object_id_t get_template_type_id() const;
-    
-    
+
+
     /**
      * A gate usually has a gate template. The gate template specifies common
      * properties. Use that function to set the gate template.
@@ -163,14 +163,14 @@ namespace degate {
      */
 
     virtual void set_gate_template(std::tr1::shared_ptr<GateTemplate> gate_template);
-    
+
     /**
      * Get the gate template.
      * @see set_gate_template()
      */
 
     virtual std::tr1::shared_ptr<GateTemplate> get_gate_template() const;
-   
+
     /**
      * Check if the gate has a template type set.
      * @return Returns true, if there is a template for this gate.
@@ -195,7 +195,7 @@ namespace degate {
      */
 
     virtual bool has_template_port(GateTemplatePort_shptr template_port);
-    
+
     /**
      * If a physically placed gate has a template. This template
      * defines the appearance of the gate in terms of an image.
@@ -205,13 +205,13 @@ namespace degate {
      */
 
     virtual void set_orientation(ORIENTATION _orientation);
-    
+
     /**
      * Get the orientation relative to the master image.
      */
 
     virtual ORIENTATION get_orientation() const;
-        
+
 
     /**
      * Check if the gate has a valid orientation.
@@ -224,8 +224,8 @@ namespace degate {
      */
 
     virtual std::string get_orienation_type_as_string() const;
-    
-    
+
+
     /**
      * Get an iterator to iterated over ports.
      */
@@ -237,7 +237,7 @@ namespace degate {
      */
 
     virtual port_const_iterator ports_begin() const;
-    
+
     /**
      * Get an end iterator.
      * @see ports_begin()
@@ -251,7 +251,7 @@ namespace degate {
      */
 
     virtual port_const_iterator ports_end() const;
-    
+
     /**
      * Get the x-coordinate relative to min_x depending on the gate's orientation.
      * @param rel_x The x-coordinate realtive to min_x.
@@ -260,7 +260,7 @@ namespace degate {
      * @see has_orientation()
      */
 
-    virtual unsigned int get_relative_x_position_within_gate(int rel_x) const 
+    virtual unsigned int get_relative_x_position_within_gate(int rel_x) const
       throw(DegateRuntimeException);
 
     /**
@@ -271,7 +271,7 @@ namespace degate {
      * @see has_orientation()
      */
 
-    virtual unsigned int get_relative_y_position_within_gate(int rel_y) const 
+    virtual unsigned int get_relative_y_position_within_gate(int rel_y) const
       throw(DegateRuntimeException);
 
     /**
@@ -280,7 +280,7 @@ namespace degate {
      * to let the user identify the concrete object. But that
      * is not a must.
      */
-    
+
     virtual const std::string get_descriptive_identifier() const;
 
     /**
@@ -296,8 +296,8 @@ namespace degate {
 
     void print(std::ostream & os = std::cout, int n_tabs = 0) const;
 
-    
-    
+
+
     bool in_shape(int x, int y, int max_distance = 0) const {
       return Rectangle::in_shape(x, y, max_distance);
     }
@@ -309,7 +309,7 @@ namespace degate {
     void shift_y(int delta_y) {
       Rectangle::shift_y(delta_y);
     }
-    
+
 
     virtual bool in_bounding_box(BoundingBox const& bbox) const {
       return Rectangle::in_bounding_box(bbox);

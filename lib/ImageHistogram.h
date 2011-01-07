@@ -1,22 +1,22 @@
-/* -*-c++-*- 
-    
+/* -*-c++-*-
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __IMAGEHISTOGRAM_H__
@@ -75,8 +75,8 @@ namespace degate {
 
   public:
 
-    ImageHistogram(double _from, double _to, double _class_width) : 
-      counts(0), 
+    ImageHistogram(double _from, double _to, double _class_width) :
+      counts(0),
       from(_from),
       to(_to),
       class_width(_class_width) {}
@@ -260,14 +260,14 @@ namespace degate {
       for(unsigned int y = (unsigned int)bb.get_min_y(); y <= (unsigned int)bb.get_max_y(); y++)
 	for(unsigned int x = (unsigned int)bb.get_min_x(); x <= (unsigned int)bb.get_max_x(); x++)
 	  add(MASK_B(img->get_pixel(x, y)));
-      
+
     }
 
     virtual double get_for_rgb(rgba_pixel_t pixel) const {
       return get(MASK_B(pixel));
     }
 
-    
+
   };
 
 
@@ -279,8 +279,8 @@ namespace degate {
 
   public:
 
-    LocalStdDevImageHistogram(double from, double to, double class_width, unsigned int _radius = 2) : 
-      ImageHistogram<double, double>(from, to, class_width), 
+    LocalStdDevImageHistogram(double from, double to, double class_width, unsigned int _radius = 2) :
+      ImageHistogram<double, double>(from, to, class_width),
       radius(_radius) {}
 
     virtual ~LocalStdDevImageHistogram() {}
@@ -303,14 +303,14 @@ namespace degate {
   protected:
 
     template<class ImageType, class EvaluateFunc>
-    inline std::vector<double> fill_vector(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb, 
+    inline std::vector<double> fill_vector(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb,
 				    unsigned int x, unsigned int y, unsigned int radius) {
       std::vector<double> v;
       unsigned int min_x = bb.get_min_x() + radius < x ? x - radius : bb.get_min_x();
       unsigned int max_x = (x + radius < (unsigned int)bb.get_max_x()) ? x + radius : bb.get_max_x();
       unsigned int min_y = bb.get_min_y() + radius < y ? y - radius : bb.get_min_y();
       unsigned int max_y = (y + radius < (unsigned int)bb.get_max_y()) ? y + radius : bb.get_max_y();
-      
+
       for(unsigned int _y = min_y; _y < max_y; _y++)
 	for(unsigned int _x = min_x; _x < max_x; _x++)
 	  v.push_back(EvaluateFunc::func(img->get_pixel(_x, _y)));
@@ -370,7 +370,7 @@ namespace degate {
   };
 
   */
-    
+
 }
 
 #endif

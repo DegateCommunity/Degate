@@ -10,7 +10,7 @@ std::vector<std::string> degate::tokenize(std::string const& str) {
 
   /* This implementation is more or less directly derived from
      this posting http://www.gamedev.net/community/forums/topic.asp?topic_id=320087
-    
+
   */
   vector<string> result;
 

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <RecognitionManager.h>
@@ -35,17 +35,17 @@ RecognitionManager::RecognitionManager() {
   TemplateMatchingInCols_shptr tm_in_cols(new TemplateMatchingInCols());
 
   plugins.push_back(RecognitionGUIBase_shptr
-		    (new TemplateMatchingGUI(tm_normal, 
+		    (new TemplateMatchingGUI(tm_normal,
 					     "Template matching")));
-  
+
   plugins.push_back(RecognitionGUIBase_shptr
-		    (new TemplateMatchingGUI(tm_in_rows, 
+		    (new TemplateMatchingGUI(tm_in_rows,
 					     "Template matching along grid in rows")));
-  
+
   plugins.push_back(RecognitionGUIBase_shptr
-		    (new TemplateMatchingGUI(tm_in_cols, 
+		    (new TemplateMatchingGUI(tm_in_cols,
 					     "Template matching along grid in columns")));
-  
+
 
   WireMatching_shptr wire_matching(new WireMatching());
   plugins.push_back(RecognitionGUIBase_shptr(new WireMatchingGUI(wire_matching, "Wire matching")));
@@ -60,9 +60,9 @@ RecognitionManager::RecognitionManager() {
 
   // Register a corresponding GUI object.
   plugins.push_back(RecognitionGUIBase_shptr
-		    (new ExternalMatchingGUI(extern_matching, 
+		    (new ExternalMatchingGUI(extern_matching,
 					     "Extern matching")));
-  
+
 }
 
 RecognitionManager::~RecognitionManager() {

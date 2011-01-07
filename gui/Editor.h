@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __EDITOR_H__
@@ -75,14 +75,14 @@ template<typename RendererType>
 class GfxEditorToolRectangle : public GfxEditorTool<RendererType> {
 
 private:
-  
+
   unsigned int start_x, start_y, stop_x, stop_y;
   bool drag_mode;
   degate::BoundingBox bbox;
 
 public:
 
-  GfxEditorToolRectangle(RendererType & renderer) : 
+  GfxEditorToolRectangle(RendererType & renderer) :
     GfxEditorTool<RendererType>(renderer),
     drag_mode(false) {
   }
@@ -106,7 +106,7 @@ protected:
       start_y = real_y;
       drag_mode = true;
       GfxEditorTool<RendererType>::set_renderer_lock(true);
-      
+
     }
   }
 
@@ -118,13 +118,13 @@ protected:
     }
   }
 
-  void on_mouse_double_click(unsigned int real_x, unsigned int real_y, 
+  void on_mouse_double_click(unsigned int real_x, unsigned int real_y,
 			     unsigned int button) {
     on_mouse_release(real_x, real_y, button);
   }
 
   void on_mouse_motion(unsigned int real_x, unsigned int real_y) {
-    
+
     if(drag_mode) {
       stop_x = real_x;
       stop_y = real_y;
@@ -165,7 +165,7 @@ private:
 
 public:
 
-  GfxEditorToolSelection(RendererType & renderer) : 
+  GfxEditorToolSelection(RendererType & renderer) :
     GfxEditorToolRectangle<RendererType>(renderer) {
   }
 
@@ -204,16 +204,16 @@ public:
 
 protected:
 
-  
-  void on_mouse_click(unsigned int real_x, unsigned int real_y, 
+
+  void on_mouse_click(unsigned int real_x, unsigned int real_y,
 		      unsigned int button) {
     GfxEditorToolRectangle<RendererType>::on_mouse_click(real_x, real_y, button);
 
     if(!signal_mouse_clicked_.empty())
       signal_mouse_clicked_(real_x, real_y, button);
   }
-  
-  void on_mouse_double_click(unsigned int real_x, unsigned int real_y, 
+
+  void on_mouse_double_click(unsigned int real_x, unsigned int real_y,
 			     unsigned int button) {
     GfxEditorToolRectangle<RendererType>::on_mouse_double_click(real_x, real_y, button);
 
@@ -228,7 +228,7 @@ protected:
 
       if(has_selection()) {
 
-	if(!signal_selection_activated_.empty()) 
+	if(!signal_selection_activated_.empty())
 	  signal_selection_activated_(GfxEditorToolRectangle<RendererType>::get_bounding_box());
       }
       /*
@@ -264,7 +264,7 @@ private:
 
 public:
 
-  GfxEditorToolMove(RendererType & renderer) : 
+  GfxEditorToolMove(RendererType & renderer) :
     GfxEditorTool<RendererType>(renderer),
     drag_mode(false) {
   }
@@ -309,7 +309,7 @@ private:
 
 public:
 
-  GfxEditorToolVia(RendererType & renderer) : 
+  GfxEditorToolVia(RendererType & renderer) :
     GfxEditorTool<RendererType>(renderer) {
   }
 
@@ -350,7 +350,7 @@ private:
   sigc::signal<void, unsigned int, unsigned int, degate::Via::DIRECTION>  signal_via_added_;
 
 
-  void angle_snap(int start_x, int start_y, int stop_x, int stop_y, 
+  void angle_snap(int start_x, int start_y, int stop_x, int stop_y,
 		  unsigned int * out_x, unsigned int * out_y) {
     assert(out_x != NULL && out_y != NULL);
     int delta_x = stop_x - start_x;
@@ -367,7 +367,7 @@ private:
 
 public:
 
-  GfxEditorToolWire(RendererType & renderer) : 
+  GfxEditorToolWire(RendererType & renderer) :
     GfxEditorTool<RendererType>(renderer),
     have_start(false),
     shift_state(false) {
@@ -414,7 +414,7 @@ protected:
     }
   }
 
-  void on_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) { 
+  void on_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) {
     if((button == 1 || button == 2) && have_start == false) {
       start_x = real_x;
       start_y = real_y;
@@ -439,8 +439,8 @@ protected:
 	angle_snap(start_x, start_y, real_x, real_y, &stop_x, &stop_y);
 
 	if(!signal_via_added_.empty() && button == 2) {
-	  signal_via_added_(stop_x, stop_y, 
-			    shift_state ? degate::Via::DIRECTION_UP : 
+	  signal_via_added_(stop_x, stop_y,
+			    shift_state ? degate::Via::DIRECTION_UP :
 			    degate::Via::DIRECTION_DOWN);
 	  GfxEditorTool<RendererType>::get_renderer().render_vias();
 	}
@@ -463,7 +463,7 @@ protected:
 
   void on_mouse_double_click(unsigned int real_x, unsigned int real_y, unsigned int button) {
     if(button == 1 && have_start == true) {
-      
+
       GfxEditorTool<RendererType>::start_tool_drawing();
       GfxEditorTool<RendererType>::stop_tool_drawing();
 
@@ -483,7 +483,7 @@ template<class RendererType>
 class GfxEditor : public RendererType {
 
 private:
-  
+
   std::tr1::shared_ptr<GfxEditorTool<RendererType> > tool;
 
 public:
@@ -500,7 +500,7 @@ public:
   void set_tool(std::tr1::shared_ptr<GfxEditorTool<RendererType> > tool) {
     this->tool = tool;
   }
-  
+
   std::tr1::shared_ptr<GfxEditorTool<RendererType> > get_tool() {
     return tool;
   }

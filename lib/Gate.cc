@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <degate.h>
@@ -26,17 +26,17 @@
 
 using namespace degate;
 
-Gate::Gate(int _min_x, int _max_x, int _min_y, int _max_y, 
-	   ORIENTATION _orientation) : 
-  Rectangle(_min_x, _max_x, _min_y, _max_y), 
+Gate::Gate(int _min_x, int _max_x, int _min_y, int _max_y,
+	   ORIENTATION _orientation) :
+  Rectangle(_min_x, _max_x, _min_y, _max_y),
   orientation(_orientation),
   template_type_id(0) {
 }
 
-Gate::Gate(BoundingBox const& bounding_box, 
-	   ORIENTATION _orientation): 
-  Rectangle(bounding_box.get_min_x(), bounding_box.get_max_x(), 
-	    bounding_box.get_min_y(), bounding_box.get_max_y()), 
+Gate::Gate(BoundingBox const& bounding_box,
+	   ORIENTATION _orientation):
+  Rectangle(bounding_box.get_min_x(), bounding_box.get_max_x(),
+	    bounding_box.get_min_y(), bounding_box.get_max_y()),
   orientation(_orientation),
   template_type_id(0) {
 }
@@ -46,9 +46,9 @@ Gate::~Gate() {
   if(gate_template != NULL) remove_template();
 }
 
-void Gate::add_port(GatePort_shptr gate_port) 
+void Gate::add_port(GatePort_shptr gate_port)
   throw(InvalidObjectIDException, DegateLogicException) {
-  if(!gate_port->has_valid_object_id()) 
+  if(!gate_port->has_valid_object_id())
     throw InvalidObjectIDException("Error in Gate::add_port(). "
 				   "The port has no valid object ID.");
 
@@ -66,7 +66,7 @@ void Gate::add_port(GatePort_shptr gate_port)
   gate_port->set_y(get_min_y() +
 		   get_relative_y_position_within_gate
 		     (gate_port->get_template_port()->get_y()));
-  
+
   gate_ports.insert(gate_port);
 }
 
@@ -80,12 +80,12 @@ void Gate::remove_port(GatePort_shptr gate_port) throw(CollectionLookupException
 }
 
 
-GatePort_shptr Gate::get_port_by_template_port(GateTemplatePort_shptr template_port) 
+GatePort_shptr Gate::get_port_by_template_port(GateTemplatePort_shptr template_port)
   throw(CollectionLookupException) {
   for(port_iterator piter = ports_begin(); piter != ports_end(); ++piter) {
     GatePort_shptr gate_port = *piter;
     GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-    if(tmpl_port == template_port) 
+    if(tmpl_port == template_port)
       return gate_port;
   }
   throw CollectionLookupException();
@@ -114,7 +114,7 @@ void Gate::set_gate_template(std::tr1::shared_ptr<GateTemplate> gate_template) {
     set_fill_color(gate_template->get_fill_color());
     set_frame_color(gate_template->get_frame_color());
     this->gate_template->increment_reference_counter();
-    
+
     if((unsigned int)get_width() != gate_template->get_width() ||
        (unsigned int)get_height() != gate_template->get_height()) {
       set_max_x(get_min_x() + gate_template->get_width());
@@ -194,34 +194,34 @@ Gate::port_const_iterator Gate::ports_end() const {
 }
 
 
-unsigned int Gate::get_relative_x_position_within_gate(int rel_x) 
+unsigned int Gate::get_relative_x_position_within_gate(int rel_x)
   const throw(DegateRuntimeException) {
   switch(orientation) {
   case ORIENTATION_NORMAL:
-  case ORIENTATION_FLIPPED_UP_DOWN: 
+  case ORIENTATION_FLIPPED_UP_DOWN:
     return rel_x;
   case ORIENTATION_FLIPPED_LEFT_RIGHT:
   case ORIENTATION_FLIPPED_BOTH:
     return get_width() - rel_x;
   case ORIENTATION_UNDEFINED:
-  default: 
+  default:
     assert(orientation != ORIENTATION_UNDEFINED);
     throw DegateRuntimeException("Can't calculate a position for an undefined orientation");
   }
 }
 
 
-unsigned int Gate::get_relative_y_position_within_gate(int rel_y) 
+unsigned int Gate::get_relative_y_position_within_gate(int rel_y)
   const throw(DegateRuntimeException) {
   switch(orientation) {
   case ORIENTATION_NORMAL:
   case ORIENTATION_FLIPPED_LEFT_RIGHT:
     return rel_y;
-  case ORIENTATION_FLIPPED_UP_DOWN: 
+  case ORIENTATION_FLIPPED_UP_DOWN:
   case ORIENTATION_FLIPPED_BOTH:
     return get_height() - rel_y;
   case ORIENTATION_UNDEFINED:
-  default: 
+  default:
     assert(orientation != ORIENTATION_UNDEFINED);
     throw DegateRuntimeException("Can't calculate a position for an undefined orientation");
   }
@@ -254,7 +254,7 @@ const std::string Gate::get_descriptive_identifier() const {
       return fmter.str();
     }
   }
-  
+
 }
 
 
@@ -263,7 +263,7 @@ const std::string Gate::get_object_type_name() const {
 }
 
 void Gate::print(std::ostream & os, int n_tabs) const {
-  
+
   os
     << gen_tabs(n_tabs) << "Gate name        : " << get_name() << std::endl
     << gen_tabs(n_tabs) << "Gate description : " << get_description() << std::endl

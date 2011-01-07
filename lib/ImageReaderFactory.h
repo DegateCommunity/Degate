@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __IMAGEREADERFACTORY_H__
@@ -52,7 +52,7 @@ namespace degate{
     file_format_collection file_formats;
 
   public:
-  
+
     ImageReaderFactory() {
       // Tiff file format parser
       file_formats.push_back("tif");
@@ -82,16 +82,16 @@ namespace degate{
      * @exception InvalidFileFormatException This exception is thrown if the there is no
      *   reader that can read the file.
      */
-    
+
     std::tr1::shared_ptr<class ImageReaderBase<ImageType> >
-    get_reader(std::string const & filename)  
+    get_reader(std::string const & filename)
       throw(InvalidFileFormatException) {
 
       std::string suffix(get_file_suffix(filename).c_str());
 
       /*
 	Convert suffix string to a lowercase string.
-	
+
 	This comment should not be necessary, if there would be a simple
 	way to convert it. You may have seen other programming languages
 	with a simple convenient way to lowercase strings. But hey! The
@@ -99,12 +99,12 @@ namespace degate{
 	BTW: If you omit the static cast, you will get a long error message
 	from your compiler. Great!
       */
-      
-      std::transform(suffix.begin(), suffix.end(), suffix.begin(), 
+
+      std::transform(suffix.begin(), suffix.end(), suffix.begin(),
 		     static_cast<int (*)(int)>(std::tolower));
-      
+
       // Ok. Enough sarcasm. Let us finish the job ...
-      
+
       if(suffix == "tif" || suffix == "tiff")
 	return std::tr1::shared_ptr<ImageReaderBase<ImageType> >
 	  (new TIFFReader<ImageType>(filename));
@@ -113,10 +113,10 @@ namespace degate{
 	  (new JPEGReader<ImageType>(filename));
       else throw InvalidFileFormatException();
     }
-    
-    
+
+
   };
-    
+
 }
 
 

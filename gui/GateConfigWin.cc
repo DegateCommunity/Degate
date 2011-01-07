@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "GateConfigWin.h"
@@ -39,7 +39,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 using namespace degate;
 using namespace boost;
 
-GateConfigWin::GateConfigWin(Gtk::Window *parent, 
+GateConfigWin::GateConfigWin(Gtk::Window *parent,
 			     LogicModel_shptr lmodel,
 			     GateTemplate_shptr gate_template) :
   GladeFileLoader("gate_create.glade", "gate_create_dialog"),
@@ -55,28 +55,28 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
   if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
-    
+
     // connect signals
     get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_cancel_button_clicked));
-    
+
     get_widget("ok_button", ok_button);
     if(ok_button)
       ok_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_ok_button_clicked) );
 
-    
+
     get_widget("port_add_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_port_add_button_clicked) );
-    
+
     get_widget("port_remove_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_port_remove_button_clicked) );
-    
-   
+
+
       refListStore_ports = Gtk::ListStore::create(port_model_columns);
-      
+
       get_widget("treeview_ports", pTreeView_ports);
       if(pTreeView_ports) {
 	pTreeView_ports->set_model(refListStore_ports);
@@ -86,7 +86,7 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 	pTreeView_ports->append_column_editable("In", port_model_columns.m_col_inport);
 	pTreeView_ports->append_column_editable("Out", port_model_columns.m_col_outport);
       }
-      
+
 
       color_t frame_color = gate_template->get_frame_color();
       color_t fill_color = gate_template->get_fill_color();
@@ -133,7 +133,7 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       for(GateTemplate::port_iterator iter = gate_template->ports_begin();
 	  iter != gate_template->ports_end();
 	  ++iter) {
-		
+
 	Gtk::TreeModel::Row row = *(refListStore_ports->append());
 
 	GateTemplatePort_shptr tmpl_port = *iter;
@@ -148,18 +148,18 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 
 	original_ports.push_back(tmpl_port);
       }
-      
+
       get_widget("entry_short_name", entry_short_name);
       assert(entry_short_name != NULL);
       if(entry_short_name) {
 	entry_short_name->set_text(gate_template->get_name());
-	entry_short_name->signal_changed().connect(sigc::mem_fun(*this, 
+	entry_short_name->signal_changed().connect(sigc::mem_fun(*this,
 								 &GateConfigWin::on_entry_short_name_changed) );
       }
 
       get_widget("entry_description", entry_description);
       assert(entry_description != NULL);
-      if(entry_description) 
+      if(entry_description)
 	entry_description->set_text(gate_template->get_description());
 
       get_widget("combobox_logic_class", combobox_logic_class);
@@ -183,7 +183,7 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       /*
        * page 2
        */
-      
+
       get_widget("combobox_lang", combobox_lang);
       assert(combobox_lang != NULL);
       if(combobox_lang != NULL) {
@@ -192,7 +192,7 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 	  code_text[iter->first] = iter->second;
 	combobox_lang->set_active(TEXT);
       }
-      
+
 
       get_widget("generate_code_button", codegen_button);
       assert(codegen_button != NULL);
@@ -244,7 +244,7 @@ GateConfigWin::~GateConfigWin() {
 
 void GateConfigWin::insert_logic_classes() {
 
-  /** @todo This list of logic classes is hardcoded and that way not flexibile. 
+  /** @todo This list of logic classes is hardcoded and that way not flexibile.
       In case this feature is really used, it should be changed.  */
   append_logic_class("undefined");
   append_logic_class("inverter");
@@ -315,17 +315,17 @@ void GateConfigWin::on_codegen_button_clicked() {
   int idx = combobox_lang->get_active_row_number();
 
   if(code_textview->get_buffer()->size() > 0) {
-    Gtk::MessageDialog dialog("Are you sure you want to replace the code?", 
+    Gtk::MessageDialog dialog("Are you sure you want to replace the code?",
 			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-    dialog.set_title("Warning");      
+    dialog.set_title("Warning");
     if(dialog.run() == Gtk::RESPONSE_NO) return;
   }
 
   if(lang_idx_to_impl(idx) == GateTemplate::UNDEFINED) {
     Gtk::MessageDialog dialog("If you define a logic class under the tab 'entity', "
-			      "you can auto-generate more specific code stubs.", 
+			      "you can auto-generate more specific code stubs.",
 			      true, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK);
-    dialog.set_title("Hint");      
+    dialog.set_title("Hint");
     dialog.run();
   }
 
@@ -378,7 +378,7 @@ void GateConfigWin::on_ok_button_clicked() {
     name_str = row[port_model_columns.m_col_name];
     descr_str = row[port_model_columns.m_col_name];
     id = row[port_model_columns.m_col_id];
-    
+
     if(row[port_model_columns.m_col_inport] == true &&
        row[port_model_columns.m_col_outport] == true) port_type = GateTemplatePort::PORT_TYPE_TRISTATE;
     else if(row[port_model_columns.m_col_inport] == true) port_type = GateTemplatePort::PORT_TYPE_IN;
@@ -400,7 +400,7 @@ void GateConfigWin::on_ok_button_clicked() {
       tmpl_port->set_name(name_str);
       tmpl_port->set_description(descr_str);
       tmpl_port->set_port_type(port_type);
-      original_ports.remove(tmpl_port);      
+      original_ports.remove(tmpl_port);
     }
 
 
@@ -412,7 +412,7 @@ void GateConfigWin::on_ok_button_clicked() {
   std::list<GateTemplatePort_shptr>::iterator i;
   for(i = original_ports.begin(); i != original_ports.end(); ++i) {
     GateTemplatePort_shptr tmpl_port = *i;
-    debug(TM, "remove port from templates / gates with id=%d", 
+    debug(TM, "remove port from templates / gates with id=%d",
 	  tmpl_port->get_object_id());
 
     lmodel->remove_template_port_from_gate_template(gate_template, tmpl_port);
@@ -460,10 +460,10 @@ void GateConfigWin::on_cancel_button_clicked() {
 
 void GateConfigWin::on_port_add_button_clicked() {
 
-  
+
   Gtk::TreeNodeChildren::size_type children_size = refListStore_ports->children().size();
 
-  Gtk::TreeModel::Row row = *(refListStore_ports->append()); 
+  Gtk::TreeModel::Row row = *(refListStore_ports->append());
   row[port_model_columns.m_col_id] = 0;
 
   if(children_size == 0) {
@@ -500,7 +500,7 @@ void GateConfigWin::on_entry_short_name_changed() {
   Glib::ustring const & s = entry_short_name->get_text();
 
   if(!s.empty() && !lib->is_name_in_use(s.c_str())) {
-    
+
     ok_button->set_sensitive(true);
   }
   else

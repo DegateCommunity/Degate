@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __SELECTMODULEWIN_H__
@@ -68,7 +68,7 @@ class SelectModuleWin : public Gtk::Window, private GladeFileLoader {
 			  degate::Module_shptr parent_module);
 
   void insert_modules();
-  void insert_module(Gtk::TreeModel::Row & row, 
+  void insert_module(Gtk::TreeModel::Row & row,
 		     degate::Module_shptr module,
 		     degate::Module_shptr parent_module);
 

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
-` 
+`
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 
@@ -63,7 +63,7 @@ void TemplateMatching::precalc_sum_tables(TileImage_GS_BYTE_shptr img,
       summation_table_single->set_pixel(x, y, 0);
       summation_table_squared->set_pixel(x, y, 0);
     }
-  
+
   for(y = 0; y < img->get_height(); y++)
     for(x = 0; x < img->get_width(); x++) {
 
@@ -84,7 +84,7 @@ void TemplateMatching::precalc_sum_tables(TileImage_GS_BYTE_shptr img,
       summation_table_single->set_pixel(x, y, f1);
       summation_table_squared->set_pixel(x, y, f2);
     }
-  
+
 }
 
 
@@ -92,7 +92,7 @@ void TemplateMatching::precalc_sum_tables(TileImage_GS_BYTE_shptr img,
 void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr project) {
 
   assert(project != NULL);
-  
+
   this->project = project;
   this->bounding_box = bounding_box;
 
@@ -104,7 +104,7 @@ void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr proje
     this->bounding_box.set_max_y(LENGTH_TO_MAX(project->get_height()));
 
   ScalingManager_shptr sm = layer_matching->get_scaling_manager();
- 
+
   debug(TM, "Prepare background.");
   prepare_background_images(sm, bounding_box, get_scaling_factor());
   debug(TM, "Prepare sum tabes.");
@@ -114,7 +114,7 @@ void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr proje
 }
 
 
-BoundingBox TemplateMatching::get_scaled_bounding_box(BoundingBox const& bounding_box, 
+BoundingBox TemplateMatching::get_scaled_bounding_box(BoundingBox const& bounding_box,
 						      double scale_down) const {
   return BoundingBox(lrint(bounding_box.get_min_x() / scale_down),
 		     lrint(bounding_box.get_max_x() / scale_down),
@@ -122,15 +122,15 @@ BoundingBox TemplateMatching::get_scaled_bounding_box(BoundingBox const& boundin
 		     lrint(bounding_box.get_max_y() / scale_down));
 }
 
-void TemplateMatching::prepare_background_images(ScalingManager_shptr sm, 
-						 BoundingBox const& bounding_box, 
+void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
+						 BoundingBox const& bounding_box,
 						 unsigned int scaling_factor) {
 
   // Get the normal background image and the scaled background image
   // These images are in RGBA format.
-  const ScalingManager<BackgroundImage>::image_map_element i1 = 
+  const ScalingManager<BackgroundImage>::image_map_element i1 =
     sm->get_image(1);
-  const ScalingManager<BackgroundImage>::image_map_element i2 = 
+  const ScalingManager<BackgroundImage>::image_map_element i2 =
     sm->get_image(scaling_factor);
 
   assert(i1.second != NULL);
@@ -142,7 +142,7 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 
   // Create a greyscaled image for the normal
   // unscaled background image and the scaled version.
-  BoundingBox scaled_bounding_box = 
+  BoundingBox scaled_bounding_box =
     get_scaled_bounding_box(bounding_box, scaling_factor);
 
 
@@ -152,12 +152,12 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 #ifdef USE_FILTER
 
   TileImage_GS_BYTE_shptr tmp;
- 
+
   tmp =  TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
 						       bounding_box.get_height()));;
 
-  extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(tmp, 
-							    img_normal, 
+  extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(tmp,
+							    img_normal,
 							    bounding_box);
 
   #ifdef USE_MEDIAN_FILTER
@@ -169,7 +169,7 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 
   int blur_kernel_size = USE_GAUSS_FILTER;
 
-  std::tr1::shared_ptr<GaussianBlur> 
+  std::tr1::shared_ptr<GaussianBlur>
     gaussian_blur_kernel(new GaussianBlur(blur_kernel_size, blur_kernel_size, 1.1));
 
   gaussian_blur_kernel->print();
@@ -179,8 +179,8 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
   #endif
 
 #else
-  extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_normal, 
-							    img_normal, 
+  extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_normal,
+							    img_normal,
 							    bounding_box);
 #endif
 
@@ -196,16 +196,16 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 #ifdef USE_MEDIAN_FILTER
     tmp =  TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
 							 bounding_box.get_height()));;
-  
-    extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(tmp, 
-							      img_scaled, 
+
+    extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(tmp,
+							      img_scaled,
 							      scaled_bounding_box);
 
     median_filter<TileImage_GS_BYTE, TileImage_GS_BYTE>(gs_img_scaled, tmp, USE_MEDIAN_FILTER);
 #else
 
-    extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_scaled, 
-							      img_scaled, 
+    extract_partial_image<TileImage_GS_BYTE, BackgroundImage>(gs_img_scaled,
+							      img_scaled,
 							      scaled_bounding_box);
 #endif
   }
@@ -218,7 +218,7 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 void TemplateMatching::prepare_sum_tables(TileImage_GS_BYTE_shptr gs_img_normal,
 					  TileImage_GS_BYTE_shptr gs_img_scaled) {
 
-  unsigned int 
+  unsigned int
     w_n = gs_img_normal->get_width(),
     h_n = gs_img_normal->get_height(),
     w_s = gs_img_scaled->get_width(),
@@ -228,7 +228,7 @@ void TemplateMatching::prepare_sum_tables(TileImage_GS_BYTE_shptr gs_img_normal,
   sum_table_squared_normal = TileImage_GS_DOUBLE_shptr(new TileImage_GS_DOUBLE(w_n, h_n));
   sum_table_single_scaled = TileImage_GS_DOUBLE_shptr(new TileImage_GS_DOUBLE(w_s, h_s));
   sum_table_squared_scaled = TileImage_GS_DOUBLE_shptr(new TileImage_GS_DOUBLE(w_s, h_s));
-  
+
   precalc_sum_tables(gs_img_normal, sum_table_single_normal, sum_table_squared_normal);
   precalc_sum_tables(gs_img_scaled, sum_table_single_scaled, sum_table_squared_scaled);
 }
@@ -236,12 +236,12 @@ void TemplateMatching::prepare_sum_tables(TileImage_GS_BYTE_shptr gs_img_normal,
 
 bool compare_template_size(const GateTemplate_shptr lhs, const GateTemplate_shptr rhs) {
   return lhs->get_width() * lhs->get_height() > rhs->get_width() * rhs->get_height();
-} 
+}
 
-bool compare_correlation(TemplateMatching::match_found const& lhs, 
+bool compare_correlation(TemplateMatching::match_found const& lhs,
 			 TemplateMatching::match_found const&  rhs) {
   return lhs.correlation > rhs.correlation;
-} 
+}
 
 void TemplateMatching::set_templates(std::list<GateTemplate_shptr> tmpl_set) {
   this->tmpl_set = tmpl_set;
@@ -275,40 +275,40 @@ void TemplateMatching::run() {
   wait;
   */
   BOOST_FOREACH(GateTemplate_shptr tmpl, tmpl_set) {
-    
+
     BOOST_FOREACH(Gate::ORIENTATION orientation, tmpl_orientations) {
 
       boost::format f("Check cell \"%1%\"");
       f % tmpl->get_name();
       set_log_message(f.str());
-      
+
       prepared_template prep_tmpl_img = prepare_template(tmpl, orientation);
       //match_single_template(prep_tmpl_img, t_hc, t_det);
-      
-      
-      std::list<match_found> m = match_single_template(prep_tmpl_img, 
-						       threshold_hc, 
+
+
+      std::list<match_found> m = match_single_template(prep_tmpl_img,
+						       threshold_hc,
 						       threshold_detection);
-      
-      
+
+
       matches.insert(matches.end(), m.begin(), m.end());
-      
+
       progress_step_done();
       if(is_canceled()) {
 	reset_progress();
 	return;
       }
     }
-    
+
   }
-  
- 
+
+
   matches.sort(compare_correlation);
 
   BOOST_FOREACH(match_found const& m, matches) {
-    std::cout << "Try to insert gate of type " << m.tmpl->get_name() << " with corr=" 
+    std::cout << "Try to insert gate of type " << m.tmpl->get_name() << " with corr="
 	      << m.correlation << " at " << m.x << "," << m.y << std::endl;
-    if(add_gate(m.x, m.y, m.tmpl, m.orientation, m.correlation, m.t_hc)) 
+    if(add_gate(m.x, m.y, m.tmpl, m.orientation, m.correlation, m.t_hc))
       std::cout << "\tInserted gate of type " << m.tmpl->get_name() << std::endl;
   }
 
@@ -316,15 +316,15 @@ void TemplateMatching::run() {
 }
 
 
-double TemplateMatching::subtract_mean(TempImage_GS_BYTE_shptr img, 
+double TemplateMatching::subtract_mean(TempImage_GS_BYTE_shptr img,
 				       TempImage_GS_DOUBLE_shptr zero_mean_img) const {
-  
+
   double mean = average<TempImage_GS_BYTE>(img);
 
   double sum_over_zero_mean_img = 0;
   unsigned int x, y;
 
-  for(y = 0; y < img->get_height(); y++) 
+  for(y = 0; y < img->get_height(); y++)
     for(x = 0; x < img->get_width(); x++) {
       double tmp = img->get_pixel_as<double>(x, y) - mean;
       zero_mean_img->set_pixel(x, y, tmp);
@@ -335,7 +335,7 @@ double TemplateMatching::subtract_mean(TempImage_GS_BYTE_shptr img,
   return sum_over_zero_mean_img;
 }
 
-TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTemplate_shptr tmpl, 
+TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTemplate_shptr tmpl,
 								       Gate::ORIENTATION orientation) {
 
   prepared_template prep;
@@ -349,7 +349,7 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
   // get image from template
   GateTemplateImage_shptr tmpl_img_orig = tmpl->get_image(layer_matching->get_layer_type());
 
-  unsigned int 
+  unsigned int
     w = tmpl_img_orig->get_width(),
     h = tmpl_img_orig->get_height();
 
@@ -361,7 +361,7 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
   //#else
   copy_image<GateTemplateImage, GateTemplateImage>(tmpl_img, tmpl_img_orig);
   //#endif
-  
+
   save_image<GateTemplateImage>("/tmp/xxx3.tif", tmpl_img);
 
   switch(orientation) {
@@ -388,24 +388,24 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
 
   prep.tmpl_img_normal = TempImage_GS_BYTE_shptr(new TempImage_GS_BYTE(w, h));
   copy_image<TempImage_GS_BYTE, GateTemplateImage>(prep.tmpl_img_normal, tmpl_img);
-  
-  prep.tmpl_img_scaled = TempImage_GS_BYTE_shptr(new TempImage_GS_BYTE(scaled_tmpl_width, 
+
+  prep.tmpl_img_scaled = TempImage_GS_BYTE_shptr(new TempImage_GS_BYTE(scaled_tmpl_width,
 								       scaled_tmpl_height));
-  
+
   scale_down_by_power_of_2<TempImage_GS_BYTE, GateTemplateImage>(prep.tmpl_img_scaled, tmpl_img);
 
 
   // create zero-mean templates
   prep.zero_mean_template_normal = TempImage_GS_DOUBLE_shptr(new TempImage_GS_DOUBLE(w, h));
-  prep.zero_mean_template_scaled = TempImage_GS_DOUBLE_shptr(new TempImage_GS_DOUBLE(scaled_tmpl_width, 
+  prep.zero_mean_template_scaled = TempImage_GS_DOUBLE_shptr(new TempImage_GS_DOUBLE(scaled_tmpl_width,
 										     scaled_tmpl_height));
 
 
   // subtract mean
-  
-  prep.sum_over_zero_mean_template_normal = subtract_mean(prep.tmpl_img_normal, 
+
+  prep.sum_over_zero_mean_template_normal = subtract_mean(prep.tmpl_img_normal,
 							  prep.zero_mean_template_normal);
-  prep.sum_over_zero_mean_template_scaled = subtract_mean(prep.tmpl_img_scaled, 
+  prep.sum_over_zero_mean_template_scaled = subtract_mean(prep.tmpl_img_scaled,
 							  prep.zero_mean_template_scaled);
 
 
@@ -419,16 +419,16 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
 
 void TemplateMatching::adjust_step_size(struct search_state & state, double corr_val) const {
   if(corr_val > 0) {
-    state.step_size_search = std::max(1.0, rint((1.0 - (double)get_max_step_size()) * 
+    state.step_size_search = std::max(1.0, rint((1.0 - (double)get_max_step_size()) *
 						corr_val + get_max_step_size()));
   }
-  
+
   else state.step_size_search = get_max_step_size();
 }
 
-TemplateMatching::match_found 
+TemplateMatching::match_found
 TemplateMatching::keep_gate_match(unsigned int x, unsigned int y,
-				  struct prepared_template & tmpl, 
+				  struct prepared_template & tmpl,
 				  double corr_val, double threshold_hc) const {
   match_found hit;
   hit.x = x;
@@ -457,7 +457,7 @@ bool TemplateMatching::add_gate(unsigned int x, unsigned int y,
     gate->set_description(dsc);
 
     gate->set_gate_template(tmpl);
-    
+
     LogicModel_shptr lmodel = project->get_logic_model();
     lmodel->add_object(layer_insert->get_layer_pos(), gate);
     lmodel->update_ports(gate);
@@ -468,7 +468,7 @@ bool TemplateMatching::add_gate(unsigned int x, unsigned int y,
   return false;
 }
 
-std::list<TemplateMatching::match_found> 
+std::list<TemplateMatching::match_found>
 TemplateMatching::match_single_template(struct prepared_template & tmpl,
 					double threshold_hc, double threshold_detection) {
 
@@ -485,16 +485,16 @@ TemplateMatching::match_single_template(struct prepared_template & tmpl,
 
   do { // works on unscaled, but cropped image
 
-    double corr_val = calc_single_xcorr(gs_img_scaled, 
+    double corr_val = calc_single_xcorr(gs_img_scaled,
 					sum_table_single_scaled,
 					sum_table_squared_scaled,
 					tmpl.zero_mean_template_scaled,
-					tmpl.sum_over_zero_mean_template_scaled, 
+					tmpl.sum_over_zero_mean_template_scaled,
 					lrint((double)state.x / get_scaling_factor()),
 					lrint((double)state.y / get_scaling_factor()));
 
     /*
-    debug(TM, "%d,%d  == %d,%d  -> %f", state.x, state.y, 
+    debug(TM, "%d,%d  == %d,%d  -> %f", state.x, state.y,
 	  lrint((double)state.x / get_scaling_factor()),
 	  lrint((double)state.y / get_scaling_factor()),
 	  corr_val);
@@ -502,8 +502,8 @@ TemplateMatching::match_single_template(struct prepared_template & tmpl,
     if(corr_val > max_corr_for_search) max_corr_for_search = corr_val;
 
 
-    adjust_step_size(state, corr_val);  
-    
+    adjust_step_size(state, corr_val);
+
     if(corr_val >= threshold_hc) {
       //debug(TM, "start hill climbing at(%d,%d), corr=%f", state.x, state.y, corr_val);
       unsigned int max_corr_x, max_corr_y;
@@ -573,7 +573,7 @@ void TemplateMatching::hill_climbing(unsigned int start_x, unsigned int start_y,
 	  i++;
 	}
       }
-    
+
     // check for position with highest correlation value
     for(unsigned int i2 = 0; i2 < i; i2++) {
 
@@ -601,32 +601,32 @@ void TemplateMatching::hill_climbing(unsigned int start_x, unsigned int start_y,
   *max_corr_x_out = max_corr_x;
   *max_corr_y_out = max_corr_y;
   *max_xcorr_out = max_corr;
-  
+
 }
 
 
-double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master, 
+double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
 					   const TileImage_GS_DOUBLE_shptr summation_table_single,
 					   const TileImage_GS_DOUBLE_shptr summation_table_squared,
-					   const TempImage_GS_DOUBLE_shptr zero_mean_template, 
+					   const TempImage_GS_DOUBLE_shptr zero_mean_template,
 					   double sum_over_zero_mean_template,
-					   unsigned int local_x, 
+					   unsigned int local_x,
 					   unsigned int local_y) const {
 
   double template_size = zero_mean_template->get_width() * zero_mean_template->get_height();
   assert(zero_mean_template->get_width() > 0 && zero_mean_template->get_height() > 0);
 
-  unsigned int 
+  unsigned int
     x_plus_w = local_x + zero_mean_template->get_width() -1,
     y_plus_h = local_y + zero_mean_template->get_height() -1,
     lxm1 = local_x - 1, // can wrap, it's checked later
     lym1 = local_y - 1;
-  
+
   // calculate denominator
-  double 
+  double
     f1 = summation_table_single->get_pixel(x_plus_w, y_plus_h),
     f2 = summation_table_squared->get_pixel(x_plus_w, y_plus_h);
-  
+
   if(local_x > 0) {
     f1 -= summation_table_single->get_pixel(lxm1, y_plus_h);
     f2 -= summation_table_squared->get_pixel(lxm1, y_plus_h);
@@ -639,12 +639,12 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
     f1 += summation_table_single->get_pixel(lxm1, lym1);
     f2 += summation_table_squared->get_pixel(lxm1, lym1);
   }
-  
+
   double denominator = sqrt((f2 - f1*f1/template_size) * sum_over_zero_mean_template);
-  
+
   // calculate nummerator
   if(std::isinf(denominator) || std::isnan(denominator) || denominator == 0) {
-    debug(TM, 
+    debug(TM,
 	  "ERROR: The denominator is not a valid number: f1=%f f2=%f template_size=%f sum=%f "
 	  "local_x=%d local_y=%d x_plus_w=%d y_plus_h=%d lxm1=%d lym1=%d",
 	  f1, f2, template_size, sum_over_zero_mean_template,
@@ -662,7 +662,7 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
       nummerator += f_xy * t_xy;
     }
   }
-  
+
   double q = nummerator/denominator;
 
   //debug(TM, "x=%d,y=%d a=%f, nummerator=%f, denominator=%f, q=%f", local_x, local_y, a, nummerator, denominator, q);
@@ -677,7 +677,7 @@ double TemplateMatching::calc_single_xcorr(const TileImage_GS_BYTE_shptr master,
 bool TemplateMatchingNormal::get_next_pos(struct search_state * state,
 					  struct prepared_template const& tmpl) const {
 
-  unsigned int 
+  unsigned int
     tmpl_w = tmpl.tmpl_img_normal->get_width(),
     tmpl_h = tmpl.tmpl_img_normal->get_height();
 
@@ -689,20 +689,20 @@ bool TemplateMatchingNormal::get_next_pos(struct search_state * state,
   bool there_was_a_gate = false;
 
   do {
-    if(state->x + step < state->search_area.get_width() - tmpl_w) 
+    if(state->x + step < state->search_area.get_width() - tmpl_w)
       state->x += step;
     else {
       state->x = 1;
-      if(state->y + step < state->search_area.get_height() - tmpl_h) 
+      if(state->y + step < state->search_area.get_height() - tmpl_h)
 	state->y += step;
       else return false;
     }
-    
-    unsigned int dist_x = 
-      layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
-						  state->y + state->search_area.get_min_y(), 
+
+    unsigned int dist_x =
+      layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(),
+						  state->y + state->search_area.get_min_y(),
 						  true, tmpl_w, tmpl_h);
-    
+
     if(dist_x > 0) {
       /*
       debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d horizontal pixels",
@@ -727,9 +727,9 @@ bool TemplateMatchingAlongGrid::initialize_state_struct(struct search_state * st
 							int offs_max,
 							bool is_horizontal_grid) const {
   if(state->grid == NULL) {
-    const RegularGrid_shptr rg = is_horizontal_grid ? 
+    const RegularGrid_shptr rg = is_horizontal_grid ?
       project->get_regular_horizontal_grid() : project->get_regular_vertical_grid();
-    const IrregularGrid_shptr ig = is_horizontal_grid ? 
+    const IrregularGrid_shptr ig = is_horizontal_grid ?
       project->get_irregular_horizontal_grid() : project->get_irregular_vertical_grid();
 
     if(rg->is_enabled()) state->grid = rg;
@@ -744,14 +744,14 @@ bool TemplateMatchingAlongGrid::initialize_state_struct(struct search_state * st
       state->iter_last = state->grid->begin();
       state->iter_end = state->grid->end();
 
-      for(Grid::grid_iter iter = state->grid->begin(); 
+      for(Grid::grid_iter iter = state->grid->begin();
 	  iter != state->grid->end(); ++iter) {
 	debug(TM, "\tcheck %d", *iter);
 	if(*iter < offs_min) state->iter_begin = iter;
 	if(*iter < offs_max) state->iter_last = iter;
       }
 
-      if(*(state->iter_begin) < offs_min && 
+      if(*(state->iter_begin) < offs_min &&
 	 state->iter_begin != state->grid->end()) state->iter_begin++;
 
       //if(state->iter_last != state->grid->end()) state->iter_last++;
@@ -781,7 +781,7 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
 					  struct prepared_template const& tmpl) const {
 
   // check if the search area is larger then the template
-  unsigned int 
+  unsigned int
     tmpl_w = tmpl.tmpl_img_normal->get_width(),
     tmpl_h = tmpl.tmpl_img_normal->get_height();
 
@@ -791,7 +791,7 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
   unsigned int step = state->step_size_search;
 
   // get grid and check if we are working on regular or irregular grid
-  if(state->grid == NULL && 
+  if(state->grid == NULL &&
      initialize_state_struct(state,
 			     state->search_area.get_min_y(),
 			     state->search_area.get_max_y() - tmpl_h,
@@ -799,7 +799,7 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
     debug(TM, "Can't initialize search structure.");
     return false;
   }
-  
+
 
   if(state->x == 1 && state->y == 1) { // start condition
     state->y = *(state->iter) - state->search_area.get_min_y();
@@ -809,7 +809,7 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
 
   do {
 
-    if(state->x + step < state->search_area.get_width() - tmpl_w) 
+    if(state->x + step < state->search_area.get_width() - tmpl_w)
       state->x += step;
     else {
       ++(state->iter);
@@ -823,11 +823,11 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
       state->y = *(state->iter) - state->search_area.get_min_y();
 
     }
-    
-    unsigned int dist_x = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
-								      state->y + state->search_area.get_min_y(), 
+
+    unsigned int dist_x = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(),
+								      state->y + state->search_area.get_min_y(),
 								      true, tmpl_w, tmpl_h);
-    
+
     if(dist_x > 0) {
       debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d horizontal pixels",
 	    state->x + state->search_area.get_min_x(),
@@ -840,8 +840,8 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state * state,
     else there_was_a_gate = false;
 
   }while(there_was_a_gate);
-  
-  
+
+
   return true;
 }
 
@@ -850,7 +850,7 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state * state,
 					  struct prepared_template const& tmpl) const {
 
   // check if the search area is larger then the template
-  unsigned int 
+  unsigned int
     tmpl_w = tmpl.tmpl_img_normal->get_width(),
     tmpl_h = tmpl.tmpl_img_normal->get_height();
 
@@ -860,13 +860,13 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state * state,
   unsigned int step = state->step_size_search;
 
   // get grid and check if we are working on regular or irregular grid
-  if(state->grid == NULL && 
+  if(state->grid == NULL &&
      initialize_state_struct(state,
 			     state->search_area.get_min_x(),
 			     state->search_area.get_max_x() - tmpl_w,
-			     true) == false) 
+			     true) == false)
     return false;
-  
+
 
   if(state->x == 1 && state->y == 1) { // start condition
     state->x = *(state->iter) - state->search_area.get_min_x();
@@ -875,7 +875,7 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state * state,
   bool there_was_a_gate = false;
 
   do {
-    if(state->y + step < state->search_area.get_height() - tmpl_h) 
+    if(state->y + step < state->search_area.get_height() - tmpl_h)
       state->y += step;
     else {
       ++state->iter;
@@ -888,10 +888,10 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state * state,
 
     }
 
-    unsigned int dist_y = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(), 
-								      state->y + state->search_area.get_min_y(), 
+    unsigned int dist_y = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(),
+								      state->y + state->search_area.get_min_y(),
 								      false, tmpl_w, tmpl_h);
-    
+
     if(dist_y > 0) {
       debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d vertical pixels",
 	    state->x + state->search_area.get_min_x(),

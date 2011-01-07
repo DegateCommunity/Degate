@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __VIA_H__
@@ -61,7 +61,7 @@ namespace degate {
   private:
 
     DIRECTION direction;
-		
+
   public:
 
     /**
@@ -69,13 +69,13 @@ namespace degate {
      */
 
     Via(int _x, int _y, diameter_t _diameter, DIRECTION _direction = DIRECTION_UNDEFINED);
-  
+
     /**
      * Destructor for a via object.
      */
 
     virtual ~Via();
-  
+
     /**
      * Get direction.
      */
@@ -98,7 +98,7 @@ namespace degate {
     /**
      * Parse a via direction string and return it as enum value.
      */
-    static Via::DIRECTION get_via_direction_from_string(std::string const& via_direction_str) 
+    static Via::DIRECTION get_via_direction_from_string(std::string const& via_direction_str)
       throw();
 
     /**
@@ -107,7 +107,7 @@ namespace degate {
      * to let the user identify the concrete object. But that
      * is not a must.
      */
-    
+
     virtual const std::string get_descriptive_identifier() const;
 
     /**
@@ -146,7 +146,7 @@ namespace degate {
   protected:
 
     virtual object_id_t push_object_to_server(std::string const& server_url);
-  
+
   };
 
 

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __MEMORYMAP_H__
@@ -56,11 +56,11 @@ namespace degate {
    */
   template<typename T>
   class MemoryMap : boost::noncopyable {
-		
+
   private:
     unsigned int width, height;
     MAP_STORAGE_TYPE storage_type;
-	
+
     T * mem;
     std::string filename;
     int fd;
@@ -70,23 +70,23 @@ namespace degate {
     ret_t alloc_memory();
     ret_t map_temp_file(std::string const & filename_pattern);
     ret_t map_file(std::string const & filename);
-    
+
     ret_t map_file_by_fd();
-    
+
     void * get_void_ptr(unsigned int x, unsigned int y) const;
 
-    bool is_temp_file() const { 
-      return storage_type == MAP_STORAGE_TYPE_TEMP_FILE; 
+    bool is_temp_file() const {
+      return storage_type == MAP_STORAGE_TYPE_TEMP_FILE;
     }
 
-    bool is_persistent_file() const { 
-      return storage_type == MAP_STORAGE_TYPE_PERSISTENT_FILE; 
+    bool is_persistent_file() const {
+      return storage_type == MAP_STORAGE_TYPE_PERSISTENT_FILE;
     }
 
-    bool is_mem() const { 
-      return storage_type == MAP_STORAGE_TYPE_MEM; 
+    bool is_mem() const {
+      return storage_type == MAP_STORAGE_TYPE_MEM;
     }
-    
+
   public:
 
 
@@ -98,30 +98,30 @@ namespace degate {
     MemoryMap(unsigned int width, unsigned int height);
 
     /**
-     * Create a file based memory chunk. 
+     * Create a file based memory chunk.
      * The storage is filebases. The file is mapped into memory.
      * @param width The width of a 2D map.
      * @param height The height of a 2D map.
      * @param mode Is either MAP_STORAGE_TYPE_PERSISTENT_FILE or MAP_STORAGE_TYPE_TEMP_FILE.
      * @param file_to_map The name of the file, which should be mmap().
      */
-    MemoryMap(unsigned int width, unsigned int height, 
+    MemoryMap(unsigned int width, unsigned int height,
 	      MAP_STORAGE_TYPE mode, std::string const & file_to_map);
 
     /**
      * The destructor.
      */
     ~MemoryMap();
-		
+
     int get_width() const { return width; }
     int get_height() const { return height; }
-	
+
     /**
      * Cear the whole memory map.
      */
     void clear();
 
-    void clear_area(unsigned int min_x, unsigned int min_y, 
+    void clear_area(unsigned int min_x, unsigned int min_y,
 		    unsigned int width, unsigned int height);
 
     /**
@@ -146,11 +146,11 @@ namespace degate {
      *   chunk is heap and not file based, an empty string is returned.
      */
     std::string const& get_filename() const { return filename; }
-	
+
   };
 
   template <typename T>
-  MemoryMap<T>::MemoryMap(unsigned int _width, unsigned int _height) : 
+  MemoryMap<T>::MemoryMap(unsigned int _width, unsigned int _height) :
     width(_width), height(_height),
     storage_type(MAP_STORAGE_TYPE_MEM),
     mem(NULL),
@@ -158,38 +158,38 @@ namespace degate {
     filesize(0) {
 
     assert(width > 0 && height > 0);
-    
+
     ret_t ret = alloc_memory();
     assert(ret == RET_OK);
   }
 
   template <typename T>
-  MemoryMap<T>::MemoryMap(unsigned int _width, unsigned int _height, 
-			  MAP_STORAGE_TYPE mode, std::string const & file_to_map) : 
+  MemoryMap<T>::MemoryMap(unsigned int _width, unsigned int _height,
+			  MAP_STORAGE_TYPE mode, std::string const & file_to_map) :
     width(_width), height(_height),
     storage_type(mode),
     mem(NULL),
     filename(file_to_map),
     fd(-1),
     filesize(0) {
-    
+
     assert(mode == MAP_STORAGE_TYPE_PERSISTENT_FILE ||
 	   mode == MAP_STORAGE_TYPE_TEMP_FILE);
 
     assert(width > 0 && height > 0);
 
     ret_t ret;
-		
+
     if(mode == MAP_STORAGE_TYPE_TEMP_FILE) {
       ret = map_temp_file(file_to_map);
-      if(RET_IS_NOT_OK(ret)) 
+      if(RET_IS_NOT_OK(ret))
 	debug(TM, "Can't open a temp file with pattern %s", file_to_map.c_str());
 
       assert(RET_IS_OK(ret));
     }
     else if(mode == MAP_STORAGE_TYPE_PERSISTENT_FILE) {
       ret = map_file(file_to_map);
-      if(RET_IS_NOT_OK(ret)) debug(TM, "Can't open file %s as persistent file", file_to_map.c_str());			
+      if(RET_IS_NOT_OK(ret)) debug(TM, "Can't open file %s as persistent file", file_to_map.c_str());
       assert(RET_IS_OK(ret));
     }
   }
@@ -197,7 +197,7 @@ namespace degate {
 
   template <typename T>
   MemoryMap<T>::~MemoryMap() {
-    
+
     switch(storage_type) {
     case MAP_STORAGE_TYPE_MEM:
       if(mem != NULL) free(mem);
@@ -209,16 +209,16 @@ namespace degate {
 	if(msync(mem, filesize, MS_SYNC) == -1) {
 	  perror("msync() failed");
 	}
-	
+
 	if(munmap(mem, filesize) == -1) {
 	  perror("munmap failed");
 	}
-	
+
 	mem = NULL;
       }
-      
+
       close(fd);
-      
+
       if(is_temp_file()) {
 	if(unlink(filename.c_str()) == -1) {
 	  debug(TM, "Can't unlink temp file");
@@ -226,15 +226,15 @@ namespace degate {
       }
       break;
     }
-    
+
   }
 
   template <typename T>
   ret_t MemoryMap<T>::alloc_memory() {
-    
+
     /* If it is not null, it would indicates,
        that there is already any allocation. */
-    assert(mem == NULL); 
+    assert(mem == NULL);
 
     mem = (T *) malloc(width * height * sizeof(T));
     assert(mem != NULL);
@@ -242,34 +242,34 @@ namespace degate {
     memset(mem, 0, width * height * sizeof(T));
     return RET_OK;
   }
-  
+
   /**
    * Clear map data.
    */
-  
+
   template <typename T>
   void MemoryMap<T>::clear() {
     assert(mem != NULL);
     if(mem != NULL) memset(mem, 0, width * height * sizeof(T));
   }
-  
-  
-  /** 
+
+
+  /**
    * Clear an area given by start point and width and height
    */
   template <typename T>
-  void MemoryMap<T>::clear_area( unsigned int min_x, unsigned int min_y, 
+  void MemoryMap<T>::clear_area( unsigned int min_x, unsigned int min_y,
 				 unsigned int width, unsigned int height) {
     assert(mem != NULL);
-    
+
     if(mem != NULL) {
       unsigned int x, y;
       for(y = min_y; y < min_y + height; y++)
 	memset(get_void_ptr(x, y), 0, width * sizeof(T));
     }
   }
-  
-  
+
+
   /**
    * Create a temp file and use it as storage for the map data.
    * @param filename_pattern The parameter file is a string that specifies the
@@ -278,13 +278,13 @@ namespace degate {
   template <typename T>
   ret_t MemoryMap<T>::map_temp_file(std::string const& filename_pattern) {
     ret_t ret;
-    
+
     assert(is_temp_file());
-    
+
     char * tmp_filename = strdup(filename_pattern.c_str());
-    
+
     fd = mkstemp(tmp_filename);
-    
+
     if(fd == -1) {
       debug(TM, "mkstemp() failed");
       ret = RET_ERR;
@@ -293,39 +293,39 @@ namespace degate {
       ret = map_file_by_fd();
       filename = std::string(tmp_filename);
     }
-    
+
     // cleanup
     free(tmp_filename);
-    
+
     return ret;
   }
-  
+
 
   /**
    * Use storage in file as storage for memory map
    */
   template <typename T>
   ret_t MemoryMap<T>::map_file(std::string const& filename) {
-    
+
     assert(is_persistent_file());
-    
+
     if((fd = open(filename.c_str(), O_RDWR | O_CREAT, 0600)) == -1) {
       debug(TM, "can't open file: %s", filename.c_str());
       return RET_ERR;
     }
-    
+
     return map_file_by_fd();
   }
-  
+
   template <typename T>
   ret_t MemoryMap<T>::map_file_by_fd() {
-    
+
     assert(fd != -1);
     if(fd == -1) {
       debug(TM, "error: invalid file handle");
       return RET_ERR;
     }
-    else { 
+    else {
       // get file size
       filesize = lseek(fd, 0, SEEK_END);
       if(filesize < width * height * sizeof(T)) {
@@ -336,20 +336,20 @@ namespace degate {
 	  return RET_ERR;
 	}
       }
-      
+
       // map the file into memory
       if((mem = (T *) mmap(NULL, filesize,
-			   PROT_READ | PROT_WRITE, 
+			   PROT_READ | PROT_WRITE,
 			   MAP_FILE | MAP_SHARED, fd, 0)) == (void *)(-1)) {
 	debug(TM, "mmap failed for %s", filename.c_str());
 	close(fd);
 	return RET_ERR;
       }
-      
+
       return RET_OK;
     }
   }
-  
+
 
   /**
    * On 32 bit architectures it might be neccessary to temporarily unmap data files.
@@ -360,29 +360,29 @@ namespace degate {
   /*  template <typename T>
   ret_t MemoryMap<T>::deactivate_mapping() {
     ret_t ret = RET_OK;
-    
+
     if(is_mem() ) return RET_ERR;
     //assert(mem != NULL);
-    
+
     if(mem != NULL) {
-      
+
       if(msync(mem, filesize, MS_SYNC) == -1) {
 	debug(TM, "msync() failed");
 	ret = RET_ERR;
       }
-      
+
       if(munmap(mem, filesize) == -1) {
 	debug(TM, "munmap failed");
 	ret = RET_ERR;
       }
-      
+
       mem = NULL;
     }
-    else 
+    else
       ret = RET_ERR;
     return ret;
     }*/
-  
+
   /**
    * On 32 bit architectures it might be neccessary to temporarily unmap data files.
    * This function should be used to map the data file again into address space.
@@ -391,20 +391,20 @@ namespace degate {
    */
   /*  template <typename T>
   ret_t MemoryMap<T>::reactivate_mapping() {
-    
+
     if(fd == 0) {
       debug(TM, "invalid file handle");
       return RET_ERR;
     }
     if(is_mem()) return RET_ERR;
-    
+
     if(mem == NULL) {
       if((mem = (T *) mmap(NULL, filesize,
-			   PROT_READ | PROT_WRITE, 
+			   PROT_READ | PROT_WRITE,
 			   MAP_FILE | MAP_SHARED, fd, 0)) == (void *)(-1)) {
 	return RET_ERR;
       }
-      
+
       return RET_OK;
     }
     else {
@@ -418,18 +418,18 @@ namespace degate {
     memcpy(buf, mem, width * height * sizeof(T));
   }
 
-  
+
   template <typename T>
   void * MemoryMap<T>::get_void_ptr(unsigned int x, unsigned int y) const {
     if(x + y < width * height)
-      return mem + (y * width + x);	
+      return mem + (y * width + x);
     else {
       debug(TM, "error: out of bounds x=%d, y=%d", x, y);
       assert(1 == 0);
       return NULL;
     }
   }
-  
+
   template <typename T>
   inline void MemoryMap<T>::set(unsigned int x, unsigned int y, T new_val) {
     if(x >= width || y >= height)  {
@@ -446,7 +446,7 @@ namespace degate {
     }
     */
   }
-  
+
   template <typename T>
   inline T MemoryMap<T>::get(unsigned int x, unsigned int y) const {
     if(x >= width || y >= height)  {
@@ -465,7 +465,7 @@ namespace degate {
     }
     */
   }
-  
+
 }
 
 #endif

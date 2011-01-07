@@ -1,22 +1,22 @@
 /*
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <zip.h>
@@ -40,7 +40,7 @@ void ProjectArchiver::add_single_file(struct zip * zip_archive,
 				      path const& archive_file,
 				      path const& base_dir_path,
 				      path const& file,
-				      path const& prepend_dir) 
+				      path const& prepend_dir)
   throw(ZipException) {
 
   assert(zip_archive != NULL);
@@ -51,15 +51,15 @@ void ProjectArchiver::add_single_file(struct zip * zip_archive,
   debug(TM, "Add file %s as %s to zip archive.",
 	file.string().c_str(), stripped.string().c_str());
 
-  if((source = zip_source_file(zip_archive, 
+  if((source = zip_source_file(zip_archive,
                                file.string().c_str(), 0, 0)) == NULL) {
     boost::format f("Cannot add file %1% to zip archive %2%: %3%");
     f % file % archive_file % zip_strerror(zip_archive);
     throw ZipException(f.str());
   }
-  
-  if(zip_add(zip_archive, 
-             stripped.string().c_str(), 
+
+  if(zip_add(zip_archive,
+             stripped.string().c_str(),
              source) < 0) {
 
     boost::format f("Cannot add file %1% to zip archive %2%: %3%");
@@ -73,7 +73,7 @@ void ProjectArchiver::add_directory(struct zip * zip_archive,
 				    path const& archive_file,
 				    path const& base_dir_path,
 				    path const& dir,
-				    path const& prepend_dir) 
+				    path const& prepend_dir)
   throw(ZipException) {
 
   recursive_directory_iterator end_iter;
@@ -97,9 +97,9 @@ void ProjectArchiver::add_directory(struct zip * zip_archive,
 }
 
 
-void ProjectArchiver::export_data(path const& project_dir, 
+void ProjectArchiver::export_data(path const& project_dir,
 				  path const& archive_file,
-				  path const& prepend_dir) 
+				  path const& prepend_dir)
   throw (ZipException) {
 
   struct zip *zip_archive;
@@ -131,5 +131,5 @@ void ProjectArchiver::export_data(path const& project_dir,
     f % archive_file % zip_strerror(zip_archive);
     throw ZipException(f.str());
   }
-  
+
 }

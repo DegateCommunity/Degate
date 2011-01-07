@@ -1,22 +1,22 @@
 /*
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <degate.h>
@@ -47,22 +47,22 @@ GateLibrary_shptr GateLibraryImporter::import(std::string const& filename) {
   }
 
   std::string directory = get_basedir(filename);
-	
+
   try {
     //debug(TM, "try to parse file %s", filename.c_str());
 
     xmlpp::DomParser parser;
     parser.set_substitute_entities(); // We just want the text to be resolved/unescaped automatically.
-		
+
     parser.parse_file(filename);
     assert(parser == true);
-		
+
     const xmlpp::Document * doc = parser.get_document();
     assert(doc != NULL);
-		
+
     const xmlpp::Element * root_elem = doc->get_root_node(); // deleted by DomParser
     assert(root_elem != NULL);
-		
+
     return parse_gate_library_element(root_elem, directory);
 
   }
@@ -70,8 +70,8 @@ GateLibrary_shptr GateLibraryImporter::import(std::string const& filename) {
     std::cout << "Exception caught: " << ex.what() << std::endl;
     throw;
   }
-	
-	
+
+
 
 }
 
@@ -88,7 +88,7 @@ GateLibrary_shptr GateLibraryImporter::parse_gate_library_element(const xmlpp::E
   return gate_lib;
 }
 
-void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * const gate_template_element, 
+void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * const gate_template_element,
 						       GateLibrary_shptr gate_lib,
 						       std::string const& directory) {
 
@@ -96,7 +96,7 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
 
   const xmlpp::Node::NodeList gate_list = gate_template_element->get_children("gate");
   for(xmlpp::Node::NodeList::const_iterator iter = gate_list.begin();
-      iter != gate_list.end(); 
+      iter != gate_list.end();
       ++iter) {
 
     if(const xmlpp::Element* gate_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -141,20 +141,20 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
       if(ports != NULL) parse_template_ports_element(ports, gate_template);
 
       const xmlpp::Element * implementations = get_dom_twig(gate_elem, "implementations");
-      if(implementations != NULL) 
+      if(implementations != NULL)
 	parse_template_implementations_element(implementations, gate_template, directory);
-      
+
       gate_lib->add_template(gate_template);
     }
   }
 
 }
 
-void GateLibraryImporter::parse_template_images_element(const xmlpp::Element * const template_images_element, 
+void GateLibraryImporter::parse_template_images_element(const xmlpp::Element * const template_images_element,
 							GateTemplate_shptr gate_tmpl,
 							std::string const& directory) {
 
-  if(template_images_element == NULL || 
+  if(template_images_element == NULL ||
      gate_tmpl == NULL) throw InvalidPointerException("Invalid pointer");
 
   const xmlpp::Node::NodeList image_list = template_images_element->get_children("image");
@@ -175,11 +175,11 @@ void GateLibraryImporter::parse_template_images_element(const xmlpp::Element * c
 
 }
 
-void GateLibraryImporter::parse_template_implementations_element(const xmlpp::Element * const implementations_element, 
+void GateLibraryImporter::parse_template_implementations_element(const xmlpp::Element * const implementations_element,
 								 GateTemplate_shptr gate_tmpl,
 								 std::string const& directory) {
 
-  if(implementations_element == NULL || 
+  if(implementations_element == NULL ||
      gate_tmpl == NULL) throw InvalidPointerException("Invalid pointer");
 
   const xmlpp::Node::NodeList impl_list = implementations_element->get_children("implementation");
@@ -201,7 +201,7 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 	  f % impl_type_str % ex.what();
 	  throw XMLAttributeParseException(f.str());
 	}
-	
+
 	debug(TM, "Parsing file '%s'", impl_file.c_str());
 	std::ifstream myfile(impl_file.c_str());
 	std::string line, code;
@@ -218,7 +218,7 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 	  f % impl_file;
 	  throw FileSystemException(f.str());
 	}
-	
+
 	gate_tmpl->set_implementation(impl_type, code);
       }
     }
@@ -227,15 +227,15 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 }
 
 
-void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element * const template_ports_element, 
+void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element * const template_ports_element,
 						       GateTemplate_shptr gate_tmpl) {
-  
-  if(template_ports_element == NULL || 
+
+  if(template_ports_element == NULL ||
      gate_tmpl == NULL) throw InvalidPointerException("Invalid pointer");
 
   const xmlpp::Node::NodeList port_list = template_ports_element->get_children("port");
   for(xmlpp::Node::NodeList::const_iterator iter = port_list.begin();
-      iter != port_list.end(); 
+      iter != port_list.end();
       ++iter) {
 
     if(const xmlpp::Element* port_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -261,7 +261,7 @@ void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element * co
       }
       assert(tmpl_port != NULL);
 
-      
+
       tmpl_port->set_name(string(name.c_str()));
       tmpl_port->set_description(string(description.c_str()));
       tmpl_port->set_object_id(object_id);
@@ -270,6 +270,6 @@ void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element * co
       gate_tmpl->add_template_port(tmpl_port);
     }
 
-  
+
   }
 }

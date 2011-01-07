@@ -1,22 +1,22 @@
-/* -*-c++-*- 
- 
+/* -*-c++-*-
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __BACKGROUNDCLASSIFIER_H__
@@ -57,18 +57,18 @@ namespace degate {
 
   template<class ImageType, typename HistogramType>
   class BackgroundClassifier : public BackgroundClassifierBase {
-    
+
   private:
-    
+
     const std::tr1::shared_ptr<ImageType> img;
     HistogramType hist_bg, hist_fg;
     const unsigned int width;
     const unsigned int threshold;
     const std::string cl_name;
-    
+
   public:
-    
-    
+
+
     BackgroundClassifier(std::tr1::shared_ptr<ImageType> _img,
 			 unsigned int _width,
 			 unsigned int _threshold,
@@ -78,16 +78,16 @@ namespace degate {
       threshold(_threshold),
       cl_name(_name) {
     }
-    
 
-    std::string get_name() const { 
+
+    std::string get_name() const {
       return cl_name;
     }
 
 
     void add_background_areas(std::list<BoundingBox> const& bg_areas) {
 
-      for(std::list<BoundingBox>::const_iterator iter = bg_areas.begin(); 
+      for(std::list<BoundingBox>::const_iterator iter = bg_areas.begin();
 	  iter != bg_areas.end(); ++iter) {
 	hist_bg.add_area(img, *iter);
       }
@@ -96,8 +96,8 @@ namespace degate {
 
     void add_foreground_areas(std::list<BoundingBox> const& fg_areas) {
 
-      
-      for(std::list<BoundingBox>::const_iterator iter = fg_areas.begin(); 
+
+      for(std::list<BoundingBox>::const_iterator iter = fg_areas.begin();
 	  iter != fg_areas.end(); ++iter) {
 	hist_fg.add_area(img, *iter);
       }
@@ -106,24 +106,24 @@ namespace degate {
 
     /**
      * @todo Cache data
-     */ 
+     */
     int recognize(coord_type & v) {
       unsigned int sum = 0;
-      
+
       int radius = width >> 1;
       int x = v.first, y = v.second;
 
       if((x > radius && x < (int)img->get_width() - radius) &&
 	 (y > radius && y < (int)img->get_height() - radius)) {
-	
+
 	for(int _y = -radius; _y < radius; _y++)
 	  for(int _x = -radius; _x < radius; _x++) {
 	    rgba_pixel_t p = img->get_pixel(x + _x, y + _y);
 	    if(hist_fg.get_for_rgb(p) > hist_bg.get_for_rgb(p)) sum++;
 	  }
       }
-      
-      
+
+
       if(sum >= threshold) return 1;
       else return -1;
     }
@@ -142,25 +142,25 @@ namespace degate {
     BackgroundClassifier(std::tr1::shared_ptr<ImageType> _img,
 			 unsigned int _width) {}
 
-    std::string get_name() const { 
+    std::string get_name() const {
       return "gradient";
     }
     int recognize(coord_type & v) {
       unsigned int sum = 0;
-      
+
       int radius = width >> 1;
       int x = v.first, y = v.second;
 
       if((x > radius && x < (int)img->get_width() - radius) &&
 	 (y > radius && y < (int)img->get_height() - radius)) {
-	
+
 	std::vector<double> col_sum(width), row_sum(width);
 
 
 	for(int _y = -radius; _y < radius; _y++)
 	  for(int _x = -radius; _x < radius; _x++) {
 
-	    
+
 	    rgba_pixel_t p = img->get_pixel(x + _x, y + _y);
 	    double gs = RGBA_TO_GS_BY_VAL(p);
 
@@ -168,7 +168,7 @@ namespace degate {
 	    row_sum[_y + radius] = gs;
 	  }
       }
-      
+
       bool col_iter_ok = true;
       for(unsigned int i = 0; i < col_sum.size() - 1; i++) {
 	if(col_sum[i] >
@@ -187,7 +187,7 @@ namespace degate {
   /*
   class BackgroundClassifier {
   private:
-    
+
     unsigned int wire_diameter;
 
     HueImageHistogram bg_hue, fg_hue;
@@ -200,10 +200,10 @@ namespace degate {
     SaturationStdDevImageHistogram bg_stdev_sat, fg_stdev_sat;
     LightnessStdDevImageHistogram bg_stdev_l, fg_stdev_l;
 
-    
+
   public:
 
-    BackgroundClassifier(unsigned int _wire_diameter) : 
+    BackgroundClassifier(unsigned int _wire_diameter) :
       wire_diameter(_wire_diameter),
       bg_stdev_hue(wire_diameter),
       fg_stdev_hue(wire_diameter),
@@ -216,7 +216,7 @@ namespace degate {
     virtual ~BackgroundClassifier() {}
 
     template<class ImageType>
-    void add_background_areas(std::tr1::shared_ptr<ImageType> img, 
+    void add_background_areas(std::tr1::shared_ptr<ImageType> img,
 			      std::list<BoundingBox> const& bg_areas) {
 
       for(std::list<BoundingBox>::const_iterator iter = bg_areas.begin(); iter != bg_areas.end(); ++iter) {
@@ -233,7 +233,7 @@ namespace degate {
     }
 
     template<class ImageType>
-    void add_foreground_areas(std::tr1::shared_ptr<ImageType> img, 
+    void add_foreground_areas(std::tr1::shared_ptr<ImageType> img,
 			      std::list<BoundingBox> const& fg_areas) {
 
 
@@ -256,7 +256,7 @@ namespace degate {
       double p_fg = fg_hue.get(rgba_to_hue(pix)) *
 	fg_sat.get(rgba_to_saturation(pix)) *
 	fg_l.get(rgba_to_lightness(pix)) *
-	
+
 	fg_r.get(MASK_R(pix)) *
 	fg_g.get(MASK_G(pix)) *
 	fg_b.get(MASK_B(pix))
@@ -297,7 +297,7 @@ namespace degate {
       //fg_stdev_l.save_histogram(join_pathes(directory, "histogram_fg_stddev_l.dat"));
 
     }
-    
+
   };
   */
 }

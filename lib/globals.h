@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 
@@ -64,7 +64,7 @@ enum ret_t {
 #error "Unknown architecture"
 #endif
 
-	
+
 #define DEGATE_VERSION "0.0.9"
 
 }
@@ -100,7 +100,7 @@ namespace degate {
   typedef std::tr1::shared_ptr<RemoteObject> RemoteObject_shptr;
 
   class Net;
-  typedef std::tr1::shared_ptr<Net> Net_shptr;  
+  typedef std::tr1::shared_ptr<Net> Net_shptr;
 
   class Gate;
 
@@ -114,7 +114,7 @@ namespace degate {
   typedef std::tr1::shared_ptr<GateLibrary> GateLibrary_shptr;
 
   class Layer;
-  typedef std::tr1::shared_ptr<Layer> Layer_shptr;  
+  typedef std::tr1::shared_ptr<Layer> Layer_shptr;
 
   class Wire;
   typedef std::tr1::shared_ptr<Wire> Wire_shptr;
@@ -134,7 +134,7 @@ namespace degate {
 
   /** defines the type for colors */
   typedef uint32_t color_t;
-  
+
   typedef unsigned long long object_id_t;
   typedef unsigned long long layer_id_t;
   typedef unsigned long long transaction_id_t;

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
    This file is part of the IC reverse engineering tool degate.
- 
+
    Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
    Degate is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    any later version.
- 
+
    Degate is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
- 
+
    You should have received a copy of the GNU General Public License
    along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 
@@ -35,21 +35,21 @@
 namespace degate {
 
 
-  template<bool b> 
-  struct get_bbox_trait_selector { 
+  template<bool b>
+  struct get_bbox_trait_selector {
     template<typename T>
     static BoundingBox const & get_bounding_box_for_object(T object) {
       return object.get_bounding_box();
     }
-  }; 
+  };
 
-  template <> 
-  struct get_bbox_trait_selector<true> { 
+  template <>
+  struct get_bbox_trait_selector<true> {
     template<typename T>
     static BoundingBox const & get_bounding_box_for_object(T object) {
       return object->get_bounding_box();
     }
-  }; 
+  };
 
 
   template <typename T> class QuadTree;
@@ -65,33 +65,33 @@ namespace degate {
    */
   template <typename T>
   class QuadTree {
-  
+
     friend class region_iterator<T>;
     //    friend class down_iterator<T>;
 
   private:
-    
+
     const static int NW = 0;
     const static int NE = 1;
     const static int SW = 2;
     const static int SE = 3;
-    
+
     const static unsigned int bbox_min_size = 10;
-    
+
     unsigned int max_entries;
-    
+
     BoundingBox box;
     std::vector<QuadTree<T> > subtree_nodes;
     std::list<T> children;
-    
+
     QuadTree * parent;
 
     std::string node_name;
 
     QuadTree(BoundingBox const & box, QuadTree * parent, std::string node_name, int max_entries = 50);
-    
+
     QuadTree<T> * traverse_downto_bounding_box(BoundingBox const & box);
-    
+
     ret_t split();
     ret_t reinsert_objects();
 
@@ -116,13 +116,13 @@ namespace degate {
      */
 
     ~QuadTree();
-    
+
     /**
      * Check if the quadtree or a quadtree node is a leaf node.
      */
 
     bool is_leave() const;
-    
+
     /**
      * Insert an object into the quadtree.
      */
@@ -144,7 +144,7 @@ namespace degate {
     void notify_shape_change(T object);
 
     /**
-     * Get the number of objects that are stored in a quadtree node and in all child nodes.     
+     * Get the number of objects that are stored in a quadtree node and in all child nodes.
      */
 
     unsigned int total_size() const;
@@ -226,10 +226,10 @@ namespace degate {
   QuadTree<T>::QuadTree(BoundingBox const & box, int max_entries) {
     this->box = box;
     this->max_entries = max_entries;
-    parent = NULL;  
+    parent = NULL;
     node_name = "/";
   }
-  
+
   template <typename T>
   QuadTree<T>::QuadTree(BoundingBox const & box, QuadTree * parent, std::string _node_name, int max_entries) {
     this->box = box;
@@ -238,45 +238,45 @@ namespace degate {
 
     node_name = parent->node_name + std::string("/") + _node_name;
   }
-  
+
   template <typename T>
   QuadTree<T>::~QuadTree() {
   }
-  
+
   template <typename T>
   unsigned int QuadTree<T>::get_width() const {
     return box.get_width();
   }
-  
+
   template <typename T>
   unsigned int QuadTree<T>::get_height() const {
     return box.get_height();
   }
-  
-  
+
+
   template <typename T>
   bool QuadTree<T>::is_splitable() const {
     return box.get_width() > bbox_min_size &&
       box.get_height() > bbox_min_size &&
       is_leave();
   }
-  
+
   template <typename T>
   ret_t QuadTree<T>::split() {
     if(is_splitable()) {
-      
+
       BoundingBox nw(box.get_min_x(), box.get_center_x(),
 		     box.get_min_y(), box.get_center_y());
-      
-      
+
+
       BoundingBox sw(box.get_min_x(), box.get_center_x(),
 		     box.get_center_y() + 1, box.get_max_y());
-      
-      
+
+
       BoundingBox ne(box.get_center_x() + 1, box.get_max_x(),
 		     box.get_min_y(), box.get_center_y());
-      
-      
+
+
       BoundingBox se(box.get_center_x() + 1, box.get_max_x(),
 		     box.get_center_y() + 1,  box.get_max_y());
 
@@ -305,9 +305,9 @@ namespace degate {
 
   template <typename T>
   ret_t QuadTree<T>::reinsert_objects() {
-  
+
     typename std::list<T> children_copy = children;
-  
+
     children.clear();
 
     for(typename std::list<T>::iterator it = children_copy.begin();
@@ -315,7 +315,7 @@ namespace degate {
 	++it) {
       insert(*it);
     }
-  
+
     return RET_OK;
   }
 
@@ -323,7 +323,7 @@ namespace degate {
   ret_t QuadTree<T>::insert(T object) {
 
     ret_t ret;
-    const BoundingBox & bbox = 
+    const BoundingBox & bbox =
       get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(object);
 
     QuadTree<T> * found = traverse_downto_bounding_box(bbox);
@@ -354,7 +354,7 @@ namespace degate {
 
   template <typename T>
   ret_t QuadTree<T>::remove(T object) {
-    const BoundingBox & bbox = 
+    const BoundingBox & bbox =
       get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(object);
 
     QuadTree<T> * found = traverse_downto_bounding_box(bbox);
@@ -423,7 +423,7 @@ namespace degate {
       for(typename std::vector< QuadTree<T> >::const_iterator it = subtree_nodes.begin();
 	  it != subtree_nodes.end();
 	  ++it) {
-      
+
 	unsigned int d = (*it).depth();
 	max_d = std::max(max_d, d);
       }
@@ -471,12 +471,12 @@ namespace degate {
   template <typename T>
   void QuadTree<T>::print(std::ostream & os, int tabs, bool recursive) {
 
-    os 
+    os
       << gen_tabs(tabs) << "Node name                      : " << get_name() << std::endl
-      << gen_tabs(tabs) << "Bounding box                   : x = " 
+      << gen_tabs(tabs) << "Bounding box                   : x = "
       << box.get_min_x() << " .. " << box.get_max_x()
-      << " / y = " 
-      << box.get_min_y() << " .. " << box.get_max_y() 
+      << " / y = "
+      << box.get_min_y() << " .. " << box.get_max_y()
       << std::endl
 
       << gen_tabs(tabs) << "Num elements in this node      : " << children.size() << std::endl
@@ -486,17 +486,17 @@ namespace degate {
 
     if(parent == NULL /* || children.size() < 5 */ ) {
 
-      for(typename std::list<T>::iterator c_iter = children.begin(); 
+      for(typename std::list<T>::iterator c_iter = children.begin();
 	  c_iter != children.end(); ++c_iter) {
 
-	const BoundingBox & e_bb = 
+	const BoundingBox & e_bb =
 	  get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(*c_iter);
 
 	os
-	  << gen_tabs(tabs) << "    + Element bounding box           : x = " 
+	  << gen_tabs(tabs) << "    + Element bounding box           : x = "
 	  << e_bb.get_min_x() << " .. " << e_bb.get_max_x()
-	  << " / y = " 
-	  << e_bb.get_min_y() << " .. " << e_bb.get_max_y() 
+	  << " / y = "
+	  << e_bb.get_min_y() << " .. " << e_bb.get_max_y()
 	  << std::endl;
       }
 
@@ -510,7 +510,7 @@ namespace degate {
       }
     }
 
-    
+
   }
 
   /* missing:

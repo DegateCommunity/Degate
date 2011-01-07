@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __PROJECTIMPORTER_H__
@@ -41,14 +41,14 @@ namespace degate {
 class ProjectImporter : public XMLImporter {
 
 private:
-	
+
   void parse_project_element(Project_shptr parent_prj, const xmlpp::Element * const project_node);
   void parse_grids_element(const xmlpp::Element * const project_node, Project_shptr prj);
   void parse_layers_element(const xmlpp::Element * const layers_node, Project_shptr prj);
   void parse_port_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj);
 
   void parse_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj);
-  
+
   std::string get_project_filename(std::string const& dir) const;
 
   /**
@@ -56,14 +56,14 @@ private:
    * from old  single file images to tile based images, the new image is stored
    * in the project directory.
    */
-  void load_background_image(Layer_shptr layer, 
+  void load_background_image(Layer_shptr layer,
 			     std::string const& image_filename,
 			     Project_shptr prj);
 
 public:
   ProjectImporter() {}
   ~ProjectImporter() {}
-	
+
   /**
    * Import a degate project.
    * @param path The parameter path specifies the project directory

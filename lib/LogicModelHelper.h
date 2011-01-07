@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __LOGICMODELHELPER_H__
@@ -98,7 +98,7 @@ namespace degate {
     BackgroundImage_shptr bg_image = layer->get_image();
     if(bg_image == NULL) throw DegateLogicException("The layer has no background image");
 
-    extract_partial_image<ImageType, BackgroundImage>(new_img, bg_image, bounding_box);    
+    extract_partial_image<ImageType, BackgroundImage>(new_img, bg_image, bounding_box);
 
     //save_image<ImageType>("/tmp/zzz.tif", new_img);
 
@@ -127,7 +127,7 @@ namespace degate {
    * logic layer and for the first metal layer, but only if a layer of a type
    * exists.
    * With the paramter \p orientation you can specify that a flipping
-   * of the image is necessary. 
+   * of the image is necessary.
    */
   void grab_template_images(LogicModel_shptr lmodel,
 			    GateTemplate_shptr gate_template,
@@ -148,7 +148,7 @@ namespace degate {
     std::set<Net_shptr> nets;
 
     for(InputIterator it = first; it != last; ++it) {
-      ConnectedLogicModelObject_shptr clo = 
+      ConnectedLogicModelObject_shptr clo =
 	std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
 
       if(clo == NULL) {
@@ -180,7 +180,7 @@ namespace degate {
   template<class InputIterator>
   void isolate_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last) {
 
-    if(lmodel == NULL) 
+    if(lmodel == NULL)
       throw InvalidPointerException("You passed an invalid shared pointer for lmodel");
 
     // collect nets
@@ -194,9 +194,9 @@ namespace degate {
 
     // unconnect objects
     for(InputIterator it = first; it != last; ++it) {
-      ConnectedLogicModelObject_shptr clo = 
+      ConnectedLogicModelObject_shptr clo =
 	std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
-      
+
       if(clo == NULL) {
 	throw DegateRuntimeException("Error in isolate_objecs(). One of the object "
 				     "cannot be connected with anything");
@@ -215,10 +215,10 @@ namespace degate {
   /**
    * Connect objects.
    */
-  void connect_objects(LogicModel_shptr lmodel, 
-		       ConnectedLogicModelObject_shptr o1, 
+  void connect_objects(LogicModel_shptr lmodel,
+		       ConnectedLogicModelObject_shptr o1,
 		       ConnectedLogicModelObject_shptr o2);
-   
+
 
   /**
    * Connect objects.
@@ -237,10 +237,10 @@ namespace degate {
   template<class InputIterator>
   void connect_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last) {
 
-    if(lmodel == NULL) 
+    if(lmodel == NULL)
       throw InvalidPointerException("You passed an invalid shared pointer for lmodel");
 
-    
+
     std::set<Net_shptr> nets;
     try {
       nets = collect_nets<InputIterator>(first, last);
@@ -264,7 +264,7 @@ namespace degate {
       for(Net::connection_iterator ci = net->begin(); ci != net->end(); ++ci) {
 	PlacedLogicModelObject_shptr plo = lmodel->get_object(*ci);
 
-	ConnectedLogicModelObject_shptr clo = 
+	ConnectedLogicModelObject_shptr clo =
 	  std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
 
 	assert(clo != NULL);
@@ -274,14 +274,14 @@ namespace degate {
 
 
     Net_shptr new_net(new Net());
-    
+
     // set new net
     for(std::set<ConnectedLogicModelObject_shptr>::iterator iter = objects.begin();
 	iter != objects.end(); ++iter) {
       ConnectedLogicModelObject_shptr clo = *iter;
       clo->set_net(new_net);
     }
-    
+
 
     // remove nets from the logic model
     for(std::set<Net_shptr>::iterator iter = nets.begin(); iter != nets.end(); ++iter) {
@@ -301,16 +301,16 @@ namespace degate {
    * @see connnect_objects()
    */
 
-  void autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer, 
+  void autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
 			   BoundingBox const& search_bbox);
-  
+
 
   /**
    * Autoconnect vias on adjacent enabled layers.
    * @exception InvalidPointerException If you pass an invalid shared pointer for the
    *   logic model, then this exception is raised.
    */
-  void autoconnect_interlayer_objects(LogicModel_shptr lmodel, 
+  void autoconnect_interlayer_objects(LogicModel_shptr lmodel,
 				      Layer_shptr layer,
 				      BoundingBox const& search_bbox);
 
@@ -321,9 +321,9 @@ namespace degate {
    * the project directory.
    * @exception InvalidPointerException If you pass an invalid shared pointer for
    *   \p layer, then this exception is raised.
-   * 
+   *
    */
-  void load_background_image(Layer_shptr layer, 
+  void load_background_image(Layer_shptr layer,
 			     std::string const& project_dir,
 			     std::string const& image_file);
 
@@ -344,7 +344,7 @@ namespace degate {
    */
 
   Layer_shptr get_first_enabled_layer(LogicModel_shptr lmodel);
-  
+
   /**
    * Get next enabled layer.
    * @return Returns the "next" visible layer relative to the current layer. If
@@ -363,7 +363,7 @@ namespace degate {
    * turn around in the layer stack.
    * @return Returns the next layer. If there is no next layer, a NULL pointer
    *   is returned.
-   * @exception InvalidPointerException If you pass an invalid shared pointer, 
+   * @exception InvalidPointerException If you pass an invalid shared pointer,
    *   then this exception is raised.
    */
   Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer);
@@ -386,7 +386,7 @@ namespace degate {
    * turn around in the layer stack.
    * @return Returns the previous layer. If there is no previous layer, a NULL pointer
    *   is returned.
-   * @exception InvalidPointerException If you pass an invalid shared pointer, 
+   * @exception InvalidPointerException If you pass an invalid shared pointer,
    *   then this exception is raised.
    */
 

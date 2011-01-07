@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __TEMPLATEMATCHING_H__
@@ -81,7 +81,7 @@ namespace degate {
 
 
     struct search_state {
-      
+
       unsigned int x, y; // unscaled coordinates in the cropped image
       unsigned int step_size_search;
       BoundingBox search_area; // on unscaled uncropped image
@@ -90,7 +90,7 @@ namespace degate {
       Grid::grid_iter iter,  // current position
 	iter_begin, // first grid offset that is larger than x or y
 	iter_last, // last entry grid that is less than x+w or y+h
-	iter_end; 
+	iter_end;
     };
 
     struct TemplateMatchingStatistics stats;
@@ -101,7 +101,7 @@ namespace degate {
       unsigned int x, y; // absolut coordinates of the left upper corner
       GateTemplate_shptr tmpl;
       Gate::ORIENTATION orientation;
-      double correlation; // the correlation value 
+      double correlation; // the correlation value
       double t_hc;
     } match_found;
 
@@ -146,16 +146,16 @@ namespace degate {
     void prepare_sum_tables(TileImage_GS_BYTE_shptr gs_img_normal,
 			    TileImage_GS_BYTE_shptr gs_img_scaled);
 
-    void precalc_sum_tables(TileImage_GS_BYTE_shptr img, 
+    void precalc_sum_tables(TileImage_GS_BYTE_shptr img,
 			    TileImage_GS_DOUBLE_shptr summation_table_single,
 			    TileImage_GS_DOUBLE_shptr summation_table_squared);
 
 
-    BoundingBox get_scaled_bounding_box(BoundingBox const& bounding_box, 
+    BoundingBox get_scaled_bounding_box(BoundingBox const& bounding_box,
 					double scale_down) const;
 
-    void prepare_background_images(ScalingManager_shptr sm, 
-				   BoundingBox const& bounding_box, 
+    void prepare_background_images(ScalingManager_shptr sm,
+				   BoundingBox const& bounding_box,
 				   unsigned int scaling_factor);
 
     struct prepared_template prepare_template(GateTemplate_shptr tmpl,
@@ -176,15 +176,15 @@ namespace degate {
     void adjust_step_size(struct search_state & state, double corr_val) const;
 
     std::list<match_found> match_single_template(struct prepared_template & tmpl,
-						 double threshold_hc, 
+						 double threshold_hc,
 						 double threshold_detection);
-    
-    
+
+
     /**
      * Calculate a zero mean image from an image and return
      * the variance(?).
      */
-    double subtract_mean(TempImage_GS_BYTE_shptr img, 
+    double subtract_mean(TempImage_GS_BYTE_shptr img,
 			 TempImage_GS_DOUBLE_shptr zero_mean_img) const;
 
     /**
@@ -249,7 +249,7 @@ namespace degate {
      * Get the correlation threshold for acepting gate recognitions.
      */
     double get_threshold_detection() const { return threshold_detection; }
-    
+
     /**
      * Set the correlation threshold for acepting gate recognitions.
      */
@@ -274,7 +274,7 @@ namespace degate {
     /**
      * Set the pixel step size.
      */
-    
+
     void set_max_step_size(unsigned int s) { max_step_size_search = s; }
 
     /**
@@ -319,7 +319,7 @@ namespace degate {
 
     /**
      * Set the layers.
-     * 
+     *
      */
 
     void set_layers(Layer_shptr layer_matching, Layer_shptr layer_insert) {

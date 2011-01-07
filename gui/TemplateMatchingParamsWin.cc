@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "TemplateMatchingParamsWin.h"
@@ -48,16 +48,16 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
   if(get_dialog() != NULL) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
-    
+
     // connect signals
     get_widget("cancel_button", pButton);
     if(pButton != NULL)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &TemplateMatchingParamsWin::on_cancel_button_clicked));
-    
+
     get_widget("ok_button", pButton);
     if(pButton != NULL)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &TemplateMatchingParamsWin::on_ok_button_clicked) );
-  
+
 
     get_widget("hscale_threshold_hc", hscale_threshold_hc);
     if(hscale_threshold_hc != NULL) {
@@ -83,8 +83,8 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
       combobox_scale_down->set_model(m_refTreeModel_scalings);
       int row_number = 0;
 
-      
-      const ScalingManager<BackgroundImage>::zoom_step_list steps = 
+
+      const ScalingManager<BackgroundImage>::zoom_step_list steps =
 	scaling_manager->get_zoom_steps();
 
       if(preselected_scale_down > steps.back()) preselected_scale_down = steps.back();
@@ -111,7 +111,7 @@ TemplateMatchingParamsWin::TemplateMatchingParamsWin(Gtk::Window *parent,
 
       combobox_tmpl_orientations->pack_start(m_Columns_orientations.m_col_orientation_str);
       combobox_tmpl_orientations->set_active(0);
-      
+
     }
 
   }
@@ -124,7 +124,7 @@ void TemplateMatchingParamsWin::populate_orientations_combobox() {
   std::list<degate::Gate::ORIENTATION> o_list;
 
   Gtk::TreeModel::Row row;
-      
+
   o_list.push_back(Gate::ORIENTATION_NORMAL);
   o_list.push_back(Gate::ORIENTATION_FLIPPED_UP_DOWN);
   o_list.push_back(Gate::ORIENTATION_FLIPPED_LEFT_RIGHT);
@@ -132,8 +132,8 @@ void TemplateMatchingParamsWin::populate_orientations_combobox() {
   row = *(m_refTreeModel_orientations->append());
   row[m_Columns_orientations.m_col_orientation_str] = "any";
   row[m_Columns_orientations.m_col_orientations] = o_list;
-	
-  
+
+
   o_list.clear();
   o_list.push_back(Gate::ORIENTATION_NORMAL);
   row = *(m_refTreeModel_orientations->append());
@@ -157,7 +157,7 @@ void TemplateMatchingParamsWin::populate_orientations_combobox() {
   row = *(m_refTreeModel_orientations->append());
   row[m_Columns_orientations.m_col_orientation_str] = "flipped both";
   row[m_Columns_orientations.m_col_orientations] = o_list;
-  
+
 }
 
 bool TemplateMatchingParamsWin::run(double * threshold_hc,
@@ -172,7 +172,7 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
 
   *max_step_size_search = 0;
   *scale_down = 0;
-  
+
   while(*max_step_size_search == 0 || *scale_down == 0) {
 
     get_dialog()->run();
@@ -184,7 +184,7 @@ bool TemplateMatchingParamsWin::run(double * threshold_hc,
       *threshold_detection = hscale_threshold_detection->get_value();
 
       Gtk::TreeModel::iterator iter;
-      
+
       iter = combobox_tmpl_orientations->get_active();
       if(iter) {
 	Gtk::TreeModel::Row row = *iter;

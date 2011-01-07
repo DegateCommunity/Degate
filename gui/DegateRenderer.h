@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __DEGATERENDERER_H__
@@ -47,7 +47,7 @@ class DegateRenderer : public OpenGLRendererBase {
   degate::Layer_shptr layer;
   double last_scaling;
 
-  
+
   typedef boost::tuple<unsigned int, unsigned int, GLuint> bg_tiles_type;
   std::list<bg_tiles_type> rendered_bg_tiles;
 
@@ -57,8 +57,8 @@ class DegateRenderer : public OpenGLRendererBase {
 
 
 
-  GLuint background_dlist, gates_dlist, gate_details_dlist, 
-    vias_dlist, wires_dlist, 
+  GLuint background_dlist, gates_dlist, gate_details_dlist,
+    vias_dlist, wires_dlist,
     annotations_dlist, annotation_details_dlist,
     grid_dlist,
     tool_dlist;
@@ -106,7 +106,7 @@ public:
   DegateRenderer();
   virtual ~DegateRenderer();
 
-  
+
 
   void set_logic_model(degate::LogicModel_shptr lmodel) {
     this->lmodel = lmodel;
@@ -143,7 +143,7 @@ public:
   virtual void clear_object(degate::PlacedLogicModelObject_shptr o) {
   }
 
-  
+
   virtual void update_screen();
 
 
@@ -154,7 +154,7 @@ public:
   void set_default_colors(degate::default_colors_t const& c) {
     default_colors = c;
   }
-  
+
  private:
 
   /**
@@ -176,18 +176,18 @@ public:
    */
 
   bool check_tile_is_present(unsigned int x, unsigned int y) const {
-    
+
     BOOST_FOREACH(bg_tiles_type const & t, rendered_bg_tiles) {
       if(x == t.get<0>() && y == t.get<1>()) return true;
     }
-    
+
     return false;
   }
 
 
-  GLuint create_and_add_tile(degate::BackgroundImage_shptr img, 
-			     unsigned int x, unsigned int y, 
-			     unsigned int tile_width, 
+  GLuint create_and_add_tile(degate::BackgroundImage_shptr img,
+			     unsigned int x, unsigned int y,
+			     unsigned int tile_width,
 			     unsigned int pre_scaling) const;
 
 

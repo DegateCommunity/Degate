@@ -1,22 +1,22 @@
 /*
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #include "Line.h"
@@ -26,7 +26,7 @@
 
 using namespace degate;
 
-Line::Line() : 
+Line::Line() :
   from_x(0),
   from_y(0),
   to_x(0),
@@ -37,7 +37,7 @@ Line::Line() :
   calculate_bounding_box();
 }
 
-Line::Line(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diameter) : 
+Line::Line(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diameter) :
   from_x(_from_x),
   from_y(_from_y),
   to_x(_to_x),
@@ -49,36 +49,36 @@ Line::Line(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diamete
 }
 
 bool Line::in_shape(int x, int y, int max_distance) const {
-	
+
   /*
     How to check if a point is on a line:
     y = m*x + n
     m = dy / dx
     n = y0 - m*x0
     y' = m*x' + n
-    
+
     |y' - y| < epsilon?
   */
-  
+
   /*
     Check if it is a vertical line (dy ~~ 0). If it is true, the bounding box
     describes the line. The same applies to horiontal lines.
   */
-  
+
   if(is_vertical() || is_horizontal()) {
     return bounding_box.in_shape(x, y, max_distance);
   }
   else {
-    
+
     // check if x is outside the x-range
-    if(x < std::min(from_x,to_x) || 
+    if(x < std::min(from_x,to_x) ||
        x > std::max(from_x, to_x))
        return false;
 
     double m = d_y / d_x;
     double n = (double)from_y - m * (double)from_x;
     double y_dash = m * (double) x + n;
-    
+
     if(fabs(y_dash - y) <= diameter / 2 + max_distance)
       return true;
     else
@@ -169,11 +169,11 @@ void Line::calculate_bounding_box() {
   int radius = diameter >> 1;
 
   if(is_vertical())
-    bounding_box = BoundingBox(std::max(from_x  - radius, 0), 
+    bounding_box = BoundingBox(std::max(from_x  - radius, 0),
 			       std::max(to_x + radius, 0), from_y, to_y);
   else if(is_horizontal())
-    bounding_box = BoundingBox(from_x, to_x, 
-			       std::max(from_y - radius, 0), 
+    bounding_box = BoundingBox(from_x, to_x,
+			       std::max(from_y - radius, 0),
 			       std::max(to_y + radius, 0));
   else
     bounding_box = BoundingBox(from_x, to_x, from_y, to_y);

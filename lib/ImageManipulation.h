@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __IMAGEMANIPULATION_H__
@@ -37,7 +37,7 @@ namespace degate {
   template<typename ImageType>
   void flip_left_right(std::tr1::shared_ptr<ImageType> img) {
     if(img->get_width() == 1) return;
-    
+
     for(unsigned int y = 0; y < img->get_height(); y++)
       for(unsigned int x = 0; x < (img->get_width() >> 1); x++) {
 	unsigned int other_x = img->get_width() - 1 - x;
@@ -47,14 +47,14 @@ namespace degate {
 	img->set_pixel(other_x, y, p1);
       }
   }
-  
+
   /**
    * Flip image in place from top to down.
    */
   template<typename ImageType>
   void flip_up_down(std::tr1::shared_ptr<ImageType> img) {
     if(img->get_height() == 1) return;
-    
+
     for(unsigned int y = 0; y < (img->get_height() >> 1); y++)
       for(unsigned int x = 0; x < img->get_width(); x++) {
 	unsigned int other_y = img->get_height() - 1 - y;
@@ -95,7 +95,7 @@ namespace degate {
 
      //h *= 255.0/360.0;
      return h;
-     
+
    }
 
   /**
@@ -153,7 +153,7 @@ namespace degate {
     return RGBA_TO_GS_BY_VAL(p);
   }
 
-  
+
 
   /**
    * Convert pixel value from from byte -> rgba.
@@ -171,8 +171,8 @@ namespace degate {
     gs_byte_pixel_t b = p;
     return MERGE_CHANNELS(b, b, b, 255);
   }
-  
-  
+
+
 
 
 
@@ -180,7 +180,7 @@ namespace degate {
    * Get pixel value as ...
    */
   template<typename PixelTypeDst, typename ImageTypeSrc>
-  inline PixelTypeDst get_pixel_as(typename std::tr1::shared_ptr<ImageTypeSrc> img, 
+  inline PixelTypeDst get_pixel_as(typename std::tr1::shared_ptr<ImageTypeSrc> img,
 			    unsigned int x, unsigned int y) {
     return convert_pixel<PixelTypeDst, typename ImageTypeSrc::pixel_type>(img->get_pixel(x, y));
   }
@@ -189,9 +189,9 @@ namespace degate {
    * Set a pixel value as ...
    */
   template<typename PixelTypeSrc, typename ImageTypeDst>
-  inline void set_pixel_as(typename std::tr1::shared_ptr<ImageTypeDst> img, 
+  inline void set_pixel_as(typename std::tr1::shared_ptr<ImageTypeDst> img,
 		    unsigned int x, unsigned int y, PixelTypeSrc p) {
-    
+
     img->get_pixel(x, y, convert_pixel<typename ImageTypeDst::pixel_type, PixelTypeSrc>(p));
   }
 
@@ -205,7 +205,7 @@ namespace degate {
    * \p src is not large enough.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void copy_image(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void copy_image(std::tr1::shared_ptr<ImageTypeDst> dst,
 		  std::tr1::shared_ptr<ImageTypeSrc> src) {
 
 
@@ -224,11 +224,11 @@ namespace degate {
    * smaller than the region or the image \p src.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void extract_partial_image(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void extract_partial_image(std::tr1::shared_ptr<ImageTypeDst> dst,
 			     std::tr1::shared_ptr<ImageTypeSrc> src,
 			     unsigned int min_x, unsigned int max_x,
 			     unsigned int min_y, unsigned int max_y) {
-    
+
     assert(min_x < max_x);
     assert(min_y < max_y);
 
@@ -240,7 +240,7 @@ namespace degate {
 
     for(y = min_y; y < min_y + h; y++, dst_y++) {
       for(x = min_x, dst_x = 0; x < min_x + w; x++, dst_x++)
-	dst->set_pixel(dst_x, dst_y, 
+	dst->set_pixel(dst_x, dst_y,
 		       src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y));
     }
   }
@@ -250,13 +250,13 @@ namespace degate {
    * @see extract_partial_image()
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void extract_partial_image(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void extract_partial_image(std::tr1::shared_ptr<ImageTypeDst> dst,
 			     std::tr1::shared_ptr<ImageTypeSrc> src,
 			     BoundingBox const& bounding_box) {
 
-    extract_partial_image<ImageTypeDst, ImageTypeSrc>(dst, src, 
+    extract_partial_image<ImageTypeDst, ImageTypeSrc>(dst, src,
 						      bounding_box.get_min_x(),
-						      bounding_box.get_max_x(), 
+						      bounding_box.get_max_x(),
 						      bounding_box.get_min_y(),
 						      bounding_box.get_max_y());
   }
@@ -275,7 +275,7 @@ namespace degate {
    * @see copy_image()
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void convert_to_greyscale(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void convert_to_greyscale(std::tr1::shared_ptr<ImageTypeDst> dst,
 			    std::tr1::shared_ptr<ImageTypeSrc> src) {
 
     unsigned int h = std::min(src->get_height(), dst->get_height());
@@ -304,20 +304,20 @@ namespace degate {
    * You can scale images in place.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void scale_down_by_2(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void scale_down_by_2(std::tr1::shared_ptr<ImageTypeDst> dst,
 		       std::tr1::shared_ptr<ImageTypeSrc> src) {
-    
+
 
     unsigned int dst_x, dst_y, src_x, src_y;
-    
+
     for(dst_y = 0; dst_y < dst->get_height(); dst_y++) {
-      
+
       src_y = dst_y * 2;
 
       for(dst_x = 0; dst_x < dst->get_width(); dst_x++) {
 
 	src_x = dst_x * 2;
-	
+
 	// 1 2
 	// 3 4
 
@@ -372,11 +372,11 @@ namespace degate {
    * Scale a source image down by factor 2.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void scale_down_by_power_of_2(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void scale_down_by_power_of_2(std::tr1::shared_ptr<ImageTypeDst> dst,
 				std::tr1::shared_ptr<ImageTypeSrc> src) throw(DegateRuntimeException) {
 
     if(dst->get_width() == 0) throw DegateRuntimeException("Invalid image dimension for destination image.");
-  
+
     unsigned int scaling = lrint((double)src->get_width() / (double)dst->get_width());
 
     if(scaling == 1)
@@ -413,12 +413,12 @@ namespace degate {
    * Helper function to load existing images in a degate image format.
    * We assume that the file or directory, where the image is stored,
    * exists.
-   * @exception 
+   * @exception
    */
 
   template<typename ImageType>
   std::tr1::shared_ptr<ImageType> load_degate_image(unsigned int width, unsigned int height,
-						    std::string const& path) 
+						    std::string const& path)
     throw(InvalidPathException) {
     if(!file_exists(path)) {
       boost::format fmter("Error in load_degate_image(): The image file or directory %1% does not exist.");
@@ -435,7 +435,7 @@ namespace degate {
    * Source and destination image can be the same image.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void normalize(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void normalize(std::tr1::shared_ptr<ImageTypeDst> dst,
 		 std::tr1::shared_ptr<ImageTypeSrc> src,
 		 double lower_bound = 0, double upper_bound = 1) {
 
@@ -450,7 +450,7 @@ namespace degate {
     double factor = (double)(upper_bound - lower_bound) / (double)(src_max - src_min);
 
     /*
-    std::cout 
+    std::cout
       << "lower bound: " << lower_bound << std::endl
       << "upper bound: " << upper_bound << std::endl
       << std::endl
@@ -467,7 +467,7 @@ namespace degate {
 
     for(unsigned int y = 0; y < h; y++) {
       for(unsigned int x = 0; x < w; x++) {
-	typename ImageTypeDst::pixel_type p = 
+	typename ImageTypeDst::pixel_type p =
 	  src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y);
 
 	double d = ((double)p + shift) * factor + lower_bound;
@@ -481,7 +481,7 @@ namespace degate {
 	  if(abs(d - upper_bound) < 0.001)
 	    d = upper_bound;
 	  std::cout << "transformed value "<< p << " beyond upper bound: " << d << std::endl;
-	  
+
 	}
 	assert(d >= lower_bound);
 	assert(d <= upper_bound);
@@ -508,7 +508,7 @@ namespace degate {
    * to a non-0 value if it is greater or equal than the trheshold.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void thresholding_image(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void thresholding_image(std::tr1::shared_ptr<ImageTypeDst> dst,
 			  std::tr1::shared_ptr<ImageTypeSrc> src,
 			  double threshold) {
 
@@ -519,7 +519,7 @@ namespace degate {
 
     for(unsigned int y = 0; y < h; y++) {
       for(unsigned int x = 0; x < w; x++) {
-	typename ImageTypeDst::pixel_type p = 
+	typename ImageTypeDst::pixel_type p =
 	  src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y);
 	dst->set_pixel_as<double>(x, y, p >= threshold ? 1 : 0);
       }
@@ -533,46 +533,46 @@ namespace degate {
    * image boundary that you cannot use for further processing.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void convolve(std::tr1::shared_ptr<ImageTypeDst> dst, 
+  void convolve(std::tr1::shared_ptr<ImageTypeDst> dst,
 		std::tr1::shared_ptr<ImageTypeSrc> src,
 		FilterKernel_shptr kernel) {
 
     assert_is_single_channel_image<ImageTypeSrc>();
-    
+
     clear_image<ImageTypeDst>(dst);
-    
+
     unsigned int h = std::min(src->get_height(), dst->get_height());
     unsigned int w = std::min(src->get_width(), dst->get_width());
-    
+
     unsigned int x, y, i, j;
-    
+
     for(y = kernel->get_center_row(); y < h - kernel->get_center_row(); y++) {
       for(x = kernel->get_center_column(); x < w - kernel->get_center_column(); x++) {
-	
+
 	double accu = 0;
-	    
+
 	for(i = 0; i < kernel->get_columns(); i++ ) {
 	  for(j = 0; j < kernel->get_rows(); j++ ) {
-	    
-	    typename ImageTypeSrc::pixel_type p = 
-	      src->get_pixel(x - kernel->get_center_column() + i, 
+
+	    typename ImageTypeSrc::pixel_type p =
+	      src->get_pixel(x - kernel->get_center_column() + i,
 			     y - kernel->get_center_row() + j);
-	    
-	    double k = kernel->get(kernel->get_columns() - 1 - i, 
+
+	    double k = kernel->get(kernel->get_columns() - 1 - i,
 				   kernel->get_rows() - 1 - j);
 	    accu += k * p;
 	  }
 	}
 	dst->set_pixel_as<double>(x, y, accu);
-      }	
+      }
     }
   }
 
 
   /**
    * Filter an (RBGA) image.
-   * 
-   * @param threshold The threshold parameter is directly passed to the calculate() 
+   *
+   * @param threshold The threshold parameter is directly passed to the calculate()
    *   method of the calculation policy class.
    * @exception DegateRuntimeException This exception is thrown if
    *   your images are to small for the kernel or if the width of the kernel is
@@ -584,25 +584,25 @@ namespace degate {
 		    std::tr1::shared_ptr<ImageTypeSrc> src,
 		    unsigned int kernel_width = 3,
 		    unsigned int threshold = 3) {
-    
+
     if(kernel_width <= 1)
       throw DegateRuntimeException("Error in filter_image(). Kernel width is to small.");
-    
+
     unsigned int width = std::min(src->get_width(), dst->get_width());
     unsigned int height = std::min(src->get_height(), dst->get_height());
-    
+
     if(width < kernel_width || height < kernel_width)
       throw DegateRuntimeException("Error in filter_image(). One of the images is to small.");
-    
+
     unsigned int kernel_center = kernel_width / 2;
-    
+
     width -= (kernel_width - kernel_center);
     height -= (kernel_width - kernel_center);
-    
+
     for(unsigned int y = kernel_center; y < height; y++) {
       for(unsigned x = kernel_center; x < width; x++) {
-	
-	typename ImageTypeSrc::pixel_type out = 
+
+	typename ImageTypeSrc::pixel_type out =
 	  FunctionPolicy::calculate(src,
 				    x, y,
 				    x - kernel_center,
@@ -610,11 +610,11 @@ namespace degate {
 				    y - kernel_center,
 				    y - kernel_center + kernel_width,
 				    threshold);
-	
+
 	dst->set_pixel_as<typename ImageTypeSrc::pixel_type>(x, y, out);
       }
     }
-    
+
   }
 
 

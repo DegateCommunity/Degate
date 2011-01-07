@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __RENDERAREA_H__
@@ -57,7 +57,7 @@ protected:
   virtual void update_virtual_dimension();
 
   bool on_scroll_event(GdkEventScroll* ev) {
-    
+
     unsigned int x, y;
     coord_screen_to_real(crop_pos(ev->x), crop_pos(ev->y), &x, &y);
 
@@ -66,8 +66,8 @@ protected:
     }
     else if(ev->direction == GDK_SCROLL_DOWN) {
       if(!signal_mouse_scroll_down_.empty()) signal_mouse_scroll_down_(x, y);
-    } 
-    
+    }
+
     return true;
   }
 
@@ -80,7 +80,7 @@ protected:
       signal_mouse_double_click_(x, y, b);
     else if(!signal_mouse_click_.empty() && ev->type == GDK_BUTTON_PRESS)
       signal_mouse_click_(x, y, b);
-    
+
     return false;
   }
 
@@ -142,7 +142,7 @@ public:
 
 
   virtual void update_screen() = 0;
-  
+
 };
 
 #endif

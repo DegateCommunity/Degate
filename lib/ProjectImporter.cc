@@ -1,22 +1,22 @@
 /*
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include "ProjectImporter.h"
@@ -60,7 +60,7 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
   if(prj != NULL) {
 
       GateLibraryImporter gl_importer;
-      
+
       GateLibrary_shptr gate_lib;
 
       std::string gate_lib_file(get_basedir(directory) + "/gate_library.xml");
@@ -75,7 +75,7 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
 			      get_basedir(directory) + "/lmodel.xml");
 
       LogicModel_shptr lmodel = prj->get_logic_model();
-	    
+
 
       /*
 	For degate projects that were exported with degate 0.0.6 the gate templates
@@ -117,21 +117,21 @@ Project_shptr ProjectImporter::import(std::string const& directory)  {
     debug(TM, "Problem: file %s not found.", filename.c_str());
     throw InvalidPathException("The ProjectImporter cannot load the project file. File does not exists.");
   }
-	
+
   try {
 
     xmlpp::DomParser parser;
     parser.set_substitute_entities(); // We just want the text to be resolved/unescaped automatically.
-		
+
     parser.parse_file(filename);
     assert(parser == true);
-		
+
     const xmlpp::Document * doc = parser.get_document();
     assert(doc != NULL);
-		
+
     const xmlpp::Element * root_elem = doc->get_root_node(); // deleted by DomParser
     assert(root_elem != NULL);
-    
+
     // parse width and height
     int w = parse_number<length_t>(root_elem, "width");
     int h = parse_number<length_t>(root_elem, "height");
@@ -155,7 +155,7 @@ void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_e
 
   const xmlpp::Node::NodeList layer_list = layers_elem->get_children("layer");
   for(xmlpp::Node::NodeList::const_iterator iter = layer_list.begin();
-      iter != layer_list.end(); 
+      iter != layer_list.end();
       ++iter) {
 
     if(const xmlpp::Element* layer_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -165,13 +165,13 @@ void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_e
       const std::string layer_description(layer_elem->get_attribute_value("description"));
       unsigned int position = parse_number<unsigned int>(layer_elem, "position");
       const std::string layer_enabled_str = layer_elem->get_attribute_value("enabled");
-      
+
       Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
 
       Layer_shptr new_layer(new Layer(prj->get_bounding_box(), layer_type));
       LogicModel_shptr lmodel = prj->get_logic_model();
 
-      debug(TM, "Parsed a layer entry for type %s. This is a %s layer. Background image is %s", 
+      debug(TM, "Parsed a layer entry for type %s. This is a %s layer. Background image is %s",
 	    layer_type_str.c_str(),
 	    Layer::get_layer_type_as_string(layer_type).c_str(),
 	    image_filename.c_str());
@@ -191,8 +191,8 @@ void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_e
   }
 }
 
-void ProjectImporter::load_background_image(Layer_shptr layer, 
-					    std::string const& image_filename, 
+void ProjectImporter::load_background_image(Layer_shptr layer,
+					    std::string const& image_filename,
 					    Project_shptr prj) {
 
   debug(TM, "try to load image [%s]", image_filename.c_str());
@@ -208,12 +208,12 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 
       debug(TM, "project importer loads an tile based image from [%s]", image_path_to_load.c_str());
 
-      BackgroundImage_shptr bg_image = 	
+      BackgroundImage_shptr bg_image =
 	load_degate_image<BackgroundImage>(prj->get_width(),
 					   prj->get_height(),
 					   image_path_to_load);
-      
-      if(bg_image == NULL) 
+
+      if(bg_image == NULL)
 	throw DegateRuntimeException("Failed to load the background image");
 
       debug(TM, "Loading done.");
@@ -229,10 +229,10 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 	 reorderd later. We do not want to rename the directories in that case.
 	 To avoid, that a user thinks the directory name reflects a layer position,
 	 we just add a number. */
-      fmter % (layer->get_layer_pos() + 0x2342); 
+      fmter % (layer->get_layer_pos() + 0x2342);
       std::string new_dir(join_pathes(prj->get_project_directory(), fmter.str()));
 
-      debug(TM, "project importer loads an old single file based image from [%s]", 
+      debug(TM, "project importer loads an old single file based image from [%s]",
 	    image_path_to_load.c_str());
 
       if(!file_exists(new_dir) && !is_directory(new_dir)) { // we have to check this, before we call the constructor
@@ -247,26 +247,26 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 	  load_degate_image<PersistentImage_RGBA>(prj->get_width(),
 						  prj->get_height(),
 						  image_path_to_load);
-	
-	if(new_bg_image == NULL) 
+
+	if(new_bg_image == NULL)
 	  throw DegateRuntimeException("Failed to load the background image");
-	
+
 	// convert image into new format
-	
+
 	debug(TM, "Copy the image into a new format. The data is stored in directory %s",
 	      new_dir.c_str());
 
 	copy_image<BackgroundImage, PersistentImage_RGBA>(new_bg_image, old_bg_image);
-	
+
 	layer->set_image(new_bg_image);
 
 	//save_image<PersistentImage_RGBA>("/tmp/xxx.tif", old_bg_image);
 	//save_image<BackgroundImage>("/tmp/yyy.tif", new_bg_image);
       }
       else {
-	
-	debug(TM, 
-	      "There is already a directory named %s. It should be loaded as an image now.", 
+
+	debug(TM,
+	      "There is already a directory named %s. It should be loaded as an image now.",
 	      new_dir.c_str());
 
 	BackgroundImage_shptr new_bg_image(new BackgroundImage(prj->get_width(),
@@ -276,12 +276,12 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 	layer->set_image(new_bg_image);
       }
 
-      
+
     }
-    
+
   }
   else {
-    debug(TM, "project in %s has no layer image defined for a layer.", 
+    debug(TM, "project in %s has no layer image defined for a layer.",
 	  prj->get_project_directory().c_str());
   }
 }
@@ -294,7 +294,7 @@ void ProjectImporter::parse_port_colors_element(const xmlpp::Element * const por
   PortColorManager_shptr port_color_manager = prj->get_port_color_manager();
 
   for(xmlpp::Node::NodeList::const_iterator iter = color_list.begin();
-      iter != color_list.end(); 
+      iter != color_list.end();
       ++iter) {
 
     if(const xmlpp::Element* color_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -306,20 +306,20 @@ void ProjectImporter::parse_port_colors_element(const xmlpp::Element * const por
       port_color_manager->set_color(port_name,
 				    parse_color_string(frame_color_str),
 				    parse_color_string(fill_color_str) );
-      
+
 
     }
   }
-  
+
 }
 
-void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_colors_elem, 
+void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_colors_elem,
 					   Project_shptr prj) {
 
   const xmlpp::Node::NodeList color_list = port_colors_elem->get_children("color");
 
   for(xmlpp::Node::NodeList::const_iterator iter = color_list.begin();
-      iter != color_list.end(); 
+      iter != color_list.end();
       ++iter) {
 
     if(const xmlpp::Element* color_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -347,7 +347,7 @@ void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_col
 
     }
   }
-  
+
 }
 
 void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_elem, Project_shptr prj) {
@@ -357,7 +357,7 @@ void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_ele
   const xmlpp::Node::NodeList regular_grid_list = grids_elem->get_children("regular-grid");
   const xmlpp::Node::NodeList irregular_grid_list = grids_elem->get_children("irregular-grid");
 
-  
+
   for(iter = regular_grid_list.begin(); iter != regular_grid_list.end(); ++iter) {
     if(const xmlpp::Element* regular_grid_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
 
@@ -376,7 +376,7 @@ void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_ele
 
       const Glib::ustring orientation(irregular_grid_elem->get_attribute_value("orientation"));
 
-      IrregularGrid_shptr irreg_grid = (orientation == "horizontal") ? 
+      IrregularGrid_shptr irreg_grid = (orientation == "horizontal") ?
 	prj->get_irregular_horizontal_grid() : prj->get_irregular_vertical_grid();
 
       irreg_grid->set_enabled(parse_bool(irregular_grid_elem->get_attribute_value("enabled")));
@@ -388,8 +388,8 @@ void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_ele
 	if(offsets_elem != NULL) {
 
 	  const xmlpp::Node::NodeList offset_entry_list = offsets_elem->get_children("offset-entry");
-	  for(xmlpp::Node::NodeList::const_iterator offs_iter = offset_entry_list.begin(); 
-	      offs_iter != offset_entry_list.end(); 
+	  for(xmlpp::Node::NodeList::const_iterator offs_iter = offset_entry_list.begin();
+	      offs_iter != offset_entry_list.end();
 	      ++offs_iter) {
 	    if(const xmlpp::Element* offset_entry_elem = dynamic_cast<const xmlpp::Element*>(*offs_iter)) {
 	      irreg_grid->add_offset(parse_number<int>(offset_entry_elem, "offset"));
@@ -408,7 +408,7 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
 
   int w = parent_prj->get_width();
   int h = parent_prj->get_height();
-					    
+
   // Use geometry information to set up regular grid ranges.
   // The RegularGrid implementation might be changed in order to avoid this setup.
   RegularGrid_shptr reg_vert_grid = parent_prj->get_regular_vertical_grid();
@@ -424,9 +424,9 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
     parent_prj->set_server_url(project_elem->get_attribute_value("server-url"));
 
   if(!project_elem->get_attribute_value("last-pulled-transaction-id").empty())
-    parent_prj->set_last_pulled_tid(parse_number<transaction_id_t>(project_elem, 
+    parent_prj->set_last_pulled_tid(parse_number<transaction_id_t>(project_elem,
 								   "last-pulled-transaction-id"));
-  
+
   parent_prj->set_lambda(parse_number<length_t>(project_elem, "lambda"));
   parent_prj->set_default_pin_diameter(parse_number<diameter_t>(project_elem, "pin-diameter"));
   parent_prj->set_default_wire_diameter(parse_number<diameter_t>(project_elem, "wire-diameter"));
@@ -444,5 +444,5 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
 
   e = get_dom_twig(project_elem, "default-colors");
   if(e != NULL) parse_colors_element(e, parent_prj);
-  
+
 }

@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "GenericTextInputWin.h"
@@ -32,10 +32,10 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 GenericTextInputWin::GenericTextInputWin(Gtk::Window *parent,
 					 Glib::ustring title,
-					 Glib::ustring label_text, 
+					 Glib::ustring label_text,
 					 Glib::ustring preset_text) :
   GladeFileLoader("generic_text_input.glade", "generic_text_input_dialog") {
-  
+
   assert(parent);
   this->parent = parent;
   ok_clicked = false;
@@ -44,14 +44,14 @@ GenericTextInputWin::GenericTextInputWin(Gtk::Window *parent,
   if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
-    
+
     get_dialog()->set_title(title);
 
     // connect signals
     get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GenericTextInputWin::on_cancel_button_clicked));
-    
+
     get_widget("ok_button", p_ok_button);
     if(p_ok_button != NULL) {
       p_ok_button->signal_clicked().connect(sigc::mem_fun(*this, &GenericTextInputWin::on_ok_button_clicked) );

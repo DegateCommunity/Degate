@@ -1,22 +1,22 @@
 /*
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #include <degate.h>
@@ -40,11 +40,11 @@ using namespace degate;
 
 
 std::tr1::shared_ptr<Layer> LogicModel::get_create_layer(layer_position_t pos) {
-  
+
   if(layers.size() <= pos || layers.at(pos) == NULL) {
     add_layer(pos);
   }
-  
+
   return layers[pos];
 }
 
@@ -56,8 +56,8 @@ void LogicModel::print(std::ostream & os) {
     << "--------------------------------[ Logic model ]--------------------------------" << endl;
 
   for(object_collection::iterator iter = objects.begin(); iter != objects.end(); ++iter) {
-    os << "\t+ Object: " 
-       << (*iter).second->get_object_type_name() << " " 
+    os << "\t+ Object: "
+       << (*iter).second->get_object_type_name() << " "
        << (*iter).second->get_object_id() << endl;
 
     // XXX dynamic cast and print
@@ -76,10 +76,10 @@ void LogicModel::print(std::ostream & os) {
   os
     << endl
     << "--------------------------------[ Layers ]--------------------------------" << endl;
-  
+
   // iterate over layers and print them
 
-  for(layer_collection::iterator iter = layers.begin(); 
+  for(layer_collection::iterator iter = layers.begin();
       iter != layers.end(); ++iter) {
 
     Layer_shptr layer = *iter;
@@ -88,7 +88,7 @@ void LogicModel::print(std::ostream & os) {
 
 }
 
-object_id_t LogicModel::get_new_object_id() { 
+object_id_t LogicModel::get_new_object_id() {
   object_id_t new_id = ++object_id_counter;
   while(objects.find(new_id) != objects.end()) {
     new_id = ++object_id_counter;
@@ -97,14 +97,14 @@ object_id_t LogicModel::get_new_object_id() {
 }
 
 
-LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int layers) : 
+LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int layers) :
   bounding_box(width, height),
   main_module(new Module("main_module")),
   object_id_counter(0) {
 
   for(unsigned int i = 0; i < layers; i++)
     get_create_layer(i);
-  
+
   if(layers > 0)
     set_current_layer(0);
 
@@ -122,7 +122,7 @@ unsigned int LogicModel::get_height() const {
   return bounding_box.get_height();
 }
 
-PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id) 
+PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id)
   throw(CollectionLookupException) {
 
   object_collection::iterator found = objects.find(object_id);
@@ -146,7 +146,7 @@ void LogicModel::add_wire(int layer_pos, Wire_shptr o) throw(InvalidPointerExcep
 
 void LogicModel::add_via(int layer_pos, Via_shptr o) throw(InvalidPointerException) {
 
-  if(o == NULL) throw InvalidPointerException(); // 
+  if(o == NULL) throw InvalidPointerException(); //
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
   vias[o->get_object_id()] = o;
 }
@@ -165,13 +165,13 @@ void LogicModel::add_gate(int layer_pos, Gate_shptr o) throw(InvalidPointerExcep
 
   assert(main_module != NULL);
   main_module->add_gate(o);
-  
+
   // iterate over ports and add them into the lookup table
   for(Gate::port_iterator iter = o->ports_begin(); iter != o->ports_end(); ++iter) {
 
     assert(*iter != NULL);
     assert((*iter)->has_valid_object_id() == true);
-      
+
     add_object(layer_pos, std::tr1::dynamic_pointer_cast<PlacedLogicModelObject>(*iter));
   }
 }
@@ -214,13 +214,13 @@ void LogicModel::remove_annotation(Annotation_shptr o) throw(InvalidPointerExcep
 
 
 
-void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o) 
+void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
   throw(DegateLogicException, InvalidPointerException) {
 
   if(o == NULL) throw InvalidPointerException();
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
   object_id_t object_id = o->get_object_id();
-  
+
   if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
     add_gate(layer_pos, gate);
   else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
@@ -257,39 +257,39 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
 void LogicModel::remove_remote_object(object_id_t remote_id) throw() {
   debug(TM, "Should remove object with remote ID %d from lmodel.", remote_id);
 
-  if(remote_id == 0) 
+  if(remote_id == 0)
     throw InvalidObjectIDException("Parameter passed to remove_remote_object() is invalid.");
-  
+
   debug(TM, "Should remove object with remote ID %d from lmodel - 2.", remote_id);
-  
+
   BOOST_FOREACH(object_collection::value_type const& p, objects) {
-    
+
     PlacedLogicModelObject_shptr plo = p.second;
     RemoteObject_shptr ro;
-      
+
     if(ro = std::tr1::dynamic_pointer_cast<RemoteObject>(plo)) {
 
       object_id_t local_id = plo->get_object_id();
-	  
-	debug(TM, "found remote object with remote ID %d and local ID = %d.", 
+
+	debug(TM, "found remote object with remote ID %d and local ID = %d.",
 	      ro->get_remote_object_id(), local_id);
-	
+
 	if(ro->get_remote_object_id() == remote_id) {
-	  
-	  debug(TM, "Removed object with remote ID %d and local ID = %d from lmodel.", 
+
+	  debug(TM, "Removed object with remote ID %d and local ID = %d from lmodel.",
 		remote_id, local_id);
 	  remove_object(plo, false);
-	  
+
 	  object_collection::iterator found = objects.find(local_id);
 	  assert(found == objects.end());
-	  
+
 	  return;
 	}
-    }	    
+    }
   }
 }
 
-void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remove_list) 
+void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remove_list)
   throw(InvalidPointerException) {
 
   if(o == NULL) throw InvalidPointerException();
@@ -299,7 +299,7 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
   }
   else {
 
-    if(ConnectedLogicModelObject_shptr clmo = 
+    if(ConnectedLogicModelObject_shptr clmo =
        std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(o)) {
       clmo->remove_net();
     }
@@ -313,7 +313,7 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
     else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
       remove_annotation(annotation);
 
-    
+
     if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>(o)) {
       // remember to send a was-removed-message to the collaboration server
       if(add_to_remove_list) removed_remote_oids.push_back(ro->get_remote_object_id());
@@ -332,13 +332,13 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPoin
 }
 
 
-void LogicModel::add_gate_template(GateTemplate_shptr tmpl) 
+void LogicModel::add_gate_template(GateTemplate_shptr tmpl)
   throw(DegateLogicException) {
   if(gate_library != NULL) {
     if(!tmpl->has_valid_object_id())  tmpl->set_object_id(get_new_object_id());
     gate_library->add_template(tmpl);
     //update_gate_ports(tmpl);
-    
+
     // XXX iterate over gates and check tmpl-id -> update
   }
   else {
@@ -348,7 +348,7 @@ void LogicModel::add_gate_template(GateTemplate_shptr tmpl)
 
 
 void LogicModel::remove_gate_template(GateTemplate_shptr tmpl) throw(DegateLogicException) {
-  if(gate_library == NULL) 
+  if(gate_library == NULL)
     throw DegateLogicException("You can't remove a gate template, if there is no gate library.");
   else {
     remove_gates_by_template_type(tmpl);
@@ -357,7 +357,7 @@ void LogicModel::remove_gate_template(GateTemplate_shptr tmpl) throw(DegateLogic
 }
 
 void LogicModel::remove_template_references(GateTemplate_shptr tmpl) throw(DegateLogicException) {
-  if(gate_library == NULL) 
+  if(gate_library == NULL)
     throw DegateLogicException("You can't remove a gate template, if there is no gate library.");
   for(gate_collection::iterator iter = gates_begin();
       iter != gates.end(); ++iter) {
@@ -371,7 +371,7 @@ void LogicModel::remove_template_references(GateTemplate_shptr tmpl) throw(Degat
 }
 
 
-void LogicModel::remove_gates_by_template_type(GateTemplate_shptr tmpl) 
+void LogicModel::remove_gates_by_template_type(GateTemplate_shptr tmpl)
   throw(InvalidPointerException) {
   if(tmpl == NULL) throw InvalidPointerException("The gate template pointer is invalid.");
 
@@ -380,8 +380,8 @@ void LogicModel::remove_gates_by_template_type(GateTemplate_shptr tmpl)
   for(gate_collection::iterator iter = gates_begin();
       iter != gates_end(); ++iter) {
     Gate_shptr gate = (*iter).second;
-    
-    if(gate->get_gate_template() == tmpl) 
+
+    if(gate->get_gate_template() == tmpl)
       gates_to_remove.push_back(gate);
   }
 
@@ -392,16 +392,16 @@ void LogicModel::remove_gates_by_template_type(GateTemplate_shptr tmpl)
 
 }
 
-void LogicModel::add_template_port_to_gate_template(GateTemplate_shptr gate_template, 
+void LogicModel::add_template_port_to_gate_template(GateTemplate_shptr gate_template,
 						    GateTemplatePort_shptr template_port) {
 
   gate_template->add_template_port(template_port);
   update_ports(gate_template);
 }
 
-void LogicModel::remove_template_port_from_gate_template(GateTemplate_shptr gate_template, 
+void LogicModel::remove_template_port_from_gate_template(GateTemplate_shptr gate_template,
 							 GateTemplatePort_shptr template_port) {
-  
+
   gate_template->remove_template_port(template_port);
   update_ports(gate_template);
 }
@@ -420,26 +420,26 @@ void LogicModel::update_ports(Gate_shptr gate) throw(InvalidPointerException) {
     for(GateTemplate::port_iterator tmpl_port_iter = gate_template->ports_begin();
 	tmpl_port_iter != gate_template->ports_end(); ++tmpl_port_iter) {
       GateTemplatePort_shptr tmpl_port = *tmpl_port_iter;
-      
+
       if(!gate->has_template_port(tmpl_port) && gate->has_orientation()) {
 	//debug(TM, "adding a port to gate");
 	GatePort_shptr new_gate_port(new GatePort(gate, tmpl_port));
 	new_gate_port->set_object_id(get_new_object_id());
 	gate->add_port(new_gate_port); // will set coordinates, too
-	
+
 	assert(gate->get_layer() != NULL);
 	add_object(gate->get_layer()->get_layer_pos(), new_gate_port);
       }
     }
   }
-  
+
   std::list<GatePort_shptr> ports_to_remove;
 
-  
+
   // iterate over gate ports
   for(Gate::port_iterator port_iter = gate->ports_begin();
       port_iter != gate->ports_end(); ++port_iter) {
-    
+
     //debug(TM, "iterating over ports");
     GatePort_shptr gate_port = *port_iter;
     assert(gate_port != NULL);
@@ -488,14 +488,14 @@ void LogicModel::update_ports(Gate_shptr gate) throw(InvalidPointerException) {
 
 }
 
-void LogicModel::update_ports(GateTemplate_shptr gate_template) 
+void LogicModel::update_ports(GateTemplate_shptr gate_template)
   throw(InvalidPointerException) {
 
   if(gate_template == NULL)
     throw InvalidPointerException("Invalid parameter for update_ports()");
 
-  // iterate over all gates ...     
-  for(gate_collection::iterator g_iter = gates.begin(); 
+  // iterate over all gates ...
+  for(gate_collection::iterator g_iter = gates.begin();
       g_iter != gates.end(); ++g_iter) {
     Gate_shptr gate = (*g_iter).second;
     if(gate->get_gate_template() == gate_template) {
@@ -506,12 +506,12 @@ void LogicModel::update_ports(GateTemplate_shptr gate_template)
 }
 
 
-void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer) 
+void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer)
   throw(DegateLogicException) {
 
   if(layers.size() <= pos) layers.resize(pos + 1);
-      
-  if(layers[pos] != NULL) 
+
+  if(layers[pos] != NULL)
     throw DegateLogicException("There is already a layer for this layer number.");
   else {
     if(!new_layer->is_empty()) throw DegateLogicException("You must add an empty layer.");
@@ -538,7 +538,7 @@ void LogicModel::set_layers(layer_collection layers) {
   std::list<Layer_shptr> layers_to_remove;
 
 
-  if(this->layers.size() > 0) { 
+  if(this->layers.size() > 0) {
     /*
       We have a vector of old layers and should set a vector with new layers.
       Therefore we need to get a list of layers to remove.
@@ -581,7 +581,7 @@ void LogicModel::remove_layer(Layer_shptr layer) {
   layer->unset_image();
 
   // Remove layer container.
-  layers.erase(remove(layers.begin(), layers.end(), layer), 
+  layers.erase(remove(layers.begin(), layers.end(), layer),
 	       layers.end());
 
 }
@@ -594,13 +594,13 @@ Layer_shptr LogicModel::get_current_layer() {
   return current_layer;
 }
 
-GateLibrary_shptr LogicModel::get_gate_library() { 
-  return gate_library;  
+GateLibrary_shptr LogicModel::get_gate_library() {
+  return gate_library;
 }
 
 void LogicModel::set_gate_library(GateLibrary_shptr new_gate_lib) {
   if(gate_library != NULL) {
-    // XXX 
+    // XXX
   }
   gate_library = new_gate_lib;
 }
@@ -617,35 +617,35 @@ Net_shptr LogicModel::get_net(object_id_t net_id) {
   return nets[net_id];
 }
 
-void LogicModel::remove_net(Net_shptr net) 
+void LogicModel::remove_net(Net_shptr net)
   throw(InvalidObjectIDException, CollectionLookupException) {
-  if(!net->has_valid_object_id()) 
+  if(!net->has_valid_object_id())
     throw InvalidObjectIDException("The net object has no object ID.");
   else if(nets.find(net->get_object_id()) == nets.end())
     throw CollectionLookupException("Unknown net.");
   else {
     while(net->size() > 0) {
-      
+
       // get an object ID from the net
       object_id_t oid = *(net->begin());
-      
+
       // logic check: this object should be known
       if(objects.find(oid) == objects.end()) throw CollectionLookupException();
-      
+
       // the logic model object should be connectable
-      if(ConnectedLogicModelObject_shptr o = 
+      if(ConnectedLogicModelObject_shptr o =
 	 std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(objects[oid])) {
-	
+
 	// unconnect object from net and net from object
 	o->remove_net();
       }
-      else 
+      else
 	throw DegateLogicException("Can't dynamic cast to a shared ptr of "
 				   "ConnectedLogicModelObject, but the object "
 				   "must be of that type, because it is "
 				   "referenced from a net.");
     }
-    
+
     // remove the net
     //nets[net->get_object_id()].reset();
     size_t n = nets.erase(net->get_object_id());

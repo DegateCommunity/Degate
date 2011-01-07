@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __PROJECT_H__
@@ -48,13 +48,13 @@ namespace degate {
    * The project class is a container for project related data.
    *
    */
-  
+
   class Project {
 
   private:
-    
+
     BoundingBox bounding_box;
-    
+
     std::string name;
     std::string description;
     std::string degate_version;
@@ -65,16 +65,16 @@ namespace degate {
     RegularGrid_shptr regular_vertical_grid;
     IrregularGrid_shptr irregular_horizontal_grid;
     IrregularGrid_shptr irregular_vertical_grid;
-  
+
     bool changed;
     time_t last_persistent_version;
-  
+
     diameter_t default_pin_diameter;
     diameter_t default_wire_diameter;
     length_t lambda;
 
     transaction_id_t last_transaction_id;
-    
+
     LogicModel_shptr logic_model;
 
     PortColorManager_shptr port_color_manager;
@@ -95,7 +95,7 @@ namespace degate {
      */
 
     Project(length_t width, length_t height);
-    
+
     /**
      * Create a new and empty project.
      * It will create an empty logic model as well.
@@ -115,64 +115,64 @@ namespace degate {
      */
 
     void set_project_directory(std::string const& _directory);
-    
+
     /**
      * Get the project directory.
      */
 
     std::string const& get_project_directory();
-    
+
     /**
      * Get the bounding box that represents the covered area for this project.
      */
 
     BoundingBox const& get_bounding_box() const;
-    
+
     /**
      * Get the width of the project.
      */
 
     unsigned int get_width() const;
-    
+
     /**
      * get the height of a project.
      */
 
     unsigned int get_height() const;
-    
+
     /**
      * Get the logic model. The logic model should be present all time. This means
      * that you can call this method and should not receive a NULL pointer.
      */
 
     LogicModel_shptr get_logic_model();
-    
+
     /**
      * Set the logic model for a project.
      * If you reset the logic model, the old logic model will be destroyed.
      */
-    
+
     void set_logic_model(LogicModel_shptr _logic_model);
-    
-    
+
+
     void set_name(std::string _name);
     std::string const& get_name() const;
-    
+
     void set_description(std::string _description);
     std::string const& get_description() const;
-    
+
     void set_degate_version(std::string version_str);
     std::string const& get_degate_version();
-    
+
     void set_lambda(length_t l);
     length_t get_lambda() const;
-    
+
     void set_default_pin_diameter(diameter_t pin_diameter);
     diameter_t get_default_pin_diameter() const;
-    
+
     void set_default_wire_diameter(diameter_t wire_diameter);
     diameter_t get_default_wire_diameter() const;
-    
+
 
     /**
      * Set the default color for an entity.
@@ -207,7 +207,7 @@ namespace degate {
      */
 
     bool is_changed() const;
-    
+
     /**
      * Get time since last "save".
      * @return Returns the time in seconds since the project change state was set to false.
@@ -227,19 +227,19 @@ namespace degate {
     RegularGrid_shptr get_regular_vertical_grid();
     IrregularGrid_shptr get_irregular_horizontal_grid();
     IrregularGrid_shptr get_irregular_vertical_grid();
-    
+
     PortColorManager_shptr get_port_color_manager();
 
     /**
      * Dump basic meta data for the project as human readable text into an ostream.
      */
-    
+
     void print(std::ostream &);
-    
+
     /**
      * Dump most meta data for the project as human readable text into an ostream.
      */
-    
+
     void print_all(std::ostream &);
 
     /**
@@ -280,7 +280,7 @@ namespace degate {
 
 
   };
-  
+
 }
 
 #endif

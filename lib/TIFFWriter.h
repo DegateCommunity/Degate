@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #ifndef __TIFFWRITER_H__
@@ -37,7 +37,7 @@
 #include <errno.h>
 
 namespace degate {
-   
+
 
   /**
    * The TIFFWriter parses tiff images.
@@ -47,14 +47,14 @@ namespace degate {
   class TIFFWriter : public ImageWriterBase<ImageType> {
 
   public:
-    
+
     using ImageWriterBase<ImageType>::get_filename;
     using ImageWriterBase<ImageType>::get_width;
     using ImageWriterBase<ImageType>::get_height;
-    
+
 
     TIFFWriter(unsigned int width, unsigned int height,
-	       std::string const& filename) : 
+	       std::string const& filename) :
       ImageWriterBase<ImageType>(width, height, filename) {}
 
     virtual ~TIFFWriter() { }
@@ -63,9 +63,9 @@ namespace degate {
       throw(FileSystemException);
   };
 
-  
+
   template<class ImageType>
-  bool TIFFWriter<ImageType>::write_image(std::tr1::shared_ptr<ImageType> img) 
+  bool TIFFWriter<ImageType>::write_image(std::tr1::shared_ptr<ImageType> img)
     throw(FileSystemException) {
 
     TIFF * tif = TIFFOpen(get_filename().c_str(), "w");
@@ -81,7 +81,7 @@ namespace degate {
     for(unsigned int y = 0; y < get_height(); y++) {
       for(unsigned int x = 0; x < get_width(); x++) {
 
-	rgba_pixel_t p = 
+	rgba_pixel_t p =
 	  img->get_pixel_as<rgba_pixel_t>(x, y);
 
 	raster[3*(y * get_width() + x)] = MASK_R(p);
@@ -112,8 +112,8 @@ namespace degate {
 
     return ret;
   }
-  
- 
+
+
 }
 
 #endif

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
  */
 
 #ifndef __IMPORTER_H__
@@ -37,14 +37,14 @@ namespace degate {
   class Importer {
 
   protected:
-    
+
     /**
      * Check if the file exists and can be read.
      * @return Returns RET_OK if the file can be read.
      * @todo Change the return type tool bool.
      */
     virtual ret_t check_file(std::string const& filename) const;
-	
+
     /**
      * Parse a string that represents a boolean value, that is "true" or "false".
      * @return Returns a C++ bool, depending on the parsed string.
@@ -67,7 +67,7 @@ namespace degate {
       }
       else return v;
     }
-    
+
   public:
 
     /**

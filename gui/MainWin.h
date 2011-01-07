@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #ifndef __MAINWIN_H__
@@ -90,7 +90,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_project_open_parent();
   virtual void on_menu_project_push_changes();
   virtual void on_menu_project_pull_changes();
-  
+
   virtual void on_menu_view_zoom_in();
   virtual void on_menu_view_zoom_out();
   virtual void on_menu_view_next_layer();
@@ -166,7 +166,7 @@ class MainWin : public Gtk::Window  {
 
   //virtual bool on_expose_event(GdkEventExpose * event);
   bool on_timer();
-  
+
 
   //Child widgets:
 
@@ -189,7 +189,7 @@ class MainWin : public Gtk::Window  {
   std::tr1::shared_ptr<LayerConfigWin> lcWin;
 
   Gtk::HBox m_displayBox;
-  
+
   std::tr1::shared_ptr<MenuManager> menu_manager;
 
   degate::Project_shptr main_project;
@@ -229,7 +229,7 @@ class MainWin : public Gtk::Window  {
   void on_algorithm_finished(int slot_pos);
   void on_export_finished(bool success);
   void on_auto_name_finished(degate::ret_t ret);
-  
+
   Glib::Dispatcher signal_project_open_finished_;
   Glib::Dispatcher signal_bg_import_finished_;
   std::tr1::shared_ptr<Glib::Dispatcher> signal_algorithm_finished_;
@@ -257,7 +257,7 @@ class MainWin : public Gtk::Window  {
 
   void update_gui_on_selection_change();
   void clear_selection();
-  
+
   void project_changed();
 };
 

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __CANNYEDGEDETECTION_H__
@@ -74,7 +74,7 @@ namespace degate {
 
   public:
 
-    CannyEdgeDetection(unsigned int min_x, unsigned int max_x, 
+    CannyEdgeDetection(unsigned int min_x, unsigned int max_x,
 		       unsigned int min_y, unsigned int max_y,
 		       unsigned int wire_diameter = 5,
 		       unsigned int median_filter_width = 3,
@@ -85,11 +85,11 @@ namespace degate {
 
     ~CannyEdgeDetection();
 
-    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in, 
+    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
 				  TileImage_GS_DOUBLE_shptr probability_map,
 				  std::string const& directory);
 
-    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in, 
+    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
 				  TileImage_GS_DOUBLE_shptr probability_map);
 
 

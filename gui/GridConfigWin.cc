@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "GridConfigWin.h"
@@ -32,11 +32,11 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace degate;
 
-GridConfigWin::GridConfigWin(Gtk::Window *_parent, 
+GridConfigWin::GridConfigWin(Gtk::Window *_parent,
 			     RegularGrid_shptr _regular_horizontal_grid,
 			     RegularGrid_shptr _regular_vertical_grid,
 			     IrregularGrid_shptr _irregular_horizontal_grid,
-			     IrregularGrid_shptr _irregular_vertical_grid) : 
+			     IrregularGrid_shptr _irregular_vertical_grid) :
   GladeFileLoader("grid_config.glade", "grid_config_dialog"),
   parent(_parent),
   regular_horizontal_grid(_regular_horizontal_grid),
@@ -51,7 +51,7 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
     get_dialog()->set_transient_for(*parent);
 
     // connect signals
-    
+
     get_widget("close_button", p_close_button);
     assert(p_close_button != NULL);
     if(p_close_button != NULL) {
@@ -163,10 +163,10 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       p_treeview_uhg->set_model(ref_liststore_uhg);
       Gtk::TreeView::Column * pColumn;
 
-      Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText()); 
+      Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText());
       p_treeview_uhg->append_column("Offset", *pRenderer);
       pColumn = p_treeview_uhg->get_column(0);
-      pColumn->add_attribute(*pRenderer, "text", m_columns_uhg.m_col_offset); 
+      pColumn->add_attribute(*pRenderer, "text", m_columns_uhg.m_col_offset);
       pRenderer->property_editable() = true;
       pRenderer->signal_edited().connect(sigc::mem_fun(*this, &GridConfigWin::on_uhg_edited));
 
@@ -209,16 +209,16 @@ GridConfigWin::GridConfigWin(Gtk::Window *_parent,
       p_treeview_uvg->set_model(ref_liststore_uvg);
       Gtk::TreeView::Column * pColumn;
 
-      Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText()); 
+      Gtk::CellRendererText * pRenderer = Gtk::manage( new Gtk::CellRendererText());
       p_treeview_uvg->append_column("Offset", *pRenderer);
       pColumn = p_treeview_uvg->get_column(0);
-      pColumn->add_attribute(*pRenderer, "text", m_columns_uvg.m_col_offset); 
+      pColumn->add_attribute(*pRenderer, "text", m_columns_uvg.m_col_offset);
       pRenderer->property_editable() = true;
       pRenderer->signal_edited().connect(sigc::mem_fun(*this, &GridConfigWin::on_uvg_edited));
 
 
       pColumn = p_treeview_uvg->get_column(0);
-      if(pColumn) pColumn->set_sort_column(m_columns_uvg.m_col_offset);      
+      if(pColumn) pColumn->set_sort_column(m_columns_uvg.m_col_offset);
 
       Glib::RefPtr<Gtk::TreeSelection> refTreeSelection =  p_treeview_uhg->get_selection();
       refTreeSelection->set_mode(Gtk::SELECTION_MULTIPLE);
@@ -263,7 +263,7 @@ void GridConfigWin::update_grid_entries() {
     for(IrregularGrid::grid_iter iter = irregular_vertical_grid->begin();
 	iter != irregular_vertical_grid->end();
 	++iter) {
-      Gtk::TreeModel::Row row = *(ref_liststore_uvg->append()); 
+      Gtk::TreeModel::Row row = *(ref_liststore_uvg->append());
       row[m_columns_uvg.m_col_offset] = *iter;
     }
   }
@@ -274,8 +274,8 @@ void GridConfigWin::update_grid_entries() {
     for(IrregularGrid::grid_iter iter = irregular_horizontal_grid->begin();
 	iter != irregular_horizontal_grid->end();
 	++iter) {
-      
-      Gtk::TreeModel::Row row = *(ref_liststore_uhg->append()); 
+
+      Gtk::TreeModel::Row row = *(ref_liststore_uhg->append());
       row[m_columns_uhg.m_col_offset] = *iter;
     }
   }
@@ -302,11 +302,11 @@ void GridConfigWin::on_uhg_edited(const Glib::ustring& path, const Glib::ustring
   Gtk::TreeModel::iterator iter = ref_liststore_uhg->get_iter(path);
   if(iter) {
     Gtk::TreeModel::Row row = *iter;
-    
+
     unsigned int new_offset = atol(new_text.c_str());
     row[m_columns_uhg.m_col_offset] = new_offset;
     irregular_horizontal_grid->add_offset(new_offset);
-    
+
     signal_changed_();
   }
 
@@ -318,7 +318,7 @@ void GridConfigWin::on_uvg_edited(const Glib::ustring& path, const Glib::ustring
   Gtk::TreeModel::iterator iter = ref_liststore_uvg->get_iter(path);
   if(iter) {
     Gtk::TreeModel::Row row = *iter;
-    
+
     unsigned int new_offset = atol(new_text.c_str());
     row[m_columns_uvg.m_col_offset] = new_offset;
     irregular_vertical_grid->add_offset(new_offset);
@@ -373,13 +373,13 @@ void GridConfigWin::on_vert_checkb_clicked() {
 
 
 void GridConfigWin::on_offset_x_changed() {
-  regular_horizontal_grid->set_range(p_adj_offset_x->get_value(), 
+  regular_horizontal_grid->set_range(p_adj_offset_x->get_value(),
 				     regular_horizontal_grid->get_max());
   signal_changed_();
 }
 
 void GridConfigWin::on_offset_y_changed() {
-  regular_vertical_grid->set_range(p_adj_offset_y->get_value(), 
+  regular_vertical_grid->set_range(p_adj_offset_y->get_value(),
 				   regular_vertical_grid->get_max());
   signal_changed_();
 }
@@ -480,12 +480,12 @@ void GridConfigWin::on_uvg_checkb_clicked() {
 
 
 void GridConfigWin::on_button_add_uhg_clicked() {
-  Gtk::TreeModel::Row row = *(ref_liststore_uhg->append()); 
+  Gtk::TreeModel::Row row = *(ref_liststore_uhg->append());
   row[m_columns_uhg.m_col_offset] = 0;
 }
 
 void GridConfigWin::on_button_add_uvg_clicked() {
-  Gtk::TreeModel::Row row = *(ref_liststore_uvg->append()); 
+  Gtk::TreeModel::Row row = *(ref_liststore_uvg->append());
   row[m_columns_uvg.m_col_offset] = 0;
 }
 
@@ -496,10 +496,10 @@ void GridConfigWin::on_button_remove_uhg_clicked() {
 
     std::vector<Gtk::TreeModel::Path> pathlist = ref_tree_selection->get_selected_rows();
 
-    for(std::vector<Gtk::TreeModel::Path>::reverse_iterator iter = pathlist.rbegin(); 
+    for(std::vector<Gtk::TreeModel::Path>::reverse_iterator iter = pathlist.rbegin();
 	iter != pathlist.rend(); ++iter)
       ref_liststore_uhg->erase(ref_tree_selection->get_model()->get_iter (*iter));
-    
+
     irregular_horizontal_grid->clear();
     signal_changed_();
   }
@@ -511,10 +511,10 @@ void GridConfigWin::on_button_remove_uvg_clicked() {
 
     std::vector<Gtk::TreeModel::Path> pathlist = ref_tree_selection->get_selected_rows();
 
-    for(std::vector<Gtk::TreeModel::Path>::reverse_iterator iter = pathlist.rbegin(); 
+    for(std::vector<Gtk::TreeModel::Path>::reverse_iterator iter = pathlist.rbegin();
 	iter != pathlist.rend(); ++iter)
       ref_liststore_uvg->erase(ref_tree_selection->get_model()->get_iter (*iter));
-    
+
     irregular_vertical_grid->clear();
     signal_changed_();
 

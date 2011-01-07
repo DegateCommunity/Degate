@@ -1,22 +1,22 @@
 /*
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <degate.h>
@@ -44,24 +44,24 @@ void LogicModelImporter::import_into(LogicModel_shptr lmodel,
     debug(TM, "Problem: file %s not found.", filename.c_str());
     throw InvalidPathException("Can't load logic model from file.");
   }
-	
+
   try {
     //debug(TM, "try to parse file %s", filename.c_str());
 
     xmlpp::DomParser parser;
     parser.set_substitute_entities(); // We just want the text to be resolved/unescaped automatically.
-		
+
     parser.parse_file(filename);
     assert(parser == true);
-		
+
     const xmlpp::Document * doc = parser.get_document();
     assert(doc != NULL);
-		
+
     const xmlpp::Element * root_elem = doc->get_root_node(); // deleted by DomParser
     assert(root_elem != NULL);
 
     lmodel->set_gate_library(gate_library);
-    
+
     parse_logic_model_element(root_elem, lmodel);
 
   }
@@ -85,7 +85,7 @@ LogicModel_shptr LogicModelImporter::import(std::string const& filename) {
 void LogicModelImporter::parse_logic_model_element(const xmlpp::Element * const lm_elem,
 						   LogicModel_shptr lmodel) {
 
-  
+
   const xmlpp::Element * gates_elem = get_dom_twig(lm_elem, "gates");
   if(gates_elem != NULL) parse_gates_element(gates_elem, lmodel);
 
@@ -103,15 +103,15 @@ void LogicModelImporter::parse_logic_model_element(const xmlpp::Element * const 
 
 }
 
-void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_element, 
+void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_element,
 					    LogicModel_shptr lmodel) {
 
-  if(nets_element == NULL || lmodel == NULL) 
+  if(nets_element == NULL || lmodel == NULL)
     throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_nets_element()");
 
   const xmlpp::Node::NodeList net_list = nets_element->get_children("net");
   for(xmlpp::Node::NodeList::const_iterator iter = net_list.begin();
-      iter != net_list.end(); 
+      iter != net_list.end();
       ++iter) {
 
     if(const xmlpp::Element* net_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -123,7 +123,7 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
 
       const xmlpp::Node::NodeList connection_list = net_elem->get_children("connection");
       for(xmlpp::Node::NodeList::const_iterator iter2 = connection_list.begin();
-	  iter2 != connection_list.end(); 
+	  iter2 != connection_list.end();
 	  ++iter2) {
 
 	if(const xmlpp::Element* conn_elem = dynamic_cast<const xmlpp::Element*>(*iter2)) {
@@ -134,12 +134,12 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
 	  try {
 	    PlacedLogicModelObject_shptr placed_object = lmodel->get_object(object_id);
 	    if(placed_object == NULL) {
-	      debug(TM, 
-		    "Failed to lookup logic model object %d. Can't connect it to net %d.", 
-		    object_id, net_id);	    
+	      debug(TM,
+		    "Failed to lookup logic model object %d. Can't connect it to net %d.",
+		    object_id, net_id);
 	    }
 	    else {
-	      ConnectedLogicModelObject_shptr o = 
+	      ConnectedLogicModelObject_shptr o =
 		std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(placed_object);
 	      if(o != NULL) {
 		o->set_net(net);
@@ -151,9 +151,9 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
 
 	  }
 	  catch(CollectionLookupException const & ex) {
-	    debug(TM, 
+	    debug(TM,
 		  "Failed to insert a connection for net %d into the logic layer. "
-		  "Can't lookup logic model object %d that should be connected to that net.", 
+		  "Can't lookup logic model object %d that should be connected to that net.",
 		  net_id, object_id);
 	    throw; // rethrow
 	  }
@@ -166,15 +166,15 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
   }
 }
 
-void LogicModelImporter::parse_wires_element(const xmlpp::Element * const wires_element, 
+void LogicModelImporter::parse_wires_element(const xmlpp::Element * const wires_element,
 					    LogicModel_shptr lmodel) {
 
-  if(wires_element == NULL || lmodel == NULL) 
+  if(wires_element == NULL || lmodel == NULL)
     throw InvalidPointerException("Null pointer in LogicModelImporter::parse_wires_element()");
 
   const xmlpp::Node::NodeList wire_list = wires_element->get_children("wire");
   for(xmlpp::Node::NodeList::const_iterator iter = wire_list.begin();
-      iter != wire_list.end(); 
+      iter != wire_list.end();
       ++iter) {
 
     if(const xmlpp::Element* wire_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -195,7 +195,7 @@ void LogicModelImporter::parse_wires_element(const xmlpp::Element * const wires_
       const Glib::ustring fill_color_str(wire_elem->get_attribute_value("fill-color"));
       const Glib::ustring frame_color_str(wire_elem->get_attribute_value("frame-color"));
 
-     
+
       Wire_shptr wire(new Wire(from_x, from_y, to_x, to_y, diameter));
       wire->set_name(name.c_str());
       wire->set_description(description.c_str());
@@ -209,14 +209,14 @@ void LogicModelImporter::parse_wires_element(const xmlpp::Element * const wires_
   }
 }
 
-void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_element, 
+void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_element,
 					    LogicModel_shptr lmodel) {
 
   if(vias_element == NULL || lmodel == NULL) throw InvalidPointerException();
 
   const xmlpp::Node::NodeList via_list = vias_element->get_children("via");
   for(xmlpp::Node::NodeList::const_iterator iter = via_list.begin();
-      iter != via_list.end(); 
+      iter != via_list.end();
       ++iter) {
 
     if(const xmlpp::Element* via_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -260,14 +260,14 @@ void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_el
   }
 }
 
-void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_element, 
+void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_element,
 					     LogicModel_shptr lmodel) {
 
   if(gates_element == NULL || lmodel == NULL) throw InvalidPointerException();
 
   const xmlpp::Node::NodeList gate_list = gates_element->get_children("gate");
   for(xmlpp::Node::NodeList::const_iterator iter = gate_list.begin();
-      iter != gate_list.end(); 
+      iter != gate_list.end();
       ++iter) {
 
     if(const xmlpp::Element* gate_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
@@ -315,7 +315,7 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
       // parse port instances
       const xmlpp::Node::NodeList port_list = gate_elem->get_children("port");
       for(xmlpp::Node::NodeList::const_iterator iter2 = port_list.begin();
-	  iter2 != port_list.end(); 
+	  iter2 != port_list.end();
 	  ++iter2) {
 
 	if(const xmlpp::Element* port_elem = dynamic_cast<const xmlpp::Element*>(*iter2)) {
@@ -335,7 +335,7 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
 	  gate->add_port(gate_port);
 	}
       }
-      
+
       lmodel->add_object(layer, gate);
       lmodel->update_ports(gate);
       gate->print();
@@ -345,14 +345,14 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
 }
 
 
-void LogicModelImporter::parse_annotations_element(const xmlpp::Element * const annotations_element, 
+void LogicModelImporter::parse_annotations_element(const xmlpp::Element * const annotations_element,
 						   LogicModel_shptr lmodel) {
 
   if(annotations_element == NULL || lmodel == NULL) throw InvalidPointerException();
 
   const xmlpp::Node::NodeList annotation_list = annotations_element->get_children("annotation");
   for(xmlpp::Node::NodeList::const_iterator iter = annotation_list.begin();
-      iter != annotation_list.end(); 
+      iter != annotation_list.end();
       ++iter) {
 
     if(const xmlpp::Element* annotation_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {

@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __GATETEMPLATE_H__
@@ -37,9 +37,9 @@ namespace degate {
   /**
    * A gate template is a container for common properties, that physically placed gates of that type share.
    */
-  
+
   class GateTemplate : public LogicModelObjectBase, public ColoredObject {
-    
+
     friend class Gate;
 
   public:
@@ -66,31 +66,31 @@ namespace degate {
 
     BoundingBox bounding_box;
     unsigned int reference_counter;
-    
+
     std::set<GateTemplatePort_shptr> ports;
-    
+
     implementation_collection implementations;
     image_collection images;
 
     std::string logic_class; // e.g. nand, xor, flipflop, buffer, oai
 
   protected:
-    
+
     /**
      * Increment the reference counter.
      */
-    
+
     virtual void increment_reference_counter();
-    
-    /** 
+
+    /**
      * Decrement the reference counter.
      */
-    
+
     virtual void decrement_reference_counter();
 
 
   public:
-    
+
     typedef std::set< GateTemplatePort_shptr >::iterator port_iterator;
 
     /**
@@ -101,7 +101,7 @@ namespace degate {
 
     GateTemplate(unsigned int width, unsigned int height);
 
-    
+
     /**
      * The constructor to set up a new gate template.
      * @deprecated A gate template should not rely on positions. Instead it should
@@ -115,13 +115,13 @@ namespace degate {
      */
 
     GateTemplate();
-    
+
     /**
      * The destructor.
      */
 
     virtual ~GateTemplate();
-    
+
     /**
      * Get the width of a gate template.
      */
@@ -131,7 +131,7 @@ namespace degate {
     /**
      * Get the height of a gate template.
      */
-    
+
     virtual unsigned int get_height() const;
 
 
@@ -146,7 +146,7 @@ namespace degate {
      * Set the height of a gate template.
      * It does not adjust dimensions of gates that reference this template.
      */
-    
+
     virtual void set_height(unsigned int);
 
     /**
@@ -174,7 +174,7 @@ namespace degate {
      * @see set_image()
      */
 
-    virtual GateTemplateImage_shptr get_image(Layer::LAYER_TYPE layer_type) 
+    virtual GateTemplateImage_shptr get_image(Layer::LAYER_TYPE layer_type)
       throw(CollectionLookupException);
 
 
@@ -195,10 +195,10 @@ namespace degate {
      * @todo In order to make the API hard to misuse, this method might be made private.
      * @see LogicModel::add_template_port
      */
-    
-    virtual void add_template_port(GateTemplatePort_shptr template_port) 
+
+    virtual void add_template_port(GateTemplatePort_shptr template_port)
       throw(InvalidObjectIDException);
-    
+
     /**
      * Remove a port from a gate template.
      * This is an isolated function. The port is just removed from the gate template.
@@ -210,16 +210,16 @@ namespace degate {
      */
 
     virtual bool remove_template_port(GateTemplatePort_shptr template_port);
-    
+
     /**
      * Remove a port from a gate template.
      * @exception InvalidObjectIDException This exception is thrown if the template port
      *   has no valid object ID.
      * @see remove_template_port(GateTemplatePort_shptr template_port)
      */
-    
+
     virtual bool remove_template_port(object_id_t object_id) throw(InvalidObjectIDException);
-    
+
     /**
      * Get a template port.
      * @exception InvalidObjectIDException This exception is thrown if the
@@ -227,8 +227,8 @@ namespace degate {
      * @exception CollectionLookupException This exception is thrown if a
      *   template port with object ID \p object_id was not found.
      */
-    
-    virtual GateTemplatePort_shptr get_template_port(object_id_t object_id) 
+
+    virtual GateTemplatePort_shptr get_template_port(object_id_t object_id)
       throw(CollectionLookupException, InvalidObjectIDException);
 
 
@@ -238,22 +238,22 @@ namespace degate {
      *   object ID is invalid.
      */
 
-    virtual bool has_template_port(object_id_t object_id) 
+    virtual bool has_template_port(object_id_t object_id)
       const throw(InvalidObjectIDException);
-    
+
     /**
      * Get an iterator.
      */
 
     virtual port_iterator ports_begin();
 
-    
+
     /**
      * Get end marker for the iteration over ports.
      */
 
     virtual port_iterator ports_end();
-    
+
 
     /**
      * Get an iterator to iterate over images.
@@ -284,7 +284,7 @@ namespace degate {
     /**
      * Get an end marker for the iteration.
      */
-    
+
     virtual implementation_iter implementations_end();
 
 
@@ -338,12 +338,12 @@ namespace degate {
 
 
     static std::string get_impl_type_as_string(IMPLEMENTATION_TYPE impl_type);
-    static IMPLEMENTATION_TYPE get_impl_type_from_string(std::string const& impl_type_str) 
+    static IMPLEMENTATION_TYPE get_impl_type_from_string(std::string const& impl_type_str)
       throw(DegateRuntimeException);
 
   };
 
-  
+
 
 }
 

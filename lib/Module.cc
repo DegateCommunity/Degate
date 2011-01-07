@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <degate.h>
@@ -41,20 +41,20 @@ std::string Module::get_entity_name() const {
   return entity_name;
 }
 
-    
+
 void Module::add_gate(Gate_shptr gate) throw(InvalidPointerException) {
-  if(gate == NULL) 
+  if(gate == NULL)
     throw InvalidPointerException("Invalid pointer passed to add_gate().");
-  
+
   gates.insert(gate);
   determine_module_ports();
 }
 
 bool Module::remove_gate(Gate_shptr gate) throw(InvalidPointerException) {
-  if(gate == NULL) 
+  if(gate == NULL)
     throw InvalidPointerException("Invalid pointer passed to remove_gate().");
-  
-  
+
+
   gate_collection::const_iterator g_iter = gates.find(gate);
   if(g_iter != gates.end()) {
     gates.erase(g_iter);
@@ -62,23 +62,23 @@ bool Module::remove_gate(Gate_shptr gate) throw(InvalidPointerException) {
     return true;
   }
   else {
-    
+
     for(module_collection::iterator iter = modules.begin();
 	iter != modules.end(); ++iter) {
-      
+
       Module_shptr child = *iter;
       if((*iter)->remove_gate(gate) == true) return true;
     }
   }
-  
+
   return false;
 }
 
 
 void Module::add_module(Module_shptr module) throw(InvalidPointerException) {
-  if(module == NULL) 
+  if(module == NULL)
     throw InvalidPointerException("Invalid pointer passed to add_modue().");
-  
+
   modules.insert(module);
 }
 
@@ -86,14 +86,14 @@ void Module::add_module(Module_shptr module) throw(InvalidPointerException) {
 
 bool Module::remove_module(Module_shptr module) throw(InvalidPointerException) {
 
-  if(module == NULL) 
+  if(module == NULL)
     throw InvalidPointerException("Invalid pointer passed to remove_module().");
-  
+
   for(module_collection::iterator iter = modules.begin();
       iter != modules.end(); ++iter) {
-    
+
     Module_shptr child = *iter;
-    
+
     if(child == module) {
       child->move_gates_recursive(this);
       modules.erase(iter);
@@ -102,11 +102,11 @@ bool Module::remove_module(Module_shptr module) throw(InvalidPointerException) {
     else if((*iter)->remove_module(module) == true)
       return true;
   }
-  
+
   return false;
 }
 
-void Module::move_gates_recursive(Module * dst_mod) 
+void Module::move_gates_recursive(Module * dst_mod)
   throw(InvalidPointerException) {
   if(dst_mod == NULL)
     throw InvalidPointerException("Invalid pointer passed to move_all_child_gates_into_current_module().");
@@ -120,7 +120,7 @@ void Module::move_gates_recursive(Module * dst_mod)
 
   for(module_collection::iterator iter = modules.begin();
       iter != modules.end(); ++iter)
-    (*iter)->move_gates_recursive(dst_mod);   
+    (*iter)->move_gates_recursive(dst_mod);
 }
 
 Module::module_collection::iterator Module::modules_begin() {
@@ -157,7 +157,7 @@ void Module::automove_gates() {
       iterate over gate ports:
       - port unconnected - ignore
       - port connected - check all related
-      
+
    */
 }
 
@@ -171,7 +171,7 @@ void Module::determine_module_ports() {
     - Gate port unconnected -> no module port
     - Gate port connected to a net
       - net not in known_nets
-        - iterate over net: 
+        - iterate over net:
 	  - not exists: a gateport (!= current) belongs to a gate that is
 	    a direct or indirect child of the current module
 	    -> is a module port, add net to known_nets
@@ -187,12 +187,12 @@ void Module::determine_module_ports() {
 
     Gate_shptr gate = *g_iter;
     assert(gate != NULL);
-    
+
     //debug(TM, "check gate");
 
     for(Gate::port_const_iterator p_iter = gate->ports_begin();
 	p_iter != gate->ports_end(); ++p_iter) {
-	
+
       GatePort_shptr gate_port = *p_iter;
       assert(gate_port != NULL);
       //debug(TM, "check gate port");
@@ -202,7 +202,7 @@ void Module::determine_module_ports() {
       //debug(TM, "check net");
 
       //if(net == NULL) debug(TM, "is null");
-      
+
       if((net != NULL) && known_ports.find(net) == known_ports.end()) {
 
 	//debug(TM, "iterate over net with size %d", net->size());
@@ -211,7 +211,7 @@ void Module::determine_module_ports() {
 
 	for(Net::connection_iterator c_iter = net->begin();
 	    c_iter != net->end() && !is_a_port; ++c_iter) {
-	  
+
 	  object_id_t oid = *c_iter;
 
 	  //debug(TM,"\tcheck object id: %d", oid);
@@ -265,6 +265,6 @@ bool Module::exists_gate_port_recursive(object_id_t oid) const {
   for(module_collection::const_iterator iter = modules.begin();
       iter != modules.end(); ++iter)
     if((*iter)->exists_gate_port_recursive(oid)) return true;
-  
+
   return false;
 }

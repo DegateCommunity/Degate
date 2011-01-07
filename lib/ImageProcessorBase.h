@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __IMAGEPROCESSORBASE_H__
@@ -26,14 +26,14 @@
 #include <ProgressControl.h>
 
 namespace degate {
-  
+
   /**
    * Abstract base class for an image processor.
    */
 
-  
+
   class ImageProcessorBase : public ProgressControl {
-    
+
     friend class IPPipe;
 
   private:
@@ -69,7 +69,7 @@ namespace degate {
 		       std::string const& _description,
 		       bool _has_properties,
 		       std::type_info const& _type_in,
-		       std::type_info const& _type_out) : 
+		       std::type_info const& _type_out) :
       name(_name),
       description(_description),
       has_properties(_has_properties),
@@ -82,7 +82,7 @@ namespace degate {
 
     virtual ~ImageProcessorBase() {}
 
-    
+
     /**
      * Get the processor's name.
      */

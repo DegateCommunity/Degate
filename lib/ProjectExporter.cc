@@ -1,22 +1,22 @@
 /*
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include "globals.h"
@@ -43,11 +43,11 @@
 using namespace std;
 using namespace degate;
 
-void ProjectExporter::export_all(std::string const& project_directory, Project_shptr prj, 
-				 bool enable_oid_rewrite, 
+void ProjectExporter::export_all(std::string const& project_directory, Project_shptr prj,
+				 bool enable_oid_rewrite,
 				 std::string const& project_file,
 				 std::string const& lmodel_file,
-				 std::string const& gatelib_file) 
+				 std::string const& gatelib_file)
   throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
 
   if(!is_directory(project_directory)) {
@@ -57,7 +57,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
     ObjectIDRewriter_shptr oid_rewriter(new ObjectIDRewriter(enable_oid_rewrite));
 
     export_data(join_pathes(project_directory, project_file), prj);
-    
+
     LogicModel_shptr lmodel = prj->get_logic_model();
 
     if(lmodel != NULL) {
@@ -68,7 +68,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
 
       GateLibrary_shptr glib = lmodel->get_gate_library();
       if(glib != NULL) {
-      
+
 	GateLibraryExporter gl_exporter(oid_rewriter);
 	gl_exporter.export_data(join_pathes(project_directory, gatelib_file), glib);
       }
@@ -76,7 +76,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
   }
 }
 
-void ProjectExporter::export_data(std::string const& filename, Project_shptr prj) 
+void ProjectExporter::export_data(std::string const& filename, Project_shptr prj)
   throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
 
   if(prj == NULL) throw InvalidPointerException("Project pointer is NULL.");
@@ -104,13 +104,13 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
 
 }
 
-void ProjectExporter::add_grids(xmlpp::Element* prj_elem, 
+void ProjectExporter::add_grids(xmlpp::Element* prj_elem,
 				Project_shptr prj) throw(std::runtime_error ) {
 
   xmlpp::Element* grids_elem = prj_elem->add_child("grids");
   if(grids_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  
+
   add_regular_grid(grids_elem, prj->get_regular_horizontal_grid(), "horizontal");
   add_regular_grid(grids_elem, prj->get_regular_vertical_grid(), "vertical");
 
@@ -118,9 +118,9 @@ void ProjectExporter::add_grids(xmlpp::Element* prj_elem,
   add_irregular_grid(grids_elem, prj->get_irregular_vertical_grid(), "vertical");
 }
 
-void ProjectExporter::add_regular_grid(xmlpp::Element* grids_elem, 
-				       const RegularGrid_shptr grid, 
-				       std::string const & grid_orientation) 
+void ProjectExporter::add_regular_grid(xmlpp::Element* grids_elem,
+				       const RegularGrid_shptr grid,
+				       std::string const & grid_orientation)
   throw(std::runtime_error ) {
 
   xmlpp::Element* grid_elem = grids_elem->add_child("regular-grid");
@@ -131,19 +131,19 @@ void ProjectExporter::add_regular_grid(xmlpp::Element* grids_elem,
   grid_elem->set_attribute("offset", number_to_string<int>(grid->get_min()));
   grid_elem->set_attribute("orientation", grid_orientation);
 
-  
+
 }
 
-void ProjectExporter::add_irregular_grid(xmlpp::Element* grids_elem, 
-					 const IrregularGrid_shptr grid, 
-					 std::string const & grid_orientation) 
+void ProjectExporter::add_irregular_grid(xmlpp::Element* grids_elem,
+					 const IrregularGrid_shptr grid,
+					 std::string const & grid_orientation)
   throw(std::runtime_error ) {
 
   xmlpp::Element* grid_elem = grids_elem->add_child("irregular-grid");
   if(grid_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
   grid_elem->set_attribute("enabled", grid->is_enabled() ? "true" : "false");
-  grid_elem->set_attribute("orientation", grid_orientation);  
+  grid_elem->set_attribute("orientation", grid_orientation);
 
   xmlpp::Element* offsets_elem = grid_elem->add_child("offsets");
   if(offsets_elem == NULL) throw(std::runtime_error("Failed to create node."));
@@ -160,7 +160,7 @@ void ProjectExporter::add_irregular_grid(xmlpp::Element* grids_elem,
 }
 
 
-void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem, 
+void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem,
 						  Project_shptr prj) throw(std::runtime_error ) {
 
   prj_elem->set_attribute("degate-version", prj->get_degate_version());
@@ -172,18 +172,18 @@ void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem,
   prj_elem->set_attribute("lambda", number_to_string<length_t>(prj->get_lambda()));
   prj_elem->set_attribute("pin-diameter", number_to_string<length_t>(prj->get_default_pin_diameter()));
   prj_elem->set_attribute("wire-diameter", number_to_string<length_t>(prj->get_default_wire_diameter()));
-  
+
   prj_elem->set_attribute("pixel-per-um", number_to_string<double>(prj->get_pixel_per_um()));
 
   prj_elem->set_attribute("server-url", prj->get_server_url());
-  prj_elem->set_attribute("last-pulled-transaction-id", 
+  prj_elem->set_attribute("last-pulled-transaction-id",
 			  number_to_string<transaction_id_t>(prj->get_last_pulled_tid()));
 }
 
 
-void ProjectExporter::add_layers(xmlpp::Element* prj_elem, 
+void ProjectExporter::add_layers(xmlpp::Element* prj_elem,
 				 LogicModel_shptr lmodel,
-				 std::string const& project_dir) 
+				 std::string const& project_dir)
   throw(InvalidPointerException, std::runtime_error ) {
 
   if(lmodel == NULL) throw InvalidPointerException();
@@ -203,18 +203,18 @@ void ProjectExporter::add_layers(xmlpp::Element* prj_elem,
     layer_elem->set_attribute("type", layer->get_layer_type_as_string());
     layer_elem->set_attribute("description", layer->get_description());
     layer_elem->set_attribute("enabled", layer->is_enabled() ? "true" : "false");
-    
-    if(layer->has_background_image()) 
-      layer_elem->set_attribute("image-filename", 
+
+    if(layer->has_background_image())
+      layer_elem->set_attribute("image-filename",
 				get_relative_path(layer->get_image_filename(), project_dir));
-    
+
   }
 
 }
 
 
-void ProjectExporter::add_port_colors(xmlpp::Element* prj_elem, 
-				      PortColorManager_shptr port_color_manager) 
+void ProjectExporter::add_port_colors(xmlpp::Element* prj_elem,
+				      PortColorManager_shptr port_color_manager)
   throw(InvalidPointerException, std::runtime_error ) {
 
   if(port_color_manager == NULL) throw InvalidPointerException();

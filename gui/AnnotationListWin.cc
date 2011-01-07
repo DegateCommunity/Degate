@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
   This file is part of the IC reverse engineering tool degate.
- 
+
   Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   any later version.
- 
+
   Degate is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include "AnnotationListWin.h"
@@ -50,7 +50,7 @@ AnnotationListWin::AnnotationListWin(Gtk::Window *parent, degate::LogicModel_shp
     get_widget("close_button", pCloseButton);
     if(pCloseButton)
       pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, &AnnotationListWin::on_close_button_clicked));
-    
+
     get_widget("goto_button", pGotoButton);
     if(pGotoButton) {
       pGotoButton->grab_focus();
@@ -65,14 +65,14 @@ AnnotationListWin::AnnotationListWin(Gtk::Window *parent, degate::LogicModel_shp
     if(entry_filter_by_class)
       entry_filter_by_class->signal_changed().connect(sigc::mem_fun(*this, &AnnotationListWin::on_entry_changed) );
 
-    
-   
+
+
     refListStore = Gtk::ListStore::create(m_Columns);
-    
+
     get_widget("treeview", pTreeView);
     if(pTreeView) {
       pTreeView->set_model(refListStore);
-      
+
       pTreeView->append_column("Layer", m_Columns.m_col_layer_pos);
       pTreeView->append_column("Class", m_Columns.m_col_annotation_class);
 
@@ -88,7 +88,7 @@ AnnotationListWin::AnnotationListWin(Gtk::Window *parent, degate::LogicModel_shp
 
       {
 	int view_column = pTreeView->append_column_editable("Description", m_Columns.m_col_description);
-	
+
 	Gtk::CellRenderer *renderer = pTreeView->get_column_cell_renderer(view_column - 1);
 	Gtk::CellRendererText *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
 	if(text_renderer) {
@@ -102,7 +102,7 @@ AnnotationListWin::AnnotationListWin(Gtk::Window *parent, degate::LogicModel_shp
       refTreeSelection->signal_changed().connect(sigc::mem_fun(*this, &AnnotationListWin::on_selection_changed));
 
     }
-    
+
   }
 
 }
@@ -150,26 +150,26 @@ void AnnotationListWin::refresh() {
   catch(boost::bad_lexical_cast &) {
   }
 
-  // there should be no exception, but else we will pass it 
-  
+  // there should be no exception, but else we will pass it
+
   for(LogicModel::annotation_collection::iterator iter = lmodel->annotations_begin();
       iter != lmodel->annotations_end(); ++iter) {
-    
+
     Annotation_shptr annotation = iter->second;
-    
+
     Layer_shptr layer = annotation->get_layer();
-    
+
     bool add = true;
-    
+
     if(entry_filter_by_layer->get_text().size() > 0 &&
        layer->get_layer_pos() != layer_pos) add = false;
-    
+
     if(entry_filter_by_class->get_text().size() > 0 &&
        annotation->get_class_id() != class_id) add = false;
-    
+
     if(add) {
       Gtk::TreeModel::Row row = *(refListStore->append());
-      
+
       row[m_Columns.m_col_layer_pos] = layer->get_layer_pos();
       row[m_Columns.m_col_annotation_class] = annotation->get_class_id();
       row[m_Columns.m_col_name] = annotation->get_name();
@@ -177,7 +177,7 @@ void AnnotationListWin::refresh() {
       row[m_Columns.m_col_object_ptr] = annotation;
     }
   }
-  
+
 }
 
 void AnnotationListWin::show() {
@@ -211,7 +211,7 @@ void AnnotationListWin::on_goto_button_clicked() {
   }
 }
 
-sigc::signal<void, degate::PlacedLogicModelObject_shptr>& 
+sigc::signal<void, degate::PlacedLogicModelObject_shptr>&
 AnnotationListWin::signal_goto_button_clicked() {
   return signal_goto_button_clicked_;
 }

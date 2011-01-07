@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __TILECACHE_H__
@@ -82,7 +82,7 @@ namespace degate {
     cache_t cache;
 
   private:
-    
+
     GlobalTileCache() : allocated_memory(0) {
       Configuration & conf = Configuration::get_instance();
       max_cache_memory = conf.get_max_tile_cache_size() * 1024 *1024;
@@ -126,7 +126,7 @@ namespace degate {
 
       for(cache_t::const_iterator iter = cache.begin(); iter != cache.end(); ++iter) {
 	cache_entry_t const& entry = iter->second;
-	printf("%16p | %12ld.%12ld | %ld M (%ld bytes)\n", 
+	printf("%16p | %12ld.%12ld | %ld M (%ld bytes)\n",
 	       iter->first, entry.first.tv_sec, entry.first.tv_nsec, entry.second/(1024*1024), entry.second);
 	iter->first->print();
       }
@@ -171,7 +171,7 @@ namespace degate {
     }
 
     void release_cache_memory(TileCacheBase * requestor, size_t amount) {
-      
+
       debug(TM, "Local cache %p releases %d bytes.", requestor, amount);
 
       cache_t::iterator found = cache.find(requestor);
@@ -183,7 +183,7 @@ namespace degate {
       }
       else {
 	cache_entry_t & entry = found->second;
-	
+
 	if(entry.second >= amount) {
 	  entry.second -= amount;
 	  assert(allocated_memory >= amount);
@@ -204,7 +204,7 @@ namespace degate {
 	  cache.erase(found);
 	}
       }
-     
+
     }
 
   };
@@ -217,7 +217,7 @@ namespace degate {
    * If new tiles become loaded, old tiles are removed from the
    * cache. You can control the numer of cached tiles via the
    * constructor parameter \p _min_cache_tiles. The memory
-   * requirement is around 
+   * requirement is around
    * \p _min_cache_tiles*sizeof(PixelPolicy::pixel_type)*(2^_tile_width_exp)^2 ,
    * where \p sizeof(PixelPolicy::pixel_type) is the size of a pixel.
    */
@@ -244,20 +244,20 @@ namespace degate {
     mutable unsigned curr_tile_num_x;
     mutable unsigned curr_tile_num_y;
 
-    
+
   public:
-    
+
     /**
      * Create a TileCache object.
      * @param _directory The directory where all the tiles are for a TileImage.
      * @param _tile_width_exp
-     * @param _persistent 
+     * @param _persistent
      */
 
-    TileCache(std::string const& _directory, 
+    TileCache(std::string const& _directory,
 	      unsigned int _tile_width_exp,
 	      bool _persistent,
-	      unsigned int _min_cache_tiles = 4) : 
+	      unsigned int _min_cache_tiles = 4) :
       directory(_directory),
       tile_width_exp(_tile_width_exp),
       persistent(_persistent) {}
@@ -276,12 +276,12 @@ namespace degate {
     void print() const {
       for(typename cache_type::const_iterator iter = cache.begin();
 	  iter != cache.end(); ++iter) {
-	std::cout << "\t+ " 
-		  << directory << "/" 
-		  << (*iter).first << " " 
-		  << (*iter).second.second.tv_sec 
-		  << "/" 
-		  << (*iter).second.second.tv_nsec 
+	std::cout << "\t+ "
+		  << directory << "/"
+		  << (*iter).first << " "
+		  << (*iter).second.second.tv_sec
+		  << "/"
+		  << (*iter).second.second.tv_nsec
 		  << std::endl;
       }
     }
@@ -294,7 +294,7 @@ namespace degate {
      * @return Returns a shared pointer to a MemoryMap object.
      */
 
-    std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> > 
+    std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> >
     inline get_tile(unsigned int x, unsigned int y) {
 
       unsigned int tile_num_x = x >> tile_width_exp;
@@ -339,14 +339,14 @@ namespace degate {
      * Remove the oldest entry from the cache.
      */
     void cleanup_cache() {
-	
+
       if(cache.size() == 0) return;
 
       struct timespec oldest_clock_val;
       GET_CLOCK(oldest_clock_val);
 
       typename cache_type::iterator oldest = cache.begin();
-      
+
       for(typename cache_type::iterator iter = cache.begin();
 	  iter != cache.end(); ++iter) {
 
@@ -367,7 +367,7 @@ namespace degate {
       gtc.release_cache_memory(this, get_image_size());
 
     }
-    
+
 
   private:
 
@@ -383,7 +383,7 @@ namespace degate {
      * @param filename Just the name of the file to load. The filename is
      *     relative to the \p directory.
      */
-    std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> > 
+    std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> >
     load(std::string const& filename) const {
 
       //debug(TM, "directory: [%s] file: [%s]", directory.c_str(), filename.c_str());

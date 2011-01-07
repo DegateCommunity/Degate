@@ -1,22 +1,22 @@
-/*                                                                              
-                                                                                
-This file is part of the IC reverse engineering tool degate.                    
-                                                                                
-Copyright 2008, 2009, 2010 by Martin Schobert                                         
-                                                                                
-Degate is free software: you can redistribute it and/or modify                  
-it under the terms of the GNU General Public License as published by            
-the Free Software Foundation, either version 3 of the License, or               
-any later version.                                                              
-                                                                                
-Degate is distributed in the hope that it will be useful,                       
-but WITHOUT ANY WARRANTY; without even the implied warranty of                  
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   
-GNU General Public License for more details.                                    
-                                                                                
-You should have received a copy of the GNU General Public License               
-along with degate. If not, see <http://www.gnu.org/licenses/>.                  
-                                                                                
+/*
+
+This file is part of the IC reverse engineering tool degate.
+
+Copyright 2008, 2009, 2010 by Martin Schobert
+
+Degate is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Degate is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with degate. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "ProjectSettingsWin.h"
@@ -32,7 +32,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace degate;
 
-ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr project) : 
+ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr project) :
   GladeFileLoader("project_settings.glade", "project_settings_dialog") {
 
   assert(parent);
@@ -43,12 +43,12 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
   if(get_dialog()) {
     //Get the Glade-instantiated Button, and connect a signal handler:
     Gtk::Button* pButton = NULL;
-    
+
     // connect signals
     get_widget("cancel_button", pButton);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &ProjectSettingsWin::on_cancel_button_clicked));
-    
+
     get_widget("ok_button", pButton);
     if(pButton) {
       pButton->grab_focus();
@@ -134,7 +134,7 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
     get_widget("colorbutton_text", pCButton);
     assert(pCButton != NULL);
     if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_TEXT));
-   
+
   }
 }
 
@@ -157,7 +157,7 @@ degate::color_t ProjectSettingsWin::get_color_for_button(std::string const & but
   get_widget(button_name, pCButton);
   if(pCButton) {
     Gdk::Color col = pCButton->get_color();
-    color_t c = MERGE_CHANNELS( (col.get_red() >> 8),				
+    color_t c = MERGE_CHANNELS( (col.get_red() >> 8),
 				(col.get_green() >> 8),
 				(col.get_blue() >> 8),
 				(pCButton->get_alpha() >> 8));
@@ -187,25 +187,25 @@ bool ProjectSettingsWin::run() {
       project->set_pixel_per_um(d);
 
 
-    project->set_default_color(DEFAULT_COLOR_WIRE, 
+    project->set_default_color(DEFAULT_COLOR_WIRE,
 			       get_color_for_button("colorbutton_wire"));
-    project->set_default_color(DEFAULT_COLOR_VIA_UP, 
+    project->set_default_color(DEFAULT_COLOR_VIA_UP,
 			       get_color_for_button("colorbutton_via_up"));
-    project->set_default_color(DEFAULT_COLOR_VIA_DOWN, 
+    project->set_default_color(DEFAULT_COLOR_VIA_DOWN,
 			       get_color_for_button("colorbutton_via_down"));
-    project->set_default_color(DEFAULT_COLOR_GRID, 
+    project->set_default_color(DEFAULT_COLOR_GRID,
 			       get_color_for_button("colorbutton_grid"));
-    project->set_default_color(DEFAULT_COLOR_ANNOTATION, 
+    project->set_default_color(DEFAULT_COLOR_ANNOTATION,
 			       get_color_for_button("colorbutton_annotation"));
-    project->set_default_color(DEFAULT_COLOR_ANNOTATION_FRAME, 
+    project->set_default_color(DEFAULT_COLOR_ANNOTATION_FRAME,
 			       get_color_for_button("colorbutton_annotation_frame"));
-    project->set_default_color(DEFAULT_COLOR_GATE, 
+    project->set_default_color(DEFAULT_COLOR_GATE,
 			       get_color_for_button("colorbutton_gate"));
-    project->set_default_color(DEFAULT_COLOR_GATE_FRAME, 
+    project->set_default_color(DEFAULT_COLOR_GATE_FRAME,
 			       get_color_for_button("colorbutton_gate_frame"));
-    project->set_default_color(DEFAULT_COLOR_GATE_PORT, 
+    project->set_default_color(DEFAULT_COLOR_GATE_PORT,
 			       get_color_for_button("colorbutton_gate_port"));
-    project->set_default_color(DEFAULT_COLOR_TEXT, 
+    project->set_default_color(DEFAULT_COLOR_TEXT,
 			       get_color_for_button("colorbutton_text"));
 
 

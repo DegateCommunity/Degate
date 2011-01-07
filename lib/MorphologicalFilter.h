@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #ifndef __MORPHOLOGICALFILTER_H__
@@ -39,15 +39,15 @@ namespace degate {
 				      unsigned int min_y,
 				      unsigned int max_y,
 				      unsigned int erosion_threshold) {
-      
+
       assert(min_x < max_x && min_y < max_y);
       assert(min_x < src->get_width());
       assert(max_x < src->get_width());
       assert(min_y < src->get_height());
       assert(max_y < src->get_height());
-      
+
       unsigned int i = 0;
-      
+
       for(unsigned int _y = min_y; _y < max_y; _y++)
 	for(unsigned int _x = min_x; _x < max_x; _x++)
 	  if(src->get_pixel(_x, _y) > 0) i++;
@@ -66,7 +66,7 @@ namespace degate {
 		   std::tr1::shared_ptr<ImageTypeSrc> src,
 		   unsigned int kernel_width = 3,
 		   unsigned int erosion_threshold = 3) {
-  
+
     filter_image<ImageTypeDst, ImageTypeSrc,
       ErodeImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >
       (dst, src, kernel_width, erosion_threshold);
@@ -88,15 +88,15 @@ namespace degate {
 				      unsigned int min_y,
 				      unsigned int max_y,
 				      unsigned int dilation_threshold) {
-      
+
       assert(min_x < max_x && min_y < max_y);
       assert(min_x < src->get_width());
       assert(max_x < src->get_width());
       assert(min_y < src->get_height());
       assert(max_y < src->get_height());
-      
+
       unsigned int i = 0;
-      
+
       for(unsigned int _y = min_y; _y < max_y; _y++)
 	for(unsigned int _x = min_x; _x < max_x; _x++)
 	  if(src->get_pixel(_x, _y) > 0) i++;
@@ -115,7 +115,7 @@ namespace degate {
 		    std::tr1::shared_ptr<ImageTypeSrc> src,
 		    unsigned int kernel_width = 3,
 		    unsigned int dilation_threshold = 3) {
-  
+
     filter_image<ImageTypeDst, ImageTypeSrc,
       DilateImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >
       (dst, src, kernel_width, dilation_threshold);
@@ -130,11 +130,11 @@ namespace degate {
 			  std::tr1::shared_ptr<ImageTypeSrc> src,
 			  unsigned int kernel_width = 3,
 			  unsigned int threshold = 3) {
-    
-    filter_image<ImageTypeDst, ImageTypeSrc,  
+
+    filter_image<ImageTypeDst, ImageTypeSrc,
       ErodeImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold);
 
-    filter_image<ImageTypeDst, ImageTypeSrc,  
+    filter_image<ImageTypeDst, ImageTypeSrc,
       DilateImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold);
   }
 
@@ -147,11 +147,11 @@ namespace degate {
 			   std::tr1::shared_ptr<ImageTypeSrc> src,
 			   unsigned int kernel_width = 3,
 			   unsigned int threshold = 3) {
-    
-    filter_image<ImageTypeDst, ImageTypeSrc,  
+
+    filter_image<ImageTypeDst, ImageTypeSrc,
       DilateImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold);
 
-    filter_image<ImageTypeDst, ImageTypeSrc,  
+    filter_image<ImageTypeDst, ImageTypeSrc,
       ErodeImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold);
 
   }
@@ -164,7 +164,7 @@ namespace degate {
    *   the second condition set is checked.
    */
   template<typename ImageType>
-  bool zhang_suen_thinning_iteration(std::tr1::shared_ptr<ImageType> img, 
+  bool zhang_suen_thinning_iteration(std::tr1::shared_ptr<ImageType> img,
 				     bool condition_switch) {
     assert_is_single_channel_image<ImageType>();
 
@@ -173,7 +173,7 @@ namespace degate {
 
     for(y = 1; y < img->get_height() - 1; y++) {
       for(x = 1; x < img->get_width() - 1; x++) {
-	unsigned int 
+	unsigned int
 	  p1 = img->get_pixel(x, y) > 0 ? 1 : 0;
 
 	if(p1 > 0) {
@@ -186,7 +186,7 @@ namespace degate {
 	    p7 = img->get_pixel(x-1, y+1) > 0 ? 1 : 0,
 	    p8 = img->get_pixel(x-1, y) > 0 ? 1 : 0,
 	    p9 = img->get_pixel(x-1, y-1)> 0 ? 1 : 0;
-	  
+
 	  unsigned int connectivity =
 	    (p2 == 0 && p3 == 1 ? 1 : 0) +
 	    (p3 == 0 && p4 == 1 ? 1 : 0) +
@@ -196,15 +196,15 @@ namespace degate {
 	    (p7 == 0 && p8 == 1 ? 1 : 0) +
 	    (p8 == 0 && p9 == 1 ? 1 : 0) +
 	    (p9 == 0 && p2 == 1 ? 1 : 0);
-	  
+
 	  unsigned int non_zero_neighbors = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
-	  
-	  
+
+
 	  if(2 <= non_zero_neighbors && non_zero_neighbors <= 6 &&
 	     connectivity == 1) {
-	    
+
 	    if(condition_switch == true) {
-	      
+
 	      if(p2 * p4 * p6 == 0 && p4 * p6 * p8 == 0) {
 		img->set_pixel(x, y, 0);
 		running = true;
@@ -221,7 +221,7 @@ namespace degate {
 
       }
     }
-    
+
     return running;
   }
 
@@ -241,6 +241,6 @@ namespace degate {
 
   }
 
-  
+
 }
 #endif

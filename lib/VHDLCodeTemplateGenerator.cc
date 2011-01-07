@@ -1,22 +1,22 @@
 /* -*-c++-*-
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 
@@ -39,9 +39,9 @@ VHDLCodeTemplateGenerator::~VHDLCodeTemplateGenerator() {
 }
 
 std::string VHDLCodeTemplateGenerator::generate() const {
-  return 
-    generate_header() + 
-    generate_entity(entity_name, generate_port_description()) + 
+  return
+    generate_header() +
+    generate_entity(entity_name, generate_port_description()) +
     generate_architecture(entity_name, "", generate_impl(logic_class));
 }
 
@@ -68,11 +68,11 @@ std::string VHDLCodeTemplateGenerator::generate_port_description() const {
 
 std::string VHDLCodeTemplateGenerator::generate_entity(std::string const& entity_name,
 						       std::string const& port_description) const {
-  
+
   boost::format f("entity %1% is\n"
 		  "%2%"
 		  "end %3%;\n\n");
-  f % generate_identifier(entity_name) 
+  f % generate_identifier(entity_name)
     % port_description
     % generate_identifier(entity_name);
   return f.str();
@@ -84,7 +84,7 @@ std::string VHDLCodeTemplateGenerator::generate_component(std::string const& ent
   boost::format f("  component %1% is\n"
 		  "%2%"
 		  "  end component;\n\n");
-  f % generate_identifier(entity_name) 
+  f % generate_identifier(entity_name)
     % port_description;
   return f.str();
 }
@@ -124,10 +124,10 @@ std::string VHDLCodeTemplateGenerator::generate_impl(std::string const& logic_cl
     }
 
     boost::format f("  %1% <= %2%%3%%4%%5%;");
-    f % generate_identifier(out[0]) 
+    f % generate_identifier(out[0])
       % outer_op
       % (outer_op.empty() ? "" : "(")
-      % boost::algorithm::join(generate_identifier<std::vector<std::string> >(in), 
+      % boost::algorithm::join(generate_identifier<std::vector<std::string> >(in),
 			       std::string(" ") + inner_op + std::string(" "))
       % (outer_op.empty() ? "" : ")");
 
@@ -172,7 +172,7 @@ std::string VHDLCodeTemplateGenerator::generate_impl(std::string const& logic_cl
     return f.str();
   }
   else {
-    return 
+    return
       "  -- \n"
       "  -- Please implement behaviour.\n"
       "  -- \n";
@@ -188,7 +188,7 @@ std::string VHDLCodeTemplateGenerator::generate_architecture(std::string const& 
 		  "begin\n"
 		  "%3%\n"
 		  "end Behavioral;\n\n");
-  f % generate_identifier(entity_name) 
+  f % generate_identifier(entity_name)
     % header
     % impl;
   return f.str();
@@ -196,7 +196,7 @@ std::string VHDLCodeTemplateGenerator::generate_architecture(std::string const& 
 
 std::string VHDLCodeTemplateGenerator::generate_identifier(std::string const& name) const {
   std::string identifier;
-  
+
   bool first_char = true;
   BOOST_FOREACH(char c, name) {
     if(c == '/' || c == '!') identifier.append("not");

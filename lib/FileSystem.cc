@@ -1,22 +1,22 @@
 /*
- 
+
  This file is part of the IC reverse engineering tool degate.
- 
+
  Copyright 2008, 2009, 2010 by Martin Schobert
- 
+
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  any later version.
- 
+
  Degate is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
 #include <FileSystem.h>
@@ -42,8 +42,8 @@
 using namespace degate;
 using namespace boost::filesystem;
 
-/** @todo Instead of writing own wrapper functions, it would be better to 
-    use the boost filesystem abstraction. 
+/** @todo Instead of writing own wrapper functions, it would be better to
+    use the boost filesystem abstraction.
 */
 
 bool degate::is_directory(std::string const & path) {
@@ -129,7 +129,7 @@ void degate::remove_directory(std::string const& path) throw(degate::FileSystemE
   boost::filesystem::remove_all(path);
 }
 
-void degate::create_directory(std::string const& directory, mode_t mode) 
+void degate::create_directory(std::string const& directory, mode_t mode)
   throw(degate::FileSystemException) {
 
   if(mkdir(directory.c_str(), mode) != 0) {
@@ -155,7 +155,7 @@ std::string degate::generate_temp_file_pattern(std::string const & basedir) {
 }
 
 
- std::list<std::string> degate::read_directory(std::string const& path, bool prefix_path) 
+ std::list<std::string> degate::read_directory(std::string const& path, bool prefix_path)
   throw(degate::FileSystemException) {
 
   DIR * dir = NULL;
@@ -163,7 +163,7 @@ std::string degate::generate_temp_file_pattern(std::string const & basedir) {
 
   std::string rpth = get_realpath(path);
 
-  if((dir = opendir(rpth.c_str())) == NULL) 
+  if((dir = opendir(rpth.c_str())) == NULL)
     throw degate::FileSystemException(strerror(errno));
 
   std::list<std::string> retlist;
@@ -196,7 +196,7 @@ std::string degate::get_filename_from_path(std::string const& path) {
 
 std::string degate::get_basename(std::string const& path) {
   std::string filename(get_filename_from_path(path));
-  
+
   size_t last_occurance = filename.rfind(".", filename.size());
   if(last_occurance < filename.size())
     return filename.substr(0, last_occurance);
@@ -205,25 +205,25 @@ std::string degate::get_basename(std::string const& path) {
 
 
 // a copy from qemu
- 
+
 char *realpath_alloc(const char *path)
 {
   int buff_len;
   char *result;
-  
-#ifdef PATH_MAX    
+
+#ifdef PATH_MAX
   buff_len = PATH_MAX;
 #else
   buff_len = pathconf(path, _PC_PATH_MAX);
   if (buff_len <= 0)
     buff_len = 4096;
 #endif
-  
-  ++buff_len;    
+
+  ++buff_len;
   result = (char*)malloc(buff_len * sizeof(char));
   if (!result)
     return NULL;
-  
+
   if(realpath(path, result) == NULL) {
     free(result);
     return NULL;
@@ -235,7 +235,7 @@ char *realpath_alloc(const char *path)
 char * _get_relative_path(const char * const path, const char * const relative_to) {
   char *path_real;
   char *path_prefix;
-  char *path_real_suffix;    
+  char *path_real_suffix;
   char *path_real_to;
   char *path_real_to_suffix;
   char *result;
@@ -247,10 +247,10 @@ char * _get_relative_path(const char * const path, const char * const relative_t
 #else
   path_separator = '/';
 #endif
-  
+
   if (NULL == path || NULL == relative_to)
     return NULL;
-  
+
   path_real = realpath_alloc(path);
   if (!path_real)
     return NULL;
@@ -260,27 +260,27 @@ char * _get_relative_path(const char * const path, const char * const relative_t
       free(path_real);
       return NULL;
     }
-    
+
   if (0 == strcmp(path_real, path_real_to))
     {
       free(path_real);
       free(path_real_to);
-    
+
       //the two directories are equal, the relative path is an empty string
       result = (char*)malloc(sizeof(char));
       *result = '\0';
       return result;
     }
-    
+
   result = NULL;
-    
+
   //eliminate the common prefix
   for (prefix_len = 0;
        path_real[prefix_len] != '\0' &&
 	 path_real_to[prefix_len] != '\0' &&
 	 path_real[prefix_len] == path_real_to[prefix_len];
        ++prefix_len);
- 
+
   path_prefix = path_real;
   path_real_suffix = path_real + prefix_len;
   while ('\0' != *path_real_suffix &&
@@ -290,7 +290,7 @@ char * _get_relative_path(const char * const path, const char * const relative_t
 	 ('/' == *path_real_suffix)
 #endif
 	 ) { *path_real_suffix++ = '\0'; }
-    
+
   path_real_to_suffix = path_real_to + prefix_len;
   while ('\0' != *path_real_to_suffix &&
 #ifdef _WIN32
@@ -299,14 +299,14 @@ char * _get_relative_path(const char * const path, const char * const relative_t
 	 ('/' == *path_real_to_suffix)
 #endif
 	 ) { *path_real_to_suffix++ = '\0'; }
- 
+
   slash_count = 0;
   for (i = 0; '\0' != path_real_to_suffix[i]; ++i)
 #ifdef _WIN32
     if ('/' == path_real_to_suffix[i] || '\\' == path_real_to_suffix[i])
 #else
       if ('/' == path_real_to_suffix[i])
-#endif    
+#endif
 	++slash_count;
   if ('\0' != *path_real_to_suffix) ++slash_count;
   result = (char*)malloc(sizeof(char) * (4 + 3 * slash_count + strlen(path_real_suffix)));
@@ -317,7 +317,7 @@ char * _get_relative_path(const char * const path, const char * const relative_t
       if (i > 0)
 	*string_end++ = path_separator;
       *string_end++ = '.';
-      *string_end++ = '.';        
+      *string_end++ = '.';
     }
   if (0 == slash_count)
     *string_end++ = '.';
@@ -328,13 +328,13 @@ char * _get_relative_path(const char * const path, const char * const relative_t
 	*string_end++ = path_real_suffix[i];
     }
   *string_end++ = '\0';
-     
+
   free(path_real);
   free(path_real_to);
   return result;
 }
 
-std::string degate::get_relative_path(std::string const& path, 
+std::string degate::get_relative_path(std::string const& path,
 				      std::string const& relative_to) {
 
   //boost::format fmter("\npath=%1%\nrelative_to=%2%");
@@ -342,7 +342,7 @@ std::string degate::get_relative_path(std::string const& path,
   //std::cout << fmter.str() << std::endl;
 
   char * rel_path = _get_relative_path(path.c_str(), relative_to.c_str());
-    
+
   std::string ret(rel_path);
 
   //std::cout << "rel_path=" << ret << std::endl;
@@ -359,13 +359,13 @@ boost::filesystem::path degate::strip_path(boost::filesystem::path const& strip_
   path::iterator src_path_iter = strip_what.begin();
   path::iterator src_path_end = strip_what.end();
   path stripped;
-  
+
   BOOST_FOREACH(std::string s, strip_from) {
-    if(src_path_iter != src_path_end && *src_path_iter == s) 
+    if(src_path_iter != src_path_end && *src_path_iter == s)
       ++src_path_iter;
-    else 
+    else
       stripped /= s;
   }
-  
+
   return stripped;
 }
