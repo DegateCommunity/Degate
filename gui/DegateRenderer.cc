@@ -82,12 +82,9 @@ void DegateRenderer::on_realize() {
   glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_DEPTH_TEST);
 
-  //glDisbale(GL
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
   glClearColor(0, 0, 0, 0);
-  //glClearColor(0, 0, 0, 0);
-  //glClearDepth(10);
 
   glEnable(GL_TEXTURE_2D);
 
@@ -255,9 +252,9 @@ void DegateRenderer::update_viewport_dimension() {
 GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
 					   unsigned int x, unsigned int y,
 					   unsigned int tile_width,
-					   unsigned int pre_scaling) const {
+					   unsigned int pre_scaling) {
 
-  //if(img == NULL) return;
+  assert(img != NULL); // checked with if outside this method
 
   // real pixel coordinates
   unsigned int min_x = x * pre_scaling;
@@ -266,6 +263,9 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
   unsigned int max_y = min_y + tile_width * pre_scaling;
 
   guint32 * data = new guint32[tile_width * tile_width];
+  assert(data != NULL);
+  if(data == NULL) throw "Failed to allocate memory";
+
   memset(data, 0, tile_width * tile_width * sizeof(guint32));
   img->raw_copy(data, x, y);
 
@@ -275,8 +275,14 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   assert(error_check());
 
-  glGenTextures(1, &texture);
-  assert(glGetError() == GL_NO_ERROR);
+  if(free_textures.size() > 0) {
+    texture = free_textures.front();
+    free_textures.pop_front();
+  }
+  else {
+    glGenTextures(1, &texture);
+    assert(glGetError() == GL_NO_ERROR);
+  }
 
   glBindTexture(GL_TEXTURE_2D, texture);
   assert(glGetError() == GL_NO_ERROR);
@@ -311,8 +317,8 @@ GLuint DegateRenderer::create_and_add_tile(degate::BackgroundImage_shptr img,
   delete[] data;
 
 
-  glBindTexture(GL_TEXTURE_2D, texture);
-  assert(error_check());
+  //glBindTexture(GL_TEXTURE_2D, texture);
+  //assert(error_check());
 
   glBegin(GL_QUADS);
   assert(error_check());
@@ -606,13 +612,14 @@ void DegateRenderer::render_background() {
     smgr->get_image(get_scaling());
 
   if(last_scaling != elem.first ||
-     !background_bbox.complete_within(get_viewport()) ) {
+     !background_bbox.complete_within(get_viewport()) || rendered_bg_tiles.empty()) {
 
     drop_tiles();
     last_scaling = elem.first;
 
     unsigned int pre_scaling = elem.first;
     degate::BackgroundImage_shptr img = elem.second;
+    if(img == NULL) return;
 
     unsigned int tile_width = img->get_tile_size();
 
@@ -647,7 +654,6 @@ void DegateRenderer::render_background() {
     for(unsigned int x = min_x; x < max_x; x+=tile_width)
 
       for(unsigned int y = min_y; y < max_y; y+=tile_width) {
-
 	GLuint texture = create_and_add_tile(img, x, y, tile_width, elem.first);
 	rendered_bg_tiles.push_back(boost::make_tuple(x, y, texture));
       }
@@ -661,8 +667,10 @@ void DegateRenderer::drop_tiles() {
 
   BOOST_FOREACH(bg_tiles_type const & t, rendered_bg_tiles) {
     GLuint i = t.get<2>();
-    glDeleteTextures(1, &i);
+    std::cout << "delete texture with id " << i << std::endl;
+    //glDeleteTextures(1, &i);
     assert(error_check());
+    free_textures.push_back(i);
   }
 
   rendered_bg_tiles.clear();

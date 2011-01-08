@@ -77,6 +77,8 @@ class DegateRenderer : public OpenGLRendererBase {
 
   degate::default_colors_t default_colors;
 
+  std::list<GLuint> free_textures;
+
 protected:
 
   void on_realize();
@@ -115,8 +117,8 @@ public:
 
   void set_layer(degate::Layer_shptr layer) {
     this->layer = layer;
-    clear_objects();
-    last_scaling = 0; // reset scaling
+    //clear_objects();
+    //last_scaling = 0; // reset scaling
     drop_tiles();
   }
 
@@ -188,7 +190,7 @@ public:
   GLuint create_and_add_tile(degate::BackgroundImage_shptr img,
 			     unsigned int x, unsigned int y,
 			     unsigned int tile_width,
-			     unsigned int pre_scaling) const;
+			     unsigned int pre_scaling);
 
 
   void drop_tiles();
