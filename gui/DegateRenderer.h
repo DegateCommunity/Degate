@@ -30,6 +30,7 @@
 
 #include <list>
 #include <set>
+#include <map>
 #include <algorithm>
 #include <boost/tuple/tuple.hpp>
 #include <boost/foreach.hpp>
@@ -40,6 +41,12 @@
 class DegateRenderer : public OpenGLRendererBase {
 
   friend class GfxEditorTool<DegateRenderer>;
+
+public:
+
+    enum INFO_LAYER {
+      INFO_LAYER_ALL = 1
+    };
 
  private:
 
@@ -54,8 +61,6 @@ class DegateRenderer : public OpenGLRendererBase {
   degate::BoundingBox background_bbox;
 
   bool realized;
-
-
 
   GLuint background_dlist, gates_dlist, gate_details_dlist,
     vias_dlist, wires_dlist,
@@ -78,6 +83,8 @@ class DegateRenderer : public OpenGLRendererBase {
   degate::default_colors_t default_colors;
 
   std::list<GLuint> free_textures;
+
+  std::map<INFO_LAYER, bool> info_layers;
 
 protected:
 
@@ -155,6 +162,17 @@ public:
 
   void set_default_colors(degate::default_colors_t const& c) {
     default_colors = c;
+  }
+  
+
+  void set_info_layer_state(INFO_LAYER info_layer, bool state = true) {
+    info_layers[info_layer] = state;
+  }
+
+  bool get_info_layer_state(INFO_LAYER info_layer) const {
+    std::map<INFO_LAYER, bool>::const_iterator i = info_layers.find(info_layer);
+    if(i == info_layers.end()) return false;
+    else return (*i).second;
   }
 
  private:

@@ -64,6 +64,8 @@ static inline uint32_t highlight_color_by_state(uint32_t col,
 DegateRenderer::DegateRenderer() : last_scaling(0), realized(false),
 				   idle_hook_enabled(false), is_idle(true), lock_state(false) {
 
+  info_layers[INFO_LAYER_ALL] = true;
+
   show();
   update_viewport_dimension();
   update_virtual_dimension();
@@ -144,21 +146,21 @@ void DegateRenderer::update_screen() {
     if(is_idle || should_update_gates) {
       render_background();
 
+
       // render gates with and without details into two different display lists
       render_gates(false);
       render_gates(true);
       should_update_gates = false;
-
+      
       // same with annotations
       render_annotations(false);
       render_annotations(true);
-
+      
       render_vias();
       render_wires();
-
+      
       render_grid();
-
-
+      
     }
   }
 
@@ -174,33 +176,36 @@ void DegateRenderer::update_screen() {
     glCallList(background_dlist);
     assert(error_check());
 
-    glCallList(gates_dlist);
-    assert(error_check());
+    if(info_layers[INFO_LAYER_ALL]) {
 
-    glCallList(annotations_dlist);
-    assert(error_check());
-
-    glCallList(grid_dlist);
-    assert(error_check());
-
-    if(!lock_state && render_details) {
-      glCallList(gate_details_dlist);
+      glCallList(gates_dlist);
       assert(error_check());
 
-      glCallList(annotation_details_dlist);
+      glCallList(annotations_dlist);
       assert(error_check());
+      
+      glCallList(grid_dlist);
+      assert(error_check());
+      
+      if(!lock_state && render_details) {
+	glCallList(gate_details_dlist);
+	assert(error_check());
+	
+	glCallList(annotation_details_dlist);
+	assert(error_check());
+	
+	render_details = false;
+      }
+      
+      if(is_idle) {
+	glCallList(wires_dlist);
+	assert(error_check());
+	
+	glCallList(vias_dlist);
+	assert(error_check());
+      }
 
-      render_details = false;
     }
-
-    if(is_idle) {
-      glCallList(wires_dlist);
-      assert(error_check());
-
-      glCallList(vias_dlist);
-      assert(error_check());
-    }
-
     glCallList(tool_dlist);
     assert(error_check());
 

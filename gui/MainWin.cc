@@ -183,9 +183,11 @@ void MainWin::on_view_info_layer_toggled(int slot_pos) {
 
 void MainWin::on_menu_view_toggle_all_info_layers() {
 
-  //const std::vector<bool> new_states = menu_manager->toggle_info_layer_visibility();
-  //imgWin.set_renderer_info_layer_state(new_states);
-  //imgWin.update_screen();
+  bool current_state =  editor.get_info_layer_state(DegateRenderer::INFO_LAYER_ALL);
+  editor.set_info_layer_state(DegateRenderer::INFO_LAYER_ALL, !current_state);
+  menu_manager->toggle_menu_item("/MenuBar/ViewMenu/ViewToggleInfoLayer", !current_state,
+				 "Disable all info layers", "Enable all info layers");
+  editor.update_screen();
 }
 
 

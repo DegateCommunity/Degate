@@ -54,9 +54,11 @@ class MenuManager {
 
   void toggle_toolbar_visibility();
 
-  const std::vector<bool> toggle_info_layer_visibility();
+  //const std::vector<bool> toggle_info_layer_visibility();
 
-  bool toggle_info_layer(int slot_pos);
+  //bool toggle_info_layer(int slot_pos);
+
+  bool toggle_menu_item(Glib::ustring path, bool state, Glib::ustring text1, Glib::ustring text2);
 
   void set_menu_item_sensitivity(const Glib::ustring& widget_path, bool state);
 
@@ -106,7 +108,6 @@ class MenuManager {
 
   void set_toolbar_item_sensitivity(const Glib::ustring& widget_path, bool state);
 
-  bool toggle_menu_item(Glib::ustring path, bool state, Glib::ustring text1, Glib::ustring text2);
 
 };
 

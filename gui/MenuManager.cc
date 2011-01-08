@@ -828,7 +828,7 @@ bool MenuManager::toggle_menu_item(Glib::ustring path, bool state,
 }
 
 
-
+/*
 const std::vector<bool> MenuManager::toggle_info_layer_visibility() {
 
   int i = 0;
@@ -861,12 +861,13 @@ const std::vector<bool> MenuManager::toggle_info_layer_visibility() {
 
   return new_states;
 }
-
+*/
 
 /**
  *
  * @return true, if the checkbox was toggled
  */
+/*
 bool MenuManager::toggle_info_layer(int slot_pos) {
   if(info_layers_checkbox_ignore_sig == false) {
     slot_states[slot_pos].second = !slot_states[slot_pos].second;
@@ -874,3 +875,4 @@ bool MenuManager::toggle_info_layer(int slot_pos) {
   }
   return false;
 }
+*/
