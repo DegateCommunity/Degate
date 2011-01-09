@@ -415,7 +415,7 @@ void MainWin::on_menu_project_save() {
   if(main_project) {
     try {
       ProjectExporter exporter;
-      exporter.export_all(main_project->get_project_directory(), main_project);
+      exporter.export_all(main_project->get_project_directory(), main_project, false);
       main_project->set_changed(false);
       update_title();
     }
