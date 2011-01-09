@@ -29,8 +29,14 @@ using namespace degate;
 
 void HlObjectSet::clear() {
   highlight(PlacedLogicModelObject::HLIGHTSTATE_NOT);
-  unhighlight_adjacent_objects();
 
+  
+  for(adjacent_objects_t::iterator iter = adjacent_objects.begin();
+      iter != adjacent_objects.end(); ++iter) {
+    unhighlight_adjacent_objects(iter->second);
+  }
+
+  adjacent_objects.clear();
   ObjectSet::clear();
 }
 
@@ -49,15 +55,10 @@ void HlObjectSet::add(std::tr1::shared_ptr<PlacedLogicModelObject> object,
 		      LogicModel_shptr lmodel) {
   add(object);
 
-  if(size() == 1) {
-    if(ConnectedLogicModelObject_shptr o =
-       std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(object) ) {
-      // highlight adjacent objects
-      highlight_adjacent_objects(o, lmodel);
-    }
-  }
-  else {
-    unhighlight_adjacent_objects();
+  if(ConnectedLogicModelObject_shptr o =
+     std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(object) ) {
+    // highlight adjacent objects
+    highlight_adjacent_objects(o, lmodel);
   }
 }
 
@@ -76,32 +77,37 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
     // remember connnected objects in list
     if(o != clo) {
 
-      assert(clo->get_highlighted() ==
-	     PlacedLogicModelObject::HLIGHTSTATE_NOT);
-
       clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
 
-      adjacent_objects.push_back(clo);
+      adjacent_objects[o].push_back(clo);
     }
   }
 }
 
-void HlObjectSet::unhighlight_adjacent_objects() {
+void HlObjectSet::unhighlight_adjacent_objects(adjacent_objects_t::mapped_type & list) {
   // iterate over list
-  BOOST_FOREACH(ConnectedLogicModelObject_shptr clo, adjacent_objects) {
+  BOOST_FOREACH(ConnectedLogicModelObject_shptr clo, list) {
 
-    clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+    adjacent_objects_t::iterator iter = adjacent_objects.find(clo);
+    if(iter == adjacent_objects.end())
+      clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+
   }
-  adjacent_objects.clear();
+  list.clear();
 }
 
 void HlObjectSet::remove(std::tr1::shared_ptr<PlacedLogicModelObject> object) {
   ObjectSet::remove(object);
-  object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
 
-  /* If there is only a single object highlighted, we must call
-     unhighlight. If adjacent objects are not highlighted, calling
-     unhighlight will not harm and even might fix invalid situations.
-  */
-  unhighlight_adjacent_objects();
+  if(ConnectedLogicModelObject_shptr o =
+     std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(object) ) {
+  
+    adjacent_objects_t::iterator iter = adjacent_objects.find(o);
+    if(iter != adjacent_objects.end()) {
+      unhighlight_adjacent_objects((*iter).second);
+    }
+    adjacent_objects.erase(iter);
+  }
+
+  object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
 }

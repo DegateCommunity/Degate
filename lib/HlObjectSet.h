@@ -25,6 +25,7 @@
 #include <degate.h>
 #include <set>
 #include <list>
+#include <map>
 #include <tr1/memory>
 #include <ObjectSet.h>
 
@@ -36,14 +37,17 @@ namespace degate {
   class HlObjectSet : public ObjectSet {
 
   private:
-    void highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
-				    LogicModel_shptr lmodel);
-    void unhighlight_adjacent_objects();
-
-    void highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state);
+    typedef std::map<ConnectedLogicModelObject_shptr,
+		     std::list<ConnectedLogicModelObject_shptr> > adjacent_objects_t;
+    adjacent_objects_t adjacent_objects;
 
   private:
-    std::list<ConnectedLogicModelObject_shptr> adjacent_objects;
+    void highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
+				    LogicModel_shptr lmodel);
+
+    void unhighlight_adjacent_objects(adjacent_objects_t::mapped_type & list);
+
+    void highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state);
 
   public:
     void clear();
