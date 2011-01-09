@@ -316,8 +316,20 @@ void MainWin::on_menu_project_close() {
 
 void MainWin::on_menu_project_settings() {
   if(main_project) {
+    diameter_t old_port_size = main_project->get_default_port_diameter();
     ProjectSettingsWin psWin(this, main_project);
     if(psWin.run()) {
+
+      diameter_t new_port_size = main_project->get_default_port_diameter();
+      if(old_port_size != new_port_size) {
+	Gtk::MessageDialog dialog_ask(*this, 
+				      "Default gate port diameter has changed. "
+				      "Should degate update port diameters of all gate ports?",
+				      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
+	dialog_ask.set_title("Warning");
+	if(dialog_ask.run() == Gtk::RESPONSE_YES)
+	  update_port_diameters(main_project->get_logic_model(), new_port_size);
+      }
       editor.set_default_colors(main_project->get_default_colors());
       project_changed();
     }
@@ -1274,7 +1286,8 @@ void MainWin::update_gui_on_selection_change() {
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateOrientation", false);
     menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", selection_active);
 
-    if(ciWin != NULL) ciWin->disable_inspection();
+    /* Do not disable inspection here. Keep last settings. */
+    //if(ciWin != NULL) ciWin->disable_inspection(); 
   }
 
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection",

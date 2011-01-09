@@ -429,6 +429,11 @@ namespace degate {
   void apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm);
 
 
+  /**
+   * Resize all gate ports from the logic model to the new size.
+   */
+  void update_port_diameters(LogicModel_shptr lmodel, diameter_t new_size);
+
 }
 
 #endif

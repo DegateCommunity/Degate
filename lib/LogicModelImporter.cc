@@ -326,6 +326,7 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
 	  GatePort_shptr gate_port(new GatePort(gate));
 	  gate_port->set_object_id(parse_number<object_id_t>(port_elem, "id"));
 	  gate_port->set_template_port_type_id(template_port_id);
+	  gate_port->set_diameter(parse_number<diameter_t>(port_elem, "diameter", 5));
 
 	  if(gate_library != NULL) {
 	    GateTemplatePort_shptr tmpl_port = gate_library->get_template_port(template_port_id);

@@ -17,7 +17,7 @@
             <child>
               <widget class="GtkTable" id="table1">
                 <property name="visible">True</property>
-                <property name="n_rows">7</property>
+                <property name="n_rows">8</property>
                 <property name="n_columns">2</property>
                 <child>
                   <widget class="GtkEntry" id="entry_project_name">
@@ -96,8 +96,8 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
                     <property name="x_padding">10</property>
                   </packing>
                 </child>
@@ -141,7 +141,7 @@
                 <child>
                   <widget class="GtkLabel" id="label7">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Via diameter (pixel):</property>
+                    <property name="label" translatable="yes">Default Via Diameter (pixel):</property>
                   </widget>
                   <packing>
                     <property name="top_attach">3</property>
@@ -154,7 +154,7 @@
                 <child>
                   <widget class="GtkLabel" id="label8">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Wire diameter (pixel):</property>
+                    <property name="label" translatable="yes">Default Wire Diameter (pixel):</property>
                   </widget>
                   <packing>
                     <property name="top_attach">4</property>
@@ -170,8 +170,8 @@
                     <property name="label" translatable="yes">Server URL:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                     <property name="x_padding">10</property>
@@ -183,8 +183,8 @@
                     <property name="label" translatable="yes">Pixel per µm:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                     <property name="x_padding">10</property>
@@ -199,8 +199,35 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
+                    <property name="x_padding">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label20">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Default Port Diameter (pixel):</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="entry_port_diameter">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">•</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
                     <property name="x_padding">10</property>
                   </packing>
                 </child>

@@ -71,6 +71,7 @@ namespace degate {
 
     diameter_t default_pin_diameter;
     diameter_t default_wire_diameter;
+    diameter_t default_port_diameter;
     length_t lambda;
 
     transaction_id_t last_transaction_id;
@@ -172,6 +173,9 @@ namespace degate {
 
     void set_default_wire_diameter(diameter_t wire_diameter);
     diameter_t get_default_wire_diameter() const;
+
+    void set_default_port_diameter(diameter_t port_diameter);
+    diameter_t get_default_port_diameter() const;
 
 
     /**

@@ -176,6 +176,8 @@ void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, l
     object_id_t new_type_id = oid_rewriter->get_new_object_id(port->get_template_port_type_id());
     port_elem->set_attribute("type-id", number_to_string<object_id_t>(new_type_id));
 
+    port_elem->set_attribute("diameter", number_to_string<diameter_t>(port->get_diameter()));
+
   }
 
 }

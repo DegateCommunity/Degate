@@ -82,6 +82,11 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
       snprintf(str, sizeof(str), "%d", project->get_default_wire_diameter());
       entry_wire_diameter->set_text(str);
     }
+    get_widget("entry_port_diameter", entry_port_diameter);
+    if(entry_port_diameter) {
+      snprintf(str, sizeof(str), "%d", project->get_default_port_diameter());
+      entry_port_diameter->set_text(str);
+    }
     get_widget("entry_server_url", entry_server_url);
     if(entry_server_url) {
       entry_server_url->set_text(project->get_server_url());
@@ -182,6 +187,8 @@ bool ProjectSettingsWin::run() {
       project->set_default_pin_diameter(r);
     if((r = atol(entry_wire_diameter->get_text().c_str())) > 0)
       project->set_default_wire_diameter(r);
+    if((r = atol(entry_port_diameter->get_text().c_str())) > 0)
+      project->set_default_port_diameter(r);
 
     if((d = atof(entry_pixel_per_um->get_text().c_str())) >= 0)
       project->set_pixel_per_um(d);

@@ -406,7 +406,7 @@ void LogicModel::remove_template_port_from_gate_template(GateTemplate_shptr gate
   update_ports(gate_template);
 }
 
-void LogicModel::update_ports(Gate_shptr gate) throw(InvalidPointerException) {
+void LogicModel::update_ports(Gate_shptr gate) {
 
   if(gate == NULL)
     throw InvalidPointerException("Invalid parameter for update_ports()");
@@ -423,7 +423,7 @@ void LogicModel::update_ports(Gate_shptr gate) throw(InvalidPointerException) {
 
       if(!gate->has_template_port(tmpl_port) && gate->has_orientation()) {
 	//debug(TM, "adding a port to gate");
-	GatePort_shptr new_gate_port(new GatePort(gate, tmpl_port));
+	GatePort_shptr new_gate_port(new GatePort(gate, tmpl_port, port_diameter));
 	new_gate_port->set_object_id(get_new_object_id());
 	gate->add_port(new_gate_port); // will set coordinates, too
 
@@ -488,8 +488,7 @@ void LogicModel::update_ports(Gate_shptr gate) throw(InvalidPointerException) {
 
 }
 
-void LogicModel::update_ports(GateTemplate_shptr gate_template)
-  throw(InvalidPointerException) {
+void LogicModel::update_ports(GateTemplate_shptr gate_template) {
 
   if(gate_template == NULL)
     throw InvalidPointerException("Invalid parameter for update_ports()");
@@ -722,4 +721,8 @@ object_id_t LogicModel::get_local_oid_for_roid(object_id_t remote_oid) {
     assert(found->second != 0);
     return found->second;
   }
+}
+
+void LogicModel::set_default_gate_port_diameter(diameter_t port_diameter) {
+  this->port_diameter = port_diameter;
 }

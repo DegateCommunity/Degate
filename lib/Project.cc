@@ -127,6 +127,14 @@ diameter_t Project::get_default_wire_diameter() const {
   return default_wire_diameter;
 }
 
+void Project::set_default_port_diameter(diameter_t port_diameter) {
+  default_port_diameter = port_diameter;
+}
+
+diameter_t Project::get_default_port_diameter() const {
+  return default_port_diameter;
+}
+
 
 void Project::set_changed(bool state) {
   changed = state;
@@ -180,6 +188,7 @@ void Project::print(std::ostream & os) {
     << "+" << endl
     << "+ Default wire diameter: " << default_wire_diameter << endl
     << "+ Default pin diameter: " << default_pin_diameter << endl
+    << "+ Default port diameter: " << default_port_diameter << endl
     << "+ Min distance between electrically isolated objects in pixel (lambda value): " << lambda << endl
     << endl;
 
@@ -198,6 +207,7 @@ void Project::print_all(std::ostream & os) {
 void Project::init_default_values() {
   default_pin_diameter = 5;
   default_wire_diameter = 5;
+  default_port_diameter = 5;
   lambda = 5;
   last_transaction_id = 0;
 

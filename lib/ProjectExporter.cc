@@ -172,6 +172,7 @@ void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem,
   prj_elem->set_attribute("lambda", number_to_string<length_t>(prj->get_lambda()));
   prj_elem->set_attribute("pin-diameter", number_to_string<length_t>(prj->get_default_pin_diameter()));
   prj_elem->set_attribute("wire-diameter", number_to_string<length_t>(prj->get_default_wire_diameter()));
+  prj_elem->set_attribute("port-diameter", number_to_string<length_t>(prj->get_default_port_diameter()));
 
   prj_elem->set_attribute("pixel-per-um", number_to_string<double>(prj->get_pixel_per_um()));
 

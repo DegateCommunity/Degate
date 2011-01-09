@@ -108,6 +108,8 @@ namespace degate {
      */
     roid_mapping_t roid_mapping;
 
+    diameter_t port_diameter; 
+
   private:
 
     /**
@@ -541,16 +543,14 @@ namespace degate {
      * template and update them.
      */
 
-    void update_ports(Gate_shptr gate)
-      throw(InvalidPointerException);
+    void update_ports(Gate_shptr gate);
 
     /**
      * Compare ports of all gates that reference a given template
      * and update them.
      */
 
-    void update_ports(GateTemplate_shptr gate_template)
-      throw(InvalidPointerException);
+    void update_ports(GateTemplate_shptr gate_template);
 
 
     /**
@@ -569,6 +569,13 @@ namespace degate {
     void update_roid_mapping(object_id_t remote_oid, object_id_t local_oid);
 
     object_id_t get_local_oid_for_roid(object_id_t remote_oid);
+
+
+    /**
+     * Set default gate port diameter.
+     */
+    void set_default_gate_port_diameter(diameter_t port_diameter);
+
   };
 
 

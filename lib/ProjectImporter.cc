@@ -75,8 +75,8 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
 			      get_basedir(directory) + "/lmodel.xml");
 
       LogicModel_shptr lmodel = prj->get_logic_model();
-
-
+      lmodel->set_default_gate_port_diameter(prj->get_default_port_diameter());
+	
       /*
 	For degate projects that were exported with degate 0.0.6 the gate templates
 	were expressed in terms of an image region. This is bad. Here is a part of the fix:
@@ -430,6 +430,7 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
   parent_prj->set_lambda(parse_number<length_t>(project_elem, "lambda"));
   parent_prj->set_default_pin_diameter(parse_number<diameter_t>(project_elem, "pin-diameter"));
   parent_prj->set_default_wire_diameter(parse_number<diameter_t>(project_elem, "wire-diameter"));
+  parent_prj->set_default_port_diameter(parse_number<diameter_t>(project_elem, "port-diameter", 5));
 
   parent_prj->set_pixel_per_um(parse_number<double>(project_elem, "pixel-per-um", 0));
 

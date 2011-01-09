@@ -615,3 +615,24 @@ void degate::autoconnect_interlayer_objects(LogicModel_shptr lmodel,
   }
 
 }
+
+void degate::update_port_diameters(LogicModel_shptr lmodel, diameter_t new_size) {
+
+  // iterate over gates
+  for(LogicModel::gate_collection::iterator iter = lmodel->gates_begin();
+      iter != lmodel->gates_end(); ++iter) {
+    Gate_shptr gate = (*iter).second;
+    assert(gate != NULL);
+    
+    // iterate over gate ports
+    for(Gate::port_iterator iter = gate->ports_begin();
+	iter != gate->ports_end(); ++iter) {
+
+      GatePort_shptr gate_port = *iter;
+      if(gate_port->get_diameter() != new_size) {
+	gate_port->set_diameter(new_size);
+      }
+    }
+  }
+
+}
