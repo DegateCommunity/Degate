@@ -62,172 +62,187 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
 
     // connect signals
     get_widget("cancel_button", pButton);
+    assert(pButton != NULL);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_cancel_button_clicked));
 
     get_widget("ok_button", ok_button);
+    assert(ok_button != NULL);
     if(ok_button)
       ok_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_ok_button_clicked) );
 
 
     get_widget("port_add_button", pButton);
+    assert(pButton != NULL);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_port_add_button_clicked) );
 
     get_widget("port_remove_button", pButton);
+    assert(pButton != NULL);
     if(pButton)
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_port_remove_button_clicked) );
 
 
-      refListStore_ports = Gtk::ListStore::create(port_model_columns);
+    refListStore_ports = Gtk::ListStore::create(port_model_columns);
 
-      get_widget("treeview_ports", pTreeView_ports);
-      if(pTreeView_ports) {
-	pTreeView_ports->set_model(refListStore_ports);
-	pTreeView_ports->append_column("Port ID", port_model_columns.m_col_id);
-	pTreeView_ports->append_column_editable("Port Name", port_model_columns.m_col_name);
-	pTreeView_ports->append_column_editable("Port Description", port_model_columns.m_col_description);
-	pTreeView_ports->append_column_editable("In", port_model_columns.m_col_inport);
-	pTreeView_ports->append_column_editable("Out", port_model_columns.m_col_outport);
+    get_widget("treeview_ports", pTreeView_ports);
+    assert(pTreeView_ports != NULL);
+    if(pTreeView_ports) {
+      pTreeView_ports->set_model(refListStore_ports);
+      pTreeView_ports->append_column("Port ID", port_model_columns.m_col_id);
+      pTreeView_ports->append_column_editable("Port Name", port_model_columns.m_col_name);
+      pTreeView_ports->append_column_editable("Port Description", port_model_columns.m_col_description);
+      pTreeView_ports->append_column_editable("In", port_model_columns.m_col_inport);
+      pTreeView_ports->append_column_editable("Out", port_model_columns.m_col_outport);
+    }
+    
+    
+    get_widget("colorbutton_fill_color", colorbutton_fill_color);
+    assert(colorbutton_fill_color != NULL);
+    if(colorbutton_fill_color != NULL) {
+      set_color_button(colorbutton_fill_color,  
+		       gate_template->has_fill_color() ? 
+		       gate_template->get_fill_color() : _default_fill_col);
+    }
+    
+    get_widget("colorbutton_frame_color", colorbutton_frame_color);
+    assert(colorbutton_frame_color != NULL);
+    if(colorbutton_frame_color != NULL) {
+      set_color_button(colorbutton_frame_color,  
+		       gate_template->has_frame_color() ? 
+		       gate_template->get_frame_color() : _default_frame_col);
+    }
+
+    get_widget("reset_frame_color_button", pButton);
+    assert(pButton != NULL);
+    if(pButton)
+      pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_reset_frame_color_clicked) );
+
+    get_widget("reset_fill_color_button", pButton);
+    assert(pButton != NULL);
+    if(pButton)
+      pButton->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_reset_fill_color_clicked) );
+
+
+    for(GateTemplate::port_iterator iter = gate_template->ports_begin();
+	iter != gate_template->ports_end();
+	++iter) {
+      
+      Gtk::TreeModel::Row row = *(refListStore_ports->append());
+      
+      GateTemplatePort_shptr tmpl_port = *iter;
+      
+      debug(TM, "PORT NAME: [%s]", tmpl_port->get_name().c_str());
+      
+      row[port_model_columns.m_col_inport] = tmpl_port->is_inport();
+      row[port_model_columns.m_col_outport] = tmpl_port->is_outport();
+      row[port_model_columns.m_col_name] = tmpl_port->get_name();
+      row[port_model_columns.m_col_description] = tmpl_port->get_description();
+      row[port_model_columns.m_col_id] = tmpl_port->get_object_id();
+      
+      original_ports.push_back(tmpl_port);
+    }
+    
+    get_widget("entry_short_name", entry_short_name);
+    assert(entry_short_name != NULL);
+    if(entry_short_name) {
+      entry_short_name->set_text(gate_template->get_name());
+      entry_short_name->signal_changed().connect(sigc::mem_fun(*this,
+							       &GateConfigWin::on_entry_short_name_changed) );
+    }
+    
+    get_widget("entry_description", entry_description);
+    assert(entry_description != NULL);
+    if(entry_description)
+      entry_description->set_text(gate_template->get_description());
+    
+    get_widget("combobox_logic_class", combobox_logic_class);
+    assert(combobox_logic_class != NULL);
+    if(combobox_logic_class) {
+      refListStore_lclass = Gtk::ListStore::create(lclass_model_columns);
+      combobox_logic_class->set_model(refListStore_lclass);
+      insert_logic_classes();
+      combobox_logic_class->pack_start(lclass_model_columns.m_col_descr);
+      selected_logic_class = gate_template->get_logic_class();
+      type_children children = refListStore_lclass->children();
+      for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
+	Gtk::TreeModel::Row row = *iter;
+	if(row[lclass_model_columns.m_col_ident] == selected_logic_class)
+	  combobox_logic_class->set_active(iter);
       }
-
-
-      color_t frame_color = gate_template->has_frame_color() ? 
-	gate_template->get_frame_color() : _default_frame_col;
-      color_t fill_color = gate_template->has_fill_color() ? 
-	gate_template->get_fill_color() : _default_fill_col;
-
-      get_widget("colorbutton_fill_color", colorbutton_fill_color);
-      if(colorbutton_fill_color != NULL) {
-	Gdk::Color c;
-	c.set_red(MASK_R(fill_color) << 8);
-	c.set_green(MASK_G(fill_color) << 8);
-	c.set_blue(MASK_B(fill_color) << 8);
-	colorbutton_fill_color->set_alpha(MASK_A(fill_color) << 8);
-	colorbutton_fill_color->set_color(c);
-      }
-
-      get_widget("colorbutton_frame_color", colorbutton_frame_color);
-      if(colorbutton_frame_color != NULL) {
-	Gdk::Color c;
-	c.set_red(MASK_R(frame_color) << 8);
-	c.set_green(MASK_G(frame_color) << 8);
-	c.set_blue(MASK_B(frame_color) << 8);
-	colorbutton_frame_color->set_alpha(MASK_A(frame_color) << 8);
-	colorbutton_frame_color->set_color(c);
-      }
-
-
-      for(GateTemplate::port_iterator iter = gate_template->ports_begin();
-	  iter != gate_template->ports_end();
-	  ++iter) {
-
-	Gtk::TreeModel::Row row = *(refListStore_ports->append());
-
-	GateTemplatePort_shptr tmpl_port = *iter;
-
-	debug(TM, "PORT NAME: [%s]", tmpl_port->get_name().c_str());
-
-	row[port_model_columns.m_col_inport] = tmpl_port->is_inport();
-	row[port_model_columns.m_col_outport] = tmpl_port->is_outport();
-	row[port_model_columns.m_col_name] = tmpl_port->get_name();
-	row[port_model_columns.m_col_description] = tmpl_port->get_description();
-	row[port_model_columns.m_col_id] = tmpl_port->get_object_id();
-
-	original_ports.push_back(tmpl_port);
-      }
-
-      get_widget("entry_short_name", entry_short_name);
-      assert(entry_short_name != NULL);
-      if(entry_short_name) {
-	entry_short_name->set_text(gate_template->get_name());
-	entry_short_name->signal_changed().connect(sigc::mem_fun(*this,
-								 &GateConfigWin::on_entry_short_name_changed) );
-      }
-
-      get_widget("entry_description", entry_description);
-      assert(entry_description != NULL);
-      if(entry_description)
-	entry_description->set_text(gate_template->get_description());
-
-      get_widget("combobox_logic_class", combobox_logic_class);
-      assert(combobox_logic_class != NULL);
-      if(combobox_logic_class) {
-	refListStore_lclass = Gtk::ListStore::create(lclass_model_columns);
-	combobox_logic_class->set_model(refListStore_lclass);
-	insert_logic_classes();
-	combobox_logic_class->pack_start(lclass_model_columns.m_col_descr);
-	selected_logic_class = gate_template->get_logic_class();
-	type_children children = refListStore_lclass->children();
-	for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
-	  Gtk::TreeModel::Row row = *iter;
-	  if(row[lclass_model_columns.m_col_ident] == selected_logic_class)
-	    combobox_logic_class->set_active(iter);
-	}
-
-	combobox_logic_class->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_logic_class_changed));
-      }
-
-      /*
-       * page 2
-       */
-
-      get_widget("combobox_lang", combobox_lang);
-      assert(combobox_lang != NULL);
-      if(combobox_lang != NULL) {
-	for(GateTemplate::implementation_iter iter = gate_template->implementations_begin();
-	    iter != gate_template->implementations_end(); ++iter)
-	  code_text[iter->first] = iter->second;
-	combobox_lang->set_active(TEXT);
-      }
-
-
-      get_widget("generate_code_button", codegen_button);
-      assert(codegen_button != NULL);
-      if(codegen_button) {
-	codegen_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_codegen_button_clicked));
-	codegen_button->set_sensitive(false);
-      }
-
-      get_widget("code_textview", code_textview);
-      assert(code_textview != NULL);
-      if(code_textview) {
-	code_textview->modify_font(Pango::FontDescription("courier"));
-
-	code_textview->get_buffer()->set_text(code_text[GateTemplate::TEXT]);
-	code_textview->get_buffer()->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_code_changed));
-      }
-
-
-      combobox_lang->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_language_changed));
-
-      /*
-       * page 3
-       */
-      Gtk::HBox * hbox_renderer = get_widget<Gtk::HBox>("hbox_renderer");
-      assert(hbox_renderer != NULL);
-      if(hbox_renderer) {
-
-	hbox_renderer->pack_start(render_window_m1, Gtk::PACK_EXPAND_WIDGET);
-	hbox_renderer->pack_start(render_window_transistor_m1, Gtk::PACK_EXPAND_WIDGET);
-	hbox_renderer->pack_start(render_window_transistor, Gtk::PACK_EXPAND_WIDGET);
-	hbox_renderer->show_all();
-
-	editor_transistor.set_gate_template(gate_template);
-	editor_transistor.add_layer_type(Layer::TRANSISTOR);
-
-	editor_transistor_m1.set_gate_template(gate_template);
-	editor_transistor_m1.add_layer_type(Layer::TRANSISTOR);
-	editor_transistor_m1.add_layer_type(Layer::LOGIC);
-
-	editor_m1.set_gate_template(gate_template);
-	editor_m1.add_layer_type(Layer::LOGIC);
-      }
+      
+      combobox_logic_class->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_logic_class_changed));
+    }
+    
+    /*
+     * page 2
+     */
+    
+    get_widget("combobox_lang", combobox_lang);
+    assert(combobox_lang != NULL);
+    if(combobox_lang != NULL) {
+      for(GateTemplate::implementation_iter iter = gate_template->implementations_begin();
+	  iter != gate_template->implementations_end(); ++iter)
+	code_text[iter->first] = iter->second;
+      combobox_lang->set_active(TEXT);
+    }
+    
+    
+    get_widget("generate_code_button", codegen_button);
+    assert(codegen_button != NULL);
+    if(codegen_button) {
+      codegen_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_codegen_button_clicked));
+      codegen_button->set_sensitive(false);
+    }
+    
+    get_widget("code_textview", code_textview);
+    assert(code_textview != NULL);
+    if(code_textview) {
+      code_textview->modify_font(Pango::FontDescription("courier"));
+      
+      code_textview->get_buffer()->set_text(code_text[GateTemplate::TEXT]);
+      code_textview->get_buffer()->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_code_changed));
+    }
+    
+    
+    combobox_lang->signal_changed().connect(sigc::mem_fun(*this, &GateConfigWin::on_language_changed));
+    
+    /*
+     * page 3
+     */
+    Gtk::HBox * hbox_renderer = get_widget<Gtk::HBox>("hbox_renderer");
+    assert(hbox_renderer != NULL);
+    if(hbox_renderer) {
+      
+      hbox_renderer->pack_start(render_window_m1, Gtk::PACK_EXPAND_WIDGET);
+      hbox_renderer->pack_start(render_window_transistor_m1, Gtk::PACK_EXPAND_WIDGET);
+      hbox_renderer->pack_start(render_window_transistor, Gtk::PACK_EXPAND_WIDGET);
+      hbox_renderer->show_all();
+      
+      editor_transistor.set_gate_template(gate_template);
+      editor_transistor.add_layer_type(Layer::TRANSISTOR);
+      
+      editor_transistor_m1.set_gate_template(gate_template);
+      editor_transistor_m1.add_layer_type(Layer::TRANSISTOR);
+      editor_transistor_m1.add_layer_type(Layer::LOGIC);
+      
+      editor_m1.set_gate_template(gate_template);
+      editor_m1.add_layer_type(Layer::LOGIC);
+    }
 
   }
 }
 
 GateConfigWin::~GateConfigWin() {
+}
+
+void GateConfigWin::set_color_button(Gtk::ColorButton * button, degate::color_t col) {
+  Gdk::Color c;
+  c.set_red(MASK_R(col) << 8);
+  c.set_green(MASK_G(col) << 8);
+  c.set_blue(MASK_B(col) << 8);
+  button->set_alpha(MASK_A(col) << 8);
+  button->set_color(c);
 }
 
 void GateConfigWin::insert_logic_classes() {
@@ -496,3 +511,15 @@ void GateConfigWin::on_entry_short_name_changed() {
 
 }
 
+
+void GateConfigWin::on_reset_frame_color_clicked() {
+  if(colorbutton_frame_color != NULL) {
+	set_color_button(colorbutton_frame_color, _default_frame_col);
+  }
+}
+
+void GateConfigWin::on_reset_fill_color_clicked() {
+  if(colorbutton_fill_color != NULL) {
+    set_color_button(colorbutton_fill_color, _default_fill_col);
+  }
+}

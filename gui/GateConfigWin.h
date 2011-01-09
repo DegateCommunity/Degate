@@ -141,6 +141,9 @@ private:
   virtual void on_port_remove_button_clicked();
   virtual void on_logic_class_changed();
 
+  virtual void on_reset_frame_color_clicked();
+  virtual void on_reset_fill_color_clicked();
+
   void on_entry_short_name_changed();
 
   void on_codegen_button_clicked();
@@ -157,6 +160,11 @@ private:
   void insert_logic_classes();
   void append_logic_class(Glib::ustring const& ident, Glib::ustring const& descr);
   void append_logic_class(Glib::ustring const& ident);
+
+  /**
+   * Set the color for a color chooser button.
+   */
+  void set_color_button(Gtk::ColorButton * button, degate::color_t col);
 };
 
 #endif
