@@ -196,9 +196,6 @@ void DRCViolationsWin::on_goto_button_clicked() {
 
       assert(object_ptr != NULL);
 
-      if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(object_ptr))
-	object_ptr = gate_port->get_gate();
-
       signal_goto_button_clicked_(object_ptr);
     }
   }
