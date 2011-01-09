@@ -57,7 +57,9 @@ class GateListWin : private GladeFileLoader {
 
 
  public:
-  GateListWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel);
+  GateListWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel,
+	      degate::color_t default_frame_col, 
+	      degate::color_t default_fill_col);
   virtual ~GateListWin();
   void run();
 
@@ -68,6 +70,9 @@ class GateListWin : private GladeFileLoader {
   GateListModelColumns m_Columns;
   Glib::RefPtr<Gtk::ListStore> refListStore;
   Gtk::TreeView* pTreeView;
+
+  degate::color_t _default_frame_col;
+  degate::color_t _default_fill_col;
 
   Gdk::Color get_color(degate::color_t col, degate::color_t default_col);
   void fill_row(Gtk::TreeModel::Row const& row, degate::GateTemplate_shptr & tmpl);

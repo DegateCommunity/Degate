@@ -41,8 +41,12 @@ using namespace boost;
 
 GateConfigWin::GateConfigWin(Gtk::Window *parent,
 			     LogicModel_shptr lmodel,
-			     GateTemplate_shptr gate_template) :
+			     GateTemplate_shptr gate_template,
+			     degate::color_t default_frame_col, 
+			     degate::color_t default_fill_col) :
   GladeFileLoader("gate_create.glade", "gate_create_dialog"),
+  _default_frame_col(default_frame_col),
+  _default_fill_col(default_fill_col),
   render_window_transistor(editor_transistor, false, false),
   render_window_m1(editor_m1, false, false),
   render_window_transistor_m1(editor_transistor_m1, false, false) {
@@ -88,45 +92,29 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       }
 
 
-      color_t frame_color = gate_template->get_frame_color();
-      color_t fill_color = gate_template->get_fill_color();
+      color_t frame_color = gate_template->has_frame_color() ? 
+	gate_template->get_frame_color() : _default_frame_col;
+      color_t fill_color = gate_template->has_fill_color() ? 
+	gate_template->get_fill_color() : _default_fill_col;
 
       get_widget("colorbutton_fill_color", colorbutton_fill_color);
       if(colorbutton_fill_color != NULL) {
 	Gdk::Color c;
-	if(fill_color != 0) {
-	  c.set_red(MASK_R(fill_color) << 8);
-	  c.set_green(MASK_G(fill_color) << 8);
-	  c.set_blue(MASK_B(fill_color) << 8);
-	  colorbutton_fill_color->set_alpha(MASK_A(fill_color) << 8);
-	  colorbutton_fill_color->set_color(c);
-	}
-	else {
-	  c.set_red(0x30 << 8);
-	  c.set_green(0x30 << 8);
-	  c.set_blue(0x30 << 8);
-	  colorbutton_fill_color->set_alpha(0xa0 << 8);
-	  colorbutton_fill_color->set_color(c);
-	}
+	c.set_red(MASK_R(fill_color) << 8);
+	c.set_green(MASK_G(fill_color) << 8);
+	c.set_blue(MASK_B(fill_color) << 8);
+	colorbutton_fill_color->set_alpha(MASK_A(fill_color) << 8);
+	colorbutton_fill_color->set_color(c);
       }
 
       get_widget("colorbutton_frame_color", colorbutton_frame_color);
       if(colorbutton_frame_color != NULL) {
 	Gdk::Color c;
-	if(frame_color != 0) {
-	  c.set_red(MASK_R(frame_color) << 8);
-	  c.set_green(MASK_G(frame_color) << 8);
-	  c.set_blue(MASK_B(frame_color) << 8);
-	  colorbutton_frame_color->set_alpha(MASK_A(frame_color) << 8);
-	  colorbutton_frame_color->set_color(c);
-	}
-	else {
-	  c.set_red(0xa0 << 8);
-	  c.set_green(0xa0 << 8);
-	  c.set_blue(0xa0 << 8);
-	  colorbutton_fill_color->set_alpha(0x7f << 8);
-	  colorbutton_fill_color->set_color(c);
-	}
+	c.set_red(MASK_R(frame_color) << 8);
+	c.set_green(MASK_G(frame_color) << 8);
+	c.set_blue(MASK_B(frame_color) << 8);
+	colorbutton_frame_color->set_alpha(MASK_A(frame_color) << 8);
+	colorbutton_frame_color->set_color(c);
       }
 
 

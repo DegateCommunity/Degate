@@ -71,7 +71,9 @@ protected:
 public:
   GateConfigWin(Gtk::Window *parent,
 		degate::LogicModel_shptr lmodel,
-		degate::GateTemplate_shptr gate_template);
+		degate::GateTemplate_shptr gate_template,
+		degate::color_t default_frame_col, 
+		degate::color_t default_fill_col);
 
   virtual ~GateConfigWin();
 
@@ -117,6 +119,8 @@ private:
 
   std::string selected_logic_class;
 
+  degate::color_t _default_frame_col;
+  degate::color_t _default_fill_col;
 
   // renderer stuff
   GfxEditor<GateRenderer> editor_transistor;

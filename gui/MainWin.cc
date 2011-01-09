@@ -878,7 +878,9 @@ void MainWin::on_menu_gate_port_colors() {
 
 void MainWin::on_menu_gate_list() {
   if(main_project != NULL) {
-    GateListWin glWin(this, main_project->get_logic_model());
+    GateListWin glWin(this, main_project->get_logic_model(),
+		      main_project->get_default_color(DEFAULT_COLOR_GATE_FRAME),
+		      main_project->get_default_color(DEFAULT_COLOR_GATE));
     glWin.run();
 
     apply_port_color_settings(main_project->get_logic_model(),
@@ -1061,7 +1063,9 @@ void MainWin::on_menu_gate_create_by_selection() {
 
     grab_template_images(lmodel, tmpl, bbox);
 
-    GateConfigWin gcWin(this, main_project->get_logic_model(), tmpl);
+    GateConfigWin gcWin(this, main_project->get_logic_model(), tmpl,
+			main_project->get_default_color(DEFAULT_COLOR_GATE_FRAME),
+			main_project->get_default_color(DEFAULT_COLOR_GATE));
 
     if(gcWin.run() == true) {
 

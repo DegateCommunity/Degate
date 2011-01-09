@@ -33,14 +33,15 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include <stdlib.h>
 
-#define DEFAULT_FILL_COLOR MERGE_CHANNELS(0x30, 0x30, 0x30, 0xff)
-#define DEFAULT_FRAME_COLOR MERGE_CHANNELS(0xa0, 0xa0, 0xa0, 0xff)
-
 using namespace degate;
 
 
-GateListWin::GateListWin(Gtk::Window *parent, LogicModel_shptr lmodel) :
-  GladeFileLoader("gate_list.glade", "gate_list_dialog") {
+GateListWin::GateListWin(Gtk::Window *parent, LogicModel_shptr lmodel,
+			 degate::color_t default_frame_col, 
+			 degate::color_t default_fill_col) :
+  GladeFileLoader("gate_list.glade", "gate_list_dialog"),
+  _default_frame_col(default_frame_col),
+  _default_fill_col(default_fill_col) {
 
   this->lmodel = lmodel;
   this->parent = parent;
@@ -142,8 +143,8 @@ void GateListWin::fill_row(Gtk::TreeModel::Row const& row, std::tr1::shared_ptr<
   row[m_Columns.m_col_description] = tmpl->get_description();
 
 
-  row[m_Columns.color_fill_] = get_color(tmpl->get_fill_color(), DEFAULT_FILL_COLOR);
-  row[m_Columns.color_frame_] = get_color(tmpl->get_frame_color(), DEFAULT_FRAME_COLOR);
+  row[m_Columns.color_fill_] = get_color(tmpl->get_fill_color(), _default_fill_col);
+  row[m_Columns.color_frame_] = get_color(tmpl->get_frame_color(), _default_frame_col);
 
   row[m_Columns.padding_] = 5;
 }
@@ -177,7 +178,7 @@ void GateListWin::on_add_button_clicked() {
   GateTemplate_shptr tmpl(new GateTemplate());
   assert(tmpl != NULL);
 
-  GateConfigWin gcWin(parent, lmodel, tmpl);
+  GateConfigWin gcWin(parent, lmodel, tmpl, _default_frame_col, _default_fill_col);
   if(gcWin.run() == true) {
 
     std::tr1::shared_ptr<GateTemplate> tmpl_shared_ptr(tmpl);
@@ -244,7 +245,7 @@ void GateListWin::on_edit_button_clicked() {
       assert(gate_lib != NULL);
       GateTemplate_shptr tmpl = gate_lib->get_template(obj_id);
 
-      GateConfigWin gcWin(parent, lmodel, tmpl);
+      GateConfigWin gcWin(parent, lmodel, tmpl, _default_frame_col, _default_fill_col);
       if(gcWin.run() == true) {
 	row[m_Columns.m_col_id] = tmpl->get_object_id();
 	row[m_Columns.m_col_refcount] = tmpl->get_reference_counter();
@@ -255,8 +256,8 @@ void GateListWin::on_edit_button_clicked() {
 	row[m_Columns.m_col_short_name] = tmpl->get_name();
 	row[m_Columns.m_col_description] = tmpl->get_description();
 
-	row[m_Columns.color_fill_] = get_color(tmpl->get_fill_color(), DEFAULT_FILL_COLOR);
-	row[m_Columns.color_frame_] = get_color(tmpl->get_frame_color(), DEFAULT_FRAME_COLOR);
+	row[m_Columns.color_fill_] = get_color(tmpl->get_fill_color(), _default_fill_col);
+	row[m_Columns.color_frame_] = get_color(tmpl->get_frame_color(), _default_frame_col);
       }
     }
   }

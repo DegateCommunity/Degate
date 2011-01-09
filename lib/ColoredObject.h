@@ -38,6 +38,16 @@ namespace degate {
     virtual ~ColoredObject() {}
 
     /**
+     * Is there a frame color definition.
+     */
+    virtual bool has_frame_color() const { return frame_color != 0; }
+
+    /**
+     * Is there a fill color definition.
+     */
+    virtual bool has_fill_color() const { return fill_color != 0; }
+
+    /**
      * Get the frame color.
      */
     virtual color_t get_frame_color() const { return frame_color; }
