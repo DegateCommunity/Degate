@@ -222,13 +222,11 @@ class MainWin : public Gtk::Window  {
   void algorithm_calc_thread(int slot_pos);
 
   void project_export_thread(std::string project_dir, std::string dst_file);
-  void auto_name_gates_thread(degate::AutoNameGates::ORIENTATION orientation);
 
   void on_project_load_finished();
   void on_background_import_finished();
   void on_algorithm_finished(int slot_pos);
   void on_export_finished(bool success);
-  void on_auto_name_finished(degate::ret_t ret);
 
   Glib::Dispatcher signal_project_open_finished_;
   Glib::Dispatcher signal_bg_import_finished_;

@@ -101,6 +101,7 @@ set(SOURCES
 	XmlRpc.cc
 	ObjectSet.cc
 	HlObjectSet.cc
+	AutoNameGates.cc
 
 	#
 	# importer / exporter

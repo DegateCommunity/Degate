@@ -22,6 +22,8 @@
 #ifndef __AUTONAMEGATES_H__
 #define __AUTONAMEGATES_H__
 
+#include <LogicModel.h>
+
 namespace degate {
 
   /**
@@ -42,10 +44,25 @@ namespace degate {
       ALONG_COLS = 2
     };
 
-    AutoNameGates(Layer_shptr, ORIENTATION orientation) {
-    }
+    AutoNameGates(LogicModel_shptr lmodel, ORIENTATION orientation);
 
-    void run() {}
+    void run();
+
+  private:
+    void rename_gates(std::vector<unsigned int> const & histogram, 
+		      ORIENTATION orientation,
+		      std::list<int> const& scan_lines) const;
+
+    void fill_histogram(LogicModel_shptr lmodel,
+			std::vector<unsigned int> & histogram, 
+			ORIENTATION orientation) const;
+
+    std::list<int> scan_histogram(std::vector<unsigned int> const & histogram) const;
+
+  private:
+    LogicModel_shptr _lmodel;
+    ORIENTATION _orientation;
+    Layer_shptr layer;  
 
   };
 

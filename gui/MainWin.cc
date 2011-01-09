@@ -1528,61 +1528,28 @@ void MainWin::on_popup_menu_add_horizontal_grid_line() {
 void MainWin::on_menu_logic_auto_name_gates(AutoNameGates::ORIENTATION orientation) {
   if(main_project != NULL) {
 
-    Gtk::MessageDialog dialog(*this, "The operation may destroy previously set names. Are you sure you want name all gates?",
+    Gtk::MessageDialog dialog(*this, "The operation may destroy previously set names. "
+			      "Are you sure you want name all gates?",
 			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
     dialog.set_title("Warning");
     if(dialog.run() == Gtk::RESPONSE_NO) return;
     dialog.hide();
 
-    Layer_shptr layer;
     try {
-      layer = get_first_logic_layer(main_project->get_logic_model());
+      Layer_shptr layer = get_first_logic_layer(main_project->get_logic_model());
     }
     catch(CollectionLookupException const& ex) {
       error_dialog("Error", "There is no logic layer defined.");
       return;
     }
 
-    ipWin = std::tr1::shared_ptr<InProgressWin>(new InProgressWin(this, "Naming gates",
-							  "Please wait while generating names."));
-    ipWin->show();
-
-    signal_auto_name_finished_.connect(sigc::mem_fun(*this, &MainWin::on_auto_name_finished));
-    thread = Glib::Thread::create(sigc::bind<AutoNameGates::ORIENTATION>
-				  (sigc::mem_fun(*this,
-						 &MainWin::auto_name_gates_thread),
-				   orientation), false);
-
-  }
-}
-
-
-void MainWin::auto_name_gates_thread(AutoNameGates::ORIENTATION orientation) {
-  try {
-    AutoNameGates auto_name(get_first_logic_layer(main_project->get_logic_model()),
-			    orientation);
+    AutoNameGates auto_name(main_project->get_logic_model(), orientation);
     auto_name.run();
-    signal_auto_name_finished_(RET_OK);
-  }
-  catch(CollectionLookupException const& ex) {
-    signal_auto_name_finished_(RET_ERR);
-  }
-}
 
-
-void MainWin::on_auto_name_finished(ret_t ret) {
-  if(ipWin) {
-    ipWin->close();
-    ipWin.reset();
-  }
-  if(RET_IS_NOT_OK(ret)) {
-    error_dialog("Error", "naming failed");
-  }
-  else {
     project_changed();
-    //imgWin.update_screen(); // XXX results in a Fatal IO error 11 (Resource temporarily unavailable) on X server :0.0.
   }
 }
+
 
 void MainWin::on_menu_logic_interconnect() {
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
