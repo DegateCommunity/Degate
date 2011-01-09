@@ -95,6 +95,7 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
   Gtk::Button* pIgnoreDRCButton;
   Gtk::Button* pUpdateButton;
 
+  Gtk::Label* pNumViolationsLabel;
 
   DRCViolationsModelColumns m_Columns;
   Glib::RefPtr<Gtk::ListStore> refListStore;

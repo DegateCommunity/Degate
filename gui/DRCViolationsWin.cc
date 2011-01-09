@@ -69,6 +69,9 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
       pUpdateButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_update_button_clicked) );
     }
 
+    get_widget("label_num_violations", pNumViolationsLabel);
+    assert(pNumViolationsLabel != NULL);
+
     refListStore = Gtk::ListStore::create(m_Columns);
 
     get_widget("treeview", pTreeView);
@@ -132,7 +135,9 @@ void DRCViolationsWin::run_checks() {
   clear_list();
   Gtk::TreeModel::Row row;
 
-  BOOST_FOREACH(DRCBase::container_type::value_type v, drc.get_drc_violations()) {
+  DRCBase::container_type const& violations = drc.get_drc_violations();
+
+  BOOST_FOREACH(DRCBase::container_type::value_type v, violations) {
     row = *(refListStore->append());
 
     PlacedLogicModelObject_shptr plo = v->get_object();
@@ -140,8 +145,11 @@ void DRCViolationsWin::run_checks() {
     row[m_Columns.m_col_layer] = boost::lexical_cast<Glib::ustring>(plo->get_layer()->get_layer_pos());
     row[m_Columns.m_col_violation_class] = v->get_drc_violation_class();
     row[m_Columns.m_col_violation_description] = v->get_problem_description();
-
   }
+  
+  boost::format fmt("%1%");
+  fmt % violations.size();
+  pNumViolationsLabel->set_text(fmt.str());
 }
 
 void DRCViolationsWin::show() {
@@ -158,6 +166,7 @@ void DRCViolationsWin::clear_list() {
   refListStore->clear();
   pGotoButton->set_sensitive(false);
   pIgnoreDRCButton->set_sensitive(false);
+  pNumViolationsLabel->set_text("0");
 }
 
 void DRCViolationsWin::disable_widgets() {
