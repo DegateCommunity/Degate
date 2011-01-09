@@ -225,12 +225,13 @@ void OpenGLRendererBase::draw_circle(int x, int y, int diameter,
   glEnd();
 
   if(render_distant_outline) {
+    int d = 3;
     glLineWidth(1);
     glBegin(GL_LINE_LOOP);
-    glVertex2i(min_x - 2, min_y - 2);
-    glVertex2i(max_x + 2, min_y - 2);
-    glVertex2i(max_x + 2, max_y + 2);
-    glVertex2i(min_x - 2, max_y + 2);
+    glVertex2i(min_x - d, min_y - d);
+    glVertex2i(max_x + d, min_y - d);
+    glVertex2i(max_x + d, max_y + d);
+    glVertex2i(min_x - d, max_y + d);
     glEnd();
   }
 
