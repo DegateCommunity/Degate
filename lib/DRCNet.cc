@@ -89,14 +89,20 @@ void DRCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
       if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(plo)) {
 
 	GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
+	std::string error_msg;
 
-	boost::format f("Port %1% of type %2%-port is only connected "
-			"to ports of the same direction.");
+	if(in_ports > 0) {
+	  boost::format f("In-Port %1% is only connected with other in-ports.");
+	  f % gate_port->get_descriptive_identifier();
+	  error_msg = f.str();
+	}
+	else {
+	  boost::format f("Out-Port %1% is connected with other out-ports.");
+	  f % gate_port->get_descriptive_identifier();
+	  error_msg = f.str();
+	}
 
-	f % gate_port->get_descriptive_identifier()
-	  % tmpl_port->get_port_type_as_string();
-
-	add_drc_violation(DRCViolation_shptr(new DRCViolation(gate_port, f.str(),
+	add_drc_violation(DRCViolation_shptr(new DRCViolation(gate_port, error_msg,
 							      get_drc_class_name())));
       }
     }

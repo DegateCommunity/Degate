@@ -37,7 +37,8 @@ namespace degate {
    * - A net connects gate ports, but these ports are all of the
    *   type. E.g. only inports or only outports are connected.
    * - Corresponding gate templates have an undefined port direction.
-
+   * - Connection of multiple output ports.
+   *
    * It is possible, that the port direction is still undefined, because
    * the user forgot to define it. This could be checked with a dedicated DRC
    * for gate template ports, but in order to simplify it, we generate a
