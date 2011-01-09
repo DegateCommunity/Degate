@@ -640,7 +640,14 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
   if(main_project != NULL && obj_ptr != NULL) {
 
     const BoundingBox & bbox = obj_ptr->get_bounding_box();
-    Layer_shptr layer = obj_ptr->get_layer();
+    Layer_shptr layer;
+
+    /* Do not switch layer, if user jumps to a gate or a gate port. */
+    if(std::tr1::dynamic_pointer_cast<GatePort>(obj_ptr) ||
+       std::tr1::dynamic_pointer_cast<Gate>(obj_ptr))
+      layer = main_project->get_logic_model()->get_current_layer();
+    else 
+      layer = obj_ptr->get_layer();
 
     highlighted_objects.clear();
     highlighted_objects.add(obj_ptr);
