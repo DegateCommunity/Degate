@@ -309,6 +309,11 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y,
   glPushAttrib(GL_LIST_BIT | GL_CURRENT_BIT  | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
   glListBase(font_dlist_base);
 
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  assert(glGetError() == GL_NO_ERROR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  assert(glGetError() == GL_NO_ERROR);
+
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
 
@@ -321,6 +326,11 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y,
   glScalef(scale_font * adjusted_scaling, scale_font * adjusted_scaling, 1);
 
   glCallLists(str.length(), GL_UNSIGNED_BYTE, str.c_str());
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  assert(glGetError() == GL_NO_ERROR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  assert(glGetError() == GL_NO_ERROR);
 
   glPopMatrix();
   glPopAttrib();
@@ -441,9 +451,6 @@ unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Fa
   glEndList();
 
   FT_Done_Glyph(glyph);
-
-  //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  assert(glGetError() == GL_NO_ERROR);
 
   return width;
 }

@@ -421,11 +421,9 @@ void DegateRenderer::render_wires() {
       iter != layer->objects_end(); ++iter) {
 
     if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(*iter)) {
-      color_t col = wire->get_frame_color();
-      if(col == 0) col = default_colors[DEFAULT_COLOR_WIRE];
+      color_t col = wire->has_frame_color() ? wire->get_frame_color() : default_colors[DEFAULT_COLOR_WIRE];
 
       set_color(highlight_color_by_state(col, wire->get_highlighted()));
-
 
       glLineWidth((double)wire->get_diameter() / get_scaling());
       glBegin(GL_LINES);
