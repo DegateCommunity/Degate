@@ -100,10 +100,12 @@ protected:
 
   /**
   * @param render_distant_outline If it is set, the renderer will draw
-  *   another circle around the centered filled circle.
+  *   another square around the centered filled square.
   */
-  void draw_circle(int x, int y, int diameter, degate::color_t col,
+  void draw_square(int x, int y, int diameter, degate::color_t col,
 		   bool render_distant_outline = false);
+
+  void draw_circle(int x, int y, int diameter, degate::color_t col);
 
   /**
    * Draw a string.

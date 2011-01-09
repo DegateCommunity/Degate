@@ -206,6 +206,18 @@ void OpenGLRendererBase::set_color(color_t col) {
 }
 
 void OpenGLRendererBase::draw_circle(int x, int y, int diameter,
+				     color_t col) {
+
+  set_color(col);
+  int r = diameter >> 1;
+
+  glBegin(GL_POLYGON);
+  for(float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / 6.0)
+    glVertex2f(x + r*cos(angle), y + r*sin(angle));
+  glEnd();
+}
+
+void OpenGLRendererBase::draw_square(int x, int y, int diameter,
 				     color_t col,
 				     bool render_distant_outline) {
   set_color(col);
@@ -235,12 +247,6 @@ void OpenGLRendererBase::draw_circle(int x, int y, int diameter,
     glEnd();
   }
 
-    /*
-  glBegin(GL_POLYGON);
-  for(float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / 6.0)
-    glVertex2f(x + r*cos(angle), y + r*sin(angle));
-  glEnd();
-    */
 }
 
 

@@ -368,7 +368,7 @@ void DegateRenderer::render_vias() {
 	diameter <<= 2;
       }
 
-      draw_circle(via->get_x(), via->get_y(), diameter, col,
+      draw_square(via->get_x(), via->get_y(), diameter, col,
 		  via->is_connected());
     }
 
@@ -585,7 +585,7 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate,
 	      port_size *= 2;
 	    }
 
-	    draw_circle(x, y, port_size, port_color, port->is_connected());
+	    draw_square(x, y, port_size, port_color, port->is_connected());
 	  }
 	  else { // render_into_details_list
 	    if(tmpl_port->has_name())
