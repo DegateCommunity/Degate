@@ -653,9 +653,6 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
     highlighted_objects.add(obj_ptr);
 
     center_view(bbox.get_center_x(), bbox.get_center_y(), layer->get_layer_pos());
-
-
-
   }
 }
 
