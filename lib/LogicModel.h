@@ -32,6 +32,7 @@
 
 #include <Via.h>
 #include <Wire.h>
+#include <EMarker.h>
 #include <Gate.h>
 #include <GatePort.h>
 #include <GateTemplate.h>
@@ -80,6 +81,7 @@ namespace degate {
     gate_collection gates;
     std::map<object_id_t, Wire_shptr > wires;
     std::map<object_id_t, Via_shptr > vias;
+    std::map<object_id_t, EMarker_shptr > emarkers;
     annotation_collection annotations;
     net_collection nets;
     Module_shptr main_module;
@@ -137,6 +139,15 @@ namespace degate {
     void add_via(int layer_pos, Via_shptr o) throw(InvalidPointerException);
 
     /**
+     * Add an emarker into the logic model. If the layer doesn't exists, the layer is created implicitly.
+     * If the emarker has no object ID, a new object ID for the emarker is generated.
+     * @param layer_pos The layer position (starting at 0).
+     * @param o A shared pointer to the object.
+     */
+
+    void add_emarker(int layer_pos, EMarker_shptr o);
+
+    /**
      * Add an annotation into the logic model. If the layer doesn't exists, the layer is created implicitly.
      * If the annotation has no object ID, a new object ID for the via is generated.
      * @param layer_pos The layer position (starting at 0).
@@ -186,6 +197,13 @@ namespace degate {
      */
 
     void remove_via(Via_shptr o) throw(InvalidPointerException);
+
+    /**
+     * Remove an emarker from the logic model.
+     * @param o A shared pointer to the object.
+     */
+
+    void remove_emarker(EMarker_shptr o);
 
     /**
      * Remove an annotation from the logic model.

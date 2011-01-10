@@ -47,6 +47,9 @@ private:
   void parse_vias_element(const xmlpp::Element * const vias_element,
 			  LogicModel_shptr lmodel) ;
 
+  void parse_emarkers_element(const xmlpp::Element * const emarkers_element,
+			      LogicModel_shptr lmodel) ;
+
   void parse_wires_element(const xmlpp::Element * const wires_element,
 			   LogicModel_shptr lmodel);
 

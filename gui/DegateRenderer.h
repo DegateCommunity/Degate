@@ -63,7 +63,9 @@ public:
   bool realized;
 
   GLuint background_dlist, gates_dlist, gate_details_dlist,
-    vias_dlist, wires_dlist,
+    vias_dlist, 
+    emarkers_dlist,
+    wires_dlist,
     annotations_dlist, annotation_details_dlist,
     grid_dlist,
     tool_dlist;
@@ -157,6 +159,7 @@ public:
 
 
   void render_vias();
+  void render_emarkers();
   void render_wires();
   void render_grid();
 

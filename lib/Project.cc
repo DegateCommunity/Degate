@@ -224,6 +224,7 @@ void Project::init_default_values() {
   default_colors[DEFAULT_COLOR_GATE_FRAME] = 0xa032b0d9;
   default_colors[DEFAULT_COLOR_GATE_PORT] = 0xff0000ff;
   default_colors[DEFAULT_COLOR_TEXT] = 0xffffffff;
+  default_colors[DEFAULT_COLOR_EMARKER] = 0xffa0a0ff;
 
   set_changed(false);
 

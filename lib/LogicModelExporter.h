@@ -46,6 +46,8 @@ private:
   void add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos) throw(std::runtime_error );
   void add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos) throw(std::runtime_error );
 
+  void add_emarker(xmlpp::Element* emarkers_elem, EMarker_shptr emarker, layer_position_t layer_pos);
+
   void add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel) throw(std::runtime_error);
 
   void add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos)

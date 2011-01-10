@@ -140,6 +140,10 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
     assert(pCButton != NULL);
     if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_TEXT));
 
+    get_widget("colorbutton_emarker", pCButton);
+    assert(pCButton != NULL);
+    if(pCButton) set_color_for_button(pCButton, project->get_default_color(DEFAULT_COLOR_EMARKER));
+
   }
 }
 
@@ -214,6 +218,8 @@ bool ProjectSettingsWin::run() {
 			       get_color_for_button("colorbutton_gate_port"));
     project->set_default_color(DEFAULT_COLOR_TEXT,
 			       get_color_for_button("colorbutton_text"));
+    project->set_default_color(DEFAULT_COLOR_EMARKER,
+			       get_color_for_button("colorbutton_emarker"));
 
 
     project->set_changed();

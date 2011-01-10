@@ -55,6 +55,9 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
     xmlpp::Element* vias_elem = root_elem->add_child("vias");
     if(vias_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
+    xmlpp::Element* emarkers_elem = root_elem->add_child("emarkers");
+    if(emarkers_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
     xmlpp::Element* wires_elem = root_elem->add_child("wires");
     if(wires_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
@@ -81,6 +84,9 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
 	else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
 	  add_via(vias_elem, via, layer_pos);
+
+	else if(EMarker_shptr emarker = std::tr1::dynamic_pointer_cast<EMarker>(o))
+	  add_emarker(emarkers_elem, emarker, layer_pos);
 
 	else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
 	  add_wire(wires_elem, wire, layer_pos);
@@ -230,6 +236,29 @@ void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer
   via_elem->set_attribute("direction", via->get_direction_as_string());
   via_elem->set_attribute("remote-id",
 			  number_to_string<object_id_t>(via->get_remote_object_id()));
+}
+
+void LogicModelExporter::add_emarker(xmlpp::Element* emarkers_elem, EMarker_shptr emarker, 
+				     layer_position_t layer_pos) {
+
+  xmlpp::Element* emarker_elem = emarkers_elem->add_child("emarker");
+  if(emarker_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
+  object_id_t new_oid = oid_rewriter->get_new_object_id(emarker->get_object_id());
+  emarker_elem->set_attribute("id", number_to_string<object_id_t>(new_oid));
+  emarker_elem->set_attribute("name", emarker->get_name());
+  emarker_elem->set_attribute("description", emarker->get_description());
+  emarker_elem->set_attribute("layer", number_to_string<layer_position_t>(layer_pos));
+  emarker_elem->set_attribute("diameter", number_to_string<unsigned int>(emarker->get_diameter()));
+
+  emarker_elem->set_attribute("x", number_to_string<int>(emarker->get_x()));
+  emarker_elem->set_attribute("y", number_to_string<int>(emarker->get_y()));
+
+  emarker_elem->set_attribute("fill-color", to_color_string(emarker->get_fill_color()));
+  emarker_elem->set_attribute("frame-color", to_color_string(emarker->get_frame_color()));
+
+  emarker_elem->set_attribute("remote-id",
+			      number_to_string<object_id_t>(emarker->get_remote_object_id()));
 }
 
 

@@ -37,7 +37,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <ObjectSet.h>
 #include "MenuManager.h"
 #include "LayerConfigWin.h"
-
+#include <EMarker.h>
 #include <degate.h>
 #include <AutoNameGates.h>
 #include <BoundingBox.h>
@@ -59,6 +59,7 @@ class MainWin : public Gtk::Window  {
 
  private:
   void open_popup_menu(GdkEventButton * event);
+  void on_popup_menu_place_emarker();
   void on_popup_menu_set_name();
   void on_popup_menu_set_port();
   void on_popup_menu_add_horizontal_grid_line();
@@ -159,6 +160,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_area_selection_activated(degate::BoundingBox const& bbox);
   virtual void on_area_selection_revoked();
 
+  virtual void goto_last_emarker();
   virtual void goto_object(degate::PlacedLogicModelObject_shptr obj_ptr);
 
   bool on_key_press_event_received(GdkEventKey * event);
@@ -205,7 +207,9 @@ class MainWin : public Gtk::Window  {
   degate::HlObjectSet highlighted_objects;
 
   unsigned int last_click_on_real_x, last_click_on_real_y;
+  degate::EMarker_shptr last_emarker;
 
+ private:
 
   void create_new_project(std::string const& project_dir);
 

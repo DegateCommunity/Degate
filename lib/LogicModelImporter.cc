@@ -92,6 +92,9 @@ void LogicModelImporter::parse_logic_model_element(const xmlpp::Element * const 
   const xmlpp::Element * vias_elem = get_dom_twig(lm_elem, "vias");
   if(vias_elem != NULL) parse_vias_element(vias_elem, lmodel);
 
+  const xmlpp::Element * emarkers_elem = get_dom_twig(lm_elem, "emarkers");
+  if(emarkers_elem != NULL) parse_emarkers_element(emarkers_elem, lmodel);
+
   const xmlpp::Element * wires_elem = get_dom_twig(lm_elem, "wires");
   if(wires_elem != NULL) parse_wires_element(wires_elem, lmodel);
 
@@ -256,6 +259,47 @@ void LogicModelImporter::parse_vias_element(const xmlpp::Element * const vias_el
       via->set_remote_object_id(remote_id);
 
       lmodel->add_object(layer, via);
+    }
+  }
+}
+
+void LogicModelImporter::parse_emarkers_element(const xmlpp::Element * const emarkers_element,
+						LogicModel_shptr lmodel) {
+
+  if(emarkers_element == NULL || lmodel == NULL) throw InvalidPointerException();
+
+  const xmlpp::Node::NodeList emarker_list = emarkers_element->get_children("emarker");
+  for(xmlpp::Node::NodeList::const_iterator iter = emarker_list.begin();
+      iter != emarker_list.end();
+      ++iter) {
+
+    if(const xmlpp::Element* emarker_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
+
+      // XXX PORT ID REPLACER ...
+
+      object_id_t object_id = parse_number<object_id_t>(emarker_elem, "id");
+      int x = parse_number<int>(emarker_elem, "x");
+      int y = parse_number<int>(emarker_elem, "y");
+      int diameter = parse_number<diameter_t>(emarker_elem, "diameter");
+      int layer = parse_number<int>(emarker_elem, "layer");
+      int remote_id = parse_number<object_id_t>(emarker_elem, "remote-id", 0);
+
+      const Glib::ustring name(emarker_elem->get_attribute_value("name"));
+      const Glib::ustring description(emarker_elem->get_attribute_value("description"));
+      const Glib::ustring fill_color_str(emarker_elem->get_attribute_value("fill-color"));
+      const Glib::ustring frame_color_str(emarker_elem->get_attribute_value("frame-color"));
+      const Glib::ustring direction_str(emarker_elem->get_attribute_value("direction").lowercase());
+
+      EMarker_shptr emarker(new EMarker(x, y, diameter));
+      emarker->set_name(name.c_str());
+      emarker->set_description(description.c_str());
+      emarker->set_object_id(object_id);
+      emarker->set_fill_color(parse_color_string(fill_color_str));
+      emarker->set_frame_color(parse_color_string(frame_color_str));
+
+      emarker->set_remote_object_id(remote_id);
+
+      lmodel->add_object(layer, emarker);
     }
   }
 }

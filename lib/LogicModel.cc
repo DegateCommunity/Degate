@@ -151,6 +151,13 @@ void LogicModel::add_via(int layer_pos, Via_shptr o) throw(InvalidPointerExcepti
   vias[o->get_object_id()] = o;
 }
 
+void LogicModel::add_emarker(int layer_pos, EMarker_shptr o) {
+
+  if(o == NULL) throw InvalidPointerException(); //
+  if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
+  emarkers[o->get_object_id()] = o;
+}
+
 void LogicModel::add_annotation(int layer_pos, Annotation_shptr o) throw(InvalidPointerException) {
   if(o == NULL) throw InvalidPointerException();
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
@@ -206,6 +213,11 @@ void LogicModel::remove_via(Via_shptr o) throw(InvalidPointerException) {
   //removed_remote_oids.push_back(o->get_remote_object_id());
 }
 
+void LogicModel::remove_emarker(EMarker_shptr o) {
+  if(o == NULL) throw InvalidPointerException();
+  emarkers.erase(o->get_object_id());
+}
+
 void LogicModel::remove_annotation(Annotation_shptr o) throw(InvalidPointerException) {
   if(o == NULL) throw InvalidPointerException();
   annotations.erase(o->get_object_id());
@@ -227,6 +239,8 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
     add_wire(layer_pos, wire);
   else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
     add_via(layer_pos, via);
+  else if(EMarker_shptr via = std::tr1::dynamic_pointer_cast<EMarker>(o))
+    add_emarker(layer_pos, via);
   else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
     add_annotation(layer_pos, annotation);
 
@@ -310,6 +324,8 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
       remove_wire(wire);
     else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
       remove_via(via);
+    else if(EMarker_shptr emarker = std::tr1::dynamic_pointer_cast<EMarker>(o))
+      remove_emarker(emarker);
     else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
       remove_annotation(annotation);
 

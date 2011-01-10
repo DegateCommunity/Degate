@@ -212,7 +212,7 @@ void OpenGLRendererBase::draw_circle(int x, int y, int diameter,
   int r = diameter >> 1;
 
   glBegin(GL_POLYGON);
-  for(float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / 6.0)
+  for(float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / 10.0)
     glVertex2f(x + r*cos(angle), y + r*sin(angle));
   glEnd();
 }

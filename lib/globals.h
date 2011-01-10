@@ -122,6 +122,9 @@ namespace degate {
   class Via;
   typedef std::tr1::shared_ptr<Via> Via_shptr;
 
+  class EMarker;
+  typedef std::tr1::shared_ptr<EMarker> EMarker_shptr;
+
   class Annotation;
   typedef std::tr1::shared_ptr<Annotation> Annotation_shptr;
 
@@ -156,7 +159,8 @@ namespace degate {
     DEFAULT_COLOR_GATE,
     DEFAULT_COLOR_GATE_FRAME,
     DEFAULT_COLOR_GATE_PORT,
-    DEFAULT_COLOR_TEXT
+    DEFAULT_COLOR_TEXT,
+    DEFAULT_COLOR_EMARKER
   };
 
   typedef std::map<ENTITY_COLOR, color_t> default_colors_t;

@@ -51,6 +51,9 @@ void MenuManager::create_popup_menu() {
 
   Gtk::Menu::MenuList & l = popup_menu.items();
 
+  l.push_back( MenuElem("Place an EMarker ",
+			sigc::mem_fun(*window, &MainWin::on_popup_menu_place_emarker) ));
+
   l.push_back( MenuElem("Set port on gate",
 			sigc::mem_fun(*window, &MainWin::on_popup_menu_set_port) ));
 

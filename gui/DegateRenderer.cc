@@ -103,6 +103,9 @@ void DegateRenderer::on_realize() {
   vias_dlist = glGenLists(1);
   assert(error_check());
 
+  emarkers_dlist = glGenLists(1);
+  assert(error_check());
+
   wires_dlist = glGenLists(1);
   assert(error_check());
 
@@ -157,6 +160,7 @@ void DegateRenderer::update_screen() {
       render_annotations(true);
       
       render_vias();
+      render_emarkers();
       render_wires();
       
       render_grid();
@@ -202,6 +206,9 @@ void DegateRenderer::update_screen() {
 	assert(error_check());
 	
 	glCallList(vias_dlist);
+	assert(error_check());
+
+	glCallList(emarkers_dlist);
 	assert(error_check());
       }
 
@@ -370,6 +377,30 @@ void DegateRenderer::render_vias() {
 
       draw_square(via->get_x(), via->get_y(), diameter, col,
 		  via->is_connected());
+    }
+
+  }
+  glEndList();
+}
+
+void DegateRenderer::render_emarkers() {
+  if(lmodel == NULL) return;
+
+  glNewList(emarkers_dlist, GL_COMPILE);
+
+  for(Layer::object_iterator iter = layer->objects_begin();
+      iter != layer->objects_end(); ++iter) {
+
+    if(EMarker_shptr emarker = std::tr1::dynamic_pointer_cast<EMarker>(*iter)) {
+      unsigned int diameter = emarker->get_diameter();
+      uint32_t col = default_colors[DEFAULT_COLOR_EMARKER];
+
+      if(emarker->is_highlighted()) {
+	col = highlight_color_by_state(col, emarker->get_highlighted());
+	diameter <<= 2;
+      }
+
+      draw_circle(emarker->get_x(), emarker->get_y(), diameter, col);
     }
 
   }

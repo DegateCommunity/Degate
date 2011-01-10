@@ -338,6 +338,7 @@ void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_col
       else if(!object_name.compare("gate-frame")) o = DEFAULT_COLOR_GATE_FRAME;
       else if(!object_name.compare("gate-port")) o = DEFAULT_COLOR_GATE_PORT;
       else if(!object_name.compare("text")) o = DEFAULT_COLOR_TEXT;
+      else if(!object_name.compare("emarker")) o = DEFAULT_COLOR_EMARKER;
       else {
 	boost::format f("Can't parse object type. '%1%'");
 	f % object_name;

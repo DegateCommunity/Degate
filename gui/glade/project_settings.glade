@@ -246,7 +246,7 @@
             <child>
               <widget class="GtkTable" id="table2">
                 <property name="visible">True</property>
-                <property name="n_rows">10</property>
+                <property name="n_rows">11</property>
                 <property name="n_columns">2</property>
                 <property name="row_spacing">5</property>
                 <child>
@@ -347,8 +347,8 @@
                     <property name="label" translatable="yes">Grid:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                   </packing>
@@ -359,8 +359,8 @@
                     <property name="label" translatable="yes">Annotation:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                   </packing>
@@ -371,8 +371,8 @@
                     <property name="label" translatable="yes">Annotation (Frame):</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                   </packing>
@@ -383,8 +383,8 @@
                     <property name="label" translatable="yes">Gate:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                   </packing>
@@ -395,8 +395,8 @@
                     <property name="label" translatable="yes">Gate (Frame):</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">7</property>
-                    <property name="bottom_attach">8</property>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                   </packing>
@@ -407,8 +407,8 @@
                     <property name="label" translatable="yes">Gate Port:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
+                    <property name="top_attach">9</property>
+                    <property name="bottom_attach">10</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                   </packing>
@@ -425,24 +425,6 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                    <property name="y_options"></property>
-                    <property name="x_padding">10</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkColorButton" id="colorbutton_annotation">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="use_alpha">True</property>
-                    <property name="title" translatable="yes">Choose color</property>
-                    <property name="color">#000000000000</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
                     <property name="y_options"></property>
@@ -450,7 +432,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkColorButton" id="colorbutton_annotation_frame">
+                  <widget class="GtkColorButton" id="colorbutton_annotation">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -468,7 +450,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkColorButton" id="colorbutton_gate">
+                  <widget class="GtkColorButton" id="colorbutton_annotation_frame">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -486,25 +468,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkColorButton" id="colorbutton_gate_port">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="use_alpha">True</property>
-                    <property name="title" translatable="yes">Choose color</property>
-                    <property name="color">#000000000000</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
-                    <property name="y_options"></property>
-                    <property name="x_padding">10</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkColorButton" id="colorbutton_gate_frame">
+                  <widget class="GtkColorButton" id="colorbutton_gate">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -522,13 +486,49 @@
                   </packing>
                 </child>
                 <child>
+                  <widget class="GtkColorButton" id="colorbutton_gate_port">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_alpha">True</property>
+                    <property name="title" translatable="yes">Choose color</property>
+                    <property name="color">#000000000000</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">9</property>
+                    <property name="bottom_attach">10</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkColorButton" id="colorbutton_gate_frame">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_alpha">True</property>
+                    <property name="title" translatable="yes">Choose color</property>
+                    <property name="color">#000000000000</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">10</property>
+                  </packing>
+                </child>
+                <child>
                   <widget class="GtkLabel" id="label19">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Text:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">9</property>
-                    <property name="bottom_attach">10</property>
+                    <property name="top_attach">10</property>
+                    <property name="bottom_attach">11</property>
                     <property name="x_options"></property>
                     <property name="y_options"></property>
                   </packing>
@@ -545,8 +545,40 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">9</property>
-                    <property name="bottom_attach">10</property>
+                    <property name="top_attach">10</property>
+                    <property name="bottom_attach">11</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label21">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">EMarker:</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">10</property>
+                    <property name="y_padding">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkColorButton" id="colorbutton_emarker">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_alpha">True</property>
+                    <property name="title" translatable="yes">Choose color</property>
+                    <property name="color">#000000000000</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                     <property name="y_options"></property>
                     <property name="x_padding">10</property>
                   </packing>

@@ -61,7 +61,6 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <ProjectArchiver.h>
 #include <XmlRpc.h>
 
-
 using namespace degate;
 
 MainWin::MainWin() : render_window(editor) {
@@ -632,6 +631,16 @@ void MainWin::set_layer(unsigned int layer) {
 
     update_title();
     editor.update_screen();
+  }
+}
+
+void MainWin::goto_last_emarker() {
+  if(main_project != NULL && last_emarker != NULL) {
+    
+    const BoundingBox & bbox = last_emarker->get_bounding_box();
+    Layer_shptr layer =  last_emarker->get_layer();
+    highlighted_objects.add(last_emarker);
+    center_view(bbox.get_center_x(), bbox.get_center_y(), layer->get_layer_pos());
   }
 }
 
@@ -1244,8 +1253,8 @@ bool MainWin::on_key_press_event_received(GdkEventKey * event) {
     control_key_pressed = false;
     debug(TM, "ctrl as modifier released");
   }
-  else if(event->keyval == GDK_space) { // should be removed
-    menu_manager->toggle_select_move_tool();
+  else if(event->keyval == GDK_space) {
+    if(last_emarker) goto_last_emarker();
   }
 
   else if(event->keyval == GDK_a) editor.shift_viewport_left();
@@ -1391,6 +1400,17 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
 }
 
 
+void MainWin::on_popup_menu_place_emarker() {
+  if(main_project) {
+
+    LogicModel_shptr lmodel = main_project->get_logic_model();
+    Layer_shptr layer = lmodel->get_current_layer();
+
+    EMarker_shptr emarker(new EMarker(last_click_on_real_x, last_click_on_real_y));
+    lmodel->add_object(layer, emarker);
+    last_emarker = emarker;
+  }
+}
 
 void MainWin::on_popup_menu_set_port() {
   if(main_project) {

@@ -84,6 +84,7 @@ set(SOURCES
 	Project.cc
 	Wire.cc
 	Via.cc
+	EMarker.cc
 	Annotation.cc
 	SubProjectAnnotation.cc
 	LogicModelObjectBase.cc
