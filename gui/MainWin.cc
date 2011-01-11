@@ -718,6 +718,9 @@ void MainWin::on_menu_tools_select() {
   selection_tool->signal_selection_activated().
     connect(sigc::mem_fun(*this, &MainWin::on_area_selection_activated));
 
+  selection_tool->signal_selection_area_resized().
+    connect(sigc::mem_fun(*this, &MainWin::on_area_selection_resized));
+
   selection_tool->signal_selection_revoked().
     connect(sigc::mem_fun(*this, &MainWin::on_area_selection_revoked));
 
@@ -1166,6 +1169,23 @@ void MainWin::on_area_selection_activated(BoundingBox const& bbox) {
       highlighted_objects.add(plo);
     }
    }
+}
+
+void MainWin::on_area_selection_resized(BoundingBox const& bbox) {
+  if(main_project) {
+    double px_per_um = main_project->get_pixel_per_um();
+    if(px_per_um > 0) {
+      boost::format f("width=%1%px, height=%2%px (w=%3um%, h=%4%um)");
+      f % bbox.get_width() % bbox.get_height() 
+	% (bbox.get_width() / px_per_um) % (bbox.get_height() / px_per_um);
+      m_statusbar.push(f.str());
+    }
+    else {
+      boost::format f("width=%1%px, height=%2%px");
+      f % bbox.get_width() % bbox.get_height();
+      m_statusbar.push(f.str());
+    }
+  }
 }
 
 void MainWin::on_area_selection_revoked() {

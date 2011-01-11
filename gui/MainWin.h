@@ -158,6 +158,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_wire_added(unsigned int from_x, unsigned int from_y,
 			     unsigned int to_x, unsigned int to_y);
   virtual void on_area_selection_activated(degate::BoundingBox const& bbox);
+  virtual void on_area_selection_resized(degate::BoundingBox const& bbox);
   virtual void on_area_selection_revoked();
 
   virtual void goto_last_emarker();
