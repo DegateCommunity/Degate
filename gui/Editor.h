@@ -99,6 +99,10 @@ public:
 
 protected:
 
+  bool in_drag_mode() const {
+    return drag_mode;
+  }
+
   void on_mouse_click(unsigned int real_x, unsigned int real_y, unsigned int button) {
     if(button == 1) {
       bbox = degate::BoundingBox(start_x, start_x, start_y, start_y);
@@ -161,6 +165,7 @@ private:
   sigc::signal<void>  signal_selection_revoked_;
   sigc::signal<void, unsigned int, unsigned int, unsigned int>  signal_mouse_clicked_;
   sigc::signal<void, unsigned int, unsigned int, unsigned int>  signal_mouse_double_clicked_;
+  sigc::signal<void, degate::BoundingBox const&>  signal_selection_area_resized_;
 
 
 public:
@@ -186,6 +191,10 @@ public:
 
   sigc::signal<void, degate::BoundingBox const& >& signal_selection_activated() {
     return signal_selection_activated_;
+  }
+
+  sigc::signal<void, degate::BoundingBox const& >& signal_selection_area_resized() {
+    return signal_selection_area_resized_;
   }
 
   /**
@@ -241,6 +250,15 @@ protected:
     }
   }
 
+  void on_mouse_motion(unsigned int real_x, unsigned int real_y) {
+    GfxEditorToolRectangle<RendererType>::on_mouse_motion(real_x, real_y);
+
+    if(has_selection() && GfxEditorToolRectangle<RendererType>::in_drag_mode()) {
+
+	if(!signal_selection_area_resized_.empty())
+	  signal_selection_area_resized_(GfxEditorToolRectangle<RendererType>::get_bounding_box());
+    }
+  }
 
 };
 
