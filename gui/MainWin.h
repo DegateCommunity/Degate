@@ -228,7 +228,7 @@ class MainWin : public Gtk::Window  {
 
   void project_export_thread(std::string project_dir, std::string dst_file);
 
-  void on_project_load_finished(std::string const& msg);
+  void on_project_load_finished(std::string msg);
   void on_background_import_finished();
   void on_algorithm_finished(int slot_pos);
   void on_export_finished(bool success);

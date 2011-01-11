@@ -171,7 +171,8 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
       if(object_counter < 2) {
 	boost::format f("Net with ID %1% has only a single object. This should not occur.");
 	f % net_id;
-	throw DegateLogicException(f.str());
+	std::cout << "WARNING: " << f.str() << std::endl;
+	//throw DegateLogicException(f.str());
       }
       lmodel->add_net(net);
     }

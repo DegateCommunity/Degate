@@ -134,6 +134,7 @@ void GateRenderer::update_viewport_dimension() {
   if(realized) {
 
     Glib::RefPtr<Gdk::GL::Window> glwindow = get_gl_window();
+    assert(glwindow != NULL);
     if(glwindow->gl_begin(get_gl_context())) {
 
       glViewport(0, 0, get_width(), get_height());

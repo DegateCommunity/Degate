@@ -84,4 +84,9 @@ void restore_autosaved_project(boost::filesystem::path const& project_dir);
 degate::BoundingBox get_selection_bounding_box(GfxEditor<DegateRenderer> const& editor,
 					       const degate::Project_shptr project);
 
+/**
+ * 
+ */
+//degate::snap_upper_or_left_edge_to_grid(const degate::Project_shptr project, degate::BoundingBox);
+
 #endif

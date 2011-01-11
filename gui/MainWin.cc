@@ -470,7 +470,7 @@ void MainWin::open_project(Glib::ustring project_dir) {
 }
 
 // in GUI-thread
-void MainWin::on_project_load_finished(std::string const& msg) {
+void MainWin::on_project_load_finished(std::string msg) {
 
   //thread->join();
 
@@ -1088,6 +1088,11 @@ void MainWin::on_menu_gate_create_by_selection() {
     }
 
     BoundingBox bbox = selection_tool->get_bounding_box();
+
+
+    // XX
+    // snap upper or left edge to nearest grid line
+    //snap_upper_or_left_edge_to_grid(main_project, bbox);
 
     GateTemplate_shptr tmpl(new GateTemplate(bbox.get_width(),
 					     bbox.get_height() ));
