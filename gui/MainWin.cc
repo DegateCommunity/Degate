@@ -470,7 +470,7 @@ void MainWin::open_project(Glib::ustring project_dir) {
 }
 
 // in GUI-thread
-void MainWin::on_project_load_finished() {
+void MainWin::on_project_load_finished(std::string const& msg) {
 
   //thread->join();
 
@@ -480,8 +480,9 @@ void MainWin::on_project_load_finished() {
   }
 
   if(main_project == NULL) {
-    Gtk::MessageDialog err_dialog(*this, "Can't open project",
+    Gtk::MessageDialog err_dialog(*this, msg,
 				  false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+    err_dialog.set_title("Can't open project");
     err_dialog.run();
   }
   else {
@@ -495,6 +496,7 @@ void MainWin::on_project_load_finished() {
 void MainWin::project_open_thread(Glib::ustring project_dir) {
 
   assert(main_project == NULL);
+  std::string msg;
 
   try {
     ProjectImporter importer;
@@ -504,9 +506,10 @@ void MainWin::project_open_thread(Glib::ustring project_dir) {
   }
   catch(std::runtime_error const& ex) {
     debug(TM, "Exception while opening a project: %s", ex.what());
+    msg = ex.what();
   }
 
-  signal_project_open_finished_();
+  signal_project_open_finished_(msg);
 }
 
 

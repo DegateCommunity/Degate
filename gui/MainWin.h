@@ -227,16 +227,15 @@ class MainWin : public Gtk::Window  {
 
   void project_export_thread(std::string project_dir, std::string dst_file);
 
-  void on_project_load_finished();
+  void on_project_load_finished(std::string const& msg);
   void on_background_import_finished();
   void on_algorithm_finished(int slot_pos);
   void on_export_finished(bool success);
 
-  Glib::Dispatcher signal_project_open_finished_;
+  sigc::signal<void, std::string const &> signal_project_open_finished_;
   Glib::Dispatcher signal_bg_import_finished_;
   std::tr1::shared_ptr<Glib::Dispatcher> signal_algorithm_finished_;
   sigc::signal<void, bool> signal_export_finished_;
-  sigc::signal<void, degate::ret_t> signal_auto_name_finished_;
 
   void update_gui_for_loaded_project();
 
