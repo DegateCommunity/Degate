@@ -224,8 +224,13 @@ void MainWin::on_menu_project_recent_projects() {
 }
 
 void MainWin::on_menu_project_quit() {
-  on_menu_project_close();
-  hide(); //Closes the main window to stop the Gtk::Main::run().
+  Gtk::MessageDialog dialog("Do you want to quit degate?",
+			    true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
+  dialog.set_title("Warning");
+  if(dialog.run() == Gtk::RESPONSE_YES) {
+    on_menu_project_close();
+    hide(); //Closes the main window to stop the Gtk::Main::run().
+  }
 }
 
 void MainWin::on_menu_project_new() {
