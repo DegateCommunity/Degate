@@ -434,6 +434,7 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
   parent_prj->set_default_port_diameter(parse_number<diameter_t>(project_elem, "port-diameter", 5));
 
   parent_prj->set_pixel_per_um(parse_number<double>(project_elem, "pixel-per-um", 0));
+  parent_prj->set_template_dimension(parse_number<int>(project_elem, "template-dimension", 0));
 
   const xmlpp::Element * e = get_dom_twig(project_elem, "grids");
   if(e != NULL) parse_grids_element(e, parent_prj);

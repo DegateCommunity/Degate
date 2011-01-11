@@ -288,3 +288,11 @@ void Project::set_pixel_per_um(double pix_per_um) {
   pixel_per_um = pix_per_um;
 }
 
+
+int Project::get_template_dimension() const {
+  return template_dimension;
+}
+
+void Project::set_template_dimension(int template_dimension) {
+  this->template_dimension = template_dimension;
+}

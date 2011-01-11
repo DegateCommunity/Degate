@@ -83,6 +83,7 @@ namespace degate {
     default_colors_t default_colors;
 
     double pixel_per_um;
+    int template_dimension;
 
   private:
 
@@ -282,6 +283,16 @@ namespace degate {
      */
     void set_pixel_per_um(double pix_per_um);
 
+
+    /**
+     * Get the template dimension. This is either the height or the width of a gate (template).
+     */
+    int get_template_dimension() const;
+
+    /**
+     * Set the template dimension.
+     */
+    void set_template_dimension(int template_dimension);
 
   };
 
