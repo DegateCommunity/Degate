@@ -1175,7 +1175,7 @@ void MainWin::on_area_selection_resized(BoundingBox const& bbox) {
   if(main_project) {
     double px_per_um = main_project->get_pixel_per_um();
     if(px_per_um > 0) {
-      boost::format f("width=%1%px, height=%2%px (w=%3um%, h=%4%um)");
+      boost::format f("width=%1%px, height=%2%px (w=%3%um, h=%4%um)");
       f % bbox.get_width() % bbox.get_height() 
 	% (bbox.get_width() / px_per_um) % (bbox.get_height() / px_per_um);
       m_statusbar.push(f.str());
