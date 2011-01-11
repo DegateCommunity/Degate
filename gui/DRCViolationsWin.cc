@@ -106,8 +106,18 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
        * col 2
        */
 
-      pTreeView->append_column("Description", *pRenderer);
+      pTreeView->append_column("Class", *pRenderer);
       pColumn = pTreeView->get_column(2);
+      pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_severity);
+      pColumn->set_resizable(true);
+      pColumn->set_sort_column(m_Columns.m_col_severity);
+
+      /*
+       * col 3
+       */
+
+      pTreeView->append_column("Description", *pRenderer);
+      pColumn = pTreeView->get_column(3);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_violation_description);
       pColumn->set_resizable(true);
       pColumn->set_sort_column(m_Columns.m_col_violation_description);
@@ -145,6 +155,12 @@ void DRCViolationsWin::run_checks() {
     row[m_Columns.m_col_layer] = boost::lexical_cast<Glib::ustring>(plo->get_layer()->get_layer_pos());
     row[m_Columns.m_col_violation_class] = v->get_drc_violation_class();
     row[m_Columns.m_col_violation_description] = v->get_problem_description();
+
+    switch(v->get_severity()) {
+    case degate::DRC_ERROR: row[m_Columns.m_col_severity] = "error"; break;
+    case degate::DRC_WARNING: row[m_Columns.m_col_severity] = "warning"; break;
+    default: row[m_Columns.m_col_severity] = "undef"; break;
+    }
   }
   
   boost::format fmt("%1%");

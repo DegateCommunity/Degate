@@ -19,12 +19,13 @@
 
 */
 
+#include <DRCBase.h>
 #include <DRCOpenPorts.h>
 
 using namespace degate;
 
 DRCOpenPorts::DRCOpenPorts() :
-  DRCBase("open_port", "Check for unconnected ports.") {
+  DRCBase("open_port", "Check for unconnected ports.", DRC_ERROR) {
 }
 
 void DRCOpenPorts::run(LogicModel_shptr lmodel) {

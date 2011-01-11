@@ -27,10 +27,18 @@
 #include <list>
 #include <LogicModel.h>
 
-#include <DRCViolation.h>
 
 namespace degate {
 
+    enum DRC_SEVERITY {
+      DRC_UNDEFINED = 0,
+      DRC_ERROR = 1,
+      DRC_WARNING = 2
+    };
+
+  class DRCViolation;
+  typedef std::tr1::shared_ptr<DRCViolation> DRCViolation_shptr;
+  
   /**
    * Base class for Design Rule Checks.
    */
@@ -40,9 +48,12 @@ namespace degate {
 
     typedef std::list<DRCViolation_shptr> container_type;
 
+
   private:
+
     std::string _class_name;
     std::string _description;
+    DRC_SEVERITY _severity;
 
     container_type drc_violations;
 
@@ -54,9 +65,11 @@ namespace degate {
      * @param description A decription of what the DRC basically checks.
      */
     DRCBase(std::string const& class_name,
-	    std::string const& description) :
+	    std::string const& description,
+	    DRC_SEVERITY severity = DRC_ERROR) :
       _class_name(class_name),
-      _description(description) {
+      _description(description),
+      _severity(severity) {
     }
 
     virtual ~DRCBase() {}
@@ -82,6 +95,10 @@ namespace degate {
       return _class_name;
     }
 
+    DRC_SEVERITY get_severity() const {
+      return _severity;
+    }
+
   protected:
 
     /**
@@ -103,5 +120,7 @@ namespace degate {
 
 
 }
+
+#include <DRCViolation.h>
 
 #endif

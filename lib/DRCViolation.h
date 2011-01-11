@@ -26,6 +26,7 @@
 #include <tr1/memory>
 #include <list>
 #include <LogicModel.h>
+#include <DRCBase.h>
 
 namespace degate {
 
@@ -35,14 +36,17 @@ namespace degate {
     PlacedLogicModelObject_shptr _obj;
     std::string _problem_description;
     std::string _drc_violation_class;
+    DRC_SEVERITY _severity;
 
   public:
     DRCViolation(PlacedLogicModelObject_shptr obj,
 		 std::string const& problem_description,
-		 std::string const& drc_violation_class) :
+		 std::string const& drc_violation_class,
+		 DRC_SEVERITY severity = DRC_ERROR) :
       _obj(obj),
       _problem_description(problem_description),
-      _drc_violation_class(drc_violation_class) {
+      _drc_violation_class(drc_violation_class),
+      _severity(severity) {
     }
 
     std::string get_problem_description() const {
@@ -53,12 +57,15 @@ namespace degate {
       return _drc_violation_class;
     }
 
+    DRC_SEVERITY get_severity() const {
+      return _severity;
+    }
+
     PlacedLogicModelObject_shptr get_object() const {
       return _obj;
     }
   };
 
-  typedef std::tr1::shared_ptr<DRCViolation> DRCViolation_shptr;
 }
 
 #endif

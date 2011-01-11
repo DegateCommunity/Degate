@@ -24,7 +24,7 @@
 using namespace degate;
 
 DRCNet::DRCNet() :
-  DRCBase("net", "Check for unusual net configs.") {
+  DRCBase("net", "Check for unusual net configs.", DRC_ERROR) {
 }
 
 void DRCNet::run(LogicModel_shptr lmodel) {
