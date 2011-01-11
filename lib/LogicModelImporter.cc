@@ -35,6 +35,8 @@
 #include <stdexcept>
 #include <list>
 
+#include <boost/format.hpp>
+
 using namespace std;
 using namespace degate;
 
@@ -117,6 +119,7 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
       iter != net_list.end();
       ++iter) {
 
+    int object_counter = 0;
     if(const xmlpp::Element* net_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
 
       object_id_t net_id = parse_number<object_id_t>(net_elem, "id");
@@ -160,10 +163,16 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
 		  net_id, object_id);
 	    throw; // rethrow
 	  }
-	}
+	} // end of if
 
+	object_counter++;
+      } // end of for
+
+      if(object_counter < 2) {
+	boost::format f("Net with ID %1% has only a single object. This should not occur.");
+	f % net_id;
+	throw DegateLogicException(f.str());
       }
-
       lmodel->add_net(net);
     }
   }
