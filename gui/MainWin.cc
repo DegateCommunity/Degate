@@ -451,6 +451,7 @@ void MainWin::set_project_to_open(char * project_dir) {
   project_to_open = project_dir;
 }
 
+// --------------------------------------------------------------------------
 void MainWin::open_project(Glib::ustring project_dir) {
   if(main_project) on_menu_project_close();
 
@@ -468,16 +469,35 @@ void MainWin::open_project(Glib::ustring project_dir) {
     (new InProgressWin(this, "Opening Project", "Please wait while opening project."));
   ipWin->show();
 
+				 
   signal_project_open_finished_.connect(sigc::mem_fun(*this, &MainWin::on_project_load_finished));
   thread = Glib::Thread::create(sigc::bind<const Glib::ustring>
 				(sigc::mem_fun(*this, &MainWin::project_open_thread),
 				 project_dir), false);
 }
 
-// in GUI-thread
-void MainWin::on_project_load_finished(std::string msg) {
 
-  //thread->join();
+void MainWin::project_open_thread(Glib::ustring project_dir) {
+
+  assert(main_project == NULL);
+
+  try {
+    ProjectImporter importer;
+    main_project = importer.import_all(project_dir);
+    debug(TM, "in project_open_thread(): project loaded");
+  }
+  catch(std::runtime_error const& ex) {
+    debug(TM, "Exception while opening a project: %s", ex.what());
+    thread_error_msg = ex.what();
+  }
+
+  debug(TM, "emit signal");
+  signal_project_open_finished_();
+}
+
+// in GUI-thread
+void MainWin::on_project_load_finished() {
+  debug(TM, "on_project_load_finished()");
 
   if(ipWin) {
     ipWin->close();
@@ -485,9 +505,9 @@ void MainWin::on_project_load_finished(std::string msg) {
   }
 
   if(main_project == NULL) {
-    Gtk::MessageDialog err_dialog(*this, msg,
+    Gtk::MessageDialog err_dialog(*this, thread_error_msg,
 				  false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
-    err_dialog.set_title("Can't open project");
+    err_dialog.set_title("Error");
     err_dialog.run();
   }
   else {
@@ -498,25 +518,7 @@ void MainWin::on_project_load_finished(std::string msg) {
   }
 }
 
-void MainWin::project_open_thread(Glib::ustring project_dir) {
-
-  assert(main_project == NULL);
-  std::string msg;
-
-  try {
-    ProjectImporter importer;
-    Project_shptr prj(importer.import_all(project_dir));
-
-    main_project = prj;
-  }
-  catch(std::runtime_error const& ex) {
-    debug(TM, "Exception while opening a project: %s", ex.what());
-    msg = ex.what();
-  }
-
-  signal_project_open_finished_(msg);
-}
-
+// --------------------------------------------------------------------------
 
 void MainWin::update_gui_for_loaded_project() {
 

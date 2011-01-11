@@ -144,7 +144,6 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_help_about();
 
   void object_clicked(unsigned int real_x, unsigned int real_y);
-
   void selection_tool_clicked(unsigned int real_x, unsigned int real_y, unsigned int button);
 
   void selection_tool_double_clicked(unsigned int real_x, unsigned int real_y,
@@ -210,6 +209,8 @@ class MainWin : public Gtk::Window  {
   unsigned int last_click_on_real_x, last_click_on_real_y;
   degate::EMarker_shptr last_emarker;
 
+  std::string thread_error_msg;
+
  private:
 
   void create_new_project(std::string const& project_dir);
@@ -228,12 +229,12 @@ class MainWin : public Gtk::Window  {
 
   void project_export_thread(std::string project_dir, std::string dst_file);
 
-  void on_project_load_finished(std::string msg);
+  void on_project_load_finished();
   void on_background_import_finished();
   void on_algorithm_finished(int slot_pos);
   void on_export_finished(bool success);
 
-  sigc::signal<void, std::string> signal_project_open_finished_;
+  Glib::Dispatcher signal_project_open_finished_;
   Glib::Dispatcher signal_bg_import_finished_;
   std::tr1::shared_ptr<Glib::Dispatcher> signal_algorithm_finished_;
   sigc::signal<void, bool> signal_export_finished_;
