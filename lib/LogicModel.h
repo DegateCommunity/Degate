@@ -127,7 +127,7 @@ namespace degate {
      * @param o A shared pointer to the object.
      */
 
-    void add_wire(int layer_pos, Wire_shptr o) throw(InvalidPointerException);
+    void add_wire(int layer_pos, Wire_shptr o);
 
     /**
      * Add a via into the logic model. If the layer doesn't exists, the layer is created implicitly.
@@ -136,7 +136,7 @@ namespace degate {
      * @param o A shared pointer to the object.
      */
 
-    void add_via(int layer_pos, Via_shptr o) throw(InvalidPointerException);
+    void add_via(int layer_pos, Via_shptr o);
 
     /**
      * Add an emarker into the logic model. If the layer doesn't exists, the layer is created implicitly.
@@ -154,7 +154,7 @@ namespace degate {
      * @param o A shared pointer to the object.
      */
 
-    void add_annotation(int layer_pos, Annotation_shptr o) throw(InvalidPointerException);
+    void add_annotation(int layer_pos, Annotation_shptr o);
 
 
     /**
@@ -166,7 +166,7 @@ namespace degate {
      * @param o A shared pointer to the object.
      */
 
-    void add_gate(int layer_pos, Gate_shptr o) throw(InvalidPointerException);
+    void add_gate(int layer_pos, Gate_shptr o);
 
 
     /**
@@ -174,7 +174,7 @@ namespace degate {
      * @param o A shared pointer to the object.
      */
 
-    void remove_gate_ports(Gate_shptr o) throw(InvalidPointerException);
+    void remove_gate_ports(Gate_shptr o);
 
     /**
      * Remove a gate from the logic model.
@@ -182,21 +182,21 @@ namespace degate {
      * @param o A shared pointer to the object.
      */
 
-    void remove_gate(Gate_shptr o) throw(InvalidPointerException);
+    void remove_gate(Gate_shptr o);
 
     /**
      * Remove a wire from the logic model.
      * @param o A shared pointer to the object.
      */
 
-    void remove_wire(Wire_shptr o) throw(InvalidPointerException);
+    void remove_wire(Wire_shptr o);
 
     /**
      * Remove a via from the logic model.
      * @param o A shared pointer to the object.
      */
 
-    void remove_via(Via_shptr o) throw(InvalidPointerException);
+    void remove_via(Via_shptr o);
 
     /**
      * Remove an emarker from the logic model.
@@ -210,15 +210,14 @@ namespace degate {
      * @param o A shared pointer to the object.
      */
 
-    void remove_annotation(Annotation_shptr o) throw(InvalidPointerException);
+    void remove_annotation(Annotation_shptr o);
 
 
     /**
      * Remove an onject from the logic model and control if the operation
      * should be remembered in delete log.
      */
-    void remove_object(PlacedLogicModelObject_shptr o,  bool add_to_remove_list)
-      throw(InvalidPointerException);
+    void remove_object(PlacedLogicModelObject_shptr o,  bool add_to_remove_list);
 
   public:
 
@@ -262,8 +261,7 @@ namespace degate {
      * @return Returns a shared pointer to the logic model.
      */
 
-    PlacedLogicModelObject_shptr get_object(object_id_t object_id)
-      throw(CollectionLookupException);
+    PlacedLogicModelObject_shptr get_object(object_id_t object_id);
 
 
     /**
@@ -281,11 +279,9 @@ namespace degate {
      *            same object ID is already in the logic model.
      */
 
-    void add_object(int layer_pos, PlacedLogicModelObject_shptr o)
-      throw(DegateLogicException, InvalidPointerException);
+    void add_object(int layer_pos, PlacedLogicModelObject_shptr o);
 
-    void add_object(Layer_shptr layer, PlacedLogicModelObject_shptr o)
-      throw(DegateLogicException, InvalidPointerException) {
+    void add_object(Layer_shptr layer, PlacedLogicModelObject_shptr o) {
       add_object(layer->get_layer_pos(), o);
     }
 
@@ -296,14 +292,14 @@ namespace degate {
      * @todo fix it
      */
 
-    void remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPointerException);
+    void remove_object(PlacedLogicModelObject_shptr o);
 
     /**
      * Remove a remote object.
      * @exception InvalidObjectIDException This exception is thrown, if remote_id is invalid.
      */
 
-    void remove_remote_object(object_id_t remote_id) throw();
+    void remove_remote_object(object_id_t remote_id);
 
 
     /**
@@ -317,7 +313,7 @@ namespace degate {
      * @todo should call add_object() for the port
      */
 
-    void add_gate_template(GateTemplate_shptr tmpl) throw(DegateLogicException);
+    void add_gate_template(GateTemplate_shptr tmpl);
 
     /**
      * Remove a gate template from the gate library and all placed gates that refer
@@ -333,7 +329,7 @@ namespace degate {
      *     should only unreference and destroy the template.
      */
 
-    void remove_gate_template(GateTemplate_shptr tmpl) throw(DegateLogicException);
+    void remove_gate_template(GateTemplate_shptr tmpl);
 
     /**
      * Remove the reference to a certain gate template from all gates.
@@ -343,7 +339,7 @@ namespace degate {
      * @todo should call remove_object() for the port
      */
 
-    void remove_template_references(GateTemplate_shptr tmpl) throw(DegateLogicException);
+    void remove_template_references(GateTemplate_shptr tmpl);
 
 
     /**
@@ -351,8 +347,7 @@ namespace degate {
      * It will remove the gate ports as well.
      */
 
-    void remove_gates_by_template_type(GateTemplate_shptr tmpl)
-      throw(InvalidPointerException);
+    void remove_gates_by_template_type(GateTemplate_shptr tmpl);
 
     /**
      * Add a template port to a gate template and make relevant updates in the logic model.
@@ -386,15 +381,14 @@ namespace degate {
      *            exception is thrown, too.
      */
 
-    void add_layer(layer_position_t pos, Layer_shptr new_layer)
-      throw(DegateLogicException);
+    void add_layer(layer_position_t pos, Layer_shptr new_layer);
 
     /**
      * Add an empty layer.
      * @see add_layer()
      */
 
-    void add_layer(layer_position_t pos) throw(DegateLogicException);
+    void add_layer(layer_position_t pos);
 
     /**
      * Get a layer.
@@ -459,7 +453,7 @@ namespace degate {
      *   passed as argument.
      */
 
-    void add_net(Net_shptr net) throw();
+    void add_net(Net_shptr net);
 
 
     /**
@@ -472,8 +466,7 @@ namespace degate {
      * Remove a net from the logic model.
      */
 
-    void remove_net(Net_shptr net)
-      throw(InvalidObjectIDException, CollectionLookupException);
+    void remove_net(Net_shptr net);
 
 
     /**

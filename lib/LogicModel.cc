@@ -122,8 +122,7 @@ unsigned int LogicModel::get_height() const {
   return bounding_box.get_height();
 }
 
-PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id)
-  throw(CollectionLookupException) {
+PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id) {
 
   object_collection::iterator found = objects.find(object_id);
 
@@ -137,14 +136,14 @@ PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id)
   }
 }
 
-void LogicModel::add_wire(int layer_pos, Wire_shptr o) throw(InvalidPointerException) {
+void LogicModel::add_wire(int layer_pos, Wire_shptr o) {
 
   if(o == NULL) throw InvalidPointerException();
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
   wires[o->get_object_id()] = o;
 }
 
-void LogicModel::add_via(int layer_pos, Via_shptr o) throw(InvalidPointerException) {
+void LogicModel::add_via(int layer_pos, Via_shptr o) {
 
   if(o == NULL) throw InvalidPointerException(); //
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
@@ -158,13 +157,13 @@ void LogicModel::add_emarker(int layer_pos, EMarker_shptr o) {
   emarkers[o->get_object_id()] = o;
 }
 
-void LogicModel::add_annotation(int layer_pos, Annotation_shptr o) throw(InvalidPointerException) {
+void LogicModel::add_annotation(int layer_pos, Annotation_shptr o) {
   if(o == NULL) throw InvalidPointerException();
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
   annotations[o->get_object_id()] = o;
 }
 
-void LogicModel::add_gate(int layer_pos, Gate_shptr o) throw(InvalidPointerException) {
+void LogicModel::add_gate(int layer_pos, Gate_shptr o) {
 
   if(o == NULL) throw InvalidPointerException();
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
@@ -183,7 +182,7 @@ void LogicModel::add_gate(int layer_pos, Gate_shptr o) throw(InvalidPointerExcep
   }
 }
 
-void LogicModel::remove_gate_ports(Gate_shptr o) throw(InvalidPointerException) {
+void LogicModel::remove_gate_ports(Gate_shptr o) {
   if(o == NULL) throw InvalidPointerException();
   // iterate over ports and remove them from the lookup table
   for(Gate::port_iterator iter = o->ports_begin(); iter != o->ports_end(); ++iter) {
@@ -192,7 +191,7 @@ void LogicModel::remove_gate_ports(Gate_shptr o) throw(InvalidPointerException) 
   }
 }
 
-void LogicModel::remove_gate(Gate_shptr o) throw(InvalidPointerException) {
+void LogicModel::remove_gate(Gate_shptr o) {
 
   if(o == NULL) throw InvalidPointerException();
   remove_gate_ports(o);
@@ -202,12 +201,12 @@ void LogicModel::remove_gate(Gate_shptr o) throw(InvalidPointerException) {
   main_module->remove_gate(o);
 }
 
-void LogicModel::remove_wire(Wire_shptr o) throw(InvalidPointerException) {
+void LogicModel::remove_wire(Wire_shptr o) {
   if(o == NULL) throw InvalidPointerException();
   wires.erase(o->get_object_id());
 }
 
-void LogicModel::remove_via(Via_shptr o) throw(InvalidPointerException) {
+void LogicModel::remove_via(Via_shptr o) {
   if(o == NULL) throw InvalidPointerException();
   vias.erase(o->get_object_id());
   //removed_remote_oids.push_back(o->get_remote_object_id());
@@ -218,7 +217,7 @@ void LogicModel::remove_emarker(EMarker_shptr o) {
   emarkers.erase(o->get_object_id());
 }
 
-void LogicModel::remove_annotation(Annotation_shptr o) throw(InvalidPointerException) {
+void LogicModel::remove_annotation(Annotation_shptr o) {
   if(o == NULL) throw InvalidPointerException();
   annotations.erase(o->get_object_id());
 }
@@ -226,8 +225,7 @@ void LogicModel::remove_annotation(Annotation_shptr o) throw(InvalidPointerExcep
 
 
 
-void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
-  throw(DegateLogicException, InvalidPointerException) {
+void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o) {
 
   if(o == NULL) throw InvalidPointerException();
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
@@ -268,7 +266,7 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
 }
 
 
-void LogicModel::remove_remote_object(object_id_t remote_id) throw() {
+void LogicModel::remove_remote_object(object_id_t remote_id) {
   debug(TM, "Should remove object with remote ID %d from lmodel.", remote_id);
 
   if(remote_id == 0)
@@ -303,8 +301,7 @@ void LogicModel::remove_remote_object(object_id_t remote_id) throw() {
   }
 }
 
-void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remove_list)
-  throw(InvalidPointerException) {
+void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remove_list) {
 
   if(o == NULL) throw InvalidPointerException();
   Layer_shptr layer = o->get_layer();
@@ -343,13 +340,12 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
   objects.erase(o->get_object_id());
 }
 
-void LogicModel::remove_object(PlacedLogicModelObject_shptr o) throw(InvalidPointerException) {
+void LogicModel::remove_object(PlacedLogicModelObject_shptr o) {
   remove_object(o, true);
 }
 
 
-void LogicModel::add_gate_template(GateTemplate_shptr tmpl)
-  throw(DegateLogicException) {
+void LogicModel::add_gate_template(GateTemplate_shptr tmpl) {
   if(gate_library != NULL) {
     if(!tmpl->has_valid_object_id())  tmpl->set_object_id(get_new_object_id());
     gate_library->add_template(tmpl);
@@ -363,7 +359,7 @@ void LogicModel::add_gate_template(GateTemplate_shptr tmpl)
 }
 
 
-void LogicModel::remove_gate_template(GateTemplate_shptr tmpl) throw(DegateLogicException) {
+void LogicModel::remove_gate_template(GateTemplate_shptr tmpl) {
   if(gate_library == NULL)
     throw DegateLogicException("You can't remove a gate template, if there is no gate library.");
   else {
@@ -372,7 +368,7 @@ void LogicModel::remove_gate_template(GateTemplate_shptr tmpl) throw(DegateLogic
   }
 }
 
-void LogicModel::remove_template_references(GateTemplate_shptr tmpl) throw(DegateLogicException) {
+void LogicModel::remove_template_references(GateTemplate_shptr tmpl) {
   if(gate_library == NULL)
     throw DegateLogicException("You can't remove a gate template, if there is no gate library.");
   for(gate_collection::iterator iter = gates_begin();
@@ -387,8 +383,7 @@ void LogicModel::remove_template_references(GateTemplate_shptr tmpl) throw(Degat
 }
 
 
-void LogicModel::remove_gates_by_template_type(GateTemplate_shptr tmpl)
-  throw(InvalidPointerException) {
+void LogicModel::remove_gates_by_template_type(GateTemplate_shptr tmpl) {
   if(tmpl == NULL) throw InvalidPointerException("The gate template pointer is invalid.");
 
   std::list<Gate_shptr> gates_to_remove;
@@ -521,8 +516,7 @@ void LogicModel::update_ports(GateTemplate_shptr gate_template) {
 }
 
 
-void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer)
-  throw(DegateLogicException) {
+void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer) {
 
   if(layers.size() <= pos) layers.resize(pos + 1);
 
@@ -539,7 +533,7 @@ void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer)
 }
 
 
-void LogicModel::add_layer(layer_position_t pos) throw(DegateLogicException) {
+void LogicModel::add_layer(layer_position_t pos) {
   Layer_shptr new_layer(new Layer(bounding_box));
   add_layer(pos, new_layer);
 }
@@ -620,7 +614,7 @@ void LogicModel::set_gate_library(GateLibrary_shptr new_gate_lib) {
   gate_library = new_gate_lib;
 }
 
-void LogicModel::add_net(Net_shptr net) throw() {
+void LogicModel::add_net(Net_shptr net) {
   if(net == NULL) throw InvalidPointerException();
 
   if(!net->has_valid_object_id()) net->set_object_id(get_new_object_id());
@@ -632,12 +626,14 @@ Net_shptr LogicModel::get_net(object_id_t net_id) {
   return nets[net_id];
 }
 
-void LogicModel::remove_net(Net_shptr net)
-  throw(InvalidObjectIDException, CollectionLookupException) {
+void LogicModel::remove_net(Net_shptr net) {
   if(!net->has_valid_object_id())
     throw InvalidObjectIDException("The net object has no object ID.");
-  else if(nets.find(net->get_object_id()) == nets.end())
-    throw CollectionLookupException("Unknown net.");
+  else if(nets.find(net->get_object_id()) == nets.end()) {
+    boost::format f("Failed to remove net with OID %1%, because it is not registered in the set of nets.");
+    f % net->get_object_id();
+    throw CollectionLookupException(f.str());
+  }
   else {
     while(net->size() > 0) {
 
