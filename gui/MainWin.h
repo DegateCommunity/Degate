@@ -233,7 +233,7 @@ class MainWin : public Gtk::Window  {
   void on_algorithm_finished(int slot_pos);
   void on_export_finished(bool success);
 
-  sigc::signal<void, std::string const &> signal_project_open_finished_;
+  sigc::signal<void, std::string> signal_project_open_finished_;
   Glib::Dispatcher signal_bg_import_finished_;
   std::tr1::shared_ptr<Glib::Dispatcher> signal_algorithm_finished_;
   sigc::signal<void, bool> signal_export_finished_;
