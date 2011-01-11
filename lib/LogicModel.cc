@@ -623,6 +623,11 @@ void LogicModel::add_net(Net_shptr net) {
 
 
 Net_shptr LogicModel::get_net(object_id_t net_id) {
+  if(nets.find(net_id) == nets.end()) {
+    boost::format f("Failed to get net with OID %1%, because it is not registered in the set of nets.");
+    f % net_id;
+    throw CollectionLookupException(f.str());
+  }
   return nets[net_id];
 }
 

@@ -458,12 +458,18 @@ namespace degate {
 
     /**
      * Get a net from the logic model.
+     * @exception CollectionLookupException Is thrown if there is
+     *   no logic model object with that object ID.     
      */
 
     Net_shptr get_net(object_id_t net_id);
 
     /**
      * Remove a net from the logic model.
+     * @exception InvalidPointerException Is thrown, if an invalid pointer was
+     *   passed as argument.
+     * @exception CollectionLookupException Is thrown if there is
+     *   no logic model object with that object ID.
      */
 
     void remove_net(Net_shptr net);
