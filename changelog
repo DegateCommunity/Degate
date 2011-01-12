@@ -1,93 +1,100 @@
 degate (0.0.9) unstable; urgency=low
 
-  * Scan for vias on adjacent layers and connect them.
-  * Integrated color settings for wires, vias, ... into project settings.
-  * Bugfix: Software crashed on opening projects (OS X).
+	* Scan for vias on adjacent layers and connect them.
+	* Integrated color settings for wires, vias, ... into project settings.
+	* Bugfix: Software crashed on opening projects (OS X).
+	* Added a new logic model type: EMarker, which are electrically connectable marker objects.
+	* Snap gates to a corridor of standard cell placements.
+	* Implemented highlighting of adjacent objects.
+	* Toggle info rendering with Ctrl-3.
+	* Implemented autonaming of standard cells according to their row and column position.
+	* Found workaround for texture memory leak on OSX.
+	* Fixed sevral rendering problems.
 	
  -- Martin Schobert <martin@weltregierung.de>  Thu, 26 Aug 2010 12:00:00 +0100
 	
 degate (0.0.8) unstable; urgency=low
 
-  * Rewritten rendering engine: it uses OpenGL.
-  * Added a jpeg image importer.
-  * Several bugfixes
-  * Merging of standard cell template images. That will increase the recognition rate and reduces false-positive matches.
-  * Added global tile cache manager.
-  * template matching improved
-  * Implemented interface to use external tools for the wire and via matching.
-  * Added library and GUI code to perform Design Rule Checks.
+	* Rewritten rendering engine: it uses OpenGL.
+	* Added a jpeg image importer.
+	* Several bugfixes
+	* Merging of standard cell template images. That will increase the recognition rate and reduces false-positive matches.
+	* Added global tile cache manager.
+	* template matching improved
+	* Implemented interface to use external tools for the wire and via matching.
+	* Added library and GUI code to perform Design Rule Checks.
 	
  -- Martin Schobert <martin@weltregierung.de>  Thu, 15 Apr 2010 09:51:00 +0100
 
 degate (0.0.7) unstable; urgency=low
 
-  * Core completely rewritten in C++. The core is now called libdegate.
-  * Degate now uses cmake to build the code.
-  * Degate now uses a tile based approach to handle large images.
-  * Added basic support for distributed wire tracing.
-  * Implemented autosave and restore.
-  * Added support for behavioural description of standard cells in VHDL, Verilog and free text.
-  * Added support for the autogeneration of VHDL and VHDL testbench code.
-  * Support for enabling/disabling and re-ordering of layers added.
-  * Annotations (a kind of 2D-boomarks) added.
-  * Basic support for module hierarchy added.
-  * Support for subprojects added.
-  * Basic support for wire matching added.
+	* Core completely rewritten in C++. The core is now called libdegate.
+	* Degate now uses cmake to build the code.
+	* Degate now uses a tile based approach to handle large images.
+	* Added basic support for distributed wire tracing.
+	* Implemented autosave and restore.
+	* Added support for behavioural description of standard cells in VHDL, Verilog and free text.
+	* Added support for the autogeneration of VHDL and VHDL testbench code.
+	* Support for enabling/disabling and re-ordering of layers added.
+	* Annotations (a kind of 2D-boomarks) added.
+	* Basic support for module hierarchy added.
+	* Support for subprojects added.
+	* Basic support for wire matching added.
 
  -- Martin Schobert <martin@weltregierung.de>  Sun, 15 Nov 2009 23:42:00 +0100
 
 degate (0.0.6) unstable; urgency=low
 
-  * improved grid configuration
-  * focus removed from quit button and set to image area
-  * improved connection inspector
-  * gate list / gate selection: sortable rows, more attributes displayed
-  * dedicated toolbar icons added
-  * open projects via command line
-  * added scaling manager: handle prescaled images (bicubical scaling)
-  * template matching: select multiple gates for matching, work on scaled images
-  * more API documentation
-  * project attributes added: project name and project descr.
-  * gates and gate ports can have colors - wires and vias too, but there is no UI
-  * handling unregular grids
-  * naming gate objects by position
-  * precompiler macro fix: improved architecture detection (thanks to mazzoo)
+	* improved grid configuration
+	* focus removed from quit button and set to image area
+	* improved connection inspector
+	* gate list / gate selection: sortable rows, more attributes displayed
+	* dedicated toolbar icons added
+	* open projects via command line
+	* added scaling manager: handle prescaled images (bicubical scaling)
+	* template matching: select multiple gates for matching, work on scaled images
+	* more API documentation
+	* project attributes added: project name and project descr.
+	* gates and gate ports can have colors - wires and vias too, but there is no UI
+	* handling unregular grids
+	* naming gate objects by position
+	* precompiler macro fix: improved architecture detection (thanks to mazzoo)
 
  -- Martin Schobert <martin@weltregierung.de>  Wed, 30 Mar 2009 12:00:00 +0100
 
 degate (0.0.5) unstable; urgency=low
 
-  * select gate ports
-  * inspect connections
-  * join/ unjoin objects
-  * several Bugfixes, e.g.
-    * Write logic model to temp file first and rename it afterwars. This prevents
-      data loss, if writing fails.
+	* select gate ports
+	* inspect connections
+	* join/ unjoin objects
+	* several Bugfixes, e.g.
+	* Write logic model to temp file first and rename it afterwars. This prevents
+		data loss, if writing fails.
 
  -- Martin Schobert <martin@weltregierung.de>  Wed, 25 Mar 2009 15:07:10 +0100
 
 degate (0.0.4) unstable; urgency=low
 
-  * Template matching improved
-  * several Bugfixes
+	* Template matching improved
+	* several Bugfixes
 
  -- Martin Schobert <martin@weltregierung.de>  Fri, 13 Mar 2009 17:30:23 +0100
 
 degate (0.0.3) unstable; urgency=low
 
-  * Problem with shift-release event fixed
+	* Problem with shift-release event fixed
 
  -- Martin Schobert <martin@weltregierung.de>  Sat, 31 Jan 2009 06:23:42 +0100
 
 degate (0.0.2) unstable; urgency=low
 
-  * applied patch from Eric Preston. Code now complies on Feodora10 with newer sigc++22-devel headers
+	* applied patch from Eric Preston. Code now complies on Feodora10 with newer sigc++22-devel headers
 
  -- Martin Schobert <martin@weltregierung.de>  Fri, 19 Dec 2008 14:54:37 +0100
 
 degate (0.0.1) unstable; urgency=low
 
-  * Initial package
+	* Initial package
 
  -- Martin Schobert <martin@weltregierung.de>  Fri, 19 Dec 2008 14:54:37 +0100
 
