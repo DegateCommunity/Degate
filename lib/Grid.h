@@ -40,6 +40,7 @@ namespace degate {
      */
 
     enum ORIENTATION {
+      UNDEFINED = 0,
       HORIZONTAL = 1,
       VERTICAL = 2
     };
@@ -124,6 +125,7 @@ namespace degate {
      */
 
     virtual bool is_vertical() const { return orientation == VERTICAL; }
+
   };
 
   typedef std::tr1::shared_ptr<Grid> Grid_shptr;
