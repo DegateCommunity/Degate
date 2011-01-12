@@ -34,6 +34,7 @@ class OpenGLRendererBase :
 
 private:
 
+  // begin of helper class
   class FontRenderingHelper : public degate::SingletonBase<FontRenderingHelper> {
 
     friend class degate::SingletonBase<FontRenderingHelper>;
@@ -81,7 +82,7 @@ private:
       throw(degate::DegateRuntimeException);
 
   };
-
+  // end of helper class
 
 public:
 
@@ -117,10 +118,13 @@ protected:
    *   then the font size is adjusted, so that the string fits. If \p max_str_width == 0
    *   no adjustment will be performed.
    */
-  void draw_string(int x, int y, degate::color_t col, std::string const& str, unsigned int max_str_width = 0);
+  void draw_string(int x, int y, degate::color_t col, std::string const& str,
+		   unsigned int max_str_width = 0);
 
   unsigned int get_font_height() const;
 
+  void draw_hline(int y, int len, degate::color_t col);
+  void draw_vline(int x, int len, degate::color_t col);
 
 };
 

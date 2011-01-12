@@ -461,3 +461,24 @@ unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Fa
 
   return width;
 }
+
+void OpenGLRendererBase::draw_hline(int y, int len, degate::color_t col) {
+  set_color(col);
+  glBegin(GL_QUADS);
+  glVertex2i(0, y);
+  glVertex2i(get_virtual_width() - 1, y);
+  glVertex2i(get_virtual_width() - 1, y + 1);
+  glVertex2i(0, y + 1);
+  glEnd();
+}
+
+
+void OpenGLRendererBase::draw_vline(int x, int len, degate::color_t col) {
+  set_color(col);
+  glBegin(GL_QUADS);
+  glVertex2i(x, 0);
+  glVertex2i(x+1, 0);
+  glVertex2i(x+1, get_virtual_height() - 1);
+  glVertex2i(x, get_virtual_height() - 1);
+  glEnd();
+}

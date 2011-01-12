@@ -87,6 +87,7 @@ public:
   std::list<GLuint> free_textures;
 
   std::map<INFO_LAYER, bool> info_layers;
+  int corridor_size;
 
 protected:
 
@@ -140,6 +141,10 @@ public:
     this->regular_vertical_grid = regular_vertical_grid;
     this->irregular_horizontal_grid = irregular_horizontal_grid;
     this->irregular_vertical_grid = irregular_vertical_grid;
+  }
+
+  void set_corridor_size(int corridor_size) {
+    this->corridor_size = corridor_size;
   }
 
   virtual void clear_objects() {

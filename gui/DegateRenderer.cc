@@ -62,7 +62,8 @@ static inline uint32_t highlight_color_by_state(uint32_t col,
 
 
 DegateRenderer::DegateRenderer() : last_scaling(0), realized(false),
-				   idle_hook_enabled(false), is_idle(true), lock_state(false) {
+				   idle_hook_enabled(false), is_idle(true), lock_state(false),
+				   corridor_size(0) {
 
   info_layers[INFO_LAYER_ALL] = true;
 
@@ -424,24 +425,18 @@ void DegateRenderer::render_grid(degate::Grid_shptr grid) {
 
   for(Grid::grid_iter iter = grid->begin(); iter != grid->end(); ++iter) {
 
-    set_color(default_colors[DEFAULT_COLOR_GRID]);
-    glBegin(GL_QUADS);
+    
+    if(grid->is_vertical()) // vertical spacing == horizontal lines
+      draw_hline(*iter, get_virtual_width() - 1, default_colors[DEFAULT_COLOR_GRID]);
+    else 
+      draw_vline(*iter, get_virtual_height() - 1, default_colors[DEFAULT_COLOR_GRID]);
 
-    if(grid->is_vertical()) { // vertical spacing == horizontal lines
-      int y = *iter;
-      glVertex2i(0, y);
-      glVertex2i(get_virtual_width() - 1, y);
-      glVertex2i(get_virtual_width() - 1, y + 1);
-      glVertex2i(0, y + 1);
+    if(corridor_size > 0) {
+      if(grid->is_vertical()) // vertical spacing == horizontal lines
+	draw_hline(*iter + corridor_size, get_virtual_width() - 1, default_colors[DEFAULT_COLOR_GRID]);
+      else 
+	draw_vline(*iter + corridor_size, get_virtual_height() - 1, default_colors[DEFAULT_COLOR_GRID]);
     }
-    else {
-      int x = *iter;
-      glVertex2i(x, 0);
-      glVertex2i(x+1, 0);
-      glVertex2i(x+1, get_virtual_height() - 1);
-      glVertex2i(x, get_virtual_height() - 1);
-    }
-    glEnd();
   }
 }
 
