@@ -224,10 +224,7 @@ void MainWin::on_menu_project_recent_projects() {
 }
 
 void MainWin::on_menu_project_quit() {
-  Gtk::MessageDialog dialog("Do you want to quit degate?",
-			    true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-  dialog.set_title("Warning");
-  if(dialog.run() == Gtk::RESPONSE_YES) {
+  if(yes_no_dialog("Warning", "Do you want to quit degate?")) {
     on_menu_project_close();
     hide(); //Closes the main window to stop the Gtk::Main::run().
   }
@@ -287,15 +284,9 @@ void MainWin::create_new_project(std::string const& project_dir) {
 void MainWin::on_menu_project_close() {
   if(main_project) {
 
-    if(main_project->is_changed()) {
-
-      Gtk::MessageDialog dialog("Project data was modified. Should it be saved?",
-				true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-      dialog.set_title("Warning");
-      if(dialog.run() == Gtk::RESPONSE_YES) {
-	on_menu_project_save();
-      }
-    }
+    if(main_project->is_changed() &&       
+       yes_no_dialog("Warning", "Project data was modified. Should it be saved?"))
+      on_menu_project_save();
 
     //imgWin.disable_renderer();
 
@@ -326,15 +317,13 @@ void MainWin::on_menu_project_settings() {
 
       diameter_t new_port_size = main_project->get_default_port_diameter();
       if(old_port_size != new_port_size) {
-	Gtk::MessageDialog dialog_ask(*this, 
-				      "Default gate port diameter has changed. "
-				      "Should degate update port diameters of all gate ports?",
-				      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-	dialog_ask.set_title("Warning");
-	if(dialog_ask.run() == Gtk::RESPONSE_YES)
+	if(yes_no_dialog("Warning", 
+			 "Default gate port diameter has changed. "
+			 "Should degate update port diameters of all gate ports?"))
 	  update_port_diameters(main_project->get_logic_model(), new_port_size);
       }
       editor.set_default_colors(main_project->get_default_colors());
+      editor.set_corridor_size(main_project->get_template_dimension());
       project_changed();
     }
   }
@@ -343,12 +332,8 @@ void MainWin::on_menu_project_settings() {
 void MainWin::on_menu_project_export_archive() {
   if(main_project) {
     if(main_project->is_changed()) {
-      Gtk::MessageDialog dialog_ask(*this, "Project data was modified. Should it be saved?",
-				    true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-      dialog_ask.set_title("Warning");
-      if(dialog_ask.run() == Gtk::RESPONSE_YES) {
+      if(yes_no_dialog("Warning", "Project data was modified. Should it be saved?"))
 	on_menu_project_save();
-      }
       else return;
     }
     Gtk::FileChooserDialog dialog("Export project as archive", Gtk::FILE_CHOOSER_ACTION_SAVE );
@@ -457,11 +442,9 @@ void MainWin::open_project(Glib::ustring project_dir) {
 
   if(check_for_autosaved_project(project_dir.c_str())) {
 
-    Gtk::MessageDialog dialog("There are autosaved files that are newer than the project files. "
-			      "Should the project data be loaded from the autosaved files instead?",
-			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-    dialog.set_title("Question");
-    if(dialog.run() == Gtk::RESPONSE_YES)
+    if(yes_no_dialog("Autosaved files",
+		     "There are autosaved files that are newer than the project files. "
+		     "Should the project data be loaded from the autosaved files instead?"))
       restore_autosaved_project(project_dir.c_str());
   }
 
@@ -540,6 +523,7 @@ void MainWin::update_gui_for_loaded_project() {
 		    main_project->get_regular_vertical_grid(),
 		    main_project->get_irregular_horizontal_grid(),
 		    main_project->get_irregular_vertical_grid());
+    editor.set_corridor_size(main_project->get_template_dimension());
 
     editor.set_default_colors(main_project->get_default_colors());
 
@@ -965,11 +949,7 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 
     if(tmpl_set.size() == 0) return;
 
-    Gtk::MessageDialog dialog(*this, "Are you sure you want to remove all gates by that type(s)?",
-			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-    dialog.set_title("Warning");
-    if(dialog.run() == Gtk::RESPONSE_YES) {
-      dialog.hide();
+    if(yes_no_dialog("Warning", "Are you sure you want to remove all gates by that type(s)?")) {
 
       for(std::list<GateTemplate_shptr>::iterator iter = tmpl_set.begin();
 	  iter != tmpl_set.end(); ++iter) {
@@ -978,11 +958,7 @@ void MainWin::on_menu_gate_remove_gate_by_type() {
 
 	lmodel->remove_gates_by_template_type(gate_template);
 
-	Gtk::MessageDialog dialog2(*this, "Do you want to remove the gate definition, too?",
-				  true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-	dialog2.set_title("Warning");
-	dialog2.hide();
-	if(dialog2.run() == Gtk::RESPONSE_YES)
+	if(yes_no_dialog("Warning", "Do you want to remove the gate definition, too?"))
 	  lmodel->remove_gate_template(gate_template);
       }
 
@@ -1096,10 +1072,50 @@ void MainWin::on_menu_gate_create_by_selection() {
 
     BoundingBox bbox = selection_tool->get_bounding_box();
 
+    bool accept_dimension = false;
+    int corridor_size = main_project->get_template_dimension();
+    if(corridor_size == 0) {
+      if(yes_no_dialog("Snap to Grid", 
+		       "You have not definded a fixed width or height for gate templates yet. "
+		       "If you want to use template matching and have to deal with up-down or "
+		       "left-right flipped versions of a standard cell, you will most likely "
+		       "use a grid in order to exactly align the standard cell along the grid lines. "
+		       "Now you create your first gate. Degate can use its height or width to "
+		       "define a corridor size between the nearest grid line and the height or width "
+		       "of your first gate. If the corridor size is the width or a height depends "
+		       "on your grid type. You should have defined either a horizontal or a vertical "
+		       "grid. Do you want to use the gate's size for the corridor definition?")) {
+	if(!check_grid_either_horizontal_or_vertical(main_project)) {
+	  error_dialog("Error", "For this operation you must have a grid, which is either"
+		       " horizontal or vertical.");
+	  return;
+	}
 
-    // XX
-    // snap upper or left edge to nearest grid line
-    //snap_upper_or_left_edge_to_grid(main_project, bbox);
+	accept_dimension = true;
+      }
+    }
+
+    if(accept_dimension || 
+       (corridor_size > 0 &&
+	yes_no_dialog("Snap to Grid", "Should the gate be snapped to the corridor?"))) {
+      // snap upper or left edge to nearest grid line
+      // if corridor dimension is undefined, the bottom or right edge of the bounding
+      // box is not touched.
+      Grid::ORIENTATION orientation = snap_upper_or_left_edge_to_grid(main_project, 
+								      bbox, corridor_size);
+
+      if(accept_dimension) {
+	if(orientation == Grid::HORIZONTAL)
+	  main_project->set_template_dimension(bbox.get_width());
+	else if(orientation == Grid::VERTICAL)
+	  main_project->set_template_dimension(bbox.get_height());
+
+	editor.set_corridor_size(main_project->get_template_dimension());	
+	project_changed();
+      }
+
+    }
+
 
     GateTemplate_shptr tmpl(new GateTemplate(bbox.get_width(),
 					     bbox.get_height() ));
@@ -1580,12 +1596,9 @@ void MainWin::on_popup_menu_add_horizontal_grid_line() {
 void MainWin::on_menu_logic_auto_name_gates(AutoNameGates::ORIENTATION orientation) {
   if(main_project != NULL) {
 
-    Gtk::MessageDialog dialog(*this, "The operation may destroy previously set names. "
-			      "Are you sure you want name all gates?",
-			      true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
-    dialog.set_title("Warning");
-    if(dialog.run() == Gtk::RESPONSE_NO) return;
-    dialog.hide();
+    if(!yes_no_dialog("Warning", 
+		      "The operation may destroy previously set names. "
+		      "Are you sure you want name all gates?")) return;
 
     try {
       Layer_shptr layer = get_first_logic_layer(main_project->get_logic_model());
@@ -1958,6 +1971,13 @@ void MainWin::warning_dialog(const char * const title, const char * const messag
   dialog.run();
 }
 
+bool MainWin::yes_no_dialog(const char * const title, const char * const message) {
+
+  Gtk::MessageDialog dialog(*this, message, true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
+  dialog.set_title(title);
+  return dialog.run() == Gtk::RESPONSE_YES;
+}
+    
 void MainWin::project_changed() {
 
   if(main_project != NULL) main_project->set_changed();

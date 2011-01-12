@@ -256,6 +256,7 @@ class MainWin : public Gtk::Window  {
 
   void error_dialog(const char * const title, const char * const message);
   void warning_dialog(const char * const title, const char * const message);
+  bool yes_no_dialog(const char * const title, const char * const message);
 
 
   void update_gui_on_selection_change();
