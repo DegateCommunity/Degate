@@ -85,8 +85,20 @@ degate::BoundingBox get_selection_bounding_box(GfxEditor<DegateRenderer> const& 
 					       const degate::Project_shptr project);
 
 /**
- * 
+ * Snap bounding box to a grid, that is referenced in a project.
+ * @param corridor_size Snap bottom or right edge of the bounding box, so that
+ *   width or height gets equal to the corridor size. If this value is 0, the bottom
+ *   or right side is left untouched.
+ * @return Returns the type of grid orientation, which matches.
  */
-//degate::snap_upper_or_left_edge_to_grid(const degate::Project_shptr project, degate::BoundingBox);
+degate::Grid::ORIENTATION snap_upper_or_left_edge_to_grid(const degate::Project_shptr project, 
+				     degate::BoundingBox & bbox,
+				     int corridor_size);
+
+/**
+ * Check if either the horizontal or the vertical grid is enabled.
+ * If both grid types are enabled, false will be returned.
+ */
+bool check_grid_either_horizontal_or_vertical(const degate::Project_shptr project);
 
 #endif

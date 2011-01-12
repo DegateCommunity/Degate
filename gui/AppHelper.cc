@@ -157,3 +157,70 @@ degate::BoundingBox get_selection_bounding_box(GfxEditor<DegateRenderer> const& 
 
   return bbox;
 }
+
+
+bool snap_upper_or_left_edge_to_grid(const degate::Grid_shptr grid, 
+				     degate::BoundingBox & bbox,
+				     int corridor_size) {
+  
+  if(!grid->is_enabled()) return false;
+
+  // set left or top edge
+  if(grid->is_horizontal())
+    bbox.set_min_x(grid->snap_to_grid(bbox.get_min_x()));
+  else 
+    bbox.set_min_y(grid->snap_to_grid(bbox.get_min_y()));
+
+  // set right or bottom edge
+  if(corridor_size > 0) {
+    if(grid->is_horizontal()) {
+      bbox.set_max_x(bbox.get_min_x() + corridor_size);
+    }
+    else {
+      bbox.set_max_y(bbox.get_min_y() + corridor_size);    
+    }
+  }
+
+  return true;
+}
+
+degate::Grid::ORIENTATION snap_upper_or_left_edge_to_grid(const degate::Project_shptr project, 
+							  degate::BoundingBox & bbox,
+							  int corridor_size) {
+
+  Grid_shptr grid;
+
+  grid = project->get_regular_horizontal_grid();
+  if(snap_upper_or_left_edge_to_grid(grid, bbox, corridor_size)) 
+    return Grid::HORIZONTAL;
+
+  grid = project->get_regular_vertical_grid();
+  if(snap_upper_or_left_edge_to_grid(grid, bbox, corridor_size)) 
+    return Grid::VERTICAL;
+
+  grid = project->get_irregular_horizontal_grid();
+  if(snap_upper_or_left_edge_to_grid(grid, bbox, corridor_size)) 
+    return Grid::HORIZONTAL;
+
+  grid = project->get_irregular_vertical_grid();
+  if(snap_upper_or_left_edge_to_grid(grid, bbox, corridor_size)) 
+    return Grid::VERTICAL;
+
+  return Grid::UNDEFINED;
+}
+
+
+bool check_grid_either_horizontal_or_vertical(const degate::Project_shptr project) {
+  Grid_shptr grid1 = project->get_regular_horizontal_grid();
+  Grid_shptr grid2 = project->get_irregular_horizontal_grid();
+
+  Grid_shptr grid3 = project->get_regular_vertical_grid();
+  Grid_shptr grid4 = project->get_irregular_vertical_grid();
+
+  bool h = grid1->is_enabled() || grid2->is_enabled();
+  bool v = grid3->is_enabled() || grid4->is_enabled();
+  
+  if(h == false && v == false) return false;
+  else return  h != v;
+}
+
