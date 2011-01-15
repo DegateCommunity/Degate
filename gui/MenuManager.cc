@@ -293,6 +293,11 @@ void MenuManager::create_and_bind_logic_menu() {
 			Gtk::AccelKey("<control>U"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_isolate));
 
+  m_refActionGroup->add(Gtk::Action::create("LogicRemoveEntireNet",
+					    Gtk::Stock::DISCONNECT, "Remove entire net(s)",
+					    "Remove entire net"),
+			sigc::mem_fun(*window, &MainWin::on_menu_logic_remove_entire_net));
+
   m_refActionGroup->add(Gtk::Action::create("LogicAutoInterconnect",
 					    Gtk::Stock::CONNECT, "Auto-Interconnect objects on current layer",
 					    "Auto-Interconnect objects on current layer"),
@@ -493,6 +498,7 @@ void MenuManager::setup_menu_structure() {
         "    <menu action='LogicMenu'>"
         "      <menuitem action='LogicInterconnect'/>"
         "      <menuitem action='LogicIsolate'/>"
+        "      <menuitem action='LogicRemoveEntireNet'/>"
         "      <menuitem action='LogicAutoInterconnect'/>"
         "      <menuitem action='LogicAutoInterconnectInterLayer'/>"
         "      <separator/>"
@@ -751,6 +757,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
   if(state == false) {
     set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicInterconnect", state);
     set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicIsolate", state);
+    set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicRemoveEntireNet", state);
   }
 
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicAutoInterconnect", state);

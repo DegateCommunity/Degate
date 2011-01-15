@@ -211,6 +211,11 @@ namespace degate {
   }
 
 
+  /**
+   * Remove net from the logic model and remove it from all objects, which share a net.
+   */
+  void remove_entire_net(LogicModel_shptr lmodel, Net_shptr net);
+
 
   /**
    * Connect objects.

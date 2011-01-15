@@ -1365,6 +1365,10 @@ void MainWin::update_gui_on_selection_change() {
 					  selected_objects.size() >= 1 &&
 					  selected_objects.check_for_all(&is_interconnectable));
 
+  menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicRemoveEntireNet",
+					  selected_objects.size() == 1 &&
+					  selected_objects.check_for_all(&is_interconnectable));
+
   menu_manager->set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicMoveGateIntoModule",
 					  selected_objects.check_for_all(&is_of_object_type<Gate>));
 
@@ -1618,7 +1622,7 @@ void MainWin::on_menu_logic_auto_name_gates(AutoNameGates::ORIENTATION orientati
 
 void MainWin::on_menu_logic_interconnect() {
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
-  if(selected_objects.size() >= 2) {
+  if(main_project && selected_objects.size() >= 2) {
 
     if(!selected_objects.check_for_all(&is_interconnectable)) {
       error_dialog("Error", "One of the objects you selected can not have connections at all.");
@@ -1634,7 +1638,7 @@ void MainWin::on_menu_logic_interconnect() {
 
 void MainWin::on_menu_logic_isolate() {
   std::set<PlacedLogicModelObject_shptr>::const_iterator it;
-  if(selected_objects.size() >= 1) {
+  if(main_project && selected_objects.size() >= 1) {
 
     if(!selected_objects.check_for_all(&is_interconnectable)) {
       error_dialog("Error", "One of the objects you selected can not have connections at all.");
@@ -1650,6 +1654,36 @@ void MainWin::on_menu_logic_isolate() {
     editor.update_screen();
   }
 
+}
+
+void MainWin::on_menu_logic_remove_entire_net() {
+  if(!main_project && selected_objects.size() < 1) return;
+
+  bool failed = false;
+  if(yes_no_dialog("Warning", 
+		   "Do you want to delete the net(s), which is "
+		   "associated with the selected objects?")) {
+
+
+    std::set<Net_shptr> l;
+    BOOST_FOREACH(PlacedLogicModelObject_shptr plo, selected_objects) {
+      if(ConnectedLogicModelObject_shptr clo = 
+	 std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo))
+	l.insert(clo->get_net());      
+      else failed = true;
+    }
+
+    if(failed) {
+      error_dialog("Error", "One of the objects you selected can not have connections at all.");
+      return;
+    }
+
+    BOOST_FOREACH(Net_shptr net, l)
+      remove_entire_net(main_project->get_logic_model(), net);
+
+    project_changed();
+    editor.update_screen();
+  }
 }
 
 void MainWin::on_menu_logic_autointerconnect() {

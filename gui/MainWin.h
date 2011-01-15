@@ -110,6 +110,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_logic_interconnect();
   virtual void on_menu_logic_autointerconnect_interlayer();
   virtual void on_menu_logic_isolate();
+  virtual void on_menu_logic_remove_entire_net();
   virtual void on_menu_logic_autointerconnect();
   virtual void on_menu_logic_clear_logic_model();
   virtual void remove_objects();

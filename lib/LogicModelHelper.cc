@@ -22,6 +22,7 @@
 #include <globals.h>
 #include <degate.h>
 #include <LogicModelHelper.h>
+#include <LogicModelObjectBase.h>
 #include <TangencyCheck.h>
 
 #include <boost/format.hpp>
@@ -470,6 +471,19 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
 
 }
 
+
+void degate::remove_entire_net(LogicModel_shptr lmodel, Net_shptr net) {
+
+  BOOST_FOREACH(object_id_t oid, *net) {
+    PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
+    assert(plo != NULL);
+    if(ConnectedLogicModelObject_shptr clmo = 
+       std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo))
+      clmo->remove_net();
+  }
+  
+  lmodel->remove_net(net);
+}
 
 void degate::connect_objects(LogicModel_shptr lmodel,
 			     ConnectedLogicModelObject_shptr o1,
