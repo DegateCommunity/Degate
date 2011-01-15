@@ -106,7 +106,7 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
        * col 2
        */
 
-      pTreeView->append_column("Class", *pRenderer);
+      pTreeView->append_column("Severity", *pRenderer);
       pColumn = pTreeView->get_column(2);
       pColumn->add_attribute(*pRenderer, "text", m_Columns.m_col_severity);
       pColumn->set_resizable(true);
