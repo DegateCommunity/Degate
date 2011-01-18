@@ -296,3 +296,7 @@ int Project::get_template_dimension() const {
 void Project::set_template_dimension(int template_dimension) {
   this->template_dimension = template_dimension;
 }
+
+DRCBase::container_type & Project::get_drcv_blacklist() {
+  return drcv_blacklist;
+}

@@ -555,6 +555,7 @@ void MenuManager::setup_menu_structure() {
         "    <toolitem action='LogicConnectionInspector'/>"
         "    <toolitem action='LogicShowModules'/>"
         "    <toolitem action='LogicShowAnnotations'/>"
+        "    <toolitem action='LogicDRC'/>"
         "  </toolbar>"
     "</ui>";
 
@@ -600,6 +601,7 @@ void MenuManager::set_toolbar_images() {
   set_image_for_toolbar_widget("/ToolBar/LogicConnectionInspector", "con_insp.png");
   set_image_for_toolbar_widget("/ToolBar/LogicShowAnnotations", "annotations.png");
   set_image_for_toolbar_widget("/ToolBar/LogicShowModules", "modules.png");
+  set_image_for_toolbar_widget("/ToolBar/LogicDRC", "drc.png");
 }
 
 
@@ -725,6 +727,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_toolbar_item_sensitivity("/ToolBar/LogicConnectionInspector", state);
   set_toolbar_item_sensitivity("/ToolBar/LogicShowAnnotations", state);
   set_toolbar_item_sensitivity("/ToolBar/LogicShowModules", state);
+  set_toolbar_item_sensitivity("/ToolBar/LogicDRC", state);
 
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectClose", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectSave", state);

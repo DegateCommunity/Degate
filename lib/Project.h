@@ -26,6 +26,7 @@
 #include <globals.h>
 #include <LogicModel.h>
 #include <PortColorManager.h>
+#include <DRCBase.h>
 
 #include <string>
 #include <list>
@@ -84,6 +85,8 @@ namespace degate {
 
     double pixel_per_um;
     int template_dimension;
+
+    DRCBase::container_type drcv_blacklist;
 
   private:
 
@@ -293,6 +296,9 @@ namespace degate {
      * Set the template dimension.
      */
     void set_template_dimension(int template_dimension);
+
+
+    DRCBase::container_type & get_drcv_blacklist();
 
   };
 

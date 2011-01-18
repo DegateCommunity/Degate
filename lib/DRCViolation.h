@@ -39,6 +39,17 @@ namespace degate {
     DRC_SEVERITY _severity;
 
   public:
+
+    /** Create a new Design Rule Check violation.
+     * @param obj The object, which is affected from the violation.
+     * @param problem_description A string, which contains a description
+     *   of the violated contraint.
+     * @param drc_violation_class This is a unique technical name for
+     *   a DRC violation, that indicates the problem class.
+     * @param severity Indicates the type of problem, actually
+     *   if a DRC violation is just a warning or a real error.
+     */
+     
     DRCViolation(PlacedLogicModelObject_shptr obj,
 		 std::string const& problem_description,
 		 std::string const& drc_violation_class,
@@ -61,9 +72,37 @@ namespace degate {
       return _severity;
     }
 
+    std::string get_severity_as_string() const {
+      switch(_severity) {
+      case DRC_ERROR: return "error"; break;
+      case DRC_WARNING: return "warning"; break;      
+      case DRC_UNDEFINED: 
+      default: return "undefined"; break;
+      }
+    }
+
+    static DRC_SEVERITY get_severity_from_string(std::string const & str) {
+      if(str == "error") return DRC_ERROR;
+      else if(str == "warning") return DRC_WARNING;
+      return DRC_UNDEFINED;
+    }
+
     PlacedLogicModelObject_shptr get_object() const {
       return _obj;
     }
+
+    /**
+     * Check if two DRC violations are conceptually equal.
+     */
+    bool equals(DRCViolation_shptr drcv) const {
+      return 
+	_obj == drcv->_obj &&
+	_problem_description == drcv->_problem_description &&
+	_drc_violation_class == drcv->_drc_violation_class &&
+	_severity == drcv->_severity;
+    }
+
+
   };
 
 }

@@ -23,6 +23,8 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #define __DRCVIOLATIONSWIN_H__
 
 #include <degate.h>
+#include <DesignRuleChecker.h>
+#include <DRCBase.h>
 #include "GladeFileLoader.h"
 #include <gtkmm.h>
 
@@ -40,6 +42,7 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
       add(m_col_violation_class);
       add(m_col_violation_description);
       add(m_col_severity);
+      add(m_col_drcv);
     }
 
     Gtk::TreeModelColumn<degate::PlacedLogicModelObject_shptr> m_col_object_ptr;
@@ -47,12 +50,14 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
     Gtk::TreeModelColumn<Glib::ustring> m_col_violation_class;
     Gtk::TreeModelColumn<Glib::ustring> m_col_violation_description;
     Gtk::TreeModelColumn<Glib::ustring> m_col_severity;
+    Gtk::TreeModelColumn<degate::DRCViolation_shptr> m_col_drcv;
   };
 
 
  public:
 
-  DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel);
+  DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel,
+		   degate::DRCVContainer & blacklist);
 
   virtual ~DRCViolationsWin();
 
@@ -96,14 +101,23 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
   Gtk::Button* pCloseButton;
   Gtk::Button* pIgnoreDRCButton;
   Gtk::Button* pUpdateButton;
-
+  Gtk::Notebook * notebook;
   Gtk::Label* pNumViolationsLabel;
 
   DRCViolationsModelColumns m_Columns;
   Glib::RefPtr<Gtk::ListStore> refListStore;
   Gtk::TreeView* pTreeView;
 
+
+  DRCViolationsModelColumns m_Columns_blacklist;
+  Glib::RefPtr<Gtk::ListStore> refListStore_blacklist;
+  Gtk::TreeView* pTreeView_blacklist;
+
   sigc::signal<void, degate::PlacedLogicModelObject_shptr>  signal_goto_button_clicked_;
+
+  degate::DRCVContainer & _blacklist;
+
+  degate::DesignRuleChecker drc;
 
   void clear_list();
   void disable_widgets();
@@ -115,6 +129,22 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
   virtual void on_update_button_clicked();
 
   virtual void on_selection_changed();
+
+  virtual void on_page_switch(GtkNotebookPage*, guint);
+
+  Gtk::TreeView* init_list(Glib::RefPtr<Gtk::ListStore> refListStore, 
+			   DRCViolationsModelColumns & m_Columns, 
+			   Glib::ustring const & widget_name,
+			   sigc::slot< void > fnk);
+
+
+  void add_to_list(degate::DRCViolation_shptr v,
+		   Gtk::ListStore::iterator iter,
+		   DRCViolationsModelColumns & m_Columns);
+
+  void update_stats();
+  void update_first_page();
+
 };
 
 #endif

@@ -120,6 +120,8 @@ set(SOURCES
 	DOTAttributes.cc
 	LogicModelDOTExporter.cc
 	ProjectArchiver.cc
+	DRCVBlacklistExporter.cc
+	DRCVBlacklistImporter.cc
 
 	#
 	# Images
@@ -139,6 +141,7 @@ set(SOURCES
 	#
 	DRCOpenPorts.cc
 	DRCNet.cc
+	DRCVContainer.cc
 )
 
 

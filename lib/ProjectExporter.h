@@ -62,13 +62,6 @@ namespace degate {
 
     void add_colors(xmlpp::Element* prj_elem, Project_shptr prj);
 
-
-    //void add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos) throw(std::runtime_error );
-    //void add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos) throw(std::runtime_error );
-
-    //void add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel) throw(std::runtime_error);
-
-
   public:
     ProjectExporter() {}
     ~ProjectExporter() {}
@@ -80,7 +73,8 @@ namespace degate {
 		    bool enable_oid_rewrite = true,
 		    std::string const& project_file = "project.xml",
 		    std::string const& lmodel_file = "lmodel.xml",
-		    std::string const& gatelib_file = "gate_library.xml")
+		    std::string const& gatelib_file = "gate_library.xml",
+		    std::string const& drcbl_file = "drc_blacklist.xml")
       throw( InvalidPathException, InvalidPointerException, std::runtime_error );
 
   };

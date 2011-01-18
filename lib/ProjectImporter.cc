@@ -19,13 +19,14 @@
 
 */
 
-#include "ProjectImporter.h"
-#include "Layer.h"
-#include "FileSystem.h"
-#include "degate_exceptions.h"
-#include "GateLibraryImporter.h"
-#include "LogicModelImporter.h"
-#include "PortColorManager.h"
+#include <ProjectImporter.h>
+#include <Layer.h>
+#include <FileSystem.h>
+#include <degate_exceptions.h>
+#include <GateLibraryImporter.h>
+#include <LogicModelImporter.h>
+#include <DRCVBlacklistImporter.h>
+#include <PortColorManager.h>
 #include <Image.h>
 #include <LogicModelHelper.h>
 #include <ImageHelper.h>
@@ -64,6 +65,7 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
       GateLibrary_shptr gate_lib;
 
       std::string gate_lib_file(get_basedir(directory) + "/gate_library.xml");
+      std::string drcbl_file(get_basedir(directory) + "/drc_blacklist.xml");
 
       if(file_exists(gate_lib_file))
 	gate_lib = gl_importer.import(gate_lib_file);
@@ -76,7 +78,12 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
 
       LogicModel_shptr lmodel = prj->get_logic_model();
       lmodel->set_default_gate_port_diameter(prj->get_default_port_diameter());
-	
+
+      if(file_exists(drcbl_file)) {
+	DRCVBlacklistImporter drcvbl_importer(lmodel);
+	drcvbl_importer.import_into(drcbl_file, prj->get_drcv_blacklist());
+      }
+      
       /*
 	For degate projects that were exported with degate 0.0.6 the gate templates
 	were expressed in terms of an image region. This is bad. Here is a part of the fix:

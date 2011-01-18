@@ -26,19 +26,20 @@
 #include <tr1/memory>
 #include <list>
 #include <LogicModel.h>
-
+#include <DRCVContainer.h>
 
 namespace degate {
 
-    enum DRC_SEVERITY {
-      DRC_UNDEFINED = 0,
-      DRC_ERROR = 1,
-      DRC_WARNING = 2
-    };
+  /**
+   * An enum for several types of Design Rule Check problem types.
+   */
+  enum DRC_SEVERITY {
+    DRC_UNDEFINED = 0,
+    DRC_ERROR = 1,
+    DRC_WARNING = 2
+  };
 
-  class DRCViolation;
-  typedef std::tr1::shared_ptr<DRCViolation> DRCViolation_shptr;
-  
+
   /**
    * Base class for Design Rule Checks.
    */
@@ -46,7 +47,7 @@ namespace degate {
   class DRCBase {
   public:
 
-    typedef std::list<DRCViolation_shptr> container_type;
+    typedef DRCVContainer container_type;
 
 
   private:
@@ -91,6 +92,10 @@ namespace degate {
       return drc_violations;
     }
 
+    /**
+     * Get the class name of a DRC violation.
+     * @return Returns the DRC violation class name as a string.
+     */
     std::string get_drc_class_name() const {
       return _class_name;
     }

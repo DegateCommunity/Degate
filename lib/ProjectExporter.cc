@@ -19,13 +19,14 @@
 
 */
 
-#include "globals.h"
-#include "Layer.h"
-#include "ProjectExporter.h"
-#include "FileSystem.h"
-#include "ObjectIDRewriter.h"
-#include "LogicModelExporter.h"
-#include "GateLibraryExporter.h"
+#include <globals.h>
+#include <Layer.h>
+#include <ProjectExporter.h>
+#include <FileSystem.h>
+#include <ObjectIDRewriter.h>
+#include <LogicModelExporter.h>
+#include <GateLibraryExporter.h>
+#include <DRCVBlacklistExporter.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -47,7 +48,8 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
 				 bool enable_oid_rewrite,
 				 std::string const& project_file,
 				 std::string const& lmodel_file,
-				 std::string const& gatelib_file)
+				 std::string const& gatelib_file,
+				 std::string const& drcbl_file)
   throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
 
   if(!is_directory(project_directory)) {
@@ -65,6 +67,9 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
       string lm_filename(join_pathes(project_directory, lmodel_file));
       lm_exporter.export_data(lm_filename, lmodel);
 
+
+      DRCVBlacklistExporter drcv_exporter(oid_rewriter);
+      drcv_exporter.export_data(drcbl_file, prj->get_drcv_blacklist());
 
       GateLibrary_shptr glib = lmodel->get_gate_library();
       if(glib != NULL) {

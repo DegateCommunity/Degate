@@ -540,7 +540,8 @@ void MainWin::update_gui_for_loaded_project() {
     ciWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
     drcWin = std::tr1::shared_ptr<DRCViolationsWin>
-      (new DRCViolationsWin(this, main_project->get_logic_model()));
+      (new DRCViolationsWin(this, main_project->get_logic_model(), 
+			    main_project->get_drcv_blacklist()));
     drcWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
 
@@ -1657,19 +1658,20 @@ void MainWin::on_menu_logic_isolate() {
 }
 
 void MainWin::on_menu_logic_remove_entire_net() {
-  if(!main_project && selected_objects.size() < 1) return;
+  if(!main_project || selected_objects.size() < 1) return;
 
   bool failed = false;
   if(yes_no_dialog("Warning", 
 		   "Do you want to delete the net(s), which is "
-		   "associated with the selected objects?")) {
+		   "associated with the selected objects(?)")) {
 
 
     std::set<Net_shptr> l;
     BOOST_FOREACH(PlacedLogicModelObject_shptr plo, selected_objects) {
       if(ConnectedLogicModelObject_shptr clo = 
-	 std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo))
-	l.insert(clo->get_net());      
+	 std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo)) {
+	if(clo->is_connected()) l.insert(clo->get_net());
+      }
       else failed = true;
     }
 
@@ -1681,8 +1683,10 @@ void MainWin::on_menu_logic_remove_entire_net() {
     BOOST_FOREACH(Net_shptr net, l)
       remove_entire_net(main_project->get_logic_model(), net);
 
-    project_changed();
-    editor.update_screen();
+    if(l.size() > 0) {
+      project_changed();
+      editor.update_screen();
+    }
   }
 }
 
