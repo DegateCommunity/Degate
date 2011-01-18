@@ -10,6 +10,8 @@ degate (0.0.9) unstable; urgency=low
 	* Implemented autonaming of standard cells according to their row and column position.
 	* Found workaround for texture memory leak on OSX.
 	* Fixed sevral rendering problems.
+	* Improved Design Rule Checks and the DRC violation dialog.
+	* Allow a persistent blacklisting of DRC violations.
 	
  -- Martin Schobert <martin@weltregierung.de>  Thu, 26 Aug 2010 12:00:00 +0100
 	
