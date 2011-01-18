@@ -91,16 +91,16 @@ void DRCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 	std::string error_msg;
 	std::string drc_class;
 
-	if(in_ports > 0) {
+	if(in_ports > 0 && out_ports == 0) {
 	  boost::format f("In-Port %1% is not feeded. It is only connected "
 			  "with %2% other in-ports.");
 	  f % gate_port->get_descriptive_identifier() % (in_ports - 1);
 	  error_msg = f.str();
 	  drc_class = "net.not_feeded";
 	}
-	else {
-	  boost::format f("Out-Port %1% is connected with other out-ports.");
-	  f % gate_port->get_descriptive_identifier();
+	else if(out_ports > 0) {
+	  boost::format f("Out-Port %1% is connected with %2% other out-ports.");
+	  f % gate_port->get_descriptive_identifier() % out_ports;
 	  error_msg = f.str();
 	  drc_class = "net.outputs_connected";
 	}
