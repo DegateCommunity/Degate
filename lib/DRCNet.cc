@@ -69,7 +69,7 @@ void DRCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 			  "direction is undefined.");
 	  f % gate_port->get_descriptive_identifier();
 	  add_drc_violation(DRCViolation_shptr(new DRCViolation(gate_port, f.str(),
-								get_drc_class_name())));
+								"undef_port_dir")));
 
 	}
 
@@ -78,8 +78,7 @@ void DRCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
     }
   }
 
-  if((in_ports > 0 && out_ports == 0) ||
-     (in_ports == 0 && out_ports > 0)) {
+  if((in_ports > 0 && out_ports == 0) || (out_ports > 0)) {
 
     for(Net::connection_iterator c_iter = net->begin();
 	c_iter != net->end(); ++c_iter) {
@@ -90,21 +89,24 @@ void DRCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 
 	GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 	std::string error_msg;
+	std::string drc_class;
 
 	if(in_ports > 0) {
 	  boost::format f("In-Port %1% is not feeded. It is only connected "
 			  "with %2% other in-ports.");
 	  f % gate_port->get_descriptive_identifier() % (in_ports - 1);
 	  error_msg = f.str();
+	  drc_class = "net.not_feeded";
 	}
 	else {
 	  boost::format f("Out-Port %1% is connected with other out-ports.");
 	  f % gate_port->get_descriptive_identifier();
 	  error_msg = f.str();
+	  drc_class = "net.outputs_connected";
 	}
 
 	add_drc_violation(DRCViolation_shptr(new DRCViolation(gate_port, error_msg,
-							      get_drc_class_name())));
+							      drc_class)));
       }
     }
   }
