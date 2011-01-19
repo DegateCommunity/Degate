@@ -181,6 +181,7 @@ void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem,
 
   prj_elem->set_attribute("pixel-per-um", number_to_string<double>(prj->get_pixel_per_um()));
   prj_elem->set_attribute("template-dimension", number_to_string<int>(prj->get_template_dimension()));
+  prj_elem->set_attribute("font-size", number_to_string<unsigned int>(prj->get_font_size()));
 
   prj_elem->set_attribute("server-url", prj->get_server_url());
   prj_elem->set_attribute("last-pulled-transaction-id",

@@ -34,10 +34,10 @@ class OpenGLRendererBase :
 
 private:
 
-  // begin of helper class
-  class FontRenderingHelper : public degate::SingletonBase<FontRenderingHelper> {
-
-    friend class degate::SingletonBase<FontRenderingHelper>;
+  /**
+   * Font rendering helper class.
+   */
+  class FontRenderingHelper {
 
   private:
     double scale_font; // scaling factor for using glyph texture maps
@@ -48,6 +48,7 @@ private:
 
   public:
 
+    FontRenderingHelper(unsigned int font_size = 16);
     ~FontRenderingHelper();
 
     unsigned int get_font_height() const {
@@ -68,18 +69,18 @@ private:
 
   private:
 
-    FontRenderingHelper();
 
-
-    void init_font(const char * fname, unsigned int h) throw(degate::DegateRuntimeException);
+    /**
+     * @throw DegateRuntimeException This exception is thrown if the font file cannot be opened.
+     */ 
+    void init_font(const char * fname, unsigned int h);
 
     /**
      * Create a font texture for a glyph.
      * @return Returns the width of the created glyph
      */
 
-    unsigned int create_font_textures(FT_Face face, char ch, GLuint list_base, GLuint * tex_base)
-      throw(degate::DegateRuntimeException);
+    unsigned int create_font_textures(FT_Face face, char ch, GLuint list_base, GLuint * tex_base);
 
   };
   // end of helper class
@@ -89,6 +90,8 @@ public:
   OpenGLRendererBase();
   virtual ~OpenGLRendererBase();
 
+  void set_font_size(unsigned int font_size);
+  unsigned int get_font_height() const;
 
 protected:
 
@@ -121,11 +124,13 @@ protected:
   void draw_string(int x, int y, degate::color_t col, std::string const& str,
 		   unsigned int max_str_width = 0);
 
-  unsigned int get_font_height() const;
 
   void draw_hline(int y, int len, degate::color_t col);
   void draw_vline(int x, int len, degate::color_t col);
 
+private:
+
+  std::tr1::shared_ptr<FontRenderingHelper> font_rendering_helper;
 };
 
 

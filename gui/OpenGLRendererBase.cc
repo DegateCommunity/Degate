@@ -158,6 +158,7 @@ OpenGLRendererBase::OpenGLRendererBase() {
 
   set_gl_capability(glconfig);
 
+ 
 }
 
 
@@ -181,7 +182,7 @@ void OpenGLRendererBase::on_realize() {
     << std::endl;
 
   // init fonts
-  FontRenderingHelper::get_instance();
+  font_rendering_helper = std::tr1::shared_ptr<FontRenderingHelper>(new FontRenderingHelper());
 
   glwindow->gl_end();
 
@@ -252,18 +253,23 @@ void OpenGLRendererBase::draw_square(int x, int y, int diameter,
 
 void OpenGLRendererBase::draw_string(int x, int y, degate::color_t col, std::string const& str, unsigned int max_str_width) {
   set_color(col);
-  FontRenderingHelper::get_instance().draw_string(x, y, str, max_str_width);
+  font_rendering_helper->draw_string(x, y, str, max_str_width);
+}
+
+
+void OpenGLRendererBase::set_font_size(unsigned int font_size) {
+  font_rendering_helper = std::tr1::shared_ptr<FontRenderingHelper>(new FontRenderingHelper(font_size));
 }
 
 unsigned int OpenGLRendererBase::get_font_height() const {
-  return FontRenderingHelper::get_instance().get_font_height();
+  return font_rendering_helper->get_font_height();
 }
 
-OpenGLRendererBase::FontRenderingHelper::FontRenderingHelper() {
+OpenGLRendererBase::FontRenderingHelper::FontRenderingHelper(unsigned int font_size) {
   try {
     char font_file[PATH_MAX];
     snprintf(font_file, PATH_MAX, "%s/FreeSans.ttf", getenv("DEGATE_HOME"));
-    init_font(font_file, 18);
+    init_font(font_file, font_size);
   }
   catch(degate::DegateRuntimeException const& ex) {
     // print and ignore exceptions
@@ -349,7 +355,7 @@ void OpenGLRendererBase::FontRenderingHelper::draw_string(int x, int y,
 
 
 void OpenGLRendererBase::FontRenderingHelper::init_font(const char * fname,
-							unsigned int h) throw(DegateRuntimeException) {
+							unsigned int h) {
   FT_Library library;
   FT_Face face;
 
@@ -378,8 +384,7 @@ void OpenGLRendererBase::FontRenderingHelper::init_font(const char * fname,
 }
 
 unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Face face, char ch,
-									   GLuint list_base, GLuint * tex_base)
-  throw(DegateRuntimeException) {
+									   GLuint list_base, GLuint * tex_base) {
 
   if(FT_Load_Glyph( face, FT_Get_Char_Index( face, ch ), FT_LOAD_DEFAULT ))
     throw DegateRuntimeException("FT_Load_Glyph failed");

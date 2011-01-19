@@ -102,6 +102,12 @@ ProjectSettingsWin::ProjectSettingsWin(Gtk::Window *parent, Project_shptr projec
       snprintf(str, sizeof(str), "%d", project->get_template_dimension());
       entry_template_dimension->set_text(str);
     }
+    get_widget("entry_font_size", entry_font_size);
+    assert(entry_font_size != NULL);
+    if(entry_font_size) {
+      snprintf(str, sizeof(str), "%d", project->get_font_size());
+      entry_font_size->set_text(str);
+    }
 
 
     Gtk::ColorButton * pCButton;
@@ -205,6 +211,8 @@ bool ProjectSettingsWin::run() {
 
     if((r = atol(entry_template_dimension->get_text().c_str())) >= 0)
       project->set_template_dimension(r);
+    if((r = atol(entry_font_size->get_text().c_str())) >= 0)
+      project->set_font_size(r);
 
 
     project->set_default_color(DEFAULT_COLOR_WIRE,

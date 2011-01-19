@@ -2,6 +2,7 @@ degate (0.0.9) unstable; urgency=low
 
 	* Scan for vias on adjacent layers and connect them.
 	* Integrated color settings for wires, vias, ... into project settings.
+	* Added font size as project setting.
 	* Bugfix: Software crashed on opening projects (OS X).
 	* Added a new logic model type: EMarker, which are electrically connectable marker objects.
 	* Snap gates to a corridor of standard cell placements.
@@ -9,7 +10,7 @@ degate (0.0.9) unstable; urgency=low
 	* Toggle info rendering with Ctrl-3.
 	* Implemented autonaming of standard cells according to their row and column position.
 	* Found workaround for texture memory leak on OSX.
-	* Fixed sevral rendering problems.
+	* Fixed several rendering problems.
 	* Improved Design Rule Checks and the DRC violation dialog.
 	* Allow a persistent blacklisting of DRC violations.
 	

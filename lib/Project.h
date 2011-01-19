@@ -88,6 +88,8 @@ namespace degate {
 
     DRCBase::container_type drcv_blacklist;
 
+    unsigned int font_size;
+
   private:
 
     void init_default_values();
@@ -297,7 +299,19 @@ namespace degate {
      */
     void set_template_dimension(int template_dimension);
 
+    /**
+     * Set the default font size.
+     */
+    void set_font_size(unsigned int font_size);
 
+    /**
+     * Get the default font size.
+     */
+    unsigned int get_font_size() const;
+
+    /**
+     * Get a list of blacklisted Design Rule Check violations.
+     */
     DRCBase::container_type & get_drcv_blacklist();
 
   };

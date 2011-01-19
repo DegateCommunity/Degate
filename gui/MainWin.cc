@@ -324,6 +324,7 @@ void MainWin::on_menu_project_settings() {
       }
       editor.set_default_colors(main_project->get_default_colors());
       editor.set_corridor_size(main_project->get_template_dimension());
+      editor.set_font_size(main_project->get_font_size());
       project_changed();
     }
   }
@@ -526,6 +527,7 @@ void MainWin::update_gui_for_loaded_project() {
     editor.set_corridor_size(main_project->get_template_dimension());
 
     editor.set_default_colors(main_project->get_default_colors());
+    editor.set_font_size(main_project->get_font_size());
 
     menu_manager->set_widget_sensitivity(true);
     add_to_recent_menu();

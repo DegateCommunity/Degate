@@ -212,6 +212,7 @@ void Project::init_default_values() {
   last_transaction_id = 0;
 
   pixel_per_um = 0;
+  font_size = 12;
 
   // A B G R
   default_colors[DEFAULT_COLOR_WIRE] = 0xff00a3fb;
@@ -297,6 +298,16 @@ void Project::set_template_dimension(int template_dimension) {
   this->template_dimension = template_dimension;
 }
 
+void Project::set_font_size(unsigned int font_size) {
+  this->font_size = font_size;
+}
+
+unsigned int Project::get_font_size() const {
+  return font_size;
+}
+
+
 DRCBase::container_type & Project::get_drcv_blacklist() {
   return drcv_blacklist;
 }
+
