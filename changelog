@@ -1,3 +1,9 @@
+degate (0.1.0) unstable; urgency=low
+	
+	* ...
+	
+ -- Martin Schobert <martin@weltregierung.de>  Wed, 19 Jan 2011 12:00:00 +0100
+
 degate (0.0.9) unstable; urgency=low
 
 	* Scan for vias on adjacent layers and connect them.
@@ -14,7 +20,7 @@ degate (0.0.9) unstable; urgency=low
 	* Improved Design Rule Checks and the DRC violation dialog.
 	* Allow a persistent blacklisting of DRC violations.
 	
- -- Martin Schobert <martin@weltregierung.de>  Thu, 26 Aug 2010 12:00:00 +0100
+ -- Martin Schobert <martin@weltregierung.de>  Wed, 19 Jan 2011 12:00:00 +0100
 	
 degate (0.0.8) unstable; urgency=low
 
