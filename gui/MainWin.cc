@@ -63,7 +63,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace degate;
 
-MainWin::MainWin() : render_window(editor) {
+MainWin::MainWin() : render_window(editor), is_fullscreen(false) {
 
   // setup window
   set_default_size(1024, 700);
@@ -190,10 +190,16 @@ void MainWin::on_menu_view_toggle_all_info_layers() {
 }
 
 
-
-
-
-
+void MainWin::on_menu_view_fullscreen() {
+  if(is_fullscreen) {    
+    unfullscreen();
+    is_fullscreen = false; // according to gtkmm documentation, it would be better to receive a signal
+  }
+  else {
+    fullscreen();
+    is_fullscreen = true;
+  }
+}
 
 void MainWin::add_to_recent_menu() {
 

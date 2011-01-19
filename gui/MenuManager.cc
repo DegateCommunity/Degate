@@ -215,6 +215,11 @@ void MenuManager::create_and_bind_view_menu() {
 			Gtk::AccelKey("<control>T"),
 			sigc::mem_fun(*this, &MenuManager::toggle_toolbar_visibility));
 
+  m_refActionGroup->add(Gtk::Action::create("ViewFullscreen",
+					    "Toggle Fullscreen", "Toggle main window fullscreen mode"),
+			Gtk::AccelKey("F11"),
+			sigc::mem_fun(*window, &MainWin::on_menu_view_fullscreen));
+
   /*  m_refActionGroup->add(Gtk::Action::create("ViewDistanceToColor", "Define color for similarity filter",
 					    "Define color for similarity filter"),
 			sigc::mem_fun(*window, &MainWin::on_menu_view_distance_to_color));
@@ -479,6 +484,7 @@ void MenuManager::setup_menu_structure() {
         "      <separator/>"
         "      <menuitem action='ViewToggleInfoLayer'/>"
         "      <menuitem action='ViewToggleToolbar'/>"
+        "      <menuitem action='ViewFullscreen'/>"
         "    </menu>"
         "    <menu action='ToolsMenu'>"
         "      <menuitem action='ToolSelect'/>"
@@ -744,7 +750,6 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_menu_item_sensitivity("/MenuBar/ViewMenu/ViewNextLayer", state);
   set_menu_item_sensitivity("/MenuBar/ViewMenu/ViewPrevLayer", state);
   set_menu_item_sensitivity("/MenuBar/ViewMenu/ViewGridConfiguration", state);
-  set_menu_item_sensitivity("/MenuBar/ViewMenu/ViewToggleInfoLayer", state);
 
   set_menu_item_sensitivity("/MenuBar/ToolsMenu/ToolSelect", state);
   set_menu_item_sensitivity("/MenuBar/ToolsMenu/ToolMove", state);

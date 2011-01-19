@@ -98,6 +98,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_view_prev_layer();
   virtual void on_menu_view_grid_config();
   virtual void on_menu_view_toggle_all_info_layers();
+  virtual void on_menu_view_fullscreen();
 
 
   // Layer menu
@@ -211,6 +212,8 @@ class MainWin : public Gtk::Window  {
   degate::EMarker_shptr last_emarker;
 
   std::string thread_error_msg;
+
+  bool is_fullscreen;
 
  private:
 

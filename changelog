@@ -1,5 +1,6 @@
 degate (0.1.0) unstable; urgency=low
-	
+
+	* Toggle fullscreen mode with F11
 	* ...
 	
  -- Martin Schobert <martin@weltregierung.de>  Wed, 19 Jan 2011 12:00:00 +0100
