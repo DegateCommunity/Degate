@@ -23,6 +23,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "GladeFileLoader.h"
 #include <VHDLCodeTemplateGenerator.h>
 #include <VHDLTBCodeTemplateGenerator.h>
+#include <VerilogCodeTemplateGenerator.h>
 #include <RenderWindow.h>
 
 #include <gdkmm/window.h>
@@ -252,6 +253,8 @@ void GateConfigWin::insert_logic_classes() {
   append_logic_class("undefined");
   append_logic_class("inverter");
   append_logic_class("tristate-inverter");
+  append_logic_class("tristate-inverter-lo-active");
+  append_logic_class("tristate-inverter-hi-active");
   append_logic_class("nand");
   append_logic_class("nor");
   append_logic_class("and");
@@ -306,7 +309,8 @@ void GateConfigWin::on_language_changed() {
   unsigned int idx = combobox_lang->get_active_row_number();
   code_textview->get_buffer()->set_text(code_text[lang_idx_to_impl(idx)]);
   if(lang_idx_to_impl(idx) == GateTemplate::VHDL ||
-     lang_idx_to_impl(idx) == GateTemplate::VHDL_TESTBENCH)
+     lang_idx_to_impl(idx) == GateTemplate::VHDL_TESTBENCH ||
+     lang_idx_to_impl(idx) == GateTemplate::VERILOG)
     codegen_button->set_sensitive(true);
   else
     codegen_button->set_sensitive(false);
@@ -334,16 +338,19 @@ void GateConfigWin::on_codegen_button_clicked() {
 
 
   if(lang_idx_to_impl(idx) == GateTemplate::VHDL) {
-    debug(TM, "generate vhdl");
     codegen = CodeTemplateGenerator_shptr(new VHDLCodeTemplateGenerator(entry_short_name->get_text().c_str(),
 									entry_description->get_text().c_str(),
 									selected_logic_class));
   }
   else if(lang_idx_to_impl(idx) == GateTemplate::VHDL_TESTBENCH) {
-    debug(TM, "generate vhdl");
     codegen = CodeTemplateGenerator_shptr(new VHDLTBCodeTemplateGenerator(entry_short_name->get_text().c_str(),
 									  entry_description->get_text().c_str(),
 									  selected_logic_class));
+  }
+  else if(lang_idx_to_impl(idx) == GateTemplate::VERILOG) {
+    codegen = CodeTemplateGenerator_shptr(new VerilogCodeTemplateGenerator(entry_short_name->get_text().c_str(),
+									   entry_description->get_text().c_str(),
+									   selected_logic_class));
   }
   else {
     return;
