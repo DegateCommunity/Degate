@@ -28,6 +28,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <gtkmm.h>
 
 #include <list>
+#include <memory>
 
 class TerminalWin : private GladeFileLoader {
 
@@ -37,10 +38,7 @@ class TerminalWin : private GladeFileLoader {
 
   virtual ~TerminalWin();
 
-  /**
-   * Display the window.
-   */
-  void show();
+  virtual void run(std::list<std::string> cmd);
 
 
  private:
@@ -49,16 +47,25 @@ class TerminalWin : private GladeFileLoader {
 
   Gtk::Button* pCloseButton;
 
-  int fd_stdin, fd_stdout; //file descriptors
+  int fd_stdin, fd_stdout, fd_stderr; //file descriptors
   Glib::Pid pid;
   Gtk::TextView * textview;
 
-  void exec_program();
+  std::string buf_stdout, buf_stderr;
+
+  void exec_program(std::list<std::string> cmd);
 
   // Signal handlers:
   virtual void on_close_button_clicked();
-  virtual bool on_read(Glib::IOCondition condition);
+  virtual bool on_read_stdout(Glib::IOCondition condition);
+  virtual bool on_read_stderr(Glib::IOCondition condition);
+
+  bool handle_io(Glib::IOCondition condition);
+  bool read_and_append(int fd, std::string & strbuf);
+  void append_text(std::string const& s);
 
 };
+
+typedef std::tr1::shared_ptr<TerminalWin> TerminalWin_shptr;
 
 #endif

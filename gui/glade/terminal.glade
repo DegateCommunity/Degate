@@ -6,6 +6,8 @@
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Terminal Output</property>
     <property name="modal">True</property>
+    <property name="default_width">700</property>
+    <property name="default_height">500</property>
     <property name="icon_name">utilities-terminal</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
