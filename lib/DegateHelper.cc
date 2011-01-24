@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 
+#include <fstream>
+
 using namespace degate;
 using namespace std;
 
@@ -34,6 +36,21 @@ std::vector<std::string> degate::tokenize(std::string const& str) {
     result.push_back(item);
   }
   return result;
+}
 
+std::string degate::write_string_to_temp_file(std::string const& dir,
+					      std::string const& content) {
 
+  char filename[PATH_MAX];
+  std::string pattern = generate_temp_file_pattern(dir);
+  strncpy(filename, pattern.c_str(), sizeof(filename));
+  if(!mktemp(filename)) // should never return NULL
+    throw DegateRuntimeException("mktemp() failed");
+
+  std::ofstream file;
+  file.open(filename, std::ios::trunc | std:: ios::out);
+  file << content;
+  file.close();
+
+  return filename;
 }

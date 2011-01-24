@@ -46,6 +46,14 @@ namespace degate {
    */
   std::vector<std::string> tokenize(std::string const& str);
 
+  /**
+   * Write a string to a temp file.
+   * @param dir The directory, where the temp file should be created.
+   * @param content The file content.
+   * @return Returns the temp file name including the directory part.
+   */
+  std::string write_string_to_temp_file(std::string const& dir,
+					std::string const& content);
 }
 
 #endif
