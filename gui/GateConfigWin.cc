@@ -25,10 +25,13 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <VHDLTBCodeTemplateGenerator.h>
 #include <VerilogCodeTemplateGenerator.h>
 #include <RenderWindow.h>
+#include <TerminalWin.h>
+#include <DegateHelper.h>
 
 #include <gdkmm/window.h>
 #include <gtkmm/stock.h>
 #include <libglademm.h>
+
 
 #include <stdlib.h>
 #include <iostream>
@@ -195,6 +198,13 @@ GateConfigWin::GateConfigWin(Gtk::Window *parent,
       codegen_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_codegen_button_clicked));
       codegen_button->set_sensitive(false);
     }
+
+    get_widget("compile_button", compile_button);
+    assert(compile_button != NULL);
+    if(compile_button) {
+      compile_button->signal_clicked().connect(sigc::mem_fun(*this, &GateConfigWin::on_compile_button_clicked));
+      compile_button->set_sensitive(false);
+    }
     
     get_widget("code_textview", code_textview);
     assert(code_textview != NULL);
@@ -303,6 +313,8 @@ GateTemplate::IMPLEMENTATION_TYPE  GateConfigWin::lang_idx_to_impl(int idx) {
 void GateConfigWin::on_code_changed() {
   unsigned int idx = combobox_lang->get_active_row_number();
   code_text[lang_idx_to_impl(idx)] = code_textview->get_buffer()->get_text();
+
+  compile_button->set_sensitive(code_textview->get_buffer()->get_text().size() > 0);
 }
 
 void GateConfigWin::on_language_changed() {
@@ -310,10 +322,39 @@ void GateConfigWin::on_language_changed() {
   code_textview->get_buffer()->set_text(code_text[lang_idx_to_impl(idx)]);
   if(lang_idx_to_impl(idx) == GateTemplate::VHDL ||
      lang_idx_to_impl(idx) == GateTemplate::VHDL_TESTBENCH ||
-     lang_idx_to_impl(idx) == GateTemplate::VERILOG)
+     lang_idx_to_impl(idx) == GateTemplate::VERILOG) {
     codegen_button->set_sensitive(true);
+  }
   else
     codegen_button->set_sensitive(false);
+}
+
+void GateConfigWin::on_compile_button_clicked() {
+  int idx = combobox_lang->get_active_row_number();
+  if(lang_idx_to_impl(idx) == GateTemplate::VERILOG) {
+
+    // write content to temp-text-file
+    std::string dir = create_temp_directory();
+    std::string in_file = join_pathes(dir, "cell.v");
+    std::string out_file = join_pathes(dir, "cell");
+
+    write_string_to_file(in_file, code_textview->get_buffer()->get_text());
+
+    // run icarus in terminal
+    std::list<std::string> cmd;
+    cmd.push_back("iverilog");
+    cmd.push_back("-v");
+    cmd.push_back(in_file);
+    cmd.push_back("-o");
+    cmd.push_back(out_file);
+
+    term = TerminalWin_shptr(new TerminalWin());
+    term->run(cmd);
+    
+    // unlink
+    //remove_directory(dir);
+  }
+
 }
 
 void GateConfigWin::on_codegen_button_clicked() {

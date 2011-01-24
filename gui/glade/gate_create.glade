@@ -338,6 +338,19 @@ Verilog/Testbench</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="compile_button">
+                        <property name="label" translatable="yes">Compile</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
                         <property name="padding">10</property>
                         <property name="pack_type">end</property>
                         <property name="position">0</property>

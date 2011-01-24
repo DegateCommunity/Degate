@@ -32,6 +32,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <Editor.h>
 #include <RenderWindow.h>
 #include <GateRenderer.h>
+#include <TerminalWin.h>
 
 class GateConfigWin : private GladeFileLoader {
 
@@ -112,6 +113,7 @@ private:
   Gtk::ColorButton * colorbutton_fill_color;
   Gtk::ColorButton * colorbutton_frame_color;
   Gtk::Button * codegen_button;
+  Gtk::Button * compile_button;
   Gtk::ComboBox * combobox_lang;
   Gtk::TextView * code_textview;
 
@@ -121,6 +123,7 @@ private:
 
   degate::color_t _default_frame_col;
   degate::color_t _default_fill_col;
+  TerminalWin_shptr term;
 
   // renderer stuff
   GfxEditor<GateRenderer> editor_transistor;
@@ -147,6 +150,7 @@ private:
   void on_entry_short_name_changed();
 
   void on_codegen_button_clicked();
+  void on_compile_button_clicked();
   void on_language_changed();
   void on_code_changed();
 
