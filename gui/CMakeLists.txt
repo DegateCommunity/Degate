@@ -78,7 +78,8 @@ set(DEGATE_SRC
 	       ObjectMatchingWin.cc
 	       ConnectionInspectorWin.cc
 	       DRCViolationsWin.cc
-	       MenuManager.cc	       
+	       MenuManager.cc
+	       TerminalWin.cc
 	       
 	       TemplateMatchingParamsWin.cc
 	       WireMatchingParamsWin.cc
