@@ -127,7 +127,7 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
   }
   else if(logic_class == "tristate-inverter") {
     boost::format f("  tri %1%; // ???\n\n"
-		    "  assign %2% = %3% ? %4% : 1'bz;");
+		    "  assign %2% = %3% ? !%4% : 1'bz;");
     f % generate_identifier(out[0]) 
       % generate_identifier(out[0])
       % generate_identifier(enable_name)
