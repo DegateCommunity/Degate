@@ -115,6 +115,8 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
   if(clock_name.empty()) clock_name = "clock";
   std::string reset_name = get_reset_port_name();
   if(reset_name.empty()) reset_name = "reset";
+  std::string enable_name = get_enable_port_name();
+  if(reset_name.empty()) reset_name = "enable";
 
   if(logic_class == "inverter" &&
      in.size() == 1 && out.size() == 1) {
@@ -124,11 +126,13 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
     return f.str();
   }
   else if(logic_class == "tristate-inverter") {
-    boost::format f("tri %1%; // ???\n\n"
-		    "bufif1 assign %1% = not %2%;");
-    f % generate_identifier(out[0]) % generate_identifier(in[0]);
+    boost::format f("  tri %1%; // ???\n\n"
+		    "  assign %2% = %3% ? %4% : 1'bz;");
+    f % generate_identifier(out[0]) 
+      % generate_identifier(out[0])
+      % generate_identifier(enable_name)
+      % generate_identifier(get_first_port_name_not_in(in, enable_name));
     return f.str();
-
   }
 
   else if((logic_class == "xor" ||
