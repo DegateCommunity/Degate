@@ -54,6 +54,14 @@ namespace degate {
    */
   std::string write_string_to_temp_file(std::string const& dir,
 					std::string const& content);
+
+  /**
+   * Write a string to a file.
+   * @param path Path to file.
+   * @param content The file content.
+   */
+  void write_string_to_file(std::string const& path,
+			    std::string const& content);
 }
 
 #endif

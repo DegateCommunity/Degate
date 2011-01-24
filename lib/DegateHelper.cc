@@ -47,10 +47,16 @@ std::string degate::write_string_to_temp_file(std::string const& dir,
   if(!mktemp(filename)) // should never return NULL
     throw DegateRuntimeException("mktemp() failed");
 
-  std::ofstream file;
-  file.open(filename, std::ios::trunc | std:: ios::out);
-  file << content;
-  file.close();
+  write_string_to_file(filename, content);
 
   return filename;
+}
+
+void degate::write_string_to_file(std::string const& path,
+				  std::string const& content) {
+
+  std::ofstream file;
+  file.open(path.c_str(), std::ios::trunc | std:: ios::out);
+  file << content;
+  file.close();
 }
