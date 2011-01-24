@@ -37,13 +37,47 @@ namespace degate {
     std::string entity_name, description, logic_class;
     port_direction_type port_direction;
 
+    /**
+     * Get a list of input ports.
+     */
     virtual std::vector<std::string> get_inports() const;
 
+    /**
+     * Get a list of output ports.
+     */
     virtual std::vector<std::string> get_outports() const;
 
+    /**
+     * Get the name of the port, that is most likely the clock port.
+     * @return Returns an empty string, if no port name matches.
+     */
     std::string get_clock_port_name() const;
 
+    /**
+     * Get the name of the port, that is most likely the reset port.
+     * @return Returns an empty string, if no port name matches.
+     */
     std::string get_reset_port_name() const;
+
+    /**
+     * Get the name of the port, that is most likely the enable port.
+     * @return Returns an empty string, if no port name matches.
+     */
+    std::string get_enable_port_name() const;
+
+    /**
+     * Get the first port name from \p ports that is not contained in \p blacklist.
+     * @return Returns an empty string, if no port name matches.
+     */
+    std::string get_first_port_name_not_in(std::vector<std::string> const& ports,
+					   std::vector<std::string> const& blacklist) const;
+
+    /**
+     * Get the first port name from \p ports that is not equal to \p blacklist_item.
+     * @return Returns an empty string, if no port name matches.
+     */
+    std::string get_first_port_name_not_in(std::vector<std::string> const& ports,
+					   std::string const& blacklist_item) const;  
 
   public:
 

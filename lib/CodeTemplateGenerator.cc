@@ -63,6 +63,37 @@ std::string CodeTemplateGenerator::get_reset_port_name() const {
     return "";
 }
 
+std::string CodeTemplateGenerator::get_enable_port_name() const {
+  port_direction_type::const_iterator found;
+  if((port_direction.end() != (found = port_direction.find("en"))) ||
+     (port_direction.end() != (found = port_direction.find("enable"))) ||
+     (port_direction.end() != (found = port_direction.find("!en"))) ||
+     (port_direction.end() != (found = port_direction.find("!enable"))))
+    return found->first;
+  else
+    return "";
+}
+
+std::string CodeTemplateGenerator::get_first_port_name_not_in(std::vector<std::string> const& ports,
+							      std::vector<std::string> const& blacklist) const {
+  
+  typedef std::vector<std::string>::const_iterator iter;
+
+  BOOST_FOREACH(std::string const& p_name, ports) {
+    iter i = std::find(blacklist.begin(), blacklist.end(), p_name);
+    if(i == blacklist.end()) return p_name;    
+  }
+
+  return "";
+}
+
+std::string CodeTemplateGenerator::get_first_port_name_not_in(std::vector<std::string> const& ports,
+							      std::string const& blacklist_item) const {
+  std::vector<std::string> v(1);
+  v[0] = blacklist_item;
+  return get_first_port_name_not_in(ports, v);
+}
+
 std::vector<std::string> CodeTemplateGenerator::get_inports() const {
   std::vector<std::string> ports;
 
