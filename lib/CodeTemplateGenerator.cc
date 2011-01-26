@@ -111,3 +111,12 @@ std::vector<std::string> CodeTemplateGenerator::get_outports() const {
 
   return ports;
 }
+
+std::vector<std::string> CodeTemplateGenerator::get_ports() const {
+  std::vector<std::string> ports;
+
+  BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
+    ports.push_back(p.first);
+
+  return ports;
+}

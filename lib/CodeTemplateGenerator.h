@@ -48,6 +48,11 @@ namespace degate {
     virtual std::vector<std::string> get_outports() const;
 
     /**
+     * Get a list of ports.
+     */
+    virtual std::vector<std::string> get_ports() const;
+
+    /**
      * Get the name of the port, that is most likely the clock port.
      * @return Returns an empty string, if no port name matches.
      */
