@@ -100,6 +100,7 @@ set(SOURCES
 	VHDLCodeTemplateGenerator.cc
 	VHDLTBCodeTemplateGenerator.cc
 	VerilogCodeTemplateGenerator.cc
+	VerilogTBCodeTemplateGenerator.cc
 	XmlRpc.cc
 	ObjectSet.cc
 	HlObjectSet.cc
