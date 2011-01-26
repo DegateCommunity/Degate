@@ -35,7 +35,7 @@
 using namespace degate;
 
 TerminalWin::TerminalWin(Gtk::Window * parent) :
-  GladeFileLoader("terminal.glade", "terminal_win") {
+  GladeFileLoader("terminal.glade", "terminal_win"), cmd_state(DONE) {
 
   if(get_dialog()) {
     
@@ -43,7 +43,8 @@ TerminalWin::TerminalWin(Gtk::Window * parent) :
     get_widget("close_button", pCloseButton);
     assert(pCloseButton != NULL);
     if(pCloseButton != NULL)
-      pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, &TerminalWin::on_close_button_clicked));
+      pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, 
+							   &TerminalWin::on_close_button_clicked));
     
 
     get_widget("textview", textview);
@@ -64,9 +65,24 @@ TerminalWin::~TerminalWin() {
 
 
 
-void TerminalWin::run(std::list<std::string> cmd) {
+void TerminalWin::run(cmd_type const & cmd, std::string const & working_dir) {
+  this->working_dir = working_dir;
   exec_program(cmd);
   get_dialog()->show();
+}
+
+void TerminalWin::run(std::list<cmd_type > const& cmds, std::string const & working_dir) {
+  this->cmds = cmds;
+  this->working_dir = working_dir;
+  run_next_command();
+  get_dialog()->show();
+}
+
+void TerminalWin::run_next_command() {
+  assert(cmd_state == DONE);
+  cmd_type cmd = cmds.front();
+  cmds.pop_front();
+  exec_program(cmd);
 }
 
 
@@ -77,24 +93,30 @@ void TerminalWin::on_close_button_clicked() {
 
 void TerminalWin::exec_program(std::list<std::string> cmd) {
 
+  cmd_state = RUNNING;
+
   BOOST_FOREACH(std::string const& s, cmd) {
     std::cout << "[" << s << "]" << std::endl;
   }
 
   try {
 
-    Glib::spawn_async_with_pipes(Glib::get_current_dir(), 
+    Glib::spawn_async_with_pipes(working_dir.empty() ? Glib::get_current_dir() : working_dir, 
 				 cmd,
 				 Glib::SPAWN_SEARCH_PATH, 
 				 sigc::slot< void >(), // const sigc::slot< void > &  child_setup = sigc::slot< void >(),
 				 &pid, 
 				 NULL, &fd_stdout, &fd_stderr); 
        
-    Glib::signal_io().connect(sigc::mem_fun(*this, &TerminalWin::on_read_stdout), fd_stdout, Glib::IO_IN);
-    Glib::signal_io().connect(sigc::mem_fun(*this, &TerminalWin::on_read_stderr), fd_stderr, Glib::IO_IN);
+    Glib::signal_io().connect(sigc::mem_fun(*this, &TerminalWin::on_read_stdout), fd_stdout, 
+			      Glib::IO_IN | Glib::IO_HUP | Glib::IO_ERR | Glib::IO_NVAL);
+    Glib::signal_io().connect(sigc::mem_fun(*this, &TerminalWin::on_read_stderr), fd_stderr, 
+			      Glib::IO_IN | Glib::IO_HUP | Glib::IO_ERR | Glib::IO_NVAL);
 
   }
   catch(Glib::SpawnError const& ex) {
+    cmd_state = FAILED;
+
     boost::format f("Failed to launch command \"%1%\". Error was: \"%2%\"");
     f % boost::algorithm::join(cmd, " ") % ex.what().c_str();
 
@@ -117,14 +139,14 @@ bool TerminalWin::on_read_stdout(Glib::IOCondition condition) {
   std::cout << "on_read_stdout()\n";
   if(condition & Glib::IO_IN)
     return read_and_append(fd_stdout, buf_stdout);
-  else return handle_io(condition);
+  else return handle_io(condition, buf_stdout);
 }
 
 bool TerminalWin::on_read_stderr(Glib::IOCondition condition) {
   std::cout << "on_read_stderr()\n";
   if(condition & Glib::IO_IN)
     return read_and_append(fd_stderr, buf_stderr);
-  else return handle_io(condition);
+  else return handle_io(condition, buf_stderr);
 }
 
 bool TerminalWin::read_and_append(int fd, std::string & strbuf) {
@@ -148,18 +170,25 @@ bool TerminalWin::read_and_append(int fd, std::string & strbuf) {
   return (n > 0);
 }
 
-bool TerminalWin::handle_io(Glib::IOCondition condition) {
+bool TerminalWin::handle_io(Glib::IOCondition condition, std::string & strbuf) {
 
   if(condition & Glib::IO_NVAL) {
     append_text("\n\n--- IO_NVAL\n\n");
+
+    cmd_state = FAILED;
     return false;
   }
   else if(condition & Glib::IO_ERR) {
+    append_text(strbuf);
     append_text("\n\n--- IO_ERR\n\n");
+    cmd_state = FAILED;
     return false;
   }
   else if(condition & Glib::IO_HUP) {
+    append_text(strbuf);
     append_text("\n\n--- IO_HUP\n\n");
+    cmd_state = DONE;
+    run_next_command();
     return false;
   }
 

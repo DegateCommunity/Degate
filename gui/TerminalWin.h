@@ -34,11 +34,14 @@ class TerminalWin : private GladeFileLoader {
 
  public:
 
+  typedef std::list<std::string> cmd_type;
+
   TerminalWin(Gtk::Window * parent = NULL);
 
   virtual ~TerminalWin();
 
-  virtual void run(std::list<std::string> cmd);
+  virtual void run(cmd_type const& cmd, std::string const & working_dir = "");
+  virtual void run(std::list<cmd_type> const& cmd, std::string const & working_dir = "");
 
 
  private:
@@ -53,16 +56,30 @@ class TerminalWin : private GladeFileLoader {
 
   std::string buf_stdout, buf_stderr;
 
-  void exec_program(std::list<std::string> cmd);
+  std::list<cmd_type> cmds; // list of commands
+
+  std::string working_dir;
+
+  enum CMD_STATE {
+    DONE = 0,
+    FAILED = 1,
+    RUNNING = 2
+  } cmd_state;
+  
+ private:
+
+  void run_next_command();
+  void exec_program(cmd_type cmd);
+
+  bool handle_io(Glib::IOCondition condition, std::string & strbuf);
+  bool read_and_append(int fd, std::string & strbuf);
+  void append_text(std::string const& s);
 
   // Signal handlers:
   virtual void on_close_button_clicked();
   virtual bool on_read_stdout(Glib::IOCondition condition);
   virtual bool on_read_stderr(Glib::IOCondition condition);
 
-  bool handle_io(Glib::IOCondition condition);
-  bool read_and_append(int fd, std::string & strbuf);
-  void append_text(std::string const& s);
 
 };
 

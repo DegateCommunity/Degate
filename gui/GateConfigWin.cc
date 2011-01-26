@@ -349,7 +349,44 @@ void GateConfigWin::on_compile_button_clicked() {
     cmd.push_back(out_file);
 
     term = TerminalWin_shptr(new TerminalWin());
-    term->run(cmd);
+    term->run(cmd, dir);
+    
+    // unlink
+    //remove_directory(dir);
+  }
+  else if(lang_idx_to_impl(idx) == GateTemplate::VERILOG_TESTBENCH) {
+
+    std::list<TerminalWin::cmd_type> cmds;
+
+    // write content to temp-text-file
+    std::string dir = create_temp_directory();
+    std::string in_file = join_pathes(dir, "cell.v");
+    std::string tb_file = join_pathes(dir, "test_cell.v");
+
+    std::string file_list_file = join_pathes(dir, "combindes.v");
+    std::string out_file = join_pathes(dir, "cell.vpp");
+   
+    write_string_to_file(in_file, code_text[GateTemplate::VERILOG]);
+    write_string_to_file(tb_file, code_textview->get_buffer()->get_text());
+    write_string_to_file(file_list_file, in_file + "\n" + tb_file);
+
+    // run icarus in terminal
+    TerminalWin::cmd_type cmd1;
+    cmd1.push_back("iverilog");
+    cmd1.push_back("-v");
+    cmd1.push_back("-t"); cmd1.push_back("vpp");
+    cmd1.push_back("-o"); cmd1.push_back(out_file);
+    cmd1.push_back(file_list_file);
+
+    TerminalWin::cmd_type cmd2;
+    cmd2.push_back("vpp");
+    cmd2.push_back("cell.vpp");
+    cmd2.push_back("-lxt2");
+
+    cmds.push_back(cmd1);
+    cmds.push_back(cmd2);
+    term = TerminalWin_shptr(new TerminalWin());
+    term->run(cmds, dir);
     
     // unlink
     //remove_directory(dir);
