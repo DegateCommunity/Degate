@@ -24,6 +24,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <VHDLCodeTemplateGenerator.h>
 #include <VHDLTBCodeTemplateGenerator.h>
 #include <VerilogCodeTemplateGenerator.h>
+#include <VerilogTBCodeTemplateGenerator.h>
 #include <RenderWindow.h>
 #include <TerminalWin.h>
 #include <DegateHelper.h>
@@ -324,6 +325,11 @@ void GateConfigWin::on_language_changed() {
      lang_idx_to_impl(idx) == GateTemplate::VHDL_TESTBENCH ||
      lang_idx_to_impl(idx) == GateTemplate::VERILOG) {
     codegen_button->set_sensitive(true);
+    compile_button->set_label("Compile");
+  }
+  else if(lang_idx_to_impl(idx) == GateTemplate::VERILOG_TESTBENCH) {
+    codegen_button->set_sensitive(true);
+    compile_button->set_label("Compile & Run");
   }
   else
     codegen_button->set_sensitive(false);
@@ -343,7 +349,7 @@ void GateConfigWin::on_compile_button_clicked() {
     // run icarus in terminal
     std::list<std::string> cmd;
     cmd.push_back("iverilog");
-    cmd.push_back("-v");
+    //cmd.push_back("-v");
     cmd.push_back(in_file);
     cmd.push_back("-o");
     cmd.push_back(out_file);
@@ -356,6 +362,14 @@ void GateConfigWin::on_compile_button_clicked() {
   }
   else if(lang_idx_to_impl(idx) == GateTemplate::VERILOG_TESTBENCH) {
 
+    if(code_text[GateTemplate::VERILOG].size() == 0) {
+      Gtk::MessageDialog dialog("You must write the Verilog code for the standard cell's behaviour first.",
+			      true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+      dialog.set_title("ERROR");
+      dialog.run();
+      return;
+    }
+
     std::list<TerminalWin::cmd_type> cmds;
 
     // write content to temp-text-file
@@ -363,28 +377,32 @@ void GateConfigWin::on_compile_button_clicked() {
     std::string in_file = join_pathes(dir, "cell.v");
     std::string tb_file = join_pathes(dir, "test_cell.v");
 
-    std::string file_list_file = join_pathes(dir, "combindes.v");
-    std::string out_file = join_pathes(dir, "cell.vpp");
+    std::string file_list_file = join_pathes(dir, "combinded.v");
+    std::string out_file = join_pathes(dir, "cell");
    
     write_string_to_file(in_file, code_text[GateTemplate::VERILOG]);
     write_string_to_file(tb_file, code_textview->get_buffer()->get_text());
-    write_string_to_file(file_list_file, in_file + "\n" + tb_file);
+    write_string_to_file(file_list_file, in_file + "\n");
 
     // run icarus in terminal
     TerminalWin::cmd_type cmd1;
     cmd1.push_back("iverilog");
     cmd1.push_back("-v");
-    cmd1.push_back("-t"); cmd1.push_back("vpp");
+    //cmd1.push_back("-t"); cmd1.push_back("vpp");
     cmd1.push_back("-o"); cmd1.push_back(out_file);
-    cmd1.push_back(file_list_file);
+    cmd1.push_back("-f"); cmd1.push_back(file_list_file);
+    cmd1.push_back(tb_file);
 
     TerminalWin::cmd_type cmd2;
-    cmd2.push_back("vpp");
-    cmd2.push_back("cell.vpp");
-    cmd2.push_back("-lxt2");
+    cmd2.push_back(join_pathes(dir, "cell"));
+
+    TerminalWin::cmd_type cmd3;
+    cmd3.push_back("gtkwave");
+    cmd3.push_back("test.vcd");
 
     cmds.push_back(cmd1);
     cmds.push_back(cmd2);
+    cmds.push_back(cmd3);
     term = TerminalWin_shptr(new TerminalWin());
     term->run(cmds, dir);
     
@@ -429,6 +447,11 @@ void GateConfigWin::on_codegen_button_clicked() {
     codegen = CodeTemplateGenerator_shptr(new VerilogCodeTemplateGenerator(entry_short_name->get_text().c_str(),
 									   entry_description->get_text().c_str(),
 									   selected_logic_class));
+  }
+  else if(lang_idx_to_impl(idx) == GateTemplate::VERILOG_TESTBENCH) {
+    codegen = CodeTemplateGenerator_shptr(new VerilogTBCodeTemplateGenerator(entry_short_name->get_text().c_str(),
+									     entry_description->get_text().c_str(),
+									     selected_logic_class));
   }
   else {
     return;
