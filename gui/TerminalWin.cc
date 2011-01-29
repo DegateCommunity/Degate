@@ -80,9 +80,11 @@ void TerminalWin::run(std::list<cmd_type > const& cmds, std::string const & work
 
 void TerminalWin::run_next_command() {
   assert(cmd_state == DONE);
-  cmd_type cmd = cmds.front();
-  cmds.pop_front();
-  exec_program(cmd);
+  if(cmds.size() > 0) {
+    cmd_type cmd = cmds.front();
+    cmds.pop_front();
+    exec_program(cmd);
+  }
 }
 
 
@@ -98,6 +100,8 @@ void TerminalWin::exec_program(std::list<std::string> cmd) {
   BOOST_FOREACH(std::string const& s, cmd) {
     std::cout << "[" << s << "]" << std::endl;
   }
+
+  append_text("Run command: " + boost::algorithm::join(cmd, " ") + "\n");
 
   try {
 
@@ -173,20 +177,20 @@ bool TerminalWin::read_and_append(int fd, std::string & strbuf) {
 bool TerminalWin::handle_io(Glib::IOCondition condition, std::string & strbuf) {
 
   if(condition & Glib::IO_NVAL) {
-    append_text("\n\n--- IO_NVAL\n\n");
+    append_text("\n--- IO_NVAL\n");
 
     cmd_state = FAILED;
     return false;
   }
   else if(condition & Glib::IO_ERR) {
     append_text(strbuf);
-    append_text("\n\n--- IO_ERR\n\n");
+    append_text("\n--- IO_ERR\n");
     cmd_state = FAILED;
     return false;
   }
   else if(condition & Glib::IO_HUP) {
     append_text(strbuf);
-    append_text("\n\n--- IO_HUP\n\n");
+    append_text("\n--- IO_HUP\n");
     cmd_state = DONE;
     run_next_command();
     return false;
