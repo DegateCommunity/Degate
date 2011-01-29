@@ -57,7 +57,7 @@ std::string VerilogTBCodeTemplateGenerator::generate_header() const {
 		  " *\n"
 		  " *  Please customize this code template according to your needs.\n"
 		  " */\n\n"
-		  "`timescale 1s/.1ns\n"
+		  "`timescale 1ns/100ps\n"
 		  "\n\n");
   f % entity_name;
   return f.str();
@@ -75,7 +75,7 @@ std::string VerilogTBCodeTemplateGenerator::generate_header() const {
     std::list<std::string> port_wirering;
     BOOST_FOREACH(std::string const & pname, 
 		  generate_identifier(get_ports())) {
-      boost::format f("%1%(%2%)");
+      boost::format f(".%1%(%2%)");
       f % pname % pname;
       port_wirering.push_back(f.str());
     }
@@ -88,7 +88,7 @@ std::string VerilogTBCodeTemplateGenerator::generate_header() const {
       inport_init += f.str();
     }
 
-    boost::format f("module testbench_%1%\n"
+    boost::format f("module testbench_%1%;\n"
 		    "  reg %2%;\n"
 		    "  wire %3%;\n"
 		    "\n"
@@ -98,7 +98,7 @@ std::string VerilogTBCodeTemplateGenerator::generate_header() const {
 		    "  // initialize\n"
 		    "  initial begin\n"
 		    "    // enable signal dumping\n"
-		    "    $dumpfile(\"test.vcd\"); // generate VCD dump file\n"
+		    "    $dumpfile(\"test.vcd\"); // Generate a VCD dump file. Please, do not change the filename.\n"
 		    "    $dumpvars(0, testbench_%6%); // for this module\n"
 		    "\n"
 		    "    // initialize signals on ports\n"
@@ -109,18 +109,18 @@ std::string VerilogTBCodeTemplateGenerator::generate_header() const {
 		    "    #10; // wait 10 ns for port initialisation\n"
 		    "\n"
 		    "    // ..."
-		    ""
+		    "\n"
 		    "  end\n"
 		    "\n"
 		    "endmodule // testbench_%8%");
-    f % device_type_name
+    f % generate_identifier(device_type_name)
       % inports
       % outports
-      % device_type_name % boost::algorithm::join(port_wirering, ", ")
-      % device_type_name
+      % generate_identifier(device_type_name) % boost::algorithm::join(port_wirering, ", ")
+      % generate_identifier(device_type_name)
       % inport_init
 
-      % device_type_name;
+      % generate_identifier(device_type_name);
   return f.str();
     
 }
