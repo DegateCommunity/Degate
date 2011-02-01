@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <glade-interface>
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy toplevel-contextual -->
@@ -7,7 +7,7 @@
     <property name="title" translatable="yes">Logic gates</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
-    <property name="default_width">700</property>
+    <property name="default_width">800</property>
     <property name="default_height">400</property>
     <property name="type_hint">dialog</property>
     <property name="urgency_hint">True</property>
