@@ -99,8 +99,8 @@ std::string VHDLTBCodeTemplateGenerator::generate_signals() const {
 
   boost::format f("  signal %1% : in std_logic;\n"
 		  "  signal %2% : out std_logic;\n");
-  f % boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_inports()), ", ")
-    % boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_outports()), ", ");
+  f % boost::algorithm::join(CodeTemplateGenerator::generate_identifier<std::vector<std::string> >(get_inports()), ", ")
+    % boost::algorithm::join(CodeTemplateGenerator::generate_identifier<std::vector<std::string> >(get_outports()), ", ");
   return f.str();
 }
 

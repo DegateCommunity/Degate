@@ -50,7 +50,8 @@ namespace degate {
     virtual std::string generate_header() const;
     virtual std::string generate_module(std::string const& device_type_name) const;
 
-    std::vector<std::string> generate_all_assignments(std::vector<std::string> const& port_idents) const;
+    std::string generate_all_assignments(std::vector<std::string> const& in_port_idents,
+					 std::vector<std::string> const& out_port_idents) const;
   };
 
   typedef std::tr1::shared_ptr<VerilogTBCodeTemplateGenerator> VerilogTBCodeTemplateGenerator_shptr;

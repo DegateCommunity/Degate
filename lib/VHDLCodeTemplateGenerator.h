@@ -82,16 +82,10 @@ namespace degate {
      * - Cannot contain white space
      * - are not case sensitive.
      */
-    virtual std::string generate_identifier(std::string const& name) const;
+    virtual std::string generate_identifier(std::string const& name, 
+					    std::string const& prefix = "") const;
 
-    template<typename Container>
-    Container generate_identifier(Container const& c) const {
-      Container new_c;
-      BOOST_FOREACH(typename Container::value_type const& s, c) {
-	new_c.push_back(generate_identifier(s));
-      }
-      return new_c;
-    }
+    using CodeTemplateGenerator::generate_identifier;
 
   };
 

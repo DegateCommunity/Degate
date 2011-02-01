@@ -64,7 +64,7 @@ std::string VerilogCodeTemplateGenerator::generate_module(std::string const& ent
   boost::format f("module %1% (\n"
 		  "%2%"
 		  ");\n\n");
-  f % generate_identifier(entity_name)
+  f % generate_identifier(entity_name, "dg_")
     % port_description;
   return f.str();
 }
@@ -125,16 +125,26 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
     f % generate_identifier(out[0]) % generate_identifier(in[0]);
     return f.str();
   }
-  else if(logic_class == "tristate-inverter") {
+  else if(logic_class == "inverter") {
+    boost::format f("  assign %1% = !%2%");
+    f % generate_identifier(out[0]) % generate_identifier(in[0]);
+    return f.str();
+  }
+  else if(logic_class == "tristate-inverter" ||
+	  logic_class == "tristate-inverter-lo-active" ||
+	  logic_class == "tristate-inverter-hi-active") {
+
+    bool low_active = logic_class == "tristate-inverter-lo-active";
+
     boost::format f("  tri %1%; // ???\n\n"
-		    "  assign %2% = %3% ? !%4% : 1'bz;");
+		    "  assign %2% = %3%%4% ? !%5% : 1'bz;");
     f % generate_identifier(out[0]) 
       % generate_identifier(out[0])
+      % (low_active ? "!" : "")
       % generate_identifier(enable_name)
       % generate_identifier(get_first_port_name_not_in(in, enable_name));
     return f.str();
   }
-
   else if((logic_class == "xor" ||
 	   logic_class == "or" ||
 	   logic_class == "and" ||
@@ -164,6 +174,18 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
 
     return f.str();
   }
+  else if(logic_class == "buffer") {
+  }
+  else if(logic_class == "latch-generic") {
+  }
+  else if(logic_class == "latch-sync-enable") {
+  }
+  else if(logic_class == "latch-async-enable") {
+  }
+  else if(logic_class == "flipflop") {
+  }
+  else if(logic_class == "flipflop-sync-rst") {
+  }
   else if(logic_class == "flipflop-async-rst") {
     boost::format f(
       "  -- \n"
@@ -184,17 +206,35 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
       % clock_name;
     return f.str();
   }
-  else {
-    return
-      "/*\n"
-      " * Please implement behaviour.\n"
-      " */\n";
+  else if(logic_class == "generic-combinational-logic") {
   }
+  else if(logic_class == "ao") {
+  }
+  else if(logic_class == "aoi") {
+  }
+  else if(logic_class == "oa") {
+  }
+  else if(logic_class == "oai") {
+  }
+  else if(logic_class == "half-adder") {
+  }
+  else if(logic_class == "full-adder") {
+  }
+  else if(logic_class == "mux") {
+  }
+  else if(logic_class == "demux") {
+  }
+
+  return
+    "/*\n"
+    " * Please implement behaviour.\n"
+    " */\n";
 }
 
 
-std::string VerilogCodeTemplateGenerator::generate_identifier(std::string const& name) const {
-  std::string identifier;
+std::string VerilogCodeTemplateGenerator::generate_identifier(std::string const& name, 
+							      std::string const& prefix) const {
+  std::string identifier = prefix;
 
   bool first_char = true;
   BOOST_FOREACH(char c, name) {

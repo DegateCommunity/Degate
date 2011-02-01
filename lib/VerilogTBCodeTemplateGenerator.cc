@@ -64,78 +64,146 @@ std::string VerilogTBCodeTemplateGenerator::generate_header() const {
 }
 
 
-  std::string VerilogTBCodeTemplateGenerator::generate_module(std::string const& device_type_name) const {
+std::string VerilogTBCodeTemplateGenerator::generate_module(std::string const& device_type_name) const {
     
-    std::string inports = 
-      boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_inports()), ", ");
-    
-    std::string outports = 
-      boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_outports()), ", ");
-    
-    std::list<std::string> port_wirering;
-    BOOST_FOREACH(std::string const & pname, 
-		  generate_identifier(get_ports())) {
-      boost::format f(".%1%(%2%)");
-      f % pname % pname;
-      port_wirering.push_back(f.str());
-    }
-
-    std::string inport_init;
-    BOOST_FOREACH(std::string const & pname, 
-		  generate_identifier(get_inports())) {
+  std::string inports = 
+    boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_inports()), ", ");
+  
+  std::string outports = 
+    boost::algorithm::join(generate_identifier<std::vector<std::string> >(get_outports()), ", ");
+  
+  std::list<std::string> port_wiring;
+  BOOST_FOREACH(std::string const & pname, 
+		generate_identifier(get_ports())) {
+    boost::format f(".%1%(%2%)");
+    f % pname % pname;
+    port_wiring.push_back(f.str());
+  }
+  
+  std::string inport_init;
+  BOOST_FOREACH(std::string const & pname, 
+		generate_identifier(get_inports())) {
       boost::format f("    %1% <= 1'b0;\n");
       f % pname;
       inport_init += f.str();
-    }
-
-    boost::format f("module testbench_%1%;\n"
-		    "  reg %2%;\n"
-		    "  wire %3%;\n"
-		    "\n"
-		    "  // create an instance of the device to test\n"
-		    "  %4% unit(%5%);\n"
-		    "\n"
-		    "  // initialize\n"
-		    "  initial begin\n"
-		    "    // enable signal dumping\n"
-		    "    $dumpfile(\"test.vcd\"); // Generate a VCD dump file. Please, do not change the filename.\n"
-		    "    $dumpvars(0, testbench_%6%); // for this module\n"
-		    "\n"
-		    "    // initialize signals on ports\n"
-		    "%7%"
-		    "  end\n"
-		    "\n"
-		    "  initial begin\n"
-		    "    #10; // wait 10 ns for port initialisation\n"
-		    "\n"
-		    "    // ..."
-		    "\n"
-		    "  end\n"
-		    "\n"
-		    "endmodule // testbench_%8%");
-    f % generate_identifier(device_type_name)
-      % inports
-      % outports
-      % generate_identifier(device_type_name) % boost::algorithm::join(port_wirering, ", ")
-      % generate_identifier(device_type_name)
-      % inport_init
-
-      % generate_identifier(device_type_name);
-  return f.str();
+  }
+  
+  boost::format f("module testbench_%1%;\n"
+		  "  reg %2%;\n"
+		  "  wire %3%;\n"
+		  "\n"
+		  "  // helper task to simulate a C-style assert() function\n"
+		  "  task assert;\n"
+		  "    input asserted_value;\n"
+		  "    begin\n"
+		  "      if(!asserted_value) begin\n"
+		  "        $display(\"Assertion failed.\");\n"
+		  "        $finish;\n"
+		  "      end\n"
+		  "    end\n"
+		  "  endtask\n"
+		  "\n"
+		  "  // create an instance of the device to test\n"
+		  "  %4% unit(%5%);\n"
+		  "\n"
+		  "  // initialize\n"
+		  "  initial begin\n"
+		  "    // Enable signal dumping\n"
+		  "    // Generate a VCD dump file. Please, do not change the filename.\n"
+		  "    $dumpfile(\"test.vcd\"); \n"
+		  "    $dumpvars(0, testbench_%6%); // for this module\n"
+		  "\n"
+		  "    // initialize signals on ports\n"
+		  "%7%"
+		  "  end\n"
+		  "\n"
+		  "  initial begin\n"
+		  "    #10; // wait 10 ns for port initialisation\n"
+		  "\n"
+		  "%8%"
+		  "\n"
+		  "    #10; // wait 10 ns\n"
+		  "\n"
+		  "  end\n"
+		  "\n"
+		  "endmodule // testbench_%9%");
+  f % generate_identifier(device_type_name, "dg_")
+    % inports
+    % outports
+    % generate_identifier(device_type_name, "dg_") % boost::algorithm::join(port_wiring, ", ")
+    % generate_identifier(device_type_name, "dg_")
+    % inport_init
     
+    % generate_all_assignments(get_inports(), get_outports())
+    
+    % generate_identifier(device_type_name, "dg_");
+
+  return f.str();    
 }
 
 
-std::vector<std::string> VerilogTBCodeTemplateGenerator::generate_all_assignments(std::vector<std::string> const& port_idents) const {
+/**
+ * Recursive implementation of an increment function.
+ * Starts with MSB and increments until position right to LSB is reached.
+ * @return Returns false, if there is nothing to do.
+ */
+bool increment(std::vector<int> & assignment, size_t pos = 0) {
+  if(assignment.size() == 0) return false;
 
-  std::vector<std::string> result;
+  // toggle lsb
+  if(assignment[pos] == 0) {
+    assignment[pos] = 1;
+    return true;
+  }
+  else {
+    assignment[pos] = 0;
+    if(pos + 1 == assignment.size()) return false;
+    else return increment(assignment, pos + 1);
+  }
+      
+}
 
-  std::vector<int> assignments(port_idents.size()+1); // init with 0
-  while(assignments[0] != 1) {
-    // inc
-    // XXX
+std::string VerilogTBCodeTemplateGenerator::generate_all_assignments
+(std::vector<std::string> const& in_port_idents, 
+ std::vector<std::string> const& out_port_idents) const {
+
+  // left side: {a, b, c, ... }
+  std::string assignment_dst = 
+    "{" +
+    boost::algorithm::join(generate_identifier<std::vector<std::string> >(in_port_idents), ", ") + 
+    "}";
+
+  // right side prefix
+  boost::format f_prefix("%1%'b");
+  f_prefix % in_port_idents.size();
+  std::string prefix = f_prefix.str();
+
+
+  std::string testcode;
+
+  std::vector<int> assignment(in_port_idents.size()); // initialized with 0
+  while(increment(assignment)) {
+
+    std::string assignment2;
+    BOOST_FOREACH(int i, assignment) 
+      assignment2.push_back(boost::lexical_cast<char>(i));
+    std::reverse(assignment2.begin(), assignment2.end());
+
+    // generate assignemt string
+    boost::format f("    %1% = %2%%3%;\n"
+		    "    #10;\n");
+    f % assignment_dst % prefix % assignment2;
+
+    testcode += f.str();
+    BOOST_FOREACH(std::string const& oport,
+		  generate_identifier<std::vector<std::string> >(out_port_idents)) {
+      boost::format f2("    assert(%1% === 1'bX); // please edit\n\n");
+      f2 % oport;
+      testcode += f2.str();
+    }
+
   }
 
-  return result;
+  return testcode;
 }
 

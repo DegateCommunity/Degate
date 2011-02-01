@@ -27,6 +27,8 @@
 #include <vector>
 #include <string>
 
+#include <boost/foreach.hpp>
+
 namespace degate {
 
   class CodeTemplateGenerator {
@@ -83,6 +85,20 @@ namespace degate {
      */
     std::string get_first_port_name_not_in(std::vector<std::string> const& ports,
 					   std::string const& blacklist_item) const;  
+
+
+
+    virtual std::string generate_identifier(std::string const& name, std::string const& prefix = "") const = 0;
+
+    template<typename Container>
+    Container generate_identifier(Container const& c, std::string const& prefix = "") const {
+      Container new_c;
+      BOOST_FOREACH(typename Container::value_type const& s, c) {
+	new_c.push_back(generate_identifier(s, prefix));
+      }
+      return new_c;
+    }
+
 
   public:
 

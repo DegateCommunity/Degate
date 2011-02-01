@@ -72,9 +72,9 @@ std::string VHDLCodeTemplateGenerator::generate_entity(std::string const& entity
   boost::format f("entity %1% is\n"
 		  "%2%"
 		  "end %3%;\n\n");
-  f % generate_identifier(entity_name)
+  f % generate_identifier(entity_name, "dg_")
     % port_description
-    % generate_identifier(entity_name);
+    % generate_identifier(entity_name, "dg_");
   return f.str();
 }
 
@@ -84,7 +84,7 @@ std::string VHDLCodeTemplateGenerator::generate_component(std::string const& ent
   boost::format f("  component %1% is\n"
 		  "%2%"
 		  "  end component;\n\n");
-  f % generate_identifier(entity_name)
+  f % generate_identifier(entity_name, "dg_")
     % port_description;
   return f.str();
 }
@@ -188,14 +188,15 @@ std::string VHDLCodeTemplateGenerator::generate_architecture(std::string const& 
 		  "begin\n"
 		  "%3%\n"
 		  "end Behavioral;\n\n");
-  f % generate_identifier(entity_name)
+  f % generate_identifier(entity_name, "dg_")
     % header
     % impl;
   return f.str();
 }
 
-std::string VHDLCodeTemplateGenerator::generate_identifier(std::string const& name) const {
-  std::string identifier;
+std::string VHDLCodeTemplateGenerator::generate_identifier(std::string const& name, 
+							   std::string const& prefix) const {
+  std::string identifier = prefix;
 
   bool first_char = true;
   BOOST_FOREACH(char c, name) {
@@ -227,7 +228,7 @@ std::string VHDLCodeTemplateGenerator::generate_instance(std::string const& inst
 
   boost::format f("  %1% : %2% port map (\n%3%\n  );\n\n\n");
   f % generate_identifier(instance_name)
-    % generate_identifier(instance_type)
+    % generate_identifier(instance_type, "dg_")
     % boost::algorithm::join(port_map_str, ",\n");
   return f.str();
 }
