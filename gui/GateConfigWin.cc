@@ -279,6 +279,7 @@ void GateConfigWin::insert_logic_classes() {
   append_logic_class("flipflop", "flipflop (generic)");
   append_logic_class("flipflop-sync-rst", "flipflop (synchronous reset, edge-triggert)");
   append_logic_class("flipflop-async-rst", "flipflop (asynchronous reset, edge-triggert)");
+  append_logic_class("generic-combinational-logic", "generic combinational logic");
   append_logic_class("ao", "and-or");
   append_logic_class("aoi", "and-or-inverter");
   append_logic_class("oa", "or-and");
