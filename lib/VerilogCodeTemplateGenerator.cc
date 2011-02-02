@@ -83,7 +83,7 @@ std::string VerilogCodeTemplateGenerator::generate_port_list() const {
 std::string VerilogCodeTemplateGenerator::generate_port_definition() const {
   std::string ret;
 
-  ret += "  // input ports;\n";
+  ret += "  // input ports\n";
   BOOST_FOREACH(std::string const& port_name, 
 		generate_identifier<std::vector<std::string> >(get_inports())) {
     boost::format f("  input %1%;\n");
@@ -92,7 +92,7 @@ std::string VerilogCodeTemplateGenerator::generate_port_definition() const {
   }
 
 
-  ret += "\n  // output ports;\n";
+  ret += "\n  // output ports\n";
   BOOST_FOREACH(std::string const& port_name, 
 		generate_identifier<std::vector<std::string> >(get_outports())) {
     boost::format f("  output %1%;\n");
@@ -175,8 +175,29 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
     return f.str();
   }
   else if(logic_class == "buffer") {
+    //
+  }
+  else if(logic_class == "buffer-tristate-hi-active" ||
+	  logic_class == "buffer-tristate-lo-active") {
+    boost::format f("  tri %1%; // ???\n\n"
+		    "  bufif%2%(%3%, %4%, %45);");
+    f % generate_identifier(out[0])
+      % (logic_class == "buffer-tristate-lo-active" ? "0" : "1")
+      % generate_identifier(out[0])
+      % generate_identifier(get_first_port_name_not_in(in, enable_name))
+      % generate_identifier(enable_name);
+    return f.str();
   }
   else if(logic_class == "latch-generic") {
+    boost::format f("  reg %1%;\n\n"
+		    "  always @(*)\n"
+		    "    if (%2%) %3% = %4%;\n");
+    f % generate_identifier(out[0])
+      % generate_identifier(enable_name)
+      % generate_identifier(out[0])
+      % generate_identifier(get_first_port_name_not_in(in, enable_name));
+    return f.str();
+
   }
   else if(logic_class == "latch-sync-enable") {
   }

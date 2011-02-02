@@ -272,12 +272,18 @@ void GateConfigWin::insert_logic_classes() {
   append_logic_class("or");
   append_logic_class("xor");
   append_logic_class("xnor");
+
   append_logic_class("buffer");
+  append_logic_class("buffer-tristate-lo-active", "Tristate buffer (low active)");
+  append_logic_class("buffer-tristate-hi-active", "Tristate buffer (high active)");
+
   append_logic_class("latch-generic", "latch (generic, transparent)");
   append_logic_class("latch-sync-enable", "latch (generic, with synchronous enable)");
+
   append_logic_class("latch-async-enable", "latch (generic, with asynchronous enable)");
   append_logic_class("flipflop", "flipflop (generic)");
   append_logic_class("flipflop-sync-rst", "flipflop (synchronous reset, edge-triggert)");
+
   append_logic_class("flipflop-async-rst", "flipflop (asynchronous reset, edge-triggert)");
   append_logic_class("generic-combinational-logic", "generic combinational logic");
   append_logic_class("ao", "and-or");
