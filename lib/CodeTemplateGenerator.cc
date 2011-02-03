@@ -39,40 +39,63 @@ CodeTemplateGenerator::~CodeTemplateGenerator() {
 }
 
 
-void CodeTemplateGenerator::add_port(std::string port_name, bool is_inport) {
+void CodeTemplateGenerator::add_port(std::string const& port_name, bool is_inport) {
   std::string lc = port_name;
   std::transform(lc.begin(), lc.end(), lc.begin(), ::tolower);
-  port_direction[port_name] = is_inport;
+  port_direction[lc] = is_inport;
 }
 
-std::string CodeTemplateGenerator::get_clock_port_name() const {
+
+std::string CodeTemplateGenerator::get_port_name_by_type(CodeTemplateGenerator::PORT_FUNCTION_TYPE t) const {
   port_direction_type::const_iterator found;
-  if((port_direction.end() != (found = port_direction.find("clock"))) ||
-     (port_direction.end() != (found = port_direction.find("clk"))))
-    return found->first;
-  else
-    return "";
+  
+  if(t == CLOCK) {
+    if((port_direction.end() != (found = port_direction.find("clock"))) ||
+       (port_direction.end() != (found = port_direction.find("clk"))))
+      return found->first;
+  }
+  else if(t == RESET) {
+    if((port_direction.end() != (found = port_direction.find("/reset"))) ||
+       (port_direction.end() != (found = port_direction.find("!reset"))) ||
+       (port_direction.end() != (found = port_direction.find("reset"))) ||
+       (port_direction.end() != (found = port_direction.find("/rst"))) ||
+       (port_direction.end() != (found = port_direction.find("!rst"))) ||
+       (port_direction.end() != (found = port_direction.find("rst"))))
+      return found->first;
+  }
+  else if(t == ENABLE) {
+    if((port_direction.end() != (found = port_direction.find("en"))) ||
+       (port_direction.end() != (found = port_direction.find("enable"))) ||
+       (port_direction.end() != (found = port_direction.find("/en"))) ||
+       (port_direction.end() != (found = port_direction.find("!en"))) ||
+       (port_direction.end() != (found = port_direction.find("/enable"))) ||
+       (port_direction.end() != (found = port_direction.find("!enable"))))
+      return found->first;
+  }
+  else if(t == SELECT) {
+    if((port_direction.end() != (found = port_direction.find("select"))) ||
+       (port_direction.end() != (found = port_direction.find("sel"))) ||
+       (port_direction.end() != (found = port_direction.find("s"))))
+      return found->first;
+  }
+  else if(t == Q) {
+    if((port_direction.end() != (found = port_direction.find("q"))) )
+      return found->first;
+  }
+  else if(t == NOT_Q) {
+    if((port_direction.end() != (found = port_direction.find("!q"))) ||
+       (port_direction.end() != (found = port_direction.find("/q"))))
+      return found->first;
+  }
+  else if(t == D) {
+    if((port_direction.end() != (found = port_direction.find("d"))) )
+      return found->first;
+  }
+
+  return "";
 }
 
-std::string CodeTemplateGenerator::get_reset_port_name() const {
-  port_direction_type::const_iterator found;
-  if((port_direction.end() != (found = port_direction.find("reset"))) ||
-     (port_direction.end() != (found = port_direction.find("rst"))))
-    return found->first;
-  else
-    return "";
-}
 
-std::string CodeTemplateGenerator::get_enable_port_name() const {
-  port_direction_type::const_iterator found;
-  if((port_direction.end() != (found = port_direction.find("en"))) ||
-     (port_direction.end() != (found = port_direction.find("enable"))) ||
-     (port_direction.end() != (found = port_direction.find("!en"))) ||
-     (port_direction.end() != (found = port_direction.find("!enable"))))
-    return found->first;
-  else
-    return "";
-}
 
 std::string CodeTemplateGenerator::get_first_port_name_not_in(std::vector<std::string> const& ports,
 							      std::vector<std::string> const& blacklist) const {
@@ -100,6 +123,7 @@ std::vector<std::string> CodeTemplateGenerator::get_inports() const {
   BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
     if(p.second == true) ports.push_back(p.first);
 
+  std::sort(ports.begin(), ports.end());
   return ports;
 }
 
@@ -109,6 +133,7 @@ std::vector<std::string> CodeTemplateGenerator::get_outports() const {
   BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
     if(p.second == false) ports.push_back(p.first);
 
+  std::sort(ports.begin(), ports.end());
   return ports;
 }
 
@@ -118,5 +143,6 @@ std::vector<std::string> CodeTemplateGenerator::get_ports() const {
   BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
     ports.push_back(p.first);
 
+  std::sort(ports.begin(), ports.end());
   return ports;
 }

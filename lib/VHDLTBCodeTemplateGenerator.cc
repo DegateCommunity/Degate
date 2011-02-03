@@ -48,7 +48,7 @@ std::string VHDLTBCodeTemplateGenerator::generate() const {
 
 
   std::string clock_process_impl;
-  std::string clock_signal_name = get_clock_port_name();
+  std::string clock_signal_name = get_port_name_by_type(CLOCK);
   std::cout << "clock signal is : " << clock_signal_name << std::endl;
   if(!clock_signal_name.empty()) clock_process_impl += generate_clock_process(clock_signal_name);
 

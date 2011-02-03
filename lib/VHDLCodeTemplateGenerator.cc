@@ -94,9 +94,9 @@ std::string VHDLCodeTemplateGenerator::generate_impl(std::string const& logic_cl
   std::vector<std::string> in = get_inports();
   std::vector<std::string> out = get_outports();
 
-  std::string clock_name = get_clock_port_name();
+  std::string clock_name = get_port_name_by_type(CLOCK);
   if(clock_name.empty()) clock_name = "clock";
-  std::string reset_name = get_reset_port_name();
+  std::string reset_name = get_port_name_by_type(RESET);
   if(reset_name.empty()) reset_name = "reset";
 
   if(logic_class == "inverter" &&

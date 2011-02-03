@@ -31,10 +31,26 @@
 
 namespace degate {
 
+  /**
+   * Base class for code generators.
+   */
   class CodeTemplateGenerator {
   public:
     typedef std::map<std::string, bool> port_direction_type;
 
+    /**
+     *
+     */
+    enum PORT_FUNCTION_TYPE {
+      CLOCK,
+      RESET,
+      ENABLE,
+      Q,
+      NOT_Q,
+      D,
+      SELECT
+    };
+    
   protected:
     std::string entity_name, description, logic_class;
     port_direction_type port_direction;
@@ -54,23 +70,13 @@ namespace degate {
      */
     virtual std::vector<std::string> get_ports() const;
 
-    /**
-     * Get the name of the port, that is most likely the clock port.
-     * @return Returns an empty string, if no port name matches.
-     */
-    std::string get_clock_port_name() const;
 
     /**
-     * Get the name of the port, that is most likely the reset port.
+     * Get the name of the port, that is most likely of the type \p t.
      * @return Returns an empty string, if no port name matches.
      */
-    std::string get_reset_port_name() const;
+    std::string get_port_name_by_type(PORT_FUNCTION_TYPE t) const;
 
-    /**
-     * Get the name of the port, that is most likely the enable port.
-     * @return Returns an empty string, if no port name matches.
-     */
-    std::string get_enable_port_name() const;
 
     /**
      * Get the first port name from \p ports that is not contained in \p blacklist.
@@ -108,7 +114,7 @@ namespace degate {
 
     virtual ~CodeTemplateGenerator();
 
-    virtual void add_port(std::string port_name, bool is_inport);
+    virtual void add_port(std::string const& port_name, bool is_inport);
 
     virtual std::string generate() const = 0;
   };

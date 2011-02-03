@@ -372,7 +372,7 @@ void GateConfigWin::on_compile_button_clicked() {
     if(code_text[GateTemplate::VERILOG].size() == 0) {
       Gtk::MessageDialog dialog("You must write the Verilog code for the standard cell's behaviour first.",
 			      true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
-      dialog.set_title("ERROR");
+      dialog.set_title("Error");
       dialog.run();
       return;
     }
@@ -386,7 +386,7 @@ void GateConfigWin::on_compile_button_clicked() {
 
     std::string file_list_file = join_pathes(dir, "combinded.v");
     std::string out_file = join_pathes(dir, "cell");
-   
+     
     write_string_to_file(in_file, code_text[GateTemplate::VERILOG]);
     write_string_to_file(tb_file, code_textview->get_buffer()->get_text());
     write_string_to_file(file_list_file, in_file + "\n");
@@ -431,13 +431,14 @@ void GateConfigWin::on_codegen_button_clicked() {
     if(dialog.run() == Gtk::RESPONSE_NO) return;
   }
 
-  if(lang_idx_to_impl(idx) == GateTemplate::UNDEFINED) {
+  if(selected_logic_class.empty() || selected_logic_class == "undefined") {
     Gtk::MessageDialog dialog("If you define a logic class under the tab 'entity', "
 			      "you can auto-generate more specific code stubs.",
 			      true, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK);
     dialog.set_title("Hint");
     dialog.run();
   }
+
 
 
   if(lang_idx_to_impl(idx) == GateTemplate::VHDL) {
@@ -464,13 +465,31 @@ void GateConfigWin::on_codegen_button_clicked() {
     return;
   }
 
+
   type_children children = refListStore_ports->children();
   for(type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
     Gtk::TreeModel::Row row = *iter;
     Glib::ustring port_name = row[port_model_columns.m_col_name];
     codegen->add_port(port_name, row[port_model_columns.m_col_inport]);
   }
-  code_textview->get_buffer()->set_text(codegen->generate());
+
+  try {
+    std::string c = codegen->generate();
+    code_textview->get_buffer()->set_text(c);
+  }
+  catch(std::exception const& e) {
+    Gtk::MessageDialog dialog(Glib::ustring("Failed to create a code template: ") + e.what(),
+			      true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+    dialog.set_title("Error");
+    dialog.run();
+  }
+  catch(...) {
+    Gtk::MessageDialog dialog("Failed to create a code template.",
+			      true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+    dialog.set_title("Error");
+    dialog.run();
+  }
+
 }
 
 

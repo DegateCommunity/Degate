@@ -111,11 +111,14 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
   std::vector<std::string> in = get_inports();
   std::vector<std::string> out = get_outports();
 
-  std::string clock_name = get_clock_port_name();
+  if(in.size() == 0 || out.size() == 0) 
+    throw DegateRuntimeException("The standard cell has either no input port or no ouput port.");
+
+  std::string clock_name = get_port_name_by_type(CLOCK);
   if(clock_name.empty()) clock_name = "clock";
-  std::string reset_name = get_reset_port_name();
+  std::string reset_name = get_port_name_by_type(RESET);
   if(reset_name.empty()) reset_name = "reset";
-  std::string enable_name = get_enable_port_name();
+  std::string enable_name = get_port_name_by_type(ENABLE);
   if(reset_name.empty()) reset_name = "enable";
 
   if(logic_class == "inverter" &&
@@ -125,13 +128,14 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
     f % generate_identifier(out[0]) % generate_identifier(in[0]);
     return f.str();
   }
-  else if(logic_class == "inverter") {
+  else if(logic_class == "inverter" && 
+	  in.size() == 1 && out.size() == 1) {
     boost::format f("  assign %1% = !%2%");
     f % generate_identifier(out[0]) % generate_identifier(in[0]);
     return f.str();
   }
   else if(logic_class == "tristate-inverter" ||
-	  logic_class == "tristate-inverter-lo-active" ||
+	  logic_class == "tristate-inverter-lo-actiSve" ||
 	  logic_class == "tristate-inverter-hi-active") {
 
     bool low_active = logic_class == "tristate-inverter-lo-active";
@@ -174,8 +178,11 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
 
     return f.str();
   }
-  else if(logic_class == "buffer") {
-    //
+  else if(logic_class == "buffer" && in.size() > 0 && out.size() > 0) {
+    boost::format f("  assign %1% = %2%; // ???");
+    f % generate_identifier(out[0]) % generate_identifier(in[0]);
+    return f.str();
+
   }
   else if(logic_class == "buffer-tristate-hi-active" ||
 	  logic_class == "buffer-tristate-lo-active") {
@@ -200,50 +207,167 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
 
   }
   else if(logic_class == "latch-sync-enable") {
+    return "  // stub not implemented, yet";
   }
   else if(logic_class == "latch-async-enable") {
+    return "  // stub not implemented, yet";
   }
   else if(logic_class == "flipflop") {
+    boost::format f("  reg %1%;\n"
+		    "\n"
+		    "  always @(posedge %2%)\n"
+		    "    %3% <= %4%;\n");
+    f % generate_identifier(get_port_name_by_type(Q))
+      % generate_identifier(get_port_name_by_type(CLOCK))
+      % generate_identifier(get_port_name_by_type(Q))
+      % generate_identifier(get_port_name_by_type(D));
+
+    if(get_port_name_by_type(NOT_Q).empty())
+      return f.str();
+    else {
+      boost::format f2("\n"
+		       "  reg %1%;\n"
+		       "\n"
+		       "  always @*\n"
+		       "    %2% <= !%3%;\n");
+      f2 % generate_identifier(get_port_name_by_type(NOT_Q))
+	% generate_identifier(get_port_name_by_type(NOT_Q))
+	% generate_identifier(get_port_name_by_type(Q));
+
+	return f.str() + f2.str();
+    }
   }
   else if(logic_class == "flipflop-sync-rst") {
+    boost::format f("  reg %1%;\n"
+		    "\n"
+		    "  always @(posedge %2%)\n"
+		    "    if(%3%) // synchronous reset\n"
+		    "      %4% <= 1'b0;\n"
+		    "    else\n"
+		    "      %5% <= %6%;\n");
+    f % generate_identifier(get_port_name_by_type(Q)) // reg
+      % generate_identifier(get_port_name_by_type(CLOCK)) // always
+
+      % generate_identifier(get_port_name_by_type(RESET)) // if
+
+      % generate_identifier(get_port_name_by_type(Q))
+      % generate_identifier(get_port_name_by_type(Q))
+      % generate_identifier(get_port_name_by_type(D));
+
+
+    if(get_port_name_by_type(NOT_Q).empty())
+      return f.str();
+    else {
+      boost::format f2("\n"
+		       "  reg %1%;\n"
+		       "\n"
+		       "  always @*\n"
+		       "    %2% <= !%3%;\n");
+      f2 % generate_identifier(get_port_name_by_type(NOT_Q))
+	% generate_identifier(get_port_name_by_type(NOT_Q))
+	% generate_identifier(get_port_name_by_type(Q));
+
+	return f.str() + f2.str();
+    }
+    
   }
   else if(logic_class == "flipflop-async-rst") {
-    boost::format f(
-      "  -- \n"
-      "  -- Please implement behaviour.\n"
-      "  -- \n"
-      "  -- process(%1%, %2%)\n"
-      "  -- begin\n"
-      "  --  if %3% = '1' then   -- or '0' if RESET is active low...\n"
-      "  --    Q <= '0';\n"
-      "  --  elsif rising_edge(%4%) then\n"
-      "  --    if Enable = '1' then  -- or '0' if Enable is active low...\n"
-      "  --      Q <= D;\n"
-      "  --    end if;\n"
-      "  --   end if;\n"
-      "  -- end process;\n");
-    f % clock_name % reset_name
-      % reset_name
-      % clock_name;
-    return f.str();
+    boost::format f("  reg %1%;\n"
+		    "\n"
+		    "  always @(posedge %2% or posedge %3%)\n"
+		    "    if(%4%) // asynchronous reset\n"
+		    "      %5% <= 1'b0;\n"
+		    "    else\n"
+		    "      %6% <= %7%;\n");
+    f % generate_identifier(get_port_name_by_type(Q)) // reg
+      % generate_identifier(get_port_name_by_type(CLOCK)) // always
+      % generate_identifier(get_port_name_by_type(RESET)) // always
+
+      % generate_identifier(get_port_name_by_type(RESET)) // if
+
+      % generate_identifier(get_port_name_by_type(Q))
+      % generate_identifier(get_port_name_by_type(Q))
+      % generate_identifier(get_port_name_by_type(D));
+
+    if(get_port_name_by_type(NOT_Q).empty())
+      return f.str();
+    else {
+      boost::format f2("\n"
+		       "  reg %1%;\n"
+		       "\n"
+		       "  always @*\n"
+		       "    %2% <= !%3%;\n");
+      f2 % generate_identifier(get_port_name_by_type(NOT_Q))
+	% generate_identifier(get_port_name_by_type(NOT_Q))
+	% generate_identifier(get_port_name_by_type(Q));
+
+	return f.str() + f2.str();
+    }
+
   }
-  else if(logic_class == "generic-combinational-logic") {
-  }
-  else if(logic_class == "ao") {
-  }
-  else if(logic_class == "aoi") {
-  }
-  else if(logic_class == "oa") {
-  }
-  else if(logic_class == "oai") {
+  else if(logic_class == "generic-combinational-logic" ||
+	  logic_class == "ao" ||
+	  logic_class == "aoi" ||
+	  logic_class == "oa" ||
+	  logic_class == "oai") {
+    
+    std::string ret;
+    BOOST_FOREACH(std::string const& oport,
+		  generate_identifier<std::vector<std::string> >(get_outports())) {
+      boost::format f("  assign %1% = ...;\n");
+      f % oport;
+      ret += f.str();
+    }
+		  
+    return ret;
   }
   else if(logic_class == "half-adder") {
+    return "  // assign {cout,sum} = a + b + cin;\n";
   }
   else if(logic_class == "full-adder") {
+    return "  // stub not implemented, yet";
   }
   else if(logic_class == "mux") {
+
+    boost::format f("  reg %1%;\n"
+		    "\n"
+		    "  always @*\n"
+		    "    begin\n"
+		    "      %2% = 1'b0; // default\n"
+		    "      case({sel1, sel0}) // just an example\n"
+		    "        2'b00 : %3% = a;\n"
+		    "        2'b01 : %4% = b;\n"
+		    "        2'b10 : %5% = c;\n"
+		    "        2'b11 : %6% = d;\n"
+		    "      endcase\n"
+		    "    end\n");
+    f % generate_identifier(out[0]) 
+      % generate_identifier(out[0]) 
+      % generate_identifier(out[0]) 
+      % generate_identifier(out[0]) 
+      % generate_identifier(out[0]) 
+      % generate_identifier(out[0]);
+    return f.str();
   }
   else if(logic_class == "demux") {
+    boost::format f("  reg a, b, c, d;\n"
+		    "\n"
+		    "  always @*\n"
+		    "    begin\n"
+		    "      %1% = 1'b0; // default\n"
+		    "      case({sel1, sel0}) // just an example\n"
+		    "        2'b00 : a = %2%;\n"
+		    "        2'b01 : b = %3%;\n"
+		    "        2'b10 : c = %4%;\n"
+		    "        2'b11 : d = %5%;\n"
+		    "      endcase\n"
+		    "    end\n");
+    f % generate_identifier(in[0]) 
+      % generate_identifier(in[0]) 
+      % generate_identifier(in[0]) 
+      % generate_identifier(in[0]) 
+      % generate_identifier(in[0]);
+    return f.str();
   }
 
   return
