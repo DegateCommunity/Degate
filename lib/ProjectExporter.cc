@@ -69,7 +69,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
 
 
       DRCVBlacklistExporter drcv_exporter(oid_rewriter);
-      drcv_exporter.export_data(drcbl_file, prj->get_drcv_blacklist());
+      drcv_exporter.export_data(join_pathes(project_directory, drcbl_file), prj->get_drcv_blacklist());
 
       GateLibrary_shptr glib = lmodel->get_gate_library();
       if(glib != NULL) {
