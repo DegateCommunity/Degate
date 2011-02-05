@@ -61,15 +61,15 @@ bool autosave_project(Project_shptr project, time_t interval) {
 
     path project_dir(project->get_project_directory());
 
-    if(exists(project_dir / path(".project.xml"))) remove(project_dir / path(".project.xml"));
-    if(exists(project_dir / path(".gate_library.xml"))) remove(project_dir / path(".gate_library.xml"));
-    if(exists(project_dir / path(".lmodel.xml"))) remove(project_dir / path(".lmodel.xml"));
-    if(exists(project_dir / path(".drc_blacklist.xml"))) remove(project_dir / path(".drc_blacklist.xml"));
+    if(exists(project_dir / path("." + project_file))) remove(project_dir / path("." + project_file));
+    if(exists(project_dir / path("." + gatelib_file))) remove(project_dir / path("." + gatelib_file));
+    if(exists(project_dir / path("." + lmodel_file))) remove(project_dir / path("." + lmodel_file));
+    if(exists(project_dir / path("." + drcvbl_file))) remove(project_dir / path("." + drcvbl_file));
 
-    create_symlink(path(prefix + project_file), project_dir / path(".project.xml"));
-    create_symlink(path(prefix + lmodel_file), project_dir / path(".lmodel.xml"));
-    create_symlink(path(prefix + gatelib_file), project_dir / path(".gate_library.xml"));
-    create_symlink(path(prefix + drcvbl_file), project_dir / path(".drc_blacklist.xml"));
+    create_symlink(path(prefix + project_file), project_dir / path("." + project_file));
+    create_symlink(path(prefix + lmodel_file), project_dir / path("." + lmodel_file));
+    create_symlink(path(prefix + gatelib_file), project_dir / path("." + gatelib_file));
+    create_symlink(path(prefix + drcvbl_file), project_dir / path("." + drcvbl_file));
 
     project->reset_last_saved_counter();
 
