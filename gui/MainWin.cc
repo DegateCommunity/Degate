@@ -343,11 +343,13 @@ void MainWin::on_menu_project_export_archive() {
 	on_menu_project_save();
       else return;
     }
-    Gtk::FileChooserDialog dialog("Export project as archive", Gtk::FILE_CHOOSER_ACTION_SAVE );
+    Gtk::FileChooserDialog dialog("Export project as archive", Gtk::FILE_CHOOSER_ACTION_SAVE);
     dialog.set_transient_for(*this);
 
     dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
     dialog.add_button("Select", Gtk::RESPONSE_OK);
+
+    dialog.set_current_folder(main_project->get_project_directory() + "/..");
 
     std::string suffix = get_basename(main_project->get_project_directory());
     dialog.set_current_name(get_date_and_time_as_file_prefix() + suffix + ".zip");
