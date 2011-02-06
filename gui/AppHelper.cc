@@ -79,10 +79,17 @@ bool autosave_project(Project_shptr project, time_t interval) {
 }
 
 bool check_for_autosaved_project(boost::filesystem::path const& project_dir) {
+
   if(!is_symlink(project_dir / path(".project.xml")) ||
      !is_symlink(project_dir / path(".lmodel.xml")) ||
-     !is_symlink(project_dir / path(".gate_library.xml")))
-    return false;
+     !is_symlink(project_dir / path(".gate_library.xml")) ||
+     !is_symlink(project_dir / path(".gate_library.xml")) ||
+
+     !is_symlink(project_dir / path("project.xml")) ||
+     !is_symlink(project_dir / path("lmodel.xml")) ||
+     !is_symlink(project_dir / path("gate_library.xml")) ||
+     !is_symlink(project_dir / path("gate_library.xml")) 
+     ) return false;
 
   if(last_write_time(project_dir / path(".project.xml")) > last_write_time(project_dir / path("project.xml")) ||
      last_write_time(project_dir / path(".lmodel.xml")) > last_write_time(project_dir / path("lmodel.xml")) ||
