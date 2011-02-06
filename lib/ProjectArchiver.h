@@ -42,16 +42,14 @@ namespace degate {
 			 boost::filesystem::path const& archive_file,
 			 boost::filesystem::path const& base_dir_path,
 			 boost::filesystem::path const& file,
-			 boost::filesystem::path const& prepend_dir)
-      throw(ZipException);
+			 boost::filesystem::path const& prepend_dir) const;
 
 
       void add_directory(struct zip * zip_archive,
 			 boost::filesystem::path const& archive_file,
 			 boost::filesystem::path const& base_dir_path,
 			 boost::filesystem::path const& dir,
-			 boost::filesystem::path const& prepend_dir)
-      throw(ZipException);
+			 boost::filesystem::path const& prepend_dir) const;
 
   public:
     ProjectArchiver() {}
@@ -59,8 +57,7 @@ namespace degate {
 
     void export_data(boost::filesystem::path const& project_dir,
 		     boost::filesystem::path const& archive_file,
-		     boost::filesystem::path const& prepend_dir)
-      throw (ZipException);
+		     boost::filesystem::path const& prepend_dir) const;
   };
 
 }
