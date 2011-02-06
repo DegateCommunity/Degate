@@ -184,15 +184,26 @@ void DRCViolationsWin::add_to_list(DRCViolation_shptr v,
 void DRCViolationsWin::run_checks() {
   
   drc.run(lmodel);
+  DRCVContainer const& violations = drc.get_drc_violations();
   
   clear_list();
 
   update_first_page();
 
+  DRCVContainer remove_from_blacklist;
+
   BOOST_FOREACH(DRCViolation_shptr v, _blacklist) {
-    add_to_list(v, refListStore_blacklist->append(), m_Columns_blacklist);
+    // check
+    if(violations.contains(v))
+      add_to_list(v, refListStore_blacklist->append(), m_Columns_blacklist);
+    else 
+      remove_from_blacklist.push_back(v);
   }
-  
+
+  BOOST_FOREACH(DRCViolation_shptr v, remove_from_blacklist) {
+    _blacklist.erase(v);
+  }
+
   update_stats();
 }
 
