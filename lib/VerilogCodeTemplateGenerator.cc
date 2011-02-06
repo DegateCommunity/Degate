@@ -195,7 +195,8 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
       % generate_identifier(enable_name);
     return f.str();
   }
-  else if(logic_class == "latch-generic") {
+  else if(logic_class == "latch-generic" ||
+	  logic_class == "latch-async-enable") {
     boost::format f("  reg %1%;\n\n"
 		    "  always @(*)\n"
 		    "    if (%2%) %3% = %4%;\n");
@@ -207,9 +208,6 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
 
   }
   else if(logic_class == "latch-sync-enable") {
-    return "  // stub not implemented, yet";
-  }
-  else if(logic_class == "latch-async-enable") {
     return "  // stub not implemented, yet";
   }
   else if(logic_class == "flipflop") {
