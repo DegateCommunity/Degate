@@ -122,8 +122,8 @@ set(SOURCES
 	DOTAttributes.cc
 	LogicModelDOTExporter.cc
 	ProjectArchiver.cc
-	DRCVBlacklistExporter.cc
-	DRCVBlacklistImporter.cc
+	RCVBlacklistExporter.cc
+	RCVBlacklistImporter.cc
 
 	#
 	# Images
@@ -141,9 +141,9 @@ set(SOURCES
 	#
 	# Design Rule Checks
 	#
-	DRCOpenPorts.cc
-	DRCNet.cc
-	DRCVContainer.cc
+	ERCOpenPorts.cc
+	ERCNet.cc
+	RCVContainer.cc
 )
 
 

@@ -74,7 +74,7 @@ namespace degate {
 		    std::string const& project_file = "project.xml",
 		    std::string const& lmodel_file = "lmodel.xml",
 		    std::string const& gatelib_file = "gate_library.xml",
-		    std::string const& drcbl_file = "drc_blacklist.xml")
+		    std::string const& rcbl_file = "rc_blacklist.xml")
       throw( InvalidPathException, InvalidPointerException, std::runtime_error );
 
   };

@@ -19,11 +19,11 @@
 
  */
 
-#ifndef __DRCVBLACKLISTIMPORTER_H__
-#define __DRCVBLACKLISTIMPORTER_H__
+#ifndef __RCVBLACKLISTIMPORTER_H__
+#define __RCVBLACKLISTIMPORTER_H__
 
 #include "globals.h"
-#include "DRCViolation.h"
+#include "RCViolation.h"
 #include "XMLImporter.h"
 
 #include <stdexcept>
@@ -31,20 +31,20 @@
 namespace degate {
   
   /**
-   * The DRCVBlacklistImporter imports a list of DRC violations, which should be ignored.
+   * The RCVBlacklistImporter imports a list of RC violations, which should be ignored.
    */
 
-  class DRCVBlacklistImporter : public XMLImporter {
+  class RCVBlacklistImporter : public XMLImporter {
   private:
 
-    void parse_list(const xmlpp::Element * const element, DRCBase::container_type & blacklist);
+    void parse_list(const xmlpp::Element * const element, RCBase::container_type & blacklist);
     LogicModel_shptr _lmodel;
 
   public:
-    DRCVBlacklistImporter(LogicModel_shptr lmodel) : _lmodel(lmodel) {}
-    ~DRCVBlacklistImporter() {}
+    RCVBlacklistImporter(LogicModel_shptr lmodel) : _lmodel(lmodel) {}
+    ~RCVBlacklistImporter() {}
 
-    void import_into(std::string const& filename, DRCBase::container_type & blacklist);
+    void import_into(std::string const& filename, RCBase::container_type & blacklist);
   };
 
 }

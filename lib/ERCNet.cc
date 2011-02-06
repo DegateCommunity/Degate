@@ -19,16 +19,16 @@
 
 */
 
-#include <DRCNet.h>
+#include <ERCNet.h>
 
 using namespace degate;
 
-DRCNet::DRCNet() :
-  DRCBase("net", "Check for unusual net configs.", DRC_ERROR) {
+ERCNet::ERCNet() :
+  RCBase("net", "Check for unusual net configs.", RC_ERROR) {
 }
 
-void DRCNet::run(LogicModel_shptr lmodel) {
-  clear_drc_violations();
+void ERCNet::run(LogicModel_shptr lmodel) {
+  clear_rc_violations();
 
   if(lmodel == NULL) return;
 
@@ -41,7 +41,7 @@ void DRCNet::run(LogicModel_shptr lmodel) {
 
 }
 
-void DRCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
+void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 
   unsigned int
     in_ports = 0,
@@ -68,7 +68,7 @@ void DRCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 	  boost::format f("For the corresponding gate template port of %1% the port "
 			  "direction is undefined.");
 	  f % gate_port->get_descriptive_identifier();
-	  add_drc_violation(DRCViolation_shptr(new DRCViolation(gate_port, f.str(),
+	  add_rc_violation(RCViolation_shptr(new RCViolation(gate_port, f.str(),
 								"undef_port_dir")));
 
 	}
@@ -89,24 +89,24 @@ void DRCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 
 	GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 	std::string error_msg;
-	std::string drc_class;
+	std::string rc_class;
 
 	if(in_ports > 0 && out_ports == 0) {
 	  boost::format f("In-Port %1% is not feeded. It is only connected "
 			  "with %2% other in-ports.");
 	  f % gate_port->get_descriptive_identifier() % (in_ports - 1);
 	  error_msg = f.str();
-	  drc_class = "net.not_feeded";
+	  rc_class = "net.not_feeded";
 	}
 	else if(out_ports > 0) {
 	  boost::format f("Out-Port %1% is connected with %2% other out-ports.");
 	  f % gate_port->get_descriptive_identifier() % out_ports;
 	  error_msg = f.str();
-	  drc_class = "net.outputs_connected";
+	  rc_class = "net.outputs_connected";
 	}
 
-	add_drc_violation(DRCViolation_shptr(new DRCViolation(gate_port, error_msg,
-							      drc_class)));
+	add_rc_violation(RCViolation_shptr(new RCViolation(gate_port, error_msg,
+							      rc_class)));
       }
     }
   }

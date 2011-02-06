@@ -49,7 +49,7 @@ bool autosave_project(Project_shptr project, time_t interval) {
     std::string project_file = "project.xml";
     std::string lmodel_file = "lmodel.xml";
     std::string gatelib_file = "gate_library.xml";
-    std::string drcvbl_file = "drc_blacklist.xml";
+    std::string rcvbl_file = "rc_blacklist.xml";
 
     ProjectExporter exporter;
     exporter.export_all(project->get_project_directory(),
@@ -57,19 +57,19 @@ bool autosave_project(Project_shptr project, time_t interval) {
 			prefix + project_file,
 			prefix + lmodel_file,
 			prefix + gatelib_file,
-			prefix + drcvbl_file);
+			prefix + rcvbl_file);
 
     path project_dir(project->get_project_directory());
 
     if(exists(project_dir / path("." + project_file))) remove(project_dir / path("." + project_file));
     if(exists(project_dir / path("." + gatelib_file))) remove(project_dir / path("." + gatelib_file));
     if(exists(project_dir / path("." + lmodel_file))) remove(project_dir / path("." + lmodel_file));
-    if(exists(project_dir / path("." + drcvbl_file))) remove(project_dir / path("." + drcvbl_file));
+    if(exists(project_dir / path("." + rcvbl_file))) remove(project_dir / path("." + rcvbl_file));
 
     create_symlink(path(prefix + project_file), project_dir / path("." + project_file));
     create_symlink(path(prefix + lmodel_file), project_dir / path("." + lmodel_file));
     create_symlink(path(prefix + gatelib_file), project_dir / path("." + gatelib_file));
-    create_symlink(path(prefix + drcvbl_file), project_dir / path("." + drcvbl_file));
+    create_symlink(path(prefix + rcvbl_file), project_dir / path("." + rcvbl_file));
 
     project->reset_last_saved_counter();
 
@@ -94,7 +94,7 @@ bool check_for_autosaved_project(boost::filesystem::path const& project_dir) {
   if(last_write_time(project_dir / path(".project.xml")) > last_write_time(project_dir / path("project.xml")) ||
      last_write_time(project_dir / path(".lmodel.xml")) > last_write_time(project_dir / path("lmodel.xml")) ||
      last_write_time(project_dir / path(".gate_library.xml")) > last_write_time(project_dir / path("gate_library.xml")) ||
-     last_write_time(project_dir / path(".drc_blacklist.xml")) > last_write_time(project_dir / path("drc_blacklist.xml")) )
+     last_write_time(project_dir / path(".rc_blacklist.xml")) > last_write_time(project_dir / path("rc_blacklist.xml")) )
     return true;
 
   return false;
@@ -104,12 +104,12 @@ void restore_autosaved_project(boost::filesystem::path const& project_dir) {
   if(exists(project_dir / path("project.xml"))) remove(project_dir / path("project.xml"));
   if(exists(project_dir / path("gate_library.xml"))) remove(project_dir / path("gate_library.xml"));
   if(exists(project_dir / path("lmodel.xml"))) remove(project_dir / path("lmodel.xml"));
-  if(exists(project_dir / path("drc_blacklist.xml"))) remove(project_dir / path("drc_blacklist.xml"));
+  if(exists(project_dir / path("rc_blacklist.xml"))) remove(project_dir / path("rc_blacklist.xml"));
 
   copy_file(project_dir / path(".project.xml"), project_dir / path("project.xml"));
   copy_file(project_dir / path(".lmodel.xml"), project_dir / path("lmodel.xml"));
   copy_file(project_dir / path(".gate_library.xml"), project_dir / path("gate_library.xml"));
-  copy_file(project_dir / path(".drc_blacklist.xml"), project_dir / path("drc_blacklist.xml"));
+  copy_file(project_dir / path(".rc_blacklist.xml"), project_dir / path("rc_blacklist.xml"));
 }
 
 

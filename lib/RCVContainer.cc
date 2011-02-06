@@ -19,51 +19,51 @@
 
 */
 
-#include <DRCBase.h>
-#include <DRCVContainer.h>
+#include <RCBase.h>
+#include <RCVContainer.h>
 
 using namespace degate;
 
-DRCVContainer::DRCVContainer() {
+RCVContainer::RCVContainer() {
 }
 
-DRCVContainer::~DRCVContainer() {
+RCVContainer::~RCVContainer() {
 }
 
-void DRCVContainer::push_back(DRCViolation_shptr drcv) {
-  violations.push_back(drcv);
+void RCVContainer::push_back(RCViolation_shptr rcv) {
+  violations.push_back(rcv);
 }
 
-DRCVContainer::iterator DRCVContainer::begin() { 
+RCVContainer::iterator RCVContainer::begin() { 
   return violations.begin(); 
 }
 
-DRCVContainer::iterator DRCVContainer::end() { 
+RCVContainer::iterator RCVContainer::end() { 
   return violations.end(); 
 }
 
-DRCVContainer::const_iterator DRCVContainer::begin() const { 
+RCVContainer::const_iterator RCVContainer::begin() const { 
   return violations.begin(); 
 }
 
-DRCVContainer::const_iterator DRCVContainer::end() const { 
+RCVContainer::const_iterator RCVContainer::end() const { 
   return violations.end(); 
 }
 
-void DRCVContainer::clear() { 
+void RCVContainer::clear() { 
   violations.clear(); 
 }
 
-size_t DRCVContainer::size() const { 
+size_t RCVContainer::size() const { 
   return violations.size(); 
 }
 
-bool DRCVContainer::contains(DRCViolation_shptr drcv) const { 
-  return find(drcv) != end();
+bool RCVContainer::contains(RCViolation_shptr rcv) const { 
+  return find(rcv) != end();
 }
 
-bool DRCVContainer::erase(DRCViolation_shptr drcv) {
-  iterator iter = find(drcv);
+bool RCVContainer::erase(RCViolation_shptr rcv) {
+  iterator iter = find(rcv);
   if(iter != end()) {
     violations.erase(iter);
     return true;
@@ -71,16 +71,16 @@ bool DRCVContainer::erase(DRCViolation_shptr drcv) {
   return false;
 }
 
-DRCVContainer::iterator DRCVContainer::find(DRCViolation_shptr drcv) {
+RCVContainer::iterator RCVContainer::find(RCViolation_shptr rcv) {
   for(iterator iter = begin(); iter != end(); ++iter) {
-    if((*iter)->equals(drcv)) return iter;
+    if((*iter)->equals(rcv)) return iter;
   }
   return end();
 }
 
-DRCVContainer::const_iterator DRCVContainer::find(DRCViolation_shptr drcv) const {
+RCVContainer::const_iterator RCVContainer::find(RCViolation_shptr rcv) const {
   for(const_iterator iter = begin(); iter != end(); ++iter) {
-    if((*iter)->equals(drcv)) return iter;
+    if((*iter)->equals(rcv)) return iter;
   }
   return end();
 }

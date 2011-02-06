@@ -25,7 +25,7 @@
 #include <degate_exceptions.h>
 #include <GateLibraryImporter.h>
 #include <LogicModelImporter.h>
-#include <DRCVBlacklistImporter.h>
+#include <RCVBlacklistImporter.h>
 #include <PortColorManager.h>
 #include <Image.h>
 #include <LogicModelHelper.h>
@@ -65,7 +65,7 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
       GateLibrary_shptr gate_lib;
 
       std::string gate_lib_file(get_basedir(directory) + "/gate_library.xml");
-      std::string drcbl_file(get_basedir(directory) + "/drc_blacklist.xml");
+      std::string rcbl_file(get_basedir(directory) + "/rc_blacklist.xml");
 
       if(file_exists(gate_lib_file))
 	gate_lib = gl_importer.import(gate_lib_file);
@@ -79,9 +79,9 @@ Project_shptr ProjectImporter::import_all(std::string const& directory) {
       LogicModel_shptr lmodel = prj->get_logic_model();
       lmodel->set_default_gate_port_diameter(prj->get_default_port_diameter());
 
-      if(file_exists(drcbl_file)) {
-	DRCVBlacklistImporter drcvbl_importer(lmodel);
-	drcvbl_importer.import_into(drcbl_file, prj->get_drcv_blacklist());
+      if(file_exists(rcbl_file)) {
+	RCVBlacklistImporter rcvbl_importer(lmodel);
+	rcvbl_importer.import_into(rcbl_file, prj->get_rcv_blacklist());
       }
       
       /*

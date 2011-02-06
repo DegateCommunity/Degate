@@ -19,113 +19,113 @@
 
 */
 
-#ifndef __DRCBASE_H__
-#define __DRCBASE_H__
+#ifndef __RCBASE_H__
+#define __RCBASE_H__
 
 #include <boost/foreach.hpp>
 #include <tr1/memory>
 #include <list>
 #include <LogicModel.h>
-#include <DRCVContainer.h>
+#include <RCVContainer.h>
 
 namespace degate {
 
   /**
-   * An enum for several types of Design Rule Check problem types.
+   * An enum for several types of Rule Check problem types.
    */
-  enum DRC_SEVERITY {
-    DRC_UNDEFINED = 0,
-    DRC_ERROR = 1,
-    DRC_WARNING = 2
+  enum RC_SEVERITY {
+    RC_UNDEFINED = 0,
+    RC_ERROR = 1,
+    RC_WARNING = 2
   };
 
 
   /**
-   * Base class for Design Rule Checks.
+   * Base class for Rule Checks.
    */
 
-  class DRCBase {
+  class RCBase {
   public:
 
-    typedef DRCVContainer container_type;
+    typedef RCVContainer container_type;
 
 
   private:
 
     std::string _class_name;
     std::string _description;
-    DRC_SEVERITY _severity;
+    RC_SEVERITY _severity;
 
-    container_type drc_violations;
+    container_type rc_violations;
 
   public:
 
     /**
      * The constructor.
-     * @param short_name Short name for the DRC class.
-     * @param description A decription of what the DRC basically checks.
+     * @param short_name Short name for the RC class.
+     * @param description A decription of what the RC basically checks.
      */
-    DRCBase(std::string const& class_name,
+    RCBase(std::string const& class_name,
 	    std::string const& description,
-	    DRC_SEVERITY severity = DRC_ERROR) :
+	    RC_SEVERITY severity = RC_ERROR) :
       _class_name(class_name),
       _description(description),
       _severity(severity) {
     }
 
-    virtual ~DRCBase() {}
+    virtual ~RCBase() {}
 
     /**
      * The run method is abstract and must be implemented in derived
      * classes. The implementation should check for design rule violations.
-     * Each DRC violation must be stored via method add_drc_violation().
+     * Each RC violation must be stored via method add_rc_violation().
      * Note: Because run() can be called multiple times, at the beginning of
      * run() you must clear the list of detected violations.
      */
     virtual void run(LogicModel_shptr lmodel) = 0;
 
     /**
-     * Get the list of DRC violations.
+     * Get the list of RC violations.
      */
 
-    container_type get_drc_violations() const {
-      return drc_violations;
+    container_type get_rc_violations() const {
+      return rc_violations;
     }
 
     /**
-     * Get the class name of a DRC violation.
-     * @return Returns the DRC violation class name as a string.
+     * Get the class name of a RC violation.
+     * @return Returns the RC violation class name as a string.
      */
-    std::string get_drc_class_name() const {
+    std::string get_rc_class_name() const {
       return _class_name;
     }
 
-    DRC_SEVERITY get_severity() const {
+    RC_SEVERITY get_severity() const {
       return _severity;
     }
 
   protected:
 
     /**
-     * Add a DRC violation to the list of already detected violations.
+     * Add a RC violation to the list of already detected violations.
      */
-    void add_drc_violation(DRCViolation_shptr violation) {
-      drc_violations.push_back(violation);
+    void add_rc_violation(RCViolation_shptr violation) {
+      rc_violations.push_back(violation);
     }
 
     /**
      * Clear list of detected violations.
      */
-    void clear_drc_violations() {
-      drc_violations.clear();
+    void clear_rc_violations() {
+      rc_violations.clear();
     }
   };
 
-  typedef std::tr1::shared_ptr<DRCBase> DRCBase_shptr;
+  typedef std::tr1::shared_ptr<RCBase> RCBase_shptr;
 
 
 }
 
-#include <DRCViolation.h>
+#include <RCViolation.h>
 
 #endif

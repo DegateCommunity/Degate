@@ -30,7 +30,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "GridConfigWin.h"
 #include "ObjectMatchingWin.h"
 #include "ConnectionInspectorWin.h"
-#include "DRCViolationsWin.h"
+#include "RCViolationsWin.h"
 #include "ModuleWin.h"
 #include "AnnotationListWin.h"
 #include <HlObjectSet.h>
@@ -116,7 +116,7 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_logic_clear_logic_model();
   virtual void remove_objects();
   virtual void on_menu_logic_connection_inspector();
-  virtual void on_menu_logic_drc();
+  virtual void on_menu_logic_rc();
   virtual void on_menu_logic_auto_name_gates(degate::AutoNameGates::ORIENTATION orientation);
   virtual void on_menu_logic_create_annotation();
   virtual void on_menu_logic_show_annotations();
@@ -186,7 +186,7 @@ class MainWin : public Gtk::Window  {
 
   std::tr1::shared_ptr<InProgressWin> ipWin;
   std::tr1::shared_ptr<ConnectionInspectorWin> ciWin;
-  std::tr1::shared_ptr<DRCViolationsWin> drcWin;
+  std::tr1::shared_ptr<RCViolationsWin> rcWin;
   std::tr1::shared_ptr<ModuleWin> modWin;
   std::tr1::shared_ptr<AnnotationListWin> alWin;
   std::tr1::shared_ptr<GridConfigWin> gcWin;

@@ -331,11 +331,11 @@ void MenuManager::create_and_bind_logic_menu() {
 			Gtk::AccelKey("<control>I"),
 			sigc::mem_fun(*window, &MainWin::on_menu_logic_connection_inspector));
 
-  m_refActionGroup->add(Gtk::Action::create("LogicDRC",
+  m_refActionGroup->add(Gtk::Action::create("LogicRC",
 					    Gtk::Stock::EXECUTE,
-					    "Design Rule Checks",
-					    "Design Rule Checks"),
-			sigc::mem_fun(*window, &MainWin::on_menu_logic_drc));
+					    "Rule Checks",
+					    "Rule Checks"),
+			sigc::mem_fun(*window, &MainWin::on_menu_logic_rc));
 
   m_refActionGroup->add(Gtk::Action::create("LogicCreateAnnotation",
 					    "Create an annotation",
@@ -519,7 +519,7 @@ void MenuManager::setup_menu_structure() {
         "      <separator/>"
         "      <menuitem action='LogicConnectionInspector'/>"
         "      <separator/>"
-        "      <menuitem action='LogicDRC'/>"
+        "      <menuitem action='LogicRC'/>"
         "    </menu>"
         "    <menu action='GateMenu'>"
         "      <menuitem action='GateCreateBySelection'/>"
@@ -561,7 +561,7 @@ void MenuManager::setup_menu_structure() {
         "    <toolitem action='LogicConnectionInspector'/>"
         "    <toolitem action='LogicShowModules'/>"
         "    <toolitem action='LogicShowAnnotations'/>"
-        "    <toolitem action='LogicDRC'/>"
+        "    <toolitem action='LogicRC'/>"
         "  </toolbar>"
     "</ui>";
 
@@ -607,7 +607,7 @@ void MenuManager::set_toolbar_images() {
   set_image_for_toolbar_widget("/ToolBar/LogicConnectionInspector", "con_insp.png");
   set_image_for_toolbar_widget("/ToolBar/LogicShowAnnotations", "annotations.png");
   set_image_for_toolbar_widget("/ToolBar/LogicShowModules", "modules.png");
-  set_image_for_toolbar_widget("/ToolBar/LogicDRC", "drc.png");
+  set_image_for_toolbar_widget("/ToolBar/LogicRC", "drc.png");
 }
 
 
@@ -733,7 +733,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
   set_toolbar_item_sensitivity("/ToolBar/LogicConnectionInspector", state);
   set_toolbar_item_sensitivity("/ToolBar/LogicShowAnnotations", state);
   set_toolbar_item_sensitivity("/ToolBar/LogicShowModules", state);
-  set_toolbar_item_sensitivity("/ToolBar/LogicDRC", state);
+  set_toolbar_item_sensitivity("/ToolBar/LogicRC", state);
 
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectClose", state);
   set_menu_item_sensitivity("/MenuBar/ProjectMenu/ProjectSave", state);
@@ -773,7 +773,7 @@ void MenuManager::set_widget_sensitivity(bool state) {
 
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModel", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicConnectionInspector", state);
-  set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicDRC", state);
+  set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicRC", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicClearLogicModelInSelection", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicCreateAnnotation", state);
   set_menu_item_sensitivity("/MenuBar/LogicMenu/LogicShowAnnotations", state);

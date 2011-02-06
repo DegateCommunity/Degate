@@ -307,7 +307,7 @@ unsigned int Project::get_font_size() const {
 }
 
 
-DRCBase::container_type & Project::get_drcv_blacklist() {
-  return drcv_blacklist;
+RCBase::container_type & Project::get_rcv_blacklist() {
+  return rcv_blacklist;
 }
 

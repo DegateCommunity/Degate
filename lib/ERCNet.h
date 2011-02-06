@@ -19,20 +19,20 @@
 
 */
 
-#ifndef __DRCNET_H__
-#define __DRCNET_H__
+#ifndef __ERCNET_H__
+#define __ERCNET_H__
 
 #include <boost/foreach.hpp>
 #include <tr1/memory>
 #include <list>
 #include <LogicModel.h>
-#include <DRCBase.h>
+#include <RCBase.h>
 
 namespace degate {
 
 
   /**
-   * Design Rule Checks that detects unusual net configurations.
+   * Electrical Rule Checks that detects unusual net configurations.
    * These cases are checked:
    * - A net connects gate ports, but these ports are all of the
    *   type. E.g. only inports or only outports are connected.
@@ -40,7 +40,7 @@ namespace degate {
    * - Connection of multiple output ports.
    *
    * It is possible, that the port direction is still undefined, because
-   * the user forgot to define it. This could be checked with a dedicated DRC
+   * the user forgot to define it. This could be checked with a dedicated RC
    * for gate template ports, but in order to simplify it, we generate a
    * violation entry here. The drawback is, that it will generate more
    * entries than necessary, because the template port direction is implicitly
@@ -48,11 +48,11 @@ namespace degate {
    *
    */
 
-  class DRCNet : public DRCBase {
+  class ERCNet : public RCBase {
 
   public:
 
-    DRCNet();
+    ERCNet();
 
     void run(LogicModel_shptr lmodel);
 

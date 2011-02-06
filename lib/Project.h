@@ -26,7 +26,7 @@
 #include <globals.h>
 #include <LogicModel.h>
 #include <PortColorManager.h>
-#include <DRCBase.h>
+#include <RCBase.h>
 
 #include <string>
 #include <list>
@@ -86,7 +86,7 @@ namespace degate {
     double pixel_per_um;
     int template_dimension;
 
-    DRCBase::container_type drcv_blacklist;
+    RCBase::container_type rcv_blacklist;
 
     unsigned int font_size;
 
@@ -310,9 +310,9 @@ namespace degate {
     unsigned int get_font_size() const;
 
     /**
-     * Get a list of blacklisted Design Rule Check violations.
+     * Get a list of blacklisted Rule Check violations.
      */
-    DRCBase::container_type & get_drcv_blacklist();
+    RCBase::container_type & get_rcv_blacklist();
 
   };
 

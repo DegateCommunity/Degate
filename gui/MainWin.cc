@@ -305,7 +305,7 @@ void MainWin::on_menu_project_close() {
 
 
     if(ciWin != NULL) ciWin.reset();
-    if(drcWin != NULL) drcWin.reset();
+    if(rcWin != NULL) rcWin.reset();
     if(alWin != NULL) alWin.reset();
     if(gcWin != NULL) gcWin.reset();
     if(lcWin != NULL) lcWin.reset();
@@ -549,11 +549,11 @@ void MainWin::update_gui_for_loaded_project() {
       (new ConnectionInspectorWin(this, main_project->get_logic_model()));
     ciWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
-    drcWin = std::tr1::shared_ptr<DRCViolationsWin>
-      (new DRCViolationsWin(this, main_project->get_logic_model(), 
-			    main_project->get_drcv_blacklist()));
-    drcWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
-
+    rcWin = std::tr1::shared_ptr<RCViolationsWin>
+      (new RCViolationsWin(this, main_project->get_logic_model(), 
+			   main_project->get_rcv_blacklist()));
+    rcWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
+    
 
     modWin = std::tr1::shared_ptr<ModuleWin>(new ModuleWin(this, main_project->get_logic_model()));
     modWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
@@ -1727,10 +1727,10 @@ void MainWin::on_menu_logic_connection_inspector() {
   if(main_project != NULL && ciWin != NULL) ciWin->show();
 }
 
-void MainWin::on_menu_logic_drc() {
-  if(main_project != NULL && drcWin != NULL) {
-    drcWin->show();
-    drcWin->run_checks();
+void MainWin::on_menu_logic_rc() {
+  if(main_project != NULL && rcWin != NULL) {
+    rcWin->show();
+    rcWin->run_checks();
   }
 }
 
@@ -1906,7 +1906,7 @@ void MainWin::on_menu_logic_clear_logic_model() {
     project_changed();
     editor.update_screen();
     ciWin->objects_removed();
-    drcWin->objects_removed();
+    rcWin->objects_removed();
     break;
   case(Gtk::RESPONSE_CANCEL):
   default:
@@ -1934,7 +1934,7 @@ void MainWin::remove_objects() {
     project_changed();
     editor.update_screen();
     ciWin->objects_removed();
-    drcWin->objects_removed();
+    rcWin->objects_removed();
   }
 }
 

@@ -77,7 +77,7 @@ set(DEGATE_SRC
 	       NewProjectWin.cc
 	       ObjectMatchingWin.cc
 	       ConnectionInspectorWin.cc
-	       DRCViolationsWin.cc
+	       RCViolationsWin.cc
 	       MenuManager.cc
 	       TerminalWin.cc
 	       

@@ -19,7 +19,7 @@
 
 */
 
-#include "DRCViolationsWin.h"
+#include "RCViolationsWin.h"
 
 #include <gdkmm/window.h>
 #include <gtkmm/stock.h>
@@ -38,9 +38,9 @@
 using namespace degate;
 
 
-DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel,
-				   degate::DRCBase::container_type & blacklist) :
-  GladeFileLoader("drc_violations_list.glade", "drc_violations_list_dialog"),
+RCViolationsWin::RCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel,
+				   degate::RCBase::container_type & blacklist) :
+  GladeFileLoader("rc_violations_list.glade", "rc_violations_list_dialog"),
   _blacklist(blacklist) {
 
   this->lmodel = lmodel;
@@ -53,22 +53,22 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
     // connect signals
     get_widget("close_button", pCloseButton);
     if(pCloseButton)
-      pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_close_button_clicked));
+      pCloseButton->signal_clicked().connect(sigc::mem_fun(*this, &RCViolationsWin::on_close_button_clicked));
 
     get_widget("goto_button", pGotoButton);
     if(pGotoButton) {
       pGotoButton->grab_focus();
-      pGotoButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_goto_button_clicked) );
+      pGotoButton->signal_clicked().connect(sigc::mem_fun(*this, &RCViolationsWin::on_goto_button_clicked) );
     }
 
-    get_widget("ignore_button", pIgnoreDRCButton);
-    if(pIgnoreDRCButton) {
-      pIgnoreDRCButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_ignore_button_clicked) );
+    get_widget("ignore_button", pIgnoreRCButton);
+    if(pIgnoreRCButton) {
+      pIgnoreRCButton->signal_clicked().connect(sigc::mem_fun(*this, &RCViolationsWin::on_ignore_button_clicked) );
     }
 
     get_widget("update_button", pUpdateButton);
     if(pUpdateButton) {
-      pUpdateButton->signal_clicked().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_update_button_clicked) );
+      pUpdateButton->signal_clicked().connect(sigc::mem_fun(*this, &RCViolationsWin::on_update_button_clicked) );
     }
 
     get_widget("label_num_violations", pNumViolationsLabel);
@@ -77,16 +77,16 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
     get_widget("notebook", notebook);
     assert(notebook != NULL);
     if(notebook != NULL) {
-      notebook->signal_switch_page().connect(sigc::mem_fun(*this, &DRCViolationsWin::on_page_switch) );
+      notebook->signal_switch_page().connect(sigc::mem_fun(*this, &RCViolationsWin::on_page_switch) );
     }
 
     refListStore = Gtk::ListStore::create(m_Columns);
     pTreeView = init_list(refListStore, m_Columns, "treeview", 
-			  sigc::mem_fun(*this, &DRCViolationsWin::on_selection_changed));
+			  sigc::mem_fun(*this, &RCViolationsWin::on_selection_changed));
 
     refListStore_blacklist = Gtk::ListStore::create(m_Columns_blacklist);
     pTreeView_blacklist = init_list(refListStore_blacklist, m_Columns_blacklist, "treeview_blacklist", 
-				    sigc::mem_fun(*this, &DRCViolationsWin::on_selection_changed));
+				    sigc::mem_fun(*this, &RCViolationsWin::on_selection_changed));
 
 
     disable_widgets();
@@ -94,12 +94,12 @@ DRCViolationsWin::DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr
 
 }
 
-DRCViolationsWin::~DRCViolationsWin() {
+RCViolationsWin::~RCViolationsWin() {
 }
 
 
-Gtk::TreeView* DRCViolationsWin::init_list(Glib::RefPtr<Gtk::ListStore> refListStore, 
-					   DRCViolationsModelColumns & m_Columns, 
+Gtk::TreeView* RCViolationsWin::init_list(Glib::RefPtr<Gtk::ListStore> refListStore, 
+					   RCViolationsModelColumns & m_Columns, 
 					   Glib::ustring const & widget_name,
 					   sigc::slot< void > fnk) {
 
@@ -165,34 +165,34 @@ Gtk::TreeView* DRCViolationsWin::init_list(Glib::RefPtr<Gtk::ListStore> refListS
 
 
 
-void DRCViolationsWin::add_to_list(DRCViolation_shptr v,
+void RCViolationsWin::add_to_list(RCViolation_shptr v,
 				   Gtk::ListStore::iterator iter, 
-				   DRCViolationsModelColumns & m_Columns) {
+				   RCViolationsModelColumns & m_Columns) {
 
   Gtk::TreeModel::Row row = *iter;
 
   PlacedLogicModelObject_shptr plo = v->get_object();
   row[m_Columns.m_col_object_ptr] = plo;
   row[m_Columns.m_col_layer] = boost::lexical_cast<Glib::ustring>(plo->get_layer()->get_layer_pos());
-  row[m_Columns.m_col_violation_class] = v->get_drc_violation_class();
+  row[m_Columns.m_col_violation_class] = v->get_rc_violation_class();
   row[m_Columns.m_col_violation_description] = v->get_problem_description();
   row[m_Columns.m_col_severity] = v->get_severity_as_string();
-  row[m_Columns.m_col_drcv] = v;
+  row[m_Columns.m_col_rcv] = v;
 }
 
 
-void DRCViolationsWin::run_checks() {
+void RCViolationsWin::run_checks() {
   
-  drc.run(lmodel);
-  DRCVContainer const& violations = drc.get_drc_violations();
+  rc.run(lmodel);
+  RCVContainer const& violations = rc.get_rc_violations();
   
   clear_list();
 
   update_first_page();
 
-  DRCVContainer remove_from_blacklist;
+  RCVContainer remove_from_blacklist;
 
-  BOOST_FOREACH(DRCViolation_shptr v, _blacklist) {
+  BOOST_FOREACH(RCViolation_shptr v, _blacklist) {
     // check
     if(violations.contains(v))
       add_to_list(v, refListStore_blacklist->append(), m_Columns_blacklist);
@@ -200,18 +200,18 @@ void DRCViolationsWin::run_checks() {
       remove_from_blacklist.push_back(v);
   }
 
-  BOOST_FOREACH(DRCViolation_shptr v, remove_from_blacklist) {
+  BOOST_FOREACH(RCViolation_shptr v, remove_from_blacklist) {
     _blacklist.erase(v);
   }
 
   update_stats();
 }
 
-void DRCViolationsWin::show() {
+void RCViolationsWin::show() {
   get_dialog()->show();
 }
 
-void DRCViolationsWin::on_selection_changed() {
+void RCViolationsWin::on_selection_changed() {
 
   bool first_page = notebook->get_current_page() == 0;
 
@@ -222,18 +222,18 @@ void DRCViolationsWin::on_selection_changed() {
     std::vector<Gtk::TreeModel::Path> pathlist = refTreeSelection->get_selected_rows();
     
     pGotoButton->set_sensitive(pathlist.size() == 1);
-    pIgnoreDRCButton->set_sensitive(pathlist.size() > 0);
+    pIgnoreRCButton->set_sensitive(pathlist.size() > 0);
   }
 }
 
 
-void DRCViolationsWin::update_first_page() {
+void RCViolationsWin::update_first_page() {
 
   refListStore->clear();
 
-  DRCVContainer const& violations = drc.get_drc_violations();
+  RCVContainer const& violations = rc.get_rc_violations();
 
-  BOOST_FOREACH(DRCViolation_shptr v, violations) {
+  BOOST_FOREACH(RCViolation_shptr v, violations) {
     // check if violation is blacklisted
     if(!_blacklist.contains(v))
        add_to_list(v, refListStore->append(), m_Columns);
@@ -241,7 +241,7 @@ void DRCViolationsWin::update_first_page() {
 }
 
 
-void DRCViolationsWin::update_stats() {
+void RCViolationsWin::update_stats() {
   size_t stat = 0;
 
   if(notebook->get_current_page() == 0)
@@ -254,38 +254,38 @@ void DRCViolationsWin::update_stats() {
   pNumViolationsLabel->set_text(fmt.str());
 }
 
-void DRCViolationsWin::on_page_switch(GtkNotebookPage* w, guint page) {
+void RCViolationsWin::on_page_switch(GtkNotebookPage* w, guint page) {
   if(page == 0) {
-    pIgnoreDRCButton->set_label("Discard");
+    pIgnoreRCButton->set_label("Discard");
   }
   else {
-    pIgnoreDRCButton->set_label("Reset");
+    pIgnoreRCButton->set_label("Reset");
   }
 
   update_stats();
 }
 
-void DRCViolationsWin::clear_list() {
+void RCViolationsWin::clear_list() {
   refListStore->clear();
   refListStore_blacklist->clear();
   pGotoButton->set_sensitive(false);
-  pIgnoreDRCButton->set_sensitive(false);
+  pIgnoreRCButton->set_sensitive(false);
   pNumViolationsLabel->set_text("0");
 }
 
-void DRCViolationsWin::disable_widgets() {
+void RCViolationsWin::disable_widgets() {
   pGotoButton->set_sensitive(false);
-  pIgnoreDRCButton->set_sensitive(false);
+  pIgnoreRCButton->set_sensitive(false);
   clear_list();
 
 }
 
-void DRCViolationsWin::on_close_button_clicked() {
+void RCViolationsWin::on_close_button_clicked() {
   get_dialog()->hide();
 }
 
 
-void DRCViolationsWin::on_goto_button_clicked() {
+void RCViolationsWin::on_goto_button_clicked() {
 
   bool first_page = notebook->get_current_page() == 0;
 
@@ -312,11 +312,11 @@ void DRCViolationsWin::on_goto_button_clicked() {
   }
 }
 
-void DRCViolationsWin::on_update_button_clicked() {
+void RCViolationsWin::on_update_button_clicked() {
   run_checks();
 }
 
-void DRCViolationsWin::on_ignore_button_clicked() {
+void RCViolationsWin::on_ignore_button_clicked() {
   bool first_page = notebook->get_current_page() == 0;
   bool refresh_needed = false;
 
@@ -334,21 +334,21 @@ void DRCViolationsWin::on_ignore_button_clicked() {
 
       Gtk::TreeModel::Row row = *(refTreeSelection->get_model()->get_iter(*iter));
     
-      DRCViolation_shptr drcv =
-	row[first_page ? m_Columns.m_col_drcv : m_Columns_blacklist.m_col_drcv];
+      RCViolation_shptr rcv =
+	row[first_page ? m_Columns.m_col_rcv : m_Columns_blacklist.m_col_rcv];
 
       if(first_page) {
 	remove_things.push_back(refTreeSelection->get_model()->get_iter (*iter));
 
-	if(!_blacklist.contains(drcv)) {
-	  if(drcv != NULL) _blacklist.push_back(drcv);
-	  add_to_list(drcv, refListStore_blacklist->append(), 
+	if(!_blacklist.contains(rcv)) {
+	  if(rcv != NULL) _blacklist.push_back(rcv);
+	  add_to_list(rcv, refListStore_blacklist->append(), 
 		      m_Columns_blacklist);
 	}
       }
       else {
 	remove_things.push_back(refTreeSelection->get_model()->get_iter (*iter));
-	_blacklist.erase(drcv);
+	_blacklist.erase(rcv);
 	refresh_needed = true;
       }
 
@@ -362,7 +362,7 @@ void DRCViolationsWin::on_ignore_button_clicked() {
     }
 
     if(refresh_needed) {
-      Gtk::MessageDialog dialog(*this, "Should degate re-run the DRC checks?", 
+      Gtk::MessageDialog dialog(*this, "Should degate re-run the RC checks?", 
 				true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
       dialog.set_title("RRC Checks");
       if(dialog.run() == Gtk::RESPONSE_YES) run_checks();      
@@ -374,15 +374,15 @@ void DRCViolationsWin::on_ignore_button_clicked() {
 }
 
 sigc::signal<void, degate::PlacedLogicModelObject_shptr>&
-DRCViolationsWin::signal_goto_button_clicked() {
+RCViolationsWin::signal_goto_button_clicked() {
   return signal_goto_button_clicked_;
 }
 
 
-void DRCViolationsWin::objects_removed() {
+void RCViolationsWin::objects_removed() {
   disable_widgets();
 }
 
-void DRCViolationsWin::object_removed(degate::PlacedLogicModelObject_shptr obj_ptr) {
+void RCViolationsWin::object_removed(degate::PlacedLogicModelObject_shptr obj_ptr) {
   disable_widgets();
 }

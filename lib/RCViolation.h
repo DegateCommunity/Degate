@@ -19,44 +19,44 @@
 
 */
 
-#ifndef __DRCVIOLATION_H__
-#define __DRCVIOLATION_H__
+#ifndef __RCVIOLATION_H__
+#define __RCVIOLATION_H__
 
 #include <boost/foreach.hpp>
 #include <tr1/memory>
 #include <list>
 #include <LogicModel.h>
-#include <DRCBase.h>
+#include <RCBase.h>
 
 namespace degate {
 
-  class DRCViolation {
+  class RCViolation {
   private:
 
     PlacedLogicModelObject_shptr _obj;
     std::string _problem_description;
-    std::string _drc_violation_class;
-    DRC_SEVERITY _severity;
+    std::string _rc_violation_class;
+    RC_SEVERITY _severity;
 
   public:
 
-    /** Create a new Design Rule Check violation.
+    /** Create a new Rule Check violation.
      * @param obj The object, which is affected from the violation.
      * @param problem_description A string, which contains a description
      *   of the violated contraint.
-     * @param drc_violation_class This is a unique technical name for
-     *   a DRC violation, that indicates the problem class.
+     * @param rc_violation_class This is a unique technical name for
+     *   a rc violation, that indicates the problem class.
      * @param severity Indicates the type of problem, actually
-     *   if a DRC violation is just a warning or a real error.
+     *   if a rc violation is just a warning or a real error.
      */
      
-    DRCViolation(PlacedLogicModelObject_shptr obj,
-		 std::string const& problem_description,
-		 std::string const& drc_violation_class,
-		 DRC_SEVERITY severity = DRC_ERROR) :
+    RCViolation(PlacedLogicModelObject_shptr obj,
+		std::string const& problem_description,
+		std::string const& rc_violation_class,
+		RC_SEVERITY severity = RC_ERROR) :
       _obj(obj),
       _problem_description(problem_description),
-      _drc_violation_class(drc_violation_class),
+      _rc_violation_class(rc_violation_class),
       _severity(severity) {
     }
 
@@ -64,27 +64,27 @@ namespace degate {
       return _problem_description;
     }
 
-    std::string get_drc_violation_class() const {
-      return _drc_violation_class;
+    std::string get_rc_violation_class() const {
+      return _rc_violation_class;
     }
 
-    DRC_SEVERITY get_severity() const {
+    RC_SEVERITY get_severity() const {
       return _severity;
     }
 
     std::string get_severity_as_string() const {
       switch(_severity) {
-      case DRC_ERROR: return "error"; break;
-      case DRC_WARNING: return "warning"; break;      
-      case DRC_UNDEFINED: 
+      case RC_ERROR: return "error"; break;
+      case RC_WARNING: return "warning"; break;      
+      case RC_UNDEFINED: 
       default: return "undefined"; break;
       }
     }
 
-    static DRC_SEVERITY get_severity_from_string(std::string const & str) {
-      if(str == "error") return DRC_ERROR;
-      else if(str == "warning") return DRC_WARNING;
-      return DRC_UNDEFINED;
+    static RC_SEVERITY get_severity_from_string(std::string const & str) {
+      if(str == "error") return RC_ERROR;
+      else if(str == "warning") return RC_WARNING;
+      return RC_UNDEFINED;
     }
 
     PlacedLogicModelObject_shptr get_object() const {
@@ -92,14 +92,14 @@ namespace degate {
     }
 
     /**
-     * Check if two DRC violations are conceptually equal.
+     * Check if two rc violations are conceptually equal.
      */
-    bool equals(DRCViolation_shptr drcv) const {
+    bool equals(RCViolation_shptr rcv) const {
       return 
-	_obj == drcv->_obj &&
-	_problem_description == drcv->_problem_description &&
-	_drc_violation_class == drcv->_drc_violation_class &&
-	_severity == drcv->_severity;
+	_obj == rcv->_obj &&
+	_problem_description == rcv->_problem_description &&
+	_rc_violation_class == rcv->_rc_violation_class &&
+	_severity == rcv->_severity;
     }
 
 

@@ -19,27 +19,27 @@
 
 */
 
-#ifndef __DRCVCONTAINER_H__
-#define __DRCVCONTAINER_H__
+#ifndef __RCVCONTAINER_H__
+#define __RCVCONTAINER_H__
 
 #include <boost/foreach.hpp>
 #include <tr1/memory>
 #include <list>
-#include <DRCBase.h>
+#include <RCBase.h>
 
 namespace degate {
 
   // forward declaration
-  class DRCViolation;
-  typedef std::tr1::shared_ptr<DRCViolation> DRCViolation_shptr;
+  class RCViolation;
+  typedef std::tr1::shared_ptr<RCViolation> RCViolation_shptr;
 
   /**
    * Representation for a container type, which holds a list
-   * of Design Rule Check Violations.
+   * of Rule Check Violations.
    */
-  class DRCVContainer {
+  class RCVContainer {
   public:
-    typedef std::list<DRCViolation_shptr> container_type;
+    typedef std::list<RCViolation_shptr> container_type;
     typedef container_type::iterator iterator;
     typedef container_type::const_iterator const_iterator;
 
@@ -50,17 +50,17 @@ namespace degate {
     /**
      * The ctor.
      */
-    DRCVContainer();
+    RCVContainer();
 
     /**
      * The dtor.
      */
-    ~DRCVContainer();
+    ~RCVContainer();
 
     /**
-     * Add a DRC violation to the container.
+     * Add a RC violation to the container.
      */
-    void push_back(DRCViolation_shptr drcv);
+    void push_back(RCViolation_shptr rcv);
     
     /**
      * Get an iterator to the start of the list.
@@ -83,19 +83,19 @@ namespace degate {
     const_iterator end() const;
     
     /**
-     * Clear entire list of DRC violations.
+     * Clear entire list of RC violations.
      */
     void clear();
 
     /**
-     * Find a DRC violation in the container.
+     * Find a RC violation in the container.
      */
-    iterator find(DRCViolation_shptr drcv);
+    iterator find(RCViolation_shptr rcv);
 
     /**
-     * Find a DRC violation and return a const iterator.
+     * Find a RC violation and return a const iterator.
      */
-    const_iterator find(DRCViolation_shptr drcv) const;
+    const_iterator find(RCViolation_shptr rcv) const;
 
     /**
      * Get the number of entries.
@@ -103,19 +103,19 @@ namespace degate {
     size_t size() const;
 
     /**
-     * Check if the container has already stored a specific DRC violation.
-     * @param drcv The DRC violation for which the presence should be checked.
-     * @return Returns true, if the DRC violation is present in the container.
+     * Check if the container has already stored a specific RC violation.
+     * @param rcv The RC violation for which the presence should be checked.
+     * @return Returns true, if the RC violation is present in the container.
      */
-    bool contains(DRCViolation_shptr drcv) const;
+    bool contains(RCViolation_shptr rcv) const;
 
     /**
-     * Erase a specific DRC violation.
-     * @param drcv The DRC violation, which should be removed.
-     * @return Returns true, if the DRC violation was found and removed.
+     * Erase a specific RC violation.
+     * @param rcv The RC violation, which should be removed.
+     * @return Returns true, if the RC violation was found and removed.
      *   Else false is returned.
      */
-    bool erase(DRCViolation_shptr drcv);
+    bool erase(RCViolation_shptr rcv);
 
   };
 

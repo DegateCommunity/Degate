@@ -19,43 +19,43 @@
 
 */
 
-#ifndef __DESIGNRULECHECKER_H__
-#define __DESIGNRULECHECKER_H__
+#ifndef __RULECHECKER_H__
+#define __RULECHECKER_H__
 
-#include <DRCBase.h>
-#include <DRCOpenPorts.h>
-#include <DRCNet.h>
+#include <RCBase.h>
+#include <ERCOpenPorts.h>
+#include <ERCNet.h>
 
 namespace degate {
 
-  class DesignRuleChecker : public DRCBase {
+  class RuleChecker : public RCBase {
 
   private:
 
-    std::list<DRCBase_shptr> checks;
+    std::list<RCBase_shptr> checks;
 
   public:
 
-    DesignRuleChecker() : DRCBase("drc-all", "A collection of all DRCs.") {
-      checks.push_back(DRCBase_shptr(new DRCOpenPorts()));
-      checks.push_back(DRCBase_shptr(new DRCNet()));
+    RuleChecker() : RCBase("rc-all", "A collection of all RCs.") {
+      checks.push_back(RCBase_shptr(new ERCOpenPorts()));
+      checks.push_back(RCBase_shptr(new ERCNet()));
     }
 
     void run(LogicModel_shptr lmodel) {
 
-      debug(TM, "run DRC");
+      debug(TM, "run RC");
 
-      clear_drc_violations();
+      clear_rc_violations();
 
-      BOOST_FOREACH(DRCBase_shptr check, checks) {
-	std::cout << "DRC: " << check->get_drc_class_name() << std::endl;
+      BOOST_FOREACH(RCBase_shptr check, checks) {
+	std::cout << "RC: " << check->get_rc_class_name() << std::endl;
 	check->run(lmodel);
-	BOOST_FOREACH(DRCViolation_shptr violation, check->get_drc_violations()) {
-	  add_drc_violation(violation);
+	BOOST_FOREACH(RCViolation_shptr violation, check->get_rc_violations()) {
+	  add_rc_violation(violation);
 	}
       }
 
-      debug(TM, "found %d drc violations.", get_drc_violations().size());
+      debug(TM, "found %d rc violations.", get_rc_violations().size());
     }
   };
 

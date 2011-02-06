@@ -19,30 +19,30 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#ifndef __DRCVIOLATIONSWIN_H__
-#define __DRCVIOLATIONSWIN_H__
+#ifndef __RCVIOLATIONSWIN_H__
+#define __RCVIOLATIONSWIN_H__
 
 #include <degate.h>
-#include <DesignRuleChecker.h>
-#include <DRCBase.h>
+#include <RuleChecker.h>
+#include <RCBase.h>
 #include "GladeFileLoader.h"
 #include <gtkmm.h>
 
 #include <list>
 
-class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
+class RCViolationsWin : public Gtk::Window, private GladeFileLoader {
 
-  class DRCViolationsModelColumns : public Gtk::TreeModelColumnRecord {
+  class RCViolationsModelColumns : public Gtk::TreeModelColumnRecord {
   public:
 
-    DRCViolationsModelColumns() {
+    RCViolationsModelColumns() {
 
       add(m_col_object_ptr);
       add(m_col_layer);
       add(m_col_violation_class);
       add(m_col_violation_description);
       add(m_col_severity);
-      add(m_col_drcv);
+      add(m_col_rcv);
     }
 
     Gtk::TreeModelColumn<degate::PlacedLogicModelObject_shptr> m_col_object_ptr;
@@ -50,20 +50,20 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
     Gtk::TreeModelColumn<Glib::ustring> m_col_violation_class;
     Gtk::TreeModelColumn<Glib::ustring> m_col_violation_description;
     Gtk::TreeModelColumn<Glib::ustring> m_col_severity;
-    Gtk::TreeModelColumn<degate::DRCViolation_shptr> m_col_drcv;
+    Gtk::TreeModelColumn<degate::RCViolation_shptr> m_col_rcv;
   };
 
 
  public:
 
-  DRCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel,
-		   degate::DRCVContainer & blacklist);
+  RCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel,
+		   degate::RCVContainer & blacklist);
 
-  virtual ~DRCViolationsWin();
+  virtual ~RCViolationsWin();
 
 
   /**
-   * Run Design Rule Checks and display.
+   * Run Rule Checks and display.
    */
   void run_checks();
 
@@ -99,25 +99,25 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
 
   Gtk::Button* pGotoButton;
   Gtk::Button* pCloseButton;
-  Gtk::Button* pIgnoreDRCButton;
+  Gtk::Button* pIgnoreRCButton;
   Gtk::Button* pUpdateButton;
   Gtk::Notebook * notebook;
   Gtk::Label* pNumViolationsLabel;
 
-  DRCViolationsModelColumns m_Columns;
+  RCViolationsModelColumns m_Columns;
   Glib::RefPtr<Gtk::ListStore> refListStore;
   Gtk::TreeView* pTreeView;
 
 
-  DRCViolationsModelColumns m_Columns_blacklist;
+  RCViolationsModelColumns m_Columns_blacklist;
   Glib::RefPtr<Gtk::ListStore> refListStore_blacklist;
   Gtk::TreeView* pTreeView_blacklist;
 
   sigc::signal<void, degate::PlacedLogicModelObject_shptr>  signal_goto_button_clicked_;
 
-  degate::DRCVContainer & _blacklist;
+  degate::RCVContainer & _blacklist;
 
-  degate::DesignRuleChecker drc;
+  degate::RuleChecker rc;
 
   void clear_list();
   void disable_widgets();
@@ -133,14 +133,14 @@ class DRCViolationsWin : public Gtk::Window, private GladeFileLoader {
   virtual void on_page_switch(GtkNotebookPage*, guint);
 
   Gtk::TreeView* init_list(Glib::RefPtr<Gtk::ListStore> refListStore, 
-			   DRCViolationsModelColumns & m_Columns, 
+			   RCViolationsModelColumns & m_Columns, 
 			   Glib::ustring const & widget_name,
 			   sigc::slot< void > fnk);
 
 
-  void add_to_list(degate::DRCViolation_shptr v,
+  void add_to_list(degate::RCViolation_shptr v,
 		   Gtk::ListStore::iterator iter,
-		   DRCViolationsModelColumns & m_Columns);
+		   RCViolationsModelColumns & m_Columns);
 
   void update_stats();
   void update_first_page();

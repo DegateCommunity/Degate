@@ -19,43 +19,43 @@
 
 */
 
-#include <DRCBase.h>
-#include <DRCOpenPorts.h>
+#include <RCBase.h>
+#include <ERCOpenPorts.h>
 
 using namespace degate;
 
-DRCOpenPorts::DRCOpenPorts() :
-  DRCBase("open_port", "Check for unconnected ports.", DRC_ERROR) {
+ERCOpenPorts::ERCOpenPorts() :
+  RCBase("open_port", "Check for unconnected ports.", RC_ERROR) {
 }
 
-void DRCOpenPorts::run(LogicModel_shptr lmodel) {
-  clear_drc_violations();
+void ERCOpenPorts::run(LogicModel_shptr lmodel) {
+  clear_rc_violations();
 
   if(lmodel == NULL) return;
 
   // iterate over Gates
-  debug(TM, "\tDRC: iterate over gates.");
+  debug(TM, "\tRC: iterate over gates.");
 
   for(LogicModel::gate_collection::iterator g_iter = lmodel->gates_begin();
       g_iter != lmodel->gates_end(); ++g_iter) {
 
     Gate_shptr gate = g_iter->second;
-
+    
     for(Gate::port_const_iterator p_iter = gate->ports_begin();
 	p_iter != gate->ports_end(); ++p_iter) {
-
+      
       GatePort_shptr port = *p_iter;
       assert(port != NULL);
-
+      
       Net_shptr net = port->get_net();
       if(net == NULL || net->size() <= 1) {
-
+	
 	boost::format f("Port %1% is unconnected.");
 	f % port->get_descriptive_identifier();
 
-	debug(TM, "\tDRC: found a vioation.");
-	add_drc_violation(DRCViolation_shptr(new DRCViolation(port, f.str(),
-							      get_drc_class_name())));
+	debug(TM, "\tRC: found a vioation.");
+	add_rc_violation(RCViolation_shptr(new RCViolation(port, f.str(),
+							   get_rc_class_name())));
       }
     }
   }

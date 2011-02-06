@@ -19,24 +19,24 @@
 
 */
 
-#ifndef __DRCOPENPORTS_H__
-#define __DRCOPENPORTS_H__
+#ifndef __ERCOPENPORTS_H__
+#define __ERCOPENPORTS_H__
 
-#include <DRCBase.h>
+#include <RCBase.h>
 #include <LogicModel.h>
 
 namespace degate {
 
   /**
-   * Design Rule Checks that detects open ports, that means if
+   * Electrical Rule Checks that detects open ports, that means if
    * a port is electrically unconnected.
    */
 
-  class DRCOpenPorts : public DRCBase {
+  class ERCOpenPorts : public RCBase {
 
   public:
 
-    DRCOpenPorts();
+    ERCOpenPorts();
 
     void run(LogicModel_shptr lmodel);
 

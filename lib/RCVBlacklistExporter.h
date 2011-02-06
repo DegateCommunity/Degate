@@ -19,12 +19,12 @@
 
  */
 
-#ifndef __DRCVBLACKLISTEXPORTER_H__
-#define __DRCVBLACKLISTEXPORTER_H__
+#ifndef __RCVBLACKLISTEXPORTER_H__
+#define __RCVBLACKLISTEXPORTER_H__
 
 #include "globals.h"
-#include <DRCBase.h>
-#include <DRCViolation.h>
+#include <RCBase.h>
+#include <RCViolation.h>
 #include "XMLExporter.h"
 #include "ObjectIDRewriter.h"
 
@@ -33,22 +33,22 @@
 namespace degate {
 
   /**
-   * The DRCVBlacklistExporter exports a set of DRC Violations, which should be ignored.
+   * The RCVBlacklistExporter exports a set of RC Violations, which should be ignored.
    */
   
-  class DRCVBlacklistExporter : public XMLExporter {
+  class RCVBlacklistExporter : public XMLExporter {
     
   private:
     
-    void add_drcv(xmlpp::Element* templates_elem, DRCViolation_shptr drcv);
+    void add_rcv(xmlpp::Element* templates_elem, RCViolation_shptr rcv);
     
     ObjectIDRewriter_shptr oid_rewriter;
     
   public:
-    DRCVBlacklistExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter) {}
-    ~DRCVBlacklistExporter() {}
+    RCVBlacklistExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter) {}
+    ~RCVBlacklistExporter() {}
     
-    void export_data(std::string const& filename, DRCBase::container_type const& violations);
+    void export_data(std::string const& filename, RCBase::container_type const& violations);
     
   };
 

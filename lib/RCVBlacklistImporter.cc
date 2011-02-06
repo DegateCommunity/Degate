@@ -20,7 +20,7 @@
 */
 
 #include <degate.h>
-#include <DRCVBlacklistImporter.h>
+#include <RCVBlacklistImporter.h>
 #include <ImageHelper.h>
 
 #include <sys/types.h>
@@ -39,8 +39,8 @@
 using namespace std;
 using namespace degate;
 
-void DRCVBlacklistImporter::import_into(std::string const& filename,
-				  DRCBase::container_type & blacklist) {
+void RCVBlacklistImporter::import_into(std::string const& filename,
+				  RCBase::container_type & blacklist) {
 
   if(RET_IS_NOT_OK(check_file(filename))) {
     debug(TM, "Problem: file %s not found.", filename.c_str());
@@ -76,27 +76,27 @@ void DRCVBlacklistImporter::import_into(std::string const& filename,
 }
 
 
-void DRCVBlacklistImporter::parse_list(const xmlpp::Element * const elem,
-				      DRCBase::container_type & blacklist) {
+void RCVBlacklistImporter::parse_list(const xmlpp::Element * const elem,
+				      RCBase::container_type & blacklist) {
 
-  const xmlpp::Node::NodeList drcv_list = elem->get_children("drc-violation");
-  for(xmlpp::Node::NodeList::const_iterator iter = drcv_list.begin();
-      iter != drcv_list.end(); ++iter) {
+  const xmlpp::Node::NodeList rcv_list = elem->get_children("rc-violation");
+  for(xmlpp::Node::NodeList::const_iterator iter = rcv_list.begin();
+      iter != rcv_list.end(); ++iter) {
 
     if(const xmlpp::Element* e = dynamic_cast<const xmlpp::Element*>(*iter)) {
 
       object_id_t object_id = parse_number<object_id_t>(e, "object-id");
 
-      const Glib::ustring drcv_class(e->get_attribute_value("drc-violation-class"));
+      const Glib::ustring rcv_class(e->get_attribute_value("rc-violation-class"));
       const Glib::ustring description(e->get_attribute_value("description"));
       const Glib::ustring severity(e->get_attribute_value("severity"));
 
-      DRCViolation_shptr drcv(new DRCViolation(_lmodel->get_object(object_id),
-					       description,
-					       drcv_class,
-					       DRCViolation::get_severity_from_string(severity)));
+      RCViolation_shptr rcv(new RCViolation(_lmodel->get_object(object_id),
+					    description,
+					    rcv_class,
+					    RCViolation::get_severity_from_string(severity)));
       
-      blacklist.push_back(drcv);
+      blacklist.push_back(rcv);
     }
   }
 }

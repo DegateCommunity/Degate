@@ -1,6 +1,6 @@
 /*
 
-  This file is part of the IC reverse engineering tool degate.
+ This file is part of the IC reverse engineering tool degate.
 
   Copyright 2008, 2009, 2010 by Martin Schobert
 
@@ -20,7 +20,7 @@
 */
 
 #include <degate.h>
-#include <DRCVBlacklistExporter.h>
+#include <RCVBlacklistExporter.h>
 #include <FileSystem.h>
 #include <ImageHelper.h>
 
@@ -41,8 +41,8 @@
 using namespace std;
 using namespace degate;
 
-void DRCVBlacklistExporter::export_data(std::string const& filename,
-				       DRCBase::container_type const& violations) {
+void RCVBlacklistExporter::export_data(std::string const& filename,
+				       RCBase::container_type const& violations) {
 
   std::string directory = get_basedir(filename);
 
@@ -50,11 +50,11 @@ void DRCVBlacklistExporter::export_data(std::string const& filename,
 
     xmlpp::Document doc;
 
-    xmlpp::Element * root_elem = doc.create_root_node("drc-blacklist");
+    xmlpp::Element * root_elem = doc.create_root_node("rc-blacklist");
     assert(root_elem != NULL);
 
-    BOOST_FOREACH(DRCViolation_shptr drcv, violations) {
-      add_drcv(root_elem, drcv);
+    BOOST_FOREACH(RCViolation_shptr rcv, violations) {
+      add_rcv(root_elem, rcv);
     }
 
     doc.write_to_file_formatted(filename, "ISO-8859-1");
@@ -67,20 +67,20 @@ void DRCVBlacklistExporter::export_data(std::string const& filename,
 
 }
 
-void DRCVBlacklistExporter::add_drcv(xmlpp::Element* root_elem,
-				    DRCViolation_shptr drcv) {
+void RCVBlacklistExporter::add_rcv(xmlpp::Element* root_elem,
+				    RCViolation_shptr rcv) {
 
-  xmlpp::Element* drcv_elem = root_elem->add_child("drc-violation");
-  if(drcv_elem == NULL) throw(std::runtime_error("Failed to create node."));
+  xmlpp::Element* rcv_elem = root_elem->add_child("rc-violation");
+  if(rcv_elem == NULL) throw(std::runtime_error("Failed to create node."));
   
   
-  PlacedLogicModelObject_shptr o = drcv->get_object();    
+  PlacedLogicModelObject_shptr o = rcv->get_object();    
   object_id_t new_oid = oid_rewriter->get_new_object_id(o->get_object_id());
   
-  drcv_elem->set_attribute("object-id", number_to_string<object_id_t>(new_oid));
-  drcv_elem->set_attribute("drc-violation-class", drcv->get_drc_violation_class());
-  drcv_elem->set_attribute("severity", drcv->get_severity_as_string());
-  drcv_elem->set_attribute("description", drcv->get_problem_description());
+  rcv_elem->set_attribute("object-id", number_to_string<object_id_t>(new_oid));
+  rcv_elem->set_attribute("rc-violation-class", rcv->get_rc_violation_class());
+  rcv_elem->set_attribute("severity", rcv->get_severity_as_string());
+  rcv_elem->set_attribute("description", rcv->get_problem_description());
 
 }
 
