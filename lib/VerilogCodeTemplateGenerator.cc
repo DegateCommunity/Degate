@@ -128,12 +128,6 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
     f % generate_identifier(out[0]) % generate_identifier(in[0]);
     return f.str();
   }
-  else if(logic_class == "inverter" && 
-	  in.size() == 1 && out.size() == 1) {
-    boost::format f("  assign %1% = !%2%");
-    f % generate_identifier(out[0]) % generate_identifier(in[0]);
-    return f.str();
-  }
   else if(logic_class == "tristate-inverter" ||
 	  logic_class == "tristate-inverter-lo-actiSve" ||
 	  logic_class == "tristate-inverter-hi-active") {
