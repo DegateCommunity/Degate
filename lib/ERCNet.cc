@@ -62,6 +62,7 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
       if(gate_port->has_template_port()) {
 
 	GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
+	// count in- and out-ports
 	if(tmpl_port->is_inport()) in_ports++;
 	else if(tmpl_port->is_outport()) out_ports++;
 	else {
@@ -69,7 +70,7 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 			  "direction is undefined.");
 	  f % gate_port->get_descriptive_identifier();
 	  add_rc_violation(RCViolation_shptr(new RCViolation(gate_port, f.str(),
-								"undef_port_dir")));
+							     "undef_port_dir")));
 
 	}
 
@@ -78,7 +79,7 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
     }
   }
 
-  if((in_ports > 0 && out_ports == 0) || (out_ports > 0)) {
+  if((in_ports > 0 && out_ports == 0) || (out_ports > 1)) {
 
     for(Net::connection_iterator c_iter = net->begin();
 	c_iter != net->end(); ++c_iter) {
@@ -98,15 +99,15 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 	  error_msg = f.str();
 	  rc_class = "net.not_feeded";
 	}
-	else if(out_ports > 0) {
+	else if(out_ports > 1) {
 	  boost::format f("Out-Port %1% is connected with %2% other out-ports.");
-	  f % gate_port->get_descriptive_identifier() % out_ports;
+	  f % gate_port->get_descriptive_identifier() % (out_ports - 1);
 	  error_msg = f.str();
 	  rc_class = "net.outputs_connected";
 	}
 
 	add_rc_violation(RCViolation_shptr(new RCViolation(gate_port, error_msg,
-							      rc_class)));
+							   rc_class)));
       }
     }
   }
