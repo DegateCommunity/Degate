@@ -38,7 +38,7 @@ Wire::Wire(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diamete
 
 const std::string Wire::get_descriptive_identifier() const {
   if(has_name()) {
-    boost::format fmter("%1% (%2%)");
+    boost::format fmter("wire %1% (%2%)");
     fmter % get_name() % get_object_id();
     return fmter.str();
   }

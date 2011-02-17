@@ -34,7 +34,7 @@ EMarker::~EMarker() {}
 
 const std::string EMarker::get_descriptive_identifier() const {
   if(has_name()) {
-    boost::format fmter("%1% (%2%)");
+    boost::format fmter("emarker %1% (%2%)");
     fmter % get_name() % get_object_id();
     return fmter.str();
   }
