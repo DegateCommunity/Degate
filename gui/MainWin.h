@@ -61,6 +61,7 @@ class MainWin : public Gtk::Window  {
   void open_popup_menu(GdkEventButton * event);
   void on_popup_menu_place_emarker();
   void on_popup_menu_set_name();
+  void on_popup_menu_set_description();
   void on_popup_menu_set_port();
   void on_popup_menu_add_horizontal_grid_line();
   void on_popup_menu_add_vertical_grid_line();

@@ -1575,6 +1575,34 @@ void MainWin::on_popup_menu_set_name() {
   }
 }
 
+void MainWin::on_popup_menu_set_description() {
+  if(main_project) {
+
+    Glib::ustring description;
+
+    if(selected_objects.empty()) {
+      error_dialog("Error", "Please select one or more objects.");
+      return;
+    }
+    else if(PlacedLogicModelObject_shptr plo = selected_objects.get_single_object<PlacedLogicModelObject>()) {
+      description = plo->get_description();
+    }
+
+    GenericTextInputWin input(this, "Set description", "Please set a description", description);
+    Glib::ustring str;
+    if(input.run(description) == true) {
+
+      for(ObjectSet::const_iterator it = selected_objects.begin(); it != selected_objects.end(); it++) {
+	(*it)->set_description(description);
+      }
+      project_changed();
+      editor.update_screen();
+    }
+
+  }
+}
+
+
 void MainWin::on_popup_menu_add_vertical_grid_line() {
   if(main_project != NULL) {
 

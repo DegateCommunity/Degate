@@ -60,6 +60,9 @@ void MenuManager::create_popup_menu() {
   l.push_back( MenuElem("Set _name for object",
 			sigc::mem_fun(*window, &MainWin::on_popup_menu_set_name) ));
 
+  l.push_back( MenuElem("Set _description for object",
+			sigc::mem_fun(*window, &MainWin::on_popup_menu_set_description) ));
+
 
   l.push_back( SeparatorElem());
 
