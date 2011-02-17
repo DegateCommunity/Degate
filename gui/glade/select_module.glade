@@ -53,11 +53,10 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkButton" id="add_button">
-                        <property name="label">gtk-add</property>
+                        <property name="label">Add Module</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
@@ -68,11 +67,10 @@
                     </child>
                     <child>
                       <widget class="GtkButton" id="remove_button">
-                        <property name="label">gtk-remove</property>
+                        <property name="label">Remove Module</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>

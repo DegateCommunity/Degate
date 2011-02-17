@@ -93,11 +93,10 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkButton" id="add_button">
-                        <property name="label">gtk-add</property>
+                        <property name="label">Add Module</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
@@ -108,11 +107,10 @@
                     </child>
                     <child>
                       <widget class="GtkButton" id="remove_button">
-                        <property name="label">gtk-remove</property>
+                        <property name="label">Remove Module</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
@@ -122,23 +120,21 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="edit_button">
-                        <property name="label">gtk-edit</property>
+                      <widget class="GtkButton" id="determine_ports_button">
+                        <property name="label" translatable="yes">Determine Ports</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="padding">5</property>
-                        <property name="position">3</property>
+                        <property name="position">4</property>
                       </packing>
                     </child>
                     <child>
                       <widget class="GtkButton" id="export_button">
-                        <property name="label" translatable="yes">Export</property>
+                        <property name="label" translatable="yes">Export Module</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -147,7 +143,22 @@
                         <property name="expand">False</property>
                         <property name="fill">False</property>
                         <property name="padding">5</property>
-                        <property name="position">4</property>
+                        <property name="position">5</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="move_button">
+                        <property name="label">Move Gate into Module</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="padding">5</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                     <child>

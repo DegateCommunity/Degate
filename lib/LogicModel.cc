@@ -99,7 +99,7 @@ object_id_t LogicModel::get_new_object_id() {
 
 LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int layers) :
   bounding_box(width, height),
-  main_module(new Module("main_module")),
+  main_module(new Module("main_module", "", true)),
   object_id_counter(0) {
 
   for(unsigned int i = 0; i < layers; i++)

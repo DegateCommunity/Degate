@@ -20,6 +20,7 @@
 */
 
 #include <ModuleWin.h>
+#include <SelectModuleWin.h>
 
 #include <gdkmm/window.h>
 #include <gtkmm/stock.h>
@@ -63,17 +64,30 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
       remove_button->set_sensitive(false);
     }
 
-    get_widget("edit_button", edit_button);
-    if(edit_button) {
-      edit_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_edit_button_clicked) );
-      edit_button->set_sensitive(false);
+    get_widget("move_button", move_button);
+    if(move_button) {
+      move_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_move_button_clicked) );
+      move_button->set_sensitive(false);
     }
+
+    get_widget("determine_ports_button", determine_ports_button);
+    if(determine_ports_button) {
+      determine_ports_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_determine_ports_button_clicked) );
+      determine_ports_button->set_sensitive(false);
+    }
+
+    get_widget("export_button", export_button);
+    if(export_button) {
+      export_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_export_button_clicked) );
+      export_button->set_sensitive(false);
+    }
+
 
     get_widget("goto_button", goto_button);
     if(goto_button) {
       goto_button->grab_focus();
       goto_button->signal_clicked().connect(sigc::mem_fun(*this, &ModuleWin::on_goto_button_clicked) );
-      remove_button->set_sensitive(false);
+      goto_button->set_sensitive(false);
     }
 
     treemodel_modules = TreeStoreModuleHierarchy::create();
@@ -88,6 +102,15 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
       Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = treeview_modules->get_selection();
       refTreeSelection->signal_changed().
 	connect(sigc::mem_fun(*this, &ModuleWin::on_module_selection_changed));
+
+
+      Gtk::CellRendererText * rendererText;
+
+      rendererText = dynamic_cast<Gtk::CellRendererText *>(treeview_modules->get_column_cell_renderer(0)); 
+      rendererText->signal_edited().connect(sigc::mem_fun(*this, &ModuleWin::on_module_name_edited));
+      rendererText = dynamic_cast<Gtk::CellRendererText *>(treeview_modules->get_column_cell_renderer(1)); 
+      rendererText->signal_edited().connect(sigc::mem_fun(*this, &ModuleWin::on_module_type_edited));
+
     }
 
     treemodel_gates = Gtk::TreeStore::create(columns_gates);
@@ -227,6 +250,16 @@ void ModuleWin::insert_ports(Module_shptr module) {
 
 }
 
+void ModuleWin::on_module_name_edited(const Glib::ustring& path, const Glib::ustring& new_text) {
+  if(Module_shptr mod = get_selected_module())
+    mod->set_name(new_text);
+}
+
+void ModuleWin::on_module_type_edited(const Glib::ustring& path, const Glib::ustring& new_text) {
+  if(Module_shptr mod = get_selected_module())
+    mod->set_entity_name(new_text);
+}
+
 void ModuleWin::on_module_selection_changed() {
 
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelection =  treeview_modules->get_selection();
@@ -237,20 +270,23 @@ void ModuleWin::on_module_selection_changed() {
 
       Module_shptr module = row[treemodel_modules->m_columns.m_col_object_ptr];
 
-      remove_button->set_sensitive(true);
-      edit_button->set_sensitive(true);
+      remove_button->set_sensitive(!module->is_main_module());
       add_button->set_sensitive(true);
+      export_button->set_sensitive(true);
+      determine_ports_button->set_sensitive(module->is_main_module());
 
       insert_gates(module);
       insert_ports(module);
     }
-  }
-  else {
-    remove_button->set_sensitive(false);
-    edit_button->set_sensitive(false);
-    add_button->set_sensitive(false);
+    else {
+      remove_button->set_sensitive(false);
+      add_button->set_sensitive(false);
+      export_button->set_sensitive(false);
+      determine_ports_button->set_sensitive(false);
+    }
   }
 
+  on_gate_selection_changed(); // must be unselected
 }
 
 void ModuleWin::on_gate_selection_changed() {
@@ -264,10 +300,13 @@ void ModuleWin::on_gate_selection_changed() {
       Gate_shptr gate = row[columns_gates.m_col_object_ptr];
 
       goto_button->set_sensitive(true);
+      move_button->set_sensitive(true);
+    }
+    else {
+      goto_button->set_sensitive(false);
+      move_button->set_sensitive(false);
     }
   }
-  else
-    goto_button->set_sensitive(false);
 }
 
 
@@ -281,42 +320,60 @@ void ModuleWin::on_close_button_clicked() {
 }
 
 void ModuleWin::on_add_button_clicked() {
+
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelection =  treeview_modules->get_selection();
   if(refTreeSelection) {
     Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
     if(*iter) {
-      Gtk::TreeModel::Row row = *iter;
-
+      Gtk::TreeModel::Row row = *iter;      
       Module_shptr parent_module = row[treemodel_modules->m_columns.m_col_object_ptr];
-      assert(parent_module != NULL);
+
 
       Module_shptr new_mod(new Module("Click to edit"));
       std::cout << "add module " << new_mod->get_name() << " to module " << parent_module->get_name() << std::endl;
       parent_module->add_module(new_mod);
-
+    
       Gtk::TreeModel::Row new_row = *(treemodel_modules->append(row.children()));
       insert_module(new_row, new_mod, parent_module);
     }
   }
 }
 
-void ModuleWin::on_remove_button_clicked() {
+
+Module_shptr ModuleWin::get_selected_module() {
+  Module_shptr mod;
+
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelection =  treeview_modules->get_selection();
   if(refTreeSelection) {
     Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
     if(*iter) {
+      Gtk::TreeModel::Row row = *iter;      
+      mod = row[treemodel_modules->m_columns.m_col_object_ptr];
+    }
+  }
+  return mod;
+}
+
+void ModuleWin::on_remove_button_clicked() {
+
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection =  treeview_modules->get_selection();
+  if(refTreeSelection) {
+    Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
+    if(*iter) {
+      Gtk::TreeModel::Row row = *iter;      
+      Module_shptr mod = row[treemodel_modules->m_columns.m_col_object_ptr];
+
+      Module_shptr root_module = lmodel->get_main_module();
+      assert(root_module != NULL);
+      
+      if(root_module == mod) return; // can't remove root module
 
       Gtk::MessageDialog dialog(*this, "Do you really want to remove the selected module?",
-                                true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
+				true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
       dialog.set_title("Warning");
       if(dialog.run() == Gtk::RESPONSE_YES) {
-
-	Gtk::TreeModel::Row row = *iter;
-	Module_shptr mod = row[treemodel_modules->m_columns.m_col_object_ptr];
-
-
-	Module_shptr root_module = lmodel->get_main_module();
-	assert(root_module != NULL);
+      
 
 	if(!root_module->remove_module(mod)) {
 	  Gtk::MessageDialog dialog(*parent, "Can't remove module.", true, Gtk::MESSAGE_ERROR);
@@ -326,15 +383,41 @@ void ModuleWin::on_remove_button_clicked() {
 	else {
 	  treemodel_modules->erase(iter);
 	  on_module_selection_changed();
+
+	  treemodel_gates->clear();
+	  treemodel_ports->clear();
+	  
 	}
       }
-
     }
   }
-
 }
 
-void ModuleWin::on_edit_button_clicked() {
+
+void ModuleWin::on_export_button_clicked() {
+  Module_shptr mod = get_selected_module();
+
+  if(mod) {
+    // XXX ...
+  }
+}
+
+void ModuleWin::on_determine_ports_button_clicked() {
+
+  debug(TM, "should determine module ports");
+
+  Module_shptr mod = get_selected_module();
+
+  if(mod) {
+    debug(TM, "have module");
+    if(mod->is_main_module()) {
+
+      debug(TM, "is main module");
+
+      determine_module_ports_for_root(lmodel);
+      insert_ports(mod);
+    }
+  }
 }
 
 
@@ -352,6 +435,35 @@ void ModuleWin::on_goto_button_clicked() {
     }
   } //
 }
+
+
+void ModuleWin::on_move_button_clicked() {
+
+  Module_shptr selected_mod = get_selected_module();
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection =  treeview_gates->get_selection();
+  if(refTreeSelection) {
+    Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
+    if(*iter) {
+      Gtk::TreeModel::Row row = *iter;
+
+      Gate_shptr gate = row[columns_gates.m_col_object_ptr];
+      assert(gate != NULL);
+
+      SelectModuleWin smWin(this, lmodel);
+      Module_shptr dst_mod = smWin.show();
+      if(dst_mod != NULL) {
+
+	selected_mod->remove_gate(gate);
+	dst_mod->add_gate(gate);
+
+	insert_gates(selected_mod);
+	insert_ports(selected_mod);
+      }
+    }
+  }
+}
+
 
 sigc::signal<void, degate::PlacedLogicModelObject_shptr>&
 ModuleWin::signal_goto_button_clicked() {
@@ -373,14 +485,8 @@ void ModuleWin::update_logic_model(Gtk::TreeModel::Children const& children,
 
     Module_shptr module = row[treemodel_modules->m_columns.m_col_object_ptr];
     Module_shptr orig_parent = row[treemodel_modules->m_columns.m_col_orig_parent_ptr];
-    Glib::ustring name = row[treemodel_modules->m_columns.m_col_name];
-    Glib::ustring type = row[treemodel_modules->m_columns.m_col_type];
-
-    std::cout << "name=" << module->get_name() << " - " << name << " type=" << type << std::endl;
 
     assert(module != NULL);
-    module->set_name(name);
-    module->set_entity_name(type);
 
     if(parent_module != NULL && orig_parent != parent_module) {
       orig_parent->remove_module(module);

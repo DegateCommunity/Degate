@@ -596,7 +596,6 @@ namespace degate {
   };
 
 
-  typedef std::tr1::shared_ptr<LogicModel> LogicModel_shptr;
 
 }
 

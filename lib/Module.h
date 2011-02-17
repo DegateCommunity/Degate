@@ -26,14 +26,19 @@
 #include <tr1/memory>
 
 #include <LogicModelObjectBase.h>
+#include <LogicModel.h>
 
 namespace degate {
 
+  
   /**
    * Implements a container to build up higher level entities.
    */
 
   class Module : public LogicModelObjectBase {
+
+    friend void determine_module_ports_for_root(LogicModel_shptr lmodel);
+
   public:
 
     typedef std::set<Module_shptr> module_collection;
@@ -42,8 +47,7 @@ namespace degate {
     /**
      * This map defines module ports.
      * A port is identified by a name. A module port is 'connected' to
-     * a gate ports. The relationship between port name and gate port is
-     * one to many in order to use it as a signal bus type.
+     * a list of gate ports.
      */
     typedef std::map<std::string, /* port name */
 		     std::list<GatePort_shptr> > port_collection;
@@ -54,13 +58,15 @@ namespace degate {
     gate_collection gates;
     port_collection ports;
 
-    std::string entity_name;
-
-
+    std::string entity_name; // name of a type
+    bool is_root;
+    
   private:
 
-    void move_gates_recursive(Module * dst_mod)
-      throw(InvalidPointerException);
+    /**
+     * @throw InvalidPointerException This exception is thrown if the parameter is a NULL pointer.
+     */
+    void move_gates_recursive(Module * dst_mod);
 
     void automove_gates();
 
@@ -81,7 +87,9 @@ namespace degate {
      * Construct a new module.
      */
 
-    Module(std::string const& module_name = "", std::string const& _entity_name = "");
+    Module(std::string const& module_name = "", 
+	   std::string const& _entity_name = "", 
+	   bool is_root = false);
 
     /**
      * Destroy the module.
@@ -89,6 +97,11 @@ namespace degate {
 
     virtual ~Module();
 
+    /**
+     * Check if module is the main module.
+     */
+    
+    bool is_main_module() const;
 
     /**
      * Set an identifier for the module type.
@@ -97,10 +110,19 @@ namespace degate {
     void set_entity_name(std::string const& name);
 
 
+    /**
+     * Get name of the entity type.
+     */
+
     std::string get_entity_name() const;
 
 
-    void add_gate(Gate_shptr gate) throw(InvalidPointerException);
+    /**
+     * Add a gate to a module.
+     * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
+     */
+
+    void add_gate(Gate_shptr gate);
 
 
     /**
@@ -112,21 +134,28 @@ namespace degate {
      * to call method add_gate() on your own.
      * @return Returns true if a module was removed, else false.
      * @see add_gate()
+     * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
      */
 
-    bool remove_gate(Gate_shptr gate) throw(InvalidPointerException);
+    bool remove_gate(Gate_shptr gate);
 
 
-    void add_module(Module_shptr module) throw(InvalidPointerException);
+    /**
+     * Add a sub-module to a module.
+     * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
+     */
+
+    void add_module(Module_shptr module);
 
     /**
      * Remove a submodule.
      * This method even works if the submodule is not a direct child. If you remove
      * a child module that contains gates, the gates are moved one layer above.
      * @return Returns true if a module was removed, else false.
+     * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
      */
 
-    bool remove_module(Module_shptr module) throw(InvalidPointerException);
+    bool remove_module(Module_shptr module);
 
 
     module_collection::iterator modules_begin();
@@ -135,7 +164,20 @@ namespace degate {
     gate_collection::iterator gates_end();
     port_collection::iterator ports_begin();
     port_collection::iterator ports_end();
+
+    module_collection::const_iterator modules_begin() const;
+    module_collection::const_iterator modules_end() const;
+    gate_collection::const_iterator gates_begin() const;
+    gate_collection::const_iterator gates_end() const;
+    port_collection::const_iterator ports_begin() const;
+    port_collection::const_iterator ports_end() const;
   };
+
+
+  /**
+   * Determine ports of a root module.
+   */
+  void determine_module_ports_for_root(LogicModel_shptr lmodel);
 
 
 }

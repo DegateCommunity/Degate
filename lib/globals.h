@@ -132,6 +132,9 @@ namespace degate {
   typedef std::tr1::shared_ptr<Module> Module_shptr;
 
 
+  class LogicModel;
+  typedef std::tr1::shared_ptr<LogicModel> LogicModel_shptr;
+
   typedef unsigned int layer_position_t;
 
 

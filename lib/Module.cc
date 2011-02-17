@@ -26,12 +26,20 @@
 using namespace degate;
 
 
-Module::Module(std::string const& module_name, std::string const& _entity_name) :
-  entity_name(_entity_name) {
+Module::Module(std::string const& module_name, 
+	       std::string const& _entity_name, 
+	       bool _is_root) :
+  entity_name(_entity_name), 
+  is_root(_is_root) {
+
   set_name(module_name);
 }
 
 Module::~Module() {}
+
+bool Module::is_main_module() const {
+  return is_root;
+}
 
 void Module::set_entity_name(std::string const& name) {
   entity_name = name;
@@ -42,15 +50,15 @@ std::string Module::get_entity_name() const {
 }
 
 
-void Module::add_gate(Gate_shptr gate) throw(InvalidPointerException) {
+void Module::add_gate(Gate_shptr gate) {
   if(gate == NULL)
     throw InvalidPointerException("Invalid pointer passed to add_gate().");
 
   gates.insert(gate);
-  determine_module_ports();
+  if(!is_root) determine_module_ports();
 }
 
-bool Module::remove_gate(Gate_shptr gate) throw(InvalidPointerException) {
+bool Module::remove_gate(Gate_shptr gate) {
   if(gate == NULL)
     throw InvalidPointerException("Invalid pointer passed to remove_gate().");
 
@@ -58,7 +66,7 @@ bool Module::remove_gate(Gate_shptr gate) throw(InvalidPointerException) {
   gate_collection::const_iterator g_iter = gates.find(gate);
   if(g_iter != gates.end()) {
     gates.erase(g_iter);
-    determine_module_ports();
+    if(!is_root) determine_module_ports();
     return true;
   }
   else {
@@ -75,7 +83,7 @@ bool Module::remove_gate(Gate_shptr gate) throw(InvalidPointerException) {
 }
 
 
-void Module::add_module(Module_shptr module) throw(InvalidPointerException) {
+void Module::add_module(Module_shptr module) {
   if(module == NULL)
     throw InvalidPointerException("Invalid pointer passed to add_modue().");
 
@@ -84,7 +92,7 @@ void Module::add_module(Module_shptr module) throw(InvalidPointerException) {
 
 
 
-bool Module::remove_module(Module_shptr module) throw(InvalidPointerException) {
+bool Module::remove_module(Module_shptr module) {
 
   if(module == NULL)
     throw InvalidPointerException("Invalid pointer passed to remove_module().");
@@ -106,8 +114,8 @@ bool Module::remove_module(Module_shptr module) throw(InvalidPointerException) {
   return false;
 }
 
-void Module::move_gates_recursive(Module * dst_mod)
-  throw(InvalidPointerException) {
+void Module::move_gates_recursive(Module * dst_mod) {
+
   if(dst_mod == NULL)
     throw InvalidPointerException("Invalid pointer passed to move_all_child_gates_into_current_module().");
 
@@ -147,6 +155,30 @@ Module::port_collection::iterator Module::ports_end() {
   return ports.end();
 }
 
+Module::module_collection::const_iterator Module::modules_begin() const {
+  return modules.begin();
+}
+
+Module::module_collection::const_iterator Module::modules_end() const {
+  return modules.end();
+}
+
+Module::gate_collection::const_iterator Module::gates_begin() const {
+  return gates.begin();
+}
+
+Module::gate_collection::const_iterator Module::gates_end() const {
+  return gates.end();
+}
+
+Module::port_collection::const_iterator Module::ports_begin() const {
+  return ports.begin();
+}
+
+Module::port_collection::const_iterator Module::ports_end() const {
+  return ports.end();
+}
+
 
 void Module::automove_gates() {
   /*
@@ -160,6 +192,9 @@ void Module::automove_gates() {
 
    */
 }
+
+
+
 
 void Module::determine_module_ports() {
 
@@ -178,6 +213,9 @@ void Module::determine_module_ports() {
 	  - else -> no module port
       - net in known_nets -> no module port
    */
+
+  // reset all known ports
+  ports.clear();
 
   //debug(TM, "in determine_module_ports()");
   std::set<Net_shptr> known_ports;
@@ -224,20 +262,9 @@ void Module::determine_module_ports() {
 	    //gate_port->print();
 
 	    GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-	    std::string mod_port_name;
+	    assert(tmpl_port != NULL); // if a gate has no standard cell type, the gate cannot have a port
 
-	    if(tmpl_port == NULL)
-	      mod_port_name = "unnamed";
-	    else if(tmpl_port->is_tristate())
-	      mod_port_name = "tristate";
-	    else if(tmpl_port->is_inport())
-	      mod_port_name = "inport";
-	    else if(tmpl_port->is_outport())
-	      mod_port_name = "outport";
-	    else
-	      mod_port_name = "undefined";
-
-	    ports[mod_port_name].push_back(gate_port);
+	    ports[tmpl_port->get_name()].push_back(gate_port);
 	    is_a_port = true;
 	    known_ports.insert(net);
 	  }
@@ -267,4 +294,63 @@ bool Module::exists_gate_port_recursive(object_id_t oid) const {
     if((*iter)->exists_gate_port_recursive(oid)) return true;
 
   return false;
+}
+
+
+
+
+void degate::determine_module_ports_for_root(LogicModel_shptr lmodel) {
+  debug(TM, "Check for module ports.");
+  /*
+    Iterate over all gate and check their ports.
+    Get the net for a port.
+    Iterate over net.
+    If a net contains a emarker with a description of 'module-port', use
+    gate port as module port.
+   */
+
+  Module_shptr main_module = lmodel->get_main_module();
+
+  main_module->ports.clear(); // reset ports
+
+  for(Module::gate_collection::iterator g_iter = main_module->gates_begin(); 
+      g_iter != main_module->gates_end(); ++g_iter) {
+
+    Gate_shptr gate = *g_iter;
+    assert(gate != NULL);
+
+    for(Gate::port_const_iterator p_iter = gate->ports_begin(); p_iter != gate->ports_end(); ++p_iter) {
+
+      GatePort_shptr gate_port = *p_iter;
+      assert(gate_port != NULL);
+
+      Net_shptr net = gate_port->get_net();
+      bool is_a_port = false;
+
+      if(net != NULL) {
+
+	for(Net::connection_iterator c_iter = net->begin(); c_iter != net->end() && !is_a_port; ++c_iter) {
+	  
+	  object_id_t oid = *c_iter;
+	  assert(oid != 0);
+	  
+	  PlacedLogicModelObject_shptr lmo = lmodel->get_object(oid);
+	  if(EMarker_shptr em = std::tr1::dynamic_pointer_cast<EMarker>(lmo)) {
+	    debug(TM, "Connected with emarker");
+
+	    if(em->get_description() == "module-port") {
+	      
+	      GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
+	      assert(tmpl_port != NULL); // if a gate has no standard cell type, the gate cannot have a port
+	      
+	      main_module->ports[em->get_name()].push_back(gate_port);
+	      is_a_port = true;
+	    }
+	  }
+	} 
+	    
+      } // end of net-object-iteration
+    } // end of gate-portiteration
+  } // end of gate-iteration
+
 }

@@ -183,15 +183,15 @@ void SelectModuleWin::on_module_selection_changed() {
 
       selected_module = row[treemodel_modules->m_columns.m_col_object_ptr];
 
-      remove_button->set_sensitive(true);
+      remove_button->set_sensitive(!selected_module->is_main_module());
       add_button->set_sensitive(true);
       ok_button->set_sensitive(true);
     }
-  }
-  else {
-    remove_button->set_sensitive(false);
-    add_button->set_sensitive(false);
-    ok_button->set_sensitive(false);
+    else {
+      remove_button->set_sensitive(false);
+      add_button->set_sensitive(false);
+      ok_button->set_sensitive(false);
+    }
   }
 
 }
