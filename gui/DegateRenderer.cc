@@ -89,8 +89,6 @@ void DegateRenderer::on_realize() {
 
   glClearColor(0, 0, 0, 0);
 
-  glEnable(GL_TEXTURE_2D);
-
 
   background_dlist = glGenLists(1);
   assert(error_check());
@@ -150,7 +148,6 @@ void DegateRenderer::update_screen() {
     if(is_idle || should_update_gates) {
       render_background();
 
-
       // render gates with and without details into two different display lists
       render_gates(false);
       render_gates(true);
@@ -178,8 +175,12 @@ void DegateRenderer::update_screen() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
+    /* texture rendering must be enabled and diabled at the right moment, see 
+       http://stackoverflow.com/questions/3405873/opengl-loading-a-texture-changes-the-current-color */
+    glEnable(GL_TEXTURE_2D);
     glCallList(background_dlist);
     assert(error_check());
+    glDisable(GL_TEXTURE_2D);
 
     if(info_layers[INFO_LAYER_ALL]) {
 
@@ -193,11 +194,13 @@ void DegateRenderer::update_screen() {
       assert(error_check());
       
       if(!lock_state && render_details) {
+	glEnable(GL_TEXTURE_2D);
 	glCallList(gate_details_dlist);
 	assert(error_check());
 	
 	glCallList(annotation_details_dlist);
 	assert(error_check());
+	glDisable(GL_TEXTURE_2D);
 	
 	render_details = false;
       }
