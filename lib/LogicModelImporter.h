@@ -59,6 +59,9 @@ private:
   void parse_annotations_element(const xmlpp::Element * const annotations_element,
 				 LogicModel_shptr lmodel) ;
 
+  std::list<Module_shptr> parse_modules_element(const xmlpp::Element * const modules_element,
+				     LogicModel_shptr lmodel) ;
+
 public:
 
   /**

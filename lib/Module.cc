@@ -50,12 +50,12 @@ std::string Module::get_entity_name() const {
 }
 
 
-void Module::add_gate(Gate_shptr gate) {
+void Module::add_gate(Gate_shptr gate, bool detect_ports) {
   if(gate == NULL)
     throw InvalidPointerException("Invalid pointer passed to add_gate().");
 
   gates.insert(gate);
-  if(!is_root) determine_module_ports();
+  if(!is_root && detect_ports) determine_module_ports();
 }
 
 bool Module::remove_gate(Gate_shptr gate) {
@@ -264,7 +264,7 @@ void Module::determine_module_ports() {
 	    GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 	    assert(tmpl_port != NULL); // if a gate has no standard cell type, the gate cannot have a port
 
-	    ports[tmpl_port->get_name()].push_back(gate_port);
+	    add_module_port(tmpl_port->get_name(), gate_port);
 	    is_a_port = true;
 	    known_ports.insert(net);
 	  }
@@ -275,6 +275,9 @@ void Module::determine_module_ports() {
   }
 }
 
+void Module::add_module_port(std::string const& module_port_name, GatePort_shptr adjacent_gate_port) {
+  ports[module_port_name].push_back(adjacent_gate_port);
+}
 
 bool Module::exists_gate_port_recursive(object_id_t oid) const {
   assert(oid != 0);

@@ -38,6 +38,7 @@ namespace degate {
   class Module : public LogicModelObjectBase {
 
     friend void determine_module_ports_for_root(LogicModel_shptr lmodel);
+    friend class LogicModelImporter;
 
   public:
 
@@ -81,6 +82,9 @@ namespace degate {
      */
     void determine_module_ports();
 
+    
+    void add_module_port(std::string const& module_port_name, GatePort_shptr adjacent_gate_port);
+
   public:
 
     /**
@@ -119,10 +123,12 @@ namespace degate {
 
     /**
      * Add a gate to a module.
+     * @param gate The gate to add.
+     * @param detect_ports Switch for enabling or disabling automatic module port detection.
      * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
      */
 
-    void add_gate(Gate_shptr gate);
+    void add_gate(Gate_shptr gate, bool detect_ports = true);
 
 
     /**

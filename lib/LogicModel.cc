@@ -718,6 +718,10 @@ Module_shptr LogicModel::get_main_module() const {
   return main_module;
 }
 
+void LogicModel::set_main_module(Module_shptr main_module) {
+  this->main_module = main_module;
+}
+
 void LogicModel::reset_removed_remote_objetcs_list() {
   removed_remote_oids.clear();
 }

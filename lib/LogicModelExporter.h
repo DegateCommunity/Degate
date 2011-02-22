@@ -42,16 +42,17 @@ class LogicModelExporter : public XMLExporter {
 private:
   typedef std::map<object_id_t /* net id */, xmlpp::Element *> net_element_map_type;
 
-  void add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos) throw(std::runtime_error );
-  void add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos) throw(std::runtime_error );
-  void add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos) throw(std::runtime_error );
+  void add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos);
+  void add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos);
+  void add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos);
 
   void add_emarker(xmlpp::Element* emarkers_elem, EMarker_shptr emarker, layer_position_t layer_pos);
 
-  void add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel) throw(std::runtime_error);
+  void add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel);
 
-  void add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos)
-    throw(std::runtime_error );
+  void add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos);
+
+  void add_module(xmlpp::Element* modules_elem, LogicModel_shptr lmodel, Module_shptr module);
 
   ObjectIDRewriter_shptr oid_rewriter;
 
@@ -59,8 +60,7 @@ public:
   LogicModelExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter) {}
   ~LogicModelExporter() {}
 
-  void export_data(std::string const& filename, LogicModel_shptr lmodel)
-    throw( InvalidPathException, InvalidPointerException, std::runtime_error );
+  void export_data(std::string const& filename, LogicModel_shptr lmodel);
 
 };
 

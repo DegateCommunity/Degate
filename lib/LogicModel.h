@@ -577,6 +577,11 @@ namespace degate {
     Module_shptr get_main_module() const;
 
     /**
+     * Set main module.
+     */
+    void set_main_module(Module_shptr main_module);
+
+    /**
      *
      */
     void reset_removed_remote_objetcs_list();

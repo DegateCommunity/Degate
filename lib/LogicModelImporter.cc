@@ -36,6 +36,7 @@
 #include <list>
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace degate;
@@ -105,6 +106,13 @@ void LogicModelImporter::parse_logic_model_element(const xmlpp::Element * const 
 
   const xmlpp::Element * annotations_elem = get_dom_twig(lm_elem, "annotations");
   if(annotations_elem != NULL) parse_annotations_element(annotations_elem, lmodel);
+
+  const xmlpp::Element * modules_elem = get_dom_twig(lm_elem, "modules");
+  if(modules_elem != NULL) {
+    std::list<Module_shptr> mods = parse_modules_element(modules_elem, lmodel);
+    assert(mods.size() == 1);
+    lmodel->set_main_module(mods.front());
+  }
 
 }
 
@@ -446,4 +454,82 @@ void LogicModelImporter::parse_annotations_element(const xmlpp::Element * const 
       lmodel->add_object(layer, annotation);
     }
   }
+}
+
+std::list<Module_shptr> LogicModelImporter::parse_modules_element(const xmlpp::Element * const modules_element,
+						       LogicModel_shptr lmodel) {
+
+  if(modules_element == NULL || lmodel == NULL)
+    throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_modules_element()");
+
+  std::list<Module_shptr> modules;
+
+  const xmlpp::Node::NodeList module_list = modules_element->get_children("module");
+
+  for(xmlpp::Node::NodeList::const_iterator m_iter = module_list.begin();  m_iter != module_list.end(); ++m_iter) {
+
+
+    if(const xmlpp::Element* module_elem = dynamic_cast<const xmlpp::Element*>(*m_iter)) {
+
+      // parse module attributes
+      object_id_t id = parse_number<object_id_t>(module_elem, "id");
+      const Glib::ustring name(module_elem->get_attribute_value("name"));
+      const Glib::ustring entity(module_elem->get_attribute_value("entity"));
+
+      Module_shptr module(new Module(name, entity));
+      module->set_object_id(id);
+
+      // parse standard cell list
+      const xmlpp::Element * cells_elem = get_dom_twig(module_elem, "cells");
+      if(cells_elem != NULL) {
+
+	const xmlpp::Node::NodeList cell_list = cells_elem->get_children("cell");
+	for(xmlpp::Node::NodeList::const_iterator c_iter = cell_list.begin();
+	    c_iter != cell_list.end(); ++c_iter) {
+
+	  if(const xmlpp::Element* cell_elem = dynamic_cast<const xmlpp::Element*>(*c_iter)) {	  
+	    object_id_t cell_id = parse_number<object_id_t>(cell_elem, "object-id");
+
+	    // Lookup will throw an exception, if cell is not in the logic model. This is intented behaviour.
+	    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(lmodel->get_object(cell_id)))
+	      module->add_gate(gate, /* autodetect module ports = */ false);
+	  }
+	}
+      }
+
+      // parse module ports
+      const xmlpp::Element * mports_elem = get_dom_twig(module_elem, "module-ports");
+      if(mports_elem != NULL) {
+
+	const xmlpp::Node::NodeList mport_list = mports_elem->get_children("module-port");
+	for(xmlpp::Node::NodeList::const_iterator mp_iter = mport_list.begin();
+	    mp_iter != mport_list.end(); ++mp_iter) {
+
+	  if(const xmlpp::Element* mport_elem = dynamic_cast<const xmlpp::Element*>(*mp_iter)) {
+
+	    const Glib::ustring port_name(mport_elem->get_attribute_value("name"));
+	    object_id_t ref_id = parse_number<object_id_t>(mport_elem, "object-id");
+	    
+	    // Lookup will throw an exception, if cell is not in the logic model. This is intented behaviour.
+	    if(GatePort_shptr gport = std::tr1::dynamic_pointer_cast<GatePort>(lmodel->get_object(ref_id)))
+	      module->add_module_port(port_name, gport);
+	  }
+	}
+      }
+
+
+      // parse sub-modules
+      const xmlpp::Element * sub_modules_elem = get_dom_twig(module_elem, "modules");
+      if(sub_modules_elem != NULL) {
+	std::list<Module_shptr> sub_modules = parse_modules_element(sub_modules_elem, lmodel);
+	BOOST_FOREACH(Module_shptr submod, sub_modules) module->add_module(submod);
+      }
+
+
+      modules.push_back(module);
+
+    }
+  }
+
+  return modules;
 }

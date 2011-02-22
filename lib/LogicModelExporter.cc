@@ -37,8 +37,7 @@
 using namespace std;
 using namespace degate;
 
-void LogicModelExporter::export_data(std::string const& filename, LogicModel_shptr lmodel)
-  throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
+void LogicModelExporter::export_data(std::string const& filename, LogicModel_shptr lmodel) {
 
   if(lmodel == NULL) throw InvalidPointerException("Logic model pointer is NULL.");
 
@@ -99,6 +98,11 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
     add_nets(nets_elem, lmodel);
 
+    // actually we have only one main module
+    xmlpp::Element* modules_elem = root_elem->add_child("modules");
+    if(modules_elem == NULL) throw(std::runtime_error("Failed to create node."));
+    else add_module(modules_elem, lmodel, lmodel->get_main_module());
+
     doc.write_to_file_formatted(filename, "ISO-8859-1");
 
   }
@@ -109,8 +113,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
 }
 
-void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel)
-  throw(std::runtime_error) {
+void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel) {
 
   for(LogicModel::net_collection::iterator net_iter = lmodel->nets_begin();
       net_iter != lmodel->nets_end(); ++net_iter) {
@@ -143,8 +146,7 @@ void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lm
 
 }
 
-void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos)
-  throw(std::runtime_error) {
+void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos) {
 
   xmlpp::Element* gate_elem = gates_elem->add_child("gate");
   if(gate_elem == NULL) throw(std::runtime_error("Failed to create node."));
@@ -188,8 +190,7 @@ void LogicModelExporter::add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, l
 
 }
 
-void LogicModelExporter::add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos)
-  throw(std::runtime_error) {
+void LogicModelExporter::add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos) {
 
   xmlpp::Element* wire_elem = wires_elem->add_child("wire");
   if(wire_elem == NULL) throw(std::runtime_error("Failed to create node."));
@@ -214,8 +215,7 @@ void LogicModelExporter::add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, l
 
 }
 
-void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos)
-  throw(std::runtime_error) {
+void LogicModelExporter::add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos) {
 
   xmlpp::Element* via_elem = vias_elem->add_child("via");
   if(via_elem == NULL) throw(std::runtime_error("Failed to create node."));
@@ -262,8 +262,7 @@ void LogicModelExporter::add_emarker(xmlpp::Element* emarkers_elem, EMarker_shpt
 }
 
 
-void LogicModelExporter::add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos)
-  throw(std::runtime_error) {
+void LogicModelExporter::add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos) {
 
   xmlpp::Element* annotation_elem = annotations_elem->add_child("annotation");
   if(annotation_elem == NULL) throw(std::runtime_error("Failed to create node."));
@@ -287,4 +286,76 @@ void LogicModelExporter::add_annotation(xmlpp::Element* annotations_elem, Annota
       iter != annotation->parameters_end(); ++iter) {
     annotation_elem->set_attribute(iter->first, iter->second);
   }
+}
+
+
+void LogicModelExporter::add_module(xmlpp::Element* modules_elem, LogicModel_shptr lmodel, Module_shptr module) {
+
+  xmlpp::Element* this_elem = modules_elem->add_child("module");
+  if(this_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
+  xmlpp::Element* module_ports_elem = this_elem->add_child("module-ports");
+  xmlpp::Element* cells_elem = this_elem->add_child("cells");
+  xmlpp::Element* sub_modules_elem = this_elem->add_child("modules");
+  if(module_ports_elem == NULL ||
+     cells_elem == NULL ||
+     sub_modules_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
+  /*
+    <module id="42" name="ff23" entity-type="flip-flop">
+
+      <module-ports>
+        <module-port name="d" object-id="666"/> -- connected with object 666
+        <module-port name="q" object-id="667"/>
+      </module-ports>
+
+      <cells>
+        <cell id="9999"/>
+      </cells>
+
+      <modules>
+        ...
+      </modules>
+
+    </module>
+
+  */
+  
+  // module itself
+
+  object_id_t new_mod_id = oid_rewriter->get_new_object_id(module->get_object_id());
+  this_elem->set_attribute("id", number_to_string<object_id_t>(new_mod_id));
+  this_elem->set_attribute("name", module->get_name());
+  this_elem->set_attribute("entity", module->get_entity_name());
+  
+  // write module ports
+  for(Module::port_collection::const_iterator p_iter = module->ports_begin();
+      p_iter != module->ports_end(); ++p_iter) {
+
+    xmlpp::Element* mport_elem = module_ports_elem->add_child("module-port");
+    if(mport_elem == NULL) throw(std::runtime_error("Failed to create node."));
+    
+    assert(p_iter->second.size() > 0);
+    GatePort_shptr gport = p_iter->second.front();
+
+    mport_elem->set_attribute("name", p_iter->first);
+    mport_elem->set_attribute("object-id", number_to_string<object_id_t>(gport->get_object_id()));
+  }
+
+  // write standard cells
+  for(Module::gate_collection::const_iterator g_iter = module->gates_begin();
+      g_iter != module->gates_end(); ++g_iter) {
+
+    xmlpp::Element* cell_elem = cells_elem->add_child("cell");
+    if(cell_elem == NULL) throw(std::runtime_error("Failed to create node."));
+
+    cell_elem->set_attribute("object-id", number_to_string<object_id_t>((*g_iter)->get_object_id()));
+  }
+
+  // write sub-modules
+  for(Module::module_collection::const_iterator m_iter = module->modules_begin();
+      m_iter != module->modules_end(); ++m_iter) {
+    add_module(sub_modules_elem, lmodel, *m_iter);
+  }
+
 }
