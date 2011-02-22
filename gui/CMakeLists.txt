@@ -8,6 +8,8 @@ link_directories(${DEGATE_BINARY_DIR}/degate)
 
 find_package(PkgConfig)
 
+set(LIBS ${LIBS} pthread)
+
 pkg_check_modules(GTKMM REQUIRED gtkmm-2.4)
 include_directories(${GTKMM_INCLUDE_DIRS})
 link_directories(${GTKMM_LIBRARY_DIRS}) 
