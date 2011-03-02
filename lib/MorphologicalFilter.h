@@ -100,7 +100,6 @@ namespace degate {
       for(unsigned int _y = min_y; _y < max_y; _y++)
 	for(unsigned int _x = min_x; _x < max_x; _x++)
 	  if(src->get_pixel(_x, _y) > 0) i++;
-
       return i >= dilation_threshold ? 1 : src->get_pixel(x, y);
     }
   };
@@ -127,15 +126,16 @@ namespace degate {
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
   void morphological_open(std::tr1::shared_ptr<ImageTypeDst> dst,
-			  std::tr1::shared_ptr<ImageTypeSrc> src,
+			  std::tr1::shared_ptr<ImageTypeSrc> src, 
 			  unsigned int kernel_width = 3,
-			  unsigned int threshold = 3) {
+			  unsigned int threshold_dilate = 1,
+			  unsigned int threshold_erode = 3) {
 
     filter_image<ImageTypeDst, ImageTypeSrc,
-      ErodeImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold);
+      ErodeImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold_erode);
 
     filter_image<ImageTypeDst, ImageTypeSrc,
-      DilateImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold);
+      DilateImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold_dilate);
   }
 
 
@@ -146,13 +146,14 @@ namespace degate {
   void morphological_close(std::tr1::shared_ptr<ImageTypeDst> dst,
 			   std::tr1::shared_ptr<ImageTypeSrc> src,
 			   unsigned int kernel_width = 3,
-			   unsigned int threshold = 3) {
+			   unsigned int threshold_dilate = 1,
+			   unsigned int threshold_erode = 3) {
 
     filter_image<ImageTypeDst, ImageTypeSrc,
-      DilateImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold);
+      DilateImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold_dilate);
 
     filter_image<ImageTypeDst, ImageTypeSrc,
-      ErodeImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold);
+      ErodeImagePolicy<ImageTypeSrc, typename ImageTypeSrc::pixel_type> >(dst, src, kernel_width, threshold_erode);
 
   }
 

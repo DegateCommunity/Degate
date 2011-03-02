@@ -54,7 +54,7 @@ ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in,
   TileImage_GS_DOUBLE_shptr zero_cross_img2(new TileImage_GS_DOUBLE(get_width(), get_height()));
 
   morphological_close<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>
-    (zero_cross_img2, zero_cross_img, 3, 1);
+    (zero_cross_img2, zero_cross_img, 3, 1, 3);
 
   thinning<TileImage_GS_DOUBLE>(zero_cross_img2);
 
