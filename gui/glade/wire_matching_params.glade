@@ -1,9 +1,10 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <glade-interface>
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkDialog" id="set_wire_matching_params_dialog">
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">Wire Matching Parameters</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">500</property>
@@ -49,7 +50,7 @@
               <widget class="GtkEntry" id="entry_min_edge_magnitude">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="invisible_char">&#x25CF;</property>
+                <property name="invisible_char">●</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -76,7 +77,7 @@
               <widget class="GtkEntry" id="entry_sigma">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="invisible_char">&#x2022;</property>
+                <property name="invisible_char">•</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -91,7 +92,7 @@
               <widget class="GtkEntry" id="entry_median_filter_width">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="invisible_char">&#x2022;</property>
+                <property name="invisible_char">•</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -106,7 +107,7 @@
               <widget class="GtkEntry" id="entry_wire_diameter">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="invisible_char">&#x2022;</property>
+                <property name="invisible_char">•</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -126,7 +127,7 @@
             <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="ok_button">
-                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -141,7 +142,7 @@
             </child>
             <child>
               <widget class="GtkButton" id="cancel_button">
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
