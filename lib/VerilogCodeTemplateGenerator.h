@@ -31,6 +31,7 @@
 
 namespace degate {
 
+
   /**
    * A code template generator for Verilog.
    */
@@ -40,7 +41,7 @@ namespace degate {
 
     VerilogCodeTemplateGenerator(std::string const& entity_name,
 				 std::string const& description,
-				 std::string const& logic_class);
+				 std::string const& logic_class = "");
 
     virtual ~VerilogCodeTemplateGenerator();
 
@@ -60,13 +61,7 @@ namespace degate {
 
 
 
-    virtual std::string generate_impl(std::string const& logic_class) const;
-
-    /*
-    virtual std::string generate_instance(std::string const& instance_name,
-					  std::string const& instance_type,
-					  port_map_type const& port_map) const;
-    */
+    virtual std::string generate_impl(std::string const& logic_class = "") const;
 
     /**
      * Generate a Verilog complient identifier from a string.

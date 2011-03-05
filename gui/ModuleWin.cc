@@ -19,6 +19,8 @@
 
 */
 
+#include <VerilogModuleGenerator.h>
+
 #include <ModuleWin.h>
 #include <SelectModuleWin.h>
 
@@ -398,7 +400,24 @@ void ModuleWin::on_export_button_clicked() {
   Module_shptr mod = get_selected_module();
 
   if(mod) {
-    // XXX ...
+
+    // create a new generator
+    VerilogModuleGenerator codegen(mod);
+
+    // set module ports
+    for(Module::port_collection::const_iterator iter = mod->ports_begin();
+	iter != mod->ports_end(); ++iter) {
+
+      const std::string mod_port_name = iter->first;
+      const GatePort_shptr gp = iter->second.front();
+      const GateTemplatePort_shptr tmpl_port = gp->get_template_port();
+      assert(tmpl_port != NULL);
+      codegen.add_port(mod_port_name, tmpl_port->is_inport());
+    }
+
+    std::string impl = codegen.generate();
+
+    std::cout << "Module-Code:\n" << impl << std::endl;
   }
 }
 
