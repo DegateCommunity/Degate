@@ -22,6 +22,7 @@ add_definitions(-Wall -O3 -ggdb)
 
 add_subdirectory(lib)
 add_subdirectory(libtest)
+add_subdirectory(tools/gate_lib_documentation)
 add_subdirectory(gui )
 
 
