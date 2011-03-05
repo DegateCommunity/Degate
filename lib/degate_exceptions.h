@@ -129,6 +129,16 @@ namespace degate {
   };
 
   /**
+   * This exception indicates, that a system operation failed.
+   */
+
+  class SystemException : public DegateRuntimeException {
+  public:
+    SystemException() : DegateRuntimeException("The file doesn't exist." ) {}
+    SystemException(std::string const & str) : DegateRuntimeException(str) {}
+  };
+
+  /**
    * This exception indicates, that a file system operation failed.
    */
 
