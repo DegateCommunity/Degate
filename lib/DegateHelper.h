@@ -62,6 +62,15 @@ namespace degate {
    */
   void write_string_to_file(std::string const& path,
 			    std::string const& content);
+
+
+  /**
+   * Execute a command.
+   * @param command The command to execute.
+   * @param params list of parameters.
+   * @returns Returns the exit code.
+   */
+  int execute_command(std::string const& command, std::list<std::string> const& params);
 }
 
 #endif
