@@ -228,8 +228,8 @@ void Module::determine_module_ports() {
 
 	    if(tmpl_port == NULL)
 	      mod_port_name = "unnamed";
-	    else if(tmpl_port->is_tristate())
-	      mod_port_name = "tristate";
+	    else if(tmpl_port->is_inout())
+	      mod_port_name = "inout";
 	    else if(tmpl_port->is_inport())
 	      mod_port_name = "inport";
 	    else if(tmpl_port->is_outport())

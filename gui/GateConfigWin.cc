@@ -517,7 +517,7 @@ void GateConfigWin::on_ok_button_clicked() {
     id = row[port_model_columns.m_col_id];
 
     if(row[port_model_columns.m_col_inport] == true &&
-       row[port_model_columns.m_col_outport] == true) port_type = GateTemplatePort::PORT_TYPE_TRISTATE;
+       row[port_model_columns.m_col_outport] == true) port_type = GateTemplatePort::PORT_TYPE_INOUT;
     else if(row[port_model_columns.m_col_inport] == true) port_type = GateTemplatePort::PORT_TYPE_IN;
     else if(row[port_model_columns.m_col_outport] == true) port_type = GateTemplatePort::PORT_TYPE_OUT;
     else port_type = GateTemplatePort::PORT_TYPE_UNDEFINED;
