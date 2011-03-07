@@ -263,8 +263,21 @@ void Module::determine_module_ports() {
 
 	    GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 	    assert(tmpl_port != NULL); // if a gate has no standard cell type, the gate cannot have a port
+	    std::string mod_port_name;
 
-	    add_module_port(tmpl_port->get_name(), gate_port);
+	    if(tmpl_port == NULL)
+	      mod_port_name = "unnamed";
+	    else if(tmpl_port->is_inout())
+	      mod_port_name = "inout";
+	    else if(tmpl_port->is_inport())
+	      mod_port_name = "inport";
+	    else if(tmpl_port->is_outport())
+	      mod_port_name = "outport";
+	    else
+	      mod_port_name = "undefined";
+
+	    ports[mod_port_name].push_back(gate_port);
+
 	    is_a_port = true;
 	    known_ports.insert(net);
 	  }

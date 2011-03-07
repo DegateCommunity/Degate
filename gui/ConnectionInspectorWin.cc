@@ -231,8 +231,8 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
 
 	  GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 
-	  if(tmpl_port->is_tristate())
-	    row[m_Columns.m_col_curr_name_sort] = Glib::ustring("t") + row[m_Columns.m_col_curr_name_sort];
+	  if(tmpl_port->is_inout())
+	    row[m_Columns.m_col_curr_name_sort] = Glib::ustring("io") + row[m_Columns.m_col_curr_name_sort];
 	  else if(tmpl_port->is_outport())
 	    row[m_Columns.m_col_curr_name_sort] = Glib::ustring("o") + row[m_Columns.m_col_curr_name_sort];
 	  else if(tmpl_port->is_inport())
@@ -248,7 +248,6 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
 	const GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 
 	if(!gate_port->has_template_port() ||
-	   tmpl_port->is_tristate() ||
 	   tmpl_port->has_undefined_port_type()) {
 
 	  row[m_Columns.m_col_next_name] = gate_port->get_descriptive_identifier();
@@ -261,7 +260,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
 	    row[m_Columns.m_col_next_name] = gate_port->get_descriptive_identifier();
 	    row[m_Columns.m_col_next_object_ptr] = gate_port;
 	  }
-	  else {
+	  if(tmpl_port->is_outport()) {
 	    row[m_Columns.m_col_prev_name] = gate_port->get_descriptive_identifier();
 	    row[m_Columns.m_col_prev_object_ptr] = gate_port;
 	  }

@@ -23,6 +23,7 @@
 #include <GateLibraryExporter.h>
 #include <FileSystem.h>
 #include <ImageHelper.h>
+#include <DegateHelper.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -199,11 +200,7 @@ void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem,
       }
       std::string filename(fmter.str());
 
-
-      std::ofstream myfile;
-      myfile.open(join_pathes(directory, filename).c_str());
-      myfile << code;
-      myfile.close();
+      write_string_to_file(join_pathes(directory, filename), code);
 
       impl_elem->set_attribute("type", GateTemplate::get_impl_type_as_string(t));
       impl_elem->set_attribute("file", filename);

@@ -42,7 +42,7 @@ namespace degate {
       PORT_TYPE_UNDEFINED = 0,
       PORT_TYPE_IN = 1,
       PORT_TYPE_OUT = 2,
-      PORT_TYPE_TRISTATE = 3
+      PORT_TYPE_INOUT = 3
     };
 
   private:
@@ -93,22 +93,22 @@ namespace degate {
     }
 
     /**
-     * Check if a port is of type input port.
+     * Check if a port is of type input port or an in-out-port.
      */
 
-    virtual bool is_inport() const { return port_type == PORT_TYPE_IN || is_tristate(); }
+    virtual bool is_inport() const { return port_type == PORT_TYPE_IN || is_inout(); }
 
     /**
-     * Check if a port is of type output port.
+     * Check if a port is of type output port or an in-out-port.
      */
 
-    virtual bool is_outport() const { return port_type == PORT_TYPE_OUT || is_tristate(); }
+    virtual bool is_outport() const { return port_type == PORT_TYPE_OUT || is_inout(); }
 
     /**
      * Check if a port is of type tristate.
      */
 
-    virtual bool is_tristate() const { return port_type == PORT_TYPE_TRISTATE; }
+    virtual bool is_inout() const { return port_type == PORT_TYPE_INOUT; }
 
     /**
      * Check if a port is of type is undefined.
@@ -137,7 +137,7 @@ namespace degate {
       switch(port_type) {
       case PORT_TYPE_IN: return std::string("in");
       case PORT_TYPE_OUT: return std::string("out");
-      case PORT_TYPE_TRISTATE: return std::string("tristate");
+      case PORT_TYPE_INOUT: return std::string("inout");
 
       case PORT_TYPE_UNDEFINED:
       default: return std::string("undefined");
@@ -175,13 +175,12 @@ namespace degate {
      *   cannot be parsed.
      */
 
-    static PORT_TYPE get_port_type_from_string(std::string const& port_type_str)
-      throw(DegateRuntimeException) {
+    static PORT_TYPE get_port_type_from_string(std::string const& port_type_str) {
 
       if(port_type_str == "undefined") return GateTemplatePort::PORT_TYPE_UNDEFINED;
       else if(port_type_str == "in") return  GateTemplatePort::PORT_TYPE_IN;
       else if(port_type_str == "out") return GateTemplatePort::PORT_TYPE_OUT;
-      else if(port_type_str == "tristate") return GateTemplatePort::PORT_TYPE_TRISTATE;
+      else if(port_type_str == "inout") return GateTemplatePort::PORT_TYPE_INOUT;
       else throw DegateRuntimeException("Can't parse port type.");
     }
 
