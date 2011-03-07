@@ -110,8 +110,8 @@ int degate::execute_command(std::string const& command, std::list<std::string> c
         errmsg += strerror(errno);
         throw SystemException(errmsg);
       }
+      return  exit_code;    
     }
   }
-
 }
 
