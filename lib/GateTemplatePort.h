@@ -96,19 +96,19 @@ namespace degate {
      * Check if a port is of type input port or an in-out-port.
      */
 
-    virtual bool is_inport() const { return port_type == PORT_TYPE_IN || is_inout(); }
+    virtual bool is_inport() const { return port_type == PORT_TYPE_IN || is_inoutport(); }
 
     /**
      * Check if a port is of type output port or an in-out-port.
      */
 
-    virtual bool is_outport() const { return port_type == PORT_TYPE_OUT || is_inout(); }
+    virtual bool is_outport() const { return port_type == PORT_TYPE_OUT || is_inoutport(); }
 
     /**
      * Check if a port is of type tristate.
      */
 
-    virtual bool is_inout() const { return port_type == PORT_TYPE_INOUT; }
+    virtual bool is_inoutport() const { return port_type == PORT_TYPE_INOUT; }
 
     /**
      * Check if a port is of type is undefined.

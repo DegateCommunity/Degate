@@ -231,7 +231,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
 
 	  GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 
-	  if(tmpl_port->is_inout())
+	  if(tmpl_port->is_inoutport())
 	    row[m_Columns.m_col_curr_name_sort] = Glib::ustring("io") + row[m_Columns.m_col_curr_name_sort];
 	  else if(tmpl_port->is_outport())
 	    row[m_Columns.m_col_curr_name_sort] = Glib::ustring("o") + row[m_Columns.m_col_curr_name_sort];

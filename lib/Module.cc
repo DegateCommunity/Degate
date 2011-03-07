@@ -267,7 +267,7 @@ void Module::determine_module_ports() {
 
 	    if(tmpl_port == NULL)
 	      mod_port_name = "unnamed";
-	    else if(tmpl_port->is_inout())
+	    else if(tmpl_port->is_inoutport())
 	      mod_port_name = "inout";
 	    else if(tmpl_port->is_inport())
 	      mod_port_name = "inport";
