@@ -1796,7 +1796,10 @@ void MainWin::on_menu_logic_show_annotations() {
 }
 
 void MainWin::on_menu_logic_show_modules() {
-  if(main_project != NULL && modWin != NULL) modWin->show();
+  if(main_project != NULL && modWin != NULL) {
+    modWin->show();
+    project_changed();
+  }
 }
 
 void MainWin::on_menu_move_gate_into_module() {

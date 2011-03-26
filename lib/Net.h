@@ -125,10 +125,15 @@ namespace degate {
 
 
     /**
-     * Get the number of objects that are connected with this net.
+     * Get  the number of objects that are connected with this net.
      */
 
     virtual unsigned int size() const;
+
+    /**
+     * Get a human readable description for the object.
+     */
+    const std::string get_descriptive_identifier() const;
   };
 
 }

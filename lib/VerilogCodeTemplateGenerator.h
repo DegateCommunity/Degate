@@ -52,6 +52,7 @@ namespace degate {
   protected:
 
     virtual std::string generate_header() const;
+    virtual std::string generate_common() const;
 
     virtual std::string generate_port_list() const;
     virtual std::string generate_port_definition() const;

@@ -720,6 +720,7 @@ Module_shptr LogicModel::get_main_module() const {
 
 void LogicModel::set_main_module(Module_shptr main_module) {
   this->main_module = main_module;
+  main_module->set_main_module(); // set the root-node-state
 }
 
 void LogicModel::reset_removed_remote_objetcs_list() {

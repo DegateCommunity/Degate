@@ -37,15 +37,124 @@ VerilogModuleGenerator::VerilogModuleGenerator(Module_shptr module) :
 VerilogModuleGenerator::~VerilogModuleGenerator() {
 }
 
+
+std::string VerilogModuleGenerator::generate_common() const {
+
+  std::string common_code;
+
+  std::set<GateTemplate_shptr> already_dumped;
+
+  for(Module::gate_collection::const_iterator iter = mod->gates_begin();
+      iter != mod->gates_end(); ++iter) {
+    Gate_shptr gate = *iter;
+
+    if(GateTemplate_shptr gtmpl = gate->get_gate_template()) {
+
+      if(already_dumped.find(gtmpl) == already_dumped.end()) {
+
+	try {
+	  common_code += gtmpl->get_implementation(GateTemplate::VERILOG);
+	}
+	catch(CollectionLookupException const& ex) {
+	  // maybe we should pass the exception?
+	  common_code += "// Error: failed to lookup Verilog implementation for module " + gtmpl->get_name() + ".\n\n";
+	}
+	already_dumped.insert(gtmpl);
+      }
+    }
+
+  }
+
+  return common_code;
+}
+
 std::string VerilogModuleGenerator::generate_impl(std::string const& logic_class /* unused parameter */ ) const {
+  
+  std::string impl;
+  std::string wire_definitions;
+
+  unsigned int wire_counter = 0;
+
+  typedef std::map<object_id_t /* net */, std::string> net_names_table;
+  net_names_table nets;
+
+
+  // generate signal names
+  for(Module::gate_collection::const_iterator iter = mod->gates_begin();
+      iter != mod->gates_end(); ++iter) {
+
+    Gate_shptr gate = *iter;
+    GateTemplate_shptr gate_tmpl = gate->get_gate_template();
+    for(Gate::port_const_iterator p_iter = gate->ports_begin(); p_iter != gate->ports_end(); ++p_iter) {
+      const GatePort_shptr gport = *p_iter;
+      if(gport->is_connected()) {
+	const Net_shptr net = gport->get_net();
+	
+	// first, check if the gate port is directly adjacent to a module port
+	boost::optional<std::string> is_module_port = mod->lookup_module_port_name(gport);
+	if(is_module_port) {
+	  nets[net->get_object_id()] = *is_module_port;
+	}
+	else if(nets.find(net->get_object_id()) == nets.end()) {
+	  boost::format f("w%1%");
+	  f % (wire_counter++);
+	  nets[net->get_object_id()] = f.str();
+	}
+      }
+    }
+  }
+
+  // genereate wire definitions
+  BOOST_FOREACH(net_names_table::value_type const& v, nets) {
+    if(!mod->exists_module_port_name(v.second)) 
+      wire_definitions += "  wire " + v.second + ";\n";
+  }
+
+
   
   // place single standard cells
 
   for(Module::gate_collection::const_iterator iter = mod->gates_begin();
       iter != mod->gates_end(); ++iter) {
+
+    Gate_shptr gate = *iter;
+    GateTemplate_shptr gate_tmpl = gate->get_gate_template();
     
+    std::list<std::string> ports;
+
+    for(Gate::port_const_iterator p_iter = gate->ports_begin(); p_iter != gate->ports_end(); ++p_iter) {
+      const GatePort_shptr gport = *p_iter;
+      const GateTemplatePort_shptr tmpl_port = gport->get_template_port();
+
+      if(gport->is_connected()) {
+	const Net_shptr net = gport->get_net();
+      
+	std::string port_name = generate_identifier(tmpl_port->get_name());
+	std::transform(port_name.begin(), port_name.end(), port_name.begin(), ::tolower);
+	
+	boost::format f("    .%1% (%2%)");
+	f % port_name
+	  % nets[net->get_object_id()];
+	ports.push_back(f.str());
+      }
+    }
+
+
+    boost::format gate_placement("  %1% %2% (\n"
+				 "%3% );\n\n");
+    gate_placement 
+      % generate_identifier(gate_tmpl->get_name(), "dg_")
+      % generate_identifier(gate->get_name())
+      % boost::algorithm::join(ports, ",\n");
+
+    impl += gate_placement.str();
   }
 
 
   // place sub-modules
+  return 
+    (wire_definitions != "" ? "  // definition of net\n" : "") +
+    wire_definitions + "\n" + 
+    "  // sub-modules\n\n" +
+    impl;
 }

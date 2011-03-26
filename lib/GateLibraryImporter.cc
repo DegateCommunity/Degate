@@ -212,6 +212,8 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 	    code.append("\n");
 	  }
 	  myfile.close();
+	  gate_tmpl->set_implementation(impl_type, code);
+	  gate_tmpl->get_implementation(impl_type);
 	}
 	else {
 	  boost::format f("Can't open file %1%");
@@ -219,7 +221,6 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 	  throw FileSystemException(f.str());
 	}
 
-	gate_tmpl->set_implementation(impl_type, code);
       }
     }
   }

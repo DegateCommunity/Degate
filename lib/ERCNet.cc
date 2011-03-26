@@ -45,7 +45,8 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 
   unsigned int
     in_ports = 0,
-    out_ports = 0;
+    out_ports = 0,
+    inout_ports = 0;
 
   // iterate over all objects from a net
   for(Net::connection_iterator c_iter = net->begin();
@@ -62,7 +63,9 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
       if(gate_port->has_template_port()) {
 
 	GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-	// count in- and out-ports
+	// Count in- and out-ports. Inout-ports must be counted first, because is_*port() will return true
+	// for inout-ports.
+	if(tmpl_port->is_inoutport()) inout_ports++;
 	if(tmpl_port->is_inport()) in_ports++;
 	else if(tmpl_port->is_outport()) out_ports++;
 	else {

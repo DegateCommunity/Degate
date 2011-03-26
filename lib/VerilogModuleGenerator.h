@@ -43,6 +43,8 @@ namespace degate {
     
   protected:
     
+    virtual std::string generate_common() const;
+
     virtual std::string generate_impl(std::string const& logic_class = ""  /* unused parameter */) const;
     
   };

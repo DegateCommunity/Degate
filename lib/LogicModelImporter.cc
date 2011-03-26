@@ -110,7 +110,7 @@ void LogicModelImporter::parse_logic_model_element(const xmlpp::Element * const 
   const xmlpp::Element * modules_elem = get_dom_twig(lm_elem, "modules");
   if(modules_elem != NULL) {
     std::list<Module_shptr> mods = parse_modules_element(modules_elem, lmodel);
-    assert(mods.size() == 1);
+    assert(mods.size() == 1);    
     lmodel->set_main_module(mods.front());
   }
 

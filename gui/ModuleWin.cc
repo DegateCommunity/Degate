@@ -162,6 +162,12 @@ ModuleWin::ModuleWin(Gtk::Window *parent, degate::LogicModel_shptr lmodel) :
       Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = treeview_ports->get_selection();
       refTreeSelection->signal_changed().
 	connect(sigc::mem_fun(*this, &ModuleWin::on_port_selection_changed));
+
+      Gtk::CellRendererText * rendererText;
+
+      rendererText = dynamic_cast<Gtk::CellRendererText *>(treeview_ports->get_column_cell_renderer(0)); 
+      rendererText->signal_edited().connect(sigc::mem_fun(*this, &ModuleWin::on_module_port_name_edited));
+
     }
   }
 
@@ -237,17 +243,17 @@ void ModuleWin::insert_ports(Module_shptr module) {
 
     std::string mod_port_name = iter->first;
 
-    BOOST_FOREACH(GatePort_shptr gp, iter->second) {
-      Gtk::TreeModel::Row row = *(treemodel_ports->append());
+    GatePort_shptr gp = iter->second;
 
-      Gate_shptr gate = gp->get_gate();
-      assert(gate != NULL);
+    Gtk::TreeModel::Row row = *(treemodel_ports->append());
 
-      row[columns_ports.m_col_name] = mod_port_name;
-      row[columns_ports.m_col_gate_port] = gp->get_descriptive_identifier();
-      row[columns_ports.m_col_gate] = gate->get_descriptive_identifier();
-      row[columns_ports.m_col_object_ptr] = gate;
-    }
+    Gate_shptr gate = gp->get_gate();
+    assert(gate != NULL);
+
+    row[columns_ports.m_col_name] = mod_port_name;
+    row[columns_ports.m_col_gate_port] = gp->get_descriptive_identifier();
+    row[columns_ports.m_col_gate] = gate->get_descriptive_identifier();
+    row[columns_ports.m_col_object_ptr] = gp;
   }
 
 }
@@ -260,6 +266,25 @@ void ModuleWin::on_module_name_edited(const Glib::ustring& path, const Glib::ust
 void ModuleWin::on_module_type_edited(const Glib::ustring& path, const Glib::ustring& new_text) {
   if(Module_shptr mod = get_selected_module())
     mod->set_entity_name(new_text);
+}
+
+void ModuleWin::on_module_port_name_edited(const Glib::ustring& path, const Glib::ustring& new_text) {
+
+  Module_shptr mod;
+
+  if(mod = get_selected_module()) {
+
+    Glib::RefPtr<Gtk::TreeSelection> refTreeSelection =  treeview_ports->get_selection();
+    if(refTreeSelection) {
+      Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
+      if(*iter) {
+	Gtk::TreeModel::Row row = *iter;      
+	GatePort_shptr gp = row[columns_ports.m_col_object_ptr];
+	mod->set_module_port_name(new_text, gp);
+      }
+    }
+  }
+
 }
 
 void ModuleWin::on_module_selection_changed() {
@@ -275,7 +300,7 @@ void ModuleWin::on_module_selection_changed() {
       remove_button->set_sensitive(!module->is_main_module());
       add_button->set_sensitive(true);
       export_button->set_sensitive(true);
-      determine_ports_button->set_sensitive(module->is_main_module());
+      determine_ports_button->set_sensitive(true /* module->is_main_module() */);
 
       insert_gates(module);
       insert_ports(module);
@@ -298,8 +323,6 @@ void ModuleWin::on_gate_selection_changed() {
     Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
     if(*iter) {
       Gtk::TreeModel::Row row = *iter;
-
-      Gate_shptr gate = row[columns_gates.m_col_object_ptr];
 
       goto_button->set_sensitive(true);
       move_button->set_sensitive(true);
@@ -409,7 +432,7 @@ void ModuleWin::on_export_button_clicked() {
 	iter != mod->ports_end(); ++iter) {
 
       const std::string mod_port_name = iter->first;
-      const GatePort_shptr gp = iter->second.front();
+      const GatePort_shptr gp = iter->second;
       const GateTemplatePort_shptr tmpl_port = gp->get_template_port();
       assert(tmpl_port != NULL);
       codegen.add_port(mod_port_name, tmpl_port->is_inport());
@@ -429,13 +452,12 @@ void ModuleWin::on_determine_ports_button_clicked() {
 
   if(mod) {
     debug(TM, "have module");
-    if(mod->is_main_module()) {
-
-      debug(TM, "is main module");
-
+    if(mod->is_main_module())
       determine_module_ports_for_root(lmodel);
-      insert_ports(mod);
-    }
+    else
+      mod->determine_module_ports();
+
+    insert_ports(mod);
   }
 }
 
@@ -452,7 +474,7 @@ void ModuleWin::on_goto_button_clicked() {
 
       if(!signal_goto_button_clicked_.empty()) signal_goto_button_clicked_(gate);
     }
-  } //
+  }
 }
 
 

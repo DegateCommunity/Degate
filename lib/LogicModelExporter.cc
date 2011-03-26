@@ -335,8 +335,7 @@ void LogicModelExporter::add_module(xmlpp::Element* modules_elem, LogicModel_shp
     xmlpp::Element* mport_elem = module_ports_elem->add_child("module-port");
     if(mport_elem == NULL) throw(std::runtime_error("Failed to create node."));
     
-    assert(p_iter->second.size() > 0);
-    GatePort_shptr gport = p_iter->second.front();
+    GatePort_shptr gport = p_iter->second;
 
     mport_elem->set_attribute("name", p_iter->first);
     mport_elem->set_attribute("object-id", number_to_string<object_id_t>(gport->get_object_id()));

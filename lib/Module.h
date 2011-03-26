@@ -27,6 +27,7 @@
 
 #include <LogicModelObjectBase.h>
 #include <LogicModel.h>
+#include <boost/optional.hpp>
 
 namespace degate {
 
@@ -51,14 +52,14 @@ namespace degate {
      * a list of gate ports.
      */
     typedef std::map<std::string, /* port name */
-		     std::list<GatePort_shptr> > port_collection;
+		     GatePort_shptr> port_collection;
 
   private:
 
     module_collection modules;
     gate_collection gates;
     port_collection ports;
-
+    
     std::string entity_name; // name of a type
     bool is_root;
     
@@ -76,14 +77,12 @@ namespace degate {
      * that has a gate port with the object ID \p oid .
      */
     bool exists_gate_port_recursive(object_id_t oid) const;
-
-    /**
-     * Determine ports of a module.
-     */
-    void determine_module_ports();
+    GatePort_shptr lookup_gate_port_recursive(object_id_t oid) const;
 
     
     void add_module_port(std::string const& module_port_name, GatePort_shptr adjacent_gate_port);
+
+    bool net_feeded_internally(Net_shptr net);
 
   public:
 
@@ -106,6 +105,13 @@ namespace degate {
      */
     
     bool is_main_module() const;
+
+    /**
+     * Set a module as main module.
+     * This will set the new state only in the current module and will not disable
+     * the root-node-state of any other module.
+     */
+    void set_main_module();
 
     /**
      * Set an identifier for the module type.
@@ -177,11 +183,61 @@ namespace degate {
     gate_collection::const_iterator gates_end() const;
     port_collection::const_iterator ports_begin() const;
     port_collection::const_iterator ports_end() const;
+
+
+    /**
+     * Determine ports of a module.
+     */
+    void determine_module_ports();
+
+
+    /**
+     * Lookup a sub-module.
+     * @param module_path Path to the module, e.g. :
+     *   an absolute path "main_module/crypto/lfsr_a"
+     *   an relative path "crypto/lfsr_a"
+     * @return Returns the module. In case of lookup failure a NULL pointer is returned.
+     */
+
+    Module_shptr lookup_module(std::string const& module_path) const;
+
+    /**
+     * Set module port name
+     */
+    void set_module_port_name(std::string const& module_port_name, GatePort_shptr adjacent_gate_port);
+
+    /**
+     * Check if a module port name exists.
+     */
+    bool exists_module_port_name(std::string const& module_port_name) const;
+
+
+    /**
+     * Lookup the module port name.
+     * @return Returns the module port name.
+     */
+
+    boost::optional<std::string> lookup_module_port_name(GatePort_shptr gate_port);
+
+  private:
+
+    /**
+     * Internal implementation of lookup_module().
+     * @param path_elements Reference to a list of path elements. List is modified.
+     * @return Returns a valid pointer on success. Else a null pointer is returned.
+     */
+    Module_shptr lookup_module(std::list<std::string> & path_elements) const;
+
   };
 
 
   /**
    * Determine ports of a root module.
+   * Note: It would b more nice to have this function as a member function of class Module. But
+   *  this would intorduce a dependency of LogicModel. The lmodel is neccessary for looking up
+   *  objects, because main module's ports are modelled by having a special emarker in the net.
+   *  I have no idea how the main module's ports could be identified else. (Using all ports
+   *  is obviously not an option.)
    */
   void determine_module_ports_for_root(LogicModel_shptr lmodel);
 

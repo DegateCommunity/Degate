@@ -40,12 +40,17 @@ VerilogCodeTemplateGenerator::~VerilogCodeTemplateGenerator() {
 
 std::string VerilogCodeTemplateGenerator::generate() const {
   return
+    generate_common() + 
     generate_header() +
     generate_module(entity_name, generate_port_list()) +
     generate_port_definition() +
     generate_impl(logic_class) + 
     "\n\n"
     "endmodule\n\n";
+}
+
+std::string VerilogCodeTemplateGenerator::generate_common() const {
+  return "";
 }
 
 std::string VerilogCodeTemplateGenerator::generate_header() const {
@@ -160,6 +165,7 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
       outer_op = "";
       if(logic_class == "and") inner_op = "&";
       else if(logic_class == "or") inner_op = "|";
+      else if(logic_class == "xor") inner_op = "^";
     }
 
     boost::format f("  assign %1% = %2%%3%%4%%5%;"); 
@@ -373,11 +379,11 @@ std::string VerilogCodeTemplateGenerator::generate_identifier(std::string const&
 							      std::string const& prefix) const {
   std::string identifier = prefix;
 
-  bool first_char = true;
+  bool first_char = prefix == "" ? true : false;
   BOOST_FOREACH(char c, name) {
     if(c == '/' || c == '!') identifier.append("not");
     else if(first_char && !isalpha(c)) {
-      //identifier.append("entity_");
+      identifier.push_back('_');
       identifier.push_back(c);
     }
     else if(isalnum(c)) identifier.push_back(c);

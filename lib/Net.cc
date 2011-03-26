@@ -80,3 +80,9 @@ void Net::add_object(ConnectedLogicModelObject_shptr o) {
 unsigned int Net::size() const {
   return connections.size();
 }
+
+const std::string Net::get_descriptive_identifier() const {
+  boost::format fmter("Net %1%");
+  fmter % get_object_id();;
+  return fmter.str();
+}

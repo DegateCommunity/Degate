@@ -60,7 +60,7 @@ class ModuleWin : public Gtk::Window, private GladeFileLoader {
     Gtk::TreeModelColumn<Glib::ustring> m_col_name;
     Gtk::TreeModelColumn<Glib::ustring> m_col_gate_port;
     Gtk::TreeModelColumn<Glib::ustring> m_col_gate;
-    Gtk::TreeModelColumn<degate::Gate_shptr> m_col_object_ptr;
+    Gtk::TreeModelColumn<degate::GatePort_shptr> m_col_object_ptr;
   };
 
  public:
@@ -144,6 +144,8 @@ class ModuleWin : public Gtk::Window, private GladeFileLoader {
 
   virtual void on_module_name_edited(const Glib::ustring& path, const Glib::ustring& new_text);
   virtual void on_module_type_edited(const Glib::ustring& path, const Glib::ustring& new_text);
+
+  virtual void on_module_port_name_edited(const Glib::ustring& path, const Glib::ustring& new_text);
 
   void update_logic_model(Gtk::TreeModel::Children const& children,
 			  degate::Module_shptr parent_module);

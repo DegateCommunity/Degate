@@ -70,16 +70,14 @@ BoundingBox const & GateTemplate::get_bounding_box() const {
 }
 
 
-void GateTemplate::set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img)
-  throw(InvalidPointerException) {
+void GateTemplate::set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img) {
   if(img == NULL) throw InvalidPointerException("Invalid pointer for image.");
   debug(TM, "set image for template.");
   images[layer_type] = img;
 }
 
 
-GateTemplateImage_shptr GateTemplate::get_image(Layer::LAYER_TYPE layer_type)
-  throw(CollectionLookupException) {
+GateTemplateImage_shptr GateTemplate::get_image(Layer::LAYER_TYPE layer_type) {
   image_collection::iterator found = images.find(layer_type);
   if(found == images.end())
     throw CollectionLookupException("Can't find reference image.");
@@ -90,8 +88,7 @@ bool GateTemplate::has_image(Layer::LAYER_TYPE layer_type) const {
   return images.find(layer_type) != images.end();
 }
 
-void GateTemplate::add_template_port(GateTemplatePort_shptr template_port)
-  throw(InvalidObjectIDException) {
+void GateTemplate::add_template_port(GateTemplatePort_shptr template_port) {
   if(!template_port->has_valid_object_id())
     throw InvalidObjectIDException("Error in GateTemplate::add_template_port(). "
 				   "The object ID is invalid.");
@@ -105,8 +102,7 @@ bool GateTemplate::remove_template_port(GateTemplatePort_shptr template_port) {
 }
 
 
-bool GateTemplate::remove_template_port(object_id_t object_id)
-  throw(InvalidObjectIDException) {
+bool GateTemplate::remove_template_port(object_id_t object_id) {
   if(object_id == 0)
     throw InvalidObjectIDException("Error in GateTemplate::remove_template_port(). "
 				   "The object ID is invalid.");
@@ -123,8 +119,7 @@ bool GateTemplate::remove_template_port(object_id_t object_id)
 
 
 
-GateTemplatePort_shptr GateTemplate::get_template_port(object_id_t object_id)
-  throw(CollectionLookupException, InvalidObjectIDException) {
+GateTemplatePort_shptr GateTemplate::get_template_port(object_id_t object_id) {
 
   if(object_id == 0)
     throw InvalidObjectIDException("Error in GateTemplate::get_template_port(). "
@@ -138,8 +133,7 @@ GateTemplatePort_shptr GateTemplate::get_template_port(object_id_t object_id)
   throw CollectionLookupException("The gate template has no template port with that ID.");
 }
 
-bool GateTemplate::has_template_port(object_id_t object_id) const
-  throw(InvalidObjectIDException) {
+bool GateTemplate::has_template_port(object_id_t object_id) const {
   if(object_id == 0)
     throw InvalidObjectIDException("Error in GateTemplate::get_template_port(). "
 				   "The object ID is invalid.");
@@ -179,12 +173,12 @@ void GateTemplate::set_implementation(IMPLEMENTATION_TYPE impl_type, std::string
   implementations[impl_type] = code;
 }
 
-std::string GateTemplate::get_implementation(IMPLEMENTATION_TYPE impl_type) const
-  throw(CollectionLookupException) {
+std::string GateTemplate::get_implementation(IMPLEMENTATION_TYPE impl_type) const {
 
   implementation_collection::const_iterator found = implementations.find(impl_type);
-  if(found == implementations.end())
+  if(found == implementations.end()) {
     throw CollectionLookupException("There is no implementation for the requested type");
+  }
   else
     return found->second;
 }
@@ -240,13 +234,12 @@ std::string GateTemplate::get_impl_type_as_string(IMPLEMENTATION_TYPE impl_type)
   }
 }
 
-GateTemplate::IMPLEMENTATION_TYPE GateTemplate::get_impl_type_from_string(std::string const& impl_type_str)
-  throw(DegateRuntimeException) {
+GateTemplate::IMPLEMENTATION_TYPE GateTemplate::get_impl_type_from_string(std::string const& impl_type_str) {
 
   if(impl_type_str == "text") return TEXT;
   else if(impl_type_str == "vhdl") return VHDL;
   else if(impl_type_str == "vhdl-testbench") return VHDL_TESTBENCH;
-  else if(impl_type_str == "verilog") return VERILOG_TESTBENCH;
+  else if(impl_type_str == "verilog") return VERILOG;
   else if(impl_type_str == "verilog-testbench") return VERILOG_TESTBENCH;
   else if(impl_type_str == "undefined" ||
 	  impl_type_str == "") return UNDEFINED;

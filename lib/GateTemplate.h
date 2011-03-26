@@ -164,18 +164,18 @@ namespace degate {
      *
      * @todo: Here we might need a hook for storing different image types,
      *   e.g. a template image that is an average image or sth. like that.
+     * @exception InvalidPointerException Throws this excpetion, if \p img is NULL.
      */
 
-    virtual void set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img)
-      throw(InvalidPointerException);
+    virtual void set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img);
 
     /**
      * Get a reference image for the template.
      * @see set_image()
+     * @exception CollectionLookupException Throws this exception, if there is no image.
      */
 
-    virtual GateTemplateImage_shptr get_image(Layer::LAYER_TYPE layer_type)
-      throw(CollectionLookupException);
+    virtual GateTemplateImage_shptr get_image(Layer::LAYER_TYPE layer_type);
 
 
     /**
@@ -196,8 +196,7 @@ namespace degate {
      * @see LogicModel::add_template_port
      */
 
-    virtual void add_template_port(GateTemplatePort_shptr template_port)
-      throw(InvalidObjectIDException);
+    virtual void add_template_port(GateTemplatePort_shptr template_port);
 
     /**
      * Remove a port from a gate template.
@@ -218,7 +217,7 @@ namespace degate {
      * @see remove_template_port(GateTemplatePort_shptr template_port)
      */
 
-    virtual bool remove_template_port(object_id_t object_id) throw(InvalidObjectIDException);
+    virtual bool remove_template_port(object_id_t object_id);
 
     /**
      * Get a template port.
@@ -228,8 +227,7 @@ namespace degate {
      *   template port with object ID \p object_id was not found.
      */
 
-    virtual GateTemplatePort_shptr get_template_port(object_id_t object_id)
-      throw(CollectionLookupException, InvalidObjectIDException);
+    virtual GateTemplatePort_shptr get_template_port(object_id_t object_id);
 
 
     /**
@@ -238,8 +236,7 @@ namespace degate {
      *   object ID is invalid.
      */
 
-    virtual bool has_template_port(object_id_t object_id)
-      const throw(InvalidObjectIDException);
+    virtual bool has_template_port(object_id_t object_id) const;
 
     /**
      * Get an iterator.
@@ -298,9 +295,10 @@ namespace degate {
 
     /**
      * Get code for an implementation type.
+     * @exception CollectionLookupException Throws an exception, if there is no code for the requested type.
      */
 
-    std::string get_implementation(IMPLEMENTATION_TYPE impl_type) const throw(CollectionLookupException);
+    std::string get_implementation(IMPLEMENTATION_TYPE impl_type) const;
 
     /**
      * Print gate template's meta information to an output stream.
@@ -337,9 +335,16 @@ namespace degate {
     virtual std::string get_logic_class() const;
 
 
+    /**
+     * Convert an implementation-type constant to a printable string.
+     */
     static std::string get_impl_type_as_string(IMPLEMENTATION_TYPE impl_type);
-    static IMPLEMENTATION_TYPE get_impl_type_from_string(std::string const& impl_type_str)
-      throw(DegateRuntimeException);
+
+    /**
+     * Convert an implementation type string to a correspondig constant.
+     * @exception DegateRuntimeException Throws this exception, if the string cannot be parsed.
+     */
+    static IMPLEMENTATION_TYPE get_impl_type_from_string(std::string const& impl_type_str);
 
   };
 
