@@ -82,7 +82,8 @@ namespace degate {
     
     void add_module_port(std::string const& module_port_name, GatePort_shptr adjacent_gate_port);
 
-    bool net_feeded_internally(Net_shptr net);
+    bool net_feeded_internally(Net_shptr net) const;
+    bool net_completely_internal(Net_shptr net) const;
 
   public:
 

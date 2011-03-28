@@ -200,12 +200,24 @@ void Module::automove_gates() {
 }
 
 
-bool Module::net_feeded_internally(Net_shptr net) {
+bool Module::net_completely_internal(Net_shptr net) const {
   for(Net::connection_iterator c_iter = net->begin(); c_iter != net->end(); ++c_iter) {
-
+    
     object_id_t oid = *c_iter;   
     GatePort_shptr gport = lookup_gate_port_recursive(oid);
+    if(gport == NULL) { // external entity
+      return false;
+    }
+  }
+  return true;
+}
 
+bool Module::net_feeded_internally(Net_shptr net) const {
+  for(Net::connection_iterator c_iter = net->begin(); c_iter != net->end(); ++c_iter) {
+    
+    object_id_t oid = *c_iter;   
+    GatePort_shptr gport = lookup_gate_port_recursive(oid);
+    
     if(gport != NULL) { // internal entity
       GateTemplatePort_shptr tmpl_port = gport->get_template_port();
       if(tmpl_port->is_outport()) return true;
@@ -243,7 +255,7 @@ void Module::determine_module_ports() {
       std::cout << "Check net for object gate port " << gate_port->get_descriptive_identifier() << "?\n";
 
       bool net_already_processed = known_net.find(net) != known_net.end();
-      if((net != NULL) && !net_already_processed) {
+      if((net != NULL) && !net_already_processed && !net_completely_internal(net)) {
 
 	bool is_a_port = false;
  
@@ -255,11 +267,9 @@ void Module::determine_module_ports() {
 
 	    // Now we check, wheather the connection is feeded by an ouside entity or feeded
 	    // from this module.
-	
 	    // Problem: We can't see the object outside this module, because we only have an
 	    // object ID and no logic model object to look up the object ID. Therefore we have
-	    // to derive the state of feeding from the obtjects we have in this or any sub-module.
-
+	    // to derive the state of feeding from the objects we have in this or any sub-module.
 	    // If we see only in-ports in the net, the module port must be driven by an outside
 	    // port.
 
@@ -301,7 +311,21 @@ void Module::determine_module_ports() {
       }
     }
   }
+  
 
+  // check sub-modules
+  BOOST_FOREACH(Module_shptr sub, modules) {
+    
+    BOOST_FOREACH(port_collection::value_type const& p, sub->ports) {
+      std::string mod_port_name = p.first;
+      GatePort_shptr gate_port = p.second;
+      Net_shptr net = gate_port->get_net();
+      
+      if(net != NULL && !net_completely_internal(net)) { // outbound connection
+	new_ports[mod_port_name] = gate_port;
+      }    
+    }
+  }
   ports = new_ports;
 
 }
