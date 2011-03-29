@@ -20,7 +20,7 @@
 */
 
 #include <VerilogModuleGenerator.h>
-
+#include <DegateHelper.h>
 #include <ModuleWin.h>
 #include <SelectModuleWin.h>
 
@@ -424,12 +424,22 @@ void ModuleWin::on_export_button_clicked() {
 
   if(mod) {
 
-    // create a new generator
-    VerilogModuleGenerator codegen(mod);
+    Gtk::FileChooserDialog dialog("Export Module", Gtk::FILE_CHOOSER_ACTION_SAVE);
+    dialog.set_transient_for(*this);
+    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dialog.add_button("Select", Gtk::RESPONSE_OK);    
 
-    std::string impl = codegen.generate();
+    dialog.set_current_name((mod->get_entity_name() != "" ? mod->get_entity_name() : mod->get_name()) + ".v" );
+    int result = dialog.run();
+    dialog.hide();
 
-    std::cout << "Module-Code:\n" << impl << std::endl;
+    if(result == Gtk::RESPONSE_OK) {
+      // create a new generator
+      VerilogModuleGenerator codegen(mod);
+      std::string impl = codegen.generate();
+      write_string_to_file(dialog.get_filename(), impl);
+    }
+
   }
 }
 
