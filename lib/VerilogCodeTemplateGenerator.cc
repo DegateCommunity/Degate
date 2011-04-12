@@ -129,7 +129,7 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
   if(logic_class == "inverter" &&
      in.size() == 1 && out.size() == 1) {
 
-    boost::format f("  assign %1% = !%2%;");
+    boost::format f("  assign %1% = ~%2%;");
     f % generate_identifier(out[0]) % generate_identifier(in[0]);
     return f.str();
   }
@@ -140,10 +140,10 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
     bool low_active = logic_class == "tristate-inverter-lo-active";
 
     boost::format f("  tri %1%; // ???\n\n"
-		    "  assign %2% = %3%%4% ? !%5% : 1'bz;");
+		    "  assign %2% = %3%%4% ? ~%5% : 1'bz;");
     f % generate_identifier(out[0]) 
       % generate_identifier(out[0])
-      % (low_active ? "!" : "")
+      % (low_active ? "~" : "")
       % generate_identifier(enable_name)
       % generate_identifier(get_first_port_name_not_in(in, enable_name));
     return f.str();
@@ -156,7 +156,7 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
 	   logic_class == "xnor") &&
 	  in.size() >= 2 && out.size() == 1) {
 
-    std::string inner_op, outer_op = "!";
+    std::string inner_op, outer_op = "~";
 
     if(logic_class == "nand") inner_op = "&";
     else if(logic_class == "nor") inner_op = "|";
@@ -227,7 +227,7 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
 		       "  reg %1%;\n"
 		       "\n"
 		       "  always @*\n"
-		       "    %2% <= !%3%;\n");
+		       "    %2% <= ~%3%;\n");
       f2 % generate_identifier(get_port_name_by_type(NOT_Q))
 	% generate_identifier(get_port_name_by_type(NOT_Q))
 	% generate_identifier(get_port_name_by_type(Q));
@@ -260,7 +260,7 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
 		       "  reg %1%;\n"
 		       "\n"
 		       "  always @*\n"
-		       "    %2% <= !%3%;\n");
+		       "    %2% <= ~%3%;\n");
       f2 % generate_identifier(get_port_name_by_type(NOT_Q))
 	% generate_identifier(get_port_name_by_type(NOT_Q))
 	% generate_identifier(get_port_name_by_type(Q));
@@ -294,7 +294,7 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
 		       "  reg %1%;\n"
 		       "\n"
 		       "  always @*\n"
-		       "    %2% <= !%3%;\n");
+		       "    %2% <= ~%3%;\n");
       f2 % generate_identifier(get_port_name_by_type(NOT_Q))
 	% generate_identifier(get_port_name_by_type(NOT_Q))
 	% generate_identifier(get_port_name_by_type(Q));
@@ -381,7 +381,7 @@ std::string VerilogCodeTemplateGenerator::generate_identifier(std::string const&
 
   bool first_char = prefix == "" ? true : false;
   BOOST_FOREACH(char c, name) {
-    if(c == '/' || c == '!') identifier.append("not");
+    if(c == '/' || c == '!' || c == '~') identifier.append("not");
     else if(first_char && !isalpha(c)) {
       identifier.push_back('_');
       identifier.push_back(c);
