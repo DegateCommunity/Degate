@@ -308,9 +308,9 @@ void ConnectionInspectorWin::on_back_button_clicked() {
 
     if(back_list.size() == 0) pBackButton->set_sensitive(false);
 
-    set_object(o); // adds current obj to back_list
+    //set_object(o); // adds current obj to back_list
 
-    if(!signal_goto_button_clicked_.empty()) signal_goto_button_clicked_(o);
+    if(!signal_goto_button_clicked_.empty()) signal_goto_button_clicked_(o); // calls set_object()
   }
 }
 
@@ -334,11 +334,11 @@ void ConnectionInspectorWin::on_goto_button_clicked() {
       if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(object_ptr))
 	object_ptr = gate_port->get_gate();
 
-      set_object(object_ptr);
+      //set_object(object_ptr);
 
       if(back_list.size() > 0) pBackButton->set_sensitive(true);
 
-      signal_goto_button_clicked_(object_ptr);
+      signal_goto_button_clicked_(object_ptr); // calls set_object()
     }
   }
 }

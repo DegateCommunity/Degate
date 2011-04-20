@@ -666,6 +666,8 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
     highlighted_objects.clear();
     highlighted_objects.add(obj_ptr);
 
+    if(ciWin != NULL) ciWin->set_object(obj_ptr); // update connection inspector
+
     center_view(bbox.get_center_x(), bbox.get_center_y(), layer->get_layer_pos());
   }
 }
