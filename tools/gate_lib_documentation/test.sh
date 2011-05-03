@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PRJ_DIR=/home/martin/degate/2010-01-13_0309_legic/subproject_1/
+PRJ_DIR=/home/martin/degate/2011-03-07_2228_legic_prime/subproject_1/
 OUT_DIR=/home/martin/degate
 REL_DIR=../../../degate
 
