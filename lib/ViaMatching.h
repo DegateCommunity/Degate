@@ -44,8 +44,13 @@ namespace degate {
 
     ViaMatching();
 
-    virtual void init(BoundingBox const& bounding_box, Project_shptr project)
-      throw(InvalidPointerException, DegateRuntimeException);
+    /**
+     * @exception InvalidPointerException This exception is thrown, if \p
+     *   project is an invalid pointer.
+     * @exception DegateRuntimeException This exception is thrown, if there
+     *   is no current layer in the logic model. This should not happen.
+     */
+    virtual void init(BoundingBox const& bounding_box, Project_shptr project);
 
     virtual void run();
 

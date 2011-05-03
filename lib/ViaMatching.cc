@@ -23,6 +23,7 @@
 #include <BoundingBox.h>
 #include <MedianFilter.h>
 #include <EdgeDetection.h>
+#include <LogicModelHelper.h>
 #include <boost/foreach.hpp>
 
 using namespace degate;
@@ -34,8 +35,7 @@ ViaMatching::ViaMatching() :
 }
 
 
-void ViaMatching::init(BoundingBox const& bounding_box, Project_shptr project)
-  throw(InvalidPointerException, DegateRuntimeException) {
+void ViaMatching::init(BoundingBox const& bounding_box, Project_shptr project) {
 
   this->bounding_box = bounding_box;
 
@@ -68,19 +68,37 @@ void ViaMatching::set_sigma(double sigma) {
 
 
 void ViaMatching::run() {
-  EdgeDetection ed(bounding_box.get_min_x(),
-		   bounding_box.get_max_x(),
-		   bounding_box.get_min_y(),
-		   bounding_box.get_max_y(),
-		   median_filter_width,
-		   sigma > 0 ? 10 : 0,
-		   sigma);
 
-  ed.run_edge_detection(img);
+  // lists for images of vias on the current layer
+  std::list<MemoryImage_shptr> vias_up, vias_down;
 
-  TileImage_GS_DOUBLE_shptr i = ed.get_edge_image(TileImage_GS_DOUBLE_shptr());
+  // iterate over placed vias and calculate a mean-image
+  for(LogicModel::via_collection::iterator viter = lmodel->vias_begin();
+      viter != lmodel->vias_end(); ++viter) {
+    Via_shptr via = viter->second;
 
-  assert(i != NULL);
+    if(via->get_layer() == layer) {
+      
+      // get bounding box
+      BoundingBox const& bb = via->get_bounding_box();
 
+      // grab via's image
+      MemoryImage_shptr img = grab_image<MemoryImage>(lmodel, layer, bb);
+      assert(img != NULL);
+      
+      // insert image into one of the lists
+      if(via->get_direction() == Via::DIRECTION_UP)
+	vias_up.push_back(img);
+      else if(via->get_direction() == Via::DIRECTION_DOWN)
+	vias_down.push_back(img);
+    }
+  }
+
+  // calculate the mean-image
+  MemoryImage_shptr via_up = merge_images(vias_up);
+  MemoryImage_shptr via_down = merge_images(vias_down);
+
+  
+  // ...
 }
 
