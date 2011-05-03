@@ -320,8 +320,10 @@ void Module::determine_module_ports() {
       std::string mod_port_name = p.first;
       GatePort_shptr gate_port = p.second;
       Net_shptr net = gate_port->get_net();
+
+      bool net_already_processed = known_net.find(net) != known_net.end();
       
-      if(net != NULL && !net_completely_internal(net)) { // outbound connection
+      if(net != NULL && !net_already_processed && !net_completely_internal(net)) { // outbound connection
 	new_ports[mod_port_name] = gate_port;
       }    
     }
