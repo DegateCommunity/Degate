@@ -64,7 +64,7 @@ namespace degate {
     typedef std::map<object_id_t, PlacedLogicModelObject_shptr> object_collection;
     typedef std::map<object_id_t, Net_shptr> net_collection;
     typedef std::map<object_id_t, Annotation_shptr> annotation_collection;
-
+    typedef std::map<object_id_t, Via_shptr > via_collection;
 
     typedef std::vector<Layer_shptr> layer_collection;
     typedef std::map<object_id_t, Gate_shptr > gate_collection;
@@ -80,7 +80,7 @@ namespace degate {
 
     gate_collection gates;
     std::map<object_id_t, Wire_shptr > wires;
-    std::map<object_id_t, Via_shptr > vias;
+    via_collection vias;
     std::map<object_id_t, EMarker_shptr > emarkers;
     annotation_collection annotations;
     net_collection nets;
@@ -501,6 +501,18 @@ namespace degate {
      */
 
     gate_collection::iterator gates_end();
+
+    /**
+     * Get a iterator to iterate over all vias.
+     */
+
+    via_collection::iterator vias_begin();
+
+    /**
+     * Get an end iterator for the iteration over all vias.
+     */
+
+    via_collection::iterator vias_end();
 
     /**
      * Get a iterator to iterate over all placeable objects.

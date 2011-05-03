@@ -685,6 +685,14 @@ LogicModel::gate_collection::iterator LogicModel::gates_end() {
   return gates.end();
 }
 
+LogicModel::via_collection::iterator LogicModel::vias_begin() {
+  return vias.begin();
+}
+
+LogicModel::via_collection::iterator LogicModel::vias_end() {
+  return vias.end();
+}
+
 LogicModel::layer_collection::iterator LogicModel::layers_begin() {
   return layers.begin();
 }
