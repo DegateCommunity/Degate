@@ -834,27 +834,26 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
   std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
     std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
-  if(selection_tool != NULL && selection_tool->has_selection()) {
+  BoundingBox bb = selection_tool != NULL && selection_tool->has_selection() ? 
+    selection_tool->get_bounding_box() : main_project->get_bounding_box();
 
-    rm.init(slot_pos, this, selection_tool->get_bounding_box(), main_project);
+  rm.init(slot_pos, this, bb, main_project);
 
-    if(rm.before_dialog(slot_pos)) {
-
-      ipWin = std::tr1::shared_ptr<InProgressWin>
-	(new InProgressWin(this, "Calculating", "Please wait while calculating.", rm.get_progress_control(slot_pos)));
-      ipWin->show();
-
-      signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
-
-      signal_algorithm_finished_->connect(sigc::bind(sigc::mem_fun(*this,
-								   &MainWin::on_algorithm_finished),
-						     slot_pos));
-
-      thread = Glib::Thread::create(sigc::bind(sigc::mem_fun(*this, &MainWin::algorithm_calc_thread),
-					       slot_pos), false);
-    }
+  if(rm.before_dialog(slot_pos)) {
+    
+    ipWin = std::tr1::shared_ptr<InProgressWin>
+      (new InProgressWin(this, "Calculating", "Please wait while calculating.", rm.get_progress_control(slot_pos)));
+    ipWin->show();
+    
+    signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
+    
+    signal_algorithm_finished_->connect(sigc::bind(sigc::mem_fun(*this,
+								 &MainWin::on_algorithm_finished),
+						   slot_pos));
+    
+    thread = Glib::Thread::create(sigc::bind(sigc::mem_fun(*this, &MainWin::algorithm_calc_thread),
+					     slot_pos), false);
   }
-
 }
 
 
