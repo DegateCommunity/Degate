@@ -263,12 +263,10 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 	debug(TM, "Copy the image into a new format. The data is stored in directory %s",
 	      new_dir.c_str());
 
-	copy_image<BackgroundImage, PersistentImage_RGBA>(new_bg_image, old_bg_image);
+	copy_image(new_bg_image, old_bg_image);
 
 	layer->set_image(new_bg_image);
 
-	//save_image<PersistentImage_RGBA>("/tmp/xxx.tif", old_bg_image);
-	//save_image<BackgroundImage>("/tmp/yyy.tif", new_bg_image);
       }
       else {
 
