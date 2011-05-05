@@ -296,6 +296,14 @@ namespace degate {
   typedef Image<PixelPolicy_RGBA, StoragePolicy_Memory> MemoryImage;
   typedef std::tr1::shared_ptr<MemoryImage> MemoryImage_shptr;
 
+
+  typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_Memory> MemoryImage_GS_BYTE;
+  typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_Memory> MemoryImage_GS_DOUBLE;
+  typedef Image<PixelPolicy_RGBA, StoragePolicy_Memory> MemoryImage_RGBA;
+  typedef std::tr1::shared_ptr<MemoryImage_GS_BYTE> MemoryImage_GS_BYTE_shptr;
+  typedef std::tr1::shared_ptr<MemoryImage_GS_DOUBLE> MemoryImage_GS_DOUBLE_shptr;
+  typedef std::tr1::shared_ptr<MemoryImage_RGBA> MemoryImage_shptr;
+
   typedef MemoryImage RendererImage;
   typedef MemoryImage_shptr RendererImage_shptr;
 
