@@ -137,6 +137,11 @@ namespace degate {
     unsigned int get_height() const;
 
     /**
+     * Get the bounding box for a layer.
+     */
+    BoundingBox const& get_bounding_box() const;
+
+    /**
      * Get layer type of this layer as human readable string, e.g. the string
      * "metal" for a layer of type Layer::METAL .
      */

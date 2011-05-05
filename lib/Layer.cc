@@ -83,6 +83,11 @@ unsigned int Layer::get_height() const {
   return quadtree.get_height();
 }
 
+BoundingBox const& Layer::get_bounding_box() const {
+  return quadtree.get_bounding_box();
+}
+
+
 const std::string Layer::get_layer_type_as_string() const {
   return get_layer_type_as_string(layer_type);
 }

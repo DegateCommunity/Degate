@@ -212,6 +212,12 @@ namespace degate {
 
     region_iterator<T> region_iter_end();
 
+
+    /**
+     * Get the bounding box for a quad tree layer.
+     */
+    BoundingBox const& get_bounding_box() const;
+      
     /**
      * Print the quadtree.
      */
@@ -467,6 +473,10 @@ namespace degate {
   }
 
 
+  template <typename T>
+  BoundingBox const& QuadTree<T>::get_bounding_box() const {
+    return box;
+  }
 
   template <typename T>
   void QuadTree<T>::print(std::ostream & os, int tabs, bool recursive) {
