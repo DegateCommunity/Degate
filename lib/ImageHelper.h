@@ -170,7 +170,7 @@ namespace degate {
 
     const double elems = images.size();
 
-    new_img = std::tr1::shared_ptr<ImageType>(new GateTemplateImage(img->get_width(), img->get_height()));
+    new_img = std::tr1::shared_ptr<ImageType>(new GateTemplateImage(w, h));
     assert(new_img != NULL);
 
     for(unsigned int y = 0; y < h; y++)
