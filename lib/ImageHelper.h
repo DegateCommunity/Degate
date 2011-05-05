@@ -78,11 +78,13 @@ namespace degate {
 
   /**
    * Load an image in a common image format, such as tiff, into an existing degate image.
+   * @exception InvalidPointerException This exception is thrown, if parameter \p img represents an invalid pointer.
    */
 
   template<typename ImageType>
   void load_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) {
 
+    if(img == NULL) throw InvalidPointerException("invalid image pointer");
     std::tr1::shared_ptr<ImageType> i = load_image<ImageType>(path);
     copy_image<ImageType, ImageType>(img, i);
   }
@@ -93,11 +95,13 @@ namespace degate {
    * Only the tiff file format is supported.
    * @todo We should use a factory for writer objects.
    * @exception DegateRuntimeException This exception is thrown, if the writer failed to save the image.
+   * @exception InvalidPointerException This exception is thrown, if parameter \p img represents an invalid pointer.
    */
 
   template<typename ImageType>
   void save_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) {
 
+    if(img == NULL) throw InvalidPointerException("invalid image pointer");
     TIFFWriter<ImageType> tiff_writer(img->get_width(),
 				      img->get_height(), path);
     if(tiff_writer.write_image(img) != true) {
@@ -109,12 +113,14 @@ namespace degate {
 
   /**
    * Save a part of an image.
+   * @exception InvalidPointerException This exception is thrown, if parameter \p img represents an invalid pointer.
    */
   template<typename ImageType>
   void save_part_of_image(std::string const& path,
 			  std::tr1::shared_ptr<ImageType> img,
 			  BoundingBox const& bounding_box) {
 
+    if(img == NULL) throw InvalidPointerException("invalid image pointer");
     std::tr1::shared_ptr<ImageType> part(new ImageType(bounding_box.get_width(),
 						       bounding_box.get_height()));
 
@@ -125,11 +131,13 @@ namespace degate {
   /**
    * Normalize a single channel image and store it in a common file format.
    * Only the tiff file format is supported.
+   * @exception InvalidPointerException This exception is thrown, if parameter \p img represents an invalid pointer.
    */
 
   template<typename ImageType>
   void save_normalized_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) {
 
+    if(img == NULL) throw InvalidPointerException("invalid image pointer");
     std::tr1::shared_ptr<ImageType> normalized_img(new ImageType(img->get_width(),
 								 img->get_height()));
 
@@ -142,7 +150,8 @@ namespace degate {
   /**
    * Merge a set of images by averaging them.
    * @exception DegateRuntimeException This exception is thrown, if images differ in size.
-   * @return Returns a merged image.
+   * @return If image collection \p images contains elements, this function returns a
+   *   valid merged image. If the collection is empty, a NULL pointer is returned.
    */
   template<typename ImageType>
   std::tr1::shared_ptr<ImageType> merge_images(std::list<std::tr1::shared_ptr<ImageType> > const & images) {
