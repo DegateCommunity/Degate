@@ -1,3 +1,4 @@
+#include <degate.h>
 #include <DegateHelper.h>
 
 #include <vector>
