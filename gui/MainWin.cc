@@ -802,6 +802,7 @@ void MainWin::on_algorithm_finished(int slot_pos) {
 
   project_changed();
 
+  /*
   try {
     if(autosave_project(main_project, 0))
       m_statusbar.push("Autosaving project data ... done.");
@@ -809,6 +810,7 @@ void MainWin::on_algorithm_finished(int slot_pos) {
   catch(DegateRuntimeException const& ex) {
     error_dialog("Error", "Can't save project.");
   }
+  */
 }
 
 
