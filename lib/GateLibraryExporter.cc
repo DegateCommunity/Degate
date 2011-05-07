@@ -178,11 +178,10 @@ void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem,
   for(GateTemplate::implementation_iter iter = gate_tmpl->implementations_begin();
       iter != gate_tmpl->implementations_end(); ++iter) {
 
-
     GateTemplate::IMPLEMENTATION_TYPE t = iter->first;
     std::string const& code = iter->second;
 
-    std::cout << "Code: " << code;
+    //std::cout << "Code: " << code;
     if(t != GateTemplate::UNDEFINED && !code.empty()) {
 
       xmlpp::Element* impl_elem = implementations_elem->add_child("implementation");
@@ -207,3 +206,4 @@ void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem,
     }
   }
 }
+
