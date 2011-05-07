@@ -26,6 +26,7 @@
 #include <Image.h>
 #include <FilterKernel.h>
 #include <Statistics.h>
+#include <ImageStatistics.h>
 
 #include <boost/format.hpp>
 
@@ -181,7 +182,7 @@ namespace degate {
    */
   template<typename PixelTypeDst, typename ImageTypeSrc>
   inline PixelTypeDst get_pixel_as(typename std::tr1::shared_ptr<ImageTypeSrc> img,
-			    unsigned int x, unsigned int y) {
+				   unsigned int x, unsigned int y) {
     return convert_pixel<PixelTypeDst, typename ImageTypeSrc::pixel_type>(img->get_pixel(x, y));
   }
 
@@ -232,7 +233,6 @@ namespace degate {
     assert(min_x < max_x);
     assert(min_y < max_y);
 
-    debug(TM, "w = %d   / h = %d", max_x - min_x, max_y - min_y);
     unsigned int h = std::min(std::min(std::min(src->get_height(), max_y), dst->get_height()), max_y - min_y);
     unsigned int w = std::min(std::min(std::min(src->get_width(), max_x), dst->get_width()), max_x - min_x);
 
