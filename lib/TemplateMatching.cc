@@ -318,7 +318,7 @@ double TemplateMatching::subtract_mean(TempImage_GS_BYTE_shptr img,
 
   for(y = 0; y < img->get_height(); y++)
     for(x = 0; x < img->get_width(); x++) {
-      double tmp = img->get_pixel_as<double>(x, y) - mean;
+      double tmp = img->get_pixel_as<gs_double_pixel_t>(x, y) - mean;
       zero_mean_img->set_pixel(x, y, tmp);
       sum_over_zero_mean_img += tmp * tmp;
     }
