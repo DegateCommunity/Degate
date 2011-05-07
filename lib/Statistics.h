@@ -33,7 +33,7 @@ namespace degate {
    *   vector's size is 0.
    */
   template<typename T>
-  inline T median(std::vector<T> & v) throw(DegateRuntimeException) {
+  inline T median(std::vector<T> & v) {
 
     if(v.empty())
       throw DegateRuntimeException("Error in median(): The vector is empty.");
@@ -56,7 +56,7 @@ namespace degate {
    *   vector's size is 0.
    */
   template<typename T>
-  inline T average(std::vector<T> const& v) throw(DegateRuntimeException) {
+  inline T average(std::vector<T> const& v) {
 
     if(v.empty())
       throw DegateRuntimeException("Error in average(): The vector is empty.");
@@ -77,7 +77,7 @@ namespace degate {
    *   vector's size is 0.
    */
   template<typename T>
-  inline T standard_deviation(std::vector<T> const& v) throw(DegateRuntimeException) {
+  inline T standard_deviation(std::vector<T> const& v) {
 
     if(v.empty())
       throw DegateRuntimeException("Error in standard_deviation(): The vector is empty.");
