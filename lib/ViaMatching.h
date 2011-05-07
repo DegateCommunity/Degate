@@ -25,6 +25,7 @@
 #include <Image.h>
 #include <Project.h>
 #include <TemplateMatching.h>
+#include <Via.h>
 
 namespace degate {
 
@@ -56,6 +57,10 @@ namespace degate {
 
     void set_median_filter_width(unsigned int median_filter_width);
     void set_sigma(double sigma);
+
+  private:
+    void scan(BoundingBox const& bbox, BackgroundImage_shptr bg_img, 
+	      MemoryImage_GS_BYTE_shptr tmpl_img, Via::DIRECTION direction);
   };
 
   typedef std::tr1::shared_ptr<ViaMatching> ViaMatching_shptr;
