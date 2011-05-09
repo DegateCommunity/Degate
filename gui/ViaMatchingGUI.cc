@@ -67,7 +67,7 @@ bool ViaMatchingGUI::before_dialog() {
 
   if(!check_vias(lmodel, layer)) {
     Gtk::MessageDialog dialog(*parent,
-			      "There are no vias on the current layer.",
+			      "There must be at least one via on the current layer, which can be used as a template.",
 			      true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
     dialog.set_title("Error");
     dialog.run();
