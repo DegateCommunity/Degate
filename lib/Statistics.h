@@ -87,7 +87,7 @@ namespace degate {
     for(typename std::vector<T>::const_iterator iter = v.begin(); iter != v.end(); ++iter)
       sum += pow(avg - *iter, 2);
 
-    return sqrt(sum);
+    return sqrt(sum/(double)v.size());
   }
 
 

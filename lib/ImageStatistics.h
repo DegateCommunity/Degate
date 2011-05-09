@@ -128,7 +128,7 @@ namespace degate {
 	sum += pow(*avg - img->get_pixel_as<gs_double_pixel_t>(x, y), 2);
       }
     
-    *stddev = sqrt(sum);
+    *stddev = sqrt(sum/(double)(height * width));
   }
 
 
