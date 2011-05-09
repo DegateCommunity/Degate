@@ -288,7 +288,7 @@ namespace degate {
      * Notify the layer that a shape of a logic model object changed.
      * This will adjust the quadtree.
      * @exception CollectionLookupException This exception is thrown if
-     *    there is no object in the layer, that has this object ID.
+     *    thetre is no object in the layer, that has this object ID.
      * @exception InvalidObjectIDException Is raised, if \p object_id
      *    has an invalid ID.
      */
@@ -314,12 +314,23 @@ namespace degate {
     PlacedLogicModelObject_shptr get_object_at_position(int x, int y, int max_distance = 0);
 
     /**
-     * Check for placed gates in a region.
-     * @return Returns true, if there is a gate in the region. Else it returns false.
+     * Check for placed objects in a region of type given by template param.
+     * @return Returns true, if there is a an object of the specified type in the region.
+     *   Else it returns false.
      */
 
-    bool exists_gate_in_region(unsigned int min_x, unsigned int max_x,
-			       unsigned int min_y, unsigned int max_y);
+    template<typename LogicModelObjectType>
+    bool exists_type_in_region(unsigned int min_x, unsigned int max_x,
+			       unsigned int min_y, unsigned int max_y) {
+      for(Layer::qt_region_iterator iter = quadtree.region_iter_begin(min_x, max_x, min_y, max_y);
+	  iter != quadtree.region_iter_end(); ++iter) {
+	
+	if(std::tr1::dynamic_pointer_cast<LogicModelObjectType>(*iter) != NULL) {
+	  return true;
+	}
+      }
+      return false;      
+    }
 
 
     /**

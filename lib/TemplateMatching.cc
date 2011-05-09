@@ -437,8 +437,8 @@ bool TemplateMatching::add_gate(unsigned int x, unsigned int y,
 				Gate::ORIENTATION orientation,
 				double corr_val, double threshold_hc) {
 
-  if(!layer_insert->exists_gate_in_region(x, x + tmpl->get_width(),
-					  y, y + tmpl->get_height())) {
+  if(!layer_insert->exists_type_in_region<Gate>(x, x + tmpl->get_width(),
+						y, y + tmpl->get_height())) {
 
     Gate_shptr gate(new Gate(x, x + tmpl->get_width(),
 			     y, y + tmpl->get_height(),
@@ -451,7 +451,7 @@ bool TemplateMatching::add_gate(unsigned int x, unsigned int y,
     gate->set_gate_template(tmpl);
 
     LogicModel_shptr lmodel = project->get_logic_model();
-    lmodel->add_object(layer_insert->get_layer_pos(), gate);
+    lmodel->add_object(layer_insert, gate);
     lmodel->update_ports(gate);
 
     stats.hits++;

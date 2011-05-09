@@ -255,20 +255,6 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
   return plo;
 }
 
-
-bool Layer::exists_gate_in_region(unsigned int min_x, unsigned int max_x,
-				  unsigned int min_y, unsigned int max_y) {
-
-  for(Layer::qt_region_iterator iter = quadtree.region_iter_begin(min_x, max_x, min_y, max_y);
-      iter != quadtree.region_iter_end(); ++iter) {
-
-    if(std::tr1::dynamic_pointer_cast<Gate>(*iter) != NULL) {
-      return true;
-    }
-  }
-  return false;
-}
-
 unsigned int Layer::get_distance_to_gate_boundary(unsigned int x, unsigned int y,
 						  bool query_horizontal_distance,
 						  unsigned int width,
