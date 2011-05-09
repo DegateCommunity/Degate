@@ -43,6 +43,18 @@ void ViaMatchingGUI::init(Gtk::Window *parent,
   this->project = project;
 }
 
+bool ViaMatchingGUI::check_vias(LogicModel_shptr lmodel, Layer_shptr layer) {
+
+  int i = 0;
+
+  for(LogicModel::via_collection::iterator viter = lmodel->vias_begin();
+      viter != lmodel->vias_end(); ++viter) {
+    Via_shptr via = viter->second;
+    if(via->get_layer() == layer) i++;
+  }
+  return i > 0;
+}
+
 bool ViaMatchingGUI::before_dialog() {
 
   assert(project != NULL);
@@ -52,6 +64,15 @@ bool ViaMatchingGUI::before_dialog() {
 
   Layer_shptr layer = lmodel->get_current_layer();
   assert(layer != NULL);
+
+  if(!check_vias(lmodel, layer)) {
+    Gtk::MessageDialog dialog(*parent,
+			      "There are no vias on the current layer.",
+			      true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+    dialog.set_title("Error");
+    dialog.run();
+    return false;
+  }
 
   if(bounding_box.get_max_x() == 0 && bounding_box.get_max_y() == 0) {
     Gtk::MessageDialog dialog(*parent,

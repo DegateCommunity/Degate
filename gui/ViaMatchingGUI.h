@@ -35,16 +35,20 @@
 
 
 class ViaMatchingGUI : public RecognitionGUIBase {
-
- private:
+  
+private:
 
   Gtk::Window *parent;
   degate::BoundingBox bounding_box;
   degate::Project_shptr project;
-
+  
   degate::ViaMatching_shptr matching;
+  
+private:
 
- public:
+  bool check_vias(degate::LogicModel_shptr lmodel, degate::Layer_shptr layer);
+
+public:
 
   ViaMatchingGUI(degate::ViaMatching_shptr _matching, std::string const& name);
 
