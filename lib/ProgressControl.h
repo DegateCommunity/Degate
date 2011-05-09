@@ -35,7 +35,7 @@ namespace degate {
 
   private:
 
-    const static int averaging_buf_size = 30;
+    const static int averaging_buf_size = 5;
 
     double progress;
     bool canceled;
