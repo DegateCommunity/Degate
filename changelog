@@ -4,6 +4,7 @@ degate (0.1.0) unstable; urgency=low
 	* Generate verilog code stubs and testbench stubs for standard cells
 	* Run a compile test for verilog code stubs directly from the Gate Edit Dialog (requires Icarus Verilog).
 	* Run gtkwave directly from the Gate Edit Dialog.
+	* Integrated via matching (cross-correlation).
 	
  -- Martin Schobert <martin@weltregierung.de>  Wed, 19 Jan 2011 12:00:00 +0100
 
