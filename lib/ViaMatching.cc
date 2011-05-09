@@ -53,6 +53,8 @@ void ViaMatching::init(BoundingBox const& bounding_box, Project_shptr project) {
 
   img = sm->get_image(1).second;
   assert(img != NULL);
+
+  reset_progress();
 }
 
 
@@ -155,12 +157,16 @@ void ViaMatching::run() {
   if(via_up_gs) save_image(join_pathes("/tmp", "02_via_up_gs.tif"), via_up_gs);
   if(via_down_gs) save_image(join_pathes("/tmp", "02_via_down_gs.tif"), via_down_gs);
 
+  // set progress step size
+  int substeps = 0;
+  if(via_up_gs) substeps++;
+  if(via_down_gs) substeps++;
+  if(substeps > 0) set_progress_step_size(1.0/( substeps * (bounding_box.get_height()-max_r*2) ));
 
+  // run via matching
   if(via_up_gs) scan(bounding_box, img, via_up_gs, Via::DIRECTION_UP);
   if(via_down_gs) scan(bounding_box, img, via_down_gs, Via::DIRECTION_DOWN);
 
-
-  // ...
 }
 
 template<class BGImageType, class TemplateImageType>
@@ -224,8 +230,13 @@ void ViaMatching::scan(BoundingBox const& bbox, BackgroundImage_shptr bg_img,
 		     tmpl_img->get_width(), tmpl_img->get_height(), 
 		     &t_avg, &sigma_t);
 
-  int max_x = bbox.get_max_x() > (int)tmpl_img->get_width() ? bbox.get_max_x() - tmpl_img->get_width() : bbox.get_min_x();
-  int max_y = bbox.get_max_y() > (int)tmpl_img->get_height() ? bbox.get_max_y() - tmpl_img->get_height() : bbox.get_min_y();
+  assert(bbox.get_max_x() >= 0);
+  assert(bbox.get_max_y() >= 0);
+
+  int max_x = static_cast<unsigned int>(bbox.get_max_x()) > tmpl_img->get_width() ? 
+    bbox.get_max_x() - tmpl_img->get_width() : bbox.get_min_x();
+  int max_y = static_cast<unsigned int>(bbox.get_max_y()) > tmpl_img->get_height() ? 
+    bbox.get_max_y() - tmpl_img->get_height() : bbox.get_min_y();
 
   for(int y = bbox.get_min_y(); y < max_y; y++) {
     for(int x = bbox.get_min_x(); x < max_x; x++) {
@@ -248,6 +259,16 @@ void ViaMatching::scan(BoundingBox const& bbox, BackgroundImage_shptr bg_img,
 	//debug(TM, "%d,%d -> %f sigma-f=%f sigma-t=%f f_avg=%f t_avg=%f", x, y, xcorr, sigma_f,sigma_t, f_avg, sigma_f);	
       }
     }
+
+    // update progress
+    progress_step_done();
+
+    // check if scanning was canceled
+    if(is_canceled()) {
+      reset_progress();
+      return;
+    }
+
   }
 
   matches.sort(compare_correlation);
