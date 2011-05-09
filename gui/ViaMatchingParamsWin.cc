@@ -34,8 +34,9 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 using namespace degate;
 
 ViaMatchingParamsWin::ViaMatchingParamsWin(Gtk::Window *parent,
-					   unsigned int median_filter_width,
-					   double sigma) :
+					   double threshold_match,
+					   unsigned int via_diameter,
+					   unsigned int merge_n_vias) :
   GladeFileLoader("via_matching_params.glade", "set_via_matching_params_dialog") {
 
   assert(parent);
@@ -57,18 +58,28 @@ ViaMatchingParamsWin::ViaMatchingParamsWin(Gtk::Window *parent,
       pButton->signal_clicked().connect
 	(sigc::mem_fun(*this, &ViaMatchingParamsWin::on_ok_button_clicked) );
 
-    get_widget("entry_median_filter_width", entry_median_filter_width);
-    if(entry_median_filter_width != NULL) {
+    get_widget("entry_threshold_match", entry_threshold_match);
+    assert(entry_threshold_match != NULL);
+    if(entry_threshold_match != NULL) {
       char txt[100];
-      snprintf(txt, sizeof(txt), "%d", median_filter_width);
-      entry_median_filter_width->set_text(strdup(txt));
+      snprintf(txt, sizeof(txt), "%.2f", threshold_match);
+      entry_threshold_match->set_text(strdup(txt));
     }
 
-    get_widget("entry_sigma", entry_sigma);
-    if(entry_sigma != NULL) {
+    get_widget("entry_via_diameter", entry_via_diameter);
+    assert(entry_via_diameter != NULL);
+    if(entry_via_diameter != NULL) {
       char txt[100];
-      snprintf(txt, sizeof(txt), "%f", sigma);
-      entry_sigma->set_text(strdup(txt));
+      snprintf(txt, sizeof(txt), "%d", via_diameter);
+      entry_via_diameter->set_text(strdup(txt));
+    }
+
+    get_widget("entry_merge_n_vias", entry_merge_n_vias);
+    assert(entry_merge_n_vias != NULL);
+    if(entry_merge_n_vias != NULL) {
+      char txt[100];
+      snprintf(txt, sizeof(txt), "%d", merge_n_vias);
+      entry_merge_n_vias->set_text(strdup(txt));
     }
 
   }
@@ -78,20 +89,23 @@ ViaMatchingParamsWin::~ViaMatchingParamsWin() {
 }
 
 
-bool ViaMatchingParamsWin::run(unsigned int * median_filter_width,
-			       double * sigma) {
+bool ViaMatchingParamsWin::run(double * threshold_match,
+			       unsigned int * via_diameter,
+			       unsigned int * merge_n_vias) {
 
-  assert(median_filter_width != NULL);
-  assert(sigma != NULL);
+  assert(threshold_match != NULL);
+  assert(via_diameter != NULL);
+  assert(merge_n_vias != NULL);
 
   while(true) {
     get_dialog()->run();
     if(ok_clicked) {
 
-      *median_filter_width = atoi(entry_median_filter_width->get_text().c_str());
-      *sigma = atof(entry_sigma->get_text().c_str());
+      *threshold_match = atof(entry_threshold_match->get_text().c_str());
+      *via_diameter = atol(entry_via_diameter->get_text().c_str());
+      *merge_n_vias = atol(entry_merge_n_vias->get_text().c_str());
 
-      if(*median_filter_width >= 0 && sigma >= 0) {
+      if(*via_diameter >= 0 && *threshold_match >= 0 && *merge_n_vias >= 0) {
 	get_dialog()->hide();
 	return true;
       }
@@ -110,4 +124,5 @@ void ViaMatchingParamsWin::on_cancel_button_clicked() {
   ok_clicked = false;
   get_dialog()->hide();
 }
+
 

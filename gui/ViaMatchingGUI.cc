@@ -64,15 +64,18 @@ bool ViaMatchingGUI::before_dialog() {
     else bounding_box = BoundingBox(project->get_width(), project->get_height());
   }
 
-  unsigned int median_filter_width = 3;
-  double sigma = 0.5;
+  double threshold_match = matching->get_threshold_match();
+  unsigned int 
+    via_diameter = project->get_default_pin_diameter(),
+    merge_n_vias = matching->get_merge_n_vias();
+  
+  ViaMatchingParamsWin wm(parent, threshold_match, via_diameter, merge_n_vias);
 
-  ViaMatchingParamsWin wm(parent, median_filter_width, sigma);
+  if(wm.run(&threshold_match, &via_diameter, &merge_n_vias)) {
 
-  if(wm.run(&median_filter_width, &sigma)) {
-
-    matching->set_median_filter_width(median_filter_width);
-    matching->set_sigma(sigma);
+    matching->set_threshold_match(threshold_match);
+    matching->set_diameter(via_diameter);
+    matching->set_merge_n_vias(merge_n_vias);
 
     return true;
   }

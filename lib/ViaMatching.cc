@@ -29,9 +29,7 @@
 using namespace degate;
 
 ViaMatching::ViaMatching() :
-
-  median_filter_width(3),
-  sigma(0.5) {
+  threshold_match(0.9) {
 }
 
 
@@ -58,16 +56,29 @@ void ViaMatching::init(BoundingBox const& bounding_box, Project_shptr project) {
 }
 
 
-void ViaMatching::set_median_filter_width(unsigned int median_filter_width) {
-  this->median_filter_width = median_filter_width;
+void ViaMatching::set_diameter(unsigned int diameter) {
+  via_diameter = diameter;
 }
 
-void ViaMatching::set_sigma(double sigma) {
-  this->sigma = sigma;
+void ViaMatching::set_threshold_match(double threshold_match) {
+  this->threshold_match = threshold_match;
 }
 
+void ViaMatching::set_merge_n_vias(unsigned int merge_n_vias) {
+  this->merge_n_vias = merge_n_vias;
+}
+
+double ViaMatching::get_threshold_match() const {
+  return threshold_match;
+}
+
+unsigned int ViaMatching::get_merge_n_vias() const {
+  return merge_n_vias;
+}
 
 void ViaMatching::run() {
+
+  if(via_diameter == 0) throw DegateLogicException("Parameter via diameter was not set.");
 
   unsigned int max_r = 0;
 
@@ -84,7 +95,7 @@ void ViaMatching::run() {
   
   debug(TM, "via matching: max diameter for image averaging: %d", max_r);
   
-  int max_count_up = 1, max_count_down = 1;
+  int max_count_up = merge_n_vias, max_count_down = merge_n_vias;
   max_r = (max_r + 1) / 2;
 
   // iterate over all placed vias (current layer) and calculate a mean-image
@@ -105,10 +116,12 @@ void ViaMatching::run() {
 	assert(img != NULL);
 	
 	// insert image into one of the lists
-	if(via->get_direction() == Via::DIRECTION_UP && max_count_up-- > 0) {
+	if(via->get_direction() == Via::DIRECTION_UP && 
+	   (merge_n_vias == 0 ? true : max_count_up-- > 0)) {
 	  vias_up.push_back(img);
 	}
-	else if(via->get_direction() == Via::DIRECTION_DOWN && max_count_down-- > 0)
+	else if(via->get_direction() == Via::DIRECTION_DOWN && 
+		(merge_n_vias == 0 ? true : max_count_down-- > 0))
 	  vias_down.push_back(img);
       }
       else debug(TM, "via out of region");
@@ -146,6 +159,7 @@ void ViaMatching::run() {
   if(via_up_gs) scan(bounding_box, img, via_up_gs, Via::DIRECTION_UP);
   if(via_down_gs) scan(bounding_box, img, via_down_gs, Via::DIRECTION_DOWN);
 
+
   // ...
 }
 
@@ -172,19 +186,46 @@ double calc_xcorr(unsigned int start_x, unsigned int start_y,
   return sum;
 }
 
+
+bool compare_correlation(ViaMatching::match_found const& lhs,
+			 ViaMatching::match_found const& rhs) {
+  return lhs.correlation > rhs.correlation;
+}
+
+bool ViaMatching::add_via(unsigned int x, unsigned int y,
+			  unsigned int diameter,
+			  Via::DIRECTION direction,
+			  double corr_val, double threshold_hc) {
+
+  if(!layer->exists_type_in_region<Via>(x, x + diameter,
+					y, y + diameter)) {
+
+    Via_shptr via(new Via(x + diameter/2, y + diameter/2, diameter, direction));
+
+    char dsc[100];
+    snprintf(dsc, sizeof(dsc), "matched with corr=%.2f t_hc=%.2f", corr_val, threshold_hc);
+    via->set_description(dsc);
+
+    lmodel->add_object(layer, via);
+    return true;
+  }
+  return false;
+}
+
 void ViaMatching::scan(BoundingBox const& bbox, BackgroundImage_shptr bg_img,
 		       MemoryImage_GS_BYTE_shptr tmpl_img, Via::DIRECTION direction) {
 
+  std::list<match_found> matches;
+  
   debug(TM, "run scanning");
-  double highest_xcorr = 0;
   double f_avg, sigma_f;
   double t_avg, sigma_t;
   average_and_stddev(tmpl_img, 0, 0, 
 		     tmpl_img->get_width(), tmpl_img->get_height(), 
 		     &t_avg, &sigma_t);
 
-  int max_x = bbox.get_max_x() > tmpl_img->get_width() ? bbox.get_max_x() - tmpl_img->get_width() : bbox.get_min_x();
-  int max_y = bbox.get_max_y() > tmpl_img->get_height() ? bbox.get_max_y() - tmpl_img->get_height() : bbox.get_min_y();
+  int max_x = bbox.get_max_x() > (int)tmpl_img->get_width() ? bbox.get_max_x() - tmpl_img->get_width() : bbox.get_min_x();
+  int max_y = bbox.get_max_y() > (int)tmpl_img->get_height() ? bbox.get_max_y() - tmpl_img->get_height() : bbox.get_min_y();
 
   for(int y = bbox.get_min_y(); y < max_y; y++) {
     for(int x = bbox.get_min_x(); x < max_x; x++) {
@@ -197,14 +238,22 @@ void ViaMatching::scan(BoundingBox const& bbox, BackgroundImage_shptr bg_img,
 				bg_img, f_avg, sigma_f,
 				tmpl_img, t_avg, sigma_t);
 
-      if(xcorr > 0.01) {
-	debug(TM, "%d,%d -> %f sigma-f=%f sigma-t=%f f_avg=%f t_avg=%f", x, y, xcorr, sigma_f,sigma_t, f_avg, sigma_f);
-	printf("xcorr = %f\n", xcorr);
+      if(xcorr > threshold_match) {
+	match_found m;
+	m.x = x;
+	m.y = y;
+	m.correlation = xcorr;
+
+	matches.push_back(m);
+	//debug(TM, "%d,%d -> %f sigma-f=%f sigma-t=%f f_avg=%f t_avg=%f", x, y, xcorr, sigma_f,sigma_t, f_avg, sigma_f);	
       }
-      if(xcorr > highest_xcorr) highest_xcorr = xcorr;
     }
   }
 
-  debug(TM, "highest xcorr=%f", highest_xcorr);
+  matches.sort(compare_correlation);
+  BOOST_FOREACH(match_found const& m, matches) {
+    add_via(m.x, m.y, via_diameter, direction, m.correlation, threshold_match);
+  }
+
 }
 

@@ -34,8 +34,9 @@ class ViaMatchingParamsWin : private GladeFileLoader {
  public:
 
   ViaMatchingParamsWin(Gtk::Window *parent,
-		       unsigned int median_filter_width,
-		       double sigma);
+		       double threshold_match,
+		       unsigned int via_diameter,
+		       unsigned int merge_n_vias);
 
   ~ViaMatchingParamsWin();
 
@@ -44,14 +45,16 @@ class ViaMatchingParamsWin : private GladeFileLoader {
    * @return Returns \p true if he the user clicked Ok. It
    *   will return false if the user clicked cancel.
    */
-  bool run(unsigned int * median_filter_width,
-	   double * sigma);
+  bool run(double * threshold_match,
+	   unsigned int * via_diameter,
+	   unsigned int * merge_n_vias);
 
  private:
   Gtk::Window *parent;
 
-  Gtk::Entry * entry_median_filter_width;
-  Gtk::Entry * entry_sigma;
+  Gtk::Entry * entry_threshold_match;
+  Gtk::Entry * entry_via_diameter;
+  Gtk::Entry * entry_merge_n_vias;
 
   bool ok_clicked;
 
