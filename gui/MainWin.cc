@@ -1978,7 +1978,7 @@ void MainWin::on_menu_layer_export_background_image() {
     if(layer->has_background_image()) {
 
 
-      Gtk::FileChooserDialog dialog("Please select a file name", Gtk::FILE_CHOOSER_ACTION_OPEN);
+      Gtk::FileChooserDialog dialog("Please select a file name", Gtk::FILE_CHOOSER_ACTION_SAVE);
       dialog.set_transient_for(*this);
 
       dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
