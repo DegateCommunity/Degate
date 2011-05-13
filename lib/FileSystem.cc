@@ -360,7 +360,7 @@ boost::filesystem::path degate::strip_path(boost::filesystem::path const& strip_
   path::iterator src_path_end = strip_what.end();
   path stripped;
 
-  BOOST_FOREACH(std::string s, strip_from) {
+  BOOST_FOREACH(path s, strip_from) {
     if(src_path_iter != src_path_end && *src_path_iter == s)
       ++src_path_iter;
     else
