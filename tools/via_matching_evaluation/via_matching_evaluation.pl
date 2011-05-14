@@ -57,7 +57,7 @@ sub compare_placements {
 
 	foreach my $v_id2 (keys %{$lmodel2->{'vias'}->{via}}) {
 
-	    my $v2 = $lmodel1->{'vias'}->{via}->{$v_id2};
+	    my $v2 = $lmodel2->{'vias'}->{via}->{$v_id2};
 	    my $x2 = $v2->{"x"};
 	    my $y2 = $v2->{"y"};
 	
