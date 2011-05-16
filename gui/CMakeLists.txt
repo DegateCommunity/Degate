@@ -50,6 +50,13 @@ include_directories(${FREETYPE_INCLUDE_DIRS})
 message(STATUS ${FREETYPE_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${FREETYPE_LIBRARIES})
 
+set(Boost_USE_STATIC_LIBS   OFF)
+find_package(Boost REQUIRED COMPONENTS system)
+if(Boost_FOUND)
+	include_directories(${Boost_INCLUDE_DIRS})
+	set(LIBS ${LIBS} ${Boost_LIBRARIES})
+endif()
+
 #
 # sources
 #

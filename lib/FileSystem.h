@@ -34,8 +34,6 @@
 
 #include <boost/filesystem/path.hpp>
 
-#define BOOST_FILESYSTEM_VERSION 2
-
 namespace degate{
 
   /**

@@ -21,7 +21,7 @@ set(LIBS ${LIBS} ${JPEG_LIBRARIES})
 
 #set(Boost_DEBUG ON)
 set(Boost_USE_STATIC_LIBS   OFF)
-find_package(Boost 1.38.0 REQUIRED COMPONENTS filesystem system thread)
+find_package(Boost REQUIRED COMPONENTS filesystem system thread)
 if(Boost_FOUND)
 	include_directories(${Boost_INCLUDE_DIRS})
 	set(LIBS ${LIBS} ${Boost_LIBRARIES})

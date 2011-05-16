@@ -20,11 +20,15 @@ add_definitions(-Wall -O3 -ggdb)
 #set(CMAKE_SHARED_LINKER_FLAGS -O3)
 
 
+#SET(Boost_ADDITIONAL_VERSIONS "1.46" "1.46.1")
+#SET(BOOST_ROOT "/home/martin/boost1461/")
+#SET(Boost_NO_SYSTEM_PATHS "true")
+
 add_subdirectory(lib)
 add_subdirectory(libtest)
 add_subdirectory(tools/gate_lib_documentation)
 add_subdirectory(tools/determine_module_ports)
 add_subdirectory(tools/export_module)
-add_subdirectory(gui )
+add_subdirectory(gui)
 
 

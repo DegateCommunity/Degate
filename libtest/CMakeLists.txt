@@ -14,6 +14,13 @@ if(CPPUNIT_FOUND)
         pkg_check_modules(LIBXML++ libxml++-2.6)
         include_directories(${LIBXML++_INCLUDE_DIRS})
 
+	set(Boost_USE_STATIC_LIBS   OFF)
+	find_package(Boost REQUIRED COMPONENTS system)
+	if(Boost_FOUND)
+	  include_directories(${Boost_INCLUDE_DIRS})
+	  set(LIBS ${LIBS} ${Boost_LIBRARIES})
+	endif()
+
 	include_directories(. ../lib)
 
 
