@@ -5,6 +5,7 @@ degate (0.1.0) unstable; urgency=low
 	* Run a compile test for verilog code stubs directly from the Gate Edit Dialog (requires Icarus Verilog).
 	* Run gtkwave directly from the Gate Edit Dialog.
 	* Integrated via matching (cross-correlation).
+	* Migrated code-base in order to support the new boost::filesystem version 3. Version 2 is still supported, too.
 	
  -- Martin Schobert <martin@weltregierung.de>  Wed, 19 Jan 2011 12:00:00 +0100
 
