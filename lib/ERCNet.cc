@@ -101,16 +101,18 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 	  f % gate_port->get_descriptive_identifier() % (in_ports - 1);
 	  error_msg = f.str();
 	  rc_class = "net.not_feeded";
+	  add_rc_violation(RCViolation_shptr(new RCViolation(gate_port, error_msg, rc_class)));
 	}
 	else if(out_ports > 1) {
-	  boost::format f("Out-Port %1% is connected with %2% other out-ports.");
-	  f % gate_port->get_descriptive_identifier() % (out_ports - 1);
-	  error_msg = f.str();
-	  rc_class = "net.outputs_connected";
+	  if(tmpl_port->is_outport()) {
+	    boost::format f("Out-Port %1% is connected with %2% other out-ports.");
+	    f % gate_port->get_descriptive_identifier() % (out_ports - 1);
+	    error_msg = f.str();
+	    rc_class = "net.outputs_connected";
+	    add_rc_violation(RCViolation_shptr(new RCViolation(gate_port, error_msg, rc_class)));
+	  }
 	}
 
-	add_rc_violation(RCViolation_shptr(new RCViolation(gate_port, error_msg,
-							   rc_class)));
       }
     }
   }
