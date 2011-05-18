@@ -667,6 +667,9 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
     selected_objects.add(obj_ptr);
     highlighted_objects.add(obj_ptr, main_project->get_logic_model()); 
 
+    assert(selected_objects.size() == 1);
+    assert(highlighted_objects.size() == 1);
+
     if(ciWin != NULL) ciWin->set_object(obj_ptr); // update connection inspector
 
     center_view(bbox.get_center_x(), bbox.get_center_y(), layer->get_layer_pos());
@@ -1456,8 +1459,7 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
   }
 
 
-  if(add_to_selection) {
-    // add to selection
+  if(add_to_selection) { // add to selection
     if(plo != NULL) {
       selected_objects.add(plo);
       highlighted_objects.add(plo, lmodel);
