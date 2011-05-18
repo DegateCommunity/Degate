@@ -247,7 +247,125 @@ void OpenGLRendererBase::draw_square(int x, int y, int diameter,
     glVertex2i(min_x - d, max_y + d);
     glEnd();
   }
+}
 
+void OpenGLRendererBase::draw_square_with_noses(int x, int y, int diameter, degate::color_t col,
+						bool render_distant_outline) {
+  set_color(col);
+  int r = diameter >> 1;
+
+  int
+    min_x = x - r,
+    min_y = y - r,
+    max_x = x + r,
+    max_y = y + r;
+
+  // We can't draw non-convex polygons with OpenGL. Therefore we have to split them.
+
+  glBegin(GL_TRIANGLES); 
+  glVertex2i(min_x, min_y);
+  glVertex2i(max_x, min_y);
+  glVertex2i(max_x, max_y);
+  glEnd();
+
+  glBegin(GL_TRIANGLES);
+  glVertex2i(x, y);
+  glVertex2i(max_x, max_y);
+  glVertex2i(min_x, max_y);
+  glEnd();
+
+
+  glBegin(GL_TRIANGLES);
+  glVertex2i(max_x, min_y);
+  glVertex2i(max_x, max_y);
+  glVertex2i(max_x + r, y);
+  glEnd();
+
+
+  if(render_distant_outline) {
+    int d = 3;
+    glLineWidth(1);
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(min_x - d, min_y - d);
+    glVertex2i(max_x + d, min_y - d);
+    glVertex2i(max_x + d, max_y + d);
+    glVertex2i(min_x - d, max_y + d);
+    glEnd();
+  }
+
+}
+
+void OpenGLRendererBase::draw_square_with_nose_left(int x, int y, int diameter, degate::color_t col,
+						    bool render_distant_outline) {
+  set_color(col);
+  int r = diameter >> 1;
+
+  int
+    min_x = x - r,
+    min_y = y - r,
+    max_x = x + r,
+    max_y = y + r;
+
+  glBegin(GL_TRIANGLES);
+  glVertex2i(min_x, min_y);
+  glVertex2i(max_x, min_y);
+  glVertex2i(max_x, max_y);
+  glEnd();
+
+  glBegin(GL_TRIANGLES);
+  glVertex2i(x, y);
+  glVertex2i(max_x, max_y);
+  glVertex2i(min_x, max_y);
+  glEnd();
+
+
+  if(render_distant_outline) {
+    int d = 3;
+    glLineWidth(1);
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(min_x - d, min_y - d);
+    glVertex2i(max_x + d, min_y - d);
+    glVertex2i(max_x + d, max_y + d);
+    glVertex2i(min_x - d, max_y + d);
+    glEnd();
+  }
+}
+
+
+void OpenGLRendererBase::draw_square_with_nose_right(int x, int y, int diameter, degate::color_t col,
+						     bool render_distant_outline) {
+  set_color(col);
+  int r = diameter >> 1;
+
+  int
+    min_x = x - r,
+    min_y = y - r,
+    max_x = x + r,
+    max_y = y + r;
+
+  glBegin(GL_QUADS);
+  glVertex2i(min_x, min_y);
+  glVertex2i(max_x, min_y);
+  glVertex2i(max_x, max_y);
+  glVertex2i(min_x, max_y);
+  glEnd();
+
+  glBegin(GL_TRIANGLES);
+  glVertex2i(max_x, min_y);
+  glVertex2i(max_x, max_y);
+  glVertex2i(max_x + r, y);
+  glEnd();
+
+  if(render_distant_outline) {
+    int d = 3;
+    glLineWidth(1);
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(min_x - d, min_y - d);
+    glVertex2i(max_x + d, min_y - d);
+    glVertex2i(max_x + d, max_y + d);
+    glVertex2i(min_x - d, max_y + d);
+    glEnd();
+  }
 }
 
 

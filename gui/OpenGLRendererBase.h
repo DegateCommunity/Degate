@@ -109,6 +109,17 @@ protected:
   void draw_square(int x, int y, int diameter, degate::color_t col,
 		   bool render_distant_outline = false);
 
+  void draw_square_with_noses(int x, int y, int diameter, degate::color_t col,
+			      bool render_distant_outline = false);
+  void draw_square_with_nose_left(int x, int y, int diameter, degate::color_t col,
+				  bool render_distant_outline = false);
+  void draw_square_with_nose_right(int x, int y, int diameter, degate::color_t col,
+				   bool render_distant_outline = false);
+
+  
+  /**
+   * Draw a circle.
+   */
   void draw_circle(int x, int y, int diameter, degate::color_t col);
 
   /**

@@ -615,7 +615,22 @@ void DegateRenderer::render_gate(degate::Gate_shptr gate,
 	      port_size *= 2;
 	    }
 
-	    draw_square(x, y, port_size, port_color, port->is_connected());
+	    
+	    switch(tmpl_port->get_port_type()) {
+	    case GateTemplatePort::PORT_TYPE_UNDEFINED:
+	      draw_square(x, y, port_size, port_color, port->is_connected());
+	      break;
+	    case GateTemplatePort::PORT_TYPE_IN:
+	      draw_square_with_nose_left(x, y, port_size, port_color, port->is_connected());
+	      break;
+	    case GateTemplatePort::PORT_TYPE_OUT:
+	      draw_square_with_nose_right(x, y, port_size, port_color, port->is_connected());
+	      break;
+	    case GateTemplatePort::PORT_TYPE_INOUT:
+	      draw_square_with_noses(x, y, port_size, port_color, port->is_connected());
+	      break;
+	    }
+	    
 	  }
 	  else { // render_into_details_list
 	    if(tmpl_port->has_name())
