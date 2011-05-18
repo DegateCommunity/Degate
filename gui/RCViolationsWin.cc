@@ -71,6 +71,14 @@ RCViolationsWin::RCViolationsWin(Gtk::Window *parent, degate::LogicModel_shptr l
       pUpdateButton->signal_clicked().connect(sigc::mem_fun(*this, &RCViolationsWin::on_update_button_clicked) );
     }
 
+    get_widget("search_button", pSearchButton);
+    if(pSearchButton) {
+      pSearchButton->signal_clicked().connect(sigc::mem_fun(*this, &RCViolationsWin::on_search_button_clicked) );
+    }
+
+    get_widget("search_entry", pSearchEntry);
+    assert(pSearchEntry != NULL);
+
     get_widget("label_num_violations", pNumViolationsLabel);
     assert(pNumViolationsLabel != NULL);
 
@@ -181,7 +189,7 @@ void RCViolationsWin::add_to_list(RCViolation_shptr v,
 }
 
 
-void RCViolationsWin::run_checks() {
+void RCViolationsWin::run_checks(std::string filter_pattern) {
   
   rc.run(lmodel);
   RCVContainer const& violations = rc.get_rc_violations();
@@ -194,8 +202,11 @@ void RCViolationsWin::run_checks() {
 
   BOOST_FOREACH(RCViolation_shptr v, _blacklist) {
     // check
-    if(violations.contains(v))
-      add_to_list(v, refListStore_blacklist->append(), m_Columns_blacklist);
+    if(violations.contains(v)) {
+      
+      if(v->matches_filter(filter_pattern))
+	add_to_list(v, refListStore_blacklist->append(), m_Columns_blacklist);
+    }
     else 
       remove_from_blacklist.push_back(v);
   }
@@ -235,7 +246,9 @@ void RCViolationsWin::update_first_page() {
 
   BOOST_FOREACH(RCViolation_shptr v, violations) {
     // check if violation is blacklisted
-    if(!_blacklist.contains(v))
+    if(v != NULL &&
+       !_blacklist.contains(v) &&
+       v->matches_filter(pSearchEntry->get_text()))
        add_to_list(v, refListStore->append(), m_Columns);
   }
 }
@@ -282,6 +295,12 @@ void RCViolationsWin::disable_widgets() {
 
 void RCViolationsWin::on_close_button_clicked() {
   get_dialog()->hide();
+}
+
+
+void RCViolationsWin::on_search_button_clicked() {
+
+  run_checks(pSearchEntry->get_text().c_str());
 }
 
 
@@ -340,10 +359,11 @@ void RCViolationsWin::on_ignore_button_clicked() {
       if(first_page) {
 	remove_things.push_back(refTreeSelection->get_model()->get_iter (*iter));
 
-	if(!_blacklist.contains(rcv)) {
-	  if(rcv != NULL) _blacklist.push_back(rcv);
-	  add_to_list(rcv, refListStore_blacklist->append(), 
-		      m_Columns_blacklist);
+	if(rcv != NULL &&
+	   !_blacklist.contains(rcv) &&
+	   rcv->matches_filter(pSearchEntry->get_text())) {
+	  _blacklist.push_back(rcv);
+	  add_to_list(rcv, refListStore_blacklist->append(), m_Columns_blacklist);
 	}
       }
       else {

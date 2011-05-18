@@ -65,7 +65,7 @@ class RCViolationsWin : public Gtk::Window, private GladeFileLoader {
   /**
    * Run Rule Checks and display.
    */
-  void run_checks();
+  void run_checks(std::string filter_pattern = "");
 
 
   /**
@@ -101,6 +101,8 @@ class RCViolationsWin : public Gtk::Window, private GladeFileLoader {
   Gtk::Button* pCloseButton;
   Gtk::Button* pIgnoreRCButton;
   Gtk::Button* pUpdateButton;
+  Gtk::Button* pSearchButton;
+  Gtk::Entry* pSearchEntry;
   Gtk::Notebook * notebook;
   Gtk::Label* pNumViolationsLabel;
 
@@ -127,6 +129,7 @@ class RCViolationsWin : public Gtk::Window, private GladeFileLoader {
   virtual void on_goto_button_clicked();
   virtual void on_ignore_button_clicked();
   virtual void on_update_button_clicked();
+  virtual void on_search_button_clicked();
 
   virtual void on_selection_changed();
 
