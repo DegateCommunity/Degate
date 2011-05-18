@@ -90,7 +90,9 @@ void LogicModel::print(std::ostream & os) {
 
 object_id_t LogicModel::get_new_object_id() {
   object_id_t new_id = ++object_id_counter;
-  while(objects.find(new_id) != objects.end()) {
+  while(objects.find(new_id) != objects.end() &&
+	!gate_library->exists_template(new_id) &&
+	nets.find(new_id) != nets.end()) {
     new_id = ++object_id_counter;
   }
   return new_id;
@@ -618,6 +620,11 @@ void LogicModel::add_net(Net_shptr net) {
   if(net == NULL) throw InvalidPointerException();
 
   if(!net->has_valid_object_id()) net->set_object_id(get_new_object_id());
+  if(nets.find(net->get_object_id()) != nets.end()) {
+    boost::format f("Error in add_net(). Net with ID %1% already exists");
+    f % net->get_object_id();
+    throw DegateRuntimeException(f.str());
+  }
   nets[net->get_object_id()] = net;
 }
 
