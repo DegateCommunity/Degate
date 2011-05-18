@@ -35,8 +35,7 @@ void GateLibrary::remove_template(GateTemplate_shptr gate_template) {
   templates.erase(gate_template->get_object_id());
 }
 
-void GateLibrary::add_template(GateTemplate_shptr gate_template)
-  throw(InvalidObjectIDException, InvalidPointerException) {
+void GateLibrary::add_template(GateTemplate_shptr gate_template) {
 
   if(gate_template == NULL) throw InvalidPointerException();
   if(!gate_template->has_valid_object_id())
@@ -51,8 +50,7 @@ bool GateLibrary::exists_template(object_id_t id) const {
 }
 
 
-GateTemplate_shptr GateLibrary::get_template(object_id_t id)
-  throw(InvalidObjectIDException, CollectionLookupException) {
+GateTemplate_shptr GateLibrary::get_template(object_id_t id) {
 
   if(id == 0)
     throw InvalidObjectIDException("Error in get_template(): Can't lookup template with id == 0");
@@ -78,8 +76,7 @@ bool GateLibrary::is_name_in_use(std::string const & name) const {
 }
 
 
-GateTemplatePort_shptr GateLibrary::get_template_port(object_id_t port_id)
-  throw(CollectionLookupException) {
+GateTemplatePort_shptr GateLibrary::get_template_port(object_id_t port_id) {
 
   for(template_iterator iter = begin(); iter != end(); ++iter) {
 

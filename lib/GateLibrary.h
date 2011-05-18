@@ -76,8 +76,7 @@ namespace degate {
      * @exception InvalidPointerException
      */
 
-    void add_template(GateTemplate_shptr gate_template)
-      throw(InvalidObjectIDException, InvalidPointerException);
+    void add_template(GateTemplate_shptr gate_template);
 
     /**
      * Get a gate template from the library.
@@ -90,8 +89,7 @@ namespace degate {
      *   was not found.
      */
 
-    GateTemplate_shptr get_template(object_id_t id)
-      throw(InvalidObjectIDException, CollectionLookupException);
+    GateTemplate_shptr get_template(object_id_t id);
 
 
     /**
@@ -112,8 +110,7 @@ namespace degate {
      * Check all templates in the library for a template port
      */
 
-    GateTemplatePort_shptr get_template_port(object_id_t port_id)
-      throw(CollectionLookupException);
+    GateTemplatePort_shptr get_template_port(object_id_t port_id);
 
 
     /**
