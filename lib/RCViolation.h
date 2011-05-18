@@ -87,6 +87,13 @@ namespace degate {
       return RC_UNDEFINED;
     }
 
+    bool matches_filter(std::string const& filter_pattern) const {
+      return filter_pattern.empty() ||
+	get_rc_violation_class().find(filter_pattern) != std::string::npos ||
+	get_severity_as_string().find(filter_pattern) != std::string::npos ||
+	get_problem_description().find(filter_pattern) != std::string::npos;
+    }
+
     PlacedLogicModelObject_shptr get_object() const {
       return _obj;
     }
