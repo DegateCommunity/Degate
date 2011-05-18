@@ -46,6 +46,10 @@ void GateLibrary::add_template(GateTemplate_shptr gate_template)
     templates[gate_template->get_object_id()] = gate_template;
 }
 
+bool GateLibrary::exists_template(object_id_t id) const {
+  return templates.find(id) != templates.end();
+}
+
 
 GateTemplate_shptr GateLibrary::get_template(object_id_t id)
   throw(InvalidObjectIDException, CollectionLookupException) {

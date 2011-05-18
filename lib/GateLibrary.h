@@ -93,6 +93,12 @@ namespace degate {
     GateTemplate_shptr get_template(object_id_t id)
       throw(InvalidObjectIDException, CollectionLookupException);
 
+
+    /**
+     * Check if a template for a given \p id exists.
+     */
+    bool exists_template(object_id_t id) const;
+
     /**
      * Check for a name in the gate library.
      * @return Returns true, if a template name is already used for a template.
