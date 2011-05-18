@@ -663,8 +663,9 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
     else 
       layer = obj_ptr->get_layer();
 
-    highlighted_objects.clear();
-    highlighted_objects.add(obj_ptr);
+    clear_selection();
+    selected_objects.add(obj_ptr);
+    highlighted_objects.add(obj_ptr, main_project->get_logic_model()); 
 
     if(ciWin != NULL) ciWin->set_object(obj_ptr); // update connection inspector
 
@@ -1452,7 +1453,6 @@ void MainWin::object_clicked(unsigned int real_x, unsigned int real_y) {
 
   if(control_key_pressed == false){
     clear_selection();
-    highlighted_objects.clear();
   }
 
 
