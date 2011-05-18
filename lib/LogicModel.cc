@@ -90,8 +90,8 @@ void LogicModel::print(std::ostream & os) {
 
 object_id_t LogicModel::get_new_object_id() {
   object_id_t new_id = ++object_id_counter;
-  while(objects.find(new_id) != objects.end() &&
-	!gate_library->exists_template(new_id) &&
+  while(objects.find(new_id) != objects.end() ||
+	gate_library->exists_template(new_id) ||
 	nets.find(new_id) != nets.end()) {
     new_id = ++object_id_counter;
   }
