@@ -1,0 +1,27 @@
+What is Degate
+---------------
+
+Degate is a software for semi-automatic VLSI reverse engineering of digital logic
+in chips. Please visit the project website to learn more about Degate.
+
+  http://degate.org
+
+
+Installation
+-------------
+
+The installation procedure is described online:
+
+  http://degate.org/documentation/installation_new.html
+
+
+Licence
+--------
+
+Degate is released under the GNU General Public Licence Version 3. See LICENCE.TXT for details
+
+
+Author
+-------
+
+Degate is developed by Martin Schobert <martin@mailbeschleuniger.de>
