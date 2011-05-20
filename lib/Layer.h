@@ -282,7 +282,7 @@ namespace degate {
     /**
      * Print the layer.
      */
-    void print(std::ostream & os);
+    void print(std::ostream & os = std::cout);
 
     /**
      * Notify the layer that a shape of a logic model object changed.
