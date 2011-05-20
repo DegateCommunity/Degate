@@ -47,6 +47,8 @@
       clock_gettime(CLOCK_MONOTONIC,  &dst_variable);
 #endif
 
+// #define TILECACHE_DEBUG
+
 /**
  * Overloaded comparison operator for timespec-structs.
  * @return Returns true, if \p a is completely before \p b. Else
@@ -104,12 +106,16 @@ namespace degate {
       }
 
       if(oldest) {
+#ifdef TILECACHE_DEBUG
 	debug(TM, "Will call cleanup on %p", oldest);
+#endif
 	oldest->cleanup_cache();
       }
       else {
+#ifdef TILECACHE_DEBUG
 	debug(TM, "there is nothing to free.");
 	print_table();
+#endif
       }
     }
 
@@ -136,10 +142,13 @@ namespace degate {
 
     bool request_cache_memory(TileCacheBase * requestor, size_t amount) {
 
+#ifdef TILECACHE_DEBUG
       debug(TM, "Local cache %p requests %d bytes.", requestor, amount);
-
+#endif
       while(allocated_memory + amount > max_cache_memory) {
+#ifdef TILECACHE_DEBUG
 	debug(TM, "Try to free memory");
+#endif
 	remove_oldest();
       }
 
@@ -159,8 +168,9 @@ namespace degate {
 	}
 
 	allocated_memory += amount;
-
+#ifdef TILECACHE_DEBUG
 	print_table();
+#endif
 	return true;
       }
 
@@ -172,7 +182,9 @@ namespace degate {
 
     void release_cache_memory(TileCacheBase * requestor, size_t amount) {
 
+#ifdef TILECACHE_DEBUG
       debug(TM, "Local cache %p releases %d bytes.", requestor, amount);
+#endif
 
       cache_t::iterator found = cache.find(requestor);
 
@@ -200,7 +212,9 @@ namespace degate {
 	}
 
 	if(entry.second == 0) {
+#ifdef TILECACHE_DEBUG
 	  debug(TM, "Memory completely released. Remove entry from global cache.");
+#endif
 	  cache.erase(found);
 	}
       }
@@ -321,7 +335,9 @@ namespace degate {
 	  GET_CLOCK(now);
 
 	  cache[filename] = std::make_pair(load(filename), now);
+#ifdef TILECACHE_DEBUG
 	  gtc.print_table();
+#endif
 	}
 
 	current_tile = cache[filename].first;
@@ -361,8 +377,9 @@ namespace degate {
       assert(oldest != cache.end());
       (*oldest).second.first.reset(); // explicit reset of smart pointer
       cache.erase(oldest);
+#ifdef TILECACHE_DEBUG
       debug(TM, "local cache: %d entries after remove\n", cache.size());
-
+#endif
       GlobalTileCache & gtc = GlobalTileCache::get_instance();
       gtc.release_cache_memory(this, get_image_size());
 
