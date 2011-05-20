@@ -559,6 +559,15 @@ Layer_shptr LogicModel::get_layer(layer_position_t pos) {
   return layers.at(pos);
 }
 
+Layer_shptr LogicModel::get_layer_by_id(layer_id_t lid) {
+  BOOST_FOREACH(Layer_shptr l, layers) {
+    if(l->has_valid_layer_id() && l->get_layer_id() == lid)
+      return l;
+  }
+
+  throw CollectionLookupException("Can't find a matching layer.");
+}
+
 void LogicModel::set_layers(layer_collection layers) {
 
   std::list<Layer_shptr> layers_to_remove;

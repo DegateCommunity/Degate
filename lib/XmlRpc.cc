@@ -124,7 +124,8 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
 
       Wire_shptr w(new Wire(from_x, from_y, to_x, to_y, diameter));
       w->set_remote_object_id(transaction_id);
-      lmodel->add_object(layer_id, w);
+      Layer_shptr layer = lmodel->get_layer_by_id(layer_id);
+      lmodel->add_object(layer, w);
     }
     else if(!obj_type_str.compare("via")) {
       if(command.size() < 7)
@@ -138,7 +139,8 @@ void degate::process_changelog_command(LogicModel_shptr lmodel,
 
       Via_shptr v(new Via(x, y, diameter, Via::get_via_direction_from_string(direction)));
       v->set_remote_object_id(transaction_id);
-      lmodel->add_object(layer_id, v);
+      Layer_shptr layer = lmodel->get_layer_by_id(layer_id);
+      lmodel->add_object(layer, v);
     }
   }
 

@@ -399,10 +399,16 @@ namespace degate {
     void add_layer(layer_position_t pos);
 
     /**
-     * Get a layer.
+     * Get a layer by its posiion index.
      */
 
     Layer_shptr get_layer(layer_position_t pos);
+
+    /**
+     * Get a layer by its ID.
+     * @exception CollectionLookupException This exception is thrown, if there is no matching layer.
+     */
+    Layer_shptr get_layer_by_id(layer_id_t lid);
 
 
     /**
