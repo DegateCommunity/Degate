@@ -381,7 +381,8 @@ namespace degate {
     void set_layer_pos(layer_position_t pos) { layer_pos = pos; }
 
     /**
-     * Set the layer ID.
+     * Set the layer ID. The layer ID is not an object ID. The only requirement is
+     * that each layer has a unique and position-independend ID.
      */
 
     virtual void set_layer_id(layer_id_t lid) { layer_id = lid; }

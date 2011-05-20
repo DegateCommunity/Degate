@@ -219,6 +219,14 @@ namespace degate {
      */
     void remove_object(PlacedLogicModelObject_shptr o,  bool add_to_remove_list);
 
+
+    /**
+     * Create a new layer ID.
+     */
+    layer_id_t get_new_layer_id();
+
+    bool exists_layer_id(layer_collection const& layers, layer_id_t lid) const;
+
   public:
 
     /**

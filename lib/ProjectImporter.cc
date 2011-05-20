@@ -174,6 +174,7 @@ void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_e
       const std::string layer_enabled_str = layer_elem->get_attribute_value("enabled");
 
       Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
+      layer_id_t layer_id = parse_number<layer_id_t>(layer_elem, "id", 0);
 
       Layer_shptr new_layer(new Layer(prj->get_bounding_box(), layer_type));
       LogicModel_shptr lmodel = prj->get_logic_model();
@@ -189,6 +190,7 @@ void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_e
       new_layer->set_enabled(layer_enabled);
 
       new_layer->set_description(layer_description);
+      new_layer->set_layer_id(layer_id);
 
       lmodel->add_layer(position, new_layer);
 

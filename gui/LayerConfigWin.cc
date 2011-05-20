@@ -103,6 +103,7 @@ LayerConfigWin::LayerConfigWin(Gtk::Window * parent,
       pTreeView_layers->set_model(refListStore_layers);
       //pTreeView_layers->append_column("Old #", m_Columns.m_col_old_position);
       //pTreeView_layers->append_column("New #", m_Columns.m_col_new_position);
+
       pTreeView_layers->append_column_editable("Enabled", m_Columns.m_col_enabled);
       //pTreeView_layers->append_column_editable("Layer type", m_Columns.m_col_layer_type);
 
@@ -221,11 +222,18 @@ void LayerConfigWin::on_ok_button_clicked() {
 
     int old_pos = row[m_Columns.m_col_old_position];
     Layer_shptr layer;
-    if(old_pos == -1) // create  new layer
+    if(old_pos == -1) { // create  new layer 
       layer = Layer_shptr(new Layer(BoundingBox(lmodel->get_width(),
 						lmodel->get_height())));
-    else
+      debug(TM, "create a new layer");
+    }
+    else {
       layer = lmodel->get_layer(old_pos);
+      debug(TM, "got existing layer from logic model");
+      layer->print();
+    }
+
+    assert(layer != NULL);
 
     layer->set_enabled(row[m_Columns.m_col_enabled]);
     // will not throw an exception: already check on edit
@@ -242,6 +250,7 @@ void LayerConfigWin::on_ok_button_clicked() {
     if(filename != "") {
       images_to_load.push_back(std::make_pair(layer, filename));
       row[m_Columns.m_col_filename] = "";
+      debug(TM, "load image file %s into layer at position %d (old position is %d)", filename.c_str(), row[m_Columns.m_col_new_position], old_pos);
     }
 
   }
@@ -272,14 +281,16 @@ void LayerConfigWin::_on_background_import_finished() {
 
 void LayerConfigWin::background_import_thread(image_list l) {
 
-  type_children children = refListStore_layers->children();
 
   for(image_list::iterator iter = l.begin(); iter != l.end(); ++iter) {
 
-      debug(TM, "Load background image.");
-      assert(iter->first != NULL);
-      load_background_image(iter->first, project_dir, iter->second);
-      debug(TM, "Background image loaded.");
+    Layer_shptr layer = iter->first;
+    std::string const& filename = iter->second;
+    assert(layer != NULL);
+
+    debug(TM, "Load background image %s into layer at position %d.", filename.c_str(), layer->get_layer_pos());
+    load_background_image(layer, project_dir, filename);
+    debug(TM, "Background image loaded.");
   }
 
   _signal_bg_import_finished_(); // internal signal

@@ -88,11 +88,20 @@ void LogicModel::print(std::ostream & os) {
 
 }
 
+bool LogicModel::exists_layer_id(layer_collection const& layers, layer_id_t lid) const {
+  BOOST_FOREACH(Layer_shptr l, layers) {
+    if(l != NULL && l->has_valid_layer_id() && l->get_layer_id() == lid)
+      return true;
+  }
+  return false;
+}
+
 object_id_t LogicModel::get_new_object_id() {
   object_id_t new_id = ++object_id_counter;
   while(objects.find(new_id) != objects.end() ||
-	gate_library->exists_template(new_id) ||
-	nets.find(new_id) != nets.end()) {
+	(gate_library != NULL && gate_library->exists_template(new_id)) ||
+	nets.find(new_id) != nets.end() ||
+	exists_layer_id(layers, new_id) ) {
     new_id = ++object_id_counter;
   }
   return new_id;
@@ -104,13 +113,14 @@ LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int lay
   main_module(new Module("main_module", "", true)),
   object_id_counter(0) {
 
+  gate_library = GateLibrary_shptr(new GateLibrary());
+
   for(unsigned int i = 0; i < layers; i++)
     get_create_layer(i);
 
   if(layers > 0)
     set_current_layer(0);
 
-  gate_library = GateLibrary_shptr(new GateLibrary());
 }
 
 LogicModel::~LogicModel() {
@@ -518,6 +528,10 @@ void LogicModel::update_ports(GateTemplate_shptr gate_template) {
 }
 
 
+layer_id_t LogicModel::get_new_layer_id() {
+  return get_new_object_id();
+}
+
 void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer) {
 
   if(layers.size() <= pos) layers.resize(pos + 1);
@@ -526,6 +540,7 @@ void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer) {
     throw DegateLogicException("There is already a layer for this layer number.");
   else {
     if(!new_layer->is_empty()) throw DegateLogicException("You must add an empty layer.");
+    if(!new_layer->has_valid_layer_id()) new_layer->set_layer_id(get_new_layer_id());
     layers[pos] = new_layer;
     new_layer->set_layer_pos(pos);
   }

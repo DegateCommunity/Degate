@@ -206,8 +206,10 @@ void ProjectExporter::add_layers(xmlpp::Element* prj_elem,
     if(layer_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
     Layer_shptr layer = *layer_iter;
+    assert(layer->has_valid_layer_id());
 
     layer_elem->set_attribute("position", number_to_string<layer_position_t>(layer->get_layer_pos()));
+    layer_elem->set_attribute("id", number_to_string<layer_id_t>(layer->get_layer_id()));
     layer_elem->set_attribute("type", layer->get_layer_type_as_string());
     layer_elem->set_attribute("description", layer->get_description());
     layer_elem->set_attribute("enabled", layer->is_enabled() ? "true" : "false");
