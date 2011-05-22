@@ -250,7 +250,6 @@ void LayerConfigWin::on_ok_button_clicked() {
     if(filename != "") {
       images_to_load.push_back(std::make_pair(layer, filename));
       row[m_Columns.m_col_filename] = "";
-      debug(TM, "load image file %s into layer at position %d (old position is %d)", filename.c_str(), row[m_Columns.m_col_new_position], old_pos);
     }
 
   }
