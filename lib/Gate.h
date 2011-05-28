@@ -104,7 +104,7 @@ namespace degate {
      * @see LogicModel::update_ports()
      */
 
-    virtual void add_port(GatePort_shptr gate_port) throw(InvalidObjectIDException, DegateLogicException);
+    virtual void add_port(GatePort_shptr gate_port);
 
     /**
      * Remove a gate port.
@@ -112,14 +112,13 @@ namespace degate {
      * @see LogicModel::update_ports()
      */
 
-    virtual void remove_port(GatePort_shptr gate_port) throw(CollectionLookupException);
+    virtual void remove_port(GatePort_shptr gate_port);
 
     /**
      * Get a gate port by a template port.
      */
 
-    virtual GatePort_shptr get_port_by_template_port(GateTemplatePort_shptr template_port)
-      throw(CollectionLookupException);
+    virtual GatePort_shptr get_port_by_template_port(GateTemplatePort_shptr template_port);
 
 
     /**
@@ -260,8 +259,7 @@ namespace degate {
      * @see has_orientation()
      */
 
-    virtual unsigned int get_relative_x_position_within_gate(int rel_x) const
-      throw(DegateRuntimeException);
+    virtual unsigned int get_relative_x_position_within_gate(int rel_x) const;
 
     /**
      * Get the y-coordinate relative to min_y depending on the gate's orientation.
@@ -271,8 +269,7 @@ namespace degate {
      * @see has_orientation()
      */
 
-    virtual unsigned int get_relative_y_position_within_gate(int rel_y) const
-      throw(DegateRuntimeException);
+    virtual unsigned int get_relative_y_position_within_gate(int rel_y) const;
 
     /**
      * Get a human readable string that describes the whole

@@ -45,8 +45,8 @@ namespace degate {
 
   protected:
 
-    void check_bounding_box(BoundingBox const& bb, ImageBase_shptr img) const
-      throw(DegateRuntimeException) {
+    void check_bounding_box(BoundingBox const& bb, ImageBase_shptr img) const {
+
       if(std::max(bb.get_min_x(), bb.get_max_x()) >= (int)img->get_width() ||
 	 std::max(bb.get_min_y(), bb.get_max_y()) >= (int)img->get_height() ||
 	 std::min(bb.get_min_x(), bb.get_max_x()) < 0 ||

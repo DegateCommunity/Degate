@@ -42,8 +42,7 @@
 using namespace std;
 using namespace degate;
 
-void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_shptr gate_lib)
-  throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
+void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_shptr gate_lib) {
 
   if(gate_lib == NULL) throw InvalidPointerException("Gate library pointer is NULL.");
 
@@ -73,8 +72,7 @@ void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_s
 
 void GateLibraryExporter::add_gates(xmlpp::Element* templates_elem,
 				    GateLibrary_shptr gate_lib,
-				    std::string const& directory)
-  throw(std::runtime_error ) {
+				    std::string const& directory) {
 
   for(GateLibrary::template_iterator iter = gate_lib->begin();
       iter != gate_lib->end(); ++iter) {
@@ -105,8 +103,7 @@ void GateLibraryExporter::add_gates(xmlpp::Element* templates_elem,
 
 void GateLibraryExporter::add_images(xmlpp::Element* gate_elem,
 				     GateTemplate_shptr gate_tmpl,
-				     std::string const& directory)
-  throw(std::runtime_error ) {
+				     std::string const& directory) {
 
   // export images
 

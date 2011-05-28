@@ -32,8 +32,7 @@ using namespace degate;
 ExternalMatching::ExternalMatching() {}
 
 
-void ExternalMatching::init(BoundingBox const& bounding_box, Project_shptr project)
-  throw(InvalidPointerException, DegateRuntimeException) {
+void ExternalMatching::init(BoundingBox const& bounding_box, Project_shptr project) {
 
   this->bounding_box = bounding_box;
 
@@ -129,8 +128,7 @@ std::list<PlacedLogicModelObject_shptr> ExternalMatching::parse_file(std::string
   return list;
 }
 
-PlacedLogicModelObject_shptr ExternalMatching::parse_line(std::string const& line) const
-  throw(DegateRuntimeException) {
+PlacedLogicModelObject_shptr ExternalMatching::parse_line(std::string const& line) const {
 
   std::vector<std::string> tokens = tokenize(line);
 

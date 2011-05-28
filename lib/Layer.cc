@@ -25,8 +25,7 @@
 
 using namespace degate;
 
-void Layer::add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o)
-  throw(DegateRuntimeException, DegateLogicException) {
+void Layer::add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) {
 
   if(o->get_bounding_box() == BoundingBox(0, 0, 0, 0)) {
     boost::format fmter("Error in add_object(): Object %1% with ID %2% has an "
@@ -42,8 +41,7 @@ void Layer::add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o)
   objects[o->get_object_id()] = o;
 }
 
-void Layer::remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o)
-  throw(DegateRuntimeException) {
+void Layer::remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) {
   if(RET_IS_NOT_OK(quadtree.remove(o))) {
     debug(TM, "Failed to remove object from quadtree.");
     throw std::runtime_error("Failed to remove object from quadtree.");
@@ -106,8 +104,7 @@ const std::string Layer::get_layer_type_as_string(LAYER_TYPE _layer_type) {
   }
 }
 
-Layer::LAYER_TYPE Layer::get_layer_type_from_string(std::string const& layer_type_str)
-  throw(DegateRuntimeException) {
+Layer::LAYER_TYPE Layer::get_layer_type_from_string(std::string const& layer_type_str) {
 
   if(layer_type_str == "metal") return Layer::METAL;
   else if(layer_type_str == "logic") return Layer::LOGIC;
@@ -163,7 +160,7 @@ void Layer::set_image(BackgroundImage_shptr img) {
   scaling_manager->create_scalings();
 }
 
-BackgroundImage_shptr Layer::get_image() throw(DegateLogicException) {
+BackgroundImage_shptr Layer::get_image() {
   if(scaling_manager != NULL) {
     ScalingManager<BackgroundImage>::image_map_element p = scaling_manager->get_image(1);
     return p.second;
@@ -171,7 +168,7 @@ BackgroundImage_shptr Layer::get_image() throw(DegateLogicException) {
   else throw DegateLogicException("You have to set the background image first.");
 }
 
-std::string Layer::get_image_filename() const throw(DegateLogicException) {
+std::string Layer::get_image_filename() const {
 
   if(scaling_manager == NULL)
     throw DegateLogicException("There is no scaling manager.");
@@ -190,7 +187,7 @@ bool Layer::has_background_image() const {
   return scaling_manager != NULL;
 }
 
-void Layer::unset_image() throw(DegateLogicException) {
+void Layer::unset_image() {
   if(scaling_manager == NULL) throw DegateLogicException("There is no scaling manager.");
   std::string img_dir = get_image_filename();
   scaling_manager.reset();
@@ -217,8 +214,7 @@ void Layer::print(std::ostream & os) {
   quadtree.print(os);
 }
 
-void Layer::notify_shape_change(object_id_t object_id)
-  throw(CollectionLookupException, InvalidObjectIDException){
+void Layer::notify_shape_change(object_id_t object_id) {
 
   if(!object_id)
     throw InvalidObjectIDException("Invalid object ID in Layer::notify_shape_change()");

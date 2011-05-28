@@ -59,14 +59,15 @@ namespace degate {
 
     virtual ~TIFFWriter() { }
 
-    bool write_image(std::tr1::shared_ptr<ImageType> img)
-      throw(FileSystemException);
+    /**
+     * exception FileSystemException
+     */
+    bool write_image(std::tr1::shared_ptr<ImageType> img);
   };
 
 
   template<class ImageType>
-  bool TIFFWriter<ImageType>::write_image(std::tr1::shared_ptr<ImageType> img)
-    throw(FileSystemException) {
+  bool TIFFWriter<ImageType>::write_image(std::tr1::shared_ptr<ImageType> img) {
 
     TIFF * tif = TIFFOpen(get_filename().c_str(), "w");
     if(tif == NULL) {

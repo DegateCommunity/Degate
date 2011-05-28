@@ -72,10 +72,10 @@ namespace degate {
 
   protected:
 
-    void add_gate(Gate_shptr gate) throw(std::runtime_error);
+    void add_gate(Gate_shptr gate);
     void add_via(Via_shptr via);
     //void add_wire(Wire_shptr wire);
-    void add_net(Net_shptr lmodel) throw(std::runtime_error);
+    void add_net(Net_shptr lmodel);
     std::string add_implicit_net(Net_shptr net);
 
     void add_connection(Net_shptr net, std::string const& src_name, std::string const& edge_name);
@@ -116,9 +116,11 @@ namespace degate {
 
     /**
      * Export the logic model as DOT file.
+     * @excpetion InvalidPathException
+     * @excpetion InvalidPointerException
+     * @excpetion std::runtime_error 
      */
-    void export_data(std::string const& filename, LogicModel_shptr lmodel)
-      throw( InvalidPathException, InvalidPointerException, std::runtime_error );
+    void export_data(std::string const& filename, LogicModel_shptr lmodel);
 
     /**
      * Set a property for the dot export.

@@ -74,8 +74,9 @@ namespace degate {
 
     /**
      * Get a fill color definition.
+     * @exception CollectionLookupException
      */
-    color_t get_fill_color(std::string const & port_name) const throw(CollectionLookupException) {
+    color_t get_fill_color(std::string const & port_name) const {
       const port_color_collection::const_iterator iter = port_color_map.find(port_name);
       if(iter != port_color_map.end()) {
 	return (*iter).second.second;
@@ -85,8 +86,9 @@ namespace degate {
 
     /**
      * Get a frame color definition.
+     * @exception CollectionLookupException
      */
-    color_t get_frame_color(std::string const & port_name) const throw(CollectionLookupException) {
+    color_t get_frame_color(std::string const & port_name) const {
       const port_color_collection::const_iterator iter = port_color_map.find(port_name);
       if(iter != port_color_map.end()) {
 	return (*iter).second.first;

@@ -41,11 +41,10 @@ class GateLibraryExporter : public XMLExporter {
 private:
 
   void add_gates(xmlpp::Element* templates_elem, GateLibrary_shptr gate_lib,
-		 std::string const& directory) throw(std::runtime_error );
+		 std::string const& directory);
 
   void add_images(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
-		  std::string const& directory)
-    throw(std::runtime_error );
+		  std::string const& directory);
 
   void add_implementations(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
 			   std::string const& directory);
@@ -58,8 +57,12 @@ public:
   GateLibraryExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter) {}
   ~GateLibraryExporter() {}
 
-  void export_data(std::string const& filename, GateLibrary_shptr gate_lib)
-    throw( InvalidPathException, InvalidPointerException, std::runtime_error );
+  /**
+   * @exception InvalidPathException
+   * @exception InvalidPointerException
+   * @exception std::runtime_error
+   */
+  void export_data(std::string const& filename, GateLibrary_shptr gate_lib);
 
 };
 

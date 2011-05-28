@@ -49,8 +49,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
 				 std::string const& project_file,
 				 std::string const& lmodel_file,
 				 std::string const& gatelib_file,
-				 std::string const& rcbl_file)
-  throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
+				 std::string const& rcbl_file) {
 
   if(!is_directory(project_directory)) {
     throw InvalidPathException("The path where the project should be exported to is not a directory.");
@@ -81,8 +80,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
   }
 }
 
-void ProjectExporter::export_data(std::string const& filename, Project_shptr prj)
-  throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
+void ProjectExporter::export_data(std::string const& filename, Project_shptr prj) {
 
   if(prj == NULL) throw InvalidPointerException("Project pointer is NULL.");
 
@@ -109,8 +107,7 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
 
 }
 
-void ProjectExporter::add_grids(xmlpp::Element* prj_elem,
-				Project_shptr prj) throw(std::runtime_error ) {
+void ProjectExporter::add_grids(xmlpp::Element* prj_elem, Project_shptr prj) {
 
   xmlpp::Element* grids_elem = prj_elem->add_child("grids");
   if(grids_elem == NULL) throw(std::runtime_error("Failed to create node."));
@@ -125,8 +122,7 @@ void ProjectExporter::add_grids(xmlpp::Element* prj_elem,
 
 void ProjectExporter::add_regular_grid(xmlpp::Element* grids_elem,
 				       const RegularGrid_shptr grid,
-				       std::string const & grid_orientation)
-  throw(std::runtime_error ) {
+				       std::string const & grid_orientation) {
 
   xmlpp::Element* grid_elem = grids_elem->add_child("regular-grid");
   if(grid_elem == NULL) throw(std::runtime_error("Failed to create node."));
@@ -141,8 +137,7 @@ void ProjectExporter::add_regular_grid(xmlpp::Element* grids_elem,
 
 void ProjectExporter::add_irregular_grid(xmlpp::Element* grids_elem,
 					 const IrregularGrid_shptr grid,
-					 std::string const & grid_orientation)
-  throw(std::runtime_error ) {
+					 std::string const & grid_orientation) {
 
   xmlpp::Element* grid_elem = grids_elem->add_child("irregular-grid");
   if(grid_elem == NULL) throw(std::runtime_error("Failed to create node."));
@@ -166,7 +161,7 @@ void ProjectExporter::add_irregular_grid(xmlpp::Element* grids_elem,
 
 
 void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem,
-						  Project_shptr prj) throw(std::runtime_error ) {
+						  Project_shptr prj) {
 
   prj_elem->set_attribute("degate-version", prj->get_degate_version());
   prj_elem->set_attribute("name", prj->get_name());
@@ -191,8 +186,7 @@ void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem,
 
 void ProjectExporter::add_layers(xmlpp::Element* prj_elem,
 				 LogicModel_shptr lmodel,
-				 std::string const& project_dir)
-  throw(InvalidPointerException, std::runtime_error ) {
+				 std::string const& project_dir) {
 
   if(lmodel == NULL) throw InvalidPointerException();
 
@@ -224,8 +218,7 @@ void ProjectExporter::add_layers(xmlpp::Element* prj_elem,
 
 
 void ProjectExporter::add_port_colors(xmlpp::Element* prj_elem,
-				      PortColorManager_shptr port_color_manager)
-  throw(InvalidPointerException, std::runtime_error ) {
+				      PortColorManager_shptr port_color_manager) {
 
   if(port_color_manager == NULL) throw InvalidPointerException();
 

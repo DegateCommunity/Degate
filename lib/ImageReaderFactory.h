@@ -84,8 +84,7 @@ namespace degate{
      */
 
     std::tr1::shared_ptr<class ImageReaderBase<ImageType> >
-    get_reader(std::string const & filename)
-      throw(InvalidFileFormatException) {
+    get_reader(std::string const & filename) {
 
       std::string suffix(get_file_suffix(filename).c_str());
 

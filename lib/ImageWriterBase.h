@@ -108,8 +108,7 @@ namespace degate {
      * Writer the image into a file.
      */
 
-    virtual bool write_image(std::tr1::shared_ptr<ImageType> img)
-      throw(FileSystemException) = 0;
+    virtual bool write_image(std::tr1::shared_ptr<ImageType> img) = 0;
 
   };
 

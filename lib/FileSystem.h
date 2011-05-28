@@ -81,7 +81,7 @@ namespace degate{
    * @see get_realpath()
    */
 
-  std::string get_basedir(std::string const & path) throw(degate::InvalidPathException);
+  std::string get_basedir(std::string const & path);
 
 
   /**
@@ -90,7 +90,7 @@ namespace degate{
    * @exception Throws an InvalidPathException if the path does not exists.
    */
 
-  std::string get_realpath(std::string const& path) throw(degate::InvalidPathException);
+  std::string get_realpath(std::string const& path);
 
 
   /**
@@ -119,21 +119,20 @@ namespace degate{
   /**
    * Unlink a file.
    */
-  void remove_file(std::string const& filename) throw(degate::FileSystemException);
+  void remove_file(std::string const& filename);
 
   /**
    * Unlink a directory with all files in it.
    * Because this function is only for degate. We make some sanity checks.
    */
-  void remove_directory(std::string const& path) throw(degate::FileSystemException);
+  void remove_directory(std::string const& path);
 
 
   /**
    * Create a directory.
    */
 
-  void create_directory(std::string const& directory, mode_t mode = 0700)
-    throw(degate::FileSystemException);
+  void create_directory(std::string const& directory, mode_t mode = 0700);
 
   /**
    * Create a temp directory.
@@ -168,8 +167,7 @@ namespace degate{
    * @see get_realpath()
    */
 
-  std::list<std::string> read_directory(std::string const& path, bool prefix_path = false)
-    throw(degate::FileSystemException);
+  std::list<std::string> read_directory(std::string const& path, bool prefix_path = false);
 
 
   /**

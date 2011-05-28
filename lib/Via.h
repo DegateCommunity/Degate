@@ -98,8 +98,7 @@ namespace degate {
     /**
      * Parse a via direction string and return it as enum value.
      */
-    static Via::DIRECTION get_via_direction_from_string(std::string const& via_direction_str)
-      throw();
+    static Via::DIRECTION get_via_direction_from_string(std::string const& via_direction_str);
 
     /**
      * Get a human readable string that describes the whole

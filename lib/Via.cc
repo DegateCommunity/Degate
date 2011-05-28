@@ -49,7 +49,7 @@ const std::string Via::get_direction_as_string() const {
   }
 }
 
-Via::DIRECTION Via::get_via_direction_from_string(std::string const& via_direction_str) throw() {
+Via::DIRECTION Via::get_via_direction_from_string(std::string const& via_direction_str) {
 
   if(via_direction_str == "up") return Via::DIRECTION_UP;
   else if(via_direction_str == "down") return Via::DIRECTION_DOWN;

@@ -41,8 +41,7 @@ using namespace degate;
 
 #define MAX_NODES 7
 
-void LogicModelDOTExporter::export_data(std::string const& filename, LogicModel_shptr lmodel)
-  throw( InvalidPathException, InvalidPointerException, std::runtime_error ) {
+void LogicModelDOTExporter::export_data(std::string const& filename, LogicModel_shptr lmodel) {
 
   if(lmodel == NULL) throw InvalidPointerException("Logic model pointer is NULL.");
 
@@ -127,8 +126,7 @@ std::string LogicModelDOTExporter::oid_to_str(std::string const& prefix, object_
   return stm.str();
 }
 
-void LogicModelDOTExporter::add_net(Net_shptr net)
-  throw(std::runtime_error) {
+void LogicModelDOTExporter::add_net(Net_shptr net) {
 
   string net_name(oid_to_str("N", net->get_object_id()));
 
@@ -166,8 +164,7 @@ std::string LogicModelDOTExporter::add_implicit_net(Net_shptr net) {
 }
 
 
-void LogicModelDOTExporter::add_gate(Gate_shptr gate)
-  throw(std::runtime_error) {
+void LogicModelDOTExporter::add_gate(Gate_shptr gate) {
 
   string node_name(oid_to_str("G", gate->get_object_id()));
 

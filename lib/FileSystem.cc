@@ -75,7 +75,7 @@ bool degate::file_exists(std::string const & path) {
   return stat(path.c_str(), &stat_buf) == 0 ? true : false;
 }
 
-std::string degate::get_basedir(std::string const & path) throw(InvalidPathException) {
+std::string degate::get_basedir(std::string const & path) {
 
   std::string resolved_path;
 
@@ -98,7 +98,7 @@ std::string degate::get_basedir(std::string const & path) throw(InvalidPathExcep
 }
 
 
-std::string degate::get_realpath(std::string const& path) throw(degate::InvalidPathException) {
+std::string degate::get_realpath(std::string const& path) {
   char resolved_path[PATH_MAX];
   if(realpath(path.c_str(), resolved_path) == NULL) {
     boost::format fmter("Error in get_realpath(). Can't get real path for %1%.");
@@ -118,19 +118,18 @@ std::string degate::get_file_suffix(std::string const& path) {
 }
 
 
-void degate::remove_file(std::string const& path) throw(degate::FileSystemException) {
+void degate::remove_file(std::string const& path) {
   if(unlink(path.c_str()) != 0) {
     throw degate::FileSystemException(strerror(errno));
   }
 }
 
-void degate::remove_directory(std::string const& path) throw(degate::FileSystemException) {
+void degate::remove_directory(std::string const& path) {
   boost::filesystem::path p(path);
   boost::filesystem::remove_all(path);
 }
 
-void degate::create_directory(std::string const& directory, mode_t mode)
-  throw(degate::FileSystemException) {
+void degate::create_directory(std::string const& directory, mode_t mode) {
 
   if(mkdir(directory.c_str(), mode) != 0) {
     throw degate::FileSystemException(strerror(errno));
@@ -155,8 +154,7 @@ std::string degate::generate_temp_file_pattern(std::string const & basedir) {
 }
 
 
- std::list<std::string> degate::read_directory(std::string const& path, bool prefix_path)
-  throw(degate::FileSystemException) {
+std::list<std::string> degate::read_directory(std::string const& path, bool prefix_path) {
 
   DIR * dir = NULL;
   struct dirent * dir_ent = NULL;

@@ -370,10 +370,12 @@ namespace degate {
 
   /**
    * Scale a source image down by factor 2.
+   * @exception DegateRuntimeException This excpetion is thrown if the
+   *  destination image has no dimension definition.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
   void scale_down_by_power_of_2(std::tr1::shared_ptr<ImageTypeDst> dst,
-				std::tr1::shared_ptr<ImageTypeSrc> src) throw(DegateRuntimeException) {
+				std::tr1::shared_ptr<ImageTypeSrc> src) {
 
     if(dst->get_width() == 0) throw DegateRuntimeException("Invalid image dimension for destination image.");
 
@@ -413,13 +415,13 @@ namespace degate {
    * Helper function to load existing images in a degate image format.
    * We assume that the file or directory, where the image is stored,
    * exists.
-   * @exception
+   * @exception InvalidPathException This exception is thrown, if
+   *   the \p path doen't exists.
    */
 
   template<typename ImageType>
   std::tr1::shared_ptr<ImageType> load_degate_image(unsigned int width, unsigned int height,
-						    std::string const& path)
-    throw(InvalidPathException) {
+						    std::string const& path) {
     if(!file_exists(path)) {
       boost::format fmter("Error in load_degate_image(): The image file or directory %1% does not exist.");
       fmter % path;

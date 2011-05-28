@@ -184,8 +184,7 @@ namespace degate {
      */
 
     template<typename NewType>
-    NewType get_parameter(std::string parameter_name)
-      const throw(boost::bad_lexical_cast, CollectionLookupException) {
+    NewType get_parameter(std::string parameter_name) const {
 
       parameter_set_type::const_iterator iter = parameters.find(parameter_name);
       if(iter == parameters.end()) {

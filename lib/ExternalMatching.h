@@ -78,16 +78,19 @@ namespace degate {
      *   line does not represent a command.
      */
 
-    PlacedLogicModelObject_shptr parse_line(std::string const& line)
-      const throw(DegateRuntimeException);
+    PlacedLogicModelObject_shptr parse_line(std::string const& line) const;
 
 
   public:
 
     ExternalMatching();
 
-    virtual void init(BoundingBox const& bounding_box, Project_shptr project)
-      throw(InvalidPointerException, DegateRuntimeException);
+    /**
+     *
+     * @exception InvalidPointerException
+     * @exception DegateRuntimeException
+     */
+    virtual void init(BoundingBox const& bounding_box, Project_shptr project);
 
     virtual void run();
 

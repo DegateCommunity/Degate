@@ -86,10 +86,10 @@ namespace degate {
      * Add an logic model object into this layer.
      * @throw DegateRuntimeException Is thrown if the object
      *   cannot be inserted into the quadtree.
+     * @throw DegateLogicException
      */
 
-    void add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o)
-      throw(DegateRuntimeException, DegateLogicException);
+    void add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o);
 
 
     /**
@@ -98,9 +98,7 @@ namespace degate {
      *   cannot be removed from the quadtree.
      */
 
-    void remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o)
-      throw(DegateRuntimeException);
-
+    void remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o);
 
   public:
 
@@ -158,8 +156,7 @@ namespace degate {
      * @exception DegateRuntimeException This exception is thrown if the string
      *   cannot be parsed.
      */
-    static LAYER_TYPE get_layer_type_from_string(std::string const& layer_type_str)
-      throw(DegateRuntimeException);
+    static LAYER_TYPE get_layer_type_from_string(std::string const& layer_type_str);
 
 
     /**
@@ -239,7 +236,7 @@ namespace degate {
      * @see set_image()
      */
 
-    BackgroundImage_shptr get_image() throw(DegateLogicException);
+    BackgroundImage_shptr get_image();
 
     /**
      * Get the directory name for the image, that represents the
@@ -248,7 +245,7 @@ namespace degate {
      *   exception is thrown.
      */
 
-    std::string get_image_filename() const throw(DegateLogicException);
+    std::string get_image_filename() const;
 
     /**
      * Check if the layer has a background image.
@@ -264,7 +261,7 @@ namespace degate {
      * @exception DegateLogicException This excpetion is thrown if there is no background image.
      */
 
-    void unset_image() throw(DegateLogicException);
+    void unset_image();
 
     /**
      * Get the scaling manager.
@@ -293,8 +290,7 @@ namespace degate {
      *    has an invalid ID.
      */
 
-    void notify_shape_change(object_id_t object_id)
-      throw(CollectionLookupException, InvalidObjectIDException);
+    void notify_shape_change(object_id_t object_id);
 
     /**
      * Get an object at a specific position.

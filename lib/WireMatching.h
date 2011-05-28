@@ -44,8 +44,11 @@ namespace degate {
 
     WireMatching();
 
-    virtual void init(BoundingBox const& bounding_box, Project_shptr project)
-      throw(InvalidPointerException, DegateRuntimeException);
+    /**
+     * @exception InvalidPointerException
+     * @exception DegateRuntimeException
+     */
+    virtual void init(BoundingBox const& bounding_box, Project_shptr project);
 
     virtual void run();
 

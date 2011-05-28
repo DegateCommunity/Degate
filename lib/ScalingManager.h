@@ -127,7 +127,7 @@ namespace degate {
      *   \p directory (ctor param) doesn't exists.
      * @todo If the image was already scaled, do not do it again. Maybe we need a force option.
      */
-    void create_scalings() throw(InvalidPathException) {
+    void create_scalings() {
       if(!(file_exists(base_directory) && is_directory(base_directory)))
 	throw InvalidPathException("The directory for prescaled images must exist. but it is not there.");
 

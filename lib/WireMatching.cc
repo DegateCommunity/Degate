@@ -36,8 +36,7 @@ WireMatching::WireMatching() :
 }
 
 
-void WireMatching::init(BoundingBox const& bounding_box, Project_shptr project)
-  throw(InvalidPointerException, DegateRuntimeException) {
+void WireMatching::init(BoundingBox const& bounding_box, Project_shptr project) {
 
   this->bounding_box = bounding_box;
 

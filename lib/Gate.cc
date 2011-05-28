@@ -46,8 +46,7 @@ Gate::~Gate() {
   if(gate_template != NULL) remove_template();
 }
 
-void Gate::add_port(GatePort_shptr gate_port)
-  throw(InvalidObjectIDException, DegateLogicException) {
+void Gate::add_port(GatePort_shptr gate_port) {
   if(!gate_port->has_valid_object_id())
     throw InvalidObjectIDException("Error in Gate::add_port(). "
 				   "The port has no valid object ID.");
@@ -71,7 +70,7 @@ void Gate::add_port(GatePort_shptr gate_port)
 }
 
 
-void Gate::remove_port(GatePort_shptr gate_port) throw(CollectionLookupException) {
+void Gate::remove_port(GatePort_shptr gate_port) {
   port_iterator found = gate_ports.find(gate_port);
   if(found != gate_ports.end()) {
     gate_ports.erase(found);
@@ -80,8 +79,7 @@ void Gate::remove_port(GatePort_shptr gate_port) throw(CollectionLookupException
 }
 
 
-GatePort_shptr Gate::get_port_by_template_port(GateTemplatePort_shptr template_port)
-  throw(CollectionLookupException) {
+GatePort_shptr Gate::get_port_by_template_port(GateTemplatePort_shptr template_port) {
   for(port_iterator piter = ports_begin(); piter != ports_end(); ++piter) {
     GatePort_shptr gate_port = *piter;
     GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
@@ -194,8 +192,7 @@ Gate::port_const_iterator Gate::ports_end() const {
 }
 
 
-unsigned int Gate::get_relative_x_position_within_gate(int rel_x)
-  const throw(DegateRuntimeException) {
+unsigned int Gate::get_relative_x_position_within_gate(int rel_x) const {
   switch(orientation) {
   case ORIENTATION_NORMAL:
   case ORIENTATION_FLIPPED_UP_DOWN:
@@ -211,8 +208,7 @@ unsigned int Gate::get_relative_x_position_within_gate(int rel_x)
 }
 
 
-unsigned int Gate::get_relative_y_position_within_gate(int rel_y)
-  const throw(DegateRuntimeException) {
+unsigned int Gate::get_relative_y_position_within_gate(int rel_y) const {
   switch(orientation) {
   case ORIENTATION_NORMAL:
   case ORIENTATION_FLIPPED_LEFT_RIGHT:
