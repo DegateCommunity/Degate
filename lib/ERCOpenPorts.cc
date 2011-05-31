@@ -25,7 +25,7 @@
 using namespace degate;
 
 ERCOpenPorts::ERCOpenPorts() :
-  RCBase("open_port", "Check for unconnected ports.", RC_ERROR) {
+  RCBase("open_port", "Check for unconnected ports.", RC_WARNING) {
 }
 
 void ERCOpenPorts::run(LogicModel_shptr lmodel) {
