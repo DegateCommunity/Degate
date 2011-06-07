@@ -110,7 +110,7 @@
                   <widget class="GtkLabel" id="label4">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Ignored RC Violations</property>
+                    <property name="label" translatable="yes">Accepted RC Violations</property>
                   </widget>
                   <packing>
                     <property name="position">1</property>
