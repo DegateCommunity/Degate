@@ -62,8 +62,10 @@ namespace degate {
 
     /**
      * The constructor.
-     * @param short_name Short name for the RC class.
+     * @param class_name Short name for the RC class.
      * @param description A decription of what the RC basically checks.
+     * @param severity This parameter indicates wheather this 
+     *   RC violation container is for an error or just for a warning.
      */
     RCBase(std::string const& class_name,
 	    std::string const& description,
