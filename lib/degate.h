@@ -51,23 +51,24 @@
  *
  * @section howto_sec How to use libdegate?
  *
- * This section will describe, how to use libdegate in order to access logic model related
- * data and images from project files. The examples presented here are taken from the
- * directory \p examples.
+ * This section describes how to use libdegate in order to access logic model related
+ * data and images from project files. The example presented here is taken from the
+ * directory \p examples. You can find further examples below the 'tools' directory.
  *
- * @subsection example1 Example 1: Load a project and get information from logic model objects.
+ * @subsection example1 Example 1: Use the project importer.
  *
- * In the following example we will load a degate project and work with the logic model.
+ * In the following example we will load a degate project and print the logic model.
  *
  * @include read_a_project.cc
  *
- * @subsection example2 Example 2: Work with images
+ * @subsection example2 Example 2: Load project and export the project as LaTeX code.
  *
+ * This example shows code to iterate over project data, especially the cell library.
+ * Cell library images are exported using the tool 'convert' from the ImageMagick tool
+ * suite.
  *
+ * @include gate_lib_doc.cc
  *
- * This example will load a degate project. It will iterate over all positions where
- * vias are placed. It will grab each image region where a via is placed and store them
- * into a seperate image files.
  */
 
 
