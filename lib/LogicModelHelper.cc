@@ -251,12 +251,23 @@ Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel) {
     throw DegateRuntimeException("Error: there is no current layer.");
 
   for(unsigned int l_pos = curr_layer->get_layer_pos() + 1;
+      l_pos < lmodel->get_num_layers(); l_pos++) {
+    Layer_shptr layer = lmodel->get_layer(l_pos);
+    if(layer->is_enabled()) return layer;
+  }
+
+  return curr_layer;
+
+  /*
+  for(unsigned int l_pos = curr_layer->get_layer_pos() + 1;
       l_pos <= curr_layer->get_layer_pos() + lmodel->get_num_layers(); l_pos++) {
     Layer_shptr layer = lmodel->get_layer(l_pos % lmodel->get_num_layers());
     if(layer->is_enabled()) return layer;
   }
+  
   throw InvalidPointerException("Error: all layers are disabled.");
   return Layer_shptr(); // to avoid compiler warning
+  */
 }
 
 
@@ -283,6 +294,16 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel) {
   if(curr_layer == NULL)
     throw DegateRuntimeException("Error: there is no current layer.");
 
+
+  if(curr_layer->get_layer_pos() == 0) return curr_layer;
+
+  for(int l_pos = curr_layer->get_layer_pos() - 1; l_pos >= 0; l_pos--) {
+    Layer_shptr layer = lmodel->get_layer(l_pos);
+    if(layer->is_enabled()) return layer;
+  }
+  return curr_layer;
+
+  /*
   if(lmodel->get_num_layers() == 1) return curr_layer;
 
   for(unsigned int l_pos = curr_layer->get_layer_pos() + lmodel->get_num_layers() - 1;
@@ -292,7 +313,7 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel) {
   }
   throw InvalidPointerException("Error: all layers are disabled.");
   return Layer_shptr(); // to avoid compiler warning
-
+  */
 }
 
 Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer) {
