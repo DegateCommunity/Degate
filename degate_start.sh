@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# This script will launch degate in a debug mode. That is basically a hack, because
-# we use gdb to generate a stacktrace, if the application crashes.
-
-
 # First we set environment variables.
 
 # This is mandatory, because degate must know where all the glade files and icons are.
@@ -27,6 +23,3 @@ export DEGATE_SERVER_URI_PATTERN=http://degate.org/cgi-bin/xmlrpc-server-cgi.pl?
 
 # Launch degate.
 $DEGATE_HOME/degate_bin
-#gdb -x .gdb_commands -q $DEGATE_HOME/degate_bin
-
-
