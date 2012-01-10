@@ -11,6 +11,12 @@ if(Boost_FOUND)
         set(LIBS ${LIBS} ${Boost_LIBRARIES})
 endif()
 
+find_package(XMLRPC COMPONENTS c++2 client)
+if(XMLRPC_FOUND)
+	include_directories(${XMLRPC_INCLUDE_DIRS})
+	set(LIBS ${LIBS} ${XMLRPC_LIBRARIES})
+endif()
+
 
 
 include_directories(. ../../lib)
