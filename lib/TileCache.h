@@ -32,7 +32,6 @@
 #include <ctime>
 #include <utility> // for make_pair
 #include <iostream>
-#include <inttypes.h>
 
 #ifdef __APPLE__
   #include <sys/time.h> // for gettimeofday

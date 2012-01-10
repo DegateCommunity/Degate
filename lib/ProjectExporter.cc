@@ -250,7 +250,6 @@ void ProjectExporter::add_colors(xmlpp::Element* prj_elem, Project_shptr prj) {
 
   default_colors_t default_colors = prj->get_default_colors();
   BOOST_FOREACH(default_colors_t::value_type const& p, default_colors) {
-    cout << "ITERATING\n";
     xmlpp::Element* color_elem = colors_elem->add_child("color");
     if(color_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
