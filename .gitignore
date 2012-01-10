@@ -17,3 +17,4 @@ tp2/
 gui/degate_bin
 libtest/libdegate_test
 lib/libdegate.dylib
+lib/libdegate.so
