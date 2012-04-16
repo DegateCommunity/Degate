@@ -67,6 +67,11 @@ void LogicModelImporter::import_into(LogicModel_shptr lmodel,
 
     parse_logic_model_element(root_elem, lmodel);
 
+    // check if the ports of placed standard cell are available and create them if necessary
+    BOOST_FOREACH(Gate_shptr g, gates) {
+      lmodel->update_ports(g);
+    }
+
   }
   catch(const std::exception& ex) {
     std::cout << "Exception caught: " << ex.what() << std::endl;
@@ -327,6 +332,7 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
 
   if(gates_element == NULL || lmodel == NULL) throw InvalidPointerException();
 
+
   const xmlpp::Node::NodeList gate_list = gates_element->get_children("gate");
   for(xmlpp::Node::NodeList::const_iterator iter = gate_list.begin();
       iter != gate_list.end();
@@ -400,8 +406,11 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
       }
 
       lmodel->add_object(layer, gate);
-      lmodel->update_ports(gate);
       gate->print();
+
+      // Collect placed standard cells in a first step.
+      // Later we call lmodel->update_ports().
+      gates.push_back(gate);
     }
   }
 

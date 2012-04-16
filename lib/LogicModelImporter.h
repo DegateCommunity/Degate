@@ -39,6 +39,8 @@ private:
   unsigned int width, height;
   GateLibrary_shptr gate_library;
 
+  std::list<Gate_shptr> gates;
+
   void parse_logic_model_element(const xmlpp::Element * const lm_element,
 				 LogicModel_shptr lmodel);
 
