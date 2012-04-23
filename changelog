@@ -1,3 +1,9 @@
+degate (0.1.1) unstable; urgency=low
+
+	* Bugfix release 
+	
+ -- Martin Schobert <martin@weltregierung.de>  Mon, 23 Apr 2012 17:56:00 +0100
+
 degate (0.1.0) unstable; urgency=low
 
 	* Toggle fullscreen mode with F11
