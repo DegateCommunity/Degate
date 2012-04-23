@@ -211,8 +211,8 @@ void GateListWin::on_remove_button_clicked() {
 
 	  if(tmpl->get_reference_counter() > 0) {
 	    Gtk::MessageDialog dialog2(*parent,
-				       "The gate template is referenced by placed gates. "
-				       "Do you want to remove the gates as well?",
+				       "The gate template is referenced by several placed gates. "
+				       "Do you want to remove these gates as well?",
 				       true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
 
 	    if(dialog2.run() == Gtk::RESPONSE_NO) {
