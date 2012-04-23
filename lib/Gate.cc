@@ -142,10 +142,26 @@ void Gate::remove_template() {
   }
 }
 
-bool Gate::has_template_port(GateTemplatePort_shptr template_port) {
+bool Gate::has_template_port(GateTemplatePort_shptr template_port) const {
   for(port_iterator piter = ports_begin(); piter != ports_end(); ++piter) {
     GatePort_shptr gate_port = *piter;
-    if(gate_port->get_template_port() == template_port) return true;
+
+    assert(gate_port->get_template_port()->has_valid_object_id());
+    assert(template_port->has_valid_object_id());
+
+    if(gate_port->get_template_port()->get_object_id() == template_port->get_object_id()) {
+
+      // debugging
+      if(gate_port->get_template_port() != template_port) {
+	std::cout << "ERROR\n";
+	gate_port->print();
+      }
+      // debugging
+      //assert(gate_port->get_template_port() == template_port);
+
+      return true;
+    }
+
   }
   return false;
 }

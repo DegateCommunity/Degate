@@ -99,7 +99,7 @@ bool LogicModel::exists_layer_id(layer_collection const& layers, layer_id_t lid)
 object_id_t LogicModel::get_new_object_id() {
   object_id_t new_id = ++object_id_counter;
   while(objects.find(new_id) != objects.end() ||
-	(gate_library != NULL && gate_library->exists_template(new_id)) ||
+	(gate_library != NULL && (gate_library->exists_template(new_id) || gate_library->exists_template_port(new_id))) ||
 	nets.find(new_id) != nets.end() ||
 	exists_layer_id(layers, new_id) ) {
     new_id = ++object_id_counter;
@@ -324,7 +324,9 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
 
     if(ConnectedLogicModelObject_shptr clmo =
        std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(o)) {
+      Net_shptr net = clmo->get_net();
       clmo->remove_net();
+      if(net != NULL && net->size()==0) remove_net(net);
     }
 
     if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
@@ -431,21 +433,29 @@ void LogicModel::remove_template_port_from_gate_template(GateTemplate_shptr gate
 
 void LogicModel::update_ports(Gate_shptr gate) {
 
+  bool d = gate->get_object_id() == 639;
+
   if(gate == NULL)
     throw InvalidPointerException("Invalid parameter for update_ports()");
 
   GateTemplate_shptr gate_template = gate->get_gate_template();
 
-  //  debug(TM, "upate ports on gate %d", gate->get_object_id());
+  debug(TM, "update ports on gate %d", gate->get_object_id());
 
+  // in a first iteration over all template ports from the corresponding template
+  // we check if there are gate ports to add
   if(gate->has_template()) {
-    // iterate over template ports
+    // iterate over template ports from the corresponding template
+
+    debug(TM, "compare ports for gate with oid=%d with corresponding template (oid=%d)", gate->get_object_id(), gate_template->get_object_id());
+
     for(GateTemplate::port_iterator tmpl_port_iter = gate_template->ports_begin();
 	tmpl_port_iter != gate_template->ports_end(); ++tmpl_port_iter) {
       GateTemplatePort_shptr tmpl_port = *tmpl_port_iter;
+      assert(tmpl_port != NULL);
 
       if(!gate->has_template_port(tmpl_port) && gate->has_orientation()) {
-	//debug(TM, "adding a port to gate");
+	debug(TM, "adding a new port to gate, because the gate has no reference to the gate port template %d.", tmpl_port->get_object_id());
 	GatePort_shptr new_gate_port(new GatePort(gate, tmpl_port, port_diameter));
 	new_gate_port->set_object_id(get_new_object_id());
 	gate->add_port(new_gate_port); // will set coordinates, too
@@ -491,12 +501,12 @@ void LogicModel::update_ports(Gate_shptr gate) {
       }
       // unset port coordinates
       else {
-	debug(TM, "should remove port from gate");
+	debug(TM, "should remove port with oid=%d from gate with oid %d", gate_port->get_object_id(), gate->get_object_id());
 	ports_to_remove.push_back(gate_port);
       }
     }
     else {
-      debug(TM, "should remove port from gate, because gate has no template");
+      debug(TM, "should remove port with oid=%d from gate with oid=%d, because gate has no template",  gate_port->get_object_id(), gate->get_object_id());
       ports_to_remove.push_back(gate_port);
     }
   }

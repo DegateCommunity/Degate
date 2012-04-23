@@ -106,8 +106,14 @@ namespace degate {
 
 
     /**
+     * Check if there is a template port in the gate library with the specified object ID.
+     */
+
+    bool exists_template_port(object_id_t port_id);
+
+    /**
      * Lookup a template port in the gate library.
-     * Check all templates in the library for a template port
+     * @throws CollectionLookupException Throws this exception, if the port was nout found.
      */
 
     GateTemplatePort_shptr get_template_port(object_id_t port_id);

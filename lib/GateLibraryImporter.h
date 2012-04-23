@@ -56,7 +56,8 @@ private:
 
 
   void parse_template_ports_element(const xmlpp::Element * const template_ports_element,
-				    GateTemplate_shptr gate_tmpl);
+				    GateTemplate_shptr gate_tmpl,
+				    GateLibrary_shptr gate_lib);
 
 public:
   GateLibraryImporter() {}

@@ -193,7 +193,7 @@ namespace degate {
      * This method bases on shared pointers not on simple port IDs.
      */
 
-    virtual bool has_template_port(GateTemplatePort_shptr template_port);
+    virtual bool has_template_port(GateTemplatePort_shptr template_port) const;
 
     /**
      * If a physically placed gate has a template. This template

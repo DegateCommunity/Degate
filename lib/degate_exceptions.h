@@ -40,6 +40,18 @@ namespace degate {
 
 
   /**
+   * Represents a runtime exception, that reflects an inconsistency in the logic model or gate library.
+   */
+
+  class DegateInconsistencyException : public DegateRuntimeException {
+  public:
+    DegateInconsistencyException() : DegateRuntimeException("There is a generic inconsistence in either the logic model or gate library.") {}
+    DegateInconsistencyException(std::string str) : DegateRuntimeException(str) {}
+  };
+
+
+
+  /**
    * Represents a this-should-not-happen problem and indicates a
    * programming error. This class is is derived from std::logic_error.
    * This excpetion should not go unnoticed. You should not

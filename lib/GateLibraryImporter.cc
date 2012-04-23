@@ -138,7 +138,7 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element * co
 
 
       const xmlpp::Element * ports = get_dom_twig(gate_elem, "ports");
-      if(ports != NULL) parse_template_ports_element(ports, gate_template);
+      if(ports != NULL) parse_template_ports_element(ports, gate_template, gate_lib);
 
       const xmlpp::Element * implementations = get_dom_twig(gate_elem, "implementations");
       if(implementations != NULL)
@@ -229,7 +229,8 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 
 
 void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element * const template_ports_element,
-						       GateTemplate_shptr gate_tmpl) {
+						       GateTemplate_shptr gate_tmpl,
+						       GateLibrary_shptr gate_lib) {
 
   if(template_ports_element == NULL ||
      gate_tmpl == NULL) throw InvalidPointerException("Invalid pointer");
@@ -242,6 +243,16 @@ void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element * co
     if(const xmlpp::Element* port_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
 
       object_id_t object_id = parse_number<object_id_t>(port_elem, "id");
+
+      // we check if the object id is somehow present in the logic model
+      if(gate_lib->exists_template_port(object_id) || gate_lib->exists_template(object_id)) {
+	boost::format f("Error: The object ID %1% is used twice in the gate library.");	
+	f % object_id;
+	std::cout << f.str() << "\n";
+	throw DegateInconsistencyException(f.str());
+      }
+
+
       const std::string name(port_elem->get_attribute_value("name"));
       const std::string description(port_elem->get_attribute_value("description"));
       const std::string type_str(port_elem->get_attribute_value("type").lowercase());

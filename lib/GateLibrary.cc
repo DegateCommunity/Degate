@@ -75,6 +75,22 @@ bool GateLibrary::is_name_in_use(std::string const & name) const {
   return false;
 }
 
+bool GateLibrary::exists_template_port(object_id_t port_id) {
+
+  for(template_iterator iter = begin(); iter != end(); ++iter) {
+
+    GateTemplate_shptr tmpl((*iter).second);
+
+    for(GateTemplate::port_iterator piter = tmpl->ports_begin();
+	piter != tmpl->ports_end();
+	piter++) {
+      if((*piter)->get_object_id() == port_id) return true;
+    }
+  }
+
+  return false;
+}
+
 
 GateTemplatePort_shptr GateLibrary::get_template_port(object_id_t port_id) {
 
