@@ -433,8 +433,6 @@ void LogicModel::remove_template_port_from_gate_template(GateTemplate_shptr gate
 
 void LogicModel::update_ports(Gate_shptr gate) {
 
-  bool d = gate->get_object_id() == 639;
-
   if(gate == NULL)
     throw InvalidPointerException("Invalid parameter for update_ports()");
 
