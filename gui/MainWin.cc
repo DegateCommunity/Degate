@@ -1394,6 +1394,8 @@ void MainWin::update_gui_on_selection_change() {
 
 void MainWin::selection_tool_double_clicked(unsigned int real_x, unsigned int real_y,
 					    unsigned int button) {
+  if(main_project == NULL) return;
+
   LogicModel_shptr lmodel = main_project->get_logic_model();
   Layer_shptr layer = lmodel->get_current_layer();
   PlacedLogicModelObject_shptr plo = layer->get_object_at_position(real_x, real_y);
