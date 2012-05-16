@@ -53,7 +53,7 @@ namespace degate {
    * This class represents the logic model.
    *
    * Note: This class is central in degate. So it tends to be somehow bloated.
-   * Convinient methods should go into LogicModelHelper.h
+   * Convenience methods should go into LogicModelHelper.h
    *
    * @todo implement a move_object
    */

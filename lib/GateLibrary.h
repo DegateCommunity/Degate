@@ -33,7 +33,7 @@ namespace degate {
    * This class represents a library of template cells.
    *
    * @todo There is no way to deal with gate libraries, which
-   *   have different image sizes for the gate templates then the
+   *   have different image sizes for the gate templates than the
    *   current project. There should be a way to scale the template
    *   images, but it is unknown how to derive the scaling factor without pain.
    */

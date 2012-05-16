@@ -265,7 +265,7 @@ void Module::determine_module_ports() {
 
 	  if(!exists_gate_port_recursive(oid)) { // outbound connection
 
-	    // Now we check, wheather the connection is feeded by an ouside entity or feeded
+	    // Now we check, whether the connection is feeded by an outside entity or feeded
 	    // from this module.
 	    // Problem: We can't see the object outside this module, because we only have an
 	    // object ID and no logic model object to look up the object ID. Therefore we have

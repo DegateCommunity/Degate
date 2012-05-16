@@ -499,7 +499,7 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(const xmlpp::E
 	  if(const xmlpp::Element* cell_elem = dynamic_cast<const xmlpp::Element*>(*c_iter)) {	  
 	    object_id_t cell_id = parse_number<object_id_t>(cell_elem, "object-id");
 
-	    // Lookup will throw an exception, if cell is not in the logic model. This is intented behaviour.
+	    // Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
 	    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(lmodel->get_object(cell_id)))
 	      module->add_gate(gate, /* autodetect module ports = */ false);
 	  }
@@ -519,7 +519,7 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(const xmlpp::E
 	    const Glib::ustring port_name(mport_elem->get_attribute_value("name"));
 	    object_id_t ref_id = parse_number<object_id_t>(mport_elem, "object-id");
 	    
-	    // Lookup will throw an exception, if cell is not in the logic model. This is intented behaviour.
+	    // Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
 	    if(GatePort_shptr gport = std::tr1::dynamic_pointer_cast<GatePort>(lmodel->get_object(ref_id)))
 	      module->add_module_port(port_name, gport);
 	  }

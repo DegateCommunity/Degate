@@ -79,7 +79,7 @@ void debug(const char * const module, int line, const char * const format, ...);
 
 
 namespace degate {
-  // we need some forward declerations here
+  // we need some forward declarations here
 
   class Circle;
   typedef std::tr1::shared_ptr<Circle> Circle_shptr;

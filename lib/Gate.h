@@ -39,8 +39,8 @@ namespace degate {
   /**
    * The class Gate defines and implements a physically placed gate.
    * @todo The template type id makes only sense, if ports have the
-   *  same thing with remplate ports. Maybe removing this is an option, because there are
-   *  easier ways to relaod the gate library.
+   *  same thing with template ports. Maybe removing this is an option, because there are
+   *  easier ways to reload the gate library.
    */
 
   class Gate : public Rectangle, public PlacedLogicModelObject {
