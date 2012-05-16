@@ -374,7 +374,7 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element * const gates_
       gate->set_fill_color(parse_color_string(fill_color_str));
       gate->set_frame_color(parse_color_string(frame_color_str));
 
-      if(gate_library != NULL) {
+      if(gate_library != NULL && gate_type_id != 0) {
 	GateTemplate_shptr tmpl = gate_library->get_template(gate_type_id);
 	assert(tmpl != NULL);
 	gate->set_gate_template(tmpl);
