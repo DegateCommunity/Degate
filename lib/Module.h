@@ -190,7 +190,12 @@ namespace degate {
      * Determine ports of a module.
      */
     void determine_module_ports();
-
+    
+    /**
+     * Determine ports of children and sub-children (not including the "local"
+     * module, on which this function is called).
+     */
+    void determine_module_ports_recursive();
 
     /**
      * Lookup a sub-module.

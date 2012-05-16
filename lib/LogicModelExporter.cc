@@ -99,6 +99,11 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
     add_nets(nets_elem, lmodel);
 
     // actually we have only one main module
+    
+    // First update the module ports.
+    determine_module_ports_for_root(lmodel); // Update main module itself.
+    lmodel->get_main_module()->determine_module_ports_recursive(); // Update all of main module's children.
+
     xmlpp::Element* modules_elem = root_elem->add_child("modules");
     if(modules_elem == NULL) throw(std::runtime_error("Failed to create node."));
     else add_module(modules_elem, lmodel, lmodel->get_main_module());

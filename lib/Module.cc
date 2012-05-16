@@ -236,7 +236,11 @@ std::string gate_port_already_named(degate::Module::port_collection const& ports
 
 
 void Module::determine_module_ports() {
-
+  
+  if (is_main_module()) {
+    throw std::logic_error("determine_module_ports() is not suited for main modules. See determine_module_ports_for_root().");
+  }
+  
   int pnum = 0;
   port_collection new_ports;
   std::set<Net_shptr> known_net;
@@ -330,6 +334,13 @@ void Module::determine_module_ports() {
   }
   ports = new_ports;
 
+}
+
+void Module::determine_module_ports_recursive() {
+  for (module_collection::iterator it = modules.begin(); it != modules.end(); ++it) {
+    (*it)->determine_module_ports();
+    (*it)->determine_module_ports_recursive();
+  }
 }
 
 void Module::add_module_port(std::string const& module_port_name, GatePort_shptr adjacent_gate_port) {
