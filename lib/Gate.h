@@ -55,14 +55,14 @@ namespace degate {
       ORIENTATION_FLIPPED_BOTH = 4
     };
 
-    typedef std::set< GatePort_shptr >::iterator port_iterator;
-    typedef std::set< GatePort_shptr >::const_iterator port_const_iterator;
+    typedef std::set< GatePort_shptr, LMOCompare >::iterator port_iterator;
+    typedef std::set< GatePort_shptr, LMOCompare >::const_iterator port_const_iterator;
 
   private:
 
     GateTemplate_shptr gate_template;
 
-    std::set<GatePort_shptr> gate_ports;
+    std::set<GatePort_shptr, LMOCompare> gate_ports;
 
     ORIENTATION orientation;
 

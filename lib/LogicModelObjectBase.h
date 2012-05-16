@@ -145,6 +145,12 @@ namespace degate {
   };
 
   typedef std::tr1::shared_ptr<LogicModelObjectBase> LogicModelObjectBase_shptr;
+  
+  class LMOCompare {
+  public:
+    bool operator() (const LogicModelObjectBase &a, const LogicModelObjectBase &b) const;
+    bool operator() (const LogicModelObjectBase_shptr &a, const LogicModelObjectBase_shptr &b) const;
+  };
 }
 
 #endif

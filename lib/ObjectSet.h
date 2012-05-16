@@ -48,7 +48,7 @@ namespace degate {
   class ObjectSet {
 
   public:
-    typedef std::set<PlacedLogicModelObject_shptr> object_set_type;
+    typedef std::set<PlacedLogicModelObject_shptr, LMOCompare> object_set_type;
     typedef object_set_type::const_iterator const_iterator;
     typedef object_set_type::iterator iterator;
 

@@ -43,8 +43,8 @@ namespace degate {
 
   public:
 
-    typedef std::set<Module_shptr> module_collection;
-    typedef std::set<Gate_shptr> gate_collection;
+    typedef std::set<Module_shptr, LMOCompare> module_collection;
+    typedef std::set<Gate_shptr, LMOCompare> gate_collection;
 
     /**
      * This map defines module ports.

@@ -67,7 +67,7 @@ namespace degate {
     BoundingBox bounding_box;
     unsigned int reference_counter;
 
-    std::set<GateTemplatePort_shptr> ports;
+    std::set<GateTemplatePort_shptr, LMOCompare> ports;
 
     implementation_collection implementations;
     image_collection images;
