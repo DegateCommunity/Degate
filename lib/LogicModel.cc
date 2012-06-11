@@ -39,7 +39,7 @@ using namespace std;
 using namespace degate;
 
 
-std::tr1::shared_ptr<Layer> LogicModel::get_create_layer(layer_position_t pos) {
+std::shared_ptr<Layer> LogicModel::get_create_layer(layer_position_t pos) {
 
   if(layers.size() <= pos || layers.at(pos) == NULL) {
     add_layer(pos);
@@ -190,7 +190,7 @@ void LogicModel::add_gate(int layer_pos, Gate_shptr o) {
     assert(*iter != NULL);
     assert((*iter)->has_valid_object_id() == true);
 
-    add_object(layer_pos, std::tr1::dynamic_pointer_cast<PlacedLogicModelObject>(*iter));
+    add_object(layer_pos, std::dynamic_pointer_cast<PlacedLogicModelObject>(*iter));
   }
 }
 
@@ -243,20 +243,20 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o) {
   if(!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
   object_id_t object_id = o->get_object_id();
 
-  if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
+  if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(o))
     add_gate(layer_pos, gate);
-  else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
+  else if(Wire_shptr wire = std::dynamic_pointer_cast<Wire>(o))
     add_wire(layer_pos, wire);
-  else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
+  else if(Via_shptr via = std::dynamic_pointer_cast<Via>(o))
     add_via(layer_pos, via);
-  else if(EMarker_shptr via = std::tr1::dynamic_pointer_cast<EMarker>(o))
+  else if(EMarker_shptr via = std::dynamic_pointer_cast<EMarker>(o))
     add_emarker(layer_pos, via);
-  else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
+  else if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(o))
     add_annotation(layer_pos, annotation);
 
 
   // if it is a RemoteObject, update remote-to-local-id mapping
-  if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>(o)) {
+  if(RemoteObject_shptr ro = std::dynamic_pointer_cast<RemoteObject>(o)) {
     update_roid_mapping(ro->get_remote_object_id(), o->get_object_id());
   }
 
@@ -291,7 +291,7 @@ void LogicModel::remove_remote_object(object_id_t remote_id) {
     PlacedLogicModelObject_shptr plo = p.second;
     RemoteObject_shptr ro;
 
-    if(ro = std::tr1::dynamic_pointer_cast<RemoteObject>(plo)) {
+    if(ro = std::dynamic_pointer_cast<RemoteObject>(plo)) {
 
       object_id_t local_id = plo->get_object_id();
 
@@ -323,25 +323,25 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
   else {
 
     if(ConnectedLogicModelObject_shptr clmo =
-       std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(o)) {
+       std::dynamic_pointer_cast<ConnectedLogicModelObject>(o)) {
       Net_shptr net = clmo->get_net();
       clmo->remove_net();
       if(net != NULL && net->size()==0) remove_net(net);
     }
 
-    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
+    if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(o))
       remove_gate(gate);
-    else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
+    else if(Wire_shptr wire = std::dynamic_pointer_cast<Wire>(o))
       remove_wire(wire);
-    else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
+    else if(Via_shptr via = std::dynamic_pointer_cast<Via>(o))
       remove_via(via);
-    else if(EMarker_shptr emarker = std::tr1::dynamic_pointer_cast<EMarker>(o))
+    else if(EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(o))
       remove_emarker(emarker);
-    else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
+    else if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(o))
       remove_annotation(annotation);
 
 
-    if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>(o)) {
+    if(RemoteObject_shptr ro = std::dynamic_pointer_cast<RemoteObject>(o)) {
       // remember to send a was-removed-message to the collaboration server
       if(add_to_remove_list) removed_remote_oids.push_back(ro->get_remote_object_id());
 
@@ -689,7 +689,7 @@ void LogicModel::remove_net(Net_shptr net) {
 
       // the logic model object should be connectable
       if(ConnectedLogicModelObject_shptr o =
-	 std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(objects[oid])) {
+	 std::dynamic_pointer_cast<ConnectedLogicModelObject>(objects[oid])) {
 
 	// unconnect object from net and net from object
 	o->remove_net();

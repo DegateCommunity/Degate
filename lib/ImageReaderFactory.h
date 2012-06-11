@@ -23,7 +23,7 @@
 #define __IMAGEREADERFACTORY_H__
 
 #include <list>
-#include <tr1/memory>
+#include <memory>
 #include <degate_exceptions.h>
 
 #include <StoragePolicies.h>
@@ -83,7 +83,7 @@ namespace degate{
      *   reader that can read the file.
      */
 
-    std::tr1::shared_ptr<class ImageReaderBase<ImageType> >
+    std::shared_ptr<class ImageReaderBase<ImageType> >
     get_reader(std::string const & filename) {
 
       std::string suffix(get_file_suffix(filename).c_str());
@@ -105,10 +105,10 @@ namespace degate{
       // Ok. Enough sarcasm. Let us finish the job ...
 
       if(suffix == "tif" || suffix == "tiff")
-	return std::tr1::shared_ptr<ImageReaderBase<ImageType> >
+	return std::shared_ptr<ImageReaderBase<ImageType> >
 	  (new TIFFReader<ImageType>(filename));
       else if(suffix == "jpg" || suffix == "jpeg")
-	return std::tr1::shared_ptr<ImageReaderBase<ImageType> >
+	return std::shared_ptr<ImageReaderBase<ImageType> >
 	  (new JPEGReader<ImageType>(filename));
       else throw InvalidFileFormatException();
     }

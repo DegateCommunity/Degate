@@ -32,7 +32,7 @@ namespace degate {
   template<typename ImageType, typename PixelType>
   struct ErodeImagePolicy {
 
-    static inline PixelType calculate(std::tr1::shared_ptr<ImageType> src,
+    static inline PixelType calculate(std::shared_ptr<ImageType> src,
 				      unsigned int x, unsigned int y,
 				      unsigned int min_x,
 				      unsigned int max_x,
@@ -62,8 +62,8 @@ namespace degate {
    */
 
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void erode_image(std::tr1::shared_ptr<ImageTypeDst> dst,
-		   std::tr1::shared_ptr<ImageTypeSrc> src,
+  void erode_image(std::shared_ptr<ImageTypeDst> dst,
+		   std::shared_ptr<ImageTypeSrc> src,
 		   unsigned int kernel_width = 3,
 		   unsigned int erosion_threshold = 3) {
 
@@ -81,7 +81,7 @@ namespace degate {
   template<typename ImageType, typename PixelType>
   struct DilateImagePolicy {
 
-    static inline PixelType calculate(std::tr1::shared_ptr<ImageType> src,
+    static inline PixelType calculate(std::shared_ptr<ImageType> src,
 				      unsigned int x, unsigned int y,
 				      unsigned int min_x,
 				      unsigned int max_x,
@@ -110,8 +110,8 @@ namespace degate {
    */
 
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void dilate_image(std::tr1::shared_ptr<ImageTypeDst> dst,
-		    std::tr1::shared_ptr<ImageTypeSrc> src,
+  void dilate_image(std::shared_ptr<ImageTypeDst> dst,
+		    std::shared_ptr<ImageTypeSrc> src,
 		    unsigned int kernel_width = 3,
 		    unsigned int dilation_threshold = 3) {
 
@@ -125,8 +125,8 @@ namespace degate {
    * Morphological open.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void morphological_open(std::tr1::shared_ptr<ImageTypeDst> dst,
-			  std::tr1::shared_ptr<ImageTypeSrc> src, 
+  void morphological_open(std::shared_ptr<ImageTypeDst> dst,
+			  std::shared_ptr<ImageTypeSrc> src, 
 			  unsigned int kernel_width = 3,
 			  unsigned int threshold_dilate = 1,
 			  unsigned int threshold_erode = 3) {
@@ -143,8 +143,8 @@ namespace degate {
    * Morphological close.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void morphological_close(std::tr1::shared_ptr<ImageTypeDst> dst,
-			   std::tr1::shared_ptr<ImageTypeSrc> src,
+  void morphological_close(std::shared_ptr<ImageTypeDst> dst,
+			   std::shared_ptr<ImageTypeSrc> src,
 			   unsigned int kernel_width = 3,
 			   unsigned int threshold_dilate = 1,
 			   unsigned int threshold_erode = 3) {
@@ -165,7 +165,7 @@ namespace degate {
    *   the second condition set is checked.
    */
   template<typename ImageType>
-  bool zhang_suen_thinning_iteration(std::tr1::shared_ptr<ImageType> img,
+  bool zhang_suen_thinning_iteration(std::shared_ptr<ImageType> img,
 				     bool condition_switch) {
     assert_is_single_channel_image<ImageType>();
 
@@ -230,7 +230,7 @@ namespace degate {
    * Zhang-Suen-Thinning of an image.
    */
   template<typename ImageType>
-  void thinning(std::tr1::shared_ptr<ImageType> img) {
+  void thinning(std::shared_ptr<ImageType> img) {
     assert_is_single_channel_image<ImageType>();
 
     bool running = true;

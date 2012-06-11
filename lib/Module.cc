@@ -410,7 +410,7 @@ void degate::determine_module_ports_for_root(LogicModel_shptr lmodel) {
 	  assert(oid != 0);
 	  
 	  PlacedLogicModelObject_shptr lmo = lmodel->get_object(oid);
-	  if(EMarker_shptr em = std::tr1::dynamic_pointer_cast<EMarker>(lmo)) {
+	  if(EMarker_shptr em = std::dynamic_pointer_cast<EMarker>(lmo)) {
 	    debug(TM, "Connected with emarker");
 
 	    if(em->get_description() == "module-port") {

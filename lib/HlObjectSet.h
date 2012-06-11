@@ -26,7 +26,7 @@
 #include <set>
 #include <list>
 #include <map>
-#include <tr1/memory>
+#include <memory>
 #include <ObjectSet.h>
 
 namespace degate {

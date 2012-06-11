@@ -57,7 +57,7 @@ namespace degate {
     std::string to_string() const;
   };
 
-  typedef std::tr1::shared_ptr<Point> Point_shptr;
+  typedef std::shared_ptr<Point> Point_shptr;
 }
 
 #endif

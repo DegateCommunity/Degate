@@ -150,7 +150,7 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<ImageBase> ImageBase_shptr;
+  typedef std::shared_ptr<ImageBase> ImageBase_shptr;
 
   /**
    * Partial template specialization for the storage policy StoragePolicy_PersistentFile.
@@ -271,38 +271,38 @@ namespace degate {
   typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_Tile> TileImage_GS_DOUBLE;
   typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_Tile> TileImage_GS_BYTE;
 
-  typedef std::tr1::shared_ptr<TileImage_RGBA> TileImage_RGBA_shptr;
-  typedef std::tr1::shared_ptr<TileImage_GS_DOUBLE> TileImage_GS_DOUBLE_shptr;
-  typedef std::tr1::shared_ptr<TileImage_GS_BYTE> TileImage_GS_BYTE_shptr;
+  typedef std::shared_ptr<TileImage_RGBA> TileImage_RGBA_shptr;
+  typedef std::shared_ptr<TileImage_GS_DOUBLE> TileImage_GS_DOUBLE_shptr;
+  typedef std::shared_ptr<TileImage_GS_BYTE> TileImage_GS_BYTE_shptr;
 
 
   typedef Image<PixelPolicy_RGBA, StoragePolicy_Tile> BackgroundImage;
-  typedef std::tr1::shared_ptr<BackgroundImage> BackgroundImage_shptr;
+  typedef std::shared_ptr<BackgroundImage> BackgroundImage_shptr;
 
 
   typedef Image<PixelPolicy_RGBA, StoragePolicy_TempFile> TempImage_RGBA;
   typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_TempFile> TempImage_GS_DOUBLE;
   typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_TempFile> TempImage_GS_BYTE;
 
-  typedef std::tr1::shared_ptr<TempImage_RGBA> TempImage_RGBA_shptr;
-  typedef std::tr1::shared_ptr<TempImage_GS_DOUBLE> TempImage_GS_DOUBLE_shptr;
-  typedef std::tr1::shared_ptr<TempImage_GS_BYTE> TempImage_GS_BYTE_shptr;
+  typedef std::shared_ptr<TempImage_RGBA> TempImage_RGBA_shptr;
+  typedef std::shared_ptr<TempImage_GS_DOUBLE> TempImage_GS_DOUBLE_shptr;
+  typedef std::shared_ptr<TempImage_GS_BYTE> TempImage_GS_BYTE_shptr;
 
 
   typedef Image<PixelPolicy_RGBA, StoragePolicy_PersistentFile> PersistentImage_RGBA;
-  typedef std::tr1::shared_ptr<PersistentImage_RGBA> PersistentImage_RGBA_shptr;
+  typedef std::shared_ptr<PersistentImage_RGBA> PersistentImage_RGBA_shptr;
 
 
   typedef Image<PixelPolicy_RGBA, StoragePolicy_Memory> MemoryImage;
-  typedef std::tr1::shared_ptr<MemoryImage> MemoryImage_shptr;
+  typedef std::shared_ptr<MemoryImage> MemoryImage_shptr;
 
 
   typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_Memory> MemoryImage_GS_BYTE;
   typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_Memory> MemoryImage_GS_DOUBLE;
   typedef Image<PixelPolicy_RGBA, StoragePolicy_Memory> MemoryImage_RGBA;
-  typedef std::tr1::shared_ptr<MemoryImage_GS_BYTE> MemoryImage_GS_BYTE_shptr;
-  typedef std::tr1::shared_ptr<MemoryImage_GS_DOUBLE> MemoryImage_GS_DOUBLE_shptr;
-  typedef std::tr1::shared_ptr<MemoryImage_RGBA> MemoryImage_shptr;
+  typedef std::shared_ptr<MemoryImage_GS_BYTE> MemoryImage_GS_BYTE_shptr;
+  typedef std::shared_ptr<MemoryImage_GS_DOUBLE> MemoryImage_GS_DOUBLE_shptr;
+  typedef std::shared_ptr<MemoryImage_RGBA> MemoryImage_shptr;
 
   typedef MemoryImage RendererImage;
   typedef MemoryImage_shptr RendererImage_shptr;

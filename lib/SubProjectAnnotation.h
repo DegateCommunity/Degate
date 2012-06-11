@@ -63,6 +63,6 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<SubProjectAnnotation> SubProjectAnnotation_shptr;
+  typedef std::shared_ptr<SubProjectAnnotation> SubProjectAnnotation_shptr;
 }
 #endif

@@ -69,7 +69,7 @@ void LogicModelExporterTest::test_export(void) {
   /*
    * export library
    */
-  LogicModelExporter exporter(std::tr1::shared_ptr<ObjectIDRewriter>(new ObjectIDRewriter()));
+  LogicModelExporter exporter(std::shared_ptr<ObjectIDRewriter>(new ObjectIDRewriter()));
   string out_filename("/tmp/lmodel.xml");
   exporter.export_data(out_filename, lmodel);
 

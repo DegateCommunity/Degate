@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include <tr1/memory>
+#include <memory>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -159,7 +159,7 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element * const nets_el
 	    }
 	    else {
 	      ConnectedLogicModelObject_shptr o =
-		std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(placed_object);
+		std::dynamic_pointer_cast<ConnectedLogicModelObject>(placed_object);
 	      if(o != NULL) {
 		o->set_net(net);
 	      }
@@ -500,7 +500,7 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(const xmlpp::E
 	    object_id_t cell_id = parse_number<object_id_t>(cell_elem, "object-id");
 
 	    // Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
-	    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(lmodel->get_object(cell_id)))
+	    if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(lmodel->get_object(cell_id)))
 	      module->add_gate(gate, /* autodetect module ports = */ false);
 	  }
 	}
@@ -520,7 +520,7 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(const xmlpp::E
 	    object_id_t ref_id = parse_number<object_id_t>(mport_elem, "object-id");
 	    
 	    // Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
-	    if(GatePort_shptr gport = std::tr1::dynamic_pointer_cast<GatePort>(lmodel->get_object(ref_id)))
+	    if(GatePort_shptr gport = std::dynamic_pointer_cast<GatePort>(lmodel->get_object(ref_id)))
 	      module->add_module_port(port_name, gport);
 	  }
 	}

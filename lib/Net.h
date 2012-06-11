@@ -23,7 +23,7 @@
 #define __NET_H__
 
 #include <set>
-#include <tr1/memory>
+#include <memory>
 
 
 #include "globals.h"

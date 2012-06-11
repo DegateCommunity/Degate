@@ -23,7 +23,7 @@
 #define __JPEGREADER_H__
 
 #include <list>
-#include <tr1/memory>
+#include <memory>
 #include <jpeglib.h>
 
 #include "StoragePolicies.h"
@@ -62,7 +62,7 @@ namespace degate {
 
     bool read();
 
-    bool get_image(std::tr1::shared_ptr<ImageType>);
+    bool get_image(std::shared_ptr<ImageType>);
 
 
   };
@@ -126,7 +126,7 @@ namespace degate {
   }
 
   template<class ImageType>
-  bool JPEGReader<ImageType>::get_image(std::tr1::shared_ptr<ImageType> img) {
+  bool JPEGReader<ImageType>::get_image(std::shared_ptr<ImageType> img) {
 
     if(img == NULL) return false;
 

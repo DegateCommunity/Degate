@@ -56,7 +56,7 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 
     PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
 
-    if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(plo)) {
+    if(GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo)) {
 
       assert(gate_port->has_template_port() == true); // can't happen
 
@@ -89,7 +89,7 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net) {
 
       object_id_t oid = *c_iter;
       PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
-      if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(plo)) {
+      if(GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo)) {
 
 	GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 	std::string error_msg;

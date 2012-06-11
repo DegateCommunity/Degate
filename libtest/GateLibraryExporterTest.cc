@@ -57,7 +57,7 @@ void GateLibraryExporterTest::test_export(void) {
   /*
    * export library
    */
-  GateLibraryExporter exporter(std::tr1::shared_ptr<ObjectIDRewriter>(new ObjectIDRewriter()));
+  GateLibraryExporter exporter(std::shared_ptr<ObjectIDRewriter>(new ObjectIDRewriter()));
   string out_filename("/tmp/gate_library.xml");
   exporter.export_data(out_filename, glib);
 

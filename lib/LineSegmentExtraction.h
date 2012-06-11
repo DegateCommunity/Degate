@@ -4,7 +4,7 @@
 #include <Image.h>
 #include <ImageManipulation.h>
 #include <Line.h>
-#include <tr1/memory>
+#include <memory>
 #include <fstream>
 
 #include <boost/foreach.hpp>
@@ -40,12 +40,12 @@ namespace degate{
 
   };
 
-  typedef std::tr1::shared_ptr<LinearPrimitive> LinearPrimitive_shptr;
+  typedef std::shared_ptr<LinearPrimitive> LinearPrimitive_shptr;
 
   // ----------------------------------------------------------------------------------
 
   class LineSegment;
-  typedef std::tr1::shared_ptr<LineSegment> LineSegment_shptr;
+  typedef std::shared_ptr<LineSegment> LineSegment_shptr;
 
   /**
    * Line segment
@@ -262,7 +262,7 @@ namespace degate{
 
   };
 
-  typedef std::tr1::shared_ptr<LineSegmentMap> LineSegmentMap_shptr;
+  typedef std::shared_ptr<LineSegmentMap> LineSegmentMap_shptr;
 
   // ----------------------------------------------------------------------------------
 
@@ -272,15 +272,15 @@ namespace degate{
   private:
 
     unsigned int width, height;
-    std::tr1::shared_ptr<ImageType> img;
-    std::tr1::shared_ptr<ImageType> processed;
+    std::shared_ptr<ImageType> img;
+    std::shared_ptr<ImageType> processed;
     LineSegmentMap_shptr line_segments;
     unsigned int search_radius_along;
     unsigned int search_radius_across;
     unsigned int border;
 
   public:
-  LineSegmentExtraction(std::tr1::shared_ptr<ImageType> _img,
+  LineSegmentExtraction(std::shared_ptr<ImageType> _img,
 			unsigned int _search_radius_along,
 			unsigned int _search_radius_across,
 			unsigned int _border) :
@@ -319,7 +319,7 @@ namespace degate{
 	}
     }
 
-    LinearPrimitive_shptr trace_line_primitive(std::tr1::shared_ptr<ImageType> img,
+    LinearPrimitive_shptr trace_line_primitive(std::shared_ptr<ImageType> img,
 					       unsigned int x, unsigned int y) {
 
       LinearPrimitive_shptr segment;

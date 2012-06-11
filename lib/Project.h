@@ -30,15 +30,15 @@
 
 #include <string>
 #include <list>
-#include <tr1/memory>
+#include <memory>
 
 #include <time.h>
 
 namespace degate {
 
   class Project;
-  typedef std::list<std::tr1::shared_ptr<Project> > ProjectList;
-  typedef std::tr1::shared_ptr<Project> Project_shptr;
+  typedef std::list<std::shared_ptr<Project> > ProjectList;
+  typedef std::shared_ptr<Project> Project_shptr;
 }
 
 #include "ProjectImporter.h"

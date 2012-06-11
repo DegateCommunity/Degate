@@ -22,7 +22,7 @@
 #ifndef __RECOGNITIONGUIBASE_H__
 #define __RECOGNITIONGUIBASE_H__
 
-#include <tr1/memory>
+#include <memory>
 #include <gdkmm/window.h>
 #include <libglademm.h>
 
@@ -89,7 +89,7 @@ public:
 
 };
 
-typedef std::tr1::shared_ptr<RecognitionGUIBase> RecognitionGUIBase_shptr;
+typedef std::shared_ptr<RecognitionGUIBase> RecognitionGUIBase_shptr;
 
 
 

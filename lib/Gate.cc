@@ -101,7 +101,7 @@ object_id_t Gate::get_template_type_id() const {
 
 
 
-void Gate::set_gate_template(std::tr1::shared_ptr<GateTemplate> gate_template) {
+void Gate::set_gate_template(std::shared_ptr<GateTemplate> gate_template) {
   if(has_template()) {
     this->gate_template->decrement_reference_counter();
   }
@@ -122,7 +122,7 @@ void Gate::set_gate_template(std::tr1::shared_ptr<GateTemplate> gate_template) {
 }
 
 
-std::tr1::shared_ptr<GateTemplate> Gate::get_gate_template() const {
+std::shared_ptr<GateTemplate> Gate::get_gate_template() const {
   return gate_template;
 }
 

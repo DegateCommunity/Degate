@@ -23,7 +23,7 @@
 #define __IMAGEREADERBASE_H__
 
 #include <list>
-#include <tr1/memory>
+#include <memory>
 #include <degate_exceptions.h>
 
 #include <TypeTraits.h>
@@ -118,7 +118,7 @@ namespace degate {
      * Read the file content into image.
      */
 
-    virtual bool get_image(std::tr1::shared_ptr<ImageType> img) = 0;
+    virtual bool get_image(std::shared_ptr<ImageType> img) = 0;
 
   };
 

@@ -36,11 +36,11 @@ namespace degate {
   class SubImageAnalyzer {
 
   private:
-    std::tr1::shared_ptr<ImageType> img;
+    std::shared_ptr<ImageType> img;
     unsigned int width;
 
   public:
-    SubImageAnalyzer(std::tr1::shared_ptr<ImageType> _img,
+    SubImageAnalyzer(std::shared_ptr<ImageType> _img,
 		     unsigned int width) :
       img(_img),
       width(_width) {

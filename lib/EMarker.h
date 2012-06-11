@@ -32,7 +32,7 @@
 #include "Circle.h"
 #include <RemoteObject.h>
 
-#include <tr1/memory>
+#include <memory>
 
 namespace degate {
 

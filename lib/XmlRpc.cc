@@ -55,7 +55,7 @@ void degate::push_changes_to_server(std::string const& server_url, LogicModel_sh
 
     object_id_t local_oid = iter->second->get_object_id();
 
-    if(RemoteObject_shptr ro = std::tr1::dynamic_pointer_cast<RemoteObject>((*iter).second)) {
+    if(RemoteObject_shptr ro = std::dynamic_pointer_cast<RemoteObject>((*iter).second)) {
 
       if(!ro->has_remote_object_id()) {
 	std::cout << "Push object to server." << std::endl;

@@ -100,7 +100,7 @@ namespace degate {
     int get_exit_code() const;
   };
 
-  typedef std::tr1::shared_ptr<ExternalMatching> ExternalMatching_shptr;
+  typedef std::shared_ptr<ExternalMatching> ExternalMatching_shptr;
 }
 
 #endif

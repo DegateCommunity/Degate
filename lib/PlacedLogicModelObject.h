@@ -53,7 +53,7 @@ namespace degate {
   private:
 
     HIGHLIGHTING_STATE highlight_state;
-    std::tr1::shared_ptr<Layer> layer;
+    std::shared_ptr<Layer> layer;
 
   protected:
 
@@ -99,13 +99,13 @@ namespace degate {
      * Set the layer on which the object is placed.
      */
 
-    virtual void set_layer(std::tr1::shared_ptr<Layer> layer);
+    virtual void set_layer(std::shared_ptr<Layer> layer);
 
     /**
      * Get the layer on which the object is placed.
      */
 
-    virtual std::tr1::shared_ptr<Layer> get_layer();
+    virtual std::shared_ptr<Layer> get_layer();
 
 
     /**

@@ -41,7 +41,7 @@ namespace degate {
 
   public:
 
-    typedef std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> > MemoryMap_shptr;
+    typedef std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> > MemoryMap_shptr;
 
   private:
 

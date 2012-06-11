@@ -74,7 +74,7 @@ TileImage_GS_DOUBLE_shptr ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in,
 
   /*
   overlay_result(zero_cross_img,
-		 std::tr1::dynamic_pointer_cast<TileImage_GS_DOUBLE>(img_in),
+		 std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(img_in),
 		 directory);
   */
   return zero_cross_img;

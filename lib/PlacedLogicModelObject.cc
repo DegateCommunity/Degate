@@ -47,11 +47,11 @@ void PlacedLogicModelObject::set_highlighted(PlacedLogicModelObject::HIGHLIGHTIN
 }
 
 
-void PlacedLogicModelObject::set_layer(std::tr1::shared_ptr<Layer> layer) {
+void PlacedLogicModelObject::set_layer(std::shared_ptr<Layer> layer) {
   this->layer = layer;
 }
 
-std::tr1::shared_ptr<Layer> PlacedLogicModelObject::get_layer() {
+std::shared_ptr<Layer> PlacedLogicModelObject::get_layer() {
   return layer;
 }
 

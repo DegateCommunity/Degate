@@ -208,12 +208,12 @@ bool degate::check_object_tangency(PlacedLogicModelObject_shptr o1,
   Line_shptr l1, l2;
   Rectangle_shptr r1, r2;
 
-  c1 = std::tr1::dynamic_pointer_cast<Circle>(o1);
-  l1 = std::tr1::dynamic_pointer_cast<Line>(o1);
-  r1 = std::tr1::dynamic_pointer_cast<Rectangle>(o1);
-  c2 = std::tr1::dynamic_pointer_cast<Circle>(o2);
-  l2 = std::tr1::dynamic_pointer_cast<Line>(o2);
-  r2 = std::tr1::dynamic_pointer_cast<Rectangle>(o2);
+  c1 = std::dynamic_pointer_cast<Circle>(o1);
+  l1 = std::dynamic_pointer_cast<Line>(o1);
+  r1 = std::dynamic_pointer_cast<Rectangle>(o1);
+  c2 = std::dynamic_pointer_cast<Circle>(o2);
+  l2 = std::dynamic_pointer_cast<Line>(o2);
+  r2 = std::dynamic_pointer_cast<Rectangle>(o2);
 
   if(c1 && c2)
     return check_object_tangency(c1, c2);

@@ -63,10 +63,10 @@ namespace degate {
 
       assert(_in != NULL);
 
-      std::tr1::shared_ptr<ImageTypeIn> img_in =
-	std::tr1::dynamic_pointer_cast<ImageTypeIn>(_in);
+      std::shared_ptr<ImageTypeIn> img_in =
+	std::dynamic_pointer_cast<ImageTypeIn>(_in);
 
-      std::tr1::shared_ptr<ImageTypeOut>
+      std::shared_ptr<ImageTypeOut>
 	img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
 
       assert(img_in != NULL);

@@ -32,7 +32,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <list>
-#include <tr1/memory>
+#include <memory>
 
 using namespace std;
 using namespace degate;
@@ -78,19 +78,19 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
 	PlacedLogicModelObject_shptr o = (*iter);
 
-	if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o))
+	if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(o))
 	  add_gate(gates_elem, gate, layer_pos);
 
-	else if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
+	else if(Via_shptr via = std::dynamic_pointer_cast<Via>(o))
 	  add_via(vias_elem, via, layer_pos);
 
-	else if(EMarker_shptr emarker = std::tr1::dynamic_pointer_cast<EMarker>(o))
+	else if(EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(o))
 	  add_emarker(emarkers_elem, emarker, layer_pos);
 
-	else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
+	else if(Wire_shptr wire = std::dynamic_pointer_cast<Wire>(o))
 	  add_wire(wires_elem, wire, layer_pos);
 
-	else if(Annotation_shptr annotation = std::tr1::dynamic_pointer_cast<Annotation>(o))
+	else if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(o))
 	  add_annotation(annotations_elem, annotation, layer_pos);
 
       }
@@ -139,7 +139,7 @@ void LogicModelExporter::add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lm
       object_id_t oid = *conn_iter;
 
       const ConnectedLogicModelObject_shptr conn_obj =
-	std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(lmodel->get_object(oid));
+	std::dynamic_pointer_cast<ConnectedLogicModelObject>(lmodel->get_object(oid));
 
       xmlpp::Element* conn_elem = net_elem->add_child("connection");
       conn_elem->set_attribute("object-id",

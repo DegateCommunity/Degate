@@ -25,7 +25,7 @@
 
 using namespace degate;
 
-void Layer::add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) {
+void Layer::add_object(std::shared_ptr<PlacedLogicModelObject> o) {
 
   if(o->get_bounding_box() == BoundingBox(0, 0, 0, 0)) {
     boost::format fmter("Error in add_object(): Object %1% with ID %2% has an "
@@ -41,7 +41,7 @@ void Layer::add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) {
   objects[o->get_object_id()] = o;
 }
 
-void Layer::remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) {
+void Layer::remove_object(std::shared_ptr<PlacedLogicModelObject> o) {
   if(RET_IS_NOT_OK(quadtree.remove(o))) {
     debug(TM, "Failed to remove object from quadtree.");
     throw std::runtime_error("Failed to remove object from quadtree.");
@@ -154,7 +154,7 @@ Layer::qt_region_iterator Layer::region_end() {
 void Layer::set_image(BackgroundImage_shptr img) {
 
   scaling_manager =
-    std::tr1::shared_ptr<ScalingManager<BackgroundImage> >
+    std::shared_ptr<ScalingManager<BackgroundImage> >
     (new ScalingManager<BackgroundImage>(img, img->get_directory()));
 
   scaling_manager->create_scalings();
@@ -244,7 +244,7 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
     }
 
     /* Prefer gate ports */
-    if(std::tr1::dynamic_pointer_cast<GatePort>(*iter) != NULL) {
+    if(std::dynamic_pointer_cast<GatePort>(*iter) != NULL) {
       return *iter;
     }
   }
@@ -259,7 +259,7 @@ unsigned int Layer::get_distance_to_gate_boundary(unsigned int x, unsigned int y
   for(Layer::qt_region_iterator iter = quadtree.region_iter_begin(x, x + width, y, y + height);
       iter != quadtree.region_iter_end(); ++iter) {
 
-    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*iter)) {
+    if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(*iter)) {
 
       if(query_horizontal_distance) {
 	assert(gate->get_max_x() >= (int)x);

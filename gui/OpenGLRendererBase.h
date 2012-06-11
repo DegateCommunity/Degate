@@ -141,7 +141,7 @@ protected:
 
 private:
 
-  std::tr1::shared_ptr<FontRenderingHelper> font_rendering_helper;
+  std::shared_ptr<FontRenderingHelper> font_rendering_helper;
 };
 
 

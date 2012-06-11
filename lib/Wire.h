@@ -22,7 +22,7 @@
 #ifndef __WIRE_H__
 #define __WIRE_H__
 
-#include <tr1/memory>
+#include <memory>
 
 #include <globals.h>
 #include <LogicModelObjectBase.h>

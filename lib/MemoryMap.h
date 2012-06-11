@@ -37,7 +37,7 @@
 #include <assert.h>
 #include <limits.h>
 #include <math.h>
-#include <tr1/memory>
+#include <memory>
 #include <boost/utility.hpp>
 
 namespace degate {

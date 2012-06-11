@@ -69,10 +69,10 @@ void ImageProcessingTest::test_pipe(void) {
    * Set up processing element
    */
   
-  std::tr1::shared_ptr<IPCopy<BackgroundImage, TileImage_GS_DOUBLE> > copy_rgba_to_gs
+  std::shared_ptr<IPCopy<BackgroundImage, TileImage_GS_DOUBLE> > copy_rgba_to_gs
     (new IPCopy<BackgroundImage, TileImage_GS_DOUBLE>() );
   
-  std::tr1::shared_ptr<IPCopy<TileImage_GS_DOUBLE, BackgroundImage> > copy_gs_to_rgba
+  std::shared_ptr<IPCopy<TileImage_GS_DOUBLE, BackgroundImage> > copy_gs_to_rgba
     (new IPCopy<TileImage_GS_DOUBLE, BackgroundImage>() );
 
   
@@ -102,7 +102,7 @@ void ImageProcessingTest::test_pipe(void) {
   pipe.add(copy_gs_to_rgba);
   CPPUNIT_ASSERT(pipe.size() == 2);
   
-  //ImageBase_shptr out = pipe.run(std::tr1::dynamic_pointer_cast<ImageBase>(in));
+  //ImageBase_shptr out = pipe.run(std::dynamic_pointer_cast<ImageBase>(in));
   ImageBase_shptr out = pipe.run(in);
  
 }

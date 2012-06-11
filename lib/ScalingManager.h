@@ -43,9 +43,9 @@ namespace degate {
 
   public:
 
-    typedef std::pair<double, std::tr1::shared_ptr<ImageType> > image_map_element;
+    typedef std::pair<double, std::shared_ptr<ImageType> > image_map_element;
     typedef std::map<double, /* scaling */
-		     std::tr1::shared_ptr<ImageType> > image_map;
+		     std::shared_ptr<ImageType> > image_map;
 
   private:
     std::string base_directory;
@@ -83,7 +83,7 @@ namespace degate {
      * @param min_size Create down scalings until the edge length
      *  is becomes less than \p min_size.
      */
-    ScalingManager(std::tr1::shared_ptr<ImageType> img,
+    ScalingManager(std::shared_ptr<ImageType> img,
 		   std::string const& base_directory,
 		   int min_size = 1024) {
 
@@ -131,7 +131,7 @@ namespace degate {
       if(!(file_exists(base_directory) && is_directory(base_directory)))
 	throw InvalidPathException("The directory for prescaled images must exist. but it is not there.");
 
-      std::tr1::shared_ptr<ImageType> last_img = images[1];
+      std::shared_ptr<ImageType> last_img = images[1];
       unsigned int w = last_img->get_width();
       unsigned int h = last_img->get_height();
 
@@ -152,7 +152,7 @@ namespace degate {
 	  debug(TM, "yes");
 	  create_directory(dir_path);
 
-	  std::tr1::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
+	  std::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
 								images[1]->is_persistent()));
 
 	  scale_down_by_2<ImageType, ImageType>(new_img, last_img);
@@ -160,7 +160,7 @@ namespace degate {
 	}
 	else {
 	  debug(TM, "no");
-	  std::tr1::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
+	  std::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
 								images[1]->is_persistent()));
 
 	  last_img = new_img;
@@ -194,7 +194,7 @@ namespace degate {
   /**
    * A typedef for scaling managers that handle background images.
    */
-  typedef std::tr1::shared_ptr<ScalingManager<BackgroundImage> > ScalingManager_shptr;
+  typedef std::shared_ptr<ScalingManager<BackgroundImage> > ScalingManager_shptr;
 }
 
 #endif

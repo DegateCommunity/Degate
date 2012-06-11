@@ -22,7 +22,7 @@
 #ifndef __GATE_H__
 #define __GATE_H__
 
-#include <tr1/memory>
+#include <memory>
 
 #include <degate.h>
 #include <Layer.h>
@@ -161,14 +161,14 @@ namespace degate {
      * @see set_template_type_id()
      */
 
-    virtual void set_gate_template(std::tr1::shared_ptr<GateTemplate> gate_template);
+    virtual void set_gate_template(std::shared_ptr<GateTemplate> gate_template);
 
     /**
      * Get the gate template.
      * @see set_gate_template()
      */
 
-    virtual std::tr1::shared_ptr<GateTemplate> get_gate_template() const;
+    virtual std::shared_ptr<GateTemplate> get_gate_template() const;
 
     /**
      * Check if the gate has a template type set.
@@ -320,7 +320,7 @@ namespace degate {
   };
 
 
-  typedef std::tr1::shared_ptr<Gate> Gate_shptr;
+  typedef std::shared_ptr<Gate> Gate_shptr;
 
 }
 

@@ -36,7 +36,7 @@ namespace degate {
    * Flip image in place from left to right.
    */
   template<typename ImageType>
-  void flip_left_right(std::tr1::shared_ptr<ImageType> img) {
+  void flip_left_right(std::shared_ptr<ImageType> img) {
     if(img->get_width() == 1) return;
 
     for(unsigned int y = 0; y < img->get_height(); y++)
@@ -53,7 +53,7 @@ namespace degate {
    * Flip image in place from top to down.
    */
   template<typename ImageType>
-  void flip_up_down(std::tr1::shared_ptr<ImageType> img) {
+  void flip_up_down(std::shared_ptr<ImageType> img) {
     if(img->get_height() == 1) return;
 
     for(unsigned int y = 0; y < (img->get_height() >> 1); y++)
@@ -70,7 +70,7 @@ namespace degate {
    * Flip image in place from top to down and from left to right.
    */
   template<typename ImageType>
-  void flip_both(std::tr1::shared_ptr<ImageType> img) {
+  void flip_both(std::shared_ptr<ImageType> img) {
     flip_up_down<ImageType>(img);
     flip_left_right<ImageType>(img);
   }
@@ -181,7 +181,7 @@ namespace degate {
    * Get pixel value as ...
    */
   template<typename PixelTypeDst, typename ImageTypeSrc>
-  inline PixelTypeDst get_pixel_as(typename std::tr1::shared_ptr<ImageTypeSrc> img,
+  inline PixelTypeDst get_pixel_as(typename std::shared_ptr<ImageTypeSrc> img,
 				   unsigned int x, unsigned int y) {
     return convert_pixel<PixelTypeDst, typename ImageTypeSrc::pixel_type>(img->get_pixel(x, y));
   }
@@ -190,7 +190,7 @@ namespace degate {
    * Set a pixel value as ...
    */
   template<typename PixelTypeSrc, typename ImageTypeDst>
-  inline void set_pixel_as(typename std::tr1::shared_ptr<ImageTypeDst> img,
+  inline void set_pixel_as(typename std::shared_ptr<ImageTypeDst> img,
 		    unsigned int x, unsigned int y, PixelTypeSrc p) {
 
     img->get_pixel(x, y, convert_pixel<typename ImageTypeDst::pixel_type, PixelTypeSrc>(p));
@@ -206,8 +206,8 @@ namespace degate {
    * \p src is not large enough.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void copy_image(std::tr1::shared_ptr<ImageTypeDst> dst,
-		  std::tr1::shared_ptr<ImageTypeSrc> src) {
+  void copy_image(std::shared_ptr<ImageTypeDst> dst,
+		  std::shared_ptr<ImageTypeSrc> src) {
 
 
     unsigned int h = std::min(src->get_height(), dst->get_height());
@@ -225,8 +225,8 @@ namespace degate {
    * smaller than the region or the image \p src.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void extract_partial_image(std::tr1::shared_ptr<ImageTypeDst> dst,
-			     std::tr1::shared_ptr<ImageTypeSrc> src,
+  void extract_partial_image(std::shared_ptr<ImageTypeDst> dst,
+			     std::shared_ptr<ImageTypeSrc> src,
 			     unsigned int min_x, unsigned int max_x,
 			     unsigned int min_y, unsigned int max_y) {
 
@@ -250,8 +250,8 @@ namespace degate {
    * @see extract_partial_image()
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void extract_partial_image(std::tr1::shared_ptr<ImageTypeDst> dst,
-			     std::tr1::shared_ptr<ImageTypeSrc> src,
+  void extract_partial_image(std::shared_ptr<ImageTypeDst> dst,
+			     std::shared_ptr<ImageTypeSrc> src,
 			     BoundingBox const& bounding_box) {
 
     extract_partial_image<ImageTypeDst, ImageTypeSrc>(dst, src,
@@ -275,8 +275,8 @@ namespace degate {
    * @see copy_image()
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void convert_to_greyscale(std::tr1::shared_ptr<ImageTypeDst> dst,
-			    std::tr1::shared_ptr<ImageTypeSrc> src) {
+  void convert_to_greyscale(std::shared_ptr<ImageTypeDst> dst,
+			    std::shared_ptr<ImageTypeSrc> src) {
 
     unsigned int h = std::min(src->get_height(), dst->get_height());
     unsigned int w = std::min(src->get_width(), dst->get_width());
@@ -290,11 +290,11 @@ namespace degate {
 
   /**
    * In place conversion to a greyscale image.
-   * @see convert_to_greyscale(std::tr1::shared_ptr<ImageTypeDst>, std::tr1::shared_ptr<ImageTypeSrc>)
+   * @see convert_to_greyscale(std::shared_ptr<ImageTypeDst>, std::shared_ptr<ImageTypeSrc>)
    */
 
   template<typename ImageType>
-  void convert_to_greyscale(std::tr1::shared_ptr<ImageType> img) {
+  void convert_to_greyscale(std::shared_ptr<ImageType> img) {
     convert_to_greyscale<ImageType, ImageType>(img, img);
   }
 
@@ -304,8 +304,8 @@ namespace degate {
    * You can scale images in place.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void scale_down_by_2(std::tr1::shared_ptr<ImageTypeDst> dst,
-		       std::tr1::shared_ptr<ImageTypeSrc> src) {
+  void scale_down_by_2(std::shared_ptr<ImageTypeDst> dst,
+		       std::shared_ptr<ImageTypeSrc> src) {
 
 
     unsigned int dst_x, dst_y, src_x, src_y;
@@ -374,8 +374,8 @@ namespace degate {
    *  destination image has no dimension definition.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void scale_down_by_power_of_2(std::tr1::shared_ptr<ImageTypeDst> dst,
-				std::tr1::shared_ptr<ImageTypeSrc> src) {
+  void scale_down_by_power_of_2(std::shared_ptr<ImageTypeDst> dst,
+				std::shared_ptr<ImageTypeSrc> src) {
 
     if(dst->get_width() == 0) throw DegateRuntimeException("Invalid image dimension for destination image.");
 
@@ -386,7 +386,7 @@ namespace degate {
     else if(scaling == 2)
       scale_down_by_2<ImageTypeDst, ImageTypeSrc>(dst, src);
     else {
-      std::tr1::shared_ptr<ImageTypeDst> tmp(new ImageTypeDst(src->get_width(), src->get_height()));
+      std::shared_ptr<ImageTypeDst> tmp(new ImageTypeDst(src->get_width(), src->get_height()));
       copy_image<ImageTypeDst, ImageTypeSrc>(tmp, src);
 
       scaling >>= 1;
@@ -402,7 +402,7 @@ namespace degate {
    * Clear an image.
    */
   template<typename ImageType>
-  void clear_image(std::tr1::shared_ptr<ImageType> img) {
+  void clear_image(std::shared_ptr<ImageType> img) {
 
     for(unsigned int y = 0; y < img->get_height(); y++)
       for(unsigned int x = 0; x < img->get_width(); x++)
@@ -420,14 +420,14 @@ namespace degate {
    */
 
   template<typename ImageType>
-  std::tr1::shared_ptr<ImageType> load_degate_image(unsigned int width, unsigned int height,
+  std::shared_ptr<ImageType> load_degate_image(unsigned int width, unsigned int height,
 						    std::string const& path) {
     if(!file_exists(path)) {
       boost::format fmter("Error in load_degate_image(): The image file or directory %1% does not exist.");
       fmter % path;
       throw InvalidPathException(fmter.str());
     }
-    return std::tr1::shared_ptr<ImageType>(new ImageType(width, height, path));
+    return std::shared_ptr<ImageType>(new ImageType(width, height, path));
   }
 
 
@@ -437,8 +437,8 @@ namespace degate {
    * Source and destination image can be the same image.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void normalize(std::tr1::shared_ptr<ImageTypeDst> dst,
-		 std::tr1::shared_ptr<ImageTypeSrc> src,
+  void normalize(std::shared_ptr<ImageTypeDst> dst,
+		 std::shared_ptr<ImageTypeSrc> src,
 		 double lower_bound = 0, double upper_bound = 1) {
 
     assert_is_single_channel_image<ImageTypeSrc>();
@@ -498,7 +498,7 @@ namespace degate {
    * Normalize a single channel image in place.
    */
   template<typename ImageType>
-  void normalize(std::tr1::shared_ptr<ImageType> img,
+  void normalize(std::shared_ptr<ImageType> img,
 		 double lower_bound = 0, double upper_bound = 1) {
     normalize<ImageType, ImageType>(img, img, lower_bound, upper_bound);
   }
@@ -510,8 +510,8 @@ namespace degate {
    * to a non-0 value if it is greater or equal than the trheshold.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void thresholding_image(std::tr1::shared_ptr<ImageTypeDst> dst,
-			  std::tr1::shared_ptr<ImageTypeSrc> src,
+  void thresholding_image(std::shared_ptr<ImageTypeDst> dst,
+			  std::shared_ptr<ImageTypeSrc> src,
 			  double threshold) {
 
     assert_is_single_channel_image<ImageTypeSrc>();
@@ -535,8 +535,8 @@ namespace degate {
    * image boundary that you cannot use for further processing.
    */
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void convolve(std::tr1::shared_ptr<ImageTypeDst> dst,
-		std::tr1::shared_ptr<ImageTypeSrc> src,
+  void convolve(std::shared_ptr<ImageTypeDst> dst,
+		std::shared_ptr<ImageTypeSrc> src,
 		FilterKernel_shptr kernel) {
 
     assert_is_single_channel_image<ImageTypeSrc>();
@@ -582,8 +582,8 @@ namespace degate {
    */
 
   template<typename ImageTypeDst, typename ImageTypeSrc, typename FunctionPolicy>
-  void filter_image(std::tr1::shared_ptr<ImageTypeDst> dst,
-		    std::tr1::shared_ptr<ImageTypeSrc> src,
+  void filter_image(std::shared_ptr<ImageTypeDst> dst,
+		    std::shared_ptr<ImageTypeSrc> src,
 		    unsigned int kernel_width = 3,
 		    unsigned int threshold = 3) {
 

@@ -31,12 +31,12 @@
 #include "Circle.h"
 
 #include <boost/format.hpp>
-#include <tr1/memory>
+#include <memory>
 
 using namespace degate;
 
-GatePort::GatePort(std::tr1::shared_ptr<Gate> _gate,
-		   std::tr1::shared_ptr<GateTemplatePort> _gate_template_port,
+GatePort::GatePort(std::shared_ptr<Gate> _gate,
+		   std::shared_ptr<GateTemplatePort> _gate_template_port,
 		   unsigned int _diameter) :
   Circle(_gate->get_min_x() +
 	 _gate->get_relative_x_position_within_gate(_gate_template_port->get_x()),
@@ -50,7 +50,7 @@ GatePort::GatePort(std::tr1::shared_ptr<Gate> _gate,
 }
 
 
-GatePort::GatePort(std::tr1::shared_ptr<Gate> _gate, unsigned int _diameter) :
+GatePort::GatePort(std::shared_ptr<Gate> _gate, unsigned int _diameter) :
   Circle(0, 0, _diameter),
   gate(_gate),
   template_port_id(0) {
@@ -76,7 +76,7 @@ const GateTemplatePort_shptr GatePort::get_template_port() const {
   return gate_template_port;
 }
 
-void GatePort::set_template_port(std::tr1::shared_ptr<GateTemplatePort>
+void GatePort::set_template_port(std::shared_ptr<GateTemplatePort>
 				 _gate_template_port) {
   gate_template_port = _gate_template_port;
   /* If the gate port is added to a gate afterwards, this caluclation will
@@ -100,7 +100,7 @@ bool GatePort::is_assigned_to_a_gate() const {
 }
 
 
-std::tr1::shared_ptr<Gate> GatePort::get_gate() {
+std::shared_ptr<Gate> GatePort::get_gate() {
   return gate;
 }
 

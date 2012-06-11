@@ -185,17 +185,17 @@ class MainWin : public Gtk::Window  {
   RenderWindow<GfxEditor<DegateRenderer> > render_window;
 
 
-  std::tr1::shared_ptr<InProgressWin> ipWin;
-  std::tr1::shared_ptr<ConnectionInspectorWin> ciWin;
-  std::tr1::shared_ptr<RCViolationsWin> rcWin;
-  std::tr1::shared_ptr<ModuleWin> modWin;
-  std::tr1::shared_ptr<AnnotationListWin> alWin;
-  std::tr1::shared_ptr<GridConfigWin> gcWin;
-  std::tr1::shared_ptr<LayerConfigWin> lcWin;
+  std::shared_ptr<InProgressWin> ipWin;
+  std::shared_ptr<ConnectionInspectorWin> ciWin;
+  std::shared_ptr<RCViolationsWin> rcWin;
+  std::shared_ptr<ModuleWin> modWin;
+  std::shared_ptr<AnnotationListWin> alWin;
+  std::shared_ptr<GridConfigWin> gcWin;
+  std::shared_ptr<LayerConfigWin> lcWin;
 
   Gtk::HBox m_displayBox;
 
-  std::tr1::shared_ptr<MenuManager> menu_manager;
+  std::shared_ptr<MenuManager> menu_manager;
 
   degate::Project_shptr main_project;
 
@@ -241,7 +241,7 @@ class MainWin : public Gtk::Window  {
 
   Glib::Dispatcher signal_project_open_finished_;
   Glib::Dispatcher signal_bg_import_finished_;
-  std::tr1::shared_ptr<Glib::Dispatcher> signal_algorithm_finished_;
+  std::shared_ptr<Glib::Dispatcher> signal_algorithm_finished_;
   sigc::signal<void, bool> signal_export_finished_;
 
   void update_gui_for_loaded_project();

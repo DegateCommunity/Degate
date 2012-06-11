@@ -114,7 +114,7 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<ImageProcessorBase> ImageProcessorBase_shptr;
+  typedef std::shared_ptr<ImageProcessorBase> ImageProcessorBase_shptr;
 }
 
 #endif

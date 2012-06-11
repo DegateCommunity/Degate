@@ -83,6 +83,6 @@ class TerminalWin : private GladeFileLoader {
 
 };
 
-typedef std::tr1::shared_ptr<TerminalWin> TerminalWin_shptr;
+typedef std::shared_ptr<TerminalWin> TerminalWin_shptr;
 
 #endif

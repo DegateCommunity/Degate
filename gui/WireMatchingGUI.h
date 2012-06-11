@@ -23,7 +23,7 @@
 #define __WIREMATCHINGGUI_H__
 
 
-#include <tr1/memory>
+#include <memory>
 #include <gdkmm/window.h>
 #include <libglademm.h>
 

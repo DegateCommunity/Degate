@@ -23,7 +23,7 @@
 #define __LOOKUPSUBCIRCUIT_H__
 
 #include <set>
-#include <tr1/memory>
+#include <memory>
 #include <string>
 
 #include <degate.h>
@@ -143,7 +143,7 @@ namespace degate {
 	      if(oid != gport->get_object_id()) {
 		PlacedLogicModelObject_shptr plmo = lmodel->get_object(oid);
 		assert(plmo != NULL);
-		if(GatePort_shptr other_port = std::tr1::dynamic_pointer_cast<GatePort>(plmo)) {
+		if(GatePort_shptr other_port = std::dynamic_pointer_cast<GatePort>(plmo)) {
 		  Gate_shptr other_gate = other_port->get_gate();
 
 		  if(is_logic_class(other_gate, logic_class) &&

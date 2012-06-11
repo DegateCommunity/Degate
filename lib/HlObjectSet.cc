@@ -21,7 +21,7 @@
 
 #include "HlObjectSet.h"
 #include <algorithm>
-#include <tr1/memory>
+#include <memory>
 
 using namespace std;
 using namespace degate;
@@ -46,17 +46,17 @@ void HlObjectSet::highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state) {
 }
 
 
-void HlObjectSet::add(std::tr1::shared_ptr<PlacedLogicModelObject> object) {
+void HlObjectSet::add(std::shared_ptr<PlacedLogicModelObject> object) {
   ObjectSet::add(object);
   object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_DIRECT);
 }
 
-void HlObjectSet::add(std::tr1::shared_ptr<PlacedLogicModelObject> object,
+void HlObjectSet::add(std::shared_ptr<PlacedLogicModelObject> object,
 		      LogicModel_shptr lmodel) {
   add(object);
 
   if(ConnectedLogicModelObject_shptr o =
-     std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(object) ) {
+     std::dynamic_pointer_cast<ConnectedLogicModelObject>(object) ) {
     // highlight adjacent objects
     highlight_adjacent_objects(o, lmodel);
   }
@@ -72,7 +72,7 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
   BOOST_FOREACH(object_id_t oid, *net) {
     PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
     ConnectedLogicModelObject_shptr clo =
-      std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
+      std::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
     assert(clo != NULL);
     // remember connnected objects in list
     if(o != clo) {
@@ -96,11 +96,11 @@ void HlObjectSet::unhighlight_adjacent_objects(adjacent_objects_t::mapped_type &
   list.clear();
 }
 
-void HlObjectSet::remove(std::tr1::shared_ptr<PlacedLogicModelObject> object) {
+void HlObjectSet::remove(std::shared_ptr<PlacedLogicModelObject> object) {
   ObjectSet::remove(object);
 
   if(ConnectedLogicModelObject_shptr o =
-     std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(object) ) {
+     std::dynamic_pointer_cast<ConnectedLogicModelObject>(object) ) {
   
     adjacent_objects_t::iterator iter = adjacent_objects.find(o);
     if(iter != adjacent_objects.end()) {

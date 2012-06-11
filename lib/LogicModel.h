@@ -41,7 +41,7 @@
 #include <Annotation.h>
 #include <Module.h>
 
-#include <tr1/memory>
+#include <memory>
 #include <set>
 #include <map>
 #include <sstream>
@@ -76,7 +76,7 @@ namespace degate {
     layer_collection layers; // x
     Layer_shptr current_layer;
 
-    std::tr1::shared_ptr<GateLibrary> gate_library; // x
+    std::shared_ptr<GateLibrary> gate_library; // x
 
     gate_collection gates;
     std::map<object_id_t, Wire_shptr > wires;

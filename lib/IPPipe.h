@@ -37,7 +37,7 @@ namespace degate {
 
   private:
 
-    typedef std::list<std::tr1::shared_ptr<ImageProcessorBase> > processor_list_type;
+    typedef std::list<std::shared_ptr<ImageProcessorBase> > processor_list_type;
     processor_list_type processor_list;
 
   public:
@@ -60,7 +60,7 @@ namespace degate {
      * Add a processor.
      */
 
-    void add(std::tr1::shared_ptr<ImageProcessorBase> processor) {
+    void add(std::shared_ptr<ImageProcessorBase> processor) {
       processor_list.push_back(processor);
     }
 

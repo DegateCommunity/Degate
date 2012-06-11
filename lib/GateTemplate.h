@@ -29,7 +29,7 @@
 #include <GateTemplatePort.h>
 
 #include <set>
-#include <tr1/memory>
+#include <memory>
 #include <map>
 
 namespace degate {

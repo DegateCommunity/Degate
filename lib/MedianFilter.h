@@ -33,7 +33,7 @@ namespace degate {
     /**
      * Calculate the median for an image region.
      */
-    static inline PixelType calculate(std::tr1::shared_ptr<ImageType> src,
+    static inline PixelType calculate(std::shared_ptr<ImageType> src,
 				      unsigned int x, unsigned int y,
 				      unsigned int min_x,
 				      unsigned int max_x,
@@ -71,7 +71,7 @@ namespace degate {
      * Calculate the median for an RGBA image region.
      */
 
-    static inline rgba_pixel_t calculate(std::tr1::shared_ptr<ImageType> src,
+    static inline rgba_pixel_t calculate(std::shared_ptr<ImageType> src,
 					 unsigned int x, unsigned int y,
 					 unsigned int min_x,
 					 unsigned int max_x,
@@ -112,8 +112,8 @@ namespace degate {
    */
 
   template<typename ImageTypeDst, typename ImageTypeSrc>
-  void median_filter(std::tr1::shared_ptr<ImageTypeDst> dst,
-		     std::tr1::shared_ptr<ImageTypeSrc> src,
+  void median_filter(std::shared_ptr<ImageTypeDst> dst,
+		     std::shared_ptr<ImageTypeSrc> src,
 		     unsigned int kernel_width = 3) {
 
     filter_image<ImageTypeDst, ImageTypeSrc,

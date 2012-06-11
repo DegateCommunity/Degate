@@ -22,7 +22,7 @@
 #ifndef __CODETEMPLATEGENERATOR_H__
 #define __CODETEMPLATEGENERATOR_H__
 
-#include <tr1/memory>
+#include <memory>
 #include <map>
 #include <vector>
 #include <string>
@@ -119,7 +119,7 @@ namespace degate {
     virtual std::string generate() const = 0;
   };
 
-  typedef std::tr1::shared_ptr<CodeTemplateGenerator> CodeTemplateGenerator_shptr;
+  typedef std::shared_ptr<CodeTemplateGenerator> CodeTemplateGenerator_shptr;
 }
 
 #endif

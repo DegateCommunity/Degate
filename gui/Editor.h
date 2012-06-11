@@ -25,7 +25,7 @@
 #include <BoundingBox.h>
 #include <RenderArea.h>
 #include <Via.h>
-#include <tr1/memory>
+#include <memory>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -502,7 +502,7 @@ class GfxEditor : public RendererType {
 
 private:
 
-  std::tr1::shared_ptr<GfxEditorTool<RendererType> > tool;
+  std::shared_ptr<GfxEditorTool<RendererType> > tool;
 
 public:
 
@@ -515,15 +515,15 @@ public:
 
   virtual ~GfxEditor() {}
 
-  void set_tool(std::tr1::shared_ptr<GfxEditorTool<RendererType> > tool) {
+  void set_tool(std::shared_ptr<GfxEditorTool<RendererType> > tool) {
     this->tool = tool;
   }
 
-  std::tr1::shared_ptr<GfxEditorTool<RendererType> > get_tool() {
+  std::shared_ptr<GfxEditorTool<RendererType> > get_tool() {
     return tool;
   }
 
-  std::tr1::shared_ptr<GfxEditorTool<RendererType> > get_tool() const {
+  std::shared_ptr<GfxEditorTool<RendererType> > get_tool() const {
     return tool;
   }
 

@@ -59,7 +59,7 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<WireMatching> WireMatching_shptr;
+  typedef std::shared_ptr<WireMatching> WireMatching_shptr;
 }
 
 #endif

@@ -38,7 +38,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <list>
-#include <tr1/memory>
+#include <memory>
 #include <boost/foreach.hpp>
 
 using namespace std;

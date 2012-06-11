@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <tr1/memory>
+#include <memory>
 #include <map>
 #include <assert.h>
 #include "degate_exceptions.h"
@@ -82,58 +82,58 @@ namespace degate {
   // we need some forward declarations here
 
   class Circle;
-  typedef std::tr1::shared_ptr<Circle> Circle_shptr;
+  typedef std::shared_ptr<Circle> Circle_shptr;
 
   class Line;
-  typedef std::tr1::shared_ptr<Line> Line_shptr;
+  typedef std::shared_ptr<Line> Line_shptr;
 
   class Rectangle;
-  typedef std::tr1::shared_ptr<Rectangle> Rectangle_shptr;
+  typedef std::shared_ptr<Rectangle> Rectangle_shptr;
 
   class ConnectedLogicModelObject;
-  typedef std::tr1::shared_ptr<ConnectedLogicModelObject> ConnectedLogicModelObject_shptr;
+  typedef std::shared_ptr<ConnectedLogicModelObject> ConnectedLogicModelObject_shptr;
 
   class PlacedLogicModelObject;
-  typedef std::tr1::shared_ptr<PlacedLogicModelObject> PlacedLogicModelObject_shptr;
+  typedef std::shared_ptr<PlacedLogicModelObject> PlacedLogicModelObject_shptr;
 
   class RemoteObject;
-  typedef std::tr1::shared_ptr<RemoteObject> RemoteObject_shptr;
+  typedef std::shared_ptr<RemoteObject> RemoteObject_shptr;
 
   class Net;
-  typedef std::tr1::shared_ptr<Net> Net_shptr;
+  typedef std::shared_ptr<Net> Net_shptr;
 
   class Gate;
 
   class GatePort;
-  typedef std::tr1::shared_ptr<GatePort> GatePort_shptr;
+  typedef std::shared_ptr<GatePort> GatePort_shptr;
 
   class GateTemplate;
-  typedef std::tr1::shared_ptr<GateTemplate> GateTemplate_shptr;
+  typedef std::shared_ptr<GateTemplate> GateTemplate_shptr;
 
   class GateLibrary;
-  typedef std::tr1::shared_ptr<GateLibrary> GateLibrary_shptr;
+  typedef std::shared_ptr<GateLibrary> GateLibrary_shptr;
 
   class Layer;
-  typedef std::tr1::shared_ptr<Layer> Layer_shptr;
+  typedef std::shared_ptr<Layer> Layer_shptr;
 
   class Wire;
-  typedef std::tr1::shared_ptr<Wire> Wire_shptr;
+  typedef std::shared_ptr<Wire> Wire_shptr;
 
   class Via;
-  typedef std::tr1::shared_ptr<Via> Via_shptr;
+  typedef std::shared_ptr<Via> Via_shptr;
 
   class EMarker;
-  typedef std::tr1::shared_ptr<EMarker> EMarker_shptr;
+  typedef std::shared_ptr<EMarker> EMarker_shptr;
 
   class Annotation;
-  typedef std::tr1::shared_ptr<Annotation> Annotation_shptr;
+  typedef std::shared_ptr<Annotation> Annotation_shptr;
 
   class Module;
-  typedef std::tr1::shared_ptr<Module> Module_shptr;
+  typedef std::shared_ptr<Module> Module_shptr;
 
 
   class LogicModel;
-  typedef std::tr1::shared_ptr<LogicModel> LogicModel_shptr;
+  typedef std::shared_ptr<LogicModel> LogicModel_shptr;
 
   typedef unsigned int layer_position_t;
 

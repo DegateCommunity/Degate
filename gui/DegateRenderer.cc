@@ -370,7 +370,7 @@ void DegateRenderer::render_vias() {
   for(Layer::object_iterator iter = layer->objects_begin();
       iter != layer->objects_end(); ++iter) {
 
-    if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(*iter)) {
+    if(Via_shptr via = std::dynamic_pointer_cast<Via>(*iter)) {
       unsigned int diameter = via->get_diameter();
       uint32_t col = via->get_direction() == Via::DIRECTION_UP ?
 	default_colors[DEFAULT_COLOR_VIA_UP] : default_colors[DEFAULT_COLOR_VIA_DOWN];
@@ -396,7 +396,7 @@ void DegateRenderer::render_emarkers() {
   for(Layer::object_iterator iter = layer->objects_begin();
       iter != layer->objects_end(); ++iter) {
 
-    if(EMarker_shptr emarker = std::tr1::dynamic_pointer_cast<EMarker>(*iter)) {
+    if(EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(*iter)) {
       unsigned int diameter = emarker->get_diameter();
       uint32_t col = default_colors[DEFAULT_COLOR_EMARKER];
 
@@ -450,7 +450,7 @@ void DegateRenderer::render_wires() {
   for(Layer::object_iterator iter = layer->objects_begin();
       iter != layer->objects_end(); ++iter) {
 
-    if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(*iter)) {
+    if(Wire_shptr wire = std::dynamic_pointer_cast<Wire>(*iter)) {
       color_t col = wire->has_frame_color() ? wire->get_frame_color() : default_colors[DEFAULT_COLOR_WIRE];
 
       set_color(highlight_color_by_state(col, wire->get_highlighted()));
@@ -487,7 +487,7 @@ void DegateRenderer::render_annotations(bool render_into_details_list) {
   for(Layer::object_iterator iter = layer->objects_begin();
       iter != layer->objects_end(); ++iter) {
 
-    if(Annotation_shptr a = std::tr1::dynamic_pointer_cast<Annotation>(*iter)) {
+    if(Annotation_shptr a = std::dynamic_pointer_cast<Annotation>(*iter)) {
       color_t fill_col = a->get_fill_color();
       color_t frame_col = a->get_frame_color();
 

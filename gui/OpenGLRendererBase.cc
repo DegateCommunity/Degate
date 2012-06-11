@@ -182,7 +182,7 @@ void OpenGLRendererBase::on_realize() {
     << std::endl;
 
   // init fonts
-  font_rendering_helper = std::tr1::shared_ptr<FontRenderingHelper>(new FontRenderingHelper());
+  font_rendering_helper = std::shared_ptr<FontRenderingHelper>(new FontRenderingHelper());
 
   glwindow->gl_end();
 
@@ -376,7 +376,7 @@ void OpenGLRendererBase::draw_string(int x, int y, degate::color_t col, std::str
 
 
 void OpenGLRendererBase::set_font_size(unsigned int font_size) {
-  font_rendering_helper = std::tr1::shared_ptr<FontRenderingHelper>(new FontRenderingHelper(font_size));
+  font_rendering_helper = std::shared_ptr<FontRenderingHelper>(new FontRenderingHelper(font_size));
 }
 
 unsigned int OpenGLRendererBase::get_font_height() const {

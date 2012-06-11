@@ -23,7 +23,7 @@
 #define __MODULE_H__
 
 #include <map>
-#include <tr1/memory>
+#include <memory>
 
 #include <LogicModelObjectBase.h>
 #include <LogicModel.h>

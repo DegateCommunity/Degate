@@ -23,7 +23,7 @@
 #define __VERILOGTBCODETEMPLATEGENERATOR_H__
 
 #include <degate.h>
-#include <tr1/memory>
+#include <memory>
 #include <cctype>
 
 #include <VerilogCodeTemplateGenerator.h>
@@ -54,7 +54,7 @@ namespace degate {
 					 std::vector<std::string> const& out_port_idents) const;
   };
 
-  typedef std::tr1::shared_ptr<VerilogTBCodeTemplateGenerator> VerilogTBCodeTemplateGenerator_shptr;
+  typedef std::shared_ptr<VerilogTBCodeTemplateGenerator> VerilogTBCodeTemplateGenerator_shptr;
 
 }
 

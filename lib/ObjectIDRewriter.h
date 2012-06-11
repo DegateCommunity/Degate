@@ -84,7 +84,7 @@ public:
 
 };
 
-typedef std::tr1::shared_ptr<ObjectIDRewriter> ObjectIDRewriter_shptr;
+typedef std::shared_ptr<ObjectIDRewriter> ObjectIDRewriter_shptr;
 
 }
 

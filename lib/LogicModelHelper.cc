@@ -465,7 +465,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
   gate_sets_type gate_sets;
 
   BOOST_FOREACH(PlacedLogicModelObject_shptr plo, gates) {
-    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(plo)) {
+    if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo)) {
       GateTemplate_shptr tmpl = gate->get_gate_template();
       if(tmpl) // ignore gates, that have no standard cell
 	gate_sets[tmpl->get_object_id()].push_back(gate);
@@ -499,7 +499,7 @@ void degate::remove_entire_net(LogicModel_shptr lmodel, Net_shptr net) {
     PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
     assert(plo != NULL);
     if(ConnectedLogicModelObject_shptr clmo = 
-       std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo))
+       std::dynamic_pointer_cast<ConnectedLogicModelObject>(plo))
       clmo->remove_net();
   }
   
@@ -529,7 +529,7 @@ void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
 
     ConnectedLogicModelObject_shptr clmo1;
 
-    if((clmo1 = std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*iter)) != NULL) {
+    if((clmo1 = std::dynamic_pointer_cast<ConnectedLogicModelObject>(*iter)) != NULL) {
 
       BoundingBox const& bb = clmo1->get_bounding_box();
 
@@ -541,13 +541,13 @@ void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
 
 	ConnectedLogicModelObject_shptr clmo2;
 	if((clmo2 =
-	    std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*siter)) != NULL) {
+	    std::dynamic_pointer_cast<ConnectedLogicModelObject>(*siter)) != NULL) {
 
 	  if((clmo1->get_net() == NULL ||
 	      clmo2->get_net() == NULL ||
 	      clmo1->get_net() != clmo2->get_net()) && // excludes identical objects, too
-	     check_object_tangency(std::tr1::dynamic_pointer_cast<PlacedLogicModelObject>(clmo1),
-				   std::tr1::dynamic_pointer_cast<PlacedLogicModelObject>(clmo2)))
+	     check_object_tangency(std::dynamic_pointer_cast<PlacedLogicModelObject>(clmo1),
+				   std::dynamic_pointer_cast<PlacedLogicModelObject>(clmo2)))
 
 	    connect_objects(lmodel, clmo1, clmo2);
 
@@ -570,17 +570,17 @@ void autoconnect_interlayer_objects_via_via(LogicModel_shptr lmodel,
   for(Layer::qt_region_iterator siter = adjacent_layer->region_begin(search_bbox);
       siter != adjacent_layer->region_end(); ++siter) {
 
-    if((v2 = std::tr1::dynamic_pointer_cast<Via>(*siter)) != NULL) {
+    if((v2 = std::dynamic_pointer_cast<Via>(*siter)) != NULL) {
 
       if((v1->get_net() == NULL || v2->get_net() == NULL ||
 	  v1->get_net() != v2->get_net()) &&
 	 v1->get_direction() == v1_dir_criteria &&
 	 v2->get_direction() == v2_dir_criteria &&
-	 check_object_tangency(std::tr1::dynamic_pointer_cast<Circle>(v1),
-			       std::tr1::dynamic_pointer_cast<Circle>(v2)))
+	 check_object_tangency(std::dynamic_pointer_cast<Circle>(v1),
+			       std::dynamic_pointer_cast<Circle>(v2)))
 	connect_objects(lmodel,
-			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v1),
-			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v2));
+			std::dynamic_pointer_cast<ConnectedLogicModelObject>(v1),
+			std::dynamic_pointer_cast<ConnectedLogicModelObject>(v2));
     }
   }
 
@@ -597,16 +597,16 @@ void autoconnect_interlayer_objects_via_gport(LogicModel_shptr lmodel,
   for(Layer::qt_region_iterator siter = adjacent_layer->region_begin(search_bbox);
       siter != adjacent_layer->region_end(); ++siter) {
 
-    if((v2 = std::tr1::dynamic_pointer_cast<GatePort>(*siter)) != NULL) {
+    if((v2 = std::dynamic_pointer_cast<GatePort>(*siter)) != NULL) {
 
       if((v1->get_net() == NULL || v2->get_net() == NULL ||
 	  v1->get_net() != v2->get_net()) &&
 	 v1->get_direction() == v1_dir_criteria &&
-	 check_object_tangency(std::tr1::dynamic_pointer_cast<Circle>(v1),
-			       std::tr1::dynamic_pointer_cast<Circle>(v2)))
+	 check_object_tangency(std::dynamic_pointer_cast<Circle>(v1),
+			       std::dynamic_pointer_cast<Circle>(v2)))
 	connect_objects(lmodel,
-			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v1),
-			std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(v2));
+			std::dynamic_pointer_cast<ConnectedLogicModelObject>(v1),
+			std::dynamic_pointer_cast<ConnectedLogicModelObject>(v2));
     }
   }
 
@@ -628,7 +628,7 @@ void degate::autoconnect_interlayer_objects(LogicModel_shptr lmodel,
   for(Layer::qt_region_iterator iter = layer->region_begin(search_bbox);
       iter != layer->region_end(); ++iter) {
 
-    if((v1 = std::tr1::dynamic_pointer_cast<Via>(*iter)) != NULL) {
+    if((v1 = std::dynamic_pointer_cast<Via>(*iter)) != NULL) {
 
       BoundingBox const& bb = v1->get_bounding_box();
 
