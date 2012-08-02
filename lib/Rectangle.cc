@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -52,6 +53,15 @@ Rectangle::Rectangle(const Rectangle& o) {
 }
 
 Rectangle::~Rectangle() {
+}
+
+void Rectangle::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Rectangle>(dest);
+  clone->bounding_box = bounding_box;
+  clone->min_x = min_x;
+  clone->max_x = max_x;
+  clone->min_y = min_y;
+  clone->max_y = max_y;
 }
 
 bool Rectangle::in_shape(int x, int y, int max_distance) const {

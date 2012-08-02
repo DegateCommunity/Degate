@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -46,6 +47,18 @@ Line::Line(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diamete
   d_x(_to_x - _from_x),
   d_y(_to_y - _from_y) {
   calculate_bounding_box();
+}
+
+void Line::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Line>(dest);
+  clone->from_x = from_x;
+  clone->from_y = from_y;
+  clone->to_x = to_x;
+  clone->to_y = to_y;
+  clone->diameter = diameter;
+  clone->d_x = d_x;
+  clone->d_y = d_y;
+  clone->calculate_bounding_box();
 }
 
 bool Line::in_shape(int x, int y, int max_distance) const {

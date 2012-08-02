@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -49,7 +50,7 @@ namespace degate {
    * @see ConnectedLogicModelObject::set_net()
    * @see ConnectedLogicModelObject::remove_net()
    */
-  class Net : public LogicModelObjectBase {
+  class Net : public LogicModelObjectBase, public DeepCopyable {
 
     friend class ConnectedLogicModelObject;
 
@@ -111,6 +112,11 @@ namespace degate {
      * @see LogicModel::remove_net()
      */
     virtual ~Net();
+    
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
 
     /**
      * Get an iterator to iterate over all objects that are electrically connected with this net.

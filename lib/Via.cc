@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -31,6 +32,18 @@ Via::Via(int _x, int _y, diameter_t _diameter, Via::DIRECTION _direction) :
 }
 
 Via::~Via() {}
+
+DeepCopyable_shptr Via::cloneShallow() const {
+  auto clone = std::make_shared<Via>();
+  clone->direction = direction;
+  return clone;
+}
+
+void Via::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  Circle::cloneDeepInto(dest, oldnew);
+  ConnectedLogicModelObject::cloneDeepInto(dest, oldnew);
+  RemoteObject::cloneDeepInto(dest, oldnew);
+}
 
 Via::DIRECTION Via::get_direction() const {
   return direction;

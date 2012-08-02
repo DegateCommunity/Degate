@@ -3,6 +3,7 @@
   This file is part of the IC reverse engineering tool degate.
 
   Copyright 2008, 2009, 2010 by Martin Schobert
+  Copyright 2012 Robert Nitsch
 
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -71,6 +72,35 @@ Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type,
 
 
 Layer::~Layer() {
+}
+
+/**
+ * @todo Check whether scaling_manager can really be reused by clones without trouble.
+ */
+DeepCopyable_shptr Layer::cloneShallow() const {
+  auto clone = std::make_shared<Layer>(quadtree.get_bounding_box(), layer_type);
+  clone->layer_pos = layer_pos;
+  clone->enabled = enabled;
+  clone->description = description;
+  clone->layer_id = layer_id;
+  clone->scaling_manager = scaling_manager;
+  return clone;
+}
+
+void Layer::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Layer>(dest);
+
+  // quadtree
+  std::vector<quadtree_element_type> quadtree_elems;
+  quadtree.get_all_elements(quadtree_elems);
+  std::for_each(quadtree_elems.begin(), quadtree_elems.end(), [&clone](const quadtree_element_type &t) {
+    clone->quadtree.insert(t);
+  });
+
+  // objects
+  std::for_each(objects.begin(), objects.end(), [&](object_collection::value_type v) {
+    clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->cloneDeep(oldnew));
+  });
 }
 
 unsigned int Layer::get_width() const {

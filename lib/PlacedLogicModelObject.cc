@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -32,6 +33,16 @@ PlacedLogicModelObject::PlacedLogicModelObject() : highlight_state(HLIGHTSTATE_N
 }
 
 PlacedLogicModelObject::~PlacedLogicModelObject() {
+}
+
+void PlacedLogicModelObject::cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const {
+  ColoredObject::cloneDeepInto(destination, oldnew);
+  LogicModelObjectBase::cloneDeepInto(destination, oldnew);
+  
+  auto clone = std::dynamic_pointer_cast<PlacedLogicModelObject>(destination);
+  assert(clone.get () != 0);
+  clone->highlight_state = highlight_state;
+  clone->layer = std::dynamic_pointer_cast<Layer>(layer->cloneDeep(oldnew));
 }
 
 PlacedLogicModelObject::HIGHLIGHTING_STATE PlacedLogicModelObject::get_highlighted() const {

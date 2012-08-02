@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -47,6 +48,13 @@ LogicModelObjectBase::LogicModelObjectBase(object_id_t oid,
 }
 
 LogicModelObjectBase::~LogicModelObjectBase() {
+}
+
+void LogicModelObjectBase::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<LogicModelObjectBase>(dest);
+  clone->object_id = object_id;
+  clone->name = name;
+  clone->description = description;
 }
 
 void LogicModelObjectBase::set_name(std::string const& name) {

@@ -3,6 +3,7 @@
   This file is part of the IC reverse engineering tool degate.
 
   Copyright 2008, 2009, 2010 by Martin Schobert
+  Copyright 2012 Robert Nitsch
 
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,7 +40,7 @@ namespace degate {
   /**
    * Representation of a chip layer.
    */
-  class Layer {
+  class Layer : public DeepCopyable {
 
     friend class LogicModel;
 
@@ -121,6 +122,11 @@ namespace degate {
      */
 
     virtual ~Layer();
+    
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
 
     /**
      * Get the width of a layer.

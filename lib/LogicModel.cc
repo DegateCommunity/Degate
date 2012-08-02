@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -35,9 +36,11 @@
 
 #include <boost/foreach.hpp>
 
+#include <algorithm>
+#include <iterator>
+
 using namespace std;
 using namespace degate;
-
 
 std::shared_ptr<Layer> LogicModel::get_create_layer(layer_position_t pos) {
 
@@ -124,6 +127,71 @@ LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int lay
 }
 
 LogicModel::~LogicModel() {
+}
+
+DeepCopyable_shptr LogicModel::cloneShallow() const {
+  auto clone = std::make_shared<LogicModel>(*this);
+  clone->layers.clear();
+  clone->gate_library.reset();
+  clone->gates.clear();
+  clone->wires.clear();
+  clone->vias.clear();
+  clone->emarkers.clear();
+  clone->annotations.clear();
+  clone->nets.clear();
+  clone->objects.clear();
+  clone->main_module.reset();
+  return clone;
+}
+
+void LogicModel::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<LogicModel>(dest);
+  
+  // layers
+  std::transform(layers.begin(), layers.end(), back_inserter(clone->layers), [&](const Layer_shptr &d) {
+    return std::dynamic_pointer_cast<Layer>(d->cloneDeep(oldnew));
+  });
+  
+  // gate_library
+  clone->gate_library = std::dynamic_pointer_cast<GateLibrary>(gate_library->cloneDeep(oldnew));
+  
+  // gates
+  std::for_each(gates.begin(), gates.end(), [&](const gate_collection::value_type &v) {
+    clone->gates[v.first] = std::dynamic_pointer_cast<Gate>(v.second->cloneDeep(oldnew));
+  });
+  
+  // wires
+  std::for_each(wires.begin(), wires.end(), [&](const wire_collection::value_type &v) {
+    clone->wires[v.first] = std::dynamic_pointer_cast<Wire>(v.second->cloneDeep(oldnew));
+  });
+  
+  // vias
+  std::for_each(vias.begin(), vias.end(), [&](const via_collection::value_type &v) {
+    clone->vias[v.first] = std::dynamic_pointer_cast<Via>(v.second->cloneDeep(oldnew));
+  });
+  
+  // emarkers
+  std::for_each(emarkers.begin(), emarkers.end(), [&](const emarker_collection::value_type &v) {
+    clone->emarkers[v.first] = std::dynamic_pointer_cast<EMarker>(v.second->cloneDeep(oldnew));
+  });
+  
+  // annotations
+  std::for_each(annotations.begin(), annotations.end(), [&](const annotation_collection::value_type &v) {
+    clone->annotations[v.first] = std::dynamic_pointer_cast<Annotation>(v.second->cloneDeep(oldnew));
+  });
+  
+  // nets
+  std::for_each(nets.begin(), nets.end(), [&](const net_collection::value_type &v) {
+    clone->nets[v.first] = std::dynamic_pointer_cast<Net>(v.second->cloneDeep(oldnew));
+  });
+  
+  // objects
+  std::for_each(objects.begin(), objects.end(), [&](const object_collection::value_type &v) {
+    clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->cloneDeep(oldnew));
+  });
+  
+  // main_module
+  clone->main_module = std::dynamic_pointer_cast<Module>(main_module->cloneDeep(oldnew));
 }
 
 unsigned int LogicModel::get_width() const {

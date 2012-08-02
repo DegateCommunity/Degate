@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -54,6 +55,8 @@ namespace degate {
      */
 
     virtual ~ConnectedLogicModelObject();
+    
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
 
     /**
      * Set the net for this object. This method will add the object to the net.

@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,6 +39,19 @@ Annotation::Annotation(BoundingBox const& bbox, class_id_t _class_id) :
 }
 
 Annotation::~Annotation() {
+}
+
+DeepCopyable_shptr Annotation::cloneShallow() const {
+  auto clone = std::make_shared<Annotation>();
+  return clone;
+}
+
+void Annotation::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Annotation>(dest);
+  clone->class_id = class_id;
+  clone->parameters = parameters;
+  Rectangle::cloneDeepInto(dest, oldnew);
+  PlacedLogicModelObject::cloneDeepInto(dest, oldnew);
 }
 
 Annotation::class_id_t Annotation::get_class_id() const {

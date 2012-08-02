@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -36,6 +37,11 @@ ConnectedLogicModelObject::ConnectedLogicModelObject() {
 ConnectedLogicModelObject:: ~ConnectedLogicModelObject() {
   remove_net();
 };
+
+void ConnectedLogicModelObject::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<ConnectedLogicModelObject>(dest);
+  clone->net = std::dynamic_pointer_cast<Net>(net->cloneDeep(oldnew));
+}
 
 void ConnectedLogicModelObject::set_net(Net_shptr net) {
   if(this->net != NULL) {

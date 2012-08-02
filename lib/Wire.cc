@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -34,6 +35,16 @@ using namespace degate;
 
 Wire::Wire(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diameter) :
   Line(_from_x, _from_y, _to_x, _to_y, _diameter) {
+}
+
+DeepCopyable_shptr Wire::cloneShallow() const {
+  return std::make_shared<Wire>(get_from_x(), get_from_y(), get_to_x(), get_to_y(), get_diameter());
+}
+
+void Wire::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Wire>(dest);
+  Line::cloneDeepInto(dest, oldnew);
+  RemoteObject::cloneDeepInto(dest, oldnew);
 }
 
 const std::string Wire::get_descriptive_identifier() const {

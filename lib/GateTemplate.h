@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,7 +39,7 @@ namespace degate {
    * A gate template is a container for common properties, that physically placed gates of that type share.
    */
 
-  class GateTemplate : public LogicModelObjectBase, public ColoredObject {
+  class GateTemplate : public LogicModelObjectBase, public ColoredObject, public DeepCopyable {
 
     friend class Gate;
 
@@ -121,6 +122,11 @@ namespace degate {
      */
 
     virtual ~GateTemplate();
+
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
 
     /**
      * Get the width of a gate template.

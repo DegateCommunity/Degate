@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -58,6 +59,21 @@ GatePort::GatePort(std::shared_ptr<Gate> _gate, unsigned int _diameter) :
   //set_y(gate->get_min_y());
 }
 
+DeepCopyable_shptr GatePort::cloneShallow() const {
+  auto clone = std::make_shared<GatePort>();
+  clone->template_port_id = template_port_id;
+  return clone;
+}
+
+void GatePort::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<GatePort>(dest);
+  
+  clone->gate = std::dynamic_pointer_cast<Gate>(gate->cloneDeep(oldnew));
+  clone->gate_template_port = std::dynamic_pointer_cast<GateTemplatePort>(gate_template_port->cloneDeep(oldnew));
+  
+  Circle::cloneDeepInto(dest, oldnew);
+  ConnectedLogicModelObject::cloneDeepInto(dest, oldnew);
+}
 
 void GatePort::set_template_port_type_id(object_id_t _template_port_id) {
   template_port_id = _template_port_id;

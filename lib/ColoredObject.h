@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,13 +23,15 @@
 #ifndef __COLOREDOBJECT_H__
 #define __COLOREDOBJECT_H__
 
+#include "DeepCopyable.h"
+
 namespace degate {
 
   /**
    * Represents an object that has a frame and a fill color.
    */
 
-  class ColoredObject {
+  class ColoredObject : public DeepCopyableBase {
   private:
     color_t fill_color;
     color_t frame_color;
@@ -37,6 +40,14 @@ namespace degate {
     ColoredObject() : fill_color(0), frame_color(0) {}
     virtual ~ColoredObject() {}
 
+    //@{
+    void cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+      auto clone = std::dynamic_pointer_cast<ColoredObject>(dest);
+      clone->fill_color = fill_color;
+      clone->frame_color = frame_color;
+    };
+    //@}
+    
     /**
      * Is there a frame color definition.
      */
