@@ -39,6 +39,8 @@ ConnectedLogicModelObject:: ~ConnectedLogicModelObject() {
 };
 
 void ConnectedLogicModelObject::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  PlacedLogicModelObject::cloneDeepInto(dest, oldnew);
+  
   auto clone = std::dynamic_pointer_cast<ConnectedLogicModelObject>(dest);
   if (net.get() != nullptr) {
     clone->net = std::dynamic_pointer_cast<Net>(net->cloneDeep(oldnew));
