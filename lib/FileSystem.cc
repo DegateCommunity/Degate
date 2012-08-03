@@ -232,7 +232,6 @@ char *realpath_alloc(const char *path)
 
 char * _get_relative_path(const char * const path, const char * const relative_to) {
   char *path_real;
-  char *path_prefix;
   char *path_real_suffix;
   char *path_real_to;
   char *path_real_to_suffix;
@@ -279,7 +278,6 @@ char * _get_relative_path(const char * const path, const char * const relative_t
 	 path_real[prefix_len] == path_real_to[prefix_len];
        ++prefix_len);
 
-  path_prefix = path_real;
   path_real_suffix = path_real + prefix_len;
   while ('\0' != *path_real_suffix &&
 #ifdef _WIN32
