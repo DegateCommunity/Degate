@@ -111,7 +111,7 @@ namespace degate {
    */
 
   template<class PixelPolicy,
-	   template <class PixelPolicy> class StoragePolicy>
+	   template <class _PixelPolicy> class StoragePolicy>
   class Image : public ImageBase,
 		public StoragePolicy<PixelPolicy> {
 
