@@ -172,7 +172,7 @@ namespace degate {
 
       for(unsigned int y = 0; y < h; y++)
       for(unsigned int x = 0; x < w; x++) {
-	color_t pix = i->get_pixel_as<color_t>(x, y);
+	color_t pix = i->template get_pixel_as<color_t>(x, y);
 	unsigned int offs = 4 * (y * w + x);
 	i_tmp[offs] += MASK_R(pix);
 	i_tmp[offs+1] += MASK_G(pix);

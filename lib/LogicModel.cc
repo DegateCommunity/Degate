@@ -291,7 +291,7 @@ void LogicModel::remove_remote_object(object_id_t remote_id) {
     PlacedLogicModelObject_shptr plo = p.second;
     RemoteObject_shptr ro;
 
-    if(ro = std::tr1::dynamic_pointer_cast<RemoteObject>(plo)) {
+    if((ro = std::tr1::dynamic_pointer_cast<RemoteObject>(plo))) {
 
       object_id_t local_id = plo->get_object_id();
 

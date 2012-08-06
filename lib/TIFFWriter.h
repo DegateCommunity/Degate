@@ -83,7 +83,7 @@ namespace degate {
       for(unsigned int x = 0; x < get_width(); x++) {
 
 	rgba_pixel_t p =
-	  img->get_pixel_as<rgba_pixel_t>(x, y);
+	  img->template get_pixel_as<rgba_pixel_t>(x, y);
 
 	raster[3*(y * get_width() + x)] = MASK_R(p);
 	raster[3*(y * get_width() + x)+1] = MASK_G(p);

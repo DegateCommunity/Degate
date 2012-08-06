@@ -90,7 +90,7 @@ namespace degate {
 
       if(size() == 1) {
 	const_iterator it = objects.begin();
-	if(o = std::tr1::dynamic_pointer_cast<ObjectType>(*it)) return o;
+	if((o = std::tr1::dynamic_pointer_cast<ObjectType>(*it))) return o;
       }
       return o;
     }
