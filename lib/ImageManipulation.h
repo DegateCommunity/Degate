@@ -215,7 +215,7 @@ namespace degate {
 
     for(unsigned int y = 0; y < h; y++)
       for(unsigned int x = 0; x < w; x++)
-	dst->template set_pixel(x, y, src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y));
+	dst->template set_pixel(x, y, src->template get_pixel_as<typename ImageTypeDst::pixel_type>(x, y));
   }
 
 
@@ -283,7 +283,7 @@ namespace degate {
 
     for(unsigned int y = 0; y < h; y++)
       for(unsigned int x = 0; x < w; x++) {
-	gs_byte_pixel_t p = src->get_pixel_as<gs_byte_pixel_t>(x, y);
+	gs_byte_pixel_t p = src->template get_pixel_as<gs_byte_pixel_t>(x, y);
 	dst->template set_pixel_as<gs_byte_pixel_t>(x, y, p);
       }
   }
