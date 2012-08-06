@@ -215,7 +215,7 @@ namespace degate {
 
     for(unsigned int y = 0; y < h; y++)
       for(unsigned int x = 0; x < w; x++)
-	dst->set_pixel(x, y, src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y));
+	dst->template set_pixel(x, y, src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y));
   }
 
 
@@ -241,7 +241,7 @@ namespace degate {
     for(y = min_y; y < min_y + h; y++, dst_y++) {
       for(x = min_x, dst_x = 0; x < min_x + w; x++, dst_x++)
 	dst->set_pixel(dst_x, dst_y,
-		       src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y));
+		       src->template get_pixel_as<typename ImageTypeDst::pixel_type>(x, y));
     }
   }
 
@@ -284,7 +284,7 @@ namespace degate {
     for(unsigned int y = 0; y < h; y++)
       for(unsigned int x = 0; x < w; x++) {
 	gs_byte_pixel_t p = src->get_pixel_as<gs_byte_pixel_t>(x, y);
-	dst->set_pixel_as<gs_byte_pixel_t>(x, y, p);
+	dst->template set_pixel_as<gs_byte_pixel_t>(x, y, p);
       }
   }
 
@@ -324,14 +324,14 @@ namespace degate {
 	int i = 1;
 	unsigned int r = 0, g = 0, b = 0, a = 0;
 
-	rgba_pixel_t pix = src->get_pixel_as<rgba_pixel_t>(src_x, src_y);
+	rgba_pixel_t pix = src->template get_pixel_as<rgba_pixel_t>(src_x, src_y);
 	r += MASK_R(pix);
 	g += MASK_G(pix);
 	b += MASK_B(pix);
 	a += MASK_A(pix);
 
 	if(src_x + 1 < src->get_width()) {
-	  pix = src->get_pixel_as<rgba_pixel_t>(src_x + 1, src_y);
+	  pix = src->template get_pixel_as<rgba_pixel_t>(src_x + 1, src_y);
 	  i++;
 	  r += MASK_R(pix);
 	  g += MASK_G(pix);
@@ -340,7 +340,7 @@ namespace degate {
 	}
 
 	if(src_y + 1 < src->get_height()) {
-	  pix = src->get_pixel_as<rgba_pixel_t>(src_x, src_y + 1);
+	  pix = src->template get_pixel_as<rgba_pixel_t>(src_x, src_y + 1);
 	  i++;
 	  r += MASK_R(pix);
 	  g += MASK_G(pix);
@@ -349,7 +349,7 @@ namespace degate {
 	}
 
 	if(src_x + 1 < src->get_width() && src_y + 1 < src->get_height()) {
-	  pix = src->get_pixel_as<rgba_pixel_t>(src_x + 1, src_y + 1);
+	  pix = src->template get_pixel_as<rgba_pixel_t>(src_x + 1, src_y + 1);
 	  i++;
 	  r += MASK_R(pix);
 	  g += MASK_G(pix);
@@ -362,7 +362,7 @@ namespace degate {
 	b /= i;
 	a /= i;
 
-	dst->set_pixel_as<rgba_pixel_t>(dst_x, dst_y, MERGE_CHANNELS(r, g, b, a));
+	dst->template set_pixel_as<rgba_pixel_t>(dst_x, dst_y, MERGE_CHANNELS(r, g, b, a));
       }
     }
   }
@@ -470,7 +470,7 @@ namespace degate {
     for(unsigned int y = 0; y < h; y++) {
       for(unsigned int x = 0; x < w; x++) {
 	typename ImageTypeDst::pixel_type p =
-	  src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y);
+	  src->template get_pixel_as<typename ImageTypeDst::pixel_type>(x, y);
 
 	double d = ((double)p + shift) * factor + lower_bound;
 	if(d < lower_bound) {
@@ -487,7 +487,7 @@ namespace degate {
 	}
 	assert(d >= lower_bound);
 	assert(d <= upper_bound);
-	dst->set_pixel_as<double>(x, y, d);
+	dst->template set_pixel_as<double>(x, y, d);
       }
     }
 
@@ -522,8 +522,8 @@ namespace degate {
     for(unsigned int y = 0; y < h; y++) {
       for(unsigned int x = 0; x < w; x++) {
 	typename ImageTypeDst::pixel_type p =
-	  src->get_pixel_as<typename ImageTypeDst::pixel_type>(x, y);
-	dst->set_pixel_as<double>(x, y, p >= threshold ? 1 : 0);
+	  src->template get_pixel_as<typename ImageTypeDst::pixel_type>(x, y);
+	dst->template set_pixel_as<double>(x, y, p >= threshold ? 1 : 0);
       }
     }
   }
@@ -565,7 +565,7 @@ namespace degate {
 	    accu += k * p;
 	  }
 	}
-	dst->set_pixel_as<double>(x, y, accu);
+	dst->template set_pixel_as<double>(x, y, accu);
       }
     }
   }
@@ -613,7 +613,7 @@ namespace degate {
 				    y - kernel_center + kernel_width,
 				    threshold);
 
-	dst->set_pixel_as<typename ImageTypeSrc::pixel_type>(x, y, out);
+	dst->template set_pixel_as<typename ImageTypeSrc::pixel_type>(x, y, out);
       }
     }
 

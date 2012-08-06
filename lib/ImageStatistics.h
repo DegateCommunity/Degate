@@ -92,7 +92,7 @@ namespace degate {
 
     for(unsigned int y = start_y; y < height; y++)
       for(unsigned int x = start_x; x < width; x++) {
-	sum += img->get_pixel_as<double>(x, y);
+	sum += img->template get_pixel_as<double>(x, y);
       }
 
     return sum / (double)(height * width);
@@ -116,7 +116,7 @@ namespace degate {
     
     for(unsigned int y = start_y; y < start_y + height; y++)
       for(unsigned int x = start_x; x < start_x + width; x++) {
-	sum += img->get_pixel_as<gs_double_pixel_t>(x, y);
+	sum += img->template get_pixel_as<gs_double_pixel_t>(x, y);
       }
     
     *avg = sum / (double)(height * width);
@@ -125,7 +125,7 @@ namespace degate {
     
     for(unsigned int y = start_y; y < start_y + height; y++)
       for(unsigned int x = start_x; x < start_x + width; x++) {
-	sum += pow(*avg - img->get_pixel_as<gs_double_pixel_t>(x, y), 2);
+	sum += pow(*avg - img->template get_pixel_as<gs_double_pixel_t>(x, y), 2);
       }
     
     *stddev = sqrt(sum/(double)(height * width));
