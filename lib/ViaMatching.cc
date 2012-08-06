@@ -179,8 +179,8 @@ double calc_xcorr(unsigned int start_x, unsigned int start_y,
 
   for(unsigned int y = 0; y < tmpl_img->get_height(); y++) {
     for(unsigned int x = 0; x < tmpl_img->get_width(); x++) {
-      double f_xy = bg_img->get_pixel_as<double>(start_x + x, start_y + y);
-      double t_xy = tmpl_img->get_pixel_as<double>(x, y);
+      double f_xy = bg_img->template get_pixel_as<double>(start_x + x, start_y + y);
+      double t_xy = tmpl_img->template get_pixel_as<double>(x, y);
       
       sum += (f_xy - f_avg) * (t_xy - t_avg) / (sigma_f * sigma_t); // extract commons
     }
