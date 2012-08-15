@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -62,8 +63,9 @@ static inline uint32_t highlight_color_by_state(uint32_t col,
 
 
 DegateRenderer::DegateRenderer() : last_scaling(0), realized(false),
-				   idle_hook_enabled(false), is_idle(true), lock_state(false),
-				   corridor_size(0) {
+				   should_update_gates(false), render_details(false),
+           idle_hook_enabled(false), is_idle(true), lock_state(false),
+           corridor_size(0) {
 
   info_layers[INFO_LAYER_ALL] = true;
 
