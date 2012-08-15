@@ -3,6 +3,7 @@
 This file is part of the IC reverse engineering tool degate.
 
 Copyright 2008, 2009, 2010 by Martin Schobert
+Copyright 2012 Robert Nitsch
 
 Degate is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -89,6 +90,7 @@ void MenuManager::create_menu() {
   m_refActionGroup = Gtk::ActionGroup::create();
 
   create_and_bind_project_menu();
+  create_and_bind_snapshot_menu();
   create_and_bind_view_menu();
   create_and_bind_tools_menu();
   create_and_bind_layer_menu();
@@ -172,6 +174,18 @@ void MenuManager::create_and_bind_project_menu() {
 
   m_refActionGroup->add(Gtk::Action::create("ProjectQuit", Gtk::Stock::QUIT),
 			sigc::mem_fun(*window, &MainWin::on_menu_project_quit));
+}
+
+void MenuManager::create_and_bind_snapshot_menu() {
+  m_refActionGroup->add(Gtk::Action::create("SnapshotMenu", "Snapshot"));
+
+  m_refActionGroup->add(Gtk::Action::create("SnapshotUndo",
+					    Gtk::Stock::UNDO, "_Undo", "Revert to the most recent snapshot"),
+			sigc::mem_fun(*window, &MainWin::on_menu_snapshot_undo));
+  
+  m_refActionGroup->add(Gtk::Action::create("SnapshotRedo",
+					    Gtk::Stock::REDO, "_Redo", "Anti-Undo"),
+			sigc::mem_fun(*window, &MainWin::on_menu_snapshot_redo));
 }
 
 std::string MenuManager::get_recent_project_uri() {
@@ -461,7 +475,7 @@ void MenuManager::setup_menu_structure() {
         "    <menu action='ProjectMenu'>"
         "      <menuitem action='ProjectNew'/>"
         "      <menuitem action='ProjectOpen'/>"
-	"      <menuitem action='ProjectRecentProjects'/>"
+	      "      <menuitem action='ProjectRecentProjects'/>"
         "      <menuitem action='ProjectClose'/>"
         "      <menuitem action='ProjectSave'/>"
         "      <menuitem action='ProjectExportArchive'/>"
@@ -475,6 +489,10 @@ void MenuManager::setup_menu_structure() {
         "      <menuitem action='ProjectSettings'/>"
         "      <separator/>"
         "      <menuitem action='ProjectQuit'/>"
+        "    </menu>"
+        "    <menu action='SnapshotMenu'>"
+        "      <menuitem action='SnapshotUndo' />"
+        "      <menuitem action='SnapshotRedo' />"
         "    </menu>"
         "    <menu action='ViewMenu'>"
         "      <menuitem action='ViewZoomIn'/>"

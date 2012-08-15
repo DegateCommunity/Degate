@@ -3,6 +3,7 @@
 This file is part of the IC reverse engineering tool degate.
 
 Copyright 2008, 2009, 2010 by Martin Schobert
+Copyright 2012 Robert Nitsch
 
 Degate is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -93,6 +94,9 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_project_push_changes();
   virtual void on_menu_project_pull_changes();
 
+  virtual void on_menu_snapshot_undo();
+  virtual void on_menu_snapshot_redo();
+  
   virtual void on_menu_view_zoom_in();
   virtual void on_menu_view_zoom_out();
   virtual void on_menu_view_next_layer();

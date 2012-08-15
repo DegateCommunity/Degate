@@ -3,6 +3,7 @@
 This file is part of the IC reverse engineering tool degate.
 
 Copyright 2008, 2009, 2010 by Martin Schobert
+Copyright 2012 Robert Nitsch
 
 Degate is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -507,6 +508,8 @@ void MainWin::on_project_load_finished() {
     assert(layer != NULL);
     update_gui_for_loaded_project();
     set_layer(get_first_enabled_layer(main_project->get_logic_model()));
+    
+    main_project->create_snapshot("feature-undo test");
   }
 }
 
@@ -2098,4 +2101,22 @@ void MainWin::on_menu_project_pull_changes() {
       error_dialog("XMLRPC failed", e.what());
     }
   }
+}
+
+void MainWin::on_menu_snapshot_undo() {
+  main_project->undo();
+  
+  Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
+  assert(layer != NULL);
+  update_gui_for_loaded_project();
+  set_layer(get_first_enabled_layer(main_project->get_logic_model()));
+}
+
+void MainWin::on_menu_snapshot_redo() {
+  main_project->redo();
+  
+  Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
+  assert(layer != NULL);
+  update_gui_for_loaded_project();
+  set_layer(get_first_enabled_layer(main_project->get_logic_model()));
 }
