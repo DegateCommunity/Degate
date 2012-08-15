@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -31,6 +32,7 @@
 #include <string>
 #include <list>
 #include <memory>
+#include <vector>
 
 #include <time.h>
 
@@ -51,11 +53,19 @@ namespace degate {
    */
 
   class Project {
-
+    
+  public:
+    struct Snapshot {
+      int id;
+      std::string title;
+      LogicModel_shptr logic_model;
+    };
   private:
 
     BoundingBox bounding_box;
 
+    int current_snapshot;
+    
     std::string name;
     std::string description;
     std::string degate_version;
@@ -90,12 +100,13 @@ namespace degate {
 
     unsigned int font_size;
 
+    std::vector<Snapshot> snapshots;
   private:
 
     void init_default_values();
 
   public:
-
+    
     /**
      * Create a new and empty project.
      * It will create an empty logic model as well.
@@ -121,6 +132,15 @@ namespace degate {
      * Set the project directory.
      */
 
+    //@{
+    int current_snapshot_index() const;
+    void create_snapshot(const std::string &title);
+    bool undo();
+    bool redo();
+    bool can_undo() const;
+    bool can_redo() const;
+    //@}
+    
     void set_project_directory(std::string const& _directory);
 
     /**

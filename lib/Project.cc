@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -35,6 +36,7 @@ Project::Project(length_t width, length_t height) :
   logic_model(new LogicModel(width, height)),
   port_color_manager(new PortColorManager()) {
   init_default_values();
+  current_snapshot = -1;
 }
 
 
@@ -44,9 +46,87 @@ Project::Project(length_t width, length_t height, std::string const& _directory,
   logic_model(new LogicModel(width, height, layers)),
   port_color_manager(new PortColorManager()) {
   init_default_values();
+  current_snapshot = -1;
 }
 
 Project::~Project() {
+}
+
+void Project::create_snapshot(const std::string &title) {
+  DeepCopyable::oldnew_t oldnew;
+  
+  int rnd = rand();
+  Snapshot ss = {rnd, title, std::dynamic_pointer_cast<LogicModel>(logic_model->cloneDeep(&oldnew))};
+  
+  if (ss.logic_model.get() == nullptr) {
+    throw degate::DegateRuntimeException("Could not clone logic_model while creating snapshot.");
+  }
+  
+  snapshots.push_back(ss);
+}
+
+bool Project::undo() {
+  if (!can_undo()) {
+    return false;
+  }
+  
+  Snapshot ss;
+  if (current_snapshot == -1) {
+    ss = snapshots.back();
+    create_snapshot("auto_snapshot_for_redoing");
+  } else {
+    ss = snapshots[current_snapshot_index()-1];
+  }
+  
+  current_snapshot = ss.id;
+  logic_model = ss.logic_model;
+  
+  return true;
+}
+
+bool Project::redo() {
+  if (!can_redo()) {
+    return false;
+  }
+  
+  Snapshot &ss = snapshots[current_snapshot_index()+1];
+  current_snapshot = ss.id;
+  logic_model = ss.logic_model;
+  
+  return true;
+}
+
+bool Project::can_undo() const {
+  if (current_snapshot == -1) {
+    return true;
+  }
+  
+  if (current_snapshot_index() > 0) {
+    return true;
+  }
+  
+  assert(current_snapshot_index() == -1);
+  return false;
+}
+
+bool Project::can_redo() const {
+  if (current_snapshot == -1) {
+    return false;
+  }
+  
+  assert(current_snapshot_index() < int(snapshots.size()));
+  return true;
+}
+
+int Project::current_snapshot_index() const {
+  for (unsigned i = 0; i < snapshots.size(); ++i) {
+    if (snapshots[i].id == current_snapshot) {
+      return i;
+    }
+  }
+  
+  assert(current_snapshot == -1);
+  return -1;
 }
 
 void Project::set_project_directory(std::string const& _directory) {
