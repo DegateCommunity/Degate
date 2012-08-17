@@ -94,7 +94,11 @@ Project::Snapshot Project::get_snapshot_by_id(const int ss_id) const {
 void Project::revert_to(const int ss_id) {
   Snapshot ss = get_snapshot_by_id(ss_id);
   if (ss.id != -1) {
-    this->logic_model = ss.logic_model;
+    DeepCopyable::oldnew_t oldnew;
+    LogicModel_shptr ss_lm_clone = std::dynamic_pointer_cast<LogicModel>(ss.logic_model->cloneDeep(&oldnew));
+    assert(ss_lm_clone.get() != nullptr);
+    
+    this->logic_model = ss_lm_clone;
   }
 }
 
