@@ -94,8 +94,8 @@ class MainWin : public Gtk::Window  {
   virtual void on_menu_project_push_changes();
   virtual void on_menu_project_pull_changes();
 
-  virtual void on_menu_snapshot_undo();
-  virtual void on_menu_snapshot_redo();
+  virtual void on_menu_snapshot_create();
+  virtual void on_menu_snapshot_view();
   
   virtual void on_menu_view_zoom_in();
   virtual void on_menu_view_zoom_out();

@@ -77,7 +77,7 @@ set(DEGATE_SRC
 
 	       GateConfigWin.cc
 	       GateListWin.cc
-
+	       SnapshotListWin.cc
 	       GateSelectWin.cc
 
 	       PortColorsWin.cc

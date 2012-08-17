@@ -133,12 +133,13 @@ namespace degate {
      */
 
     //@{
+    void clear_snapshots();
+    void remove_snapshot(const int id);
     int current_snapshot_index() const;
-    void create_snapshot(const std::string &title);
-    bool undo();
-    bool redo();
-    bool can_undo() const;
-    bool can_redo() const;
+    Snapshot create_snapshot(const std::string &title);
+    std::vector<Snapshot> get_snapshots() const;
+    Snapshot get_snapshot_by_id(const int ss_id) const;
+    void revert_to(const int ss_id);
     //@}
     
     void set_project_directory(std::string const& _directory);

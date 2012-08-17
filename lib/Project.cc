@@ -23,6 +23,7 @@
 #include "globals.h"
 #include "Project.h"
 
+#include <algorithm>
 #include <string>
 #include <iostream>
 #include <ctime>
@@ -52,7 +53,17 @@ Project::Project(length_t width, length_t height, std::string const& _directory,
 Project::~Project() {
 }
 
-void Project::create_snapshot(const std::string &title) {
+void Project::clear_snapshots() {
+  snapshots.clear();
+}
+
+void Project::remove_snapshot(const int id) {
+  std::remove_if(snapshots.begin(), snapshots.end(), [id](const Snapshot &ss) -> bool {
+    return ss.id == id;
+  });
+}
+
+Project::Snapshot Project::create_snapshot(const std::string &title) {
   DeepCopyable::oldnew_t oldnew;
   
   int rnd = rand();
@@ -63,59 +74,28 @@ void Project::create_snapshot(const std::string &title) {
   }
   
   snapshots.push_back(ss);
+  return ss;
 }
 
-bool Project::undo() {
-  if (!can_undo()) {
-    return false;
-  }
-  
-  Snapshot ss;
-  if (current_snapshot == -1) {
-    ss = snapshots.back();
-    create_snapshot("auto_snapshot_for_redoing");
-  } else {
-    ss = snapshots[current_snapshot_index()-1];
-  }
-  
-  current_snapshot = ss.id;
-  logic_model = ss.logic_model;
-  
-  return true;
+std::vector<Project::Snapshot> Project::get_snapshots() const {
+  return snapshots;
 }
 
-bool Project::redo() {
-  if (!can_redo()) {
-    return false;
+Project::Snapshot Project::get_snapshot_by_id(const int ss_id) const {
+  for (auto it = snapshots.begin(); it != snapshots.end(); ++it) {
+    if (it->id == ss_id) {
+      return *it;
+    }
   }
   
-  Snapshot &ss = snapshots[current_snapshot_index()+1];
-  current_snapshot = ss.id;
-  logic_model = ss.logic_model;
-  
-  return true;
+  return {-1, "", std::shared_ptr<LogicModel>()};
 }
 
-bool Project::can_undo() const {
-  if (current_snapshot == -1) {
-    return true;
+void Project::revert_to(const int ss_id) {
+  Snapshot ss = get_snapshot_by_id(ss_id);
+  if (ss.id != -1) {
+    this->logic_model = ss.logic_model;
   }
-  
-  if (current_snapshot_index() > 0) {
-    return true;
-  }
-  
-  assert(current_snapshot_index() == -1);
-  return false;
-}
-
-bool Project::can_redo() const {
-  if (current_snapshot == -1) {
-    return false;
-  }
-  
-  assert(current_snapshot_index() < int(snapshots.size()));
-  return true;
 }
 
 int Project::current_snapshot_index() const {

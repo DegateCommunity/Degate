@@ -35,6 +35,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "NewProjectWin.h"
 #include "GridConfigWin.h"
 #include "GateListWin.h"
+#include "SnapshotListWin.h"
 #include "PortColorsWin.h"
 #include "GateConfigWin.h"
 #include "GateSelectWin.h"
@@ -509,7 +510,7 @@ void MainWin::on_project_load_finished() {
     update_gui_for_loaded_project();
     set_layer(get_first_enabled_layer(main_project->get_logic_model()));
     
-    main_project->create_snapshot("feature-undo test");
+    main_project->create_snapshot("(auto) Project loaded.");
   }
 }
 
@@ -2103,20 +2104,21 @@ void MainWin::on_menu_project_pull_changes() {
   }
 }
 
-void MainWin::on_menu_snapshot_undo() {
-  main_project->undo();
-  
-  Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
-  assert(layer != NULL);
-  update_gui_for_loaded_project();
-  set_layer(get_first_enabled_layer(main_project->get_logic_model()));
+void MainWin::on_menu_snapshot_create() {
+  if (main_project != nullptr) {
+    main_project->create_snapshot("menu-created snapshot");
+  }
 }
 
-void MainWin::on_menu_snapshot_redo() {
-  main_project->redo();
-  
-  Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
-  assert(layer != NULL);
-  update_gui_for_loaded_project();
-  set_layer(get_first_enabled_layer(main_project->get_logic_model()));
+void MainWin::on_menu_snapshot_view() {
+  if (main_project != nullptr) {
+    SnapshotListWin glWin(this, main_project);
+    glWin.run();
+    
+    Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
+    assert(layer != NULL);
+    update_gui_for_loaded_project();
+    set_layer(get_first_enabled_layer(main_project->get_logic_model()));
+    editor.update_screen();
+  }
 }

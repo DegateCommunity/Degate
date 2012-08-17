@@ -179,13 +179,13 @@ void MenuManager::create_and_bind_project_menu() {
 void MenuManager::create_and_bind_snapshot_menu() {
   m_refActionGroup->add(Gtk::Action::create("SnapshotMenu", "Snapshot"));
 
-  m_refActionGroup->add(Gtk::Action::create("SnapshotUndo",
-					    Gtk::Stock::UNDO, "_Undo", "Revert to the most recent snapshot"),
-			sigc::mem_fun(*window, &MainWin::on_menu_snapshot_undo));
+  m_refActionGroup->add(Gtk::Action::create("SnapshotCreate",
+					    Gtk::Stock::REDO, "_Create", "Create snapshot"),
+			sigc::mem_fun(*window, &MainWin::on_menu_snapshot_create));
   
-  m_refActionGroup->add(Gtk::Action::create("SnapshotRedo",
-					    Gtk::Stock::REDO, "_Redo", "Anti-Undo"),
-			sigc::mem_fun(*window, &MainWin::on_menu_snapshot_redo));
+  m_refActionGroup->add(Gtk::Action::create("SnapshotView",
+					    Gtk::Stock::UNDO, "_View", "View snapshots"),
+			sigc::mem_fun(*window, &MainWin::on_menu_snapshot_view));
 }
 
 std::string MenuManager::get_recent_project_uri() {
@@ -491,8 +491,8 @@ void MenuManager::setup_menu_structure() {
         "      <menuitem action='ProjectQuit'/>"
         "    </menu>"
         "    <menu action='SnapshotMenu'>"
-        "      <menuitem action='SnapshotUndo' />"
-        "      <menuitem action='SnapshotRedo' />"
+        "      <menuitem action='SnapshotCreate' />"
+        "      <menuitem action='SnapshotView' />"
         "    </menu>"
         "    <menu action='ViewMenu'>"
         "      <menuitem action='ViewZoomIn'/>"
