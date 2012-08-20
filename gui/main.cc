@@ -3,6 +3,7 @@
 This file is part of the IC reverse engineering tool degate.
 
 Copyright 2008, 2009, 2010 by Martin Schobert
+Copyright 2012 Robert Nitsch
 
 Degate is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,9 +57,9 @@ bool directory_exists(const char * const env_variable, const char * const sub_pa
   snprintf(path, PATH_MAX, "%s/%s", getenv(env_variable), sub_path);
 
   if(!is_directory(path)) {
-    std::cout << "Error: you environment variable " << env_variable
-	      << " seems to be incorrent. The directory " << path
-	      << " does not exists."
+    std::cout << "Error: your environment variable " << env_variable
+	      << " seems to be incorrect. The directory " << path
+	      << " does not exist."
 	      << std::endl;
     return false;
   }
