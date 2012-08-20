@@ -124,6 +124,7 @@ MainWin::MainWin() : render_window(editor), is_fullscreen(false) {
   signal_key_press_event().connect(sigc::mem_fun(*this,&MainWin::on_key_press_event_received), false);
   signal_key_release_event().connect(sigc::mem_fun(*this,&MainWin::on_key_release_event_received), false);
   signal_hide().connect(sigc::mem_fun(*this, &MainWin::on_menu_project_close), false);
+  signal_project_open_finished_.connect(sigc::mem_fun(*this, &MainWin::on_project_load_finished));
 
 }
 
@@ -461,8 +462,6 @@ void MainWin::open_project(Glib::ustring project_dir) {
     (new InProgressWin(this, "Opening Project", "Please wait while opening project."));
   ipWin->show();
 
-				 
-  signal_project_open_finished_.connect(sigc::mem_fun(*this, &MainWin::on_project_load_finished));
   thread = Glib::Thread::create(sigc::bind<const Glib::ustring>
 				(sigc::mem_fun(*this, &MainWin::project_open_thread),
 				 project_dir), false);
