@@ -180,11 +180,11 @@ void MenuManager::create_and_bind_snapshot_menu() {
   m_refActionGroup->add(Gtk::Action::create("SnapshotMenu", "Snapshot"));
 
   m_refActionGroup->add(Gtk::Action::create("SnapshotCreate",
-					    Gtk::Stock::REDO, "_Create", "Create snapshot"),
+					    Gtk::Stock::ADD, "_Create", "Create snapshot"),
 			sigc::mem_fun(*window, &MainWin::on_menu_snapshot_create));
   
   m_refActionGroup->add(Gtk::Action::create("SnapshotView",
-					    Gtk::Stock::UNDO, "_View", "View snapshots"),
+					    Gtk::Stock::INDEX, "_View", "View snapshots"),
 			sigc::mem_fun(*window, &MainWin::on_menu_snapshot_view));
 }
 
