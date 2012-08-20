@@ -739,6 +739,9 @@ void MenuManager::initialize_menu_render_funcs(const std::vector<Glib::ustring> 
 
 void MenuManager::set_widget_sensitivity(bool state) {
 
+  set_toolbar_item_sensitivity("/MenuBar/SnapshotMenu/SnapshotCreate", state);
+  set_toolbar_item_sensitivity("/MenuBar/SnapshotMenu/SnapshotView", state);
+
   set_toolbar_item_sensitivity("/ToolBar/ViewZoomIn", state);
   set_toolbar_item_sensitivity("/ToolBar/ViewZoomOut", state);
   set_toolbar_item_sensitivity("/ToolBar/ViewPrevLayer", state);
