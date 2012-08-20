@@ -248,7 +248,7 @@ class MainWin : public Gtk::Window  {
   std::shared_ptr<Glib::Dispatcher> signal_algorithm_finished_;
   sigc::signal<void, bool> signal_export_finished_;
 
-  void update_gui_for_loaded_project();
+  void update_gui_for_loaded_project(bool reverted);
 
   void initialize_menu();
 

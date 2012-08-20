@@ -276,7 +276,7 @@ void MainWin::create_new_project(std::string const& project_dir) {
     try {
       if(!file_exists(project_dir)) create_directory(project_dir);
       main_project = Project_shptr(new Project(width, height, project_dir, layers));
-      update_gui_for_loaded_project();
+      update_gui_for_loaded_project(false);
       assert(lcWin != NULL);
       lcWin->run();
       set_layer(get_first_enabled_layer(main_project->get_logic_model()));
@@ -507,7 +507,7 @@ void MainWin::on_project_load_finished() {
   else {
     Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
     assert(layer != NULL);
-    update_gui_for_loaded_project();
+    update_gui_for_loaded_project(false);
     set_layer(get_first_enabled_layer(main_project->get_logic_model()));
     
     main_project->create_snapshot("(auto) Project loaded.");
@@ -516,7 +516,7 @@ void MainWin::on_project_load_finished() {
 
 // --------------------------------------------------------------------------
 
-void MainWin::update_gui_for_loaded_project() {
+void MainWin::update_gui_for_loaded_project(bool reverted) {
 
   if(main_project) {
 
@@ -528,7 +528,9 @@ void MainWin::update_gui_for_loaded_project() {
 
 
     editor.set_virtual_size(main_project->get_width(), main_project->get_height());
-    editor.set_viewport(0, 0, editor.get_width(), editor.get_height());
+    if (!reverted) {
+        editor.set_viewport(0, 0, editor.get_width(), editor.get_height());
+    }
     editor.set_logic_model(lmodel);
     editor.set_layer(layer);
 
@@ -2115,10 +2117,6 @@ void MainWin::on_menu_snapshot_view() {
     SnapshotListWin glWin(this, main_project);
     glWin.run();
     
-    Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
-    assert(layer != NULL);
-    update_gui_for_loaded_project();
-    set_layer(get_first_enabled_layer(main_project->get_logic_model()));
-    editor.update_screen();
+    update_gui_for_loaded_project(true);
   }
 }
