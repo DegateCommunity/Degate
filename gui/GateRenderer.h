@@ -38,7 +38,7 @@
 
 class GateRenderer : public OpenGLRendererBase {
 
-  //friend class GfxEditorTool<DegateRenderer>;
+  friend class GfxEditorTool<GateRenderer>;
 
  private:
 
@@ -80,6 +80,15 @@ public:
   void render_gate_template(degate::GateTemplate_shptr tmpl,
 			    layer_list_type & layers);
 
+protected:
+  /* It is "planned" that the gate renderer in the GateConfigEditor gets support to draw
+     things into a rendered cell type. This will require the following methods. Now there 
+     is only a simple viewing widget without real interactive features.
+   */
+  virtual void start_tool() {}
+  virtual void stop_tool() {}
+  virtual void set_lock(bool state) {}
+  
 };
 
 
