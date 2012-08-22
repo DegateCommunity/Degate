@@ -150,7 +150,11 @@ void LogicModel::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const 
   
   // layers
   std::transform(layers.begin(), layers.end(), back_inserter(clone->layers), [&](const Layer_shptr &d) {
-    return std::dynamic_pointer_cast<Layer>(d->cloneDeep(oldnew));
+      Layer_shptr layer_cloned = std::dynamic_pointer_cast<Layer>(d->cloneDeep(oldnew));
+      if (d == current_layer) {
+          clone->current_layer = layer_cloned;
+      }
+      return layer_cloned;
   });
   
   // gate_library
