@@ -132,6 +132,7 @@ LogicModel::~LogicModel() {
 DeepCopyable_shptr LogicModel::cloneShallow() const {
   auto clone = std::make_shared<LogicModel>(*this);
   clone->layers.clear();
+  clone->current_layer.reset();
   clone->gate_library.reset();
   clone->gates.clear();
   clone->wires.clear();
