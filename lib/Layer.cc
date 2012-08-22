@@ -93,8 +93,8 @@ void Layer::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
   // quadtree
   std::vector<quadtree_element_type> quadtree_elems;
   quadtree.get_all_elements(quadtree_elems);
-  std::for_each(quadtree_elems.begin(), quadtree_elems.end(), [&clone](const quadtree_element_type &t) {
-    clone->quadtree.insert(t);
+  std::for_each(quadtree_elems.begin(), quadtree_elems.end(), [=,oldnew,&clone](const quadtree_element_type &t) {
+    clone->quadtree.insert(std::dynamic_pointer_cast<PlacedLogicModelObject>(t->cloneDeep(oldnew)));
   });
 
   // objects
