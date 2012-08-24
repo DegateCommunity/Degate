@@ -58,9 +58,13 @@ void Project::clear_snapshots() {
 }
 
 void Project::remove_snapshot(const int id) {
-  std::remove_if(snapshots.begin(), snapshots.end(), [id](const Snapshot &ss) -> bool {
+  auto it = std::find_if(snapshots.begin(), snapshots.end(), [id](const Snapshot &ss) -> bool {
     return ss.id == id;
   });
+  
+  if (it != snapshots.end()) {
+    snapshots.erase(it);
+  }
 }
 
 Project::Snapshot Project::create_snapshot(const std::string &title) {
