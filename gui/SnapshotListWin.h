@@ -64,6 +64,7 @@ private:
   virtual void on_remove_button_clicked();
   virtual void on_clear_button_clicked();
   virtual void on_revert_button_clicked();
+  virtual void on_selection_changed();
   //@}
 
 };

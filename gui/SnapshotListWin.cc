@@ -68,12 +68,15 @@ SnapshotListWin::SnapshotListWin(Gtk::Window *parent, Project_shptr project)
     get_widget("revert_button", pButton);
     if(pButton) {
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &SnapshotListWin::on_revert_button_clicked));
+      pButton->set_sensitive(false);
     }
     
     // Set up treeview.
     refListStore = Gtk::ListStore::create(m_Columns);
     get_widget("treeview", pTreeView);
     if(pTreeView) {
+      pTreeView->get_selection()->signal_changed().connect(sigc::mem_fun(*this, &SnapshotListWin::on_selection_changed));
+      
       pTreeView->set_model(refListStore);
       pTreeView->append_column("ID", m_Columns.m_col_id);
       pTreeView->append_column("Title", m_Columns.m_col_title);
@@ -152,6 +155,8 @@ void SnapshotListWin::on_remove_button_clicked() {
 
         project->remove_snapshot(ss_id);
         refListStore->erase(iter);
+        
+        get_dialog()->present();
       }
     }
   }
@@ -166,5 +171,14 @@ void SnapshotListWin::on_revert_button_clicked() {
   int ss_id = treeview_get_selected_id();
   if (ss_id != -1) {
     project->revert_to(ss_id);
+    get_dialog()->hide();
+  }
+}
+
+void SnapshotListWin::on_selection_changed() {
+  Gtk::Button *pButton = NULL;
+  get_widget("revert_button", pButton);
+  if (pButton) {
+    pButton->set_sensitive(treeview_get_selected_id() != -1);
   }
 }
