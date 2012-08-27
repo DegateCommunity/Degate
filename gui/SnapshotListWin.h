@@ -65,6 +65,7 @@ private:
   virtual void on_clear_button_clicked();
   virtual void on_revert_button_clicked();
   virtual void on_selection_changed();
+  virtual void on_snapshot_title_edited(const Glib::ustring& path, const Glib::ustring& new_text);
   //@}
 
 };

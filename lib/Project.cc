@@ -95,6 +95,14 @@ Project::Snapshot Project::get_snapshot_by_id(const int ss_id) const {
   return {-1, "", std::shared_ptr<LogicModel>()};
 }
 
+void Project::set_snapshot_title(const int ss_id, const std::string &title) {
+  for (auto it = snapshots.begin(); it != snapshots.end(); ++it) {
+    if (it->id == ss_id) {
+      it->title = title;
+    }
+  }
+}
+
 void Project::revert_to(const int ss_id) {
   Snapshot ss = get_snapshot_by_id(ss_id);
   if (ss.id != -1) {

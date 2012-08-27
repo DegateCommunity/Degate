@@ -139,6 +139,7 @@ namespace degate {
     Snapshot create_snapshot(const std::string &title);
     std::vector<Snapshot> get_snapshots() const;
     Snapshot get_snapshot_by_id(const int ss_id) const;
+    void set_snapshot_title(const int ss_id, const std::string &title);
     void revert_to(const int ss_id);
     //@}
     

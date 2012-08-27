@@ -79,7 +79,7 @@ SnapshotListWin::SnapshotListWin(Gtk::Window *parent, Project_shptr project)
       
       pTreeView->set_model(refListStore);
       pTreeView->append_column("ID", m_Columns.m_col_id);
-      pTreeView->append_column("Title", m_Columns.m_col_title);
+      pTreeView->append_column_editable("Title", m_Columns.m_col_title);
 
       Gtk::TreeView::Column * pColumn;
 
@@ -94,6 +94,10 @@ SnapshotListWin::SnapshotListWin(Gtk::Window *parent, Project_shptr project)
       }
       
       refListStore->set_sort_column_id(m_Columns.m_col_title, Gtk::SORT_ASCENDING);
+      
+      Gtk::CellRendererText * rendererText;
+      rendererText = dynamic_cast<Gtk::CellRendererText *>(pTreeView->get_column_cell_renderer(1)); 
+      rendererText->signal_edited().connect(sigc::mem_fun(*this, &SnapshotListWin::on_snapshot_title_edited));
     }
 
     // Fill treeview.
@@ -181,4 +185,9 @@ void SnapshotListWin::on_selection_changed() {
   if (pButton) {
     pButton->set_sensitive(treeview_get_selected_id() != -1);
   }
+}
+
+void SnapshotListWin::on_snapshot_title_edited(const Glib::ustring& path, const Glib::ustring& new_text) {
+  int id = treeview_get_selected_id();
+  project->set_snapshot_title(id, new_text);
 }
