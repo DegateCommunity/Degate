@@ -170,8 +170,15 @@ void SnapshotListWin::on_remove_button_clicked() {
 }
 
 void SnapshotListWin::on_clear_button_clicked() {
-  refListStore->clear();
-  mainwin->clear_snapshots();
+  Gtk::MessageDialog dialog(*parent, "Are you sure you want to remove all snapshots?",
+          true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
+  dialog.set_title("Warning");
+  if (dialog.run() == Gtk::RESPONSE_YES) {
+    dialog.hide();
+    refListStore->clear();
+    mainwin->clear_snapshots();
+  }
+  get_dialog()->present();
 }
 
 void SnapshotListWin::on_revert_button_clicked() {
