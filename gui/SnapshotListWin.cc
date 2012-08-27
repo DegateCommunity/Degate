@@ -58,6 +58,7 @@ SnapshotListWin::SnapshotListWin(Gtk::Window *parent, Project_shptr project)
     get_widget("remove_button", pButton);
     if(pButton) {
       pButton->signal_clicked().connect(sigc::mem_fun(*this, &SnapshotListWin::on_remove_button_clicked));
+      pButton->set_sensitive(false);
     }
     
     get_widget("clear_button", pButton);
@@ -181,9 +182,14 @@ void SnapshotListWin::on_revert_button_clicked() {
 
 void SnapshotListWin::on_selection_changed() {
   Gtk::Button *pButton = NULL;
+  bool sensitive = (treeview_get_selected_id() != -1);
   get_widget("revert_button", pButton);
   if (pButton) {
-    pButton->set_sensitive(treeview_get_selected_id() != -1);
+    pButton->set_sensitive(sensitive);
+  }
+  get_widget("remove_button", pButton);
+  if (pButton) {
+    pButton->set_sensitive(sensitive);
   }
 }
 
