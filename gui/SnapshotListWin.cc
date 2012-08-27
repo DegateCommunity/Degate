@@ -20,6 +20,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "SnapshotListWin.h"
+#include "MainWin.h"
 #include "GladeFileLoader.h"
 #include "Project.h"
 
@@ -33,12 +34,12 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace degate;
 
-SnapshotListWin::SnapshotListWin(Gtk::Window *parent, Project_shptr project)
+SnapshotListWin::SnapshotListWin(Gtk::Window *parent)
   : GladeFileLoader("snapshot_list.glade", "snapshot_list_dialog")
 {
-  this->project = project;
   this->parent = parent;
-  assert(project.get() != nullptr);
+  this->mainwin = dynamic_cast<MainWin*>(parent);
+  assert(mainwin);
 
   if(get_dialog()) {
     // Get the Glade-instantiated button, and connect a signal handler.
@@ -102,7 +103,7 @@ SnapshotListWin::SnapshotListWin(Gtk::Window *parent, Project_shptr project)
     }
 
     // Fill treeview.
-    std::vector<Project::Snapshot> snapshots = project->get_snapshots();
+    std::vector<ProjectSnapshot_shptr> snapshots = mainwin->get_snapshots();
     for (auto it = snapshots.begin(); it != snapshots.end(); ++it) {
       fill_row(*(refListStore->append()), *it);
     }
@@ -112,20 +113,21 @@ SnapshotListWin::SnapshotListWin(Gtk::Window *parent, Project_shptr project)
   }
 }
 
-int SnapshotListWin::treeview_get_selected_id() const {
+ProjectSnapshot_shptr SnapshotListWin::get_selected_snapshot() const {
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelection =  pTreeView->get_selection();
   Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
   Gtk::TreeModel::Row row = *iter;
   if (iter) {
-    return row[m_Columns.m_col_id];
+    return row[m_Columns.m_col_ptr];
   } else {
-    return -1;
+    return ProjectSnapshot_shptr();
   }
 }
 
-void SnapshotListWin::fill_row(Gtk::TreeModel::Row const& row, const Project::Snapshot &ss) {
-  row[m_Columns.m_col_id] = ss.id;
-  row[m_Columns.m_col_title] = ss.title;
+void SnapshotListWin::fill_row(Gtk::TreeModel::Row const& row, const ProjectSnapshot_shptr &ss) {
+  row[m_Columns.m_col_id] = ss->id;
+  row[m_Columns.m_col_title] = ss->title;
+  row[m_Columns.m_col_ptr] = ss;
 }
 
 SnapshotListWin::~SnapshotListWin() {
@@ -140,7 +142,7 @@ void SnapshotListWin::on_close_button_clicked() {
 }
 
 void SnapshotListWin::on_add_button_clicked() {
-  Project::Snapshot ss = project->create_snapshot("snapshot");
+  ProjectSnapshot_shptr ss = mainwin->create_snapshot("snapshot");
   fill_row(*(refListStore->append()), ss);
 }
 
@@ -150,7 +152,6 @@ void SnapshotListWin::on_remove_button_clicked() {
     Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
     if (iter) {
       Gtk::TreeModel::Row row = *iter;
-      int ss_id = row[m_Columns.m_col_id];
 
       Gtk::MessageDialog dialog(*parent, "Are you sure you want to remove selected snapshot(s)?",
 				true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO);
@@ -158,7 +159,8 @@ void SnapshotListWin::on_remove_button_clicked() {
       if (dialog.run() == Gtk::RESPONSE_YES) {
         dialog.hide();
 
-        project->remove_snapshot(ss_id);
+        ProjectSnapshot_shptr ss = row[m_Columns.m_col_ptr];
+        mainwin->remove_snapshot(ss);
         refListStore->erase(iter);
         
         get_dialog()->present();
@@ -169,20 +171,20 @@ void SnapshotListWin::on_remove_button_clicked() {
 
 void SnapshotListWin::on_clear_button_clicked() {
   refListStore->clear();
-  project->clear_snapshots();
+  mainwin->clear_snapshots();
 }
 
 void SnapshotListWin::on_revert_button_clicked() {
-  int ss_id = treeview_get_selected_id();
-  if (ss_id != -1) {
-    project->revert_to(ss_id);
+  ProjectSnapshot_shptr ss = get_selected_snapshot();
+  if (ss.get() != nullptr) {
+    mainwin->revert_to_snapshot(ss);
     get_dialog()->hide();
   }
 }
 
 void SnapshotListWin::on_selection_changed() {
   Gtk::Button *pButton = NULL;
-  bool sensitive = (treeview_get_selected_id() != -1);
+  bool sensitive = (get_selected_snapshot().get() != nullptr);
   get_widget("revert_button", pButton);
   if (pButton) {
     pButton->set_sensitive(sensitive);
@@ -194,6 +196,8 @@ void SnapshotListWin::on_selection_changed() {
 }
 
 void SnapshotListWin::on_snapshot_title_edited(const Glib::ustring& path, const Glib::ustring& new_text) {
-  int id = treeview_get_selected_id();
-  project->set_snapshot_title(id, new_text);
+  auto ss = get_selected_snapshot();
+  if (ss.get() != nullptr) {
+    ss->title = new_text;
+  }
 }

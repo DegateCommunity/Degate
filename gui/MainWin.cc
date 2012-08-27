@@ -448,6 +448,41 @@ void MainWin::set_project_to_open(char * project_dir) {
   project_to_open = project_dir;
 }
 
+ProjectSnapshot_shptr MainWin::create_snapshot(const std::string &title) {
+  ProjectSnapshot_shptr ss = std::make_shared<ProjectSnapshot>();
+  ss->id = rand();
+  ss->title = title;
+  
+  DeepCopyable::oldnew_t oldnew;
+  ss->clone = std::dynamic_pointer_cast<Project>(main_project->cloneDeep(&oldnew));
+  
+  snapshots.push_back(ss);
+  return ss;
+}
+
+std::vector<ProjectSnapshot_shptr> MainWin::get_snapshots() {
+  return snapshots;
+}
+
+void MainWin::clear_snapshots() {
+  snapshots.clear();
+}
+
+void MainWin::remove_snapshot(ProjectSnapshot_shptr &ss) {
+  auto pos = std::find(snapshots.begin(), snapshots.end(), ss);
+  if (pos != snapshots.end()) {
+    snapshots.erase(pos);
+  }
+}
+
+void MainWin::revert_to_snapshot(ProjectSnapshot_shptr &ss) {
+  DeepCopyable::oldnew_t oldnew;
+  auto target_state = std::dynamic_pointer_cast<Project>(ss->clone->cloneDeep(&oldnew));
+  if (target_state.get() != nullptr) {
+    main_project = target_state;
+  }
+}
+
 // --------------------------------------------------------------------------
 void MainWin::open_project(Glib::ustring project_dir) {
   if(main_project) on_menu_project_close();
@@ -509,7 +544,7 @@ void MainWin::on_project_load_finished() {
     update_gui_for_loaded_project(false);
     set_layer(get_first_enabled_layer(main_project->get_logic_model()));
     
-    main_project->create_snapshot("(auto) Project loaded.");
+    create_snapshot("(auto) Project loaded.");
   }
 }
 
@@ -2107,13 +2142,13 @@ void MainWin::on_menu_project_pull_changes() {
 
 void MainWin::on_menu_snapshot_create() {
   if (main_project != nullptr) {
-    main_project->create_snapshot("menu-created snapshot");
+    create_snapshot("menu-created snapshot");
   }
 }
 
 void MainWin::on_menu_snapshot_view() {
   if (main_project != nullptr) {
-    SnapshotListWin glWin(this, main_project);
+    SnapshotListWin glWin(this);
     glWin.run();
     
     update_gui_for_loaded_project(true);

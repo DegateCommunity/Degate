@@ -24,6 +24,7 @@
 #define __PROJECT_H__
 
 #include <degate.h>
+#include <DeepCopyable.h>
 #include <globals.h>
 #include <LogicModel.h>
 #include <PortColorManager.h>
@@ -47,24 +48,23 @@ namespace degate {
 
 namespace degate {
 
+  struct ProjectSnapshot {
+    int id;
+    std::string title;
+    Project_shptr clone;
+  };
+  typedef std::shared_ptr<ProjectSnapshot> ProjectSnapshot_shptr;
+
   /**
    * The project class is a container for project related data.
    *
    */
 
-  class Project {
-    
-  public:
-    struct Snapshot {
-      int id;
-      std::string title;
-      LogicModel_shptr logic_model;
-    };
+  class Project : public DeepCopyable {
   private:
 
     BoundingBox bounding_box;
 
-    int current_snapshot;
     
     std::string name;
     std::string description;
@@ -99,8 +99,6 @@ namespace degate {
     RCBase::container_type rcv_blacklist;
 
     unsigned int font_size;
-
-    std::vector<Snapshot> snapshots;
   private:
 
     void init_default_values();
@@ -128,21 +126,14 @@ namespace degate {
 
     virtual ~Project();
 
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
+    
     /**
      * Set the project directory.
      */
-
-    //@{
-    void clear_snapshots();
-    void remove_snapshot(const int id);
-    int current_snapshot_index() const;
-    Snapshot create_snapshot(const std::string &title);
-    std::vector<Snapshot> get_snapshots() const;
-    Snapshot get_snapshot_by_id(const int ss_id) const;
-    void set_snapshot_title(const int ss_id, const std::string &title);
-    void revert_to(const int ss_id);
-    //@}
-    
     void set_project_directory(std::string const& _directory);
 
     /**

@@ -45,6 +45,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 #include <set>
 #include <utility>
+#include <vector>
 
 class MainWin : public Gtk::Window  {
 
@@ -57,6 +58,13 @@ class MainWin : public Gtk::Window  {
   void open_project(Glib::ustring project_dir);
   void set_project_to_open(char * project_dir);
 
+  //@{
+  degate::ProjectSnapshot_shptr create_snapshot(const std::string &title);
+  std::vector<degate::ProjectSnapshot_shptr> get_snapshots();
+  void clear_snapshots();
+  void remove_snapshot(degate::ProjectSnapshot_shptr &ss);
+  void revert_to_snapshot(degate::ProjectSnapshot_shptr &ss);
+  //@}
 
  private:
   void open_popup_menu(GdkEventButton * event);
@@ -205,6 +213,8 @@ class MainWin : public Gtk::Window  {
 
  private:
 
+  std::vector<degate::ProjectSnapshot_shptr> snapshots;
+  
   bool shift_key_pressed;
   bool control_key_pressed;
 

@@ -37,7 +37,6 @@ Project::Project(length_t width, length_t height) :
   logic_model(new LogicModel(width, height)),
   port_color_manager(new PortColorManager()) {
   init_default_values();
-  current_snapshot = -1;
 }
 
 
@@ -47,82 +46,33 @@ Project::Project(length_t width, length_t height, std::string const& _directory,
   logic_model(new LogicModel(width, height, layers)),
   port_color_manager(new PortColorManager()) {
   init_default_values();
-  current_snapshot = -1;
 }
 
 Project::~Project() {
 }
 
-void Project::clear_snapshots() {
-  snapshots.clear();
+DeepCopyable_shptr Project::cloneShallow() const {
+  auto clone = std::make_shared<Project>(*this);
+  clone->regular_horizontal_grid.reset();
+  clone->regular_vertical_grid.reset();
+  clone->irregular_horizontal_grid.reset();
+  clone->irregular_vertical_grid.reset();
+  clone->logic_model.reset();
+  clone->port_color_manager.reset();
+  return clone;
 }
 
-void Project::remove_snapshot(const int id) {
-  auto it = std::find_if(snapshots.begin(), snapshots.end(), [id](const Snapshot &ss) -> bool {
-    return ss.id == id;
-  });
+void Project::cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Project>(destination);
   
-  if (it != snapshots.end()) {
-    snapshots.erase(it);
-  }
-}
-
-Project::Snapshot Project::create_snapshot(const std::string &title) {
-  DeepCopyable::oldnew_t oldnew;
+  clone->logic_model = std::dynamic_pointer_cast<LogicModel>(logic_model->cloneDeep(oldnew));
   
-  int rnd = rand();
-  Snapshot ss = {rnd, title, std::dynamic_pointer_cast<LogicModel>(logic_model->cloneDeep(&oldnew))};
-  
-  if (ss.logic_model.get() == nullptr) {
-    throw degate::DegateRuntimeException("Could not clone logic_model while creating snapshot.");
-  }
-  
-  snapshots.push_back(ss);
-  return ss;
-}
-
-std::vector<Project::Snapshot> Project::get_snapshots() const {
-  return snapshots;
-}
-
-Project::Snapshot Project::get_snapshot_by_id(const int ss_id) const {
-  for (auto it = snapshots.begin(); it != snapshots.end(); ++it) {
-    if (it->id == ss_id) {
-      return *it;
-    }
-  }
-  
-  return {-1, "", std::shared_ptr<LogicModel>()};
-}
-
-void Project::set_snapshot_title(const int ss_id, const std::string &title) {
-  for (auto it = snapshots.begin(); it != snapshots.end(); ++it) {
-    if (it->id == ss_id) {
-      it->title = title;
-    }
-  }
-}
-
-void Project::revert_to(const int ss_id) {
-  Snapshot ss = get_snapshot_by_id(ss_id);
-  if (ss.id != -1) {
-    DeepCopyable::oldnew_t oldnew;
-    LogicModel_shptr ss_lm_clone = std::dynamic_pointer_cast<LogicModel>(ss.logic_model->cloneDeep(&oldnew));
-    assert(ss_lm_clone.get() != nullptr);
-    
-    this->logic_model = ss_lm_clone;
-  }
-}
-
-int Project::current_snapshot_index() const {
-  for (unsigned i = 0; i < snapshots.size(); ++i) {
-    if (snapshots[i].id == current_snapshot) {
-      return i;
-    }
-  }
-  
-  assert(current_snapshot == -1);
-  return -1;
+  // For these members we use the default copy constructors.
+  clone->regular_horizontal_grid = std::make_shared<RegularGrid>(*regular_horizontal_grid);
+  clone->regular_vertical_grid = std::make_shared<RegularGrid>(*regular_vertical_grid);
+  clone->irregular_horizontal_grid = std::make_shared<IrregularGrid>(*irregular_horizontal_grid);
+  clone->irregular_vertical_grid = std::make_shared<IrregularGrid>(*irregular_vertical_grid);
+  clone->port_color_manager = std::make_shared<PortColorManager>(*port_color_manager);
 }
 
 void Project::set_project_directory(std::string const& _directory) {

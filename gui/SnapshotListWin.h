@@ -28,6 +28,8 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "GladeFileLoader.h"
 #include "Project.h"
 
+class MainWin;
+
 class SnapshotListWin : private GladeFileLoader {
 
   class SnapshotListModelColumns : public Gtk::TreeModelColumnRecord {
@@ -35,27 +37,29 @@ class SnapshotListWin : private GladeFileLoader {
     SnapshotListModelColumns() {
       add(m_col_id);
       add(m_col_title);
+      add(m_col_ptr);
     }
 
     Gtk::TreeModelColumn<int> m_col_id;
     Gtk::TreeModelColumn<Glib::ustring> m_col_title;
+    Gtk::TreeModelColumn<degate::ProjectSnapshot_shptr> m_col_ptr;
   };
 
 public:
-  SnapshotListWin(Gtk::Window *parent, degate::Project_shptr project);
+  SnapshotListWin(Gtk::Window *parent);
   virtual ~SnapshotListWin();
   void run();
 
 private:
   Gtk::Window *parent;
-  degate::Project_shptr project;
+  MainWin *mainwin;
 
   SnapshotListModelColumns m_Columns;
   Glib::RefPtr<Gtk::ListStore> refListStore;
   Gtk::TreeView* pTreeView;
   
-  int treeview_get_selected_id() const;
-  void fill_row(Gtk::TreeModel::Row const& row, const degate::Project::Snapshot &ss);
+  degate::ProjectSnapshot_shptr get_selected_snapshot() const;
+  void fill_row(Gtk::TreeModel::Row const& row, const degate::ProjectSnapshot_shptr &ss);
 
   // Signal handlers:
   //@{
