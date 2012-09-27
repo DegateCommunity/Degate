@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,12 +23,13 @@
 #ifndef __CIRCLE_H__
 #define __CIRCLE_H__
 
+#include "DeepCopyable.h"
 #include "Shape.h"
 #include "BoundingBox.h"
 
 namespace degate {
 
-  class Circle : public AbstractShape {
+  class Circle : public AbstractShape, public DeepCopyableBase {
 
   private:
     int x, y;
@@ -43,6 +45,8 @@ namespace degate {
     Circle(int x, int y, unsigned int diameter);
 
     virtual ~Circle() {}
+    
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
 
     virtual bool in_shape(int x, int y, int max_distance = 0) const;
 

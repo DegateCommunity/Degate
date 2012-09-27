@@ -88,7 +88,7 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<ViaMatching> ViaMatching_shptr;
+  typedef std::shared_ptr<ViaMatching> ViaMatching_shptr;
 }
 
 #endif

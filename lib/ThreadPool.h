@@ -5,13 +5,13 @@
 #include <boost/function.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
-#include <tr1/memory>
+#include <memory>
 
 
 template <typename FunctionType>
 class ThreadPool {
 
-  typedef std::tr1::shared_ptr<boost::thread> thread_shptr;
+  typedef std::shared_ptr<boost::thread> thread_shptr;
 
 private:
   unsigned int max_n;

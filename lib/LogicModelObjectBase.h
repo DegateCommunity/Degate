@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,6 +24,7 @@
 #define __LOGICMODELOBJECTBASE_H__
 
 #include "globals.h"
+#include "DeepCopyable.h"
 #include <boost/format.hpp>
 
 namespace degate {
@@ -31,7 +33,7 @@ namespace degate {
    * The class LogicModelObjectBase is the base class for basically every class
    * that represents a logic model object.
    */
-  class LogicModelObjectBase {
+  class LogicModelObjectBase : public DeepCopyableBase {
 
   private:
 
@@ -68,6 +70,8 @@ namespace degate {
      */
 
     virtual ~LogicModelObjectBase();
+
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
 
     /**
      * Set the name for a logic model object. It is up to the user
@@ -144,7 +148,7 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<LogicModelObjectBase> LogicModelObjectBase_shptr;
+  typedef std::shared_ptr<LogicModelObjectBase> LogicModelObjectBase_shptr;
   
   class LMOCompare {
   public:

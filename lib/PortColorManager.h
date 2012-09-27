@@ -23,7 +23,7 @@
 #define __PORTCOLORMANAGER_H__
 
 #include <map>
-#include <tr1/memory>
+#include <memory>
 
 namespace degate {
 
@@ -126,7 +126,7 @@ namespace degate {
   /**
    * Typedef for a shared pointer on PortColorManager objects.
    */
-  typedef std::tr1::shared_ptr<PortColorManager> PortColorManager_shptr;
+  typedef std::shared_ptr<PortColorManager> PortColorManager_shptr;
 }
 
 #endif

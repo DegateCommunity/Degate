@@ -24,7 +24,7 @@
 #include <globals.h>
 #include <ProjectArchiver.h>
 #include <list>
-#include <tr1/memory>
+#include <memory>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>

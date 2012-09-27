@@ -21,18 +21,18 @@
 
 #include <ObjectSet.h>
 #include <algorithm>
-#include <tr1/memory>
+#include <memory>
 
 using namespace std;
 using namespace degate;
 
 
 bool degate::is_removable(PlacedLogicModelObject_shptr o) {
-  return std::tr1::dynamic_pointer_cast<GatePort>(o) == NULL;
+  return std::dynamic_pointer_cast<GatePort>(o) == NULL;
 }
 
 bool degate::is_interconnectable(PlacedLogicModelObject_shptr o) {
-  return std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(o) != NULL;
+  return std::dynamic_pointer_cast<ConnectedLogicModelObject>(o) != NULL;
 }
 
 

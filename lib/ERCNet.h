@@ -23,7 +23,7 @@
 #define __ERCNET_H__
 
 #include <boost/foreach.hpp>
-#include <tr1/memory>
+#include <memory>
 #include <list>
 #include <LogicModel.h>
 #include <RCBase.h>

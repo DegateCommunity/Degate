@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -44,6 +45,26 @@ Gate::Gate(BoundingBox const& bounding_box,
 Gate::~Gate() {
   debug(TM, "destroy gate");
   if(gate_template != NULL) remove_template();
+}
+
+DeepCopyable_shptr Gate::cloneShallow() const {
+  auto clone = std::make_shared<Gate>(get_bounding_box(), orientation);
+  clone->template_type_id = template_type_id;
+  return clone;
+}
+
+void Gate::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Gate>(dest);
+  
+  PlacedLogicModelObject::cloneDeepInto(clone, oldnew);
+  Rectangle::cloneDeepInto(clone, oldnew);
+  
+  if (gate_template.get() != 0) {
+    clone->gate_template = std::dynamic_pointer_cast<GateTemplate>(gate_template->cloneDeep(oldnew));
+  }
+  std::for_each(gate_ports.begin(), gate_ports.end(), [&](const GatePort_shptr &d) {
+    clone->gate_ports.insert(std::dynamic_pointer_cast<GatePort>(d->cloneDeep(oldnew)));
+  });
 }
 
 void Gate::add_port(GatePort_shptr gate_port) {
@@ -101,7 +122,7 @@ object_id_t Gate::get_template_type_id() const {
 
 
 
-void Gate::set_gate_template(std::tr1::shared_ptr<GateTemplate> gate_template) {
+void Gate::set_gate_template(std::shared_ptr<GateTemplate> gate_template) {
   if(has_template()) {
     this->gate_template->decrement_reference_counter();
   }
@@ -122,7 +143,7 @@ void Gate::set_gate_template(std::tr1::shared_ptr<GateTemplate> gate_template) {
 }
 
 
-std::tr1::shared_ptr<GateTemplate> Gate::get_gate_template() const {
+std::shared_ptr<GateTemplate> Gate::get_gate_template() const {
   return gate_template;
 }
 

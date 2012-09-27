@@ -3,6 +3,7 @@
 This file is part of the IC reverse engineering tool degate.
 
 Copyright 2008, 2009, 2010 by Martin Schobert
+Copyright 2012 Robert Nitsch
 
 Degate is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,6 +35,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "NewProjectWin.h"
 #include "GridConfigWin.h"
 #include "GateListWin.h"
+#include "SnapshotListWin.h"
 #include "PortColorsWin.h"
 #include "GateConfigWin.h"
 #include "GateSelectWin.h"
@@ -75,7 +77,7 @@ MainWin::MainWin() : render_window(editor), is_fullscreen(false) {
 
 
   // setup menu
-  menu_manager = std::tr1::shared_ptr<MenuManager>(new MenuManager(this));
+  menu_manager = std::shared_ptr<MenuManager>(new MenuManager(this));
   Gtk::Widget* menubar = menu_manager->get_menubar();
   Gtk::Widget* toolbar = menu_manager->get_toolbar();
   assert(menubar != NULL);
@@ -275,7 +277,7 @@ void MainWin::create_new_project(std::string const& project_dir) {
     try {
       if(!file_exists(project_dir)) create_directory(project_dir);
       main_project = Project_shptr(new Project(width, height, project_dir, layers));
-      update_gui_for_loaded_project();
+      update_gui_for_loaded_project(false);
       assert(lcWin != NULL);
       lcWin->run();
       set_layer(get_first_enabled_layer(main_project->get_logic_model()));
@@ -360,7 +362,7 @@ void MainWin::on_menu_project_export_archive() {
     switch(result) {
     case Gtk::RESPONSE_OK:
 
-      ipWin = std::tr1::shared_ptr<InProgressWin>
+      ipWin = std::shared_ptr<InProgressWin>
 	(new InProgressWin(this, "Exporting", "Please wait while exporting project."));
       ipWin->show();
 
@@ -446,6 +448,41 @@ void MainWin::set_project_to_open(char * project_dir) {
   project_to_open = project_dir;
 }
 
+ProjectSnapshot_shptr MainWin::create_snapshot(const std::string &title) {
+  ProjectSnapshot_shptr ss = std::make_shared<ProjectSnapshot>();
+  ss->id = rand();
+  ss->title = title;
+  
+  DeepCopyable::oldnew_t oldnew;
+  ss->clone = std::dynamic_pointer_cast<Project>(main_project->cloneDeep(&oldnew));
+  
+  snapshots.push_back(ss);
+  return ss;
+}
+
+std::vector<ProjectSnapshot_shptr> MainWin::get_snapshots() {
+  return snapshots;
+}
+
+void MainWin::clear_snapshots() {
+  snapshots.clear();
+}
+
+void MainWin::remove_snapshot(ProjectSnapshot_shptr &ss) {
+  auto pos = std::find(snapshots.begin(), snapshots.end(), ss);
+  if (pos != snapshots.end()) {
+    snapshots.erase(pos);
+  }
+}
+
+void MainWin::revert_to_snapshot(ProjectSnapshot_shptr &ss) {
+  DeepCopyable::oldnew_t oldnew;
+  auto target_state = std::dynamic_pointer_cast<Project>(ss->clone->cloneDeep(&oldnew));
+  if (target_state.get() != nullptr) {
+    main_project = target_state;
+  }
+}
+
 // --------------------------------------------------------------------------
 void MainWin::open_project(Glib::ustring project_dir) {
   if(main_project) on_menu_project_close();
@@ -458,7 +495,7 @@ void MainWin::open_project(Glib::ustring project_dir) {
       restore_autosaved_project(project_dir.c_str());
   }
 
-  ipWin = std::tr1::shared_ptr<InProgressWin>
+  ipWin = std::shared_ptr<InProgressWin>
     (new InProgressWin(this, "Opening Project", "Please wait while opening project."));
   ipWin->show();
 
@@ -504,14 +541,16 @@ void MainWin::on_project_load_finished() {
   else {
     Layer_shptr layer = main_project->get_logic_model()->get_current_layer();
     assert(layer != NULL);
-    update_gui_for_loaded_project();
+    update_gui_for_loaded_project(false);
     set_layer(get_first_enabled_layer(main_project->get_logic_model()));
+    
+    create_snapshot("(auto) Project loaded.");
   }
 }
 
 // --------------------------------------------------------------------------
 
-void MainWin::update_gui_for_loaded_project() {
+void MainWin::update_gui_for_loaded_project(bool reverted) {
 
   if(main_project) {
 
@@ -523,7 +562,9 @@ void MainWin::update_gui_for_loaded_project() {
 
 
     editor.set_virtual_size(main_project->get_width(), main_project->get_height());
-    editor.set_viewport(0, 0, editor.get_width(), editor.get_height());
+    if (!reverted) {
+        editor.set_viewport(0, 0, editor.get_width(), editor.get_height());
+    }
     editor.set_logic_model(lmodel);
     editor.set_layer(layer);
 
@@ -544,24 +585,24 @@ void MainWin::update_gui_for_loaded_project() {
     on_area_selection_revoked();
 
 
-    ciWin = std::tr1::shared_ptr<ConnectionInspectorWin>
+    ciWin = std::shared_ptr<ConnectionInspectorWin>
       (new ConnectionInspectorWin(this, main_project->get_logic_model()));
     ciWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
-    rcWin = std::tr1::shared_ptr<RCViolationsWin>
+    rcWin = std::shared_ptr<RCViolationsWin>
       (new RCViolationsWin(this, main_project->get_logic_model(), 
 			   main_project->get_rcv_blacklist()));
     rcWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
     
 
-    modWin = std::tr1::shared_ptr<ModuleWin>(new ModuleWin(this, main_project->get_logic_model()));
+    modWin = std::shared_ptr<ModuleWin>(new ModuleWin(this, main_project->get_logic_model()));
     modWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
-    alWin = std::tr1::shared_ptr<AnnotationListWin>
+    alWin = std::shared_ptr<AnnotationListWin>
       (new AnnotationListWin(this, main_project->get_logic_model()));
     alWin->signal_goto_button_clicked().connect(sigc::mem_fun(*this, &MainWin::goto_object));
 
-    gcWin = std::tr1::shared_ptr<GridConfigWin>(new GridConfigWin(this,
+    gcWin = std::shared_ptr<GridConfigWin>(new GridConfigWin(this,
 							  main_project->get_regular_horizontal_grid(),
 							  main_project->get_regular_vertical_grid(),
 							  main_project->get_irregular_horizontal_grid(),
@@ -569,7 +610,7 @@ void MainWin::update_gui_for_loaded_project() {
     gcWin->signal_changed().connect(sigc::mem_fun(*this, &MainWin::on_grid_config_changed));
 
 
-    lcWin = std::tr1::shared_ptr<LayerConfigWin>(new LayerConfigWin(this, main_project->get_logic_model(),
+    lcWin = std::shared_ptr<LayerConfigWin>(new LayerConfigWin(this, main_project->get_logic_model(),
 							    main_project->get_project_directory()));
     lcWin->signal_on_background_import_finished().connect
       (sigc::mem_fun(*this, &MainWin::on_background_import_finished));
@@ -589,8 +630,8 @@ void MainWin::on_menu_project_create_subproject() {
   boost::format f("subproject_%1%");
   f % lmodel->get_new_object_id();
 
-  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool != NULL && selection_tool->has_selection()) {
     SubProjectAnnotation_shptr annotation
@@ -656,8 +697,8 @@ void MainWin::goto_object(PlacedLogicModelObject_shptr obj_ptr) {
     Layer_shptr layer;
 
     /* Do not switch layer, if user jumps to a gate or a gate port. */
-    if(std::tr1::dynamic_pointer_cast<GatePort>(obj_ptr) ||
-       std::tr1::dynamic_pointer_cast<Gate>(obj_ptr))
+    if(std::dynamic_pointer_cast<GatePort>(obj_ptr) ||
+       std::dynamic_pointer_cast<Gate>(obj_ptr))
       layer = main_project->get_logic_model()->get_current_layer();
     else 
       layer = obj_ptr->get_layer();
@@ -719,7 +760,7 @@ void MainWin::on_menu_tools_select() {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
   if(window) window->set_cursor(Gdk::Cursor(Gdk::LEFT_PTR));
 
-  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool
+  std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool
     (new GfxEditorToolSelection<DegateRenderer>(editor));
 
   selection_tool->signal_selection_activated().
@@ -744,7 +785,7 @@ void MainWin::on_menu_tools_move() {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
   if(window) window->set_cursor(Gdk::Cursor(Gdk::FLEUR));
 
-  std::tr1::shared_ptr<GfxEditorToolMove<DegateRenderer> > move_tool
+  std::shared_ptr<GfxEditorToolMove<DegateRenderer> > move_tool
     (new GfxEditorToolMove<DegateRenderer>(editor));
 
   editor.set_tool(move_tool);
@@ -754,7 +795,7 @@ void MainWin::on_menu_tools_wire() {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::TCROSS));
 
-  std::tr1::shared_ptr<GfxEditorToolWire<DegateRenderer> > wire_tool
+  std::shared_ptr<GfxEditorToolWire<DegateRenderer> > wire_tool
     (new GfxEditorToolWire<DegateRenderer>(editor));
 
   wire_tool->signal_wire_added().connect(sigc::mem_fun(*this, &MainWin::on_wire_added));
@@ -774,7 +815,7 @@ void MainWin::on_menu_tools_via(degate::Via::DIRECTION dir) {
   Glib::RefPtr<Gdk::Window> window = editor.get_window();
   window->set_cursor(Gdk::Cursor(Gdk::CROSS));
 
-  std::tr1::shared_ptr<GfxEditorToolVia<DegateRenderer> > via_tool
+  std::shared_ptr<GfxEditorToolVia<DegateRenderer> > via_tool
     (new GfxEditorToolVia<DegateRenderer>(editor));
 
   if(dir == Via::DIRECTION_DOWN)
@@ -836,8 +877,8 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
 
   RecognitionManager & rm = RecognitionManager::get_instance();
 
-  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   BoundingBox bb = selection_tool != NULL && selection_tool->has_selection() ? 
     selection_tool->get_bounding_box() : main_project->get_bounding_box();
@@ -846,11 +887,11 @@ void MainWin::on_algorithms_func_clicked(int slot_pos) {
 
   if(rm.before_dialog(slot_pos)) {
     
-    ipWin = std::tr1::shared_ptr<InProgressWin>
+    ipWin = std::shared_ptr<InProgressWin>
       (new InProgressWin(this, "Calculating", "Please wait while calculating.", rm.get_progress_control(slot_pos)));
     ipWin->show();
     
-    signal_algorithm_finished_ = std::tr1::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
+    signal_algorithm_finished_ = std::shared_ptr<Glib::Dispatcher>(new Glib::Dispatcher);
     
     signal_algorithm_finished_->connect(sigc::bind(sigc::mem_fun(*this,
 								 &MainWin::on_algorithm_finished),
@@ -888,7 +929,7 @@ void MainWin::on_menu_goto_gate_by_id() {
 
       try {
 	PlacedLogicModelObject_shptr plo = lmodel->get_object(id);
-	gate = std::tr1::dynamic_pointer_cast<Gate>(plo);
+	gate = std::dynamic_pointer_cast<Gate>(plo);
       }
       catch(CollectionLookupException const& ex) { }
 
@@ -1011,8 +1052,8 @@ void MainWin::on_menu_gate_set() {
 
   LogicModel_shptr lmodel = main_project->get_logic_model();
 
-  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool != NULL && selection_tool->has_selection()) {
 
@@ -1071,8 +1112,8 @@ void MainWin::on_menu_gate_set() {
 void MainWin::on_menu_gate_create_by_selection() {
   if(main_project == NULL) return;
 
-  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool != NULL && selection_tool->has_selection()) {
 
@@ -1283,8 +1324,8 @@ bool MainWin::on_key_release_event_received(GdkEventKey * event) {
   if((event->keyval ==  GDK_Shift_L || event->keyval == GDK_Shift_R)) {
     shift_key_pressed = false;
 
-    std::tr1::shared_ptr<GfxEditorToolWire<DegateRenderer> > tool =
-      std::tr1::dynamic_pointer_cast<GfxEditorToolWire<DegateRenderer> >(editor.get_tool());
+    std::shared_ptr<GfxEditorToolWire<DegateRenderer> > tool =
+      std::dynamic_pointer_cast<GfxEditorToolWire<DegateRenderer> >(editor.get_tool());
 
     if(tool != NULL) tool->set_shift_state(false);
 
@@ -1306,8 +1347,8 @@ bool MainWin::on_key_press_event_received(GdkEventKey * event) {
   if(event->keyval == GDK_Shift_L || event->keyval == GDK_Shift_R) {
     shift_key_pressed = true;
 
-    std::tr1::shared_ptr<GfxEditorToolWire<DegateRenderer> > tool =
-      std::tr1::dynamic_pointer_cast<GfxEditorToolWire<DegateRenderer> >(editor.get_tool());
+    std::shared_ptr<GfxEditorToolWire<DegateRenderer> > tool =
+      std::dynamic_pointer_cast<GfxEditorToolWire<DegateRenderer> >(editor.get_tool());
 
     if(tool != NULL) tool->set_shift_state(true);
 
@@ -1344,15 +1385,15 @@ void MainWin::clear_selection() {
 
 void MainWin::update_gui_on_selection_change() {
 
-  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   bool selection_active = selection_tool != NULL && selection_tool->has_selection();
 
   if(selected_objects.size() == 1) {
     ObjectSet::const_iterator it = selected_objects.begin();
 
-    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it)) {
+    if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(*it)) {
       menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateOrientation", true);
       menu_manager->set_menu_item_sensitivity("/MenuBar/GateMenu/GateSet", true);
     }
@@ -1400,7 +1441,7 @@ void MainWin::selection_tool_double_clicked(unsigned int real_x, unsigned int re
   PlacedLogicModelObject_shptr plo = layer->get_object_at_position(real_x, real_y);
 
   if(SubProjectAnnotation_shptr sp =
-     std::tr1::dynamic_pointer_cast<SubProjectAnnotation>(plo)) {
+     std::dynamic_pointer_cast<SubProjectAnnotation>(plo)) {
 
     std::string dir = join_pathes(main_project->get_project_directory(), sp->get_path());
     debug(TM, "Will open or create project at %s", dir.c_str());
@@ -1499,7 +1540,7 @@ void MainWin::on_popup_menu_set_port() {
 
     PlacedLogicModelObject_shptr plo = layer->get_object_at_position(last_click_on_real_x, last_click_on_real_y);
 
-    if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(plo)) {
+    if(GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo)) {
       // user clicked on an alredy placed gate port -> derive gate object from it
       plo = gate_port->get_gate();
     }
@@ -1509,7 +1550,7 @@ void MainWin::on_popup_menu_set_port() {
       return;
     }
 
-    Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(plo);
+    Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo);
     if(gate == NULL) {
       error_dialog("Error", "You clicked on something that is not a gate.");
       return;
@@ -1713,7 +1754,7 @@ void MainWin::on_menu_logic_remove_entire_net() {
     std::set<Net_shptr> l;
     BOOST_FOREACH(PlacedLogicModelObject_shptr plo, selected_objects) {
       if(ConnectedLogicModelObject_shptr clo = 
-	 std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo)) {
+	 std::dynamic_pointer_cast<ConnectedLogicModelObject>(plo)) {
 	if(clo->is_connected()) l.insert(clo->get_net());
       }
       else failed = true;
@@ -1772,8 +1813,8 @@ void MainWin::on_menu_logic_rc() {
 void MainWin::on_menu_logic_create_annotation() {
   if(main_project == NULL) return;
 
-  std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   if(selection_tool == NULL || !selection_tool->has_selection()) return;
 
@@ -1820,7 +1861,7 @@ void MainWin::on_menu_move_gate_into_module() {
     for(ObjectSet::const_iterator it = selected_objects.begin();
 	it != selected_objects.end(); it++) {
 
-      Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*it);
+      Gate_shptr gate = std::dynamic_pointer_cast<Gate>(*it);
       assert(gate != NULL);
 
 
@@ -1869,7 +1910,7 @@ void MainWin::on_menu_layer_import_background() {
   case(Gtk::RESPONSE_OK):
 
     assert(ipWin == NULL);
-    ipWin = std::tr1::shared_ptr<InProgressWin>
+    ipWin = std::shared_ptr<InProgressWin>
       (new InProgressWin(this, "Importing",
 			 "Please wait while importing background image and calculating the prescaled images."));
     ipWin->show();
@@ -1960,7 +2001,7 @@ void MainWin::remove_objects() {
     LogicModel_shptr lmodel = main_project->get_logic_model();
 
     for(it = selected_objects.begin(); it != selected_objects.end(); it++) {
-      if(std::tr1::dynamic_pointer_cast<GatePort>(*it) == NULL) // gate ports can't be removed directly
+      if(std::dynamic_pointer_cast<GatePort>(*it) == NULL) // gate ports can't be removed directly
 	lmodel->remove_object(*it);
     }
 
@@ -2001,8 +2042,8 @@ void MainWin::on_menu_layer_export_background_image() {
 	BackgroundImage_shptr img = sm->get_image(1).second;
 	assert(img != NULL);
 
-	std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-	  std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+	std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+	  std::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
 	if(selection_tool != NULL && selection_tool->has_selection())
 	  save_part_of_image(filename, img, selection_tool->get_bounding_box());
@@ -2096,5 +2137,20 @@ void MainWin::on_menu_project_pull_changes() {
     catch(XMLRPCException const& e) {
       error_dialog("XMLRPC failed", e.what());
     }
+  }
+}
+
+void MainWin::on_menu_snapshot_create() {
+  if (main_project != nullptr) {
+    create_snapshot("menu-created snapshot");
+  }
+}
+
+void MainWin::on_menu_snapshot_view() {
+  if (main_project != nullptr) {
+    SnapshotListWin glWin(this);
+    glWin.run();
+    
+    update_gui_for_loaded_project(true);
   }
 }

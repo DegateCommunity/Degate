@@ -23,7 +23,7 @@
 #define __TIFFWRITER_H__
 
 #include <list>
-#include <tr1/memory>
+#include <memory>
 #include "tiffio.h"
 
 #include <globals.h>
@@ -62,12 +62,12 @@ namespace degate {
     /**
      * exception FileSystemException
      */
-    bool write_image(std::tr1::shared_ptr<ImageType> img);
+    bool write_image(std::shared_ptr<ImageType> img);
   };
 
 
   template<class ImageType>
-  bool TIFFWriter<ImageType>::write_image(std::tr1::shared_ptr<ImageType> img) {
+  bool TIFFWriter<ImageType>::write_image(std::shared_ptr<ImageType> img) {
 
     TIFF * tif = TIFFOpen(get_filename().c_str(), "w");
     if(tif == NULL) {

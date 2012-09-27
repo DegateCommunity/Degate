@@ -28,7 +28,7 @@
 
 #include <string>
 #include <map>
-#include <tr1/memory>
+#include <memory>
 #include <ctime>
 #include <utility> // for make_pair
 #include <iostream>
@@ -242,7 +242,7 @@ namespace degate {
 
   private:
 
-    typedef std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> > MemoryMap_shptr;
+    typedef std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> > MemoryMap_shptr;
     typedef std::map< std::string, // filename
 		      std::pair<MemoryMap_shptr, struct timespec> > cache_type;
 
@@ -307,7 +307,7 @@ namespace degate {
      * @return Returns a shared pointer to a MemoryMap object.
      */
 
-    std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> >
+    std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> >
     inline get_tile(unsigned int x, unsigned int y) {
 
       unsigned int tile_num_x = x >> tile_width_exp;
@@ -399,7 +399,7 @@ namespace degate {
      * @param filename Just the name of the file to load. The filename is
      *     relative to the \p directory.
      */
-    std::tr1::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> >
+    std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type> >
     load(std::string const& filename) const {
 
       //debug(TM, "directory: [%s] file: [%s]", directory.c_str(), filename.c_str());

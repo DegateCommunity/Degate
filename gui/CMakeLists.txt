@@ -10,6 +10,11 @@ find_package(PkgConfig)
 
 set(LIBS ${LIBS} pthread)
 
+pkg_check_modules(SIGC++2 REQUIRED sigc++-2.0)
+include_directories(${SIGC++2_INCLUDE_DIRS})
+link_directories(${SIGC++2_LIBRARIES}) 
+set(LIBS ${LIBS} ${SIGC++2_LIBRARIES})
+
 pkg_check_modules(GTKMM REQUIRED gtkmm-2.4)
 include_directories(${GTKMM_INCLUDE_DIRS})
 link_directories(${GTKMM_LIBRARY_DIRS}) 
@@ -72,7 +77,7 @@ set(DEGATE_SRC
 
 	       GateConfigWin.cc
 	       GateListWin.cc
-
+	       SnapshotListWin.cc
 	       GateSelectWin.cc
 
 	       PortColorsWin.cc

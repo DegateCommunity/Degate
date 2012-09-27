@@ -132,7 +132,7 @@ GateListWin::GateListWin(Gtk::Window *parent, LogicModel_shptr lmodel,
 
 }
 
-void GateListWin::fill_row(Gtk::TreeModel::Row const& row, std::tr1::shared_ptr<GateTemplate> & tmpl) {
+void GateListWin::fill_row(Gtk::TreeModel::Row const& row, std::shared_ptr<GateTemplate> & tmpl) {
   row[m_Columns.m_col_id] = tmpl->get_object_id();
   row[m_Columns.m_col_refcount] = tmpl->get_reference_counter();
 
@@ -181,7 +181,7 @@ void GateListWin::on_add_button_clicked() {
   GateConfigWin gcWin(parent, lmodel, tmpl, _default_frame_col, _default_fill_col);
   if(gcWin.run() == true) {
 
-    std::tr1::shared_ptr<GateTemplate> tmpl_shared_ptr(tmpl);
+    std::shared_ptr<GateTemplate> tmpl_shared_ptr(tmpl);
 
     lmodel->add_gate_template(tmpl_shared_ptr);
 

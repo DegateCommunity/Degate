@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,12 +24,13 @@
 #define __LINE_H__
 
 #include <BoundingBox.h>
+#include "DeepCopyable.h"
 #include <Shape.h>
 #include <Point.h>
 
 namespace degate {
 
-  class Line : public AbstractShape {
+  class Line : public AbstractShape, public DeepCopyableBase {
 
   private:
     int from_x, from_y, to_x, to_y;
@@ -56,6 +58,8 @@ namespace degate {
     Line(int from_x, int from_y, int to_x, int to_y, unsigned int diameter);
 
     virtual ~Line() {}
+    
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
 
     virtual bool in_shape(int x, int y, int max_distance = 0) const;
     virtual bool in_bounding_box(BoundingBox const& bbox) const;

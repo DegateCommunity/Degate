@@ -3,6 +3,7 @@
   This file is part of the IC reverse engineering tool degate.
 
   Copyright 2008, 2009, 2010 by Martin Schobert
+  Copyright 2012 Robert Nitsch
 
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,7 +40,7 @@ namespace degate {
   /**
    * Representation of a chip layer.
    */
-  class Layer {
+  class Layer : public DeepCopyable {
 
     friend class LogicModel;
 
@@ -56,7 +57,7 @@ namespace degate {
       TRANSISTOR = 3
     };
 
-    typedef std::tr1::shared_ptr<PlacedLogicModelObject> quadtree_element_type;
+    typedef std::shared_ptr<PlacedLogicModelObject> quadtree_element_type;
 
     typedef region_iterator<quadtree_element_type> qt_region_iterator;
     typedef qt_region_iterator object_iterator;
@@ -69,7 +70,7 @@ namespace degate {
 
     layer_position_t layer_pos;
 
-    std::tr1::shared_ptr<ScalingManager<BackgroundImage> > scaling_manager;
+    std::shared_ptr<ScalingManager<BackgroundImage> > scaling_manager;
 
     // store shared pointers to objects, that belong to the layer
     typedef std::map<object_id_t, PlacedLogicModelObject_shptr> object_collection;
@@ -89,7 +90,7 @@ namespace degate {
      * @throw DegateLogicException
      */
 
-    void add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o);
+    void add_object(std::shared_ptr<PlacedLogicModelObject> o);
 
 
     /**
@@ -98,7 +99,7 @@ namespace degate {
      *   cannot be removed from the quadtree.
      */
 
-    void remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o);
+    void remove_object(std::shared_ptr<PlacedLogicModelObject> o);
 
   public:
 
@@ -121,6 +122,11 @@ namespace degate {
      */
 
     virtual ~Layer();
+    
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
 
     /**
      * Get the width of a layer.
@@ -321,7 +327,7 @@ namespace degate {
       for(Layer::qt_region_iterator iter = quadtree.region_iter_begin(min_x, max_x, min_y, max_y);
 	  iter != quadtree.region_iter_end(); ++iter) {
 	
-	if(std::tr1::dynamic_pointer_cast<LogicModelObjectType>(*iter) != NULL) {
+	if(std::dynamic_pointer_cast<LogicModelObjectType>(*iter) != NULL) {
 	  return true;
 	}
       }

@@ -73,12 +73,12 @@ void ImageTest::test_rgba_in_temp_file(void) {
 }
 
 void ImageTest::test_type_traits(void) {
-  CPPUNIT_ASSERT(is_pointer<TileImage_RGBA>::value == false);
-  CPPUNIT_ASSERT(is_pointer<TileImage_RGBA *>::value == true);
-  CPPUNIT_ASSERT(is_pointer<TileImage_RGBA_shptr>::value == true);
+  CPPUNIT_ASSERT(degate::is_pointer<TileImage_RGBA>::value == false);
+  CPPUNIT_ASSERT(degate::is_pointer<TileImage_RGBA *>::value == true);
+  CPPUNIT_ASSERT(degate::is_pointer<TileImage_RGBA_shptr>::value == true);
 }
 
-TileImage_RGBA_shptr ImageTest::read_image(std::tr1::shared_ptr<degate::ImageReaderBase
+TileImage_RGBA_shptr ImageTest::read_image(std::shared_ptr<degate::ImageReaderBase
 			   <degate::TileImage_RGBA> > reader, 
 			   unsigned int tile_size_exp) {
   clock_t start_time = clock();
@@ -123,7 +123,7 @@ void ImageTest::test_image_reader(void) {
   CPPUNIT_ASSERT(file_formats.size() > 0);
 
   // get a tiff reader from the factory
-  std::tr1::shared_ptr<ImageReaderBase<TileImage_RGBA> > tiff_reader = 
+  std::shared_ptr<ImageReaderBase<TileImage_RGBA> > tiff_reader = 
     ir_factory.get_reader(imagefile);
 
 

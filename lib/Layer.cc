@@ -3,6 +3,7 @@
   This file is part of the IC reverse engineering tool degate.
 
   Copyright 2008, 2009, 2010 by Martin Schobert
+  Copyright 2012 Robert Nitsch
 
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,7 +26,7 @@
 
 using namespace degate;
 
-void Layer::add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) {
+void Layer::add_object(std::shared_ptr<PlacedLogicModelObject> o) {
 
   if(o->get_bounding_box() == BoundingBox(0, 0, 0, 0)) {
     boost::format fmter("Error in add_object(): Object %1% with ID %2% has an "
@@ -41,7 +42,7 @@ void Layer::add_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) {
   objects[o->get_object_id()] = o;
 }
 
-void Layer::remove_object(std::tr1::shared_ptr<PlacedLogicModelObject> o) {
+void Layer::remove_object(std::shared_ptr<PlacedLogicModelObject> o) {
   if(RET_IS_NOT_OK(quadtree.remove(o))) {
     debug(TM, "Failed to remove object from quadtree.");
     throw std::runtime_error("Failed to remove object from quadtree.");
@@ -71,6 +72,35 @@ Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type,
 
 
 Layer::~Layer() {
+}
+
+/**
+ * @todo Check whether scaling_manager can really be reused by clones without trouble.
+ */
+DeepCopyable_shptr Layer::cloneShallow() const {
+  auto clone = std::make_shared<Layer>(quadtree.get_bounding_box(), layer_type);
+  clone->layer_pos = layer_pos;
+  clone->enabled = enabled;
+  clone->description = description;
+  clone->layer_id = layer_id;
+  clone->scaling_manager = scaling_manager;
+  return clone;
+}
+
+void Layer::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Layer>(dest);
+
+  // quadtree
+  std::vector<quadtree_element_type> quadtree_elems;
+  quadtree.get_all_elements(quadtree_elems);
+  std::for_each(quadtree_elems.begin(), quadtree_elems.end(), [=,oldnew,&clone](const quadtree_element_type &t) {
+    clone->quadtree.insert(std::dynamic_pointer_cast<PlacedLogicModelObject>(t->cloneDeep(oldnew)));
+  });
+
+  // objects
+  std::for_each(objects.begin(), objects.end(), [&](object_collection::value_type v) {
+    clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->cloneDeep(oldnew));
+  });
 }
 
 unsigned int Layer::get_width() const {
@@ -154,7 +184,7 @@ Layer::qt_region_iterator Layer::region_end() {
 void Layer::set_image(BackgroundImage_shptr img) {
 
   scaling_manager =
-    std::tr1::shared_ptr<ScalingManager<BackgroundImage> >
+    std::shared_ptr<ScalingManager<BackgroundImage> >
     (new ScalingManager<BackgroundImage>(img, img->get_directory()));
 
   scaling_manager->create_scalings();
@@ -244,7 +274,7 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
     }
 
     /* Prefer gate ports */
-    if(std::tr1::dynamic_pointer_cast<GatePort>(*iter) != NULL) {
+    if(std::dynamic_pointer_cast<GatePort>(*iter) != NULL) {
       return *iter;
     }
   }
@@ -259,7 +289,7 @@ unsigned int Layer::get_distance_to_gate_boundary(unsigned int x, unsigned int y
   for(Layer::qt_region_iterator iter = quadtree.region_iter_begin(x, x + width, y, y + height);
       iter != quadtree.region_iter_end(); ++iter) {
 
-    if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*iter)) {
+    if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(*iter)) {
 
       if(query_horizontal_distance) {
 	assert(gate->get_max_x() >= (int)x);

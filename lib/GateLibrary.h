@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,6 +23,7 @@
 #ifndef __GATELIBRARY_H__
 #define __GATELIBRARY_H__
 
+#include "DeepCopyable.h"
 #include <degate.h>
 #include <set>
 #include <map>
@@ -37,7 +39,7 @@ namespace degate {
    *   current project. There should be a way to scale the template
    *   images, but it is unknown how to derive the scaling factor without pain.
    */
-  class GateLibrary {
+  class GateLibrary : public DeepCopyable {
 
   public:
 
@@ -63,6 +65,11 @@ namespace degate {
 
     virtual ~GateLibrary();
 
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
+    
     /**
      * Remove a template from the gate library.
      */

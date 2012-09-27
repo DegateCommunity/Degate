@@ -77,6 +77,7 @@ set(SOURCES
 	# logic model related
 	#
 
+	DeepCopyable.cc
 	LogicModel.cc
 	LogicModelHelper.cc
 	Net.cc

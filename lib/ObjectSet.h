@@ -25,7 +25,7 @@
 #include <degate.h>
 #include <set>
 #include <list>
-#include <tr1/memory>
+#include <memory>
 #include <boost/foreach.hpp>
 
 namespace degate {
@@ -42,7 +42,7 @@ namespace degate {
 
   template<typename Type>
   bool is_of_object_type(PlacedLogicModelObject_shptr o) {
-    return std::tr1::dynamic_pointer_cast<Type>(o) != NULL;
+    return std::dynamic_pointer_cast<Type>(o) != NULL;
   }
 
   class ObjectSet {
@@ -85,12 +85,12 @@ namespace degate {
     }
 
     template<typename ObjectType>
-      std::tr1::shared_ptr<ObjectType> get_single_object() const {
-      std::tr1::shared_ptr<ObjectType> o;
+      std::shared_ptr<ObjectType> get_single_object() const {
+      std::shared_ptr<ObjectType> o;
 
       if(size() == 1) {
 	const_iterator it = objects.begin();
-	if((o = std::tr1::dynamic_pointer_cast<ObjectType>(*it))) return o;
+	if(o = std::dynamic_pointer_cast<ObjectType>(*it)) return o;
       }
       return o;
     }

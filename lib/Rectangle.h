@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,11 +24,12 @@
 #define __RECTANGLE_H__
 
 #include "BoundingBox.h"
+#include "DeepCopyable.h"
 #include "Shape.h"
 
 namespace degate {
 
-  class Rectangle : public AbstractShape {
+  class Rectangle : public AbstractShape, public DeepCopyableBase {
 
   private:
     int min_x, max_x, min_y, max_y;
@@ -44,6 +46,8 @@ namespace degate {
     Rectangle(const Rectangle&);
 
     virtual ~Rectangle();
+    
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
 
     virtual bool in_shape(int x, int y, int max_distance = 0) const;
     virtual bool in_bounding_box(BoundingBox const& bbox) const;

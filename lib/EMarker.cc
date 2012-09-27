@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -31,6 +32,17 @@ EMarker::EMarker(int _x, int _y, diameter_t _diameter) :
 
 EMarker::~EMarker() {}
 
+DeepCopyable_shptr EMarker::cloneShallow() const {
+  auto clone = std::make_shared<EMarker>();
+  return clone;
+}
+
+void EMarker::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<EMarker>(dest);
+  Circle::cloneDeepInto(clone, oldnew);
+  ConnectedLogicModelObject::cloneDeepInto(clone, oldnew);
+  RemoteObject::cloneDeepInto(clone, oldnew);
+}
 
 const std::string EMarker::get_descriptive_identifier() const {
   if(has_name()) {

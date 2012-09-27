@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,7 +23,7 @@
 #ifndef __GATE_H__
 #define __GATE_H__
 
-#include <tr1/memory>
+#include <memory>
 
 #include <degate.h>
 #include <Layer.h>
@@ -91,6 +92,11 @@ namespace degate {
 
     virtual ~Gate();
 
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
+    
     /**
      * Add a gate port.
      *
@@ -161,14 +167,14 @@ namespace degate {
      * @see set_template_type_id()
      */
 
-    virtual void set_gate_template(std::tr1::shared_ptr<GateTemplate> gate_template);
+    virtual void set_gate_template(std::shared_ptr<GateTemplate> gate_template);
 
     /**
      * Get the gate template.
      * @see set_gate_template()
      */
 
-    virtual std::tr1::shared_ptr<GateTemplate> get_gate_template() const;
+    virtual std::shared_ptr<GateTemplate> get_gate_template() const;
 
     /**
      * Check if the gate has a template type set.
@@ -320,7 +326,7 @@ namespace degate {
   };
 
 
-  typedef std::tr1::shared_ptr<Gate> Gate_shptr;
+  typedef std::shared_ptr<Gate> Gate_shptr;
 
 }
 

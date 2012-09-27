@@ -64,10 +64,10 @@ void LogicModelTest::test_casts_shared_ptr(void) {
   Wire_shptr w(new Wire(20, 21, 30, 31, 5));
   CPPUNIT_ASSERT(w != NULL);
 
-  PlacedLogicModelObject_shptr ptr = std::tr1::dynamic_pointer_cast<PlacedLogicModelObject>(w);
+  PlacedLogicModelObject_shptr ptr = std::dynamic_pointer_cast<PlacedLogicModelObject>(w);
   CPPUNIT_ASSERT(ptr != NULL);
 
-  Wire_shptr w2 = std::tr1::dynamic_pointer_cast<Wire>(ptr);
+  Wire_shptr w2 = std::dynamic_pointer_cast<Wire>(ptr);
   CPPUNIT_ASSERT(w2 != NULL);
 }
 
@@ -121,7 +121,7 @@ void LogicModelTest::test_add_and_retrieve_wire(void) {
   PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
   CPPUNIT_ASSERT(plo != NULL);
 
-  Wire_shptr retrieved_wire = std::tr1::dynamic_pointer_cast<Wire>(plo);
+  Wire_shptr retrieved_wire = std::dynamic_pointer_cast<Wire>(plo);
   CPPUNIT_ASSERT(retrieved_wire != NULL);
 
   for(int j = 0; j < 100; j++) {

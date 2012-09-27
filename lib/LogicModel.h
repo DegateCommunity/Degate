@@ -3,6 +3,7 @@
   This file is part of the IC reverse engineering tool degate.
 
   Copyright 2008, 2009, 2010 by Martin Schobert
+  Copyright 2012 Robert Nitsch
 
   Degate is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -32,6 +33,7 @@
 
 #include <Via.h>
 #include <Wire.h>
+#include <DeepCopyable.h>
 #include <EMarker.h>
 #include <Gate.h>
 #include <GatePort.h>
@@ -41,7 +43,7 @@
 #include <Annotation.h>
 #include <Module.h>
 
-#include <tr1/memory>
+#include <memory>
 #include <set>
 #include <map>
 #include <sstream>
@@ -57,7 +59,7 @@ namespace degate {
    *
    * @todo implement a move_object
    */
-  class LogicModel {
+  class LogicModel : public DeepCopyable {
 
   public:
 
@@ -68,7 +70,9 @@ namespace degate {
 
     typedef std::vector<Layer_shptr> layer_collection;
     typedef std::map<object_id_t, Gate_shptr > gate_collection;
-
+    typedef std::map<object_id_t, Wire_shptr > wire_collection;
+    typedef std::map<object_id_t, EMarker_shptr> emarker_collection;
+    
   private:
 
     BoundingBox bounding_box;
@@ -76,12 +80,12 @@ namespace degate {
     layer_collection layers; // x
     Layer_shptr current_layer;
 
-    std::tr1::shared_ptr<GateLibrary> gate_library; // x
+    std::shared_ptr<GateLibrary> gate_library; // x
 
     gate_collection gates;
-    std::map<object_id_t, Wire_shptr > wires;
+    wire_collection wires;
     via_collection vias;
-    std::map<object_id_t, EMarker_shptr > emarkers;
+    emarker_collection emarkers;
     annotation_collection annotations;
     net_collection nets;
     Module_shptr main_module;
@@ -242,6 +246,11 @@ namespace degate {
 
     virtual ~LogicModel();
 
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
+    
     /**
      * Get the width of logic model.
      */

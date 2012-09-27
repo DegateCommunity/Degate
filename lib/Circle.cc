@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -39,6 +40,13 @@ Circle::Circle(int x, int y, unsigned int diameter) {
   calculate_bounding_box();
 }
 
+void Circle::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Circle>(dest);
+  clone->x = x;
+  clone->y = y;
+  clone->diameter = diameter;
+  clone->bounding_box = bounding_box;
+}
 
 bool Circle::in_shape(int x, int y, int max_distance) const {
   int delta_x = this->x - x;

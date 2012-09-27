@@ -23,7 +23,7 @@
 #define __VHDLCODETEMPLATEGENERATOR_H__
 
 #include <degate.h>
-#include <tr1/memory>
+#include <memory>
 #include <cctype>
 
 #include <CodeTemplateGenerator.h>
@@ -89,7 +89,7 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<VHDLCodeTemplateGenerator> VHDLCodeTemplateGenerator_shptr;
+  typedef std::shared_ptr<VHDLCodeTemplateGenerator> VHDLCodeTemplateGenerator_shptr;
 
 }
 

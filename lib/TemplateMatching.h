@@ -334,7 +334,7 @@ namespace degate {
   };
 
 
-  typedef std::tr1::shared_ptr<TemplateMatching> TemplateMatching_shptr;
+  typedef std::shared_ptr<TemplateMatching> TemplateMatching_shptr;
 
 
   /**
@@ -350,7 +350,7 @@ namespace degate {
     ~TemplateMatchingNormal() {}
   };
 
-  typedef std::tr1::shared_ptr<TemplateMatchingNormal> TemplateMatchingNormal_shptr;
+  typedef std::shared_ptr<TemplateMatchingNormal> TemplateMatchingNormal_shptr;
 
 
   /**
@@ -392,7 +392,7 @@ namespace degate {
     ~TemplateMatchingInRows() {}
   };
 
-  typedef std::tr1::shared_ptr<TemplateMatchingInRows> TemplateMatchingInRows_shptr;
+  typedef std::shared_ptr<TemplateMatchingInRows> TemplateMatchingInRows_shptr;
 
   /**
    * This class implements matching for gate template that are aligned in a column.
@@ -409,7 +409,7 @@ namespace degate {
     ~TemplateMatchingInCols() {}
   };
 
-  typedef std::tr1::shared_ptr<TemplateMatchingInCols> TemplateMatchingInCols_shptr;
+  typedef std::shared_ptr<TemplateMatchingInCols> TemplateMatchingInCols_shptr;
 
 }
 

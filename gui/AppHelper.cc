@@ -19,6 +19,8 @@
 
 */
 
+#define BOOST_NO_SCOPED_ENUMS
+
 #include <AppHelper.h>
 #include <boost/filesystem.hpp>
 
@@ -159,8 +161,8 @@ degate::BoundingBox get_selection_bounding_box(GfxEditor<DegateRenderer> const& 
 					       const degate::Project_shptr project) {
 
   // get bounding box for working area
-  const std::tr1::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
-    std::tr1::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
+  const std::shared_ptr<GfxEditorToolSelection<DegateRenderer> > selection_tool =
+    std::dynamic_pointer_cast<GfxEditorToolSelection<DegateRenderer> >(editor.get_tool());
 
   BoundingBox bbox;
 

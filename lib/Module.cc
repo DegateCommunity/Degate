@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -24,6 +25,8 @@
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <iterator>
+
 using namespace degate;
 
 
@@ -37,6 +40,32 @@ Module::Module(std::string const& module_name,
 }
 
 Module::~Module() {}
+
+DeepCopyable_shptr Module::cloneShallow() const {
+  auto clone = std::make_shared<Module>(get_name(), entity_name, is_root);
+  return clone;
+}
+
+void Module::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Module>(dest);
+  
+  // modules
+  std::transform(modules.begin(), modules.end(), std::inserter(clone->modules, clone->modules.begin()), [&](const module_collection::value_type &v) {
+    return std::dynamic_pointer_cast<Module>(v->cloneDeep(oldnew));
+  });
+  
+  // gates
+  std::transform(gates.begin(), gates.end(), std::inserter(clone->gates, clone->gates.begin()), [&](const gate_collection::value_type &v) {
+    return std::dynamic_pointer_cast<Gate>(v->cloneDeep(oldnew));
+  });
+  
+  // ports
+  std::for_each(ports.begin(), ports.end(), [&](const port_collection::value_type &v) {
+    clone->ports[v.first] = std::dynamic_pointer_cast<GatePort>(v.second->cloneDeep(oldnew));
+  });
+  
+  LogicModelObjectBase::cloneDeepInto(dest, oldnew);
+}
 
 bool Module::is_main_module() const {
   return is_root;
@@ -410,7 +439,7 @@ void degate::determine_module_ports_for_root(LogicModel_shptr lmodel) {
 	  assert(oid != 0);
 	  
 	  PlacedLogicModelObject_shptr lmo = lmodel->get_object(oid);
-	  if(EMarker_shptr em = std::tr1::dynamic_pointer_cast<EMarker>(lmo)) {
+	  if(EMarker_shptr em = std::dynamic_pointer_cast<EMarker>(lmo)) {
 	    debug(TM, "Connected with emarker");
 
 	    if(em->get_description() == "module-port") {

@@ -71,7 +71,7 @@ void LogicModelDOTExporterTest::test_export(void) {
    * export logic model as dot files
    */
 
-  LogicModelDOTExporter exporter(std::tr1::shared_ptr<ObjectIDRewriter>(new ObjectIDRewriter(true)));
+  LogicModelDOTExporter exporter(std::shared_ptr<ObjectIDRewriter>(new ObjectIDRewriter(true)));
 
   string out_filename("/tmp/layout_gate_placement.dot");
 
@@ -84,7 +84,7 @@ void LogicModelDOTExporterTest::test_export(void) {
   CPPUNIT_ASSERT(file_exists(out_filename) == true);
 
 
-  LogicModelDOTExporter exporter2(std::tr1::shared_ptr<ObjectIDRewriter>(new ObjectIDRewriter(true)));
+  LogicModelDOTExporter exporter2(std::shared_ptr<ObjectIDRewriter>(new ObjectIDRewriter(true)));
 
   string out_filename2("/tmp/logic_model_graph.dot");
 

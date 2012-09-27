@@ -34,7 +34,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <list>
-#include <tr1/memory>
+#include <memory>
 
 using namespace std;
 using namespace degate;
@@ -92,19 +92,19 @@ void LogicModelDOTExporter::export_data(std::string const& filename, LogicModel_
 
       PlacedLogicModelObject_shptr o = (*iter).second;
 
-      if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(o)) {
+      if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(o)) {
 	// check if the gate should be rendered
 	//if(accept_gate_for_output)
 	add_gate(gate);
       }
 
       else if(properties[ENABLE_VIAS]) {
-	if(Via_shptr via = std::tr1::dynamic_pointer_cast<Via>(o))
+	if(Via_shptr via = std::dynamic_pointer_cast<Via>(o))
 	  add_via(via);
       }
 
       /*
-	else if(Wire_shptr wire = std::tr1::dynamic_pointer_cast<Wire>(o))
+	else if(Wire_shptr wire = std::dynamic_pointer_cast<Wire>(o))
 	  add_wire(wires_elem, wire, layer_pos);
 
       */

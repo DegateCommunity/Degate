@@ -60,7 +60,7 @@ namespace degate {
 
   private:
 
-    const std::tr1::shared_ptr<ImageType> img;
+    const std::shared_ptr<ImageType> img;
     HistogramType hist_bg, hist_fg;
     const unsigned int width;
     const unsigned int threshold;
@@ -69,7 +69,7 @@ namespace degate {
   public:
 
 
-    BackgroundClassifier(std::tr1::shared_ptr<ImageType> _img,
+    BackgroundClassifier(std::shared_ptr<ImageType> _img,
 			 unsigned int _width,
 			 unsigned int _threshold,
 			 std::string const& _name) :
@@ -135,11 +135,11 @@ namespace degate {
   class GradientClassifier : public Classifier<coord_type> {
 
   private:
-    const std::tr1::shared_ptr<ImageType> img;
+    const std::shared_ptr<ImageType> img;
     const unsigned int width;
   public:
 
-    BackgroundClassifier(std::tr1::shared_ptr<ImageType> _img,
+    BackgroundClassifier(std::shared_ptr<ImageType> _img,
 			 unsigned int _width) {}
 
     std::string get_name() const {
@@ -216,7 +216,7 @@ namespace degate {
     virtual ~BackgroundClassifier() {}
 
     template<class ImageType>
-    void add_background_areas(std::tr1::shared_ptr<ImageType> img,
+    void add_background_areas(std::shared_ptr<ImageType> img,
 			      std::list<BoundingBox> const& bg_areas) {
 
       for(std::list<BoundingBox>::const_iterator iter = bg_areas.begin(); iter != bg_areas.end(); ++iter) {
@@ -233,7 +233,7 @@ namespace degate {
     }
 
     template<class ImageType>
-    void add_foreground_areas(std::tr1::shared_ptr<ImageType> img,
+    void add_foreground_areas(std::shared_ptr<ImageType> img,
 			      std::list<BoundingBox> const& fg_areas) {
 
 

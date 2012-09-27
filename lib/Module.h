@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,7 +24,7 @@
 #define __MODULE_H__
 
 #include <map>
-#include <tr1/memory>
+#include <memory>
 
 #include <LogicModelObjectBase.h>
 #include <LogicModel.h>
@@ -36,7 +37,7 @@ namespace degate {
    * Implements a container to build up higher level entities.
    */
 
-  class Module : public LogicModelObjectBase {
+  class Module : public LogicModelObjectBase, public DeepCopyable {
 
     friend void determine_module_ports_for_root(LogicModel_shptr lmodel);
     friend class LogicModelImporter;
@@ -101,6 +102,11 @@ namespace degate {
 
     virtual ~Module();
 
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
+    
     /**
      * Check if module is the main module.
      */

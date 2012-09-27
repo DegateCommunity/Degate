@@ -52,7 +52,7 @@ void AutoNameGates::rename_gates(std::vector<unsigned int> const & histogram,
     
     for(Layer::qt_region_iterator iter = layer->region_begin(bbox); 
 	iter != layer->region_end(); ++iter) {
-      if(Gate_shptr gate = std::tr1::dynamic_pointer_cast<Gate>(*iter))
+      if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(*iter))
 	gate_list.push_back(gate);
     }
     

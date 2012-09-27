@@ -3,6 +3,7 @@
    This file is part of the IC reverse engineering tool degate.
 
    Copyright 2008, 2009, 2010 by Martin Schobert
+   Copyright 2012 Robert Nitsch
 
    Degate is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@
 #include "Rectangle.h"
 #include "TypeTraits.h"
 
+#include <algorithm>
 #include <vector>
 #include <list>
 #include <assert.h>
@@ -117,6 +119,8 @@ namespace degate {
 
     ~QuadTree();
 
+    void get_all_elements(std::vector<T> &vec) const;
+    
     /**
      * Check if the quadtree or a quadtree node is a leaf node.
      */
@@ -247,6 +251,14 @@ namespace degate {
 
   template <typename T>
   QuadTree<T>::~QuadTree() {
+  }
+  
+  template <typename T>
+  void QuadTree<T>::get_all_elements(std::vector<T> &vec) const {
+    std::copy(children.begin(), children.end(), back_inserter(vec));
+    std::for_each(subtree_nodes.begin(), subtree_nodes.end(), [&vec](const QuadTree<T> &q) {
+      q.get_all_elements(vec);
+    });
   }
 
   template <typename T>

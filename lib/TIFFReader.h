@@ -23,7 +23,7 @@
 #define __TIFFREADER_H__
 
 #include <list>
-#include <tr1/memory>
+#include <memory>
 #include "tiffio.h"
 
 //#include "ImageReaderFactory.h"
@@ -63,7 +63,7 @@ namespace degate {
 
     bool read();
 
-    bool get_image(std::tr1::shared_ptr<ImageType>);
+    bool get_image(std::shared_ptr<ImageType>);
 
 
   };
@@ -84,7 +84,7 @@ namespace degate {
   }
 
   template<class ImageType>
-  bool TIFFReader<ImageType>::get_image(std::tr1::shared_ptr<ImageType> img) {
+  bool TIFFReader<ImageType>::get_image(std::shared_ptr<ImageType> img) {
 
     size_t npixels = get_width() * get_height();
     uint32 * raster = (uint32*) _TIFFmalloc(npixels * sizeof (uint32));

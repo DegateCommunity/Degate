@@ -52,7 +52,7 @@ namespace degate {
    */
 
   template<typename T>
-  struct is_pointer<std::tr1::shared_ptr<T> > {
+  struct is_pointer<std::shared_ptr<T> > {
     static const bool value = true;
   };
 

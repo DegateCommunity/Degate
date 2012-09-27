@@ -23,7 +23,7 @@
 #define __RCVCONTAINER_H__
 
 #include <boost/foreach.hpp>
-#include <tr1/memory>
+#include <memory>
 #include <list>
 #include <RCBase.h>
 
@@ -31,7 +31,7 @@ namespace degate {
 
   // forward declaration
   class RCViolation;
-  typedef std::tr1::shared_ptr<RCViolation> RCViolation_shptr;
+  typedef std::shared_ptr<RCViolation> RCViolation_shptr;
 
   /**
    * Representation for a container type, which holds a list

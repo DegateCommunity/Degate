@@ -24,7 +24,7 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <tr1/memory>
+#include <memory>
 
 #include <degate.h>
 

@@ -36,7 +36,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <list>
-#include <tr1/memory>
+#include <memory>
 
 
 using namespace std;

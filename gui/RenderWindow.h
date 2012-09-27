@@ -53,7 +53,7 @@ private:
   Gtk::HRuler h_ruler;
   Gtk::VRuler v_ruler;
 
-  static const double zoom_step;
+  static constexpr double zoom_step = 1.0/1.2;
 
   unsigned int win_width, win_height;
 
@@ -203,10 +203,6 @@ public:
 
 
 };
-
-
-template<typename RendererType>
-const double RenderWindow<RendererType>::zoom_step = 1.0/1.2;
 
 
 template <typename RendererType>

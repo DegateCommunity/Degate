@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -31,7 +32,7 @@ namespace degate {
   /**
    * This class represents a port of a gate template.
    */
-  class GateTemplatePort : public LogicModelObjectBase, public ColoredObject {
+  class GateTemplatePort : public LogicModelObjectBase, public ColoredObject, public DeepCopyable {
 
   public:
 
@@ -73,6 +74,21 @@ namespace degate {
 
 
     virtual ~GateTemplatePort() {}
+
+    //@{
+    DeepCopyable_shptr cloneShallow() const {
+      auto clone = std::make_shared<GateTemplatePort>(port_type);
+      if (is_position_defined()) {
+        clone->set_point(point);
+      }
+      return clone;
+    };
+    
+    void cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+      ColoredObject::cloneDeepInto(dest, oldnew);
+      LogicModelObjectBase::cloneDeepInto(dest, oldnew);
+    };
+    //@}
 
     /**
      * Check if a position is defined for the port.
@@ -186,7 +202,7 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<GateTemplatePort> GateTemplatePort_shptr;
+  typedef std::shared_ptr<GateTemplatePort> GateTemplatePort_shptr;
 
 }
 

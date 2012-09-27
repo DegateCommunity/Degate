@@ -22,7 +22,7 @@
 #ifndef __PROGRESSCONTROL_H__
 #define __PROGRESSCONTROL_H__
 
-#include <tr1/memory>
+#include <memory>
 #include <time.h>
 #include <boost/thread.hpp>
 
@@ -209,7 +209,7 @@ namespace degate {
     }
   };
 
-  typedef std::tr1::shared_ptr<ProgressControl> ProgressControl_shptr;
+  typedef std::shared_ptr<ProgressControl> ProgressControl_shptr;
 }
 
 #endif

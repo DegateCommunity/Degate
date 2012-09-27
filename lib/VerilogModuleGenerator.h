@@ -23,7 +23,7 @@
 #define __VERILOGMODULEGENERATOR_H__
 
 #include <degate.h>
-#include <tr1/memory>
+#include <memory>
 
 #include <VerilogCodeTemplateGenerator.h>
 

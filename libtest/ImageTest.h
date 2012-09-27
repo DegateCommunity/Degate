@@ -24,7 +24,7 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <tr1/memory>
+#include <memory>
 
 #include <Image.h>
 #include <ImageReaderFactory.h>
@@ -58,7 +58,7 @@ protected:
   
   
 private:
-  degate::TileImage_RGBA_shptr read_image(std::tr1::shared_ptr<
+  degate::TileImage_RGBA_shptr read_image(std::shared_ptr<
 					  degate::ImageReaderBase<degate::TileImage_RGBA> > reader, 
 					  unsigned int tile_size_exp);
   

@@ -170,7 +170,7 @@ void ConnectionInspectorWin::set_object(degate::PlacedLogicModelObject_shptr obj
     back_list.push_back(obj_ptr);
 
 
-    if(Gate_shptr g = std::tr1::dynamic_pointer_cast<Gate>(obj_ptr)) {
+    if(Gate_shptr g = std::dynamic_pointer_cast<Gate>(obj_ptr)) {
       for(Gate::port_iterator iter = g->ports_begin();
 	  iter != g->ports_end(); ++iter) {
 	Glib::ustring current_color = MY_WHITE;
@@ -183,7 +183,7 @@ void ConnectionInspectorWin::set_object(degate::PlacedLogicModelObject_shptr obj
       }
     }
     else if(ConnectedLogicModelObject_shptr o =
-	    std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(obj_ptr)) {
+	    std::dynamic_pointer_cast<ConnectedLogicModelObject>(obj_ptr)) {
       show_connections(o, MY_WHITE);
     }
 
@@ -211,7 +211,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
 
     object_id_t oid = *iter;
     const ConnectedLogicModelObject_shptr obj_ptr =
-      std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(lmodel->get_object(oid));
+      std::dynamic_pointer_cast<ConnectedLogicModelObject>(lmodel->get_object(oid));
 
     if(obj_ptr != src_curr_obj) {
 
@@ -225,7 +225,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
       row[m_Columns.m_col_curr_name] = src_curr_obj->get_descriptive_identifier();
       row[m_Columns.m_col_curr_name_sort] = src_curr_obj->get_descriptive_identifier();
 
-      if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(src_curr_obj)) {
+      if(GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(src_curr_obj)) {
 
 	if(gate_port->has_template_port()) {
 
@@ -243,7 +243,7 @@ void ConnectionInspectorWin::show_connections(degate::ConnectedLogicModelObject_
       // connected with
 
       if(const GatePort_shptr gate_port =
-	 std::tr1::dynamic_pointer_cast<GatePort>(obj_ptr)) {
+	 std::dynamic_pointer_cast<GatePort>(obj_ptr)) {
 
 	const GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 
@@ -331,7 +331,7 @@ void ConnectionInspectorWin::on_goto_button_clicked() {
 
       pBackButton->set_sensitive(true);
 
-      if(GatePort_shptr gate_port = std::tr1::dynamic_pointer_cast<GatePort>(object_ptr))
+      if(GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(object_ptr))
 	object_ptr = gate_port->get_gate();
 
       //set_object(object_ptr);

@@ -23,7 +23,7 @@
 #define __VERILOGCODETEMPLATEGENERATOR_H__
 
 #include <degate.h>
-#include <tr1/memory>
+#include <memory>
 #include <cctype>
 
 #include <CodeTemplateGenerator.h>
@@ -82,7 +82,7 @@ namespace degate {
     using CodeTemplateGenerator::generate_identifier;
   };
 
-  typedef std::tr1::shared_ptr<VerilogCodeTemplateGenerator> VerilogCodeTemplateGenerator_shptr;
+  typedef std::shared_ptr<VerilogCodeTemplateGenerator> VerilogCodeTemplateGenerator_shptr;
 
 }
 

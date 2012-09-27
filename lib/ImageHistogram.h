@@ -126,7 +126,7 @@ namespace degate {
     HueImageHistogram() : ImageHistogram<double, double>(0, 360, 1) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
 
       assert_is_multi_channel_image<ImageType>();
       check_bounding_box(bb, img);
@@ -152,7 +152,7 @@ namespace degate {
     SaturationImageHistogram() : ImageHistogram<double, double>(0, 1, 0.01) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
 
       assert_is_multi_channel_image<ImageType>();
       check_bounding_box(bb, img);
@@ -175,7 +175,7 @@ namespace degate {
     LightnessImageHistogram() : ImageHistogram<double, double>(0, 255, 1) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
 
       assert_is_multi_channel_image<ImageType>();
       check_bounding_box(bb, img);
@@ -200,7 +200,7 @@ namespace degate {
     RedChannelImageHistogram() : ImageHistogram<double, double>(0, 255, 1) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
 
       assert_is_multi_channel_image<ImageType>();
       check_bounding_box(bb, img);
@@ -227,7 +227,7 @@ namespace degate {
     GreenChannelImageHistogram() : ImageHistogram<double, double>(0, 255, 1) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
 
       assert_is_multi_channel_image<ImageType>();
       check_bounding_box(bb, img);
@@ -252,7 +252,7 @@ namespace degate {
     BlueChannelImageHistogram() : ImageHistogram<double, double>(0, 255, 1) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
 
       assert_is_multi_channel_image<ImageType>();
       check_bounding_box(bb, img);
@@ -286,7 +286,7 @@ namespace degate {
     virtual ~LocalStdDevImageHistogram() {}
 
     template<class ImageType, class EvaluateFunc>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
 
       assert_is_multi_channel_image<ImageType>();
       check_bounding_box(bb, img);
@@ -303,7 +303,7 @@ namespace degate {
   protected:
 
     template<class ImageType, class EvaluateFunc>
-    inline std::vector<double> fill_vector(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb,
+    inline std::vector<double> fill_vector(std::shared_ptr<ImageType> img, BoundingBox const& bb,
 				    unsigned int x, unsigned int y, unsigned int radius) {
       std::vector<double> v;
       unsigned int min_x = bb.get_min_x() + radius < x ? x - radius : bb.get_min_x();
@@ -331,7 +331,7 @@ namespace degate {
     HueStdDevImageHistogram(unsigned int radius = 2) : LocalStdDevImageHistogram(0, 255, 1, radius) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
       LocalStdDevImageHistogram::add_area<ImageType, rgba_to_hue_calculation>(img, bb);
     }
   };
@@ -347,7 +347,7 @@ namespace degate {
     SaturationStdDevImageHistogram(unsigned int radius = 2) : LocalStdDevImageHistogram(0, 1, 0.05, radius) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
       LocalStdDevImageHistogram::add_area<ImageType, rgba_to_sat_calculation>(img, bb);
     }
   };
@@ -364,7 +364,7 @@ namespace degate {
     LightnessStdDevImageHistogram(unsigned int radius = 2) : LocalStdDevImageHistogram(0, 255, 1, radius) {}
 
     template<class ImageType>
-    void add_area(std::tr1::shared_ptr<ImageType> img, BoundingBox const& bb) {
+    void add_area(std::shared_ptr<ImageType> img, BoundingBox const& bb) {
       LocalStdDevImageHistogram::add_area<ImageType, rgba_to_lightness_calculation>(img, bb);
     }
   };

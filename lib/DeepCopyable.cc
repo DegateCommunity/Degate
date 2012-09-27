@@ -2,7 +2,7 @@
 
  This file is part of the IC reverse engineering tool degate.
 
- Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -16,48 +16,33 @@
 
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
-
 */
 
-#ifndef __POINT_H__
-#define __POINT_H__
+#include "DeepCopyable.h"
 
-#include "Shape.h"
+#include <assert.h>
 
 namespace degate {
 
-  class Point {
-
-  private:
-    int x, y;
-
-  public:
-
-    Point();
-    Point(int x, int y);
-
-    bool operator==(const Point& other) const;
-    bool operator!=(const Point& other) const;
-
-    int get_x() const;
-    int get_y() const;
-
-    void set_x(int x);
-    void set_y(int y);
-
-    void shift_x(int delta_x);
-    void shift_y(int delta_y);
-
-    /**
-     * Calculate the distance to another point.
-     */
-    unsigned int get_distance(Point const& p) const;
-
-
-    std::string to_string() const;
-  };
-
-  typedef std::shared_ptr<Point> Point_shptr;
+DeepCopyable_shptr DeepCopyable::cloneDeep(oldnew_t *oldnew) const {
+  auto _this = shared_from_this();
+  if (cloneOnce(_this, oldnew)) {
+    cloneDeepInto((*oldnew)[_this], oldnew);
+  }
+  return (*oldnew)[_this];
 }
 
-#endif
+bool DeepCopyable::cloneOnce(const c_DeepCopyable_shptr &o, std::map<c_DeepCopyable_shptr, DeepCopyable_shptr> *__oldnew) {
+  assert(o.get() != 0);
+  
+  std::map<c_DeepCopyable_shptr, DeepCopyable_shptr> &oldnew = *__oldnew;
+  if (oldnew.count(o) > 0) {
+    return false;
+  }
+  
+  DeepCopyable_shptr clone = o->cloneShallow();
+  oldnew[o] = clone;
+  return true;
+}
+
+}

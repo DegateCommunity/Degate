@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cctype>
 #include <string>
-#include <tr1/memory>
+#include <memory>
 
 
 using namespace degate;

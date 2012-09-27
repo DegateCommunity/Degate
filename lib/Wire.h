@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,7 +23,7 @@
 #ifndef __WIRE_H__
 #define __WIRE_H__
 
-#include <tr1/memory>
+#include <memory>
 
 #include <globals.h>
 #include <LogicModelObjectBase.h>
@@ -49,6 +50,11 @@ namespace degate {
      */
     virtual ~Wire() {}
 
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
+    
     /**
      * Get a human readable string that describes the whole
      * logic model object. The string should be unique in order

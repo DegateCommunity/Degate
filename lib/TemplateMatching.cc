@@ -167,7 +167,7 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 
   int blur_kernel_size = USE_GAUSS_FILTER;
 
-  std::tr1::shared_ptr<GaussianBlur>
+  std::shared_ptr<GaussianBlur>
     gaussian_blur_kernel(new GaussianBlur(blur_kernel_size, blur_kernel_size, 1.1));
 
   gaussian_blur_kernel->print();

@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,6 +23,7 @@
 #ifndef __REMOTEOBJECT_H__
 #define __REMOTEOBJECT_H__
 
+#include "DeepCopyable.h"
 
 #include <cstdlib>
 #include <string>
@@ -30,7 +32,7 @@
 
 namespace degate {
 
-  class RemoteObject {
+  class RemoteObject : public DeepCopyableBase {
 
   private:
 
@@ -48,6 +50,10 @@ namespace degate {
     virtual ~RemoteObject() {
     }
 
+    void cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+      auto clone = std::dynamic_pointer_cast<RemoteObject>(dest);
+      clone->remote_oid = remote_oid;
+    }
 
     virtual bool has_remote_object_id() const {
       return remote_oid != 0;

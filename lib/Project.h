@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,6 +24,7 @@
 #define __PROJECT_H__
 
 #include <degate.h>
+#include <DeepCopyable.h>
 #include <globals.h>
 #include <LogicModel.h>
 #include <PortColorManager.h>
@@ -30,32 +32,40 @@
 
 #include <string>
 #include <list>
-#include <tr1/memory>
+#include <memory>
+#include <vector>
 
 #include <time.h>
 
 namespace degate {
 
   class Project;
-  typedef std::list<std::tr1::shared_ptr<Project> > ProjectList;
-  typedef std::tr1::shared_ptr<Project> Project_shptr;
+  typedef std::list<std::shared_ptr<Project> > ProjectList;
+  typedef std::shared_ptr<Project> Project_shptr;
 }
 
 #include "ProjectImporter.h"
 
 namespace degate {
 
+  struct ProjectSnapshot {
+    int id;
+    std::string title;
+    Project_shptr clone;
+  };
+  typedef std::shared_ptr<ProjectSnapshot> ProjectSnapshot_shptr;
+
   /**
    * The project class is a container for project related data.
    *
    */
 
-  class Project {
-
+  class Project : public DeepCopyable {
   private:
 
     BoundingBox bounding_box;
 
+    
     std::string name;
     std::string description;
     std::string degate_version;
@@ -89,13 +99,12 @@ namespace degate {
     RCBase::container_type rcv_blacklist;
 
     unsigned int font_size;
-
   private:
 
     void init_default_values();
 
   public:
-
+    
     /**
      * Create a new and empty project.
      * It will create an empty logic model as well.
@@ -117,10 +126,14 @@ namespace degate {
 
     virtual ~Project();
 
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
+    
     /**
      * Set the project directory.
      */
-
     void set_project_directory(std::string const& _directory);
 
     /**

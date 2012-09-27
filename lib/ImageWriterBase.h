@@ -23,7 +23,7 @@
 #define __IMAGEWRITERBASE_H__
 
 #include <list>
-#include <tr1/memory>
+#include <memory>
 #include "degate_exceptions.h"
 
 #include "TypeTraits.h"
@@ -108,7 +108,7 @@ namespace degate {
      * Writer the image into a file.
      */
 
-    virtual bool write_image(std::tr1::shared_ptr<ImageType> img) = 0;
+    virtual bool write_image(std::shared_ptr<ImageType> img) = 0;
 
   };
 

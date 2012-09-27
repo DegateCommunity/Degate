@@ -23,7 +23,7 @@
 #define __FILTERKERNEL_H__
 
 #include <vector>
-#include <tr1/memory>
+#include <memory>
 #include <iostream>
 #include <math.h>
 #include <boost/format.hpp>
@@ -87,7 +87,7 @@ namespace degate {
     }
   };
 
-  typedef std::tr1::shared_ptr<FilterKernel> FilterKernel_shptr;
+  typedef std::shared_ptr<FilterKernel> FilterKernel_shptr;
 
   class SobelXOperator : public FilterKernel {
   public:
@@ -107,7 +107,7 @@ namespace degate {
     virtual ~SobelXOperator() {}
   };
 
-  typedef std::tr1::shared_ptr<SobelXOperator> SobelXOperator_shptr;
+  typedef std::shared_ptr<SobelXOperator> SobelXOperator_shptr;
 
   class SobelYOperator : public FilterKernel {
   public:
@@ -127,7 +127,7 @@ namespace degate {
     virtual ~SobelYOperator() {}
   };
 
-  typedef std::tr1::shared_ptr<SobelYOperator> SobelYOperator_shptr;
+  typedef std::shared_ptr<SobelYOperator> SobelYOperator_shptr;
 
 
   class SobelOperator : public FilterKernel {
@@ -148,7 +148,7 @@ namespace degate {
     virtual ~SobelOperator() {}
   };
 
-  typedef std::tr1::shared_ptr<SobelOperator> SobelOperator_shptr;
+  typedef std::shared_ptr<SobelOperator> SobelOperator_shptr;
 
   class GaussianBlur : public FilterKernel {
   public:
@@ -201,7 +201,7 @@ namespace degate {
    virtual ~LoG() {}
   };
 
-  typedef std::tr1::shared_ptr<LoG> LoG_shptr;
+  typedef std::shared_ptr<LoG> LoG_shptr;
 
 }
 

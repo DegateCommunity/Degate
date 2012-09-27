@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -30,7 +31,7 @@
 #include "GateTemplatePort.h"
 #include <set>
 
-#include <tr1/memory>
+#include <memory>
 
 namespace degate {
 
@@ -44,14 +45,15 @@ namespace degate {
 
   private:
 
-    std::tr1::shared_ptr<Gate> gate;
-    std::tr1::shared_ptr<GateTemplatePort> gate_template_port;
+    std::shared_ptr<Gate> gate;
+    std::shared_ptr<GateTemplatePort> gate_template_port;
     object_id_t template_port_id;
 
   public:
 
 
-
+    explicit GatePort() {};
+    
     /**
      * Create a gate port and set a "reference" to the the template port.
      *
@@ -59,8 +61,8 @@ namespace degate {
      * @param _gate_template_port A shared pointer to a template port.
      * @param _diameter The diameter of the port.
      */
-    GatePort(std::tr1::shared_ptr<Gate> _gate,
-	     std::tr1::shared_ptr<GateTemplatePort> _gate_template_port,
+    GatePort(std::shared_ptr<Gate> _gate,
+	     std::shared_ptr<GateTemplatePort> _gate_template_port,
 	     unsigned int _diameter = 5);
 
     /**
@@ -69,7 +71,7 @@ namespace degate {
      * @param _gate A shared pointer to the gate, the port is created for.
      * @param diameter The diameter of the port.
      */
-    GatePort(std::tr1::shared_ptr<Gate> _gate, unsigned int _diameter = 5);
+    GatePort(std::shared_ptr<Gate> _gate, unsigned int _diameter = 5);
 
 
     /**
@@ -77,6 +79,11 @@ namespace degate {
      */
 
     virtual ~GatePort() {}
+
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
 
     /**
      * Set the ID of the template port.
@@ -106,7 +113,7 @@ namespace degate {
      * Set the template port.
      */
 
-    virtual void set_template_port(std::tr1::shared_ptr<GateTemplatePort>
+    virtual void set_template_port(std::shared_ptr<GateTemplatePort>
 				   _gate_template_port);
 
 
@@ -131,7 +138,7 @@ namespace degate {
      * @see has_gate()
      */
 
-    std::tr1::shared_ptr<Gate> get_gate();
+    std::shared_ptr<Gate> get_gate();
 
 
     /**

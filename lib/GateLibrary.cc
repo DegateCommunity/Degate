@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -30,6 +31,16 @@ GateLibrary::GateLibrary() {
 GateLibrary::~GateLibrary() {
 }
 
+DeepCopyable_shptr GateLibrary::cloneShallow() const {
+  return std::make_shared<GateLibrary>();
+}
+
+void GateLibrary::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<GateLibrary>(dest);
+  std::for_each(templates.begin(), templates.end(), [&](const gate_lib_collection_t::value_type &v) {
+    clone->templates[v.first] = std::dynamic_pointer_cast<GateTemplate>(v.second->cloneDeep(oldnew));
+  });
+}
 
 void GateLibrary::remove_template(GateTemplate_shptr gate_template) {
   templates.erase(gate_template->get_object_id());

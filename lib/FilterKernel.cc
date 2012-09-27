@@ -1,5 +1,5 @@
 #include <FilterKernel.h>
-#include <tr1/memory>
+#include <memory>
 
 using namespace degate;
 

@@ -29,14 +29,14 @@ namespace degate {
 
   // We need a forward decleration here in order to use img->get_pixel_as<>().
   template<typename PixelTypeDst, typename ImageTypeSrc>
-  inline PixelTypeDst get_pixel_as(typename std::tr1::shared_ptr<ImageTypeSrc> img,
+  inline PixelTypeDst get_pixel_as(typename std::shared_ptr<ImageTypeSrc> img,
 				   unsigned int x, unsigned int y);
 
   /**
    * Get the minimum pixel value of a single channel image.
    */
   template<typename ImageType>
-  typename ImageType::pixel_type get_minimum(std::tr1::shared_ptr<ImageType> img) {
+  typename ImageType::pixel_type get_minimum(std::shared_ptr<ImageType> img) {
 
     assert_is_single_channel_image<ImageType>();
     typename ImageType::pixel_type minimum = img->get_pixel(0, 0);
@@ -53,7 +53,7 @@ namespace degate {
    * Get the maximum pixel value of a single channel image.
    */
   template<typename ImageType>
-  typename ImageType::pixel_type get_maximum(std::tr1::shared_ptr<ImageType> img) {
+  typename ImageType::pixel_type get_maximum(std::shared_ptr<ImageType> img) {
 
     assert_is_single_channel_image<ImageType>();
     typename ImageType::pixel_type maximum = img->get_pixel(0, 0);
@@ -72,7 +72,7 @@ namespace degate {
    * If the input image is a multi-channel image, data will be converted on-the-fly.
    */
   template<typename ImageType>
-  double average(std::tr1::shared_ptr<ImageType> img) {
+  double average(std::shared_ptr<ImageType> img) {
     return average(img, 0, 0, img->get_width(), img->get_height());
   }
 
@@ -82,7 +82,7 @@ namespace degate {
    * @exception DegateRuntimeException This exception is thrown, if the image area is 0. 
    */
   template<typename ImageType>
-  double average(std::tr1::shared_ptr<ImageType> img, 
+  double average(std::shared_ptr<ImageType> img, 
 		 unsigned int start_x, unsigned int start_y, 
 		 unsigned int width, unsigned int height) {
 
@@ -104,7 +104,7 @@ namespace degate {
    * @exception DegateRuntimeException This exception is thrown, if the image area is 0. 
    */
   template<typename ImageType>
-  void average_and_stddev(std::tr1::shared_ptr<ImageType> img, 
+  void average_and_stddev(std::shared_ptr<ImageType> img, 
 			  unsigned int start_x, unsigned int start_y, 
 			  unsigned int width, unsigned int height,
 			  double * avg, double * stddev) {

@@ -171,8 +171,8 @@ void ViaMatching::run() {
 
 template<class BGImageType, class TemplateImageType>
 double calc_xcorr(unsigned int start_x, unsigned int start_y,
-		  std::tr1::shared_ptr<BGImageType> bg_img, double f_avg, double sigma_f,
-		  std::tr1::shared_ptr<TemplateImageType> tmpl_img, double t_avg, double sigma_t) {
+		  std::shared_ptr<BGImageType> bg_img, double f_avg, double sigma_f,
+		  std::shared_ptr<TemplateImageType> tmpl_img, double t_avg, double sigma_t) {
 
   double sum = 0;
   double n = tmpl_img->get_width() * tmpl_img->get_height();

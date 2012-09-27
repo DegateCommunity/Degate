@@ -87,12 +87,12 @@ namespace degate {
    *   background image set.
    */
   template<typename ImageType>
-  std::tr1::shared_ptr<ImageType> grab_image(LogicModel_shptr lmodel,
+  std::shared_ptr<ImageType> grab_image(LogicModel_shptr lmodel,
 					     Layer_shptr layer,
 					     BoundingBox const& bounding_box) {
 
     // create empty image with the size of the bounding box
-    std::tr1::shared_ptr<ImageType> new_img(new ImageType(bounding_box.get_width(),
+    std::shared_ptr<ImageType> new_img(new ImageType(bounding_box.get_width(),
 							  bounding_box.get_height()));
 
     BackgroundImage_shptr bg_image = layer->get_image();
@@ -149,7 +149,7 @@ namespace degate {
 
     for(InputIterator it = first; it != last; ++it) {
       ConnectedLogicModelObject_shptr clo =
-	std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
+	std::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
 
       if(clo == NULL) {
 	throw DegateRuntimeException("Error in collect_nets(). One of the objects "
@@ -195,7 +195,7 @@ namespace degate {
     // unconnect objects
     for(InputIterator it = first; it != last; ++it) {
       ConnectedLogicModelObject_shptr clo =
-	std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
+	std::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
 
       if(clo == NULL) {
 	throw DegateRuntimeException("Error in isolate_objecs(). One of the object "
@@ -259,7 +259,7 @@ namespace degate {
     std::set<ConnectedLogicModelObject_shptr> objects;
 
     for(InputIterator it = first; it != last; ++it) {
-      objects.insert(std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(*it));
+      objects.insert(std::dynamic_pointer_cast<ConnectedLogicModelObject>(*it));
     }
 
     for(std::set<Net_shptr>::iterator iter = nets.begin(); iter != nets.end(); ++iter) {
@@ -270,7 +270,7 @@ namespace degate {
 	PlacedLogicModelObject_shptr plo = lmodel->get_object(*ci);
 
 	ConnectedLogicModelObject_shptr clo =
-	  std::tr1::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
+	  std::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
 
 	assert(clo != NULL);
 	objects.insert(clo);

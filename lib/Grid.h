@@ -23,7 +23,7 @@
 #define __GRID_H__
 
 #include <list>
-#include <tr1/memory>
+#include <memory>
 
 namespace degate {
 
@@ -128,7 +128,7 @@ namespace degate {
 
   };
 
-  typedef std::tr1::shared_ptr<Grid> Grid_shptr;
+  typedef std::shared_ptr<Grid> Grid_shptr;
 }
 
 #endif

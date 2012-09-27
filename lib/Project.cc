@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,6 +23,7 @@
 #include "globals.h"
 #include "Project.h"
 
+#include <algorithm>
 #include <string>
 #include <iostream>
 #include <ctime>
@@ -47,6 +49,30 @@ Project::Project(length_t width, length_t height, std::string const& _directory,
 }
 
 Project::~Project() {
+}
+
+DeepCopyable_shptr Project::cloneShallow() const {
+  auto clone = std::make_shared<Project>(*this);
+  clone->regular_horizontal_grid.reset();
+  clone->regular_vertical_grid.reset();
+  clone->irregular_horizontal_grid.reset();
+  clone->irregular_vertical_grid.reset();
+  clone->logic_model.reset();
+  clone->port_color_manager.reset();
+  return clone;
+}
+
+void Project::cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<Project>(destination);
+  
+  clone->logic_model = std::dynamic_pointer_cast<LogicModel>(logic_model->cloneDeep(oldnew));
+  
+  // For these members we use the default copy constructors.
+  clone->regular_horizontal_grid = std::make_shared<RegularGrid>(*regular_horizontal_grid);
+  clone->regular_vertical_grid = std::make_shared<RegularGrid>(*regular_vertical_grid);
+  clone->irregular_horizontal_grid = std::make_shared<IrregularGrid>(*irregular_horizontal_grid);
+  clone->irregular_vertical_grid = std::make_shared<IrregularGrid>(*irregular_vertical_grid);
+  clone->port_color_manager = std::make_shared<PortColorManager>(*port_color_manager);
 }
 
 void Project::set_project_directory(std::string const& _directory) {

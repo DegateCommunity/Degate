@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -47,6 +48,33 @@ GateTemplate::GateTemplate() :
 
 
 GateTemplate::~GateTemplate() {
+}
+
+DeepCopyable_shptr GateTemplate::cloneShallow() const {
+  auto clone = std::make_shared<GateTemplate>();
+  clone->bounding_box = bounding_box;
+  clone->reference_counter = reference_counter;
+  clone->implementations = implementations;
+  clone->logic_class = logic_class;
+  return clone;
+}
+
+/**
+ * @todo Determine whether 'images' must be deep-cloned. (For now, it is \em not deep-cloned.)
+ */
+void GateTemplate::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
+  auto clone = std::dynamic_pointer_cast<GateTemplate>(dest);
+  
+  // ports
+  std::transform(ports.begin(), ports.end(), std::inserter(clone->ports, clone->ports.begin()), [&](const GateTemplatePort_shptr &v) {
+    return std::dynamic_pointer_cast<GateTemplatePort>(v->cloneDeep(oldnew));
+  });
+  
+  // images
+  clone->images = images;
+  
+  ColoredObject::cloneDeepInto(dest, oldnew);
+  LogicModelObjectBase::cloneDeepInto(dest, oldnew);
 }
 
 unsigned int GateTemplate::get_width() const {

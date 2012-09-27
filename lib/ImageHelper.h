@@ -44,7 +44,7 @@ namespace degate {
    */
 
   template<typename ImageType>
-  std::tr1::shared_ptr<ImageType> load_image(std::string const& path) {
+  std::shared_ptr<ImageType> load_image(std::string const& path) {
     if(!file_exists(path)) {
       boost::format fmter("Error in load_image(): file %1% does not exist.");
       fmter % path;
@@ -56,7 +56,7 @@ namespace degate {
 
       // get a reader
       ImageReaderFactory<ImageType> ir_factory;
-      std::tr1::shared_ptr<ImageReaderBase<ImageType> > reader = ir_factory.get_reader(path);
+      std::shared_ptr<ImageReaderBase<ImageType> > reader = ir_factory.get_reader(path);
 
       if(reader->read() == false) {
 	throw DegateRuntimeException(fmter.str());
@@ -66,7 +66,7 @@ namespace degate {
 	debug(TM, "reading image file: %s", path.c_str());
 
 	// create an empty image
-	std::tr1::shared_ptr<ImageType> img(new ImageType(reader->get_width(),
+	std::shared_ptr<ImageType> img(new ImageType(reader->get_width(),
 							  reader->get_height()));
 	if(reader->get_image(img) == true)
 	  return img;
@@ -82,10 +82,10 @@ namespace degate {
    */
 
   template<typename ImageType>
-  void load_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) {
+  void load_image(std::string const& path, std::shared_ptr<ImageType> img) {
 
     if(img == NULL) throw InvalidPointerException("invalid image pointer");
-    std::tr1::shared_ptr<ImageType> i = load_image<ImageType>(path);
+    std::shared_ptr<ImageType> i = load_image<ImageType>(path);
     copy_image<ImageType, ImageType>(img, i);
   }
 
@@ -99,7 +99,7 @@ namespace degate {
    */
 
   template<typename ImageType>
-  void save_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) {
+  void save_image(std::string const& path, std::shared_ptr<ImageType> img) {
 
     if(img == NULL) throw InvalidPointerException("invalid image pointer");
     TIFFWriter<ImageType> tiff_writer(img->get_width(),
@@ -117,11 +117,11 @@ namespace degate {
    */
   template<typename ImageType>
   void save_part_of_image(std::string const& path,
-			  std::tr1::shared_ptr<ImageType> img,
+			  std::shared_ptr<ImageType> img,
 			  BoundingBox const& bounding_box) {
 
     if(img == NULL) throw InvalidPointerException("invalid image pointer");
-    std::tr1::shared_ptr<ImageType> part(new ImageType(bounding_box.get_width(),
+    std::shared_ptr<ImageType> part(new ImageType(bounding_box.get_width(),
 						       bounding_box.get_height()));
 
     extract_partial_image(part, img, bounding_box);
@@ -135,10 +135,10 @@ namespace degate {
    */
 
   template<typename ImageType>
-  void save_normalized_image(std::string const& path, std::tr1::shared_ptr<ImageType> img) {
+  void save_normalized_image(std::string const& path, std::shared_ptr<ImageType> img) {
 
     if(img == NULL) throw InvalidPointerException("invalid image pointer");
-    std::tr1::shared_ptr<ImageType> normalized_img(new ImageType(img->get_width(),
+    std::shared_ptr<ImageType> normalized_img(new ImageType(img->get_width(),
 								 img->get_height()));
 
     normalize<ImageType, ImageType>(normalized_img, img, 0, 255);
@@ -154,17 +154,17 @@ namespace degate {
    *   valid merged image. If the collection is empty, a NULL pointer is returned.
    */
   template<typename ImageType>
-  std::tr1::shared_ptr<ImageType> merge_images(std::list<std::tr1::shared_ptr<ImageType> > const & images) {
+  std::shared_ptr<ImageType> merge_images(std::list<std::shared_ptr<ImageType> > const & images) {
 
-    std::tr1::shared_ptr<ImageType> new_img;
+    std::shared_ptr<ImageType> new_img;
     if(images.empty()) return new_img;
 
-    const std::tr1::shared_ptr<ImageType> img = images.front();
+    const std::shared_ptr<ImageType> img = images.front();
 
     unsigned int w = img->get_width(), h = img->get_height();
     std::vector<double> i_tmp(4 * w * h);
 
-    BOOST_FOREACH(const std::tr1::shared_ptr<ImageType> i, images) {
+    BOOST_FOREACH(const std::shared_ptr<ImageType> i, images) {
 
       // verify that all images have the same dimensions
       if(w != i->get_width() || h != i->get_height()) 
@@ -183,7 +183,7 @@ namespace degate {
 
     const double elems = images.size();
 
-    new_img = std::tr1::shared_ptr<ImageType>(new GateTemplateImage(w, h));
+    new_img = std::shared_ptr<ImageType>(new GateTemplateImage(w, h));
     assert(new_img != NULL);
 
     for(unsigned int y = 0; y < h; y++)

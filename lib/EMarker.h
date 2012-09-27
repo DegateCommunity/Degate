@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -32,7 +33,7 @@
 #include "Circle.h"
 #include <RemoteObject.h>
 
-#include <tr1/memory>
+#include <memory>
 
 namespace degate {
 
@@ -44,6 +45,8 @@ namespace degate {
 
   public:
 
+    explicit EMarker() {};
+    
     /**
      * Constructor for a via object.
      */
@@ -55,6 +58,11 @@ namespace degate {
      */
 
     virtual ~EMarker();
+
+    //@{
+    DeepCopyable_shptr cloneShallow() const;
+    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+    //@}
 
     /**
      * Get a human readable string that describes the whole

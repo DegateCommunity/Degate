@@ -23,7 +23,7 @@
 #define __RCBASE_H__
 
 #include <boost/foreach.hpp>
-#include <tr1/memory>
+#include <memory>
 #include <list>
 #include <LogicModel.h>
 #include <RCVContainer.h>
@@ -123,7 +123,7 @@ namespace degate {
     }
   };
 
-  typedef std::tr1::shared_ptr<RCBase> RCBase_shptr;
+  typedef std::shared_ptr<RCBase> RCBase_shptr;
 
 
 }
