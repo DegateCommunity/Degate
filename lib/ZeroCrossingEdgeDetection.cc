@@ -3,6 +3,7 @@
  This file is part of the IC reverse engineering tool degate.
 
  Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2012 Robert Nitsch
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -151,8 +152,12 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
     }
     x += inc_x;
     y += inc_y;
-    if(x >= edge_image->get_width() ||
-       y >= edge_image->get_height() ||
+    
+    assert(x >= 0);
+    assert(y >= 0);
+    
+    if(unsigned(x) >= edge_image->get_width() ||
+       unsigned(y) >= edge_image->get_height() ||
        x == 0 || y == 0) s = END;
   }
   return false;
@@ -163,7 +168,8 @@ TileImage_GS_DOUBLE_shptr
 ZeroCrossingEdgeDetection::analyze_edge_image(TileImage_GS_DOUBLE_shptr edge_image,
 					      TileImage_GS_DOUBLE_shptr probability_map,
 					      unsigned int min_d, unsigned int max_d) {
-  int start_x = 0, start_y = 0, stop_x = 0, stop_y = 0, x, y;
+  int start_x = 0, start_y = 0, stop_x = 0, stop_y = 0;
+  unsigned x, y;
   double mag = 0;
 
   normalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(edge_image, edge_image, -1, 1);
