@@ -20,6 +20,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#include <boost/date_time.hpp>
 #include <gdkmm/window.h>
 #include <gtkmm/stock.h>
 #include <libglademm.h>
@@ -450,7 +451,7 @@ void MainWin::set_project_to_open(char * project_dir) {
 
 ProjectSnapshot_shptr MainWin::create_snapshot(const std::string &title) {
   ProjectSnapshot_shptr ss = std::make_shared<ProjectSnapshot>();
-  ss->id = rand();
+  ss->datetime = boost::posix_time::ptime(boost::posix_time::microsec_clock::local_time());
   ss->title = title;
   
   DeepCopyable::oldnew_t oldnew;
