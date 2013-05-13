@@ -60,6 +60,7 @@ class MainWin : public Gtk::Window  {
 
   //@{
   degate::ProjectSnapshot_shptr create_snapshot(const std::string &title);
+  degate::ProjectSnapshot_shptr create_automatic_snapshot();
   std::vector<degate::ProjectSnapshot_shptr> get_snapshots();
   void clear_snapshots();
   void remove_snapshot(degate::ProjectSnapshot_shptr &ss);

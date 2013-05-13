@@ -54,6 +54,7 @@ namespace degate {
     boost::posix_time::ptime datetime;
     std::string title;
     Project_shptr clone;
+    bool automatic;
   };
   typedef std::shared_ptr<ProjectSnapshot> ProjectSnapshot_shptr;
 
