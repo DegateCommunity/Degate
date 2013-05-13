@@ -134,7 +134,7 @@ void SnapshotListWin::fill_row(Gtk::TreeModel::Row const& row, const ProjectSnap
   std::stringstream buff;
   boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%d-%b, %H:%M:%S");
   buff.imbue(std::locale(buff.getloc(), facet));
-  buff << boost::posix_time::second_clock::local_time();
+  buff << ss->datetime;
   row[m_Columns.m_col_datetime] = buff.str();
   
   row[m_Columns.m_col_title] = ss->title;
