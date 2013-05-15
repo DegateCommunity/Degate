@@ -24,12 +24,14 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include "GladeFileLoader.h"
 #include "Project.h"
 
+#include <boost/date_time/posix_time/posix_time_io.hpp>
 #include <gtkmm/stock.h>
 #include <gdkmm/window.h>
 #include <libglademm.h>
 
 #include <assert.h>
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 
 using namespace degate;
@@ -80,14 +82,14 @@ SnapshotListWin::SnapshotListWin(Gtk::Window *parent)
       pTreeView->get_selection()->signal_changed().connect(sigc::mem_fun(*this, &SnapshotListWin::on_selection_changed));
       
       pTreeView->set_model(refListStore);
-      pTreeView->append_column("ID", m_Columns.m_col_id);
+      pTreeView->append_column("Datetime", m_Columns.m_col_datetime);
       pTreeView->append_column_editable("Title", m_Columns.m_col_title);
 
       Gtk::TreeView::Column * pColumn;
 
       pColumn = pTreeView->get_column(0);
       if(pColumn) {
-        pColumn->set_sort_column(m_Columns.m_col_id);
+        pColumn->set_sort_column(m_Columns.m_col_datetime);
       }
       
       pColumn = pTreeView->get_column(1);
@@ -95,7 +97,7 @@ SnapshotListWin::SnapshotListWin(Gtk::Window *parent)
         pColumn->set_sort_column(m_Columns.m_col_title);
       }
       
-      refListStore->set_sort_column_id(m_Columns.m_col_title, Gtk::SORT_ASCENDING);
+      refListStore->set_sort_column_id(m_Columns.m_col_timestamp, Gtk::SORT_DESCENDING);
       
       Gtk::CellRendererText * rendererText;
       rendererText = dynamic_cast<Gtk::CellRendererText *>(pTreeView->get_column_cell_renderer(1)); 
@@ -125,7 +127,16 @@ ProjectSnapshot_shptr SnapshotListWin::get_selected_snapshot() const {
 }
 
 void SnapshotListWin::fill_row(Gtk::TreeModel::Row const& row, const ProjectSnapshot_shptr &ss) {
-  row[m_Columns.m_col_id] = ss->id;
+  boost::posix_time::ptime epoch(boost::gregorian::date(1970,1,1));
+  row[m_Columns.m_col_timestamp] = long((ss->datetime - epoch).total_milliseconds());
+  
+  // Format datetime.
+  std::stringstream buff;
+  boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%d-%b, %H:%M:%S");
+  buff.imbue(std::locale(buff.getloc(), facet));
+  buff << ss->datetime;
+  row[m_Columns.m_col_datetime] = buff.str();
+  
   row[m_Columns.m_col_title] = ss->title;
   row[m_Columns.m_col_ptr] = ss;
 }

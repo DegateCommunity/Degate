@@ -30,6 +30,8 @@
 #include <PortColorManager.h>
 #include <RCBase.h>
 
+#include <boost/date_time.hpp>
+
 #include <string>
 #include <list>
 #include <memory>
@@ -49,9 +51,10 @@ namespace degate {
 namespace degate {
 
   struct ProjectSnapshot {
-    int id;
+    boost::posix_time::ptime datetime;
     std::string title;
     Project_shptr clone;
+    bool automatic;
   };
   typedef std::shared_ptr<ProjectSnapshot> ProjectSnapshot_shptr;
 

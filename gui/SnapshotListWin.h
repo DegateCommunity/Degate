@@ -35,12 +35,14 @@ class SnapshotListWin : private GladeFileLoader {
   class SnapshotListModelColumns : public Gtk::TreeModelColumnRecord {
   public:
     SnapshotListModelColumns() {
-      add(m_col_id);
+      add(m_col_timestamp);
+      add(m_col_datetime);
       add(m_col_title);
       add(m_col_ptr);
     }
 
-    Gtk::TreeModelColumn<int> m_col_id;
+    Gtk::TreeModelColumn<long> m_col_timestamp;
+    Gtk::TreeModelColumn<Glib::ustring> m_col_datetime;
     Gtk::TreeModelColumn<Glib::ustring> m_col_title;
     Gtk::TreeModelColumn<degate::ProjectSnapshot_shptr> m_col_ptr;
   };
