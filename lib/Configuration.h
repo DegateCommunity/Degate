@@ -27,15 +27,6 @@
 
 namespace degate {
 
-  /**
-   * Get the temp directory.
-   * This is a shortcut for
-   * \p (Configuration::get_instance()).get_temp_directory() .
-   */
-
-  std::string get_temp_directory();
-
-
   class Configuration : public SingletonBase<Configuration> {
 
     friend class SingletonBase<Configuration>;
