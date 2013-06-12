@@ -32,6 +32,7 @@
 #include <ctime>
 #include <utility> // for make_pair
 #include <iostream>
+#include <iomanip>
 
 #ifdef __APPLE__
   #include <sys/time.h> // for gettimeofday
@@ -122,21 +123,24 @@ namespace degate {
   public:
 
     void print_table() const {
-      printf("Global Image Tile Cache:\n"
-	     "Used memory : %llu bytes\n"
-	     "Max memory  : %llu bytes\n\n"
-	     "Holder           | Last access (sec,nsec)    | Amount of memory\n"
-	     "-----------------+---------------------------+------------------------------------\n",
-	     (long long unsigned)allocated_memory, (long long unsigned)max_cache_memory);
+      std::cout << "Global Image Tile Cache:\n"
+        << "Used memory : " << allocated_memory << " bytes\n"
+        << "Max memory  : " << max_cache_memory << " bytes\n\n"
+        << "Holder           | Last access (sec,nsec)    | Amount of memory\n"
+        << "-----------------+---------------------------+------------------------------------\n";
 
       for(cache_t::const_iterator iter = cache.begin(); iter != cache.end(); ++iter) {
-	cache_entry_t const& entry = iter->second;
-	printf("%16p | %12ld.%12ld | %lu M (%lu bytes)\n",
-	       iter->first, entry.first.tv_sec, entry.first.tv_nsec, entry.second/(1024*1024), entry.second);
-	iter->first->print();
+        cache_entry_t const& entry = iter->second;
+        std::cout << std::setw(16) << std::hex << static_cast<void*>(iter->first);
+        std::cout << " | ";
+        std::cout << std::setw(12) << entry.first.tv_sec;
+        std::cout << ".";
+        std::cout << std::setw(12) << entry.first.tv_nsec;
+        std::cout << " | ";
+        std::cout << entry.second/(1024*1024) << " M (" << entry.second << " bytes)\n";
+        iter->first->print();
       }
-
-      printf("\n");
+      std::cout << "\n";
     }
 
     bool request_cache_memory(TileCacheBase * requestor, size_t amount) {
