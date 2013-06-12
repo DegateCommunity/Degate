@@ -20,6 +20,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "GladeFileLoader.h"
+#include "DegateHelper.h"
 
 #include <globals.h>
 #include <iostream>
@@ -34,7 +35,7 @@ GladeFileLoader::GladeFileLoader(std::string const& glade_file, std::string cons
 
 
   boost::format fmter("%1%/glade/%2%");
-  fmter % getenv("DEGATE_HOME") % glade_file;
+  fmter % degate::get_data_dir() % glade_file;
   std::string file(fmter.str());
   debug(TM, "Loading glade file: %s", file.c_str());
 

@@ -28,6 +28,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <dirent.h>
 #include <assert.h>
 #include "FileSystem.h"
+#include "DegateHelper.h"
 #include <gtkglmm.h>
 
 #include "MainWin.h"
@@ -35,29 +36,16 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace degate;
 
-void show_env_help() {
-    std::cout
-      << std::endl
-      << "Error: Environment variable DEGATE_HOME is undefined. Please set it, e.g. "
-      << std::endl
-      << std::endl
-      << "\texport DEGATE_HOME=/home/foo/degate"
-      << std::endl
-      << std::endl
-      << std::endl
-      << std::endl;
-}
-
-bool directory_exists(const char * const env_variable, const char * const sub_path) {
+bool directory_exists(const char * const base_path, const char * const sub_path) {
   char path[PATH_MAX];
-  assert(env_variable != NULL);
+  assert(base_path != NULL);
   assert(sub_path != NULL);
-  if(env_variable == NULL || sub_path == NULL) return false;
+  if(base_path == NULL || sub_path == NULL) return false;
 
-  snprintf(path, PATH_MAX, "%s/%s", getenv(env_variable), sub_path);
+  snprintf(path, PATH_MAX, "%s/%s", base_path, sub_path);
 
   if(!is_directory(path)) {
-    std::cout << "Error: your environment variable " << env_variable
+    std::cout << "Error: your base_path " << base_path
 	      << " seems to be incorrect. The directory " << path
 	      << " does not exist."
 	      << std::endl;
@@ -70,14 +58,8 @@ bool directory_exists(const char * const env_variable, const char * const sub_pa
 
 int main(int argc, char ** argv) {
 
-  // check environment variables
-  if(getenv("DEGATE_HOME") == NULL) {
-    show_env_help();
-    exit(1);
-  }
-
-  if(directory_exists("DEGATE_HOME", "glade") == false) exit(1);
-  if(directory_exists("DEGATE_HOME", "icons") == false) exit(1);
+  if(directory_exists(get_data_dir().c_str(), "glade") == false) exit(1);
+  if(directory_exists(get_data_dir().c_str(), "icons") == false) exit(1);
 
   // setup threading
   if(!Glib::thread_supported()) Glib::thread_init();

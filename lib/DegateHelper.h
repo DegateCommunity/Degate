@@ -61,6 +61,8 @@ namespace degate {
    * @returns Returns the exit code.
    */
   int execute_command(std::string const& command, std::list<std::string> const& params);
+
+  std::string get_data_dir();
 }
 
 #endif

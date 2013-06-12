@@ -63,6 +63,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <SubProjectAnnotation.h>
 #include <ProjectArchiver.h>
 #include <XmlRpc.h>
+#include "DegateHelper.h"
 
 using namespace degate;
 
@@ -71,7 +72,7 @@ MainWin::MainWin() : render_window(editor), is_fullscreen(false) {
   // setup window
   set_default_size(1024, 700);
   char path[PATH_MAX];
-  snprintf(path, PATH_MAX, "%s/icons/degate_logo.png", getenv("DEGATE_HOME"));
+  snprintf(path, PATH_MAX, "%s/icons/degate_logo.png", get_data_dir().c_str());
   set_icon_from_file(path);
 
   add(m_Box);

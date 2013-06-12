@@ -24,6 +24,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <limits.h>
 
 #include "SplashWin.h"
+#include "DegateHelper.h"
 
 #include <gtkmm.h>
 #include <gdkmm.h>
@@ -33,7 +34,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 SplashWin::SplashWin( int delay_msec) :
   Gtk::Window(Gtk::WINDOW_TOPLEVEL) {
   char filename[PATH_MAX];
-  snprintf(filename, PATH_MAX, "%s/icons/degate_splash.png", getenv("DEGATE_HOME"));
+  snprintf(filename, PATH_MAX, "%s/icons/degate_splash.png", degate::get_data_dir().c_str());
 
   m_image = Gdk::Pixbuf::create_from_file(filename);
   m_image_w = m_image->get_width();

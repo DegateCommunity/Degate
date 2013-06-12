@@ -386,7 +386,7 @@ unsigned int OpenGLRendererBase::get_font_height() const {
 OpenGLRendererBase::FontRenderingHelper::FontRenderingHelper(unsigned int font_size) {
   try {
     char font_file[PATH_MAX];
-    snprintf(font_file, PATH_MAX, "%s/FreeSans.ttf", getenv("DEGATE_HOME"));
+    snprintf(font_file, PATH_MAX, "%s/FreeSans.ttf", get_data_dir().c_str());
     init_font(font_file, font_size);
   }
   catch(degate::DegateRuntimeException const& ex) {

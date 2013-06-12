@@ -1,5 +1,6 @@
 #include <degate.h>
 #include <DegateHelper.h>
+#include <Configuration.h>
 
 #include <vector>
 #include <string>
@@ -102,3 +103,7 @@ int degate::execute_command(std::string const& command, std::list<std::string> c
   }
 }
 
+std::string degate::get_data_dir() {
+  Configuration const & conf = Configuration::get_instance();
+  return conf.get_data_dir();
+}
