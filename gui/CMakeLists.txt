@@ -120,3 +120,28 @@ add_executable(degate_bin ${DEGATE_SRC})
 # set libraries for the main executable
 target_link_libraries(degate_bin ${LIBS} degate)
 
+if(WIN32)
+    set(_library_dir bin)   # .dll are in PATH, like executables
+else()
+    set(_library_dir lib)
+endif()
+
+set(LIB_INSTALL_DIR "${_library_dir}${LIB_SUFFIX}")
+
+set(_INSTALL_DESTINATIONS
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+    ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
+)
+
+install(TARGETS degate_bin ${_INSTALL_DESTINATIONS})
+
+FILE(GLOB glade_files "${CMAKE_CURRENT_SOURCE_DIR}/glade/*")
+INSTALL(FILES ${glade_files} DESTINATION share/degate/glade)
+
+FILE(GLOB icon_files "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
+INSTALL(FILES ${icon_files} DESTINATION share/degate/icons)
+
+FILE(GLOB font_files "${CMAKE_CURRENT_SOURCE_DIR}/*.ttf")
+INSTALL(FILES ${font_files} DESTINATION share/degate)
+

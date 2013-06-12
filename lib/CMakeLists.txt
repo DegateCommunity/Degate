@@ -166,3 +166,21 @@ else()
    message("Warning: Doxygen not found. Ignoring. You should "
    	"install the doxygen package to generate the documentation for libdegate.")
 ENDIF(DOXYGEN_FOUND)
+
+
+if(WIN32)
+    set(_library_dir bin)   # .dll are in PATH, like executables
+else()
+    set(_library_dir lib)
+endif()
+
+set(LIB_INSTALL_DIR "${_library_dir}${LIB_SUFFIX}")
+
+set(_INSTALL_DESTINATIONS
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+    ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
+)
+
+install(TARGETS degate ${_INSTALL_DESTINATIONS})
+
