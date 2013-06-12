@@ -106,7 +106,7 @@ namespace degate {
       buffer = (*cinfo.mem->alloc_sarray)
 	((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
-      printf("Row stride is %d\n",row_stride);
+      debug(TM,"Row stride is %d\n",row_stride);
       while (cinfo.output_scanline < cinfo.output_height) {
         jpeg_read_scanlines(&cinfo, buffer, 1);
 
@@ -115,7 +115,7 @@ namespace degate {
         //        put_scanline_someplace(buffer[0], row_stride);
       }
 
-      printf("Image read\n");
+      debug(TM,"Image read\n");
     }
 
     jpeg_finish_decompress(&cinfo);
