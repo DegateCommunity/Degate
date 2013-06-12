@@ -132,7 +132,7 @@ namespace degate{
    * Create a directory.
    */
 
-  void create_directory(std::string const& directory, mode_t mode = 0700);
+  void create_directory(std::string const& directory);
 
   /**
    * Create a temp directory.
