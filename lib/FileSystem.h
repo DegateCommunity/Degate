@@ -142,7 +142,7 @@ namespace degate{
   /**
    * Create a temporary directory based on a path pattern specification.
    * The directory is created with mode 0700.
-   * @param directory_pattern A pattern of the form e.g. "/tmp/temp.XXXXXXXXX".
+   * @param directory_pattern A pattern of the form e.g. "/tmp/temp.%%%%%%".
    * @return Returns the path of the created directory.
    */
   std::string create_temp_directory(std::string const & directory_pattern);
@@ -150,11 +150,11 @@ namespace degate{
 
   /**
    * Generate a pattern within a basedir for temp files.
-   * The pattern is in the form of e.g. "/tmp/temp.XXXXXXXX" that can be passed
-   * to mkstemp(). Only the pattern is generated.
+   * The pattern is in the form of e.g. "/tmp/temp.%%%%%%" that can be passed
+   * to boost::filesystem::unique_path. Only the pattern is generated.
    */
 
-  std::string generate_temp_file_pattern(std::string const & basedir);
+  std::string generate_temp_file_pattern();
 
   /**
    * Read all entries from a directory, but not from subdirectories.

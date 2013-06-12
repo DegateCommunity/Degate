@@ -149,7 +149,7 @@ namespace degate {
     StoragePolicy_TempFile(unsigned int _width,
 			   unsigned int _height) :
       StoragePolicy_File<PixelPolicy>(_width, _height,
-				      generate_temp_file_pattern(get_temp_directory()),
+				      generate_temp_file_pattern(),
 				      false) {}
 
     virtual ~StoragePolicy_TempFile() {}

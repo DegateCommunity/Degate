@@ -147,7 +147,7 @@ void ImageTest::test_image_reader(void) {
   TileImage_RGBA_shptr img = read_image(tiff_reader, 
 					10 /* tiles of size 1024x1024 */);
 
-  std::string tiff_out(join_pathes(get_temp_directory(), "degate_image_test.tif"));
+  std::string tiff_out("degate_image_test.tif");
   if(file_exists(tiff_out)) remove_file(tiff_out);
   CPPUNIT_ASSERT(file_exists(tiff_out) == false);
 		       

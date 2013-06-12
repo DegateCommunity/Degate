@@ -26,18 +26,7 @@
 
 using namespace degate;
 
-std::string degate::get_temp_directory() {
-  Configuration const & conf = Configuration::get_instance();
-  return conf.get_temp_directory();
-}
-
 Configuration::Configuration() {
-}
-
-std::string Configuration::get_temp_directory() const {
-  char * td = getenv("DEGATE_TEMP_DIR");
-  if(td == NULL) return get_realpath(std::string("/tmp"));
-  return get_realpath(std::string(td));
 }
 
 size_t Configuration::get_max_tile_cache_size() const {
