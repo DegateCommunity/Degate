@@ -148,6 +148,7 @@ set(SOURCES
 	RCVContainer.cc
 )
 
+configure_file(Configuration.h.in ${PROJECT_SOURCE_DIR}/lib/Configuration.h)
 
 add_library(degate SHARED ${SOURCES} )
 target_link_libraries(degate ${LIBS})

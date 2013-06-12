@@ -25,6 +25,8 @@
 #include <globals.h>
 #include <SingletonBase.h>
 
+#define DEGATE_HOME "@CMAKE_INSTALL_PREFIX@/share/degate"
+
 namespace degate {
 
   class Configuration : public SingletonBase<Configuration> {
@@ -56,6 +58,14 @@ namespace degate {
      */
 
     std::string get_servers_uri_pattern() const;
+
+    /**
+     * Get the path to glade files and pixmaps.
+     * @return If the environment variable DEGATE_HOME is set,
+     *   its value. Else the default cmake-setted path is returned.
+     */
+
+     std::string get_data_dir() const;
 
   };
 

@@ -40,3 +40,10 @@ std::string Configuration::get_servers_uri_pattern() const {
   if(uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
   return uri_pattern;
 }
+
+std::string Configuration::get_data_dir() const {
+  char * data_dir = getenv("DEGATE_HOME");
+  if(data_dir == NULL) return DEGATE_HOME;
+  return data_dir;
+}
+
