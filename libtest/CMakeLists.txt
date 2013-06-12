@@ -52,7 +52,7 @@ if(CPPUNIT_FOUND)
 
 
 	add_executable(libdegate_test ${TESTCASES} ${TESTMAIN})
-	target_link_libraries(libdegate_test ${LIBS} degate)
+	target_link_libraries(libdegate_test ${LIBS} degate rt)
 
 	add_test(libdegatetest {EXECUTABLE_OUTPUT_PATH}/libdegate_test)
 
