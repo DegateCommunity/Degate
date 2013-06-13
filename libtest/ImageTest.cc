@@ -176,10 +176,10 @@ void ImageTest::test_convert_pixel(void) {
 
 
   rgba_pixel_t rb = convert_pixel<rgba_pixel_t, gs_byte_pixel_t>(0xa0);
-  CPPUNIT_ASSERT(MERGE_CHANNELS(0xa0, 0xa0, 0xa0, 255) == rb);
+  CPPUNIT_ASSERT((unsigned)MERGE_CHANNELS(0xa0, 0xa0, 0xa0, 255) == rb);
 
   rgba_pixel_t rd = convert_pixel<rgba_pixel_t, gs_double_pixel_t>(4.0);
-  CPPUNIT_ASSERT(MERGE_CHANNELS(4, 4, 4, 255) == rd);
+  CPPUNIT_ASSERT((unsigned)MERGE_CHANNELS(4, 4, 4, 255) == rd);
 }
 
 void ImageTest::test_copy_pixel(void) {

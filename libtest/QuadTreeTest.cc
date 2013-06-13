@@ -110,7 +110,7 @@ void QuadTreeTest::test_iterator(void) {
     CPPUNIT_ASSERT(*it != NULL);
 
     PlacedLogicModelObject_shptr gate = *it;
-    BoundingBox const& bb = gate->get_bounding_box();
+//    BoundingBox const& bb = gate->get_bounding_box();
     //bb.print();
   }
   if(i != 2) {
