@@ -28,6 +28,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sys/wait.h>
 
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string/join.hpp>
@@ -93,6 +94,55 @@ int main(int argc, char ** argv) {
 }
 
 
+int execute_command(std::string const& command, std::list<std::string> const& params) {
+
+  pid_t pid = fork();
+  if(pid == 0) {
+    // child
+    std::cout << "Execute command " << command << " ";
+    char const ** argv = new char const *[params.size()+2];
+    int i = 1;
+    BOOST_FOREACH(std::string const& s, params) {
+      argv[i] = s.c_str();
+      i++;
+      std::cout << s << " ";
+    }
+    argv[0] = command.c_str();
+    argv[i] = NULL;
+
+    std::cout << std::endl;
+
+    if(execvp(command.c_str(), const_cast<char* const*>(argv)) == -1) {
+      std::cout << "exec failed" << std::endl;
+    }
+    std::cout << "sth. failed" << std::endl;
+    exit(0);
+  }
+  else if(pid < 0) {
+    // fork failed
+    throw SystemException("fork() failed");
+  }
+  else {
+
+    // parent
+    int exit_code;
+    if(waitpid(pid, &exit_code, 0) != pid)
+      throw SystemException("waitpid() failed");
+    else {
+      if(WEXITSTATUS(exit_code) != 0) {
+        std::string errmsg("Failed to execute command: " + command);
+        BOOST_FOREACH(std::string const& s, params) {
+          errmsg += " ";
+          errmsg += s;
+        }
+        errmsg += ". Error: ";
+        errmsg += strerror(errno);
+        throw SystemException(errmsg);
+      }
+      return  exit_code;    
+    }
+  }
+}
 
 
 
