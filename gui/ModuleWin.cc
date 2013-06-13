@@ -322,8 +322,6 @@ void ModuleWin::on_gate_selection_changed() {
   if(refTreeSelection) {
     Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
     if(*iter) {
-      Gtk::TreeModel::Row row = *iter;
-
       goto_button->set_sensitive(true);
       move_button->set_sensitive(true);
     }
