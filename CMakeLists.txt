@@ -32,3 +32,5 @@ add_subdirectory(tools/export_module)
 add_subdirectory(gui)
 
 
+INSTALL(FILES degate.png DESTINATION share/pixmaps)
+INSTALL(FILES degate.desktop DESTINATION share/applications)
