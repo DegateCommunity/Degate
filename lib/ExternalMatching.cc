@@ -103,11 +103,6 @@ void ExternalMatching::run() {
   remove_directory(dir);
 }
 
-int ExternalMatching::get_exit_code() const {
-  return WEXITSTATUS(exit_code);
-}
-
-
 std::list<PlacedLogicModelObject_shptr> ExternalMatching::parse_file(std::string const& filename) const {
 
   std::list<PlacedLogicModelObject_shptr> list;
