@@ -386,7 +386,7 @@ unsigned int OpenGLRendererBase::get_font_height() const {
 OpenGLRendererBase::FontRenderingHelper::FontRenderingHelper(unsigned int font_size) {
   try {
     char font_file[PATH_MAX];
-    snprintf(font_file, PATH_MAX, "%s/FreeSans.ttf", getenv("DEGATE_HOME"));
+    snprintf(font_file, PATH_MAX, "%s/FreeSans.ttf", get_data_dir().c_str());
     init_font(font_file, font_size);
   }
   catch(degate::DegateRuntimeException const& ex) {
@@ -525,17 +525,13 @@ unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Fa
     for(int i=0; i < width; i++){
       unsigned int dst_offs = 2*(i+j*width);
       GLubyte v = (i>=bitmap.width || j>=bitmap.rows) ?
-	0 : bitmap.buffer[i + bitmap.width*j];
+        0 : bitmap.buffer[i + bitmap.width*j];
 
-      if(v == 0) printf(".. ");
-      else printf("%02X ", v);
 
       expanded_data[dst_offs] =  0; // XXX was 255;
       expanded_data[dst_offs + 1] = 255-v; //v > 128 ? 0 : 255; //255 - v;
     }
-    printf("\n");
   }
-  printf("\n\n");
 
   glBindTexture( GL_TEXTURE_2D, tex_base[(int)ch]);
   assert(opengl_error_check());

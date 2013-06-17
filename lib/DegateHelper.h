@@ -46,15 +46,6 @@ namespace degate {
   std::vector<std::string> tokenize(std::string const& str);
 
   /**
-   * Write a string to a temp file.
-   * @param dir The directory, where the temp file should be created.
-   * @param content The file content.
-   * @return Returns the temp file name including the directory part.
-   */
-  std::string write_string_to_temp_file(std::string const& dir,
-					std::string const& content);
-
-  /**
    * Write a string to a file.
    * @param path Path to file.
    * @param content The file content.
@@ -70,6 +61,8 @@ namespace degate {
    * @returns Returns the exit code.
    */
   int execute_command(std::string const& command, std::list<std::string> const& params);
+
+  std::string get_data_dir();
 }
 
 #endif

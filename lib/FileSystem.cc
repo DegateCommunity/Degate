@@ -47,32 +47,19 @@ using namespace boost::filesystem;
 */
 
 bool degate::is_directory(std::string const & path) {
-  struct stat stat_buf;
-  if(stat(path.c_str(), &stat_buf) == 0) {
-    return S_ISDIR(stat_buf.st_mode) ? true : false;
-  }
-  return false;
+  return boost::filesystem::is_directory(path);
 }
 
 bool degate::is_file(std::string const & path) {
-  struct stat stat_buf;
-  if(stat(path.c_str(), &stat_buf) == 0) {
-    return S_ISREG(stat_buf.st_mode) ? true : false;
-  }
-  return false;
+  return boost::filesystem::is_regular_file(path);
 }
 
 bool degate::is_symlink(std::string const & path) {
-  struct stat stat_buf;
-  if(stat(path.c_str(), &stat_buf) == 0) {
-    return S_ISLNK(stat_buf.st_mode) ? true : false;
-  }
-  return false;
+  return boost::filesystem::is_symlink(path);
 }
 
 bool degate::file_exists(std::string const & path) {
-  struct stat stat_buf;
-  return stat(path.c_str(), &stat_buf) == 0 ? true : false;
+  return boost::filesystem::exists(path);
 }
 
 std::string degate::get_basedir(std::string const & path) {
@@ -84,28 +71,21 @@ std::string degate::get_basedir(std::string const & path) {
 
     if(is_directory(resolved_path)) return resolved_path;
     else {
-      return resolved_path.substr(0, resolved_path.find_last_of('/'));
+      boost::filesystem::path p(path);
+      return p.parent_path().make_preferred().string();
     }
   }
   else {
     // treat it as a file name
-    size_t last_pos = path.find_last_of('/');
-    if(last_pos != 0)
-      return path.substr(0, last_pos);
-    else return "/";
+    boost::filesystem::path p(path);
+    return p.parent_path().make_preferred().string();
   }
 
 }
 
 
 std::string degate::get_realpath(std::string const& path) {
-  char resolved_path[PATH_MAX];
-  if(realpath(path.c_str(), resolved_path) == NULL) {
-    boost::format fmter("Error in get_realpath(). Can't get real path for %1%.");
-    fmter % path;
-    throw degate::InvalidPathException(fmter.str());
-  }
-  else return std::string(resolved_path);
+  return boost::filesystem::canonical(path).make_preferred().string();
 }
 
 
@@ -119,38 +99,30 @@ std::string degate::get_file_suffix(std::string const& path) {
 
 
 void degate::remove_file(std::string const& path) {
-  if(unlink(path.c_str()) != 0) {
-    throw degate::FileSystemException(strerror(errno));
-  }
+  boost::filesystem::remove(path);
 }
 
 void degate::remove_directory(std::string const& path) {
-  boost::filesystem::path p(path);
   boost::filesystem::remove_all(path);
 }
 
-void degate::create_directory(std::string const& directory, mode_t mode) {
-
-  if(mkdir(directory.c_str(), mode) != 0) {
-    throw degate::FileSystemException(strerror(errno));
-  }
-
+void degate::create_directory(std::string const& directory) {
+  boost::filesystem::create_directory(directory);
 }
 
 std::string degate::create_temp_directory() {
-  return create_temp_directory(generate_temp_file_pattern(get_temp_directory()));
+  return create_temp_directory(generate_temp_file_pattern());
 }
 
 std::string degate::create_temp_directory(std::string const & directory_pattern) {
-  char template_str[PATH_MAX];
-  strncpy(template_str, directory_pattern.c_str(), sizeof(template_str));
-  char * dirname = mkdtemp(template_str);
-  return std::string(dirname);
+  create_directory(directory_pattern);
+  return directory_pattern;
 }
 
 
-std::string degate::generate_temp_file_pattern(std::string const & basedir) {
-  return basedir + std::string("/temp.XXXXXXXXXXX");
+std::string degate::generate_temp_file_pattern() {
+  boost::filesystem::path p(boost::filesystem::temp_directory_path() / boost::filesystem::unique_path("/temp.%%%%%%%%"));
+  return p.make_preferred().string();
 }
 
 
@@ -180,16 +152,14 @@ std::list<std::string> degate::read_directory(std::string const& path, bool pref
 
 
 std::string degate::join_pathes(std::string const& base_path, std::string const& extension_path) {
-  return base_path + std::string("/") + extension_path;
+  boost::filesystem::path p(base_path / extension_path);
+  return p.make_preferred().string();
 }
 
 
 std::string degate::get_filename_from_path(std::string const& path) {
-  size_t last_occurance = path.rfind("/", path.size());
-  if(last_occurance < path.size()) {
-    return path.substr(last_occurance + 1, path.size() - last_occurance);
-  }
-  else return path;
+  boost::filesystem::path p(path);
+  return p.filename().string();
 }
 
 std::string degate::get_basename(std::string const& path) {
@@ -201,156 +171,101 @@ std::string degate::get_basename(std::string const& path) {
   else return filename;
 }
 
+boost::filesystem::path
+naive_uncomplete(boost::filesystem::path const p, boost::filesystem::path const base) {
 
-// a copy from qemu
+    using boost::filesystem::path;
 
-char *realpath_alloc(const char *path)
-{
-  int buff_len;
-  char *result;
+    boost::filesystem::canonical(p);
+    boost::filesystem::canonical(base);
 
-#ifdef PATH_MAX
-  buff_len = PATH_MAX;
-#else
-  buff_len = pathconf(path, _PC_PATH_MAX);
-  if (buff_len <= 0)
-    buff_len = 4096;
+    if (p == base)
+        return "";
+        /*!! this breaks stuff if path is a filename rather than a directory,
+             which it most likely is... but then base shouldn't be a filename so... */
+
+    boost::filesystem::path from_path, from_base, output;
+
+    boost::filesystem::path::iterator path_it = p.begin(),    path_end = p.end();
+    boost::filesystem::path::iterator base_it = base.begin(), base_end = base.end();
+
+    // check for emptiness
+    if ((path_it == path_end) || (base_it == base_end))
+        throw std::runtime_error("path or base was empty; couldn't generate relative path");
+
+#ifdef WIN32
+    // drive letters are different; don't generate a relative path
+    if (*path_it != *base_it)
+        return p;
+
+    // now advance past drive letters; relative paths should only go up
+    // to the root of the drive and not past it
+    ++path_it, ++base_it;
 #endif
 
-  ++buff_len;
-  result = (char*)malloc(buff_len * sizeof(char));
-  if (!result)
-    return NULL;
+    // Cache system-dependent dot, double-dot and slash strings
+    const std::string _dot  = ".";
+    const std::string _dots = "..";
+#ifdef WIN32
+    const std::string _sep = "/";
+#else
+    const std::string _sep = "\\";
+#endif
 
-  if(realpath(path, result) == NULL) {
-    free(result);
-    return NULL;
-  }
-  else return result;
+    // iterate over path and base
+    while (true) {
+
+        // compare all elements so far of path and base to find greatest common root;
+        // when elements of path and base differ, or run out:
+        if ((path_it == path_end) || (base_it == base_end) || (*path_it != *base_it)) {
+
+            // write to output, ../ times the number of remaining elements in base;
+            // this is how far we've had to come down the tree from base to get to the common root
+            for (; base_it != base_end; ++base_it) {
+                if (*base_it == _dot)
+                    continue;
+                else if (*base_it == _sep)
+                    continue;
+
+                output /= "..";
+            }
+
+            // write to output, the remaining elements in path;
+            // this is the path relative from the common root
+            boost::filesystem::path::iterator path_it_start = path_it;
+            for (; path_it != path_end; ++path_it) {
+
+                if (*path_it == _dot)
+                    continue;
+                if (*path_it == _sep)
+                    continue;
+
+                output /= *path_it;
+            }
+
+            break;
+        }
+
+        // add directory level to both paths and continue iteration
+        from_path /= path(*path_it);
+        from_base /= path(*base_it);
+
+        ++path_it, ++base_it;
+    }
+
+    return output;
 }
 
-
-char * _get_relative_path(const char * const path, const char * const relative_to) {
-  char *path_real;
-  char *path_real_suffix;
-  char *path_real_to;
-  char *path_real_to_suffix;
-  char *result;
-  int prefix_len, i, slash_count;
-  char *string_end;
-  char path_separator;
-#ifdef _WIN32
-  path_separator = '\\';
-#else
-  path_separator = '/';
-#endif
-
-  if (NULL == path || NULL == relative_to)
-    return NULL;
-
-  path_real = realpath_alloc(path);
-  if (!path_real)
-    return NULL;
-  path_real_to = realpath_alloc(relative_to);
-  if (!path_real_to)
-    {
-      free(path_real);
-      return NULL;
-    }
-
-  if (0 == strcmp(path_real, path_real_to))
-    {
-      free(path_real);
-      free(path_real_to);
-
-      //the two directories are equal, the relative path is an empty string
-      result = (char*)malloc(sizeof(char));
-      *result = '\0';
-      return result;
-    }
-
-  result = NULL;
-
-  //eliminate the common prefix
-  for (prefix_len = 0;
-       path_real[prefix_len] != '\0' &&
-	 path_real_to[prefix_len] != '\0' &&
-	 path_real[prefix_len] == path_real_to[prefix_len];
-       ++prefix_len);
-
-  path_real_suffix = path_real + prefix_len;
-  while ('\0' != *path_real_suffix &&
-#ifdef _WIN32
-	 ('/' == *path_real_suffix || '\\' == *path_real_suffix)
-#else
-	 ('/' == *path_real_suffix)
-#endif
-	 ) { *path_real_suffix++ = '\0'; }
-
-  path_real_to_suffix = path_real_to + prefix_len;
-  while ('\0' != *path_real_to_suffix &&
-#ifdef _WIN32
-	 ('/' == *path_real_to_suffix || '\\' == *path_real_to_suffix)
-#else
-	 ('/' == *path_real_to_suffix)
-#endif
-	 ) { *path_real_to_suffix++ = '\0'; }
-
-  slash_count = 0;
-  for (i = 0; '\0' != path_real_to_suffix[i]; ++i)
-#ifdef _WIN32
-    if ('/' == path_real_to_suffix[i] || '\\' == path_real_to_suffix[i])
-#else
-      if ('/' == path_real_to_suffix[i])
-#endif
-	++slash_count;
-  if ('\0' != *path_real_to_suffix) ++slash_count;
-  result = (char*)malloc(sizeof(char) * (4 + 3 * slash_count + strlen(path_real_suffix)));
-
-  string_end = result;
-  for (i = 0; i < slash_count; ++i)
-    {
-      if (i > 0)
-	*string_end++ = path_separator;
-      *string_end++ = '.';
-      *string_end++ = '.';
-    }
-  if (0 == slash_count)
-    *string_end++ = '.';
-  if ('\0' != *path_real_suffix)
-    {
-      *string_end++ = path_separator;
-      for (i = 0; '\0' != path_real_suffix[i]; ++i)
-	*string_end++ = path_real_suffix[i];
-    }
-  *string_end++ = '\0';
-
-  free(path_real);
-  free(path_real_to);
-  return result;
-}
 
 std::string degate::get_relative_path(std::string const& path,
-				      std::string const& relative_to) {
-
-  //boost::format fmter("\npath=%1%\nrelative_to=%2%");
-  //fmter % path % relative_to;
-  //std::cout << fmter.str() << std::endl;
-
-  char * rel_path = _get_relative_path(path.c_str(), relative_to.c_str());
-
-  std::string ret(rel_path);
-
-  //std::cout << "rel_path=" << ret << std::endl;
-
-  free(rel_path);
-  return ret;
+     std::string const& relative_to) {
+  return naive_uncomplete(path,relative_to).make_preferred().string();
 }
 
 
 
 boost::filesystem::path degate::strip_path(boost::filesystem::path const& strip_from,
-					   boost::filesystem::path const& strip_what) {
+   boost::filesystem::path const& strip_what) {
 
   path::iterator src_path_iter = strip_what.begin();
   path::iterator src_path_end = strip_what.end();

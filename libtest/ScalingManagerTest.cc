@@ -51,7 +51,7 @@ void ScalingManagerTest::test_scaling_manager_shptrimg(void) {
   bool read_result = tiff_reader.read();
   CPPUNIT_ASSERT(read_result == true);
 
-  std::string img_dir(create_temp_directory(generate_temp_file_pattern(get_temp_directory())));
+  std::string img_dir(create_temp_directory(generate_temp_file_pattern()));
 
   BackgroundImage_shptr img(new BackgroundImage(tiff_reader.get_width(),
 						tiff_reader.get_height(),

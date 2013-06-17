@@ -20,6 +20,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#include <boost/date_time.hpp>
 #include <gdkmm/window.h>
 #include <gtkmm/stock.h>
 #include <libglademm.h>
@@ -62,6 +63,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 #include <SubProjectAnnotation.h>
 #include <ProjectArchiver.h>
 #include <XmlRpc.h>
+#include "DegateHelper.h"
 
 using namespace degate;
 
@@ -70,7 +72,7 @@ MainWin::MainWin() : render_window(editor), is_fullscreen(false) {
   // setup window
   set_default_size(1024, 700);
   char path[PATH_MAX];
-  snprintf(path, PATH_MAX, "%s/icons/degate_logo.png", getenv("DEGATE_HOME"));
+  snprintf(path, PATH_MAX, "%s/icons/degate_logo.png", get_data_dir().c_str());
   set_icon_from_file(path);
 
   add(m_Box);
@@ -450,13 +452,34 @@ void MainWin::set_project_to_open(char * project_dir) {
 
 ProjectSnapshot_shptr MainWin::create_snapshot(const std::string &title) {
   ProjectSnapshot_shptr ss = std::make_shared<ProjectSnapshot>();
-  ss->id = rand();
+  ss->datetime = boost::posix_time::ptime(boost::posix_time::microsec_clock::local_time());
   ss->title = title;
+  ss->automatic = false;
   
   DeepCopyable::oldnew_t oldnew;
   ss->clone = std::dynamic_pointer_cast<Project>(main_project->cloneDeep(&oldnew));
   
   snapshots.push_back(ss);
+  return ss;
+}
+
+ProjectSnapshot_shptr MainWin::create_automatic_snapshot() {
+  const unsigned MAX_AUTO_SNAPSHOTS = 10; // TODO: This value should be made dynamic later.
+  
+  ProjectSnapshot_shptr ss = create_snapshot("auto");
+  ss->automatic = true;
+  
+  // Count number of automatically created snapshots
+  std::list<ProjectSnapshot_shptr> auto_snapshots;
+  std::copy_if(snapshots.begin(), snapshots.end(), std::inserter(auto_snapshots, auto_snapshots.begin()), [] (const ProjectSnapshot_shptr &ss) {
+    return ss->automatic;
+  });
+  
+  // If number of automatically created snapshots exceeds the maximum, delete the oldest one.
+  if (auto_snapshots.size() > MAX_AUTO_SNAPSHOTS) {
+    remove_snapshot(auto_snapshots.front());
+  }
+  
   return ss;
 }
 
@@ -544,7 +567,7 @@ void MainWin::on_project_load_finished() {
     update_gui_for_loaded_project(false);
     set_layer(get_first_enabled_layer(main_project->get_logic_model()));
     
-    create_snapshot("(auto) Project loaded.");
+    create_snapshot("Project loaded.");
   }
 }
 
@@ -2108,6 +2131,7 @@ void MainWin::project_changed() {
 
   if(main_project != NULL) main_project->set_changed();
   update_title();
+  create_automatic_snapshot();
 }
 
 void MainWin::on_menu_project_push_changes() {

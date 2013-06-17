@@ -24,6 +24,7 @@ along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 #include "MenuManager.h"
 #include <RecognitionManager.h>
+#include "DegateHelper.h"
 
 #include <degate.h>
 #include <iostream>
@@ -639,7 +640,7 @@ void MenuManager::set_image_for_toolbar_widget(Glib::ustring toolbar_widget_path
 
   char path[PATH_MAX];
   snprintf(path, PATH_MAX, "%s/icons/%s",
-	   getenv("DEGATE_HOME"), image_file_name.c_str());
+	   degate::get_data_dir().c_str(), image_file_name.c_str());
 
   assert(file_exists(path) == true);
 
