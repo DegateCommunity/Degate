@@ -139,6 +139,7 @@ set(SOURCES
 	ViaMatching.cc
 	TemplateMatching.cc
 	ExternalMatching.cc
+	Otsu.cc
 
 	#
 	# Design Rule Checks
