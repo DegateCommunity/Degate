@@ -135,6 +135,7 @@ set(SOURCES
 	EdgeDetection.cc
 	CannyEdgeDetection.cc
 	ZeroCrossingEdgeDetection.cc
+	BinaryLineDetection.cc
 	WireMatching.cc
 	ViaMatching.cc
 	TemplateMatching.cc

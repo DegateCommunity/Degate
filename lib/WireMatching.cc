@@ -21,6 +21,7 @@
 
 #include <WireMatching.h>
 #include <ZeroCrossingEdgeDetection.h>
+#include <BinaryLineDetection.h>
 #include <BoundingBox.h>
 #include <LineSegmentExtraction.h>
 #include <MedianFilter.h>
@@ -89,6 +90,18 @@ void WireMatching::run() {
 
   TileImage_GS_DOUBLE_shptr i = ed.run(img, TileImage_GS_DOUBLE_shptr(), "/tmp");
   assert(i != NULL);
+
+  BinaryLineDetection test(bounding_box.get_min_x(),
+			   bounding_box.get_max_x(),
+			   bounding_box.get_min_y(),
+			   bounding_box.get_max_y(),
+			   wire_diameter,
+			   median_filter_width,
+			   sigma > 0 ? 10 : 0,
+			   sigma);
+  TileImage_GS_DOUBLE_shptr j = test.run(img, TileImage_GS_DOUBLE_shptr(), "/tmp");
+  assert(j != NULL);
+  save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(test.get_directory(), "line.tif"), j);
 
   LineSegmentExtraction<TileImage_GS_DOUBLE> extraction(i, wire_diameter/2, 2, ed.get_border());
   LineSegmentMap_shptr line_segments = extraction.run();
