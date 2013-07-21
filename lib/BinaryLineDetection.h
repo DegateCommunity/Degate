@@ -24,6 +24,8 @@
 
 #include <Image.h>
 #include <IPPipe.h>
+#include <Region.h>
+#include <RegionList.h>
 
 namespace degate {
 
@@ -44,6 +46,7 @@ namespace degate {
     TileImage_GS_DOUBLE_shptr grayImage;
     TileImage_GS_DOUBLE_shptr binImage;
     TileImage_GS_DOUBLE_shptr regionImage;
+    RegionList region;
 
     std::string directory; // path for storing debug images
 
@@ -64,7 +67,8 @@ namespace degate {
     void set_directory(std::string const& path);
 		
     TileImage_GS_DOUBLE_shptr gs_to_binary(TileImage_GS_DOUBLE_shptr gray);
-    TileImage_GS_DOUBLE_shptr binary_to_region(TileImage_GS_DOUBLE_shptr binary);
+    TileImage_GS_DOUBLE_shptr binary_to_edge(TileImage_GS_DOUBLE_shptr binary);
+    RegionList binary_to_region(TileImage_GS_DOUBLE_shptr binary);
 
   public:
 

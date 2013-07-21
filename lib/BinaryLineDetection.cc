@@ -22,7 +22,6 @@
 
 #include <BinaryLineDetection.h>
 #include <Otsu.h>
-#include <Region.h>
 #include <IPCopy.h>
 #include <IPMedianFilter.h>
 #include <IPNormalize.h>
@@ -32,14 +31,16 @@
 #include <ImageManipulation.h>
 #include <IPImageWriter.h>
 
+#include <RegionList.h>
+
 using namespace degate;
 
 BinaryLineDetection::BinaryLineDetection(unsigned int _min_x, unsigned int _max_x,
-																	unsigned int _min_y, unsigned int _max_y,
-																	unsigned int _wire_diameter,
-																	unsigned int _median_filter_width,
-																	unsigned int _blur_kernel_size,
-																	double _sigma) :
+					unsigned int _min_y, unsigned int _max_y,
+					unsigned int _wire_diameter,
+					unsigned int _median_filter_width,
+					unsigned int _blur_kernel_size,
+					double _sigma) :
   min_x(_min_x),
   max_x(_max_x),
   min_y(_min_y),
@@ -57,16 +58,16 @@ BinaryLineDetection::BinaryLineDetection(unsigned int _min_x, unsigned int _max_
 
 BinaryLineDetection::~BinaryLineDetection() {}
 
-TileImage_GS_DOUBLE_shptr BinaryLineDetection::run(ImageBase_shptr img_in,
-																	TileImage_GS_DOUBLE_shptr probability_map,
-																	std::string const& directory) {
+TileImage_GS_DOUBLE_shptr BinaryLineDetection::run(ImageBase_shptr img_in, 
+						TileImage_GS_DOUBLE_shptr probability_map, 
+						std::string const& directory) {
 
   set_directory(directory);
   grayImage = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(pipe.run(img_in));
   binImage = gs_to_binary(grayImage);
-  regionImage = binary_to_region(binImage);
-
-  return regionImage;
+  regionImage = binary_to_edge(binImage);
+  region = binary_to_region(binImage);
+  return binImage;
 
 }
 
@@ -150,27 +151,63 @@ TileImage_GS_DOUBLE_shptr BinaryLineDetection::gs_to_binary(TileImage_GS_DOUBLE_
 
 }
 
-TileImage_GS_DOUBLE_shptr BinaryLineDetection::binary_to_region(TileImage_GS_DOUBLE_shptr binary) {
+TileImage_GS_DOUBLE_shptr BinaryLineDetection::binary_to_edge(TileImage_GS_DOUBLE_shptr binary) {
 
+  unsigned int tmp_y, tmp_x_start, tmp_x_end;
   TileImage_GS_DOUBLE_shptr region(new TileImage_GS_DOUBLE(get_width(), get_height()));
-  unsigned int temp_y, temp_x_start, temp_x_end;
+  RegionList testList(get_width(), get_height());
+  Region_shptr_list::iterator iter1;
+  regionLine_list::iterator iter2;
+  endPoint_list::iterator iter3;
 
-  for(unsigned int y = border; y < get_height() - border - 1; y++) {
-    for(unsigned int x = border; x < get_width() - border - 1; x++) {
+  for(unsigned int y = 0; y < get_height() - 0 - 1; y++) {
+    for(unsigned int x = 0; x < get_width() - 0 - 1; x++) {
       if(binary->get_pixel(x, y) == 0) continue;
       else if(binary->get_pixel(x, y) == 1) {
-	temp_y = y;
-	temp_x_start = x;
+	tmp_y = y;
+	tmp_x_start = x;
 	while(binary->get_pixel(++x, y) == 1) {
-	  if(x == get_width() - border) break;
+	  if(x == get_width() - 0) break;
 	}
-	temp_x_end = x - 1;
+	tmp_x_end = x - 1;
       }
-      region->set_pixel(temp_x_start, temp_y, 1);
-      region->set_pixel(temp_x_end, temp_y, 1);
+      region->set_pixel(tmp_x_start, tmp_y, 1);
+      region->set_pixel(tmp_x_end, tmp_y, 1);
     }
   }
 
   return region;
+
+}
+
+RegionList BinaryLineDetection::binary_to_region(TileImage_GS_DOUBLE_shptr binary) {
+
+  unsigned int tmp_y, tmp_x_start, tmp_x_end;
+  RegionList testList(get_width(), get_height());
+  Region_shptr_list::iterator iter1;
+  regionLine_list::iterator iter2;
+  endPoint_list::iterator iter3;
+
+  for(unsigned int y = 0; y < get_height() - 0 - 1; y++) {
+    for(unsigned int x = 0; x < get_width() - 0 - 1; x++) {
+      if(binary->get_pixel(x, y) == 0) continue;
+      else if(binary->get_pixel(x, y) == 1) {
+	tmp_y = y;
+	tmp_x_start = x;
+	while(binary->get_pixel(++x, y) == 1) {
+	  if(x == get_width() - 0) break;
+	}
+	tmp_x_end = x - 1;
+      }
+      //Region_shptr testRegion(new Region(tmp_y, tmp_x_start, tmp_x_end));
+      //testList.set_region(testRegion);
+      testList.set_region(tmp_y, tmp_x_start, tmp_x_end);
+    }
+  }
+debug(TM, "end of making regions");
+  testList.save_region();
+  testList.print_region();
+  testList.free_all_region();
+  return testList;
 
 }
