@@ -78,27 +78,6 @@ void WireMatching::set_min_edge_magnitude(double min_edge_magnitude) {
 
 void WireMatching::run() {
 
-//  ZeroCrossingEdgeDetection ed(bounding_box.get_min_x(),
-//			       bounding_box.get_max_x(),
-//			       bounding_box.get_min_y(),
-//			       bounding_box.get_max_y(),
-//			       median_filter_width,
-//			       sigma > 0 ? 10 : 0,
-//			       sigma,
-//			       wire_diameter >> 1,
-//			       wire_diameter + (wire_diameter >> 1),
-//			       min_edge_magnitude, 0.5);
-  CannyEdgeDetection ed(bounding_box.get_min_x(),
-			bounding_box.get_max_x(),
-			bounding_box.get_min_y(),
-			bounding_box.get_max_y(),
-			wire_diameter,
-			median_filter_width,
-			sigma > 0? 10 : 0,
-			sigma, min_edge_magnitude, 0.5);
-  TileImage_GS_DOUBLE_shptr i = ed.run(img, TileImage_GS_DOUBLE_shptr(), "/tmp");
-  assert(i != NULL);
-
   BinaryLineDetection test(bounding_box.get_min_x(),
 			   bounding_box.get_max_x(),
 			   bounding_box.get_min_y(),
@@ -107,11 +86,11 @@ void WireMatching::run() {
 			   median_filter_width,
 			   sigma > 0 ? 10 : 0,
 			   sigma);
-  TileImage_GS_DOUBLE_shptr j = test.run(img, TileImage_GS_DOUBLE_shptr(), "/tmp");
-  assert(j != NULL);
-  save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(test.get_directory(), "line.tif"), j);
+  TileImage_GS_DOUBLE_shptr i = test.run(img, TileImage_GS_DOUBLE_shptr(), "/tmp");
+  assert(i != NULL);
+  save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(test.get_directory(), "line.tif"), i);
 
-  LineSegmentExtraction<TileImage_GS_DOUBLE> extraction(i, wire_diameter/2, 2, ed.get_border());
+  LineSegmentExtraction<TileImage_GS_DOUBLE> extraction(i, wire_diameter/2, 2, test.get_border());
   LineSegmentMap_shptr line_segments = extraction.run();
   assert(line_segments != NULL);
 
@@ -119,7 +98,6 @@ void WireMatching::run() {
   assert(layer != NULL);
 
   BOOST_FOREACH(LineSegment_shptr ls, *line_segments) {
-    debug(TM, "found  wire");
     Wire_shptr w(new Wire(bounding_box.get_min_x() + ls->get_from_x(),
 			  bounding_box.get_min_y() + ls->get_from_y(),
 			  bounding_box.get_min_x() + ls->get_to_x(),

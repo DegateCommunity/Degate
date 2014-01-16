@@ -64,10 +64,41 @@ TileImage_GS_DOUBLE_shptr BinaryLineDetection::run(ImageBase_shptr img_in,
 
   set_directory(directory);
   grayImage = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(pipe.run(img_in));
-  binImage = gs_to_binary(grayImage);
-  regionImage = binary_to_edge(binImage);
-  region = binary_to_region(binImage);
-  return binImage;
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gray.tif", grayImage);
+
+  TileImage_GS_DOUBLE_shptr binOtsu, binMean1_0, binMean1_1, binMean1_2;
+  binOtsu = gs_to_binary(grayImage);
+  binMean1_0 = gs_by_mean(grayImage, 1.0);
+  binMean1_1 = gs_by_mean(grayImage, 1.1);
+  binMean1_2 = gs_by_mean(grayImage, 1.2);
+  //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/mean.tif", meanImage);
+
+  RegionList RL_Otsu, RL_Mean1_0, RL_Mean1_1, RL_Mean1_2;
+  RL_Otsu = binary_to_region(binOtsu);
+  RL_Mean1_0 = binary_to_region(binMean1_0);
+  RL_Mean1_1 = binary_to_region(binMean1_1);
+  RL_Mean1_2 = binary_to_region(binMean1_2);
+
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridOtsu.tif", RL_Otsu.get_unfixed_grid_binary(wire_diameter));
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.0.tif", RL_Mean1_0.get_unfixed_grid_binary(wire_diameter));
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.1.tif", RL_Mean1_1.get_unfixed_grid_binary(wire_diameter));
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.2.tif", RL_Mean1_2.get_unfixed_grid_binary(wire_diameter));
+
+  RL_Otsu.application_grid(wire_diameter);
+  RL_Mean1_0.application_grid(wire_diameter);
+  RL_Mean1_1.application_grid(wire_diameter);
+  RL_Mean1_2.application_grid(wire_diameter);
+
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedOtsu.tif", RL_Otsu.get_binary());
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.0.tif", RL_Mean1_0.get_binary());
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.1.tif", RL_Mean1_1.get_binary());
+  save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.2.tif", RL_Mean1_2.get_binary());
+
+  //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/bin.tif", binImage);
+  //binImage = region.get_binary();
+  //debug(TM, "%d", region.get_count());
+  //region.save_region();
+  return binOtsu;
 
 }
 
@@ -137,6 +168,7 @@ TileImage_GS_DOUBLE_shptr BinaryLineDetection::gs_to_binary(TileImage_GS_DOUBLE_
  
   o.run(gray);
   otsu_threshold = o.get_otsu_threshold();
+  debug(TM, "\t\t%lf", otsu_threshold); 
 
   for(unsigned int y = border; y < get_height() - border- 1; y++) {
     for(unsigned int x = border; x < get_width() - border- 1; x++) {
@@ -151,14 +183,36 @@ TileImage_GS_DOUBLE_shptr BinaryLineDetection::gs_to_binary(TileImage_GS_DOUBLE_
 
 }
 
+TileImage_GS_DOUBLE_shptr BinaryLineDetection::gs_by_mean(TileImage_GS_DOUBLE_shptr gray, double scale) {
+
+  double threshold, sum = 0.0;
+  TileImage_GS_DOUBLE_shptr mean_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
+
+  for(unsigned int y = border; y < get_height() - border - 1; y++) {
+    for(unsigned int x = border; x < get_width() - border - 1; x++) {
+      sum += gray->get_pixel(x, y);
+    }
+  }
+
+  threshold = sum / ((get_height() - 2 * border) * (get_width() - 2 * border));
+  threshold *= scale;
+
+  for(unsigned int y = border; y < get_height() - border - 1; y++) {
+    for(unsigned int x = border; x < get_width() - border - 1; x++) {
+      if(gray->get_pixel(x, y) >= threshold)
+	mean_image->set_pixel(x, y, 1);
+      else
+	mean_image->set_pixel(x, y, 0);
+    }
+  }
+
+  return mean_image;
+
+}
 TileImage_GS_DOUBLE_shptr BinaryLineDetection::binary_to_edge(TileImage_GS_DOUBLE_shptr binary) {
 
   unsigned int tmp_y, tmp_x_start, tmp_x_end;
   TileImage_GS_DOUBLE_shptr region(new TileImage_GS_DOUBLE(get_width(), get_height()));
-  RegionList testList(get_width(), get_height());
-  Region_shptr_list::iterator iter1;
-  regionLine_list::iterator iter2;
-  endPoint_list::iterator iter3;
 
   for(unsigned int y = 0; y < get_height() - 0 - 1; y++) {
     for(unsigned int x = 0; x < get_width() - 0 - 1; x++) {
@@ -184,12 +238,9 @@ RegionList BinaryLineDetection::binary_to_region(TileImage_GS_DOUBLE_shptr binar
 
   unsigned int tmp_y, tmp_x_start, tmp_x_end;
   RegionList testList(get_width(), get_height());
-  Region_shptr_list::iterator iter1;
-  regionLine_list::iterator iter2;
-  endPoint_list::iterator iter3;
 
-  for(unsigned int y = 0; y < get_height() - 0 - 1; y++) {
-    for(unsigned int x = 0; x < get_width() - 0 - 1; x++) {
+  for(unsigned int y = 0; y < get_height(); y++) {
+    for(unsigned int x = 0; x < get_width(); x++) {
       if(binary->get_pixel(x, y) == 0) continue;
       else if(binary->get_pixel(x, y) == 1) {
 	tmp_y = y;
@@ -199,15 +250,22 @@ RegionList BinaryLineDetection::binary_to_region(TileImage_GS_DOUBLE_shptr binar
 	}
 	tmp_x_end = x - 1;
       }
-      //Region_shptr testRegion(new Region(tmp_y, tmp_x_start, tmp_x_end));
-      //testList.set_region(testRegion);
       testList.set_region(tmp_y, tmp_x_start, tmp_x_end);
     }
   }
 debug(TM, "end of making regions");
-  testList.save_region();
-  testList.print_region();
-  testList.free_all_region();
+  //testList.save_region();
+  //testList.print_region();
+  //testList.free_all_region();
   return testList;
 
+}
+
+void BinaryLineDetection::draw_grid(TileImage_GS_DOUBLE_shptr & binary) {
+
+  for(unsigned int y = 0; y < get_height(); y=y + wire_diameter) {
+    for(unsigned int x = 0; x < get_width(); x=x + wire_diameter) {
+      binary->set_pixel(x, y, 0);
+    }
+  }
 }

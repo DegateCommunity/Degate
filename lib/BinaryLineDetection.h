@@ -45,6 +45,7 @@ namespace degate {
 
     TileImage_GS_DOUBLE_shptr grayImage;
     TileImage_GS_DOUBLE_shptr binImage;
+    TileImage_GS_DOUBLE_shptr meanImage;
     TileImage_GS_DOUBLE_shptr regionImage;
     RegionList region;
 
@@ -67,8 +68,10 @@ namespace degate {
     void set_directory(std::string const& path);
 		
     TileImage_GS_DOUBLE_shptr gs_to_binary(TileImage_GS_DOUBLE_shptr gray);
+    TileImage_GS_DOUBLE_shptr gs_by_mean(TileImage_GS_DOUBLE_shptr gray, double scale);
     TileImage_GS_DOUBLE_shptr binary_to_edge(TileImage_GS_DOUBLE_shptr binary);
     RegionList binary_to_region(TileImage_GS_DOUBLE_shptr binary);
+    void draw_grid(TileImage_GS_DOUBLE_shptr & binary);
 
   public:
 
