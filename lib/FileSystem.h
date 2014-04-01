@@ -180,7 +180,6 @@ namespace degate{
 
   std::string join_pathes(std::string const& base_path, std::string const& extension_path);
 
-
   /**
    * Make a path specification relative to another.
    *

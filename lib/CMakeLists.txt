@@ -135,10 +135,12 @@ set(SOURCES
 	EdgeDetection.cc
 	CannyEdgeDetection.cc
 	ZeroCrossingEdgeDetection.cc
+	BinaryLineDetection.cc
 	WireMatching.cc
 	ViaMatching.cc
 	TemplateMatching.cc
 	ExternalMatching.cc
+	Otsu.cc
 
 	#
 	# Design Rule Checks
