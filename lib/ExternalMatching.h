@@ -97,7 +97,6 @@ namespace degate {
     void set_command(std::string const& cmd);
     std::string get_command() const;
 
-    int get_exit_code() const;
   };
 
   typedef std::shared_ptr<ExternalMatching> ExternalMatching_shptr;

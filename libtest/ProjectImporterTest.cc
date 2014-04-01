@@ -108,7 +108,7 @@ void ProjectImporterTest::test_import_all_new_format(void) {
     for(GateTemplate::image_iterator img_iter = gate_tmpl->images_begin();
 	img_iter != gate_tmpl->images_end(); ++img_iter, i++) {
       
-      Layer::LAYER_TYPE layer_type = (*img_iter).first;
+//      Layer::LAYER_TYPE layer_type = (*img_iter).first;
       GateTemplateImage_shptr img = (*img_iter).second;    
       CPPUNIT_ASSERT(img != NULL);
     }

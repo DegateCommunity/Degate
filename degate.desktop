@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Degate
+Name[ru]=Degate
+Comment=reverse engineering of digital logic
+Comment[ru]=инжинерный анализ цифровой логики
+Exec=degate_bin
+Icon=degate
+Terminal=false
+Type=Application
+Categories=Development;Electronics;
+StartupNotify=true

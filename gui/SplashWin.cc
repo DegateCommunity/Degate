@@ -68,7 +68,6 @@ bool SplashWin::on_expose_event(GdkEventExpose *event) {
   Glib::RefPtr<Gdk::Window> window = get_window();
 
   if(window) {
-    Gtk::Allocation allocation = get_allocation();
     Cairo::RefPtr<Cairo::Context> m_cr = window->create_cairo_context();
 
 
