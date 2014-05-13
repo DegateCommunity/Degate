@@ -16,7 +16,9 @@ export DEGATE_HOME=gui;
 export DEGATE_CACHE_SIZE=256
 
 # Set the temp directory.
-export DEGATE_TEMP=/tmp
+# Temp directories are handled by the boost library and it checks for
+# TMPDIR, TMP, TEMP, TEMPDIR, whatever is found first.
+#export TMPDIR=/tmp
 
 # Set the URI pattern for the collaboration server.
 export DEGATE_SERVER_URI_PATTERN=http://degate.org/cgi-bin/xmlrpc-server-cgi.pl?channel=%1%
