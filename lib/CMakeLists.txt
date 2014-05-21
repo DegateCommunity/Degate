@@ -162,8 +162,8 @@ target_link_libraries(degate ${LIBS})
 find_package(Doxygen QUIET)
 IF (DOXYGEN_FOUND)
    add_custom_target(libdoc 
- 	COMMAND ${DOXYGEN_EXECUTABLE} "${PROJECT_SOURCE_DIR}/doc/Doxyfile.libdegate"}
-	 SOURCES ${SOURCES})
+     COMMAND ${DOXYGEN_EXECUTABLE} "${PROJECT_SOURCE_DIR}/doc/Doxyfile.libdegate"
+     SOURCES ${SOURCES})
 else()
    message("Warning: Doxygen not found. Ignoring. You should "
    	"install the doxygen package to generate the documentation for libdegate.")
