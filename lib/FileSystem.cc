@@ -111,12 +111,9 @@ void degate::create_directory(std::string const& directory) {
 }
 
 std::string degate::create_temp_directory() {
-  return create_temp_directory(generate_temp_file_pattern());
-}
-
-std::string degate::create_temp_directory(std::string const & directory_pattern) {
-  create_directory(directory_pattern);
-  return directory_pattern;
+  boost::filesystem::path t(boost::filesystem::temp_directory_path() / boost::filesystem::unique_path());
+  create_directory(t.string());
+  return t.string();
 }
 
 

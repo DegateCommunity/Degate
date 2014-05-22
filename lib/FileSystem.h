@@ -136,16 +136,9 @@ namespace degate{
 
   /**
    * Create a temp directory.
-   */
-  std::string create_temp_directory();
-
-  /**
-   * Create a temporary directory based on a path pattern specification.
-   * The directory is created with mode 0700.
-   * @param directory_pattern A pattern of the form e.g. "/tmp/temp.%%%%%%".
    * @return Returns the path of the created directory.
    */
-  std::string create_temp_directory(std::string const & directory_pattern);
+  std::string create_temp_directory();
 
 
   /**

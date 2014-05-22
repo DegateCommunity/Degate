@@ -121,8 +121,7 @@ void FileSystemTest::test_read_directory(void) {
 }
 
 void FileSystemTest::test_create_and_remove_temp_directory(void) {
-  string dir_pattern = generate_temp_file_pattern();
-  string dir = create_temp_directory(dir_pattern);
+  string dir = create_temp_directory();
 
   CPPUNIT_ASSERT(file_exists(dir) == true);
   remove_directory(dir);
