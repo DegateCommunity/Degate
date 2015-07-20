@@ -234,6 +234,7 @@ void Project::init_default_values() {
   default_pin_diameter = 5;
   default_wire_diameter = 5;
   default_port_diameter = 5;
+  template_dimension = 40;
   lambda = 5;
   last_transaction_id = 0;
 
