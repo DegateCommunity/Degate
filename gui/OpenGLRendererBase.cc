@@ -515,14 +515,14 @@ unsigned int OpenGLRendererBase::FontRenderingHelper::create_font_textures(FT_Fa
 
   FT_Bitmap& bitmap=bitmap_glyph->bitmap;
 
-  int width = next_power_of_two( bitmap.width );
-  int height = next_power_of_two( bitmap.rows );
+  unsigned int width = next_power_of_two( bitmap.width );
+  unsigned int height = next_power_of_two( bitmap.rows );
 
   GLubyte* expanded_data = new GLubyte[ 2 * width * height];
   memset(expanded_data, 0, 2 * width * height);
 
-  for(int j=0; j < height; j++) { // y
-    for(int i=0; i < width; i++){
+  for(unsigned int j=0; j < height; j++) { // y
+    for(unsigned int i=0; i < width; i++){
       unsigned int dst_offs = 2*(i+j*width);
       GLubyte v = (i>=bitmap.width || j>=bitmap.rows) ?
         0 : bitmap.buffer[i + bitmap.width*j];
