@@ -26,7 +26,11 @@
 
 namespace degate {
 
-  class Otsu{
+  /**
+     Otsu's algorithm for calculating a threshold for image binarysation:
+     https://en.wikipedia.org/wiki/Otsu's_method
+   */
+  class Otsu {
 
   private:
 

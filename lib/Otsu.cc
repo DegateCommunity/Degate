@@ -33,23 +33,24 @@ double Otsu::get_otsu_threshold() {
 }
 
 void Otsu::run(TileImage_GS_DOUBLE_shptr gray) {
-  unsigned int histData[256] = {0,};
+  unsigned long histData[256] = {0,};
 
   for(unsigned int y = 0; y < gray->get_height(); y++)
     for(unsigned int x = 0; x < gray->get_width(); x++) {
-      int h = (int)(gray->get_pixel(x, y));
+      gs_byte_pixel_t h = gray->get_pixel_as<gs_byte_pixel_t>(x, y);
+      assert((h >= 0) && (h < 256));
       histData[h]++;
     }
 
-  unsigned int total = gray->get_height() * gray->get_width();
+  unsigned long total = gray->get_height() * gray->get_width();
 
   double sum = 0;
   for(int t=0; t < 256; t++)
     sum += t * histData[t];
 
   double sumB = 0;
-  unsigned int wB = 0;
-  unsigned int wF = 0;
+  unsigned long wB = 0;
+  unsigned long wF = 0;
 
   double varMax = 0;
 

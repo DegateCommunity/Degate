@@ -79,6 +79,7 @@ TileImage_GS_DOUBLE_shptr BinaryLineDetection::run(ImageBase_shptr img_in,
   RL_Mean1_1 = binary_to_region(binMean1_1);
   RL_Mean1_2 = binary_to_region(binMean1_2);
 
+  // XXX better use a real temp dir as this allows race conditions
   save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridOtsu.tif", RL_Otsu.get_unfixed_grid_binary(wire_diameter));
   save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.0.tif", RL_Mean1_0.get_unfixed_grid_binary(wire_diameter));
   save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.1.tif", RL_Mean1_1.get_unfixed_grid_binary(wire_diameter));
