@@ -24,6 +24,7 @@ Install dependencies on Ubuntu
 On a freshly installed Ubuntu it should be sufficient to install these packages:
 
 ::
+
    > sudo apt-get install cmake libboost-filesystem-dev \
         libboost-system-dev libboost-thread-dev \
         libboost-program-options-dev \
@@ -39,6 +40,7 @@ Install dependencies on Mac OS X
 You need the Mac Ports (or whatever the recent port system is) and Xcode (≥ 3.1) in order to build gtkmm and related libraries. If you have installed it, you can start your terminal and run:
 
 ::
+   
    > sudo port install gtkmm cmake boost cppunit doxygen freetype \
      libglademm libxmlxx2 libzip xmlrpc-c gtkglextmm gnome-icon-theme
 
@@ -49,6 +51,7 @@ Compile degate
 Get sources for Degate. Go into the main directory and type:
 
 ::
+
    > cmake . && make
 
 
