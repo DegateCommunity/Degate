@@ -1,36 +1,34 @@
-PROJECT(DEGATE)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0)
+project(DEGATE)
 
+set(CMAKE_CXX_STANDARD 11)
 message(STATUS "Using compiler: ${CMAKE_CXX_COMPILER}")
-
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-
 
 set(CMAKE_VERBOSE_MAKEFILE true)
 
-#
-# global flags
-#
-#add_definitions(-ggdb -Wall -O3 -pg)
-#set(CMAKE_EXE_LINKER_FLAGS -pg)
-#set(CMAKE_SHARED_LINKER_FLAGS -pg)
+if (NOT MSVC)
+	#add_definitions(-Wall -g -fno-inline -std=c++0x -DBOOST_NO_CXX11_SCOPED_ENUMS)
+	add_definitions(-Wall -g -fno-inline -std=c++11 -DBOOST_NO_CXX11_SCOPED_ENUMS)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+else()
+	add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+endif()
 
-add_definitions(-Wall -g -fno-inline -std=c++0x -DBOOST_NO_CXX11_SCOPED_ENUMS)
-#set(CMAKE_EXE_LINKER_FLAGS)
-#set(CMAKE_SHARED_LINKER_FLAGS -O3)
-
-
-#SET(Boost_ADDITIONAL_VERSIONS "1.46" "1.46.1")
-#SET(BOOST_ROOT "/home/martin/boost1461/")
-#SET(Boost_NO_SYSTEM_PATHS "true")
+# property for folders
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(lib)
-add_subdirectory(libtest)
-add_subdirectory(tools/gate_lib_documentation)
-add_subdirectory(tools/determine_module_ports)
-add_subdirectory(tools/export_module)
-add_subdirectory(gui)
-
+#add_subdirectory(libtest)
+#add_subdirectory(tools/gate_lib_documentation)
+#add_subdirectory(tools/determine_module_ports)
+#add_subdirectory(tools/export_module)
 
 INSTALL(FILES degate.png DESTINATION share/pixmaps)
 INSTALL(FILES degate.desktop DESTINATION share/applications)
+
+if (CMAKE_SIZEOF_VOID_P MATCHES 8) # if x64
+		message("-- x64 configuration")
+	else() # if x86
+		message("-- x86 configuration")
+endif()
