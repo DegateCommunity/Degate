@@ -1,0 +1,30 @@
+.TH degate 1 "August 23, 2010" "Version 0.0.9"
+.SH NAME
+degate \- reverse engineering of logic gates
+.SH SYNOPSIS
+.B degate [ project file | project directory]
+.SH DESCRIPTION
+Degates' purpose is to aid reverse engineering of integrated circuits (ICs). Degate helps you to explore images from ICs. It matches logic gates  on the imagery given by graphical templates and it assists you in tracing circuit paths.
+.PP
+Degate is not a completely automatic analyzing tool. Degate helps you with some automation in your manual reverse engineering process. 
+.SH ENVIRONMENT
+.TP
+DEGATE_HOME
+Path to files, that are used at runtime (usually /usr/share/degate). See FILES.
+.SH FILES
+.TP
+$DEGATE_HOME
+This directory contains files, that are used at runtime.
+.TP
+$DEGATE_TEMP_DIR
+You can set this environment variable, if you want to specify a directory for temporary files, that should be used.
+.TP
+$DEGATE_CACHE_SIZE
+Use this environment variable in order to set the global cache size for image tiles. The unit is megabyte.
+.TP
+$DEGATE_SERVER_URI_PATTERN
+This is a format string of type boost::format for the generation of collaboration server URIs.
+.SH AUTHOR
+Martin Schobert <martin@weltregierung.de>
+.SH SEE ALSO
+Degate project website: http://www.degate.org/
