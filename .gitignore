@@ -1,5 +1,4 @@
 .DS_Store
-todo.txt
 *~
 
 CMakeFiles/
@@ -7,14 +6,10 @@ CMakeCache.txt
 Makefile
 cmake_install.cmake
 
-doc/libdegate/
-
 libtest/testfiles/
 CTestTestfile.cmake
-tp1/
-tp2/
-
-gui/degate_bin
 libtest/libdegate_test
 lib/libdegate.dylib
 lib/libdegate.so
+
+build/*
