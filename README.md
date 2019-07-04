@@ -18,4 +18,3 @@ For Qt5 you need to specify to CMake the path to Qt with the Qt5_DIR variable, f
 Degate is released under the GNU General Public License Version 3. See LICENSE.TXT for details.
 
 Degate is originaly developed by Martin Schobert <martin@mailbeschleuniger.de>.
-This forked version is developed by Dorian Bachelot <dorian.bachelot at hotmail.com> and Eric Filiol <efiliol at netc.fr>.
