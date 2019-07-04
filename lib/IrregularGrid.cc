@@ -21,8 +21,8 @@
 
 #include "IrregularGrid.h"
 
-#include <assert.h>
-#include <stdlib.h>
+#include <cassert>
+#include <cstdlib>
 
 using namespace degate;
 

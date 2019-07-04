@@ -23,11 +23,11 @@
 #ifndef __GLOBALS_H__
 #define __GLOBALS_H__
 
-#include <stdio.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstdint>
 #include <memory>
 #include <map>
-#include <assert.h>
+#include <cassert>
 #include "degate_exceptions.h"
 
 /**
@@ -61,7 +61,7 @@ enum ret_t {
 #elif (__SIZEOF_POINTER__ == 8) || (__WORDSIZE == 64)
 #define ARCH_64
 #else
-#error "Unknown architecture"
+//#error "Unknown architecture" TODO
 #endif
 
 

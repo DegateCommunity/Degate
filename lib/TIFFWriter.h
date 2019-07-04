@@ -34,7 +34,7 @@
 #include <FileSystem.h>
 #include <Image.h>
 
-#include <errno.h>
+#include <cerrno>
 
 namespace degate {
 

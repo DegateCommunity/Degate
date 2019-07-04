@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <vector>
 #include <list>
-#include <assert.h>
+#include <cassert>
 #include "globals.h"
 #include <iostream>
 

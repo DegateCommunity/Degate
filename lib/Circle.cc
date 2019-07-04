@@ -24,7 +24,7 @@
 
 #include "Circle.h"
 #include "BoundingBox.h"
-#include <math.h>
+#include <cmath>
 
 using namespace degate;
 

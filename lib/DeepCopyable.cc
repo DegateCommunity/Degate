@@ -20,7 +20,7 @@
 
 #include "DeepCopyable.h"
 
-#include <assert.h>
+#include <cassert>
 
 namespace degate {
 

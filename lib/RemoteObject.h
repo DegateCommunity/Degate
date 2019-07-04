@@ -28,7 +28,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
-#include <assert.h>
+#include <cassert>
 
 namespace degate {
 

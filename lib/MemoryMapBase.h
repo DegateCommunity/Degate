@@ -25,18 +25,18 @@
 #include "globals.h"
 #include <string>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdint>
 #include <unistd.h>
-#include <string.h>
-#include <time.h>
+#include <cstring>
+#include <ctime>
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <fcntl.h>
-#include <assert.h>
-#include <limits.h>
-#include <math.h>
+#include <cassert>
+#include <climits>
+#include <cmath>
 
 namespace degate {
 

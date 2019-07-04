@@ -11,7 +11,7 @@
 
 #include <vector>
 #include <string>
-#include <math.h>
+#include <cmath>
 
 // that is bad
 using namespace std;

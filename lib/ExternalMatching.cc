@@ -23,7 +23,7 @@
 #include <BoundingBox.h>
 #include <ImageHelper.h>
 #include <DegateHelper.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 

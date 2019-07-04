@@ -20,7 +20,7 @@
  */
 
 #include "RegularGrid.h"
-#include <math.h>
+#include <cmath>
 
 using namespace degate;
 

@@ -25,12 +25,12 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <string.h>
-#include <limits.h>
+//#include <unistd.h> : Linux only
+#include <cerrno>
+#include <cstdlib>
+//#include <dirent.h> : Linux only
+#include <cstring>
+#include <climits>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -123,7 +123,7 @@ std::string degate::generate_temp_file_pattern() {
 }
 
 
-std::list<std::string> degate::read_directory(std::string const& path, bool prefix_path) {
+std::list<std::string> degate::read_directory(std::string const& path, bool prefix_path) { // dirent.h : Linux only header
 
   DIR * dir = NULL;
   struct dirent * dir_ent = NULL;

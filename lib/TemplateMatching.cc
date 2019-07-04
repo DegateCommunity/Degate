@@ -31,7 +31,7 @@
 
 #include <utility>
 #include <boost/foreach.hpp>
-#include <math.h>
+#include <cmath>
 
 using namespace degate;
 

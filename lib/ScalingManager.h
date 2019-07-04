@@ -25,7 +25,7 @@
 #include "Image.h"
 
 #include <map>
-#include <assert.h>
+#include <cassert>
 #include <algorithm>
 
 namespace degate {

@@ -22,7 +22,7 @@
 #ifndef __BOUNDINGBOX_H__
 #define __BOUNDINGBOX_H__
 
-#include <stdio.h>
+#include <cstdio>
 #include "globals.h"
 #include <iostream>
 

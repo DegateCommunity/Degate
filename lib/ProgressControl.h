@@ -23,7 +23,7 @@
 #define __PROGRESSCONTROL_H__
 
 #include <memory>
-#include <time.h>
+#include <ctime>
 #include <boost/thread.hpp>
 
 namespace degate {
