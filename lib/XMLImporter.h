@@ -25,7 +25,7 @@
 #include "globals.h"
 #include "Importer.h"
 
-#include <libxml++/libxml++.h>
+#include <QtXml/QtXml>
 
 namespace degate {
 
@@ -42,15 +42,17 @@ class XMLImporter : public Importer {
    * @return Returns the number in type T.
    */
   template <typename T>
-    T parse_number(const xmlpp::Element * const node, std::string const& attribute_str) const {
+    T parse_number(QDomElement const node, std::string const& attribute_str) const {
 
-    assert(node != NULL);
-    if(node == NULL) throw InvalidPointerException("Parameter must be != NULL.");
+    assert(!node.isNull());
+	if (node.isNull()) throw InvalidXMLException("Parameter must be != Null.");
 
-    if(node->get_attribute(attribute_str) == NULL) {
+	const QString attribute = node.attribute(QString::fromStdString(attribute_str), 0);
+
+    if(attribute == 0) {
       throw XMLAttributeMissingException(std::string("attribute is not present: ") + attribute_str);
     }
-    else return parse_number<T>(node->get_attribute_value(attribute_str));
+    else return parse_number<T>(attribute.toStdString());
   }
 
   /**
@@ -60,16 +62,18 @@ class XMLImporter : public Importer {
    */
 
   template <typename T>
-    T parse_number(const xmlpp::Element * const node, std::string const& attribute_str, T default_value) {
+    T parse_number(QDomElement const node, std::string const& attribute_str, T default_value) {
 
-    assert(node != NULL);
-    if(node == NULL) throw InvalidPointerException();
+    assert(!node.isNull());
+	if (node.isNull()) throw InvalidXMLException("Parameter must be != Null.");
 
-    if(node->get_attribute(attribute_str) == NULL) return default_value;
-    else return parse_number<T>(node->get_attribute_value(attribute_str));
+	const QString attribute = node.attribute(QString::fromStdString(attribute_str), 0);
+
+    if(attribute == 0) return default_value;
+    else return parse_number<T>(attribute.toStdString());
   }
 
-  const xmlpp::Element * get_dom_twig(const xmlpp::Element * const start_node, std::string const & element_name) const;
+  QDomElement get_dom_twig(QDomElement const start_node, std::string const & element_name) const;
 
   /**
    * Parse a HTML RGBA color description, e.g. '#23FF42A0'.

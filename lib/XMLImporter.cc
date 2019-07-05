@@ -35,13 +35,8 @@
 
 using namespace degate;
 
-const xmlpp::Element * XMLImporter::get_dom_twig(const xmlpp::Element * const start_node, std::string const & element_name) const {
-  xmlpp::Node::NodeList node_list = start_node->get_children(element_name);
-  if(!node_list.empty()) {
-    const xmlpp::Element * element = dynamic_cast<const xmlpp::Element*>(node_list.front());
-    return element;
-  }
-  return NULL;
+QDomElement XMLImporter::get_dom_twig(QDomElement const start_node, std::string const & element_name) const {
+  return start_node.elementsByTagName(QString::fromStdString(element_name)).at(0).toElement();
 }
 
 
