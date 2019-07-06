@@ -127,17 +127,24 @@ Project_shptr ProjectImporter::import(std::string const& directory)  {
 
   try {
 
-    xmlpp::DomParser parser;
-    parser.set_substitute_entities(); // We just want the text to be resolved/unescaped automatically.
+    QDomDocument parser;
 
-    parser.parse_file(filename);
-    assert(parser == true);
+	QFile file(QString::fromStdString(filename));
+	if (!file.open(QIODevice::ReadOnly))
+	{
+      debug(TM, "Problem: can't open the file %s.", filename.c_str());
+	  throw InvalidFileFormatException("The ProjectImporter cannot load the project file. Can't open the file.");
+    }
 
-    const xmlpp::Document * doc = parser.get_document();
-    assert(doc != NULL);
+	if(!parser.setContent(&file))
+	{
+	  debug(TM, "Problem: can't parse the file %s.", filename.c_str());
+	  throw InvalidXMLException("The ProjectImporter cannot load the project file. Can't parse the file.");
+	}
+	file.close();
 
-    const xmlpp::Element * root_elem = doc->get_root_node(); // deleted by DomParser
-    assert(root_elem != NULL);
+    const QDomElement root_elem = parser.documentElement();
+    assert(!root_elem.isNull());
 
     // parse width and height
     int w = parse_number<length_t>(root_elem, "width");
@@ -157,46 +164,45 @@ Project_shptr ProjectImporter::import(std::string const& directory)  {
 }
 
 
-void ProjectImporter::parse_layers_element(const xmlpp::Element * const layers_elem, Project_shptr prj) {
+void ProjectImporter::parse_layers_element(QDomElement const layers_elem, Project_shptr prj) {
   debug(TM, "parsing layers");
 
-  const xmlpp::Node::NodeList layer_list = layers_elem->get_children("layer");
-  for(xmlpp::Node::NodeList::const_iterator iter = layer_list.begin();
-      iter != layer_list.end();
-      ++iter) {
+  const QDomNodeList layer_list = layers_elem.elementsByTagName("layer");
+  QDomElement layer_elem;
+  for (int i = 0; i < layer_list.count(); i++)
+  {
 
-    if(const xmlpp::Element* layer_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
+	layer_elem = layer_list.at(i).toElement();
 
-      const std::string image_filename(layer_elem->get_attribute_value("image-filename"));
-      const std::string layer_type_str(layer_elem->get_attribute_value("type"));
-      const std::string layer_description(layer_elem->get_attribute_value("description"));
-      unsigned int position = parse_number<unsigned int>(layer_elem, "position");
-      const std::string layer_enabled_str = layer_elem->get_attribute_value("enabled");
-
-      Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
-      layer_id_t layer_id = parse_number<layer_id_t>(layer_elem, "id", 0);
-
-      Layer_shptr new_layer(new Layer(prj->get_bounding_box(), layer_type));
-      LogicModel_shptr lmodel = prj->get_logic_model();
-
-      debug(TM, "Parsed a layer entry for type %s. This is a %s layer. Background image is %s",
-	    layer_type_str.c_str(),
-	    Layer::get_layer_type_as_string(layer_type).c_str(),
-	    image_filename.c_str());
-
-      bool layer_enabled = true;
-      if(layer_enabled_str.size() != 0)
-	layer_enabled = parse_bool(layer_enabled_str);
-      new_layer->set_enabled(layer_enabled);
-
-      new_layer->set_description(layer_description);
-      new_layer->set_layer_id(layer_id);
-
-      lmodel->add_layer(position, new_layer);
-
-      load_background_image(new_layer, image_filename, prj);
-
+    if (!layer_elem.isNull())
+    {
+	    const std::string image_filename(layer_elem.attribute("image-filename").toStdString());
+	    const std::string layer_type_str(layer_elem.attribute("type").toStdString());
+	    const std::string layer_description(layer_elem.attribute("description").toStdString());
+	    unsigned int position = parse_number<unsigned int>(layer_elem, "position");
+	    const std::string layer_enabled_str = layer_elem.attribute("enabled").toStdString();
+    
+	    Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
+	    layer_id_t layer_id = parse_number<layer_id_t>(layer_elem, "id", 0);
+    
+	    Layer_shptr new_layer(new Layer(prj->get_bounding_box(), layer_type));
+	    LogicModel_shptr lmodel = prj->get_logic_model();
+    
+	    debug(TM, "Parsed a layer entry for type %s. This is a %s layer. Background image is %s", layer_type_str.c_str(), Layer::get_layer_type_as_string(layer_type).c_str(), image_filename.c_str());
+    
+	    bool layer_enabled = true;
+	    if (layer_enabled_str.size() != 0)
+	  	  layer_enabled = parse_bool(layer_enabled_str);
+	    new_layer->set_enabled(layer_enabled);
+    
+	    new_layer->set_description(layer_description);
+	    new_layer->set_layer_id(layer_id);
+    
+	    lmodel->add_layer(position, new_layer);
+    
+	    load_background_image(new_layer, image_filename, prj);
     }
+
   }
 }
 
@@ -294,21 +300,21 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 }
 
 
-void ProjectImporter::parse_port_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj) {
+void ProjectImporter::parse_port_colors_element(QDomElement const port_colors_elem, Project_shptr prj) {
 
-  const xmlpp::Node::NodeList color_list = port_colors_elem->get_children("port-color");
+  const QDomNodeList color_list = port_colors_elem.elementsByTagName("port-color");
 
   PortColorManager_shptr port_color_manager = prj->get_port_color_manager();
 
-  for(xmlpp::Node::NodeList::const_iterator iter = color_list.begin();
-      iter != color_list.end();
-      ++iter) {
+  QDomElement color_elem;
+  for(int i = 0; i < color_list.count(); i++)
+  {
+	color_elem = color_list.at(i).toElement();
+    if(!color_elem.isNull()) {
 
-    if(const xmlpp::Element* color_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
-
-      const std::string port_name(color_elem->get_attribute_value("port-name"));
-      const std::string fill_color_str(color_elem->get_attribute_value("fill-color"));
-      const std::string frame_color_str(color_elem->get_attribute_value("frame-color"));
+      const std::string port_name(color_elem.attribute("port-name").toStdString());
+      const std::string fill_color_str(color_elem.attribute("fill-color").toStdString());
+      const std::string frame_color_str(color_elem.attribute("frame-color").toStdString());
 
       port_color_manager->set_color(port_name,
 				    parse_color_string(frame_color_str),
@@ -320,19 +326,19 @@ void ProjectImporter::parse_port_colors_element(const xmlpp::Element * const por
 
 }
 
-void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_colors_elem,
+void ProjectImporter::parse_colors_element(QDomElement const port_colors_elem,
 					   Project_shptr prj) {
 
-  const xmlpp::Node::NodeList color_list = port_colors_elem->get_children("color");
+  const QDomNodeList color_list = port_colors_elem.elementsByTagName("color");
 
-  for(xmlpp::Node::NodeList::const_iterator iter = color_list.begin();
-      iter != color_list.end();
-      ++iter) {
+  QDomElement color_elem;
+  for(int i = 0; i < color_list.count(); i++)
+  {
+	color_elem = color_list.at(i).toElement();
+    if(!color_elem.isNull()) {
 
-    if(const xmlpp::Element* color_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
-
-      const std::string object_name(color_elem->get_attribute_value("object"));
-      const std::string color_str(color_elem->get_attribute_value("color"));
+      const std::string object_name(color_elem.attribute("object").toStdString());
+      const std::string color_str(color_elem.attribute("color").toStdString());
       ENTITY_COLOR o;
 
       if(!object_name.compare("wire")) o = DEFAULT_COLOR_WIRE;
@@ -358,53 +364,60 @@ void ProjectImporter::parse_colors_element(const xmlpp::Element * const port_col
 
 }
 
-void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_elem, Project_shptr prj) {
-
-  xmlpp::Node::NodeList::const_iterator iter;
-
-  const xmlpp::Node::NodeList regular_grid_list = grids_elem->get_children("regular-grid");
-  const xmlpp::Node::NodeList irregular_grid_list = grids_elem->get_children("irregular-grid");
+void ProjectImporter::parse_grids_element(QDomElement const grids_elem, Project_shptr prj) {
 
 
-  for(iter = regular_grid_list.begin(); iter != regular_grid_list.end(); ++iter) {
-    if(const xmlpp::Element* regular_grid_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
+  const QDomNodeList regular_grid_list = grids_elem.elementsByTagName("regular-grid");
+  const QDomNodeList irregular_grid_list = grids_elem.elementsByTagName("irregular-grid");
 
-      const Glib::ustring orientation(regular_grid_elem->get_attribute_value("orientation"));
+  QDomElement regular_grid_elem;
+  for (int i = 0; i < regular_grid_list.count(); i++) 
+  {
+	regular_grid_elem = regular_grid_list.at(i).toElement();
+    if(!regular_grid_elem.isNull()) {
+
+      const std::string orientation(regular_grid_elem.attribute("orientation").toStdString());
 
       RegularGrid_shptr reg_grid = (orientation == "horizontal") ?
 	prj->get_regular_horizontal_grid() : prj->get_regular_vertical_grid();
 
       reg_grid->set_distance(parse_number<unsigned int>(regular_grid_elem, "distance", 0));
-      reg_grid->set_enabled(parse_bool(regular_grid_elem->get_attribute_value("enabled")));
+      reg_grid->set_enabled(parse_bool(regular_grid_elem.attribute("enabled").toStdString()));
     }
   }
 
-  for(iter = irregular_grid_list.begin(); iter != irregular_grid_list.end(); ++iter) {
-    if(const xmlpp::Element* irregular_grid_elem = dynamic_cast<const xmlpp::Element*>(*iter)) {
+  QDomElement irregular_grid_elem;
+  for (int j = 0; j < irregular_grid_list.count(); j++)
+  {
+	irregular_grid_elem = irregular_grid_list.at(j).toElement();
+    if(!irregular_grid_elem.isNull()) {
 
-      const Glib::ustring orientation(irregular_grid_elem->get_attribute_value("orientation"));
+      const std::string orientation(irregular_grid_elem.attribute("orientation").toStdString());
 
       IrregularGrid_shptr irreg_grid = (orientation == "horizontal") ?
 	prj->get_irregular_horizontal_grid() : prj->get_irregular_vertical_grid();
 
-      irreg_grid->set_enabled(parse_bool(irregular_grid_elem->get_attribute_value("enabled")));
+      irreg_grid->set_enabled(parse_bool(irregular_grid_elem.attribute("enabled").toStdString()));
 
-      const xmlpp::Node::NodeList offsets_entry_list = irregular_grid_elem->get_children("offsets");
-      const xmlpp::Node::NodeList::const_iterator offsets_iter = offsets_entry_list.begin();
-      if(offsets_iter != offsets_entry_list.end()) {
-	const xmlpp::Element* offsets_elem = dynamic_cast<const xmlpp::Element*>(*offsets_iter);
-	if(offsets_elem != NULL) {
+      const QDomNodeList offsets_entry_list = irregular_grid_elem.elementsByTagName("offsets");
 
-	  const xmlpp::Node::NodeList offset_entry_list = offsets_elem->get_children("offset-entry");
-	  for(xmlpp::Node::NodeList::const_iterator offs_iter = offset_entry_list.begin();
-	      offs_iter != offset_entry_list.end();
-	      ++offs_iter) {
-	    if(const xmlpp::Element* offset_entry_elem = dynamic_cast<const xmlpp::Element*>(*offs_iter)) {
-	      irreg_grid->add_offset(parse_number<int>(offset_entry_elem, "offset"));
+      if(!offsets_entry_list.isEmpty()) {
+	    const QDomElement offsets_elem = offsets_entry_list.at(0).toElement();
+
+	    if(!offsets_elem.isNull()) {
+	      const QDomNodeList offset_entry_list = offsets_elem.elementsByTagName("offset-entry");
+
+		  for (int k = 0; k < offset_entry_list.count(); k++) {
+			QDomElement offset_entry_elem = offset_entry_list.at(k).toElement();
+	        if(!offset_entry_elem.isNull()) {
+	          irreg_grid->add_offset(parse_number<int>(offset_entry_elem, "offset"));
+	        }
+	      }
+
 	    }
-	  }
-	}
+
       }
+
     }
   }
 }
@@ -412,7 +425,7 @@ void ProjectImporter::parse_grids_element(const xmlpp::Element * const grids_ele
 
 
 void ProjectImporter::parse_project_element(Project_shptr parent_prj,
-					    const xmlpp::Element * const project_elem) {
+					    QDomElement const project_elem) {
 
   int w = parent_prj->get_width();
   int h = parent_prj->get_height();
@@ -424,14 +437,14 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
   reg_vert_grid->set_range(0, w);
   reg_hor_grid->set_range(0, h);
 
-  parent_prj->set_degate_version(project_elem->get_attribute_value("degate-version"));
-  parent_prj->set_name(project_elem->get_attribute_value("name"));
-  parent_prj->set_description(project_elem->get_attribute_value("description"));
+  parent_prj->set_degate_version(project_elem.attribute("degate-version").toStdString());
+  parent_prj->set_name(project_elem.attribute("name").toStdString());
+  parent_prj->set_description(project_elem.attribute("description").toStdString());
 
-  if(!project_elem->get_attribute_value("server-url").empty())
-    parent_prj->set_server_url(project_elem->get_attribute_value("server-url"));
+  if(project_elem.attribute("server-url") != 0)
+    parent_prj->set_server_url(project_elem.attribute("server-url").toStdString());
 
-  if(!project_elem->get_attribute_value("last-pulled-transaction-id").empty())
+  if(project_elem.attribute("last-pulled-transaction-id") != 0)
     parent_prj->set_last_pulled_tid(parse_number<transaction_id_t>(project_elem,
 								   "last-pulled-transaction-id"));
 
@@ -444,16 +457,16 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
   parent_prj->set_template_dimension(parse_number<int>(project_elem, "template-dimension", 0));
   parent_prj->set_font_size(parse_number<unsigned int>(project_elem, "font-size", 10));
 
-  const xmlpp::Element * e = get_dom_twig(project_elem, "grids");
-  if(e != NULL) parse_grids_element(e, parent_prj);
+  QDomElement e = get_dom_twig(project_elem, "grids");
+  if(!e.isNull()) parse_grids_element(e, parent_prj);
 
   e = get_dom_twig(project_elem, "layers");
-  if(e != NULL) parse_layers_element(e, parent_prj);
+  if(!e.isNull()) parse_layers_element(e, parent_prj);
 
   e = get_dom_twig(project_elem, "port-colors");
-  if(e != NULL) parse_port_colors_element(e, parent_prj);
+  if(!e.isNull()) parse_port_colors_element(e, parent_prj);
 
   e = get_dom_twig(project_elem, "default-colors");
-  if(e != NULL) parse_colors_element(e, parent_prj);
+  if(!e.isNull()) parse_colors_element(e, parent_prj);
 
 }

@@ -24,7 +24,7 @@
 
 #include "globals.h"
 #include "Exporter.h"
-#include <libxml++/libxml++.h>
+#include <QtXml/QtXml>
 
 namespace degate {
 

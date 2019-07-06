@@ -42,12 +42,12 @@ class ProjectImporter : public XMLImporter {
 
 private:
 
-  void parse_project_element(Project_shptr parent_prj, const xmlpp::Element * const project_node);
-  void parse_grids_element(const xmlpp::Element * const project_node, Project_shptr prj);
-  void parse_layers_element(const xmlpp::Element * const layers_node, Project_shptr prj);
-  void parse_port_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj);
+  void parse_project_element(Project_shptr parent_prj, QDomElement const project_node);
+  void parse_grids_element(QDomElement const project_node, Project_shptr prj);
+  void parse_layers_element(QDomElement const layers_node, Project_shptr prj);
+  void parse_port_colors_element(QDomElement const port_colors_elem, Project_shptr prj);
 
-  void parse_colors_element(const xmlpp::Element * const port_colors_elem, Project_shptr prj);
+  void parse_colors_element(QDomElement const port_colors_elem, Project_shptr prj);
 
   std::string get_project_filename(std::string const& dir) const;
 
