@@ -34,19 +34,24 @@
 #include <iostream>
 #include <iomanip>
 
-#ifdef __APPLE__
-  #include <sys/time.h> // for gettimeofday
-  #define GET_CLOCK(dst_variable) \
-  { \
-      struct timeval tv; \
-      gettimeofday(&tv, NULL); \
-      dst_variable.tv_sec = tv.tv_sec; \
-      dst_variable.tv_nsec = tv.tv_usec * 1000; \
-  }
-#else
+#include <chrono>
+
+void get_clock(struct timespec * ts)
+{
+	assert(ts != NULL);
+
+	std::chrono::steady_clock::time_point tp = std::chrono::steady_clock::now();
+
+    auto secs = std::chrono::time_point_cast<std::chrono::seconds>(tp);
+    auto ns = std::chrono::time_point_cast<std::chrono::nanoseconds>(tp) - std::chrono::time_point_cast<std::chrono::nanoseconds>(secs);
+
+	ts->tv_sec = secs.time_since_epoch().count();
+	ts->tv_nsec = ns.count();
+}
+
 #define GET_CLOCK(dst_variable) \
-      clock_gettime(CLOCK_MONOTONIC,  &dst_variable);
-#endif
+      get_clock(&dst_variable);
+
 
 // #define TILECACHE_DEBUG
 
