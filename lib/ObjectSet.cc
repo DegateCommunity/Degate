@@ -27,33 +27,35 @@ using namespace std;
 using namespace degate;
 
 
-bool degate::is_removable(PlacedLogicModelObject_shptr o) {
-  return std::dynamic_pointer_cast<GatePort>(o) == NULL;
+bool degate::is_removable(PlacedLogicModelObject_shptr o)
+{
+	return std::dynamic_pointer_cast<GatePort>(o) == NULL;
 }
 
-bool degate::is_interconnectable(PlacedLogicModelObject_shptr o) {
-  return std::dynamic_pointer_cast<ConnectedLogicModelObject>(o) != NULL;
-}
-
-
-
-void ObjectSet::clear() {
-  objects.clear();
+bool degate::is_interconnectable(PlacedLogicModelObject_shptr o)
+{
+	return std::dynamic_pointer_cast<ConnectedLogicModelObject>(o) != NULL;
 }
 
 
-void ObjectSet::add(PlacedLogicModelObject_shptr object) {
-  objects.insert(object);
+void ObjectSet::clear()
+{
+	objects.clear();
 }
 
 
-void ObjectSet::remove(PlacedLogicModelObject_shptr object) {
-
-  object_set_type::iterator it = find(objects.begin(), objects.end(), object);
-
-  if(it != objects.end()) {
-    objects.erase(it);
-  }
+void ObjectSet::add(PlacedLogicModelObject_shptr object)
+{
+	objects.insert(object);
 }
 
 
+void ObjectSet::remove(PlacedLogicModelObject_shptr object)
+{
+	object_set_type::iterator it = find(objects.begin(), objects.end(), object);
+
+	if (it != objects.end())
+	{
+		objects.erase(it);
+	}
+}

@@ -32,37 +32,35 @@
 
 #include <set>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * An annotation for subprojects.
+	 */
 
-  /**
-   * An annotation for subprojects.
-   */
+	class SubProjectAnnotation : public Annotation
+	{
+	public:
 
-  class SubProjectAnnotation : public Annotation {
+		/**
+		 * Create a new annotation.
+		 */
 
-
-  public:
-
-    /**
-     * Create a new annotation.
-     */
-
-    SubProjectAnnotation(int min_x, int max_x, int min_y, int max_y,
-			 std::string const& subproject_path);
+		SubProjectAnnotation(int min_x, int max_x, int min_y, int max_y,
+		                     std::string const& subproject_path);
 
 
-    /**
-     * Create a new annotation.
-     */
+		/**
+		 * Create a new annotation.
+		 */
 
-    SubProjectAnnotation(BoundingBox const& bbox, std::string const& subproject_path);
+		SubProjectAnnotation(BoundingBox const& bbox, std::string const& subproject_path);
 
-    void set_path(std::string const& subproject_path);
+		void set_path(std::string const& subproject_path);
 
-    std::string get_path() const;
+		std::string get_path() const;
+	};
 
-  };
-
-  typedef std::shared_ptr<SubProjectAnnotation> SubProjectAnnotation_shptr;
+	typedef std::shared_ptr<SubProjectAnnotation> SubProjectAnnotation_shptr;
 }
 #endif

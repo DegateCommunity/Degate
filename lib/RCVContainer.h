@@ -27,98 +27,97 @@
 #include <list>
 #include <RCBase.h>
 
-namespace degate {
+namespace degate
+{
+	// forward declaration
+	class RCViolation;
+	typedef std::shared_ptr<RCViolation> RCViolation_shptr;
 
-  // forward declaration
-  class RCViolation;
-  typedef std::shared_ptr<RCViolation> RCViolation_shptr;
+	/**
+	 * Representation for a container type, which holds a list
+	 * of Rule Check Violations.
+	 */
+	class RCVContainer
+	{
+	public:
+		typedef std::list<RCViolation_shptr> container_type;
+		typedef container_type::iterator iterator;
+		typedef container_type::const_iterator const_iterator;
 
-  /**
-   * Representation for a container type, which holds a list
-   * of Rule Check Violations.
-   */
-  class RCVContainer {
-  public:
-    typedef std::list<RCViolation_shptr> container_type;
-    typedef container_type::iterator iterator;
-    typedef container_type::const_iterator const_iterator;
+	private:
+		container_type violations;
 
-  private:
-    container_type violations;
+	public:
+		/**
+		 * The ctor.
+		 */
+		RCVContainer();
 
-  public:
-    /**
-     * The ctor.
-     */
-    RCVContainer();
+		/**
+		 * The dtor.
+		 */
+		~RCVContainer();
 
-    /**
-     * The dtor.
-     */
-    ~RCVContainer();
+		/**
+		 * Add a RC violation to the container.
+		 */
+		void push_back(RCViolation_shptr rcv);
 
-    /**
-     * Add a RC violation to the container.
-     */
-    void push_back(RCViolation_shptr rcv);
-    
-    /**
-     * Get an iterator to the start of the list.
-     */
-    iterator begin();
+		/**
+		 * Get an iterator to the start of the list.
+		 */
+		iterator begin();
 
-    /**
-     * Get an iterator to the end of the list.
-     */
-    iterator end();
+		/**
+		 * Get an iterator to the end of the list.
+		 */
+		iterator end();
 
-    /**
-     * Get a const iterator for the start of the list.
-     */
-    const_iterator begin() const;
+		/**
+		 * Get a const iterator for the start of the list.
+		 */
+		const_iterator begin() const;
 
-    /**
-     * Get a const iterator for the end of the list.
-     */
-    const_iterator end() const;
-    
-    /**
-     * Clear entire list of RC violations.
-     */
-    void clear();
+		/**
+		 * Get a const iterator for the end of the list.
+		 */
+		const_iterator end() const;
 
-    /**
-     * Find a RC violation in the container.
-     */
-    iterator find(RCViolation_shptr rcv);
+		/**
+		 * Clear entire list of RC violations.
+		 */
+		void clear();
 
-    /**
-     * Find a RC violation and return a const iterator.
-     */
-    const_iterator find(RCViolation_shptr rcv) const;
+		/**
+		 * Find a RC violation in the container.
+		 */
+		iterator find(RCViolation_shptr rcv);
 
-    /**
-     * Get the number of entries.
-     */
-    size_t size() const;
+		/**
+		 * Find a RC violation and return a const iterator.
+		 */
+		const_iterator find(RCViolation_shptr rcv) const;
 
-    /**
-     * Check if the container has already stored a specific RC violation.
-     * @param rcv The RC violation for which the presence should be checked.
-     * @return Returns true, if the RC violation is present in the container.
-     */
-    bool contains(RCViolation_shptr rcv) const;
+		/**
+		 * Get the number of entries.
+		 */
+		size_t size() const;
 
-    /**
-     * Erase a specific RC violation.
-     * @param rcv The RC violation, which should be removed.
-     * @return Returns true, if the RC violation was found and removed.
-     *   Else false is returned.
-     */
-    bool erase(RCViolation_shptr rcv);
+		/**
+		 * Check if the container has already stored a specific RC violation.
+		 * @param rcv The RC violation for which the presence should be checked.
+		 * @return Returns true, if the RC violation is present in the container.
+		 */
+		bool contains(RCViolation_shptr rcv) const;
 
-  };
-
+		/**
+		 * Erase a specific RC violation.
+		 * @param rcv The RC violation, which should be removed.
+		 * @return Returns true, if the RC violation was found and removed.
+		 *   Else false is returned.
+		 */
+		bool erase(RCViolation_shptr rcv);
+	};
 }
 
 #endif

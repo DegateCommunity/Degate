@@ -28,90 +28,101 @@
 #include <LogicModel.h>
 #include <RCBase.h>
 
-namespace degate {
+namespace degate
+{
+	class RCViolation
+	{
+	private:
 
-  class RCViolation {
-  private:
+		PlacedLogicModelObject_shptr _obj;
+		std::string _problem_description;
+		std::string _rc_violation_class;
+		RC_SEVERITY _severity;
 
-    PlacedLogicModelObject_shptr _obj;
-    std::string _problem_description;
-    std::string _rc_violation_class;
-    RC_SEVERITY _severity;
+	public:
 
-  public:
+		/** Create a new Rule Check violation.
+		 * @param obj The object, which is affected from the violation.
+		 * @param problem_description A string, which contains a description
+		 *   of the violated contraint.
+		 * @param rc_violation_class This is a unique technical name for
+		 *   a rc violation, that indicates the problem class.
+		 * @param severity Indicates the type of problem, actually
+		 *   if a rc violation is just a warning or a real error.
+		 */
 
-    /** Create a new Rule Check violation.
-     * @param obj The object, which is affected from the violation.
-     * @param problem_description A string, which contains a description
-     *   of the violated contraint.
-     * @param rc_violation_class This is a unique technical name for
-     *   a rc violation, that indicates the problem class.
-     * @param severity Indicates the type of problem, actually
-     *   if a rc violation is just a warning or a real error.
-     */
-     
-    RCViolation(PlacedLogicModelObject_shptr obj,
-		std::string const& problem_description,
-		std::string const& rc_violation_class,
-		RC_SEVERITY severity = RC_ERROR) :
-      _obj(obj),
-      _problem_description(problem_description),
-      _rc_violation_class(rc_violation_class),
-      _severity(severity) {
-    }
+		RCViolation(PlacedLogicModelObject_shptr obj,
+		            std::string const& problem_description,
+		            std::string const& rc_violation_class,
+		            RC_SEVERITY severity = RC_ERROR) :
+			_obj(obj),
+			_problem_description(problem_description),
+			_rc_violation_class(rc_violation_class),
+			_severity(severity)
+		{
+		}
 
-    std::string get_problem_description() const {
-      return _problem_description;
-    }
+		std::string get_problem_description() const
+		{
+			return _problem_description;
+		}
 
-    std::string get_rc_violation_class() const {
-      return _rc_violation_class;
-    }
+		std::string get_rc_violation_class() const
+		{
+			return _rc_violation_class;
+		}
 
-    RC_SEVERITY get_severity() const {
-      return _severity;
-    }
+		RC_SEVERITY get_severity() const
+		{
+			return _severity;
+		}
 
-    std::string get_severity_as_string() const {
-      switch(_severity) {
-      case RC_ERROR: return "error"; break;
-      case RC_WARNING: return "warning"; break;      
-      case RC_UNDEFINED: 
-      default: return "undefined"; break;
-      }
-    }
+		std::string get_severity_as_string() const
+		{
+			switch (_severity)
+			{
+			case RC_ERROR: return "error";
+				break;
+			case RC_WARNING: return "warning";
+				break;
+			case RC_UNDEFINED:
+			default: return "undefined";
+				break;
+			}
+		}
 
-    static RC_SEVERITY get_severity_from_string(std::string const & str) {
-      if(str == "error") return RC_ERROR;
-      else if(str == "warning") return RC_WARNING;
-      return RC_UNDEFINED;
-    }
+		static RC_SEVERITY get_severity_from_string(std::string const& str)
+		{
+			if (str == "error") return RC_ERROR;
+			else if (str == "warning") return RC_WARNING;
+			return RC_UNDEFINED;
+		}
 
-    bool matches_filter(std::string const& filter_pattern) const {
-      return filter_pattern.empty() ||
-	get_rc_violation_class().find(filter_pattern) != std::string::npos ||
-	get_severity_as_string().find(filter_pattern) != std::string::npos ||
-	get_problem_description().find(filter_pattern) != std::string::npos;
-    }
+		bool matches_filter(std::string const& filter_pattern) const
+		{
+			return filter_pattern.empty() ||
+				get_rc_violation_class().find(filter_pattern) != std::string::npos ||
+				get_severity_as_string().find(filter_pattern) != std::string::npos ||
+				get_problem_description().find(filter_pattern) != std::string::npos;
+		}
 
-    PlacedLogicModelObject_shptr get_object() const {
-      return _obj;
-    }
+		PlacedLogicModelObject_shptr get_object() const
+		{
+			return _obj;
+		}
 
-    /**
-     * Check if two rc violations are conceptually equal.
-     */
-    bool equals(RCViolation_shptr rcv) const {
-      return 
-	_obj == rcv->_obj &&
-	_problem_description == rcv->_problem_description &&
-	_rc_violation_class == rcv->_rc_violation_class &&
-	_severity == rcv->_severity;
-    }
-
-
-  };
-
+		/**
+		 * Check if two rc violations are conceptually equal.
+		 */
+		bool equals(RCViolation_shptr rcv) const
+		{
+			return
+				_obj == rcv->_obj &&
+				_problem_description == rcv->_problem_description &&
+				_rc_violation_class == rcv->_rc_violation_class &&
+				_severity == rcv->_severity;
+		}
+	};
 }
 
 #endif

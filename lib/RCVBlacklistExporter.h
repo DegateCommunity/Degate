@@ -30,28 +30,31 @@
 
 #include <stdexcept>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The RCVBlacklistExporter exports a set of RC Violations, which should be ignored.
+	 */
 
-  /**
-   * The RCVBlacklistExporter exports a set of RC Violations, which should be ignored.
-   */
-  
-  class RCVBlacklistExporter : public XMLExporter {
-    
-  private:
-    
-    void add_rcv(xmlpp::Element* templates_elem, RCViolation_shptr rcv);
-    
-    ObjectIDRewriter_shptr oid_rewriter;
-    
-  public:
-    RCVBlacklistExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter) {}
-    ~RCVBlacklistExporter() {}
-    
-    void export_data(std::string const& filename, RCBase::container_type const& violations);
-    
-  };
+	class RCVBlacklistExporter : public XMLExporter
+	{
+	private:
 
+		void add_rcv(xmlpp::Element* templates_elem, RCViolation_shptr rcv);
+
+		ObjectIDRewriter_shptr oid_rewriter;
+
+	public:
+		RCVBlacklistExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter)
+		{
+		}
+
+		~RCVBlacklistExporter()
+		{
+		}
+
+		void export_data(std::string const& filename, RCBase::container_type const& violations);
+	};
 }
 
 #endif

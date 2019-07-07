@@ -25,54 +25,50 @@
 #include <BoundingBox.h>
 #include <ColoredObject.h>
 
-namespace degate {
-
-  /**
-   * Represents an abstract shape.
-   */
-  class AbstractShape {
-
-
-  public:
-
-
-    /**
-     * Check in the Point with coordinates x and y is within the area of the shape.
-     */
-
-    virtual bool in_shape(int x, int y, int max_distance = 0) const = 0;
+namespace degate
+{
+	/**
+	 * Represents an abstract shape.
+	 */
+	class AbstractShape
+	{
+	public:
 
 
-    /**
-     * Check if this shape is in the bounding box.
-     * Note: it is somhow unclear if this 'in' means complete within or if an intersection is sufficient.
-     */
+		/**
+		 * Check in the Point with coordinates x and y is within the area of the shape.
+		 */
 
-    virtual bool in_bounding_box(BoundingBox const& bbox) const = 0;
-
-    /**
-     * Get the bounding box.
-     */
-
-    virtual BoundingBox const& get_bounding_box() const = 0;
-
-    /**
-     * Shift the shape vertically.
-     * Note: If you store this shape in a QuadTree, you have to manage the changes in your QuadTree by yourself.
-     */
-
-    virtual void shift_x(int delta_x) = 0;
-
-    /**
-     * Shift the shape horizontally.
-     * Note: If you store this shape in a QuadTree, you have to manage the changes in your QuadTree by yourself.
-     */
-
-    virtual void shift_y(int delta_y) = 0;
+		virtual bool in_shape(int x, int y, int max_distance = 0) const = 0;
 
 
-  };
+		/**
+		 * Check if this shape is in the bounding box.
+		 * Note: it is somhow unclear if this 'in' means complete within or if an intersection is sufficient.
+		 */
 
+		virtual bool in_bounding_box(BoundingBox const& bbox) const = 0;
+
+		/**
+		 * Get the bounding box.
+		 */
+
+		virtual BoundingBox const& get_bounding_box() const = 0;
+
+		/**
+		 * Shift the shape vertically.
+		 * Note: If you store this shape in a QuadTree, you have to manage the changes in your QuadTree by yourself.
+		 */
+
+		virtual void shift_x(int delta_x) = 0;
+
+		/**
+		 * Shift the shape horizontally.
+		 * Note: If you store this shape in a QuadTree, you have to manage the changes in your QuadTree by yourself.
+		 */
+
+		virtual void shift_y(int delta_y) = 0;
+	};
 }
 
 #endif

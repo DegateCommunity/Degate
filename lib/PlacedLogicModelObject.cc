@@ -29,46 +29,55 @@
 
 using namespace degate;
 
-PlacedLogicModelObject::PlacedLogicModelObject() : highlight_state(HLIGHTSTATE_NOT) {
+PlacedLogicModelObject::PlacedLogicModelObject() : highlight_state(HLIGHTSTATE_NOT)
+{
 }
 
-PlacedLogicModelObject::~PlacedLogicModelObject() {
+PlacedLogicModelObject::~PlacedLogicModelObject()
+{
 }
 
-void PlacedLogicModelObject::cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const {
-  ColoredObject::cloneDeepInto(destination, oldnew);
-  LogicModelObjectBase::cloneDeepInto(destination, oldnew);
-  
-  auto clone = std::dynamic_pointer_cast<PlacedLogicModelObject>(destination);
-  assert(clone.get () != 0);
-  clone->highlight_state = highlight_state;
-  clone->layer = std::dynamic_pointer_cast<Layer>(layer->cloneDeep(oldnew));
+void PlacedLogicModelObject::cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const
+{
+	ColoredObject::cloneDeepInto(destination, oldnew);
+	LogicModelObjectBase::cloneDeepInto(destination, oldnew);
+
+	auto clone = std::dynamic_pointer_cast<PlacedLogicModelObject>(destination);
+	assert(clone.get () != 0);
+	clone->highlight_state = highlight_state;
+	clone->layer = std::dynamic_pointer_cast<Layer>(layer->cloneDeep(oldnew));
 }
 
-PlacedLogicModelObject::HIGHLIGHTING_STATE PlacedLogicModelObject::get_highlighted() const {
-  return highlight_state;
+PlacedLogicModelObject::HIGHLIGHTING_STATE PlacedLogicModelObject::get_highlighted() const
+{
+	return highlight_state;
 }
 
-bool PlacedLogicModelObject::is_highlighted() const {
-  return highlight_state != PlacedLogicModelObject::HLIGHTSTATE_NOT;
+bool PlacedLogicModelObject::is_highlighted() const
+{
+	return highlight_state != PlacedLogicModelObject::HLIGHTSTATE_NOT;
 }
 
-void PlacedLogicModelObject::set_highlighted(PlacedLogicModelObject::HIGHLIGHTING_STATE state) {
-  highlight_state = state;
+void PlacedLogicModelObject::set_highlighted(PlacedLogicModelObject::HIGHLIGHTING_STATE state)
+{
+	highlight_state = state;
 }
 
 
-void PlacedLogicModelObject::set_layer(std::shared_ptr<Layer> layer) {
-  this->layer = layer;
+void PlacedLogicModelObject::set_layer(std::shared_ptr<Layer> layer)
+{
+	this->layer = layer;
 }
 
-std::shared_ptr<Layer> PlacedLogicModelObject::get_layer() {
-  return layer;
+std::shared_ptr<Layer> PlacedLogicModelObject::get_layer()
+{
+	return layer;
 }
 
-void PlacedLogicModelObject::notify_shape_change() {
-
-  if(layer != NULL && has_valid_object_id()) {
-    layer->notify_shape_change(get_object_id());
-  }
+void PlacedLogicModelObject::notify_shape_change()
+{
+	if (layer != NULL && has_valid_object_id())
+	{
+		layer->notify_shape_change(get_object_id());
+	}
 }

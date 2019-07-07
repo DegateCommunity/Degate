@@ -28,59 +28,65 @@
 #include <sstream>
 #include <boost/format.hpp>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The base class for importers that can parse text files.
+	 */
 
-  /**
-   * The base class for importers that can parse text files.
-   */
+	class Importer
+	{
+	protected:
 
-  class Importer {
+		/**
+		 * Check if the file exists and can be read.
+		 * @return Returns RET_OK if the file can be read.
+		 * @todo Change the return type tool bool.
+		 */
+		virtual ret_t check_file(std::string const& filename) const;
 
-  protected:
+		/**
+		 * Parse a string that represents a boolean value, that is "true" or "false".
+		 * @return Returns a C++ bool, depending on the parsed string.
+		 * @throw std::invalid_argument The exception is thrown, if the string can not be parsed.
+		 */
+		virtual bool parse_bool(std::string const& str) const;
 
-    /**
-     * Check if the file exists and can be read.
-     * @return Returns RET_OK if the file can be read.
-     * @todo Change the return type tool bool.
-     */
-    virtual ret_t check_file(std::string const& filename) const;
+		/**
+		 * Parse a string that represents a number.
+		 * @throw XMLAttributeParseException This exception is thrown, if the string can't be parsed.
+		 */
+		template <typename T>
+		T parse_number(std::string const& str) const
+		{
+			std::stringstream strm(str);
+			T v;
+			strm >> v;
+			if (!strm)
+			{
+				boost::format f("Can't parse number in Importer::parse_number(). Value is %1%");
+				f % str;
+				throw XMLAttributeParseException(f.str());
+			}
+			else return v;
+		}
 
-    /**
-     * Parse a string that represents a boolean value, that is "true" or "false".
-     * @return Returns a C++ bool, depending on the parsed string.
-     * @throw std::invalid_argument The exception is thrown, if the string can not be parsed.
-     */
-    virtual bool parse_bool(std::string const& str) const;
+	public:
 
-    /**
-     * Parse a string that represents a number.
-     * @throw XMLAttributeParseException This exception is thrown, if the string can't be parsed.
-     */
-    template <typename T> T parse_number(std::string const& str) const {
-      std::stringstream strm(str);
-      T v;
-      strm >> v;
-      if(!strm) {
-	boost::format f("Can't parse number in Importer::parse_number(). Value is %1%");
-	f % str;
-	throw XMLAttributeParseException(f.str());
-      }
-      else return v;
-    }
+		/**
+		 * Create a new text importer object.
+		 */
+		Importer()
+		{
+		}
 
-  public:
-
-    /**
-     * Create a new text importer object.
-     */
-    Importer() {}
-
-    /**
-     * Destroy a text importer object.
-     */
-    virtual ~Importer() {}
-  };
-
+		/**
+		 * Destroy a text importer object.
+		 */
+		virtual ~Importer()
+		{
+		}
+	};
 }
 
 #endif

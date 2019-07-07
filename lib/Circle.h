@@ -27,48 +27,48 @@
 #include "Shape.h"
 #include "BoundingBox.h"
 
-namespace degate {
+namespace degate
+{
+	class Circle : public AbstractShape, public DeepCopyableBase
+	{
+	private:
+		int x, y;
+		unsigned int diameter;
 
-  class Circle : public AbstractShape, public DeepCopyableBase {
+		BoundingBox bounding_box;
 
-  private:
-    int x, y;
-    unsigned int diameter;
+		void calculate_bounding_box();
 
-    BoundingBox bounding_box;
+	public:
 
-    void calculate_bounding_box();
+		Circle();
+		Circle(int x, int y, unsigned int diameter);
 
-  public:
+		virtual ~Circle()
+		{
+		}
 
-    Circle();
-    Circle(int x, int y, unsigned int diameter);
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-    virtual ~Circle() {}
-    
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+		virtual bool in_shape(int x, int y, int max_distance = 0) const;
 
-    virtual bool in_shape(int x, int y, int max_distance = 0) const;
+		virtual bool in_bounding_box(BoundingBox const& bbox) const;
+		virtual BoundingBox const& get_bounding_box() const;
 
-    virtual bool in_bounding_box(BoundingBox const& bbox) const;
-    virtual BoundingBox const& get_bounding_box() const;
+		virtual bool operator==(const Circle& other) const;
+		virtual bool operator!=(const Circle& other) const;
 
-    virtual bool operator==(const Circle& other) const;
-    virtual bool operator!=(const Circle& other) const;
+		virtual int get_x() const;
+		virtual int get_y() const;
+		virtual unsigned int get_diameter() const;
 
-    virtual int get_x() const;
-    virtual int get_y() const;
-    virtual unsigned int get_diameter() const;
+		virtual void set_x(int x);
+		virtual void set_y(int y);
+		virtual void set_diameter(unsigned int diameter);
 
-    virtual void set_x(int x);
-    virtual void set_y(int y);
-    virtual void set_diameter(unsigned int diameter);
-
-    virtual void shift_x(int delta_x);
-    virtual void shift_y(int delta_y);
-
-  };
-
+		virtual void shift_x(int delta_x);
+		virtual void shift_y(int delta_y);
+	};
 }
 
 #endif

@@ -30,71 +30,82 @@
 
 using namespace degate;
 
-Net::Net() {
+Net::Net()
+{
 }
 
-Net::~Net() {
+Net::~Net()
+{
 }
 
-DeepCopyable_shptr Net::cloneShallow() const {
-  auto clone = std::make_shared<Net>();
-  return clone;
+DeepCopyable_shptr Net::cloneShallow() const
+{
+	auto clone = std::make_shared<Net>();
+	return clone;
 }
 
-void Net::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
-  auto clone = std::dynamic_pointer_cast<Net>(dest);
-  clone->connections = connections;
-  LogicModelObjectBase::cloneDeepInto(dest, oldnew);
+void Net::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+{
+	auto clone = std::dynamic_pointer_cast<Net>(dest);
+	clone->connections = connections;
+	LogicModelObjectBase::cloneDeepInto(dest, oldnew);
 }
 
-Net::connection_iterator Net::begin() {
-  return connections.begin();
+Net::connection_iterator Net::begin()
+{
+	return connections.begin();
 }
 
-Net::connection_iterator Net::end() {
-  return connections.end();
+Net::connection_iterator Net::end()
+{
+	return connections.end();
 }
 
-void Net::remove_object(object_id_t oid) {
+void Net::remove_object(object_id_t oid)
+{
+	if (oid == 0)
+		throw InvalidObjectIDException("The object that has to be "
+			"removed from the net has no object ID.");
 
-  if(oid == 0)
-    throw InvalidObjectIDException("The object that has to be "
-				   "removed from the net has no object ID.");
-
-  connection_iterator i = connections.find(oid);
-  if(i != connections.end()) {
-    connections.erase(i);
-  }
-  else
-    throw CollectionLookupException("Can't remove object from the the net, "
-				    "because it is not in the net.");
+	connection_iterator i = connections.find(oid);
+	if (i != connections.end())
+	{
+		connections.erase(i);
+	}
+	else
+		throw CollectionLookupException("Can't remove object from the the net, "
+			"because it is not in the net.");
 }
 
-void Net::remove_object(ConnectedLogicModelObject_shptr o) {
-  remove_object(o->get_object_id());
-}
-
-
-void Net::add_object(object_id_t oid) {
-  if(oid == 0)
-    throw InvalidObjectIDException("The object that has to be "
-				   "added to the net has no object ID.");
-  else
-    connections.insert(oid);
-}
-
-void Net::add_object(ConnectedLogicModelObject_shptr o) {
-  add_object(o->get_object_id());
+void Net::remove_object(ConnectedLogicModelObject_shptr o)
+{
+	remove_object(o->get_object_id());
 }
 
 
-
-unsigned int Net::size() const {
-  return connections.size();
+void Net::add_object(object_id_t oid)
+{
+	if (oid == 0)
+		throw InvalidObjectIDException("The object that has to be "
+			"added to the net has no object ID.");
+	else
+		connections.insert(oid);
 }
 
-const std::string Net::get_descriptive_identifier() const {
-  boost::format fmter("Net %1%");
-  fmter % get_object_id();;
-  return fmter.str();
+void Net::add_object(ConnectedLogicModelObject_shptr o)
+{
+	add_object(o->get_object_id());
+}
+
+
+unsigned int Net::size() const
+{
+	return connections.size();
+}
+
+const std::string Net::get_descriptive_identifier() const
+{
+	boost::format fmter("Net %1%");
+	fmter % get_object_id();;
+	return fmter.str();
 }

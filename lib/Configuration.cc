@@ -26,24 +26,27 @@
 
 using namespace degate;
 
-Configuration::Configuration() {
+Configuration::Configuration()
+{
 }
 
-size_t Configuration::get_max_tile_cache_size() const {
-  char * cs = getenv("DEGATE_CACHE_SIZE");
-  if(cs == NULL) return 256;
-  return boost::lexical_cast<size_t>(cs);
+size_t Configuration::get_max_tile_cache_size() const
+{
+	char* cs = getenv("DEGATE_CACHE_SIZE");
+	if (cs == NULL) return 256;
+	return boost::lexical_cast<size_t>(cs);
 }
 
-std::string Configuration::get_servers_uri_pattern() const {
-  char * uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-  if(uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-  return uri_pattern;
+std::string Configuration::get_servers_uri_pattern() const
+{
+	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
+	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
+	return uri_pattern;
 }
 
-std::string Configuration::get_data_dir() const {
-  char * data_dir = getenv("DEGATE_HOME");
-  if(data_dir == NULL) return DEGATE_HOME;
-  return data_dir;
+std::string Configuration::get_data_dir() const
+{
+	char* data_dir = getenv("DEGATE_HOME");
+	if (data_dir == NULL) return DEGATE_HOME;
+	return data_dir;
 }
-

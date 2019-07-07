@@ -26,300 +26,338 @@
 
 using namespace degate;
 
-void Layer::add_object(std::shared_ptr<PlacedLogicModelObject> o) {
-
-  if(o->get_bounding_box() == BoundingBox(0, 0, 0, 0)) {
-    boost::format fmter("Error in add_object(): Object %1% with ID %2% has an "
+void Layer::add_object(std::shared_ptr<PlacedLogicModelObject> o)
+{
+	if (o->get_bounding_box() == BoundingBox(0, 0, 0, 0))
+	{
+		boost::format fmter("Error in add_object(): Object %1% with ID %2% has an "
 			"undefined bounding box. Can't insert it into the quadtree");
-    fmter % o->get_object_type_name() % o->get_object_id();
-    throw DegateLogicException(fmter.str());
-  }
+		fmter % o->get_object_type_name() % o->get_object_id();
+		throw DegateLogicException(fmter.str());
+	}
 
-  if(RET_IS_NOT_OK(quadtree.insert(o))) {
-    debug(TM, "Failed to insert object into quadtree.");
-    throw DegateRuntimeException("Failed to insert object into quadtree.");
-  }
-  objects[o->get_object_id()] = o;
+	if (RET_IS_NOT_OK(quadtree.insert(o)))
+	{
+		debug(TM, "Failed to insert object into quadtree.");
+		throw DegateRuntimeException("Failed to insert object into quadtree.");
+	}
+	objects[o->get_object_id()] = o;
 }
 
-void Layer::remove_object(std::shared_ptr<PlacedLogicModelObject> o) {
-  if(RET_IS_NOT_OK(quadtree.remove(o))) {
-    debug(TM, "Failed to remove object from quadtree.");
-    throw std::runtime_error("Failed to remove object from quadtree.");
-  }
+void Layer::remove_object(std::shared_ptr<PlacedLogicModelObject> o)
+{
+	if (RET_IS_NOT_OK(quadtree.remove(o)))
+	{
+		debug(TM, "Failed to remove object from quadtree.");
+		throw std::runtime_error("Failed to remove object from quadtree.");
+	}
 
-  objects.erase(o->get_object_id());
+	objects.erase(o->get_object_id());
 }
 
-Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type) :
-  quadtree(bbox, 100),
-  layer_type(_layer_type),
-  layer_pos(0),
-  enabled(true),
-  layer_id(0) {
+Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE _layer_type) :
+	quadtree(bbox, 100),
+	layer_type(_layer_type),
+	layer_pos(0),
+	enabled(true),
+	layer_id(0)
+{
 }
 
-Layer::Layer(BoundingBox const & bbox, Layer::LAYER_TYPE _layer_type,
-	     BackgroundImage_shptr img) :
-  quadtree(bbox, 100),
-  layer_type(_layer_type),
-  layer_pos(0),
-  enabled(true),
-  layer_id(0) {
-
-  set_image(img);
+Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE _layer_type,
+             BackgroundImage_shptr img) :
+	quadtree(bbox, 100),
+	layer_type(_layer_type),
+	layer_pos(0),
+	enabled(true),
+	layer_id(0)
+{
+	set_image(img);
 }
 
 
-Layer::~Layer() {
+Layer::~Layer()
+{
 }
 
 /**
  * @todo Check whether scaling_manager can really be reused by clones without trouble.
  */
-DeepCopyable_shptr Layer::cloneShallow() const {
-  auto clone = std::make_shared<Layer>(quadtree.get_bounding_box(), layer_type);
-  clone->layer_pos = layer_pos;
-  clone->enabled = enabled;
-  clone->description = description;
-  clone->layer_id = layer_id;
-  clone->scaling_manager = scaling_manager;
-  return clone;
+DeepCopyable_shptr Layer::cloneShallow() const
+{
+	auto clone = std::make_shared<Layer>(quadtree.get_bounding_box(), layer_type);
+	clone->layer_pos = layer_pos;
+	clone->enabled = enabled;
+	clone->description = description;
+	clone->layer_id = layer_id;
+	clone->scaling_manager = scaling_manager;
+	return clone;
 }
 
-void Layer::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
-  auto clone = std::dynamic_pointer_cast<Layer>(dest);
+void Layer::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+{
+	auto clone = std::dynamic_pointer_cast<Layer>(dest);
 
-  // quadtree
-  std::vector<quadtree_element_type> quadtree_elems;
-  quadtree.get_all_elements(quadtree_elems);
-  std::for_each(quadtree_elems.begin(), quadtree_elems.end(), [=,&clone](const quadtree_element_type &t) {
-    clone->quadtree.insert(std::dynamic_pointer_cast<PlacedLogicModelObject>(t->cloneDeep(oldnew)));
-  });
+	// quadtree
+	std::vector<quadtree_element_type> quadtree_elems;
+	quadtree.get_all_elements(quadtree_elems);
+	std::for_each(quadtree_elems.begin(), quadtree_elems.end(), [=,&clone](const quadtree_element_type& t)
+	{
+		clone->quadtree.insert(std::dynamic_pointer_cast<PlacedLogicModelObject>(t->cloneDeep(oldnew)));
+	});
 
-  // objects
-  std::for_each(objects.begin(), objects.end(), [&](object_collection::value_type v) {
-    clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->cloneDeep(oldnew));
-  });
+	// objects
+	std::for_each(objects.begin(), objects.end(), [&](object_collection::value_type v)
+	{
+		clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->cloneDeep(oldnew));
+	});
 }
 
-unsigned int Layer::get_width() const {
-  return quadtree.get_width();
+unsigned int Layer::get_width() const
+{
+	return quadtree.get_width();
 }
 
-unsigned int Layer::get_height() const {
-  return quadtree.get_height();
+unsigned int Layer::get_height() const
+{
+	return quadtree.get_height();
 }
 
-BoundingBox const& Layer::get_bounding_box() const {
-  return quadtree.get_bounding_box();
-}
-
-
-const std::string Layer::get_layer_type_as_string() const {
-  return get_layer_type_as_string(layer_type);
-}
-
-const std::string Layer::get_layer_type_as_string(LAYER_TYPE _layer_type) {
-  switch(_layer_type) {
-  case METAL:
-    return std::string("metal");
-  case LOGIC:
-    return std::string("logic");
-  case TRANSISTOR:
-    return std::string("transistor");
-  case UNDEFINED:
-  default:
-    return std::string("undefined");
-  }
-}
-
-Layer::LAYER_TYPE Layer::get_layer_type_from_string(std::string const& layer_type_str) {
-
-  if(layer_type_str == "metal") return Layer::METAL;
-  else if(layer_type_str == "logic") return Layer::LOGIC;
-  else if(layer_type_str == "transistor") return Layer::TRANSISTOR;
-  else if(layer_type_str == "undefined") return Layer::UNDEFINED;
-  else throw DegateRuntimeException("Can't parse layer type.");
+BoundingBox const& Layer::get_bounding_box() const
+{
+	return quadtree.get_bounding_box();
 }
 
 
-Layer::LAYER_TYPE Layer::get_layer_type() const {
-  return layer_type;
+const std::string Layer::get_layer_type_as_string() const
+{
+	return get_layer_type_as_string(layer_type);
 }
 
-void Layer::set_layer_type(LAYER_TYPE _layer_type) {
-  layer_type = _layer_type;
+const std::string Layer::get_layer_type_as_string(LAYER_TYPE _layer_type)
+{
+	switch (_layer_type)
+	{
+	case METAL:
+		return std::string("metal");
+	case LOGIC:
+		return std::string("logic");
+	case TRANSISTOR:
+		return std::string("transistor");
+	case UNDEFINED:
+	default:
+		return std::string("undefined");
+	}
 }
 
-
-bool Layer::is_empty() const {
-  return quadtree.is_empty();
-}
-
-layer_position_t Layer::get_layer_pos() const {
-  return layer_pos;
-}
-
-Layer::object_iterator Layer::objects_begin() {
-  return quadtree.region_iter_begin();
-}
-
-Layer::object_iterator Layer::objects_end() {
-  return quadtree.region_iter_end();
-}
-
-Layer::qt_region_iterator Layer::region_begin(int min_x, int max_x, int min_y, int max_y) {
-  return quadtree.region_iter_begin(min_x, max_x, min_y, max_y);
-}
-
-Layer::qt_region_iterator Layer::region_begin(BoundingBox const& bbox) {
-  return quadtree.region_iter_begin(bbox);
-}
-
-Layer::qt_region_iterator Layer::region_end() {
-  return quadtree.region_iter_end();
-}
-
-void Layer::set_image(BackgroundImage_shptr img) {
-
-  scaling_manager =
-    std::shared_ptr<ScalingManager<BackgroundImage> >
-    (new ScalingManager<BackgroundImage>(img, img->get_directory()));
-
-  scaling_manager->create_scalings();
-}
-
-BackgroundImage_shptr Layer::get_image() {
-  if(scaling_manager != NULL) {
-    ScalingManager<BackgroundImage>::image_map_element p = scaling_manager->get_image(1);
-    return p.second;
-  }
-  else throw DegateLogicException("You have to set the background image first.");
-}
-
-std::string Layer::get_image_filename() const {
-
-  if(scaling_manager == NULL)
-    throw DegateLogicException("There is no scaling manager.");
-  else {
-    const ScalingManager<BackgroundImage>::image_map_element p =
-      scaling_manager->get_image(1);
-
-    if(p.second != NULL)
-      return p.second->get_directory();
-    else
-      throw DegateLogicException("The scaling manager failed to return an image pointer.");
-  }
-}
-
-bool Layer::has_background_image() const {
-  return scaling_manager != NULL;
-}
-
-void Layer::unset_image() {
-  if(scaling_manager == NULL) throw DegateLogicException("There is no scaling manager.");
-  std::string img_dir = get_image_filename();
-  scaling_manager.reset();
-  debug(TM, "remove directory: %s", img_dir.c_str());
-  remove_directory(img_dir);
-}
-
-ScalingManager_shptr Layer::get_scaling_manager() {
-  return scaling_manager;
-}
-
-void Layer::print(std::ostream & os) {
-
-  os
-    << "Layer position       : " << get_layer_pos() << std::endl
-    << "Width                : " << get_width() << std::endl
-    << "Height               : " << get_height() << std::endl
-    << "Layer type           : " << get_layer_type_as_string() << std::endl
-    << "Has background image : " << (has_background_image() ? "true" : "false") << std::endl
-    << "Background image     : " << (has_background_image() ? get_image_filename() : "none" ) << std::endl
-    << std::endl
-    ;
-
-  quadtree.print(os);
-}
-
-void Layer::notify_shape_change(object_id_t object_id) {
-
-  if(!object_id)
-    throw InvalidObjectIDException("Invalid object ID in Layer::notify_shape_change()");
-
-  object_collection::iterator iter = objects.find(object_id);
-  if(iter == objects.end())
-    throw CollectionLookupException("Error in Layer::notify_shape_change(): "
-				    "The object is not in the layer.");
-
-  quadtree.notify_shape_change((*iter).second);
+Layer::LAYER_TYPE Layer::get_layer_type_from_string(std::string const& layer_type_str)
+{
+	if (layer_type_str == "metal") return Layer::METAL;
+	else if (layer_type_str == "logic") return Layer::LOGIC;
+	else if (layer_type_str == "transistor") return Layer::TRANSISTOR;
+	else if (layer_type_str == "undefined") return Layer::UNDEFINED;
+	else throw DegateRuntimeException("Can't parse layer type.");
 }
 
 
-PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance) {
+Layer::LAYER_TYPE Layer::get_layer_type() const
+{
+	return layer_type;
+}
 
-  debug(TM, "get_object_at_position %d, %d (max-dist: %d)", x, y, max_distance);
-  PlacedLogicModelObject_shptr plo;
+void Layer::set_layer_type(LAYER_TYPE _layer_type)
+{
+	layer_type = _layer_type;
+}
 
-  for(qt_region_iterator iter = quadtree.region_iter_begin(x - max_distance,
-							   x + max_distance,
-							   y - max_distance,
-							   y + max_distance);
-      iter != quadtree.region_iter_end(); ++iter) {
 
-    if((*iter)->in_shape(x, y, max_distance)) {
-      plo = *iter;
-    }
+bool Layer::is_empty() const
+{
+	return quadtree.is_empty();
+}
 
-    /* Prefer gate ports */
-    if(std::dynamic_pointer_cast<GatePort>(*iter) != NULL) {
-      return *iter;
-    }
-  }
-  return plo;
+layer_position_t Layer::get_layer_pos() const
+{
+	return layer_pos;
+}
+
+Layer::object_iterator Layer::objects_begin()
+{
+	return quadtree.region_iter_begin();
+}
+
+Layer::object_iterator Layer::objects_end()
+{
+	return quadtree.region_iter_end();
+}
+
+Layer::qt_region_iterator Layer::region_begin(int min_x, int max_x, int min_y, int max_y)
+{
+	return quadtree.region_iter_begin(min_x, max_x, min_y, max_y);
+}
+
+Layer::qt_region_iterator Layer::region_begin(BoundingBox const& bbox)
+{
+	return quadtree.region_iter_begin(bbox);
+}
+
+Layer::qt_region_iterator Layer::region_end()
+{
+	return quadtree.region_iter_end();
+}
+
+void Layer::set_image(BackgroundImage_shptr img)
+{
+	scaling_manager =
+		std::shared_ptr<ScalingManager<BackgroundImage>>
+		(new ScalingManager<BackgroundImage>(img, img->get_directory()));
+
+	scaling_manager->create_scalings();
+}
+
+BackgroundImage_shptr Layer::get_image()
+{
+	if (scaling_manager != NULL)
+	{
+		ScalingManager<BackgroundImage>::image_map_element p = scaling_manager->get_image(1);
+		return p.second;
+	}
+	else throw DegateLogicException("You have to set the background image first.");
+}
+
+std::string Layer::get_image_filename() const
+{
+	if (scaling_manager == NULL)
+		throw DegateLogicException("There is no scaling manager.");
+	else
+	{
+		const ScalingManager<BackgroundImage>::image_map_element p =
+			scaling_manager->get_image(1);
+
+		if (p.second != NULL)
+			return p.second->get_directory();
+		else
+			throw DegateLogicException("The scaling manager failed to return an image pointer.");
+	}
+}
+
+bool Layer::has_background_image() const
+{
+	return scaling_manager != NULL;
+}
+
+void Layer::unset_image()
+{
+	if (scaling_manager == NULL) throw DegateLogicException("There is no scaling manager.");
+	std::string img_dir = get_image_filename();
+	scaling_manager.reset();
+	debug(TM, "remove directory: %s", img_dir.c_str());
+	remove_directory(img_dir);
+}
+
+ScalingManager_shptr Layer::get_scaling_manager()
+{
+	return scaling_manager;
+}
+
+void Layer::print(std::ostream& os)
+{
+	os
+		<< "Layer position       : " << get_layer_pos() << std::endl
+		<< "Width                : " << get_width() << std::endl
+		<< "Height               : " << get_height() << std::endl
+		<< "Layer type           : " << get_layer_type_as_string() << std::endl
+		<< "Has background image : " << (has_background_image() ? "true" : "false") << std::endl
+		<< "Background image     : " << (has_background_image() ? get_image_filename() : "none") << std::endl
+		<< std::endl;
+
+	quadtree.print(os);
+}
+
+void Layer::notify_shape_change(object_id_t object_id)
+{
+	if (!object_id)
+		throw InvalidObjectIDException("Invalid object ID in Layer::notify_shape_change()");
+
+	object_collection::iterator iter = objects.find(object_id);
+	if (iter == objects.end())
+		throw CollectionLookupException("Error in Layer::notify_shape_change(): "
+			"The object is not in the layer.");
+
+	quadtree.notify_shape_change((*iter).second);
+}
+
+
+PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance)
+{
+	debug(TM, "get_object_at_position %d, %d (max-dist: %d)", x, y, max_distance);
+	PlacedLogicModelObject_shptr plo;
+
+	for (qt_region_iterator iter = quadtree.region_iter_begin(x - max_distance,
+	                                                          x + max_distance,
+	                                                          y - max_distance,
+	                                                          y + max_distance);
+	     iter != quadtree.region_iter_end(); ++iter)
+	{
+		if ((*iter)->in_shape(x, y, max_distance))
+		{
+			plo = *iter;
+		}
+
+		/* Prefer gate ports */
+		if (std::dynamic_pointer_cast<GatePort>(*iter) != NULL)
+		{
+			return *iter;
+		}
+	}
+	return plo;
 }
 
 unsigned int Layer::get_distance_to_gate_boundary(unsigned int x, unsigned int y,
-						  bool query_horizontal_distance,
-						  unsigned int width,
-						  unsigned int height) {
+                                                  bool query_horizontal_distance,
+                                                  unsigned int width,
+                                                  unsigned int height)
+{
+	for (Layer::qt_region_iterator iter = quadtree.region_iter_begin(x, x + width, y, y + height);
+	     iter != quadtree.region_iter_end(); ++iter)
+	{
+		if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(*iter))
+		{
+			if (query_horizontal_distance)
+			{
+				assert(gate->get_max_x() >= (int)x);
+				return gate->get_max_x() - x;
+			}
+			else
+			{
+				assert(gate->get_max_y() >= (int)y);
+				return gate->get_max_y() - y;
+			}
+		}
+	}
 
-  for(Layer::qt_region_iterator iter = quadtree.region_iter_begin(x, x + width, y, y + height);
-      iter != quadtree.region_iter_end(); ++iter) {
-
-    if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(*iter)) {
-
-      if(query_horizontal_distance) {
-	assert(gate->get_max_x() >= (int)x);
-	return gate->get_max_x() - x;
-      }
-      else {
-	assert(gate->get_max_y() >= (int)y);
-	return gate->get_max_y() - y;
-      }
-    }
-  }
-
-  return 0;
+	return 0;
 }
 
 
-void Layer::set_enabled(bool state) {
-  enabled = state;
+void Layer::set_enabled(bool state)
+{
+	enabled = state;
 }
 
-bool Layer::is_enabled() const {
-  return enabled;
-}
-
-
-std::string Layer::get_description() const {
-  return description;
+bool Layer::is_enabled() const
+{
+	return enabled;
 }
 
 
-void Layer::set_description(std::string const& description) {
-  this->description = description;
+std::string Layer::get_description() const
+{
+	return description;
+}
+
+
+void Layer::set_description(std::string const& description)
+{
+	this->description = description;
 }

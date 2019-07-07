@@ -26,56 +26,54 @@
 #include <ImageProcessorBase.h>
 #include <MedianFilter.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Processor: Median filter a single channel image.
+	 */
 
-  /**
-   * Processor: Median filter a single channel image.
-   */
+	template <typename ImageTypeIn, typename ImageTypeOut>
+	class IPMedianFilter : public ImageProcessorBase
+	{
+	private:
 
-  template<typename ImageTypeIn, typename ImageTypeOut>
-  class IPMedianFilter : public ImageProcessorBase {
+		unsigned int median_filter_width;
 
-  private:
+	public:
 
-    unsigned int median_filter_width;
+		/**
+		 * The constructor.
+		 */
 
-  public:
-
-    /**
-     * The constructor.
-     */
-
-    IPMedianFilter(unsigned int _median_filter_width = 3) :
-      ImageProcessorBase("IPNormalize",
-			 "Normalize an image.",
-			 false,
-			 typeid(typename ImageTypeIn::pixel_type),
-			 typeid(typename ImageTypeOut::pixel_type)),
-      median_filter_width(_median_filter_width) { }
-
-
-    virtual ImageBase_shptr run(ImageBase_shptr _in) {
-
-      assert(_in != NULL);
-
-      std::shared_ptr<ImageTypeIn> img_in =
-	std::dynamic_pointer_cast<ImageTypeIn>(_in);
-
-      std::shared_ptr<ImageTypeOut>
-	img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
-
-      assert(img_in != NULL);
-      assert(img_out != NULL);
-
-      median_filter<ImageTypeOut, ImageTypeIn>(img_out, img_in, median_filter_width);
-
-      return img_out;
-    }
+		IPMedianFilter(unsigned int _median_filter_width = 3) :
+			ImageProcessorBase("IPNormalize",
+			                   "Normalize an image.",
+			                   false,
+			                   typeid(typename ImageTypeIn::pixel_type),
+			                   typeid(typename ImageTypeOut::pixel_type)),
+			median_filter_width(_median_filter_width)
+		{
+		}
 
 
-  };
+		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		{
+			assert(_in != NULL);
 
+			std::shared_ptr<ImageTypeIn> img_in =
+				std::dynamic_pointer_cast<ImageTypeIn>(_in);
+
+			std::shared_ptr<ImageTypeOut>
+				img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
+
+			assert(img_in != NULL);
+			assert(img_out != NULL);
+
+			median_filter<ImageTypeOut, ImageTypeIn>(img_out, img_in, median_filter_width);
+
+			return img_out;
+		}
+	};
 }
 
 #endif
-

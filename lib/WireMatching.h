@@ -26,40 +26,39 @@
 #include <Project.h>
 #include <TemplateMatching.h>
 
-namespace degate {
+namespace degate
+{
+	class WireMatching : public Matching
+	{
+	private:
 
-  class WireMatching : public Matching {
+		Layer_shptr layer;
+		LogicModel_shptr lmodel;
+		unsigned int wire_diameter, median_filter_width;
+		double sigma, min_edge_magnitude;
+		BackgroundImage_shptr img;
 
-  private:
+		BoundingBox bounding_box;
 
-    Layer_shptr layer;
-    LogicModel_shptr lmodel;
-    unsigned int wire_diameter, median_filter_width;
-    double sigma, min_edge_magnitude;
-    BackgroundImage_shptr img;
+	public:
 
-    BoundingBox bounding_box;
+		WireMatching();
 
-  public:
+		/**
+		 * @exception InvalidPointerException
+		 * @exception DegateRuntimeException
+		 */
+		virtual void init(BoundingBox const& bounding_box, Project_shptr project);
 
-    WireMatching();
+		virtual void run();
 
-    /**
-     * @exception InvalidPointerException
-     * @exception DegateRuntimeException
-     */
-    virtual void init(BoundingBox const& bounding_box, Project_shptr project);
+		void set_wire_diameter(unsigned int wire_diameter);
+		void set_median_filter_width(unsigned int median_filter_width);
+		void set_sigma(double sigma);
+		void set_min_edge_magnitude(double min_edge_magnitude);
+	};
 
-    virtual void run();
-
-    void set_wire_diameter(unsigned int wire_diameter);
-    void set_median_filter_width(unsigned int median_filter_width);
-    void set_sigma(double sigma);
-    void set_min_edge_magnitude(double min_edge_magnitude);
-
-  };
-
-  typedef std::shared_ptr<WireMatching> WireMatching_shptr;
+	typedef std::shared_ptr<WireMatching> WireMatching_shptr;
 }
 
 #endif

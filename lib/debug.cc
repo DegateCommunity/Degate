@@ -27,24 +27,24 @@
 using namespace degate;
 
 #ifdef DEBUG
-void debug(const char * const module, int line, const char * const format, ...) {
+void debug(const char* const module, int line, const char* const format, ...)
+{
+	va_list args;
+	printf("[%s:%d] ", module, line);
 
-  va_list args;
-  printf("[%s:%d] ", module, line);
-
-  va_start(args, format);
-  vfprintf(stdout, format, args);
-  va_end(args);
-  puts("");
-
+	va_start(args, format);
+	vfprintf(stdout, format, args);
+	va_end(args);
+	puts("");
 }
 
 #endif
 
 
-std::string degate::gen_tabs(int n) {
-  std::string ret;
-  for(int i = 0; i < n; i++)
-    ret += "\t";
-  return ret;
+std::string degate::gen_tabs(int n)
+{
+	std::string ret;
+	for (int i = 0; i < n; i++)
+		ret += "\t";
+	return ret;
 }

@@ -30,152 +30,152 @@
 
 #include <stdexcept>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The LogicModelDOTExporter exports the logic model or a part
+	 * of the logic model as a dot graph.
+	 */
 
-  /**
-   * The LogicModelDOTExporter exports the logic model or a part
-   * of the logic model as a dot graph.
-   */
+	class LogicModelDOTExporter : public DOTExporter
+	{
+	public:
 
-  class LogicModelDOTExporter : public DOTExporter {
+		/**
+		 * Properties you can set in order to control the dot output.
+		 */
+		enum PROPERTY
+		{
+			/** default: false */
+			PRESERVE_GATE_POSITIONS,
 
-  public:
+			/** default: true */
+			ENABLE_EDGES,
 
-    /**
-     * Properties you can set in order to control the dot output.
-     */
-    enum PROPERTY {
+			/** default: true */
+			ENABLE_VIAS,
 
-      /** default: false */
-      PRESERVE_GATE_POSITIONS,
+			/** default: true */
+			ENABLE_WIRES,
 
-      /** default: true */
-      ENABLE_EDGES,
+			/** default: true */
+			ENABLE_TEMPLATE_NAMES,
 
-      /** default: true */
-      ENABLE_VIAS,
+			/**
+			 * Control whether the fill color of logic model objects is used
+			 * as fill color for shapes in the dot output.
+			 * default: false
+			*/
+			ENABLE_COLORS
+		};
 
-      /** default: true */
-      ENABLE_WIRES,
+	protected:
 
-      /** default: true */
-      ENABLE_TEMPLATE_NAMES,
+		void add_gate(Gate_shptr gate);
+		void add_via(Via_shptr via);
+		//void add_wire(Wire_shptr wire);
+		void add_net(Net_shptr lmodel);
+		std::string add_implicit_net(Net_shptr net);
 
-      /**
-       * Control whether the fill color of logic model objects is used
-       * as fill color for shapes in the dot output.
-       * default: false
-      */
-      ENABLE_COLORS
+		void add_connection(Net_shptr net, std::string const& src_name, std::string const& edge_name);
 
-    };
-
-  protected:
-
-    void add_gate(Gate_shptr gate);
-    void add_via(Via_shptr via);
-    //void add_wire(Wire_shptr wire);
-    void add_net(Net_shptr lmodel);
-    std::string add_implicit_net(Net_shptr net);
-
-    void add_connection(Net_shptr net, std::string const& src_name, std::string const& edge_name);
-
-    std::string oid_to_str(std::string const& prefix, object_id_t oid);
-
-
-  private:
-
-    std::map<object_id_t /* net id */, int> implicit_net_counter;
-
-    ObjectIDRewriter_shptr oid_rewriter;
-
-    double scaling;
-
-    typedef std::map<PROPERTY, bool> property_map;
-    property_map properties;
-
-    unsigned int fontsize, penwidth;
-
-  public:
-
-    LogicModelDOTExporter(ObjectIDRewriter_shptr _oid_rewriter) :
-      oid_rewriter(_oid_rewriter), scaling(1) {
-
-      properties[PRESERVE_GATE_POSITIONS] = false;
-      properties[ENABLE_EDGES] = true;
-      properties[ENABLE_VIAS] = true;
-      properties[ENABLE_WIRES] = true;
-      properties[ENABLE_TEMPLATE_NAMES] = true;
-      properties[ENABLE_COLORS] = false;
-
-      fontsize = 0;
-      penwidth = 0;
-    }
-
-    ~LogicModelDOTExporter() {}
-
-    /**
-     * Export the logic model as DOT file.
-     * @excpetion InvalidPathException
-     * @excpetion InvalidPointerException
-     * @excpetion std::runtime_error 
-     */
-    void export_data(std::string const& filename, LogicModel_shptr lmodel);
-
-    /**
-     * Set a property for the dot export.
-     */
-    void set_property(PROPERTY property, bool state) {
-      properties[property] = state;
-    }
-
-    /**
-     * Get the state of a property.
-     * @see set_property()
-     */
-    bool get_property(PROPERTY property) const {
-
-      property_map::const_iterator found = properties.find(property);
-
-      /* We can assert this, because the property-map is
-	 filled up in the constructor with default settings.
-	 If we forget it we might notice it here. */
-      assert(found != properties.end());
-
-      return (*found).second;
-    }
+		std::string oid_to_str(std::string const& prefix, object_id_t oid);
 
 
-    /**
-     * Set the font size.
-     * @param size The new font size in points. If you set it
-     *      to zero, the default font size is used.
-     * @see http://www.graphviz.org/doc/info/attrs.html#d:fontsize
-     */
-    void set_fontsize(unsigned int size) { fontsize = size; }
+	private:
 
-    /**
-     * Get the font size.
-     * @see set_fontsize()
-     */
-    unsigned int get_fontsize() const { return fontsize; }
+		std::map<object_id_t /* net id */, int> implicit_net_counter;
 
-    /**
-     * Set the pen width.
-     * @param size The new pen width in points. If you set it
-     *      to zero, the default pen width is used.
-     * @see http://www.graphviz.org/doc/info/attrs.html#d:penwidth
-     */
-    void set_penwidth(unsigned int size) { penwidth = size; }
+		ObjectIDRewriter_shptr oid_rewriter;
 
-    /**
-     * Get the pen width.
-     * @see set_penwidth()
-     */
-    unsigned int get_penwidth() const { return penwidth; }
+		double scaling;
 
-  };
+		typedef std::map<PROPERTY, bool> property_map;
+		property_map properties;
 
+		unsigned int fontsize, penwidth;
+
+	public:
+
+		LogicModelDOTExporter(ObjectIDRewriter_shptr _oid_rewriter) :
+			oid_rewriter(_oid_rewriter), scaling(1)
+		{
+			properties[PRESERVE_GATE_POSITIONS] = false;
+			properties[ENABLE_EDGES] = true;
+			properties[ENABLE_VIAS] = true;
+			properties[ENABLE_WIRES] = true;
+			properties[ENABLE_TEMPLATE_NAMES] = true;
+			properties[ENABLE_COLORS] = false;
+
+			fontsize = 0;
+			penwidth = 0;
+		}
+
+		~LogicModelDOTExporter()
+		{
+		}
+
+		/**
+		 * Export the logic model as DOT file.
+		 * @excpetion InvalidPathException
+		 * @excpetion InvalidPointerException
+		 * @excpetion std::runtime_error 
+		 */
+		void export_data(std::string const& filename, LogicModel_shptr lmodel);
+
+		/**
+		 * Set a property for the dot export.
+		 */
+		void set_property(PROPERTY property, bool state)
+		{
+			properties[property] = state;
+		}
+
+		/**
+		 * Get the state of a property.
+		 * @see set_property()
+		 */
+		bool get_property(PROPERTY property) const
+		{
+			property_map::const_iterator found = properties.find(property);
+
+			/* We can assert this, because the property-map is
+		   filled up in the constructor with default settings.
+		   If we forget it we might notice it here. */
+			assert(found != properties.end());
+
+			return (*found).second;
+		}
+
+
+		/**
+		 * Set the font size.
+		 * @param size The new font size in points. If you set it
+		 *      to zero, the default font size is used.
+		 * @see http://www.graphviz.org/doc/info/attrs.html#d:fontsize
+		 */
+		void set_fontsize(unsigned int size) { fontsize = size; }
+
+		/**
+		 * Get the font size.
+		 * @see set_fontsize()
+		 */
+		unsigned int get_fontsize() const { return fontsize; }
+
+		/**
+		 * Set the pen width.
+		 * @param size The new pen width in points. If you set it
+		 *      to zero, the default pen width is used.
+		 * @see http://www.graphviz.org/doc/info/attrs.html#d:penwidth
+		 */
+		void set_penwidth(unsigned int size) { penwidth = size; }
+
+		/**
+		 * Get the pen width.
+		 * @see set_penwidth()
+		 */
+		unsigned int get_penwidth() const { return penwidth; }
+	};
 }
 
 #endif

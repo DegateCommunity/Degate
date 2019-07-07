@@ -26,191 +26,209 @@
 #include <ctime>
 #include <boost/thread.hpp>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 */
 
-  /**
-   */
+	class ProgressControl
+	{
+	private:
 
-  class ProgressControl {
+		const static int averaging_buf_size = 5;
 
-  private:
+		double progress;
+		bool canceled;
 
-    const static int averaging_buf_size = 5;
+		double step_size;
+		time_t time_started;
 
-    double progress;
-    bool canceled;
+		time_t estimated[averaging_buf_size];
+		int estimated_idx;
 
-    double step_size;
-    time_t time_started;
+		std::string log_message;
+		bool log_message_set;
 
-    time_t estimated[averaging_buf_size];
-    int estimated_idx;
+		boost::recursive_mutex mtx;
 
-    std::string log_message;
-    bool log_message_set;
+	private:
 
-    boost::recursive_mutex mtx;
+		time_t get_time_left_averaged()
+		{
+			estimated[estimated_idx++] = get_time_left();
+			estimated_idx %= averaging_buf_size;
 
-  private:
+			unsigned int sum = 0, valid_values = 0;
+			for (int i = 0; i < averaging_buf_size; i++)
+				if (estimated[i] != -1)
+				{
+					sum += estimated[i];
+					valid_values++;
+				}
 
-    time_t get_time_left_averaged() {
-      estimated[estimated_idx++] = get_time_left();
-      estimated_idx %= averaging_buf_size;
+			return valid_values > 0 ? sum / valid_values : get_time_left_averaged();
+		}
 
-      unsigned int sum = 0, valid_values = 0;
-      for(int i = 0; i < averaging_buf_size; i++)
-	if(estimated[i] != -1) {
-	  sum += estimated[i];
-	  valid_values++;
-	}
+	protected:
 
-      return valid_values > 0 ? sum / valid_values : get_time_left_averaged();
-    }
+		/**
+		 * Set progress.
+		 */
+		virtual void set_progress(double progress)
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			this->progress = progress;
+		}
 
-  protected:
+		/**
+		 * Set step size.
+		 */
+		virtual void set_progress_step_size(double step_size)
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			this->step_size = step_size;
+		}
 
-    /**
-     * Set progress.
-     */
-    virtual void set_progress(double progress) {
-      boost::recursive_mutex::scoped_lock(mtx);
-      this->progress = progress;
-    }
+		/**
+		 * Increase progress.
+		 */
+		virtual void progress_step_done()
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			progress += step_size;
+		}
 
-    /**
-     * Set step size.
-     */
-    virtual void set_progress_step_size(double step_size) {
-      boost::recursive_mutex::scoped_lock(mtx);
-      this->step_size = step_size;
-    }
+		/**
+		 * Reset progress and cancel state.
+		 */
+		virtual void reset_progress()
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			time_started = time(NULL);
+			canceled = false;
+			progress = 0;
 
-    /**
-     * Increase progress.
-     */
-    virtual void progress_step_done() {
-      boost::recursive_mutex::scoped_lock(mtx);
-      progress += step_size;
-    }
+			for (int i = 0; i < averaging_buf_size; i++) estimated[i] = -1;
 
-    /**
-     * Reset progress and cancel state.
-     */
-    virtual void reset_progress() {
-      boost::recursive_mutex::scoped_lock(mtx);
-      time_started = time(NULL);
-      canceled = false;
-      progress = 0;
+			estimated_idx = 0;
+		}
 
-      for(int i = 0; i < averaging_buf_size; i++) estimated[i] = -1;
+	public:
 
-      estimated_idx = 0;
-    }
+		/**
+		 * The constructor
+		 */
 
-  public:
+		ProgressControl() : log_message_set(false)
+		{
+			reset_progress();
+		}
 
-    /**
-     * The constructor
-     */
+		/**
+		 * The destructor for a plugin.
+		 */
 
-    ProgressControl() : log_message_set(false) {
-      reset_progress();
-    }
+		virtual ~ProgressControl()
+		{
+		}
 
-    /**
-     * The destructor for a plugin.
-     */
+		/**
+		 * Check if the process is canceled.
+		 */
 
-    virtual ~ProgressControl() {}
+		virtual bool is_canceled() const
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			return canceled;
+		}
 
-    /**
-     * Check if the process is canceled.
-     */
+		/**
+		 * Stop the processing.
+		 */
 
-    virtual bool is_canceled() const {
-      boost::recursive_mutex::scoped_lock(mtx);
-      return canceled;
-    }
-
-    /**
-     * Stop the processing.
-     */
-
-    virtual void cancel() {
-      boost::recursive_mutex::scoped_lock(mtx);
-      canceled = true;
-    }
-
-
-    /**
-     * Get progress.
-     * @return Returns a value between 0 and 100 percent.
-     */
-
-    virtual double get_progress() const {
-      boost::recursive_mutex::scoped_lock(mtx);
-      return progress;
-    }
-
-    /**
-     * Get (real) time since the progress counter was resetted.
-     */
-    virtual time_t get_time_passed() const {
-      boost::mutex::scoped_lock(m_mutex);
-      return time(NULL) - time_started;
-    }
-
-    /**
-     * Get estimated time left in seconds.
-     * @return Returns the time to go in seconds or -1, if
-     *   that time cannot be calculated.
-     */
-    virtual time_t get_time_left() const {
-      boost::recursive_mutex::scoped_lock(mtx);
-      if(progress < 1.0)
-	return progress > 0 ? (1.0 - progress) * get_time_passed() / progress : -1;
-      return 0;
-    }
-
-    virtual std::string get_time_left_as_string() {
-      boost::recursive_mutex::scoped_lock(mtx);
-      time_t time_left = get_time_left_averaged();
-      if(time_left == -1) return std::string("-");
-      else {
-	char buf[100];
-	if(time_left < 60)
-	  snprintf(buf, sizeof(buf), "%d s", (int)time_left);
-	else if(time_left < 60*60)
-	  snprintf(buf, sizeof(buf), "%d:%02d m", (int)time_left / 60, (int)time_left % 60);
-	else {
-	  unsigned int minutes = (int)time_left / 60;
-	  snprintf(buf, sizeof(buf), "%d:%02d h", minutes / 60, (int)time_left % 60);
-	}
-	return std::string(buf);
-      }
-
-    }
+		virtual void cancel()
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			canceled = true;
+		}
 
 
-    virtual void set_log_message(std::string const& msg) {
-      boost::recursive_mutex::scoped_lock(mtx);
-      log_message = msg;
-      log_message_set = true;
-    }
+		/**
+		 * Get progress.
+		 * @return Returns a value between 0 and 100 percent.
+		 */
 
-    virtual std::string get_log_message() const {
-      boost::recursive_mutex::scoped_lock(mtx);
-      return log_message;
-    }
+		virtual double get_progress() const
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			return progress;
+		}
 
-    virtual bool has_log_message() const {
-      boost::recursive_mutex::scoped_lock(mtx);
-      return log_message_set;
-    }
-  };
+		/**
+		 * Get (real) time since the progress counter was resetted.
+		 */
+		virtual time_t get_time_passed() const
+		{
+			boost::mutex::scoped_lock (m_mutex);
+			return time(NULL) - time_started;
+		}
 
-  typedef std::shared_ptr<ProgressControl> ProgressControl_shptr;
+		/**
+		 * Get estimated time left in seconds.
+		 * @return Returns the time to go in seconds or -1, if
+		 *   that time cannot be calculated.
+		 */
+		virtual time_t get_time_left() const
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			if (progress < 1.0)
+				return progress > 0 ? (1.0 - progress) * get_time_passed() / progress : -1;
+			return 0;
+		}
+
+		virtual std::string get_time_left_as_string()
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			time_t time_left = get_time_left_averaged();
+			if (time_left == -1) return std::string("-");
+			else
+			{
+				char buf[100];
+				if (time_left < 60)
+					snprintf(buf, sizeof(buf), "%d s", (int)time_left);
+				else if (time_left < 60 * 60)
+					snprintf(buf, sizeof(buf), "%d:%02d m", (int)time_left / 60, (int)time_left % 60);
+				else
+				{
+					unsigned int minutes = (int)time_left / 60;
+					snprintf(buf, sizeof(buf), "%d:%02d h", minutes / 60, (int)time_left % 60);
+				}
+				return std::string(buf);
+			}
+		}
+
+
+		virtual void set_log_message(std::string const& msg)
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			log_message = msg;
+			log_message_set = true;
+		}
+
+		virtual std::string get_log_message() const
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			return log_message;
+		}
+
+		virtual bool has_log_message() const
+		{
+			boost::recursive_mutex::scoped_lock (mtx);
+			return log_message_set;
+		}
+	};
+
+	typedef std::shared_ptr<ProgressControl> ProgressControl_shptr;
 }
 
 #endif
-

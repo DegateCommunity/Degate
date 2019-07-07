@@ -29,33 +29,33 @@
 #include <memory>
 #include <ObjectSet.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * This class represents a collection of highlighted objects.
+	 */
+	class HlObjectSet : public ObjectSet
+	{
+	private:
+		typedef std::map<ConnectedLogicModelObject_shptr,
+		                 std::list<ConnectedLogicModelObject_shptr>> adjacent_objects_t;
+		adjacent_objects_t adjacent_objects;
 
-  /**
-   * This class represents a collection of highlighted objects.
-   */
-  class HlObjectSet : public ObjectSet {
+	private:
+		void highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
+		                                LogicModel_shptr lmodel);
 
-  private:
-    typedef std::map<ConnectedLogicModelObject_shptr,
-		     std::list<ConnectedLogicModelObject_shptr> > adjacent_objects_t;
-    adjacent_objects_t adjacent_objects;
+		void unhighlight_adjacent_objects(adjacent_objects_t::mapped_type& list);
 
-  private:
-    void highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
-				    LogicModel_shptr lmodel);
+		void highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state);
 
-    void unhighlight_adjacent_objects(adjacent_objects_t::mapped_type & list);
-
-    void highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state);
-
-  public:
-    void clear();
-    void add(degate::PlacedLogicModelObject_shptr object);
-    void add(degate::PlacedLogicModelObject_shptr object,
-	     LogicModel_shptr lmodel);
-    void remove(degate::PlacedLogicModelObject_shptr object);
-  };
+	public:
+		void clear();
+		void add(degate::PlacedLogicModelObject_shptr object);
+		void add(degate::PlacedLogicModelObject_shptr object,
+		         LogicModel_shptr lmodel);
+		void remove(degate::PlacedLogicModelObject_shptr object);
+	};
 }
 
 #endif

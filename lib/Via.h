@@ -36,127 +36,129 @@
 
 #include <memory>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Representation of a via that interconnects layers of a chip.
+	 */
+	class Via : public Circle, public ConnectedLogicModelObject, public RemoteObject
+	{
+	public:
 
-  /**
-   * Representation of a via that interconnects layers of a chip.
-   */
-  class Via : public Circle, public ConnectedLogicModelObject, public RemoteObject {
+		/**
+		 * An enum to indicate, which layer is connected.
+		 *
+		 * Vias are placed on a layer. If the via connects an object
+		 * from the current layer to a layer that is above, then the
+		 * direction is up.
+		 */
 
-  public:
+		enum DIRECTION
+		{
+			DIRECTION_UNDEFINED = 0,
+			DIRECTION_UP = 1,
+			DIRECTION_DOWN = 2
+		};
 
-    /**
-     * An enum to indicate, which layer is connected.
-     *
-     * Vias are placed on a layer. If the via connects an object
-     * from the current layer to a layer that is above, then the
-     * direction is up.
-     */
+	private:
 
-    enum DIRECTION {
-      DIRECTION_UNDEFINED = 0,
-      DIRECTION_UP = 1,
-      DIRECTION_DOWN = 2
-    };
+		DIRECTION direction;
 
-  private:
+	public:
 
-    DIRECTION direction;
+		explicit Via()
+		{
+		};
 
-  public:
+		/**
+		 * Constructor for a via object.
+		 */
 
-    explicit Via() {};
+		Via(int _x, int _y, diameter_t _diameter, DIRECTION _direction = DIRECTION_UNDEFINED);
 
-    /**
-     * Constructor for a via object.
-     */
+		/**
+		 * Destructor for a via object.
+		 */
 
-    Via(int _x, int _y, diameter_t _diameter, DIRECTION _direction = DIRECTION_UNDEFINED);
+		virtual ~Via();
 
-    /**
-     * Destructor for a via object.
-     */
+		//@{
+		DeepCopyable_shptr cloneShallow() const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		//@}
 
-    virtual ~Via();
+		/**
+		 * Get direction.
+		 */
 
-    //@{
-    DeepCopyable_shptr cloneShallow() const;
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
-    //@}
+		virtual DIRECTION get_direction() const;
 
-    /**
-     * Get direction.
-     */
+		/**
+		 * Set direction.
+		 */
 
-    virtual DIRECTION get_direction() const;
+		virtual void set_direction(DIRECTION dir);
 
-    /**
-     * Set direction.
-     */
+		/**
+		 * Get the direction as a human readable string.
+		 */
 
-    virtual void set_direction(DIRECTION dir);
-
-    /**
-     * Get the direction as a human readable string.
-     */
-
-    virtual const std::string get_direction_as_string() const;
-
-
-    /**
-     * Parse a via direction string and return it as enum value.
-     */
-    static Via::DIRECTION get_via_direction_from_string(std::string const& via_direction_str);
-
-    /**
-     * Get a human readable string that describes the whole
-     * logic model object. The string should be unique in order
-     * to let the user identify the concrete object. But that
-     * is not a must.
-     */
-
-    virtual const std::string get_descriptive_identifier() const;
-
-    /**
-     * Get a human readable string that names the object type.
-     * Here it is "Via".
-     */
-
-    virtual const std::string get_object_type_name() const;
-
-    /**
-     * Print the object.
-     */
-
-    void print(std::ostream & os, int n_tabs) const;
+		virtual const std::string get_direction_as_string() const;
 
 
+		/**
+		 * Parse a via direction string and return it as enum value.
+		 */
+		static Via::DIRECTION get_via_direction_from_string(std::string const& via_direction_str);
 
-    void shift_x(int delta_x);
-    void shift_y(int delta_y);
-    void set_x(int x);
-    void set_y(int y);
-    void set_diameter(unsigned int diameter);
+		/**
+		 * Get a human readable string that describes the whole
+		 * logic model object. The string should be unique in order
+		 * to let the user identify the concrete object. But that
+		 * is not a must.
+		 */
 
-    virtual bool in_bounding_box(BoundingBox const& bbox) const {
-      return Circle::in_bounding_box(bbox);
-    }
+		virtual const std::string get_descriptive_identifier() const;
 
-    virtual BoundingBox const& get_bounding_box() const {
-      return Circle::get_bounding_box();
-    }
+		/**
+		 * Get a human readable string that names the object type.
+		 * Here it is "Via".
+		 */
 
-    virtual bool in_shape(int x, int y, int max_distance = 0) const {
-      return Circle::in_shape(x, y, max_distance);
-    }
+		virtual const std::string get_object_type_name() const;
 
-  protected:
+		/**
+		 * Print the object.
+		 */
 
-    virtual object_id_t push_object_to_server(std::string const& server_url);
-
-  };
+		void print(std::ostream& os, int n_tabs) const;
 
 
+		void shift_x(int delta_x);
+		void shift_y(int delta_y);
+		void set_x(int x);
+		void set_y(int y);
+		void set_diameter(unsigned int diameter);
+
+		virtual bool in_bounding_box(BoundingBox const& bbox) const
+		{
+			return Circle::in_bounding_box(bbox);
+		}
+
+		virtual BoundingBox const& get_bounding_box() const
+		{
+			return Circle::get_bounding_box();
+		}
+
+		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		{
+			return Circle::in_shape(x, y, max_distance);
+		}
+
+	protected:
+
+		virtual object_id_t push_object_to_server(std::string const& server_url);
+	};
 }
 
 #endif

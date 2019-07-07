@@ -26,25 +26,28 @@
 #include "Exporter.h"
 #include <QtXml/QtXml>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * A base class for XML exporter.
+	 */
+	class XMLExporter : public Exporter
+	{
+	public:
+		/**
+		 * The ctor.
+		 */
+		XMLExporter()
+		{
+		};
 
-  /**
-   * A base class for XML exporter.
-   */
-  class XMLExporter : public Exporter {
-
-  public:
-    /**
-     * The ctor.
-     */
-    XMLExporter() {};
-
-    /**
-     * The dtor.
-     */
-    virtual ~XMLExporter() {};
-  };
-
+		/**
+		 * The dtor.
+		 */
+		virtual ~XMLExporter()
+		{
+		};
+	};
 }
 
 #endif

@@ -42,165 +42,168 @@
 using namespace std;
 using namespace degate;
 
-void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_shptr gate_lib) {
+void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_shptr gate_lib)
+{
+	if (gate_lib == NULL) throw InvalidPointerException("Gate library pointer is NULL.");
 
-  if(gate_lib == NULL) throw InvalidPointerException("Gate library pointer is NULL.");
+	std::string directory = get_basedir(filename);
 
-  std::string directory = get_basedir(filename);
+	try
+	{
+		xmlpp::Document doc;
 
-  try {
+		xmlpp::Element* root_elem = doc.create_root_node("gate-library");
+		assert(root_elem != NULL);
 
-    xmlpp::Document doc;
+		xmlpp::Element* templates_elem = root_elem->add_child("gate-templates");
+		if (templates_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-    xmlpp::Element * root_elem = doc.create_root_node("gate-library");
-    assert(root_elem != NULL);
+		add_gates(templates_elem, gate_lib, directory);
 
-    xmlpp::Element* templates_elem = root_elem->add_child("gate-templates");
-    if(templates_elem == NULL) throw(std::runtime_error("Failed to create node."));
-
-    add_gates(templates_elem, gate_lib, directory);
-
-    doc.write_to_file_formatted(filename, "ISO-8859-1");
-
-  }
-  catch(const std::exception& ex) {
-    std::cout << "Exception caught: " << ex.what() << std::endl;
-    throw;
-  }
-
+		doc.write_to_file_formatted(filename, "ISO-8859-1");
+	}
+	catch (const std::exception& ex)
+	{
+		std::cout << "Exception caught: " << ex.what() << std::endl;
+		throw;
+	}
 }
 
 void GateLibraryExporter::add_gates(xmlpp::Element* templates_elem,
-				    GateLibrary_shptr gate_lib,
-				    std::string const& directory) {
+                                    GateLibrary_shptr gate_lib,
+                                    std::string const& directory)
+{
+	for (GateLibrary::template_iterator iter = gate_lib->begin();
+	     iter != gate_lib->end(); ++iter)
+	{
+		GateTemplate_shptr gate_tmpl((*iter).second);
 
-  for(GateLibrary::template_iterator iter = gate_lib->begin();
-      iter != gate_lib->end(); ++iter) {
+		xmlpp::Element* gate_elem = templates_elem->add_child("gate");
+		if (gate_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-    GateTemplate_shptr gate_tmpl((*iter).second);
+		object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
+		gate_elem->set_attribute("type-id", number_to_string<object_id_t>(new_oid));
+		gate_elem->set_attribute("name", gate_tmpl->get_name());
+		gate_elem->set_attribute("description", gate_tmpl->get_description());
+		gate_elem->set_attribute("logic-class", gate_tmpl->get_logic_class());
 
-    xmlpp::Element* gate_elem = templates_elem->add_child("gate");
-    if(gate_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		gate_elem->set_attribute("fill-color", to_color_string(gate_tmpl->get_fill_color()));
+		gate_elem->set_attribute("frame-color", to_color_string(gate_tmpl->get_frame_color()));
 
-    object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
-    gate_elem->set_attribute("type-id", number_to_string<object_id_t>(new_oid));
-    gate_elem->set_attribute("name", gate_tmpl->get_name());
-    gate_elem->set_attribute("description", gate_tmpl->get_description());
-    gate_elem->set_attribute("logic-class", gate_tmpl->get_logic_class());
+		gate_elem->set_attribute("width", number_to_string<unsigned int>(gate_tmpl->get_width()));
+		gate_elem->set_attribute("height", number_to_string<unsigned int>(gate_tmpl->get_height()));
 
-    gate_elem->set_attribute("fill-color", to_color_string(gate_tmpl->get_fill_color()));
-    gate_elem->set_attribute("frame-color", to_color_string(gate_tmpl->get_frame_color()));
-
-    gate_elem->set_attribute("width", number_to_string<unsigned int>(gate_tmpl->get_width()));
-    gate_elem->set_attribute("height", number_to_string<unsigned int>(gate_tmpl->get_height()));
-
-    add_images(gate_elem, gate_tmpl, directory);
-    add_ports(gate_elem, gate_tmpl);
-    add_implementations(gate_elem, gate_tmpl, directory);
-  }
+		add_images(gate_elem, gate_tmpl, directory);
+		add_ports(gate_elem, gate_tmpl);
+		add_implementations(gate_elem, gate_tmpl, directory);
+	}
 }
 
 
 void GateLibraryExporter::add_images(xmlpp::Element* gate_elem,
-				     GateTemplate_shptr gate_tmpl,
-				     std::string const& directory) {
+                                     GateTemplate_shptr gate_tmpl,
+                                     std::string const& directory)
+{
+	// export images
 
-  // export images
+	xmlpp::Element* images_elem = gate_elem->add_child("images");
+	if (images_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  xmlpp::Element* images_elem = gate_elem->add_child("images");
-  if(images_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	for (GateTemplate::image_iterator img_iter = gate_tmpl->images_begin();
+	     img_iter != gate_tmpl->images_end(); ++img_iter)
+	{
+		Layer::LAYER_TYPE layer_type = (*img_iter).first;
+		GateTemplateImage_shptr img = (*img_iter).second;
+		assert(img != NULL);
 
-  for(GateTemplate::image_iterator img_iter = gate_tmpl->images_begin();
-      img_iter != gate_tmpl->images_end(); ++img_iter) {
+		xmlpp::Element* img_elem = images_elem->add_child("image");
+		if (img_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-    Layer::LAYER_TYPE layer_type = (*img_iter).first;
-    GateTemplateImage_shptr img = (*img_iter).second;
-    assert(img != NULL);
+		img_elem->set_attribute("layer-type", Layer::get_layer_type_as_string(layer_type));
 
-    xmlpp::Element* img_elem = images_elem->add_child("image");
-    if(img_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		// export the image
+		object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
+		boost::format fmter("%1%_%2%.tif");
+		fmter % new_oid % Layer::get_layer_type_as_string(layer_type);
+		std::string filename(fmter.str());
 
-    img_elem->set_attribute("layer-type", Layer::get_layer_type_as_string(layer_type));
+		img_elem->set_attribute("image", filename);
 
-    // export the image
-    object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
-    boost::format fmter("%1%_%2%.tif");
-    fmter % new_oid % Layer::get_layer_type_as_string(layer_type);
-    std::string filename(fmter.str());
-
-    img_elem->set_attribute("image", filename);
-
-    save_image<GateTemplateImage>(join_pathes(directory, filename), img);
-  }
-
+		save_image<GateTemplateImage>(join_pathes(directory, filename), img);
+	}
 }
 
 void GateLibraryExporter::add_ports(xmlpp::Element* gate_elem,
-				    GateTemplate_shptr gate_tmpl) {
+                                    GateTemplate_shptr gate_tmpl)
+{
+	xmlpp::Element* ports_elem = gate_elem->add_child("ports");
+	if (ports_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  xmlpp::Element* ports_elem = gate_elem->add_child("ports");
-  if(ports_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	for (GateTemplate::port_iterator piter = gate_tmpl->ports_begin();
+	     piter != gate_tmpl->ports_end(); ++piter)
+	{
+		xmlpp::Element* port_elem = ports_elem->add_child("port");
+		if (port_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  for(GateTemplate::port_iterator piter = gate_tmpl->ports_begin();
-      piter != gate_tmpl->ports_end(); ++piter) {
+		GateTemplatePort_shptr tmpl_port((*piter));
 
-    xmlpp::Element* port_elem = ports_elem->add_child("port");
-    if(port_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		object_id_t new_port_id = oid_rewriter->get_new_object_id(tmpl_port->get_object_id());
+		port_elem->set_attribute("id", number_to_string<object_id_t>(new_port_id));
+		port_elem->set_attribute("name", tmpl_port->get_name());
+		port_elem->set_attribute("description", tmpl_port->get_description());
 
-    GateTemplatePort_shptr tmpl_port((*piter));
+		port_elem->set_attribute("type", tmpl_port->get_port_type_as_string());
 
-    object_id_t new_port_id = oid_rewriter->get_new_object_id(tmpl_port->get_object_id());
-    port_elem->set_attribute("id", number_to_string<object_id_t>(new_port_id));
-    port_elem->set_attribute("name", tmpl_port->get_name());
-    port_elem->set_attribute("description", tmpl_port->get_description());
-
-    port_elem->set_attribute("type", tmpl_port->get_port_type_as_string());
-
-    if(tmpl_port->is_position_defined()) {
-      Point const & point = tmpl_port->get_point();
-      port_elem->set_attribute("x", number_to_string<int>(point.get_x()));
-      port_elem->set_attribute("y", number_to_string<int>(point.get_y()));
-    }
-
-  }
+		if (tmpl_port->is_position_defined())
+		{
+			Point const& point = tmpl_port->get_point();
+			port_elem->set_attribute("x", number_to_string<int>(point.get_x()));
+			port_elem->set_attribute("y", number_to_string<int>(point.get_y()));
+		}
+	}
 }
 
 void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem,
-					      GateTemplate_shptr gate_tmpl,
-					      std::string const& directory) {
+                                              GateTemplate_shptr gate_tmpl,
+                                              std::string const& directory)
+{
+	xmlpp::Element* implementations_elem = gate_elem->add_child("implementations");
+	if (implementations_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  xmlpp::Element* implementations_elem = gate_elem->add_child("implementations");
-  if(implementations_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	for (GateTemplate::implementation_iter iter = gate_tmpl->implementations_begin();
+	     iter != gate_tmpl->implementations_end(); ++iter)
+	{
+		GateTemplate::IMPLEMENTATION_TYPE t = iter->first;
+		std::string const& code = iter->second;
 
-  for(GateTemplate::implementation_iter iter = gate_tmpl->implementations_begin();
-      iter != gate_tmpl->implementations_end(); ++iter) {
+		//std::cout << "Code: " << code;
+		if (t != GateTemplate::UNDEFINED && !code.empty())
+		{
+			xmlpp::Element* impl_elem = implementations_elem->add_child("implementation");
+			if (impl_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-    GateTemplate::IMPLEMENTATION_TYPE t = iter->first;
-    std::string const& code = iter->second;
+			object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
+			boost::format fmter("%1%%2%.%3%");
+			switch (t)
+			{
+			case GateTemplate::TEXT: fmter % "" % new_oid % "txt";
+				break;
+			case GateTemplate::VHDL: fmter % "" % new_oid % "vhdl";
+				break;
+			case GateTemplate::VHDL_TESTBENCH: fmter % "test_" % new_oid % "vhdl";
+				break;
+			case GateTemplate::VERILOG: fmter % "" % new_oid % "v";
+				break;
+			case GateTemplate::VERILOG_TESTBENCH: fmter % "test_" % new_oid % "v";
+				break;
+			default: assert(1==0); // already handled. just to get rid of a compiler warning.
+			}
+			std::string filename(fmter.str());
 
-    //std::cout << "Code: " << code;
-    if(t != GateTemplate::UNDEFINED && !code.empty()) {
+			write_string_to_file(join_pathes(directory, filename), code);
 
-      xmlpp::Element* impl_elem = implementations_elem->add_child("implementation");
-      if(impl_elem == NULL) throw(std::runtime_error("Failed to create node."));
-
-      object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
-      boost::format fmter("%1%%2%.%3%");
-      switch(t) {
-      case GateTemplate::TEXT: fmter % "" % new_oid % "txt"; break;
-      case GateTemplate::VHDL: fmter % "" % new_oid % "vhdl"; break;
-      case GateTemplate::VHDL_TESTBENCH: fmter % "test_" % new_oid % "vhdl"; break;
-      case GateTemplate::VERILOG: fmter % "" % new_oid % "v"; break;
-      case GateTemplate::VERILOG_TESTBENCH: fmter % "test_" % new_oid % "v"; break;
-      default: assert(1==0); // already handled. just to get rid of a compiler warning.
-      }
-      std::string filename(fmter.str());
-
-      write_string_to_file(join_pathes(directory, filename), code);
-
-      impl_elem->set_attribute("type", GateTemplate::get_impl_type_as_string(t));
-      impl_elem->set_attribute("file", filename);
-    }
-  }
+			impl_elem->set_attribute("type", GateTemplate::get_impl_type_as_string(t));
+			impl_elem->set_attribute("file", filename);
+		}
+	}
 }
-

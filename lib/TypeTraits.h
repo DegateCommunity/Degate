@@ -24,77 +24,82 @@
 
 #include <PixelPolicies.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * A pointer trait for the generic type T.
+	 * @todo use boost version instead.
+	 */
 
-  /**
-   * A pointer trait for the generic type T.
-   * @todo use boost version instead.
-   */
+	template <typename T>
+	struct is_pointer
+	{
+		static const bool value = false;
+	};
 
-  template<typename T>
-  struct is_pointer {
-    static const bool value = false;
-  };
+	/**
+	 * A pointer trait for the generic type T *.
+	 * @todo use boost version instead.
+	 */
 
-  /**
-   * A pointer trait for the generic type T *.
-   * @todo use boost version instead.
-   */
+	template <typename T>
+	struct is_pointer<T*>
+	{
+		static const bool value = true;
+	};
 
-  template<typename T>
-  struct is_pointer<T*> {
-    static const bool value = true;
-  };
+	/**
+	 * A pointer trait for the special shared pointer of type T.
+	 * @todo use boost version instead.
+	 */
 
-  /**
-   * A pointer trait for the special shared pointer of type T.
-   * @todo use boost version instead.
-   */
-
-  template<typename T>
-  struct is_pointer<std::shared_ptr<T> > {
-    static const bool value = true;
-  };
-
-
-  /**
-   * Method parameter type trait for pointer and shared pointer.
-   */
-
-  template<typename T, bool b>
-  struct call_trait {
-    typedef T param_type;
-  };
-
-  /**
-   * Method parameter type trait for normal object that should be passed via reference.
-   */
-
-  template<typename T>
-  struct call_trait<T, false> {
-    typedef T& param_type;
-  };
+	template <typename T>
+	struct is_pointer<std::shared_ptr<T>>
+	{
+		static const bool value = true;
+	};
 
 
-  /**
-   * Type trait for multi channel images.
-   */
+	/**
+	 * Method parameter type trait for pointer and shared pointer.
+	 */
 
-  template<class PixelType>
-  struct is_single_channel_image {
-    static const bool value = true;
-  };
+	template <typename T, bool b>
+	struct call_trait
+	{
+		typedef T param_type;
+	};
 
-  /**
-   * Type trait for single channel images.
-   */
+	/**
+	 * Method parameter type trait for normal object that should be passed via reference.
+	 */
 
-  template<>
-  struct is_single_channel_image<rgba_pixel_t> {
-    static const bool value = false;
-  };
+	template <typename T>
+	struct call_trait<T, false>
+	{
+		typedef T& param_type;
+	};
 
 
+	/**
+	 * Type trait for multi channel images.
+	 */
+
+	template <class PixelType>
+	struct is_single_channel_image
+	{
+		static const bool value = true;
+	};
+
+	/**
+	 * Type trait for single channel images.
+	 */
+
+	template <>
+	struct is_single_channel_image<rgba_pixel_t>
+	{
+		static const bool value = false;
+	};
 }
 
 #endif

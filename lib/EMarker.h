@@ -35,83 +35,84 @@
 
 #include <memory>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Representation of an electrically connectable marker object.
+	 */
+	class EMarker : public Circle, public ConnectedLogicModelObject, public RemoteObject
+	{
+	public:
 
-  /**
-   * Representation of an electrically connectable marker object.
-   */
-  class EMarker : public Circle, public ConnectedLogicModelObject, public RemoteObject {
+		explicit EMarker()
+		{
+		};
 
+		/**
+		 * Constructor for a via object.
+		 */
 
-  public:
+		EMarker(int _x, int _y, diameter_t _diameter = 5);
 
-    explicit EMarker() {};
-    
-    /**
-     * Constructor for a via object.
-     */
+		/**
+		 * Destructor for a via object.
+		 */
 
-    EMarker(int _x, int _y, diameter_t _diameter = 5);
+		virtual ~EMarker();
 
-    /**
-     * Destructor for a via object.
-     */
+		//@{
+		DeepCopyable_shptr cloneShallow() const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		//@}
 
-    virtual ~EMarker();
+		/**
+		 * Get a human readable string that describes the whole
+		 * logic model object. The string should be unique in order
+		 * to let the user identify the concrete object. But that
+		 * is not a must.
+		 */
 
-    //@{
-    DeepCopyable_shptr cloneShallow() const;
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
-    //@}
+		virtual const std::string get_descriptive_identifier() const;
 
-    /**
-     * Get a human readable string that describes the whole
-     * logic model object. The string should be unique in order
-     * to let the user identify the concrete object. But that
-     * is not a must.
-     */
+		/**
+		 * Get a human readable string that names the object type.
+		 * Here it is "EMarker".
+		 */
 
-    virtual const std::string get_descriptive_identifier() const;
+		virtual const std::string get_object_type_name() const;
 
-    /**
-     * Get a human readable string that names the object type.
-     * Here it is "EMarker".
-     */
+		/**
+		 * Print the object.
+		 */
 
-    virtual const std::string get_object_type_name() const;
-
-    /**
-     * Print the object.
-     */
-
-    void print(std::ostream & os, int n_tabs) const;
-
-
-    void shift_x(int delta_x);
-    void shift_y(int delta_y);
-    void set_x(int x);
-    void set_y(int y);
-    void set_diameter(unsigned int diameter);
-
-    virtual bool in_bounding_box(BoundingBox const& bbox) const {
-      return Circle::in_bounding_box(bbox);
-    }
-
-    virtual BoundingBox const& get_bounding_box() const {
-      return Circle::get_bounding_box();
-    }
-
-    virtual bool in_shape(int x, int y, int max_distance = 0) const {
-      return Circle::in_shape(x, y, max_distance);
-    }
-
-  protected:
-
-    virtual object_id_t push_object_to_server(std::string const& server_url);
-
-  };
+		void print(std::ostream& os, int n_tabs) const;
 
 
+		void shift_x(int delta_x);
+		void shift_y(int delta_y);
+		void set_x(int x);
+		void set_y(int y);
+		void set_diameter(unsigned int diameter);
+
+		virtual bool in_bounding_box(BoundingBox const& bbox) const
+		{
+			return Circle::in_bounding_box(bbox);
+		}
+
+		virtual BoundingBox const& get_bounding_box() const
+		{
+			return Circle::get_bounding_box();
+		}
+
+		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		{
+			return Circle::in_shape(x, y, max_distance);
+		}
+
+	protected:
+
+		virtual object_id_t push_object_to_server(std::string const& server_url);
+	};
 }
 
 #endif

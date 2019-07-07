@@ -26,55 +26,67 @@
 
 using namespace degate;
 
-Point::Point() {
-  x = y = 0;
+Point::Point()
+{
+	x = y = 0;
 }
 
-Point::Point(int x, int y) {
-  this->x = x;
-  this->y = y;
+Point::Point(int x, int y)
+{
+	this->x = x;
+	this->y = y;
 }
 
-bool Point::operator==(const Point& other) const {
-    return (x == other.x && y == other.y);
+bool Point::operator==(const Point& other) const
+{
+	return (x == other.x && y == other.y);
 }
 
-bool Point::operator!=(const Point& other) const {
-    return !(*this == other);
+bool Point::operator!=(const Point& other) const
+{
+	return !(*this == other);
 }
 
-int Point::get_x() const {
-  return x;
+int Point::get_x() const
+{
+	return x;
 }
 
-int Point::get_y() const {
-  return y;
+int Point::get_y() const
+{
+	return y;
 }
 
-void Point::set_x(int x) {
-  this->x = x;
+void Point::set_x(int x)
+{
+	this->x = x;
 }
 
-void Point::set_y(int y) {
-  this->y = y;
-}
-
-
-void Point::shift_y(int delta_y) {
-  y += delta_y;
-}
-
-void Point::shift_x(int delta_x) {
-  x += delta_x;
+void Point::set_y(int y)
+{
+	this->y = y;
 }
 
 
-unsigned int Point::get_distance(Point const& p) const {
-  return ((labs(x - p.get_x()) << 1) + (labs(y - p.get_y()) << 1)) >> 1;
+void Point::shift_y(int delta_y)
+{
+	y += delta_y;
 }
 
-std::string Point::to_string() const {
-  boost::format f("point(%1%, %2%)");
-  f % x % y;
-  return f.str();
+void Point::shift_x(int delta_x)
+{
+	x += delta_x;
+}
+
+
+unsigned int Point::get_distance(Point const& p) const
+{
+	return ((labs(x - p.get_x()) << 1) + (labs(y - p.get_y()) << 1)) >> 1;
+}
+
+std::string Point::to_string() const
+{
+	boost::format f("point(%1%, %2%)");
+	f % x % y;
+	return f.str();
 }

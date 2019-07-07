@@ -38,32 +38,30 @@
 #include <climits>
 #include <cmath>
 
-namespace degate {
+namespace degate
+{
+	template <typename T>
+	class MemoryMapBase
+	{
+	protected:
+		unsigned int width, height;
 
-template<typename T>
-class MemoryMapBase {
+	public:
 
-protected:
-	unsigned int width, height;
+		MemoryMapBase(unsigned int width, unsigned int height);
+		virtual ~MemoryMapBase();
 
-public:
-
-	MemoryMapBase(unsigned int width, unsigned int height);
-	virtual ~MemoryMapBase();
-
-	virtual int get_width() const { return width; }
-	virtual int get_height() const { return height; }
+		virtual int get_width() const { return width; }
+		virtual int get_height() const { return height; }
 
 
-	virtual void clear();
-	virtual void clear_area(unsigned int min_x, unsigned int min_y,
-							unsigned int width, unsigned int height);
+		virtual void clear();
+		virtual void clear_area(unsigned int min_x, unsigned int min_y,
+		                        unsigned int width, unsigned int height);
 
-	virtual void set(unsigned int x, unsigned int y, T new_val);
-	virtual T get(unsigned int x, unsigned int y) const;
-
-};
-
+		virtual void set(unsigned int x, unsigned int y, T new_val);
+		virtual T get(unsigned int x, unsigned int y) const;
+	};
 }
 
 #endif

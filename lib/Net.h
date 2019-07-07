@@ -30,118 +30,116 @@
 #include "globals.h"
 
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The net class represents an electrical potential that is shared
+	 * between electrically adjacent objects.
+	 *
+	 * Why do methods in class Net work with object ID instead of
+	 * shared pointers? There is an automatism. A ConnectedLogicModelObject
+	 * adds itself to a net, if you set the net for the ConnectedLogicModelObject.
+	 * And it removes itself from a Net object, if it's destructor is called.
+	 * The problem is, that the ConnectedLogicModelObject itself only
+	 * has a \p this pointer. An object can't have a shared pointer to itself.
+	 * One could work with normal pointers, but this would somehow circumvent
+	 * shared pointer approach in libdegate. So we use loosely coupled
+	 * object IDs.
+	 *
+	 * @see ConnectedLogicModelObject::set_net()
+	 * @see ConnectedLogicModelObject::remove_net()
+	 */
+	class Net : public LogicModelObjectBase, public DeepCopyable
+	{
+		friend class ConnectedLogicModelObject;
+
+	private:
+
+		std::set<object_id_t> connections;
+
+	protected:
+
+		/**
+		 * Add an object of type ConnectedLogicModelObject to the net.
+		 * It is silently ignored, if the object is already referenced
+		 * from the net.
+		 * @exception InvalidObjectIDException This exception is thrown
+		 *  if the object has an invalid object ID.
+		 */
+
+		virtual void add_object(ConnectedLogicModelObject_shptr o);
 
 
-  /**
-   * The net class represents an electrical potential that is shared
-   * between electrically adjacent objects.
-   *
-   * Why do methods in class Net work with object ID instead of
-   * shared pointers? There is an automatism. A ConnectedLogicModelObject
-   * adds itself to a net, if you set the net for the ConnectedLogicModelObject.
-   * And it removes itself from a Net object, if it's destructor is called.
-   * The problem is, that the ConnectedLogicModelObject itself only
-   * has a \p this pointer. An object can't have a shared pointer to itself.
-   * One could work with normal pointers, but this would somehow circumvent
-   * shared pointer approach in libdegate. So we use loosely coupled
-   * object IDs.
-   *
-   * @see ConnectedLogicModelObject::set_net()
-   * @see ConnectedLogicModelObject::remove_net()
-   */
-  class Net : public LogicModelObjectBase, public DeepCopyable {
-
-    friend class ConnectedLogicModelObject;
-
-  private:
-
-    std::set<object_id_t> connections;
-
-  protected:
-
-    /**
-     * Add an object of type ConnectedLogicModelObject to the net.
-     * It is silently ignored, if the object is already referenced
-     * from the net.
-     * @exception InvalidObjectIDException This exception is thrown
-     *  if the object has an invalid object ID.
-     */
-
-    virtual void add_object(ConnectedLogicModelObject_shptr o);
+		/**
+		 * Add an object to the net.
+		 * @see add_object()
+		 */
+		virtual void add_object(object_id_t oid);
 
 
-    /**
-     * Add an object to the net.
-     * @see add_object()
-     */
-    virtual void add_object(object_id_t oid);
+		/**
+		 * Remove an object from a net.
+		 * @exception CollectionLookupException Indicates that the object
+		 *  is not referenced from the net.
+		 * @exception InvalidObjectIDException As in add_object().
+		 * @see add_object()
+		 */
+
+		virtual void remove_object(ConnectedLogicModelObject_shptr o);
+
+		/**
+		 * Remove object.
+		 * @see remove_object()
+		 */
+
+		virtual void remove_object(object_id_t o);
 
 
-    /**
-     * Remove an object from a net.
-     * @exception CollectionLookupException Indicates that the object
-     *  is not referenced from the net.
-     * @exception InvalidObjectIDException As in add_object().
-     * @see add_object()
-     */
+	public:
 
-    virtual void remove_object(ConnectedLogicModelObject_shptr o);
+		typedef std::set<object_id_t>::iterator connection_iterator;
+		typedef std::set<object_id_t>::iterator iterator;
+		typedef std::set<object_id_t>::const_iterator const_iterator;
 
-    /**
-     * Remove object.
-     * @see remove_object()
-     */
+		/**
+		 * Construct a new net.
+		 */
+		Net();
 
-    virtual void remove_object(object_id_t o);
+		/**
+		 * Destroy a net.
+		 * @see LogicModel::remove_net()
+		 */
+		virtual ~Net();
 
+		//@{
+		DeepCopyable_shptr cloneShallow() const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		//@}
 
-  public:
+		/**
+		 * Get an iterator to iterate over all objects that are electrically connected with this net.
+		 * Be careful with iterator invalidation!
+		 */
+		virtual connection_iterator begin();
 
-    typedef std::set<object_id_t>::iterator connection_iterator;
-    typedef std::set<object_id_t>::iterator iterator;
-    typedef std::set<object_id_t>::const_iterator const_iterator;
-
-    /**
-     * Construct a new net.
-     */
-    Net();
-
-    /**
-     * Destroy a net.
-     * @see LogicModel::remove_net()
-     */
-    virtual ~Net();
-    
-    //@{
-    DeepCopyable_shptr cloneShallow() const;
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
-    //@}
-
-    /**
-     * Get an iterator to iterate over all objects that are electrically connected with this net.
-     * Be careful with iterator invalidation!
-     */
-    virtual connection_iterator begin();
-
-    /**
-     * Get an end marker.
-     */
-    virtual connection_iterator end();
+		/**
+		 * Get an end marker.
+		 */
+		virtual connection_iterator end();
 
 
-    /**
-     * Get  the number of objects that are connected with this net.
-     */
+		/**
+		 * Get  the number of objects that are connected with this net.
+		 */
 
-    virtual unsigned int size() const;
+		virtual unsigned int size() const;
 
-    /**
-     * Get a human readable description for the object.
-     */
-    const std::string get_descriptive_identifier() const;
-  };
-
+		/**
+		 * Get a human readable description for the object.
+		 */
+		const std::string get_descriptive_identifier() const;
+	};
 }
 
 #endif

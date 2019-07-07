@@ -28,73 +28,73 @@
 #include <Shape.h>
 #include <Point.h>
 
-namespace degate {
+namespace degate
+{
+	class Line : public AbstractShape, public DeepCopyableBase
+	{
+	private:
+		int from_x, from_y, to_x, to_y;
+		unsigned int diameter;
 
-  class Line : public AbstractShape, public DeepCopyableBase {
+		double d_x, d_y;
 
-  private:
-    int from_x, from_y, to_x, to_y;
-    unsigned int diameter;
+		BoundingBox bounding_box;
 
-    double d_x, d_y;
+	private:
 
-    BoundingBox bounding_box;
+		/**
+		 * Recalulate the bounding box of a line.
+		 * If the line is either horizontally nor vertically
+		 * aligned, the bounding box corresponds exactly to
+		 * the area, the line spans. If the line is horizontal
+		 * or vertical, the bounding box also depends on the
+		 * diameter.
+		 */
+		void calculate_bounding_box();
 
-  private:
+	public:
 
-    /**
-     * Recalulate the bounding box of a line.
-     * If the line is either horizontally nor vertically
-     * aligned, the bounding box corresponds exactly to
-     * the area, the line spans. If the line is horizontal
-     * or vertical, the bounding box also depends on the
-     * diameter.
-     */
-    void calculate_bounding_box();
+		Line();
+		Line(int from_x, int from_y, int to_x, int to_y, unsigned int diameter);
 
-  public:
+		virtual ~Line()
+		{
+		}
 
-    Line();
-    Line(int from_x, int from_y, int to_x, int to_y, unsigned int diameter);
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-    virtual ~Line() {}
-    
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
-
-    virtual bool in_shape(int x, int y, int max_distance = 0) const;
-    virtual bool in_bounding_box(BoundingBox const& bbox) const;
-    virtual BoundingBox const& get_bounding_box() const;
+		virtual bool in_shape(int x, int y, int max_distance = 0) const;
+		virtual bool in_bounding_box(BoundingBox const& bbox) const;
+		virtual BoundingBox const& get_bounding_box() const;
 
 
-    virtual int get_from_x() const;
-    virtual int get_to_x() const;
-    virtual int get_from_y() const;
-    virtual int get_to_y() const;
+		virtual int get_from_x() const;
+		virtual int get_to_x() const;
+		virtual int get_from_y() const;
+		virtual int get_to_y() const;
 
-    virtual void set_from_x(int min_x);
-    virtual void set_from_y(int min_y);
-    virtual void set_to_x(int max_x);
-    virtual void set_to_y(int max_y);
+		virtual void set_from_x(int min_x);
+		virtual void set_from_y(int min_y);
+		virtual void set_to_x(int max_x);
+		virtual void set_to_y(int max_y);
 
-    virtual void shift_x(int delta_x);
-    virtual void shift_y(int delta_y);
+		virtual void shift_x(int delta_x);
+		virtual void shift_y(int delta_y);
 
-    virtual unsigned int get_diameter() const;
-    virtual void set_diameter(unsigned int diameter);
+		virtual unsigned int get_diameter() const;
+		virtual void set_diameter(unsigned int diameter);
 
-    virtual bool is_vertical() const;
-    virtual bool is_horizontal() const;
+		virtual bool is_vertical() const;
+		virtual bool is_horizontal() const;
 
-    virtual unsigned int get_length() const;
+		virtual unsigned int get_length() const;
 
-    virtual Point get_p1() const;
-    virtual Point get_p2() const;
+		virtual Point get_p1() const;
+		virtual Point get_p2() const;
 
-    virtual void set_p1(Point const& p);
-    virtual void set_p2(Point const& p);
-
-  };
-
+		virtual void set_p1(Point const& p);
+		virtual void set_p2(Point const& p);
+	};
 }
 
 #endif

@@ -26,65 +26,65 @@
 #include <ImageProcessorBase.h>
 #include <ImageHelper.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Processor: Write an image to file.
+	 */
 
-  /**
-   * Processor: Write an image to file.
-   */
+	template <typename ImageType>
+	class IPImageWriter : public ImageProcessorBase
+	{
+	private:
+		std::string filename;
 
-  template<typename ImageType>
-  class IPImageWriter : public ImageProcessorBase {
+	public:
 
-  private:
-    std::string filename;
+		/**
+		 * The constructor.
+		 */
 
-  public:
+		IPImageWriter(std::string _filename) :
+			ImageProcessorBase("IPImageWriter",
+			                   "Write an image.",
+			                   false,
+			                   typeid(typename ImageType::pixel_type),
+			                   typeid(typename ImageType::pixel_type)),
+			filename(_filename)
+		{
+		}
 
-    /**
-     * The constructor.
-     */
+		/**
+		 * The destructor.
+		 */
 
-    IPImageWriter(std::string _filename) :
-      ImageProcessorBase("IPImageWriter",
-			 "Write an image.",
-			 false,
-			 typeid(typename ImageType::pixel_type),
-			 typeid(typename ImageType::pixel_type)),
-      filename(_filename) { }
+		virtual ~IPImageWriter()
+		{
+		}
 
-    /**
-     * The destructor.
-     */
+		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		{
+			assert(_in != NULL);
 
-    virtual ~IPImageWriter() {}
-
-    virtual ImageBase_shptr run(ImageBase_shptr _in) {
-
-      assert(_in != NULL);
-
-      std::shared_ptr<ImageType> img_in =
-	std::dynamic_pointer_cast<ImageType>(_in);
-
-
-      std::shared_ptr<ImageType>
-	img_out(new ImageType(_in->get_width(), _in->get_height()));
-
-      assert(img_in != NULL);
-      assert(img_out != NULL);
-
-      std::cout << "writing file: " << filename << std::endl;
-
-      normalize<ImageType, ImageType>(img_out, img_in, 0, 255);
-
-      save_image<ImageType>(filename, img_out);
-
-      return img_in;
-    }
+			std::shared_ptr<ImageType> img_in =
+				std::dynamic_pointer_cast<ImageType>(_in);
 
 
-  };
+			std::shared_ptr<ImageType>
+				img_out(new ImageType(_in->get_width(), _in->get_height()));
 
+			assert(img_in != NULL);
+			assert(img_out != NULL);
+
+			std::cout << "writing file: " << filename << std::endl;
+
+			normalize<ImageType, ImageType>(img_out, img_in, 0, 255);
+
+			save_image<ImageType>(filename, img_out);
+
+			return img_in;
+		}
+	};
 }
 
 #endif
-

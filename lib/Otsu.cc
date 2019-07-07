@@ -23,56 +23,63 @@
 
 using namespace degate;
 
-Otsu::Otsu() : 
-  otsu_threshold(0) {}
-
-Otsu::~Otsu() {}
-
-double Otsu::get_otsu_threshold() {
-  return otsu_threshold;
+Otsu::Otsu() :
+	otsu_threshold(0)
+{
 }
 
-void Otsu::run(TileImage_GS_DOUBLE_shptr gray) {
-  unsigned long histData[256] = {0,};
+Otsu::~Otsu()
+{
+}
 
-  for(unsigned int y = 0; y < gray->get_height(); y++)
-    for(unsigned int x = 0; x < gray->get_width(); x++) {
-      gs_byte_pixel_t h = gray->get_pixel_as<gs_byte_pixel_t>(x, y);
-      assert((h >= 0) && (h < 256));
-      histData[h]++;
-    }
+double Otsu::get_otsu_threshold()
+{
+	return otsu_threshold;
+}
 
-  unsigned long total = gray->get_height() * gray->get_width();
+void Otsu::run(TileImage_GS_DOUBLE_shptr gray)
+{
+	unsigned long histData[256] = {0,};
 
-  double sum = 0;
-  for(int t=0; t < 256; t++)
-    sum += t * histData[t];
+	for (unsigned int y = 0; y < gray->get_height(); y++)
+		for (unsigned int x = 0; x < gray->get_width(); x++)
+		{
+			gs_byte_pixel_t h = gray->get_pixel_as<gs_byte_pixel_t>(x, y);
+			assert((h >= 0) && (h < 256));
+			histData[h]++;
+		}
 
-  double sumB = 0;
-  unsigned long wB = 0;
-  unsigned long wF = 0;
+	unsigned long total = gray->get_height() * gray->get_width();
 
-  double varMax = 0;
+	double sum = 0;
+	for (int t = 0; t < 256; t++)
+		sum += t * histData[t];
 
-  for(int t=0; t<256; t++)
-  {
-    wB += histData[t];
-    if(wB == 0)
-      continue;
+	double sumB = 0;
+	unsigned long wB = 0;
+	unsigned long wF = 0;
 
-    wF = total - wB;
-    if(wF == 0)
-      break;
-    sumB += (double)(t * histData[t]);
+	double varMax = 0;
 
-    double mB = sumB / wB;
-    double mF = (sum - sumB) /wF;
-    double varBetween = (double)wB * (double)wF * (mB-mF) * (mB-mF);
+	for (int t = 0; t < 256; t++)
+	{
+		wB += histData[t];
+		if (wB == 0)
+			continue;
 
-    if(varBetween > varMax)
-    {
-      varMax = varBetween;
-      otsu_threshold = t;
-    }
-  }
+		wF = total - wB;
+		if (wF == 0)
+			break;
+		sumB += (double)(t * histData[t]);
+
+		double mB = sumB / wB;
+		double mF = (sum - sumB) / wF;
+		double varBetween = (double)wB * (double)wF * (mB - mF) * (mB - mF);
+
+		if (varBetween > varMax)
+		{
+			varMax = varBetween;
+			otsu_threshold = t;
+		}
+	}
 }

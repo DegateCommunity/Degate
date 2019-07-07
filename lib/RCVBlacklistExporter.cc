@@ -42,45 +42,43 @@ using namespace std;
 using namespace degate;
 
 void RCVBlacklistExporter::export_data(std::string const& filename,
-				       RCBase::container_type const& violations) {
+                                       RCBase::container_type const& violations)
+{
+	std::string directory = get_basedir(filename);
 
-  std::string directory = get_basedir(filename);
+	try
+	{
+		xmlpp::Document doc;
 
-  try {
+		xmlpp::Element* root_elem = doc.create_root_node("rc-blacklist");
+		assert(root_elem != NULL);
 
-    xmlpp::Document doc;
+		BOOST_FOREACH(RCViolation_shptr rcv, violations)
+		{
+			add_rcv(root_elem, rcv);
+		}
 
-    xmlpp::Element * root_elem = doc.create_root_node("rc-blacklist");
-    assert(root_elem != NULL);
-
-    BOOST_FOREACH(RCViolation_shptr rcv, violations) {
-      add_rcv(root_elem, rcv);
-    }
-
-    doc.write_to_file_formatted(filename, "ISO-8859-1");
-
-  }
-  catch(const std::exception& ex) {
-    std::cout << "Exception caught: " << ex.what() << std::endl;
-    throw;
-  }
-
+		doc.write_to_file_formatted(filename, "ISO-8859-1");
+	}
+	catch (const std::exception& ex)
+	{
+		std::cout << "Exception caught: " << ex.what() << std::endl;
+		throw;
+	}
 }
 
 void RCVBlacklistExporter::add_rcv(xmlpp::Element* root_elem,
-				    RCViolation_shptr rcv) {
+                                   RCViolation_shptr rcv)
+{
+	xmlpp::Element* rcv_elem = root_elem->add_child("rc-violation");
+	if (rcv_elem == NULL) throw(std::runtime_error("Failed to create node."));
 
-  xmlpp::Element* rcv_elem = root_elem->add_child("rc-violation");
-  if(rcv_elem == NULL) throw(std::runtime_error("Failed to create node."));
-  
-  
-  PlacedLogicModelObject_shptr o = rcv->get_object();    
-  object_id_t new_oid = oid_rewriter->get_new_object_id(o->get_object_id());
-  
-  rcv_elem->set_attribute("object-id", number_to_string<object_id_t>(new_oid));
-  rcv_elem->set_attribute("rc-violation-class", rcv->get_rc_violation_class());
-  rcv_elem->set_attribute("severity", rcv->get_severity_as_string());
-  rcv_elem->set_attribute("description", rcv->get_problem_description());
 
+	PlacedLogicModelObject_shptr o = rcv->get_object();
+	object_id_t new_oid = oid_rewriter->get_new_object_id(o->get_object_id());
+
+	rcv_elem->set_attribute("object-id", number_to_string<object_id_t>(new_oid));
+	rcv_elem->set_attribute("rc-violation-class", rcv->get_rc_violation_class());
+	rcv_elem->set_attribute("severity", rcv->get_severity_as_string());
+	rcv_elem->set_attribute("description", rcv->get_problem_description());
 }
-

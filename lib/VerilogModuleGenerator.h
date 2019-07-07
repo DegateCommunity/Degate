@@ -27,33 +27,32 @@
 
 #include <VerilogCodeTemplateGenerator.h>
 
-namespace degate {
+namespace degate
+{
+	class VerilogModuleGenerator : public VerilogCodeTemplateGenerator
+	{
+	private:
 
-  class VerilogModuleGenerator : public VerilogCodeTemplateGenerator {
-    
-  private:
+		Module_shptr mod;
+		bool no_gates;
 
-    Module_shptr mod;
-    bool no_gates;
+	public:
 
-  public:
-    
-    VerilogModuleGenerator(Module_shptr module, bool do_not_output_gates = false);
-    
-    virtual ~VerilogModuleGenerator();
-    
-  protected:
-    
-    virtual std::string generate_common() const;
+		VerilogModuleGenerator(Module_shptr module, bool do_not_output_gates = false);
 
-    virtual std::string generate_impl(std::string const& logic_class = ""  /* unused parameter */) const;
+		virtual ~VerilogModuleGenerator();
 
-  private:
+	protected:
 
-    std::string generate_common_code_for_gates(Module_shptr module, std::set<GateTemplate_shptr> & already_dumped) const;
-  };
+		virtual std::string generate_common() const;
 
+		virtual std::string generate_impl(std::string const& logic_class = "" /* unused parameter */) const;
 
+	private:
+
+		std::string generate_common_code_for_gates(Module_shptr module,
+		                                           std::set<GateTemplate_shptr>& already_dumped) const;
+	};
 }
 
 #endif

@@ -25,110 +25,114 @@
 #include <list>
 #include <memory>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Base class for grid types.
+	 */
 
-  /**
-   * Base class for grid types.
-   */
+	class Grid
+	{
+	public:
 
-  class Grid {
+		/**
+		 * Enum to declare the type of a grid.
+		 */
 
-  public:
+		enum ORIENTATION
+		{
+			UNDEFINED = 0,
+			HORIZONTAL = 1,
+			VERTICAL = 2
+		};
 
-    /**
-     * Enum to declare the type of a grid.
-     */
+	private:
 
-    enum ORIENTATION {
-      UNDEFINED = 0,
-      HORIZONTAL = 1,
-      VERTICAL = 2
-    };
+		ORIENTATION orientation;
+		bool enabled;
 
-  private:
+	public:
+		typedef std::list<int> grid_set;
+		typedef grid_set::const_iterator grid_iter;
 
-    ORIENTATION orientation;
-    bool enabled;
+		/**
+		 * Create a new grid.
+		 * @param _orientation This parameter defines the orientation. E.g. a horizontal
+		 *   grid that defines horizontal spacings. This means that lines are vertical.
+		 * @param _enabled You can enable/disable grids. With this parameter you can
+		 *   control whether the grid is enabled od disabled.
+		 */
 
-  public:
-    typedef std::list<int> grid_set;
-    typedef grid_set::const_iterator grid_iter;
+		Grid(ORIENTATION _orientation, bool _enabled = false) :
+			orientation(_orientation),
+			enabled(_enabled)
+		{
+		}
 
-    /**
-     * Create a new grid.
-     * @param _orientation This parameter defines the orientation. E.g. a horizontal
-     *   grid that defines horizontal spacings. This means that lines are vertical.
-     * @param _enabled You can enable/disable grids. With this parameter you can
-     *   control whether the grid is enabled od disabled.
-     */
+		/**
+		 * The destructor.
+		 */
 
-    Grid(ORIENTATION _orientation, bool _enabled = false) :
-      orientation(_orientation),
-      enabled(_enabled) {}
+		virtual ~Grid()
+		{
+		}
 
-    /**
-     * The destructor.
-     */
+		/**
+		 * Get an iterator to iterate over grid offsets.
+		 */
 
-    virtual ~Grid() {}
+		virtual grid_iter begin() const = 0;
 
-    /**
-     * Get an iterator to iterate over grid offsets.
-     */
+		/**
+		 * Get an end marker for ther iteration.
+		 */
 
-    virtual grid_iter begin() const = 0;
+		virtual grid_iter end() const = 0;
 
-    /**
-     * Get an end marker for ther iteration.
-     */
+		/**
+		 * Clear the grid.
+		 */
 
-    virtual grid_iter end() const = 0;
+		virtual void clear() = 0;
 
-    /**
-     * Clear the grid.
-     */
+		/**
+		 * Set the state, whether a grid is enabled or not.
+		 */
 
-    virtual void clear() = 0;
+		virtual void set_enabled(bool state = true) { enabled = state; }
 
-    /**
-     * Set the state, whether a grid is enabled or not.
-     */
+		/**
+		 * Check the state, whether a grid is enabled or not.
+		 */
 
-    virtual void set_enabled(bool state = true) { enabled = state; }
+		virtual bool is_enabled() const { return enabled; }
 
-    /**
-     * Check the state, whether a grid is enabled or not.
-     */
+		/**
+		 * Get the nearest offset, that is on grid.
+		 */
 
-    virtual bool is_enabled() const { return enabled; }
+		virtual int snap_to_grid(int pos) const = 0;
 
-    /**
-     * Get the nearest offset, that is on grid.
-     */
+		/**
+		 * Get the grid orientation.
+		 */
 
-    virtual int snap_to_grid(int pos) const = 0;
+		virtual ORIENTATION get_orientation() const { return orientation; }
 
-    /**
-     * Get the grid orientation.
-     */
+		/**
+		 * Check grid orientation: this is if the spacing is horizontal (vertical lines).
+		 */
 
-    virtual ORIENTATION get_orientation() const { return orientation; }
+		virtual bool is_horizontal() const { return orientation == HORIZONTAL; }
 
-    /**
-     * Check grid orientation: this is if the spacing is horizontal (vertical lines).
-     */
+		/**
+		 * Check grid orientation: this is if the spacing is vertical (horizontal lines.)
+		 */
 
-    virtual bool is_horizontal() const { return orientation == HORIZONTAL; }
+		virtual bool is_vertical() const { return orientation == VERTICAL; }
+	};
 
-    /**
-     * Check grid orientation: this is if the spacing is vertical (horizontal lines.)
-     */
-
-    virtual bool is_vertical() const { return orientation == VERTICAL; }
-
-  };
-
-  typedef std::shared_ptr<Grid> Grid_shptr;
+	typedef std::shared_ptr<Grid> Grid_shptr;
 }
 
 #endif

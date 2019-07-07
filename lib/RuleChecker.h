@@ -26,39 +26,41 @@
 #include <ERCOpenPorts.h>
 #include <ERCNet.h>
 
-namespace degate {
+namespace degate
+{
+	class RuleChecker : public RCBase
+	{
+	private:
 
-  class RuleChecker : public RCBase {
+		std::list<RCBase_shptr> checks;
 
-  private:
+	public:
 
-    std::list<RCBase_shptr> checks;
+		RuleChecker() : RCBase("rc-all", "A collection of all RCs.")
+		{
+			checks.push_back(RCBase_shptr(new ERCOpenPorts()));
+			checks.push_back(RCBase_shptr(new ERCNet()));
+		}
 
-  public:
+		void run(LogicModel_shptr lmodel)
+		{
+			debug(TM, "run RC");
 
-    RuleChecker() : RCBase("rc-all", "A collection of all RCs.") {
-      checks.push_back(RCBase_shptr(new ERCOpenPorts()));
-      checks.push_back(RCBase_shptr(new ERCNet()));
-    }
+			clear_rc_violations();
 
-    void run(LogicModel_shptr lmodel) {
+			BOOST_FOREACH(RCBase_shptr check, checks)
+			{
+				std::cout << "RC: " << check->get_rc_class_name() << std::endl;
+				check->run(lmodel);
+				BOOST_FOREACH(RCViolation_shptr violation, check->get_rc_violations())
+				{
+					add_rc_violation(violation);
+				}
+			}
 
-      debug(TM, "run RC");
-
-      clear_rc_violations();
-
-      BOOST_FOREACH(RCBase_shptr check, checks) {
-	std::cout << "RC: " << check->get_rc_class_name() << std::endl;
-	check->run(lmodel);
-	BOOST_FOREACH(RCViolation_shptr violation, check->get_rc_violations()) {
-	  add_rc_violation(violation);
-	}
-      }
-
-      debug(TM, "found %d rc violations.", get_rc_violations().size());
-    }
-  };
-
+			debug(TM, "found %d rc violations.", get_rc_violations().size());
+		}
+	};
 }
 
 #endif

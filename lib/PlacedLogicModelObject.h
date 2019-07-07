@@ -28,98 +28,97 @@
 #include <Layer.h>
 #include <Shape.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Represents a placeable object.
+	 *
+	 * Any class that represents a somewhere placeable objects should inherit
+	 * from that base class. The term "placed objects" is related to real
+	 * existent physical structures on the chip surface
+	 * (e.g. wire, vias, ...) as well as logical objects (e.g. annotations).
+	 */
 
-  /**
-   * Represents a placeable object.
-   *
-   * Any class that represents a somewhere placeable objects should inherit
-   * from that base class. The term "placed objects" is related to real
-   * existent physical structures on the chip surface
-   * (e.g. wire, vias, ...) as well as logical objects (e.g. annotations).
-   */
+	class PlacedLogicModelObject : public AbstractShape,
+	                               public LogicModelObjectBase,
+	                               public ColoredObject,
+	                               public DeepCopyable
+	{
+	public:
 
-  class PlacedLogicModelObject : public AbstractShape,
-				 public LogicModelObjectBase,
-				 public ColoredObject,
-         public DeepCopyable {
+		enum HIGHLIGHTING_STATE
+		{
+			HLIGHTSTATE_NOT = 0,
+			HLIGHTSTATE_DIRECT = 1,
+			HLIGHTSTATE_ADJACENT = 2
+		};
 
-  public:
+	private:
 
-    enum HIGHLIGHTING_STATE {
-      HLIGHTSTATE_NOT = 0,
-      HLIGHTSTATE_DIRECT = 1,
-      HLIGHTSTATE_ADJACENT = 2
-    };
+		HIGHLIGHTING_STATE highlight_state;
+		std::shared_ptr<Layer> layer;
 
-  private:
+	protected:
 
-    HIGHLIGHTING_STATE highlight_state;
-    std::shared_ptr<Layer> layer;
+		/**
+		 * Ajust the position in the quadtree.
+		 */
 
-  protected:
+		void notify_shape_change();
 
-    /**
-     * Ajust the position in the quadtree.
-     */
+	public:
 
-    void notify_shape_change();
+		/**
+		 * The constructor.
+		 */
 
-  public:
+		PlacedLogicModelObject();
 
-    /**
-     * The constructor.
-     */
+		/**
+		 * The destructor.
+		 */
 
-    PlacedLogicModelObject();
+		virtual ~PlacedLogicModelObject();
 
-    /**
-     * The destructor.
-     */
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-    virtual ~PlacedLogicModelObject();
+		/**
+		 * A placed object is highlightable. You can ask for its
+		 * state with this method.
+		 */
 
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+		virtual HIGHLIGHTING_STATE get_highlighted() const;
 
-    /**
-     * A placed object is highlightable. You can ask for its
-     * state with this method.
-     */
+		/**
+		 * Check if an object is highlighted at all.
+		 */
+		virtual bool is_highlighted() const;
 
-    virtual HIGHLIGHTING_STATE get_highlighted() const;
+		/**
+		 * Set the selection state.
+		 */
 
-    /**
-     * Check if an object is highlighted at all.
-     */
-    virtual bool is_highlighted() const;
+		virtual void set_highlighted(HIGHLIGHTING_STATE state);
 
-    /**
-     * Set the selection state.
-     */
+		/**
+		 * Set the layer on which the object is placed.
+		 */
 
-    virtual void set_highlighted(HIGHLIGHTING_STATE state);
+		virtual void set_layer(std::shared_ptr<Layer> layer);
 
-    /**
-     * Set the layer on which the object is placed.
-     */
+		/**
+		 * Get the layer on which the object is placed.
+		 */
 
-    virtual void set_layer(std::shared_ptr<Layer> layer);
-
-    /**
-     * Get the layer on which the object is placed.
-     */
-
-    virtual std::shared_ptr<Layer> get_layer();
+		virtual std::shared_ptr<Layer> get_layer();
 
 
-    /**
-     * Print the object.
-     */
+		/**
+		 * Print the object.
+		 */
 
-    virtual void print(std::ostream & os = std::cout, int n_tabs = 0) const = 0;
-
-  };
-
+		virtual void print(std::ostream& os = std::cout, int n_tabs = 0) const = 0;
+	};
 }
 
 #endif

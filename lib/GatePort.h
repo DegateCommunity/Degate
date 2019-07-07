@@ -33,172 +33,175 @@
 
 #include <memory>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * This class represents a port of a gate.
+	 * @todo Dispatch get_fill/frame_color() calls to
+	 *   GateTemplatePort::get_xxx_color(). Make sure, that colors
+	 *   are updated when changes are made in the PortColorManager.
+	 */
+	class GatePort : public Circle, public ConnectedLogicModelObject
+	{
+	private:
 
-  /**
-   * This class represents a port of a gate.
-   * @todo Dispatch get_fill/frame_color() calls to
-   *   GateTemplatePort::get_xxx_color(). Make sure, that colors
-   *   are updated when changes are made in the PortColorManager.
-   */
-  class GatePort : public Circle, public ConnectedLogicModelObject {
+		std::shared_ptr<Gate> gate;
+		std::shared_ptr<GateTemplatePort> gate_template_port;
+		object_id_t template_port_id;
 
-  private:
-
-    std::shared_ptr<Gate> gate;
-    std::shared_ptr<GateTemplatePort> gate_template_port;
-    object_id_t template_port_id;
-
-  public:
-
-
-    explicit GatePort() {};
-    
-    /**
-     * Create a gate port and set a "reference" to the the template port.
-     *
-     * @param _gate A shared pointer to the gate, the port is created for.
-     * @param _gate_template_port A shared pointer to a template port.
-     * @param _diameter The diameter of the port.
-     */
-    GatePort(std::shared_ptr<Gate> _gate,
-	     std::shared_ptr<GateTemplatePort> _gate_template_port,
-	     unsigned int _diameter = 5);
-
-    /**
-     * Create a gate port.
-     *
-     * @param _gate A shared pointer to the gate, the port is created for.
-     * @param diameter The diameter of the port.
-     */
-    GatePort(std::shared_ptr<Gate> _gate, unsigned int _diameter = 5);
+	public:
 
 
-    /**
-     * The destructor.
-     */
+		explicit GatePort()
+		{
+		};
 
-    virtual ~GatePort() {}
+		/**
+		 * Create a gate port and set a "reference" to the the template port.
+		 *
+		 * @param _gate A shared pointer to the gate, the port is created for.
+		 * @param _gate_template_port A shared pointer to a template port.
+		 * @param _diameter The diameter of the port.
+		 */
+		GatePort(std::shared_ptr<Gate> _gate,
+		         std::shared_ptr<GateTemplatePort> _gate_template_port,
+		         unsigned int _diameter = 5);
 
-    //@{
-    DeepCopyable_shptr cloneShallow() const;
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
-    //@}
-
-    /**
-     * Set the ID of the template port.
-     */
-
-    virtual void set_template_port_type_id(object_id_t _template_port_id);
-
-    /**
-     * Get the ID of the template port.
-     */
-
-    virtual object_id_t get_template_port_type_id() const;
-
-    /**
-     * Get the template port.
-     */
-
-    virtual GateTemplatePort_shptr get_template_port();
-
-    /**
-     * Get the template port.
-     */
-
-    virtual const GateTemplatePort_shptr get_template_port() const;
-
-    /**
-     * Set the template port.
-     */
-
-    virtual void set_template_port(std::shared_ptr<GateTemplatePort>
-				   _gate_template_port);
+		/**
+		 * Create a gate port.
+		 *
+		 * @param _gate A shared pointer to the gate, the port is created for.
+		 * @param diameter The diameter of the port.
+		 */
+		GatePort(std::shared_ptr<Gate> _gate, unsigned int _diameter = 5);
 
 
-    /**
-     * Check if there is a template port defined.
-     */
+		/**
+		 * The destructor.
+		 */
 
-    virtual bool has_template_port() const;
+		virtual ~GatePort()
+		{
+		}
 
-    /**
-     * Check if a gate port already belongs to a gate.
-     * Normally a gate port belongs to a gate.
-     */
+		//@{
+		DeepCopyable_shptr cloneShallow() const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		//@}
 
-    virtual bool is_assigned_to_a_gate() const;
+		/**
+		 * Set the ID of the template port.
+		 */
 
+		virtual void set_template_port_type_id(object_id_t _template_port_id);
 
-    /**
-     * Get the gate, this gate port belongs to.
-     * @return Returns a shared pointer to a gate. A pointer value
-     *   of NULL indicates, that the gate port is not assigned to a gate.
-     * @see has_gate()
-     */
+		/**
+		 * Get the ID of the template port.
+		 */
 
-    std::shared_ptr<Gate> get_gate();
+		virtual object_id_t get_template_port_type_id() const;
 
+		/**
+		 * Get the template port.
+		 */
 
-    /**
-     * Get a human readable string that describes the whole
-     * logic model object. The string should be unique in order
-     * to let the user identify the concrete object. But that
-     * is not a must.
-     */
+		virtual GateTemplatePort_shptr get_template_port();
 
-    virtual const std::string get_descriptive_identifier() const;
+		/**
+		 * Get the template port.
+		 */
 
-    /**
-     * Get a human readable string that names the object type.
-     * Here it is "Gate port".
-     */
+		virtual const GateTemplatePort_shptr get_template_port() const;
 
-    virtual const std::string get_object_type_name() const;
+		/**
+		 * Set the template port.
+		 */
 
-
-    /**
-     * Print gate port.
-     */
-
-    void print(std::ostream & os = std::cout, int n_tabs = 0) const;
+		virtual void set_template_port(std::shared_ptr<GateTemplatePort>
+			_gate_template_port);
 
 
+		/**
+		 * Check if there is a template port defined.
+		 */
 
-    /**
-     * Set the absolute position of a port.
-     */
+		virtual bool has_template_port() const;
 
-    void set_x(int x);
+		/**
+		 * Check if a gate port already belongs to a gate.
+		 * Normally a gate port belongs to a gate.
+		 */
 
-    /**
-     * Set the absolute position of a port.
-     */
-
-    void set_y(int y);
-
-
-    void shift_x(int delta_x);
-    void shift_y(int delta_y);
-    void set_diameter(unsigned int diameter);
+		virtual bool is_assigned_to_a_gate() const;
 
 
+		/**
+		 * Get the gate, this gate port belongs to.
+		 * @return Returns a shared pointer to a gate. A pointer value
+		 *   of NULL indicates, that the gate port is not assigned to a gate.
+		 * @see has_gate()
+		 */
 
-    virtual bool in_bounding_box(BoundingBox const& bbox) const {
-      return Circle::in_bounding_box(bbox);
-    }
+		std::shared_ptr<Gate> get_gate();
 
-    virtual BoundingBox const& get_bounding_box() const {
-      return Circle::get_bounding_box();
-    }
 
-    virtual bool in_shape(int x, int y, int max_distance = 0) const {
-      return Circle::in_shape(x, y, max_distance);
-    }
+		/**
+		 * Get a human readable string that describes the whole
+		 * logic model object. The string should be unique in order
+		 * to let the user identify the concrete object. But that
+		 * is not a must.
+		 */
 
-  };
+		virtual const std::string get_descriptive_identifier() const;
 
+		/**
+		 * Get a human readable string that names the object type.
+		 * Here it is "Gate port".
+		 */
+
+		virtual const std::string get_object_type_name() const;
+
+
+		/**
+		 * Print gate port.
+		 */
+
+		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
+
+
+		/**
+		 * Set the absolute position of a port.
+		 */
+
+		void set_x(int x);
+
+		/**
+		 * Set the absolute position of a port.
+		 */
+
+		void set_y(int y);
+
+
+		void shift_x(int delta_x);
+		void shift_y(int delta_y);
+		void set_diameter(unsigned int diameter);
+
+
+		virtual bool in_bounding_box(BoundingBox const& bbox) const
+		{
+			return Circle::in_bounding_box(bbox);
+		}
+
+		virtual BoundingBox const& get_bounding_box() const
+		{
+			return Circle::get_bounding_box();
+		}
+
+		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		{
+			return Circle::in_shape(x, y, max_distance);
+		}
+	};
 }
 
 #endif

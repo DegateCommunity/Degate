@@ -30,40 +30,43 @@
 
 #include <stdexcept>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The LogicModelExporter exports a logic model. That is the file lmodel.xml from your degate project.
+	 *
+	 */
 
-/**
- * The LogicModelExporter exports a logic model. That is the file lmodel.xml from your degate project.
- *
- */
+	class LogicModelExporter : public XMLExporter
+	{
+	private:
+		typedef std::map<object_id_t /* net id */, xmlpp::Element *> net_element_map_type;
 
-class LogicModelExporter : public XMLExporter {
+		void add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos);
+		void add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos);
+		void add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos);
 
-private:
-  typedef std::map<object_id_t /* net id */, xmlpp::Element *> net_element_map_type;
+		void add_emarker(xmlpp::Element* emarkers_elem, EMarker_shptr emarker, layer_position_t layer_pos);
 
-  void add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos);
-  void add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos);
-  void add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos);
+		void add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel);
 
-  void add_emarker(xmlpp::Element* emarkers_elem, EMarker_shptr emarker, layer_position_t layer_pos);
+		void add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos);
 
-  void add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel);
+		void add_module(xmlpp::Element* modules_elem, LogicModel_shptr lmodel, Module_shptr module);
 
-  void add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos);
+		ObjectIDRewriter_shptr oid_rewriter;
 
-  void add_module(xmlpp::Element* modules_elem, LogicModel_shptr lmodel, Module_shptr module);
+	public:
+		LogicModelExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter)
+		{
+		}
 
-  ObjectIDRewriter_shptr oid_rewriter;
+		~LogicModelExporter()
+		{
+		}
 
-public:
-  LogicModelExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter) {}
-  ~LogicModelExporter() {}
-
-  void export_data(std::string const& filename, LogicModel_shptr lmodel);
-
-};
-
+		void export_data(std::string const& filename, LogicModel_shptr lmodel);
+	};
 }
 
 #endif

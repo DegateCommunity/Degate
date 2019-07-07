@@ -24,29 +24,32 @@
 
 using namespace degate;
 
-void RegularGrid::precalc_steps() {
+void RegularGrid::precalc_steps()
+{
 	grid_offsets.clear();
-	if(distance > 0) {
-		for(double i = min; i < max; i += distance) {
+	if (distance > 0)
+	{
+		for (double i = min; i < max; i += distance)
+		{
 			grid_offsets.push_back(lround(i));
 		}
 		grid_offsets.sort();
 	}
 }
 
-int RegularGrid::snap_to_grid(int pos) const {
-
-	if(pos <= min) return min;
-	else if(pos >= max) return max;
-    else {
-		if(distance == 0) return pos;
+int RegularGrid::snap_to_grid(int pos) const
+{
+	if (pos <= min) return min;
+	else if (pos >= max) return max;
+	else
+	{
+		if (distance == 0) return pos;
 
 		unsigned int grid_coord_x_lo = (unsigned int)((pos - min) / distance);
 		unsigned int grid_coord_x_hi = grid_coord_x_lo + 1;
 
-		if( (grid_coord_x_hi * distance + min - pos) < (pos - (grid_coord_x_lo * distance + min)))
+		if ((grid_coord_x_hi * distance + min - pos) < (pos - (grid_coord_x_lo * distance + min)))
 			return (int)(grid_coord_x_hi * distance + min);
-		else  return (int)(grid_coord_x_lo * distance + min);
-    }
-
+		else return (int)(grid_coord_x_lo * distance + min);
+	}
 }

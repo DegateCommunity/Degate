@@ -22,27 +22,31 @@
 
 #include <cassert>
 
-namespace degate {
+namespace degate
+{
+	DeepCopyable_shptr DeepCopyable::cloneDeep(oldnew_t* oldnew) const
+	{
+		auto _this = shared_from_this();
+		if (cloneOnce(_this, oldnew))
+		{
+			cloneDeepInto((*oldnew)[_this], oldnew);
+		}
+		return (*oldnew)[_this];
+	}
 
-DeepCopyable_shptr DeepCopyable::cloneDeep(oldnew_t *oldnew) const {
-  auto _this = shared_from_this();
-  if (cloneOnce(_this, oldnew)) {
-    cloneDeepInto((*oldnew)[_this], oldnew);
-  }
-  return (*oldnew)[_this];
-}
+	bool DeepCopyable::cloneOnce(const c_DeepCopyable_shptr& o,
+	                             std::map<c_DeepCopyable_shptr, DeepCopyable_shptr>* __oldnew)
+	{
+		assert(o.get() != 0);
 
-bool DeepCopyable::cloneOnce(const c_DeepCopyable_shptr &o, std::map<c_DeepCopyable_shptr, DeepCopyable_shptr> *__oldnew) {
-  assert(o.get() != 0);
-  
-  std::map<c_DeepCopyable_shptr, DeepCopyable_shptr> &oldnew = *__oldnew;
-  if (oldnew.count(o) > 0) {
-    return false;
-  }
-  
-  DeepCopyable_shptr clone = o->cloneShallow();
-  oldnew[o] = clone;
-  return true;
-}
+		std::map<c_DeepCopyable_shptr, DeepCopyable_shptr>& oldnew = *__oldnew;
+		if (oldnew.count(o) > 0)
+		{
+			return false;
+		}
 
+		DeepCopyable_shptr clone = o->cloneShallow();
+		oldnew[o] = clone;
+		return true;
+	}
 }

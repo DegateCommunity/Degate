@@ -34,71 +34,80 @@
 using namespace degate;
 
 Wire::Wire(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diameter) :
-  Line(_from_x, _from_y, _to_x, _to_y, _diameter) {
+	Line(_from_x, _from_y, _to_x, _to_y, _diameter)
+{
 }
 
-DeepCopyable_shptr Wire::cloneShallow() const {
-  return std::make_shared<Wire>(get_from_x(), get_from_y(), get_to_x(), get_to_y(), get_diameter());
+DeepCopyable_shptr Wire::cloneShallow() const
+{
+	return std::make_shared<Wire>(get_from_x(), get_from_y(), get_to_x(), get_to_y(), get_diameter());
 }
 
-void Wire::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
-  auto clone = std::dynamic_pointer_cast<Wire>(dest);
-  Line::cloneDeepInto(dest, oldnew);
-  RemoteObject::cloneDeepInto(dest, oldnew);
+void Wire::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+{
+	auto clone = std::dynamic_pointer_cast<Wire>(dest);
+	Line::cloneDeepInto(dest, oldnew);
+	RemoteObject::cloneDeepInto(dest, oldnew);
 }
 
-const std::string Wire::get_descriptive_identifier() const {
-  if(has_name()) {
-    boost::format fmter("wire %1% (%2%)");
-    fmter % get_name() % get_object_id();
-    return fmter.str();
-  }
-  else {
-    boost::format fmter("wire (%1%)");
-    fmter % get_object_id();
-    return fmter.str();
-  }
+const std::string Wire::get_descriptive_identifier() const
+{
+	if (has_name())
+	{
+		boost::format fmter("wire %1% (%2%)");
+		fmter % get_name() % get_object_id();
+		return fmter.str();
+	}
+	else
+	{
+		boost::format fmter("wire (%1%)");
+		fmter % get_object_id();
+		return fmter.str();
+	}
 }
 
-const std::string Wire::get_object_type_name() const {
-  return std::string("Wire");
+const std::string Wire::get_object_type_name() const
+{
+	return std::string("Wire");
 }
 
-void Wire::print(std::ostream & os, int n_tabs) const {
+void Wire::print(std::ostream& os, int n_tabs) const
+{
 }
 
-object_id_t Wire::push_object_to_server(std::string const& server_url) {
+object_id_t Wire::push_object_to_server(std::string const& server_url)
+{
+	try
+	{
+		xmlrpc_c::paramList params;
+		params.add(xmlrpc_c::value_string("add"));
+		params.add(xmlrpc_c::value_string("wire"));
 
-  try {
+		Layer_shptr layer = get_layer();
+		assert(layer != NULL);
+		params.add(xmlrpc_c::value_int(layer->get_layer_id()));
 
-    xmlrpc_c::paramList params;
-    params.add(xmlrpc_c::value_string("add"));
-    params.add(xmlrpc_c::value_string("wire"));
+		params.add(xmlrpc_c::value_int(get_from_x()));
+		params.add(xmlrpc_c::value_int(get_from_y()));
+		params.add(xmlrpc_c::value_int(get_to_x()));
+		params.add(xmlrpc_c::value_int(get_to_y()));
+		params.add(xmlrpc_c::value_int(get_diameter()));
 
-    Layer_shptr layer = get_layer();
-    assert(layer != NULL);
-    params.add(xmlrpc_c::value_int(layer->get_layer_id()));
+		int const transaction_id =
+			xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
 
-    params.add(xmlrpc_c::value_int(get_from_x()));
-    params.add(xmlrpc_c::value_int(get_from_y()));
-    params.add(xmlrpc_c::value_int(get_to_x()));
-    params.add(xmlrpc_c::value_int(get_to_y()));
-    params.add(xmlrpc_c::value_int(get_diameter()));
-
-    int const transaction_id =
-      xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
-
-    set_remote_object_id(transaction_id);
-    std::cout << "Pushed wire to server. remote id is: " << transaction_id << std::endl;
-    return transaction_id;
-  }
-  catch(std::exception const& e) {
-    std::cerr << "Client threw error: " << e.what() << std::endl;
-    throw XMLRPCException(e.what());
-  }
-  catch(...) {
-    std::cerr << "Client threw unexpected error." << std::endl;
-    throw XMLRPCException("Client threw unexpected error.");
-  }
-
+		set_remote_object_id(transaction_id);
+		std::cout << "Pushed wire to server. remote id is: " << transaction_id << std::endl;
+		return transaction_id;
+	}
+	catch (std::exception const& e)
+	{
+		std::cerr << "Client threw error: " << e.what() << std::endl;
+		throw XMLRPCException(e.what());
+	}
+	catch (...)
+	{
+		std::cerr << "Client threw unexpected error." << std::endl;
+		throw XMLRPCException("Client threw unexpected error.");
+	}
 }

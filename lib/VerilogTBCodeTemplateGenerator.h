@@ -29,33 +29,33 @@
 #include <VerilogCodeTemplateGenerator.h>
 #include <boost/foreach.hpp>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * A code template generator for Verilog.
+	 */
 
-  /**
-   * A code template generator for Verilog.
-   */
-  
-  class VerilogTBCodeTemplateGenerator : public VerilogCodeTemplateGenerator {
-  public:
+	class VerilogTBCodeTemplateGenerator : public VerilogCodeTemplateGenerator
+	{
+	public:
 
-    VerilogTBCodeTemplateGenerator(std::string const& entity_name,
-				   std::string const& description,
-				   std::string const& logic_class);
-    
-    virtual ~VerilogTBCodeTemplateGenerator();
-    virtual std::string generate() const;
+		VerilogTBCodeTemplateGenerator(std::string const& entity_name,
+		                               std::string const& description,
+		                               std::string const& logic_class);
 
-  protected:
+		virtual ~VerilogTBCodeTemplateGenerator();
+		virtual std::string generate() const;
 
-    virtual std::string generate_header() const;
-    virtual std::string generate_module(std::string const& device_type_name) const;
+	protected:
 
-    std::string generate_all_assignments(std::vector<std::string> const& in_port_idents,
-					 std::vector<std::string> const& out_port_idents) const;
-  };
+		virtual std::string generate_header() const;
+		virtual std::string generate_module(std::string const& device_type_name) const;
 
-  typedef std::shared_ptr<VerilogTBCodeTemplateGenerator> VerilogTBCodeTemplateGenerator_shptr;
+		std::string generate_all_assignments(std::vector<std::string> const& in_port_idents,
+		                                     std::vector<std::string> const& out_port_idents) const;
+	};
 
+	typedef std::shared_ptr<VerilogTBCodeTemplateGenerator> VerilogTBCodeTemplateGenerator_shptr;
 }
 
 #endif

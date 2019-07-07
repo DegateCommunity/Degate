@@ -26,63 +26,63 @@
 #include <ImageProcessorBase.h>
 #include <FilterKernel.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Processor: Normalize a single channel image.
+	 */
 
-  /**
-   * Processor: Normalize a single channel image.
-   */
+	template <typename ImageTypeIn, typename ImageTypeOut>
+	class IPNormalize : public ImageProcessorBase
+	{
+	private:
+		double lower_bound;
+		double upper_bound;
 
-  template<typename ImageTypeIn, typename ImageTypeOut>
-  class IPNormalize : public ImageProcessorBase {
+	public:
 
-  private:
-    double lower_bound;
-    double upper_bound;
+		/**
+		 * The constructor.
+		 */
 
-  public:
+		IPNormalize(double _lower_bound = 0, double _upper_bound = 1) :
+			ImageProcessorBase("IPNormalize",
+			                   "Normalize an image.",
+			                   false,
+			                   typeid(typename ImageTypeIn::pixel_type),
+			                   typeid(typename ImageTypeOut::pixel_type)),
+			lower_bound(_lower_bound),
+			upper_bound(_upper_bound)
+		{
+		}
 
-    /**
-     * The constructor.
-     */
+		/**
+		 * The destructor.
+		 */
 
-    IPNormalize(double _lower_bound = 0, double _upper_bound = 1) :
-      ImageProcessorBase("IPNormalize",
-			 "Normalize an image.",
-			 false,
-			 typeid(typename ImageTypeIn::pixel_type),
-			 typeid(typename ImageTypeOut::pixel_type)),
-      lower_bound(_lower_bound),
-      upper_bound(_upper_bound) { }
-
-    /**
-     * The destructor.
-     */
-
-    virtual ~IPNormalize() {}
-
-
-    virtual ImageBase_shptr run(ImageBase_shptr _in) {
-
-      assert(_in != NULL);
-
-      std::shared_ptr<ImageTypeIn> img_in =
-	std::dynamic_pointer_cast<ImageTypeIn>(_in);
-
-      std::shared_ptr<ImageTypeOut>
-	img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
-
-      assert(img_in != NULL);
-      assert(img_out != NULL);
-
-      normalize<ImageTypeOut, ImageTypeIn>(img_out, img_in, lower_bound, upper_bound);
-
-      return img_out;
-    }
+		virtual ~IPNormalize()
+		{
+		}
 
 
-  };
+		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		{
+			assert(_in != NULL);
 
+			std::shared_ptr<ImageTypeIn> img_in =
+				std::dynamic_pointer_cast<ImageTypeIn>(_in);
+
+			std::shared_ptr<ImageTypeOut>
+				img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
+
+			assert(img_in != NULL);
+			assert(img_out != NULL);
+
+			normalize<ImageTypeOut, ImageTypeIn>(img_out, img_in, lower_bound, upper_bound);
+
+			return img_out;
+		}
+	};
 }
 
 #endif
-

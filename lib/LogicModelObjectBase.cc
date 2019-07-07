@@ -29,91 +29,108 @@
 using namespace degate;
 
 LogicModelObjectBase::LogicModelObjectBase(object_id_t oid) :
-  object_id(oid) {
+	object_id(oid)
+{
 }
 
 LogicModelObjectBase::LogicModelObjectBase(std::string const& object_name,
-					   std::string const& object_description) :
-  object_id(0),
-  name(object_name),
-  description(object_description) {
+                                           std::string const& object_description) :
+	object_id(0),
+	name(object_name),
+	description(object_description)
+{
 }
 
 LogicModelObjectBase::LogicModelObjectBase(object_id_t oid,
-					   std::string const& object_name,
-					   std::string const& object_description) :
-  object_id(oid),
-  name(object_name),
-  description(object_description) {
+                                           std::string const& object_name,
+                                           std::string const& object_description) :
+	object_id(oid),
+	name(object_name),
+	description(object_description)
+{
 }
 
-LogicModelObjectBase::~LogicModelObjectBase() {
+LogicModelObjectBase::~LogicModelObjectBase()
+{
 }
 
-void LogicModelObjectBase::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
-  auto clone = std::dynamic_pointer_cast<LogicModelObjectBase>(dest);
-  clone->object_id = object_id;
-  clone->name = name;
-  clone->description = description;
+void LogicModelObjectBase::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+{
+	auto clone = std::dynamic_pointer_cast<LogicModelObjectBase>(dest);
+	clone->object_id = object_id;
+	clone->name = name;
+	clone->description = description;
 }
 
-void LogicModelObjectBase::set_name(std::string const& name) {
-  this->name = name;
+void LogicModelObjectBase::set_name(std::string const& name)
+{
+	this->name = name;
 }
 
-void LogicModelObjectBase::set_description(std::string const & description) {
-  this->description = description;
+void LogicModelObjectBase::set_description(std::string const& description)
+{
+	this->description = description;
 }
 
-std::string const & LogicModelObjectBase::get_name() const {
-  return name;
+std::string const& LogicModelObjectBase::get_name() const
+{
+	return name;
 }
 
-std::string const & LogicModelObjectBase::get_description() const {
-  return description;
+std::string const& LogicModelObjectBase::get_description() const
+{
+	return description;
 }
 
-bool LogicModelObjectBase::has_name() const {
-  return !name.empty();
+bool LogicModelObjectBase::has_name() const
+{
+	return !name.empty();
 }
 
-bool LogicModelObjectBase::has_description() const {
-  return !description.empty();
-}
-
-
-void LogicModelObjectBase::set_object_id(object_id_t oid) {
-  object_id = oid;
-}
-
-object_id_t LogicModelObjectBase::get_object_id() const {
-  return object_id;
-}
-
-bool LogicModelObjectBase::has_valid_object_id() const {
-  return object_id != 0;
+bool LogicModelObjectBase::has_description() const
+{
+	return !description.empty();
 }
 
 
-const std::string LogicModelObjectBase::get_descriptive_identifier() const {
-  // should be dispatched. In debug mode we break here.
-  assert(1 == 0);
-
-  boost::format fmter("Generic object %1%");
-  fmter % get_object_id();;
-  return fmter.str();
+void LogicModelObjectBase::set_object_id(object_id_t oid)
+{
+	object_id = oid;
 }
 
-const std::string LogicModelObjectBase::get_object_type_name() const {
-  return std::string("Generic object");
+object_id_t LogicModelObjectBase::get_object_id() const
+{
+	return object_id;
+}
+
+bool LogicModelObjectBase::has_valid_object_id() const
+{
+	return object_id != 0;
 }
 
 
+const std::string LogicModelObjectBase::get_descriptive_identifier() const
+{
+	// should be dispatched. In debug mode we break here.
+	assert(1 == 0);
 
-bool LMOCompare::operator() (const LogicModelObjectBase &a, const LogicModelObjectBase &b) const {
-  return a.get_object_id() < b.get_object_id();
+	boost::format fmter("Generic object %1%");
+	fmter % get_object_id();;
+	return fmter.str();
 }
 
-bool LMOCompare::operator() (const LogicModelObjectBase_shptr &a, const LogicModelObjectBase_shptr &b) const {
-  return this->operator()(*a, *b);
+const std::string LogicModelObjectBase::get_object_type_name() const
+{
+	return std::string("Generic object");
+}
+
+
+bool LMOCompare::operator()(const LogicModelObjectBase& a, const LogicModelObjectBase& b) const
+{
+	return a.get_object_id() < b.get_object_id();
+}
+
+bool LMOCompare::operator()(const LogicModelObjectBase_shptr& a, const LogicModelObjectBase_shptr& b) const
+{
+	return this->operator()(*a, *b);
 }

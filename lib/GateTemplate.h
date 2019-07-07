@@ -33,329 +33,326 @@
 #include <memory>
 #include <map>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * A gate template is a container for common properties, that physically placed gates of that type share.
+	 */
 
-  /**
-   * A gate template is a container for common properties, that physically placed gates of that type share.
-   */
+	class GateTemplate : public LogicModelObjectBase, public ColoredObject, public DeepCopyable
+	{
+		friend class Gate;
 
-  class GateTemplate : public LogicModelObjectBase, public ColoredObject, public DeepCopyable {
+	public:
 
-    friend class Gate;
+		/**
+		 * Implementation types for a template.
+		 */
+		enum IMPLEMENTATION_TYPE
+		{
+			UNDEFINED = 0,
+			TEXT = 1,
+			VHDL = 2,
+			VHDL_TESTBENCH = 3,
+			VERILOG = 4,
+			VERILOG_TESTBENCH = 5
+		};
 
-  public:
+		typedef std::map<IMPLEMENTATION_TYPE, std::string /* code */> implementation_collection;
+		typedef implementation_collection::iterator implementation_iter;
 
-    /**
-     * Implementation types for a template.
-     */
-    enum IMPLEMENTATION_TYPE {
-      UNDEFINED = 0,
-      TEXT = 1,
-      VHDL = 2,
-      VHDL_TESTBENCH = 3,
-      VERILOG = 4,
-      VERILOG_TESTBENCH = 5
-    };
+		typedef std::map<Layer::LAYER_TYPE, GateTemplateImage_shptr> image_collection;
+		typedef image_collection::iterator image_iterator;
 
-    typedef std::map<IMPLEMENTATION_TYPE, std::string /* code */> implementation_collection;
-    typedef implementation_collection::iterator implementation_iter;
+	private:
 
-    typedef std::map<Layer::LAYER_TYPE, GateTemplateImage_shptr> image_collection;
-    typedef image_collection::iterator image_iterator;
+		BoundingBox bounding_box;
+		unsigned int reference_counter;
 
-  private:
+		std::set<GateTemplatePort_shptr, LMOCompare> ports;
 
-    BoundingBox bounding_box;
-    unsigned int reference_counter;
+		implementation_collection implementations;
+		image_collection images;
 
-    std::set<GateTemplatePort_shptr, LMOCompare> ports;
+		std::string logic_class; // e.g. nand, xor, flipflop, buffer, oai
 
-    implementation_collection implementations;
-    image_collection images;
+	protected:
 
-    std::string logic_class; // e.g. nand, xor, flipflop, buffer, oai
+		/**
+		 * Increment the reference counter.
+		 */
 
-  protected:
+		virtual void increment_reference_counter();
 
-    /**
-     * Increment the reference counter.
-     */
+		/**
+		 * Decrement the reference counter.
+		 */
 
-    virtual void increment_reference_counter();
+		virtual void decrement_reference_counter();
 
-    /**
-     * Decrement the reference counter.
-     */
 
-    virtual void decrement_reference_counter();
+	public:
 
+		typedef std::set<GateTemplatePort_shptr>::iterator port_iterator;
 
-  public:
+		/**
+		 * The constructor to set up a new gate template.
+		 * @deprecated A gate template should not rely on positions. Instead it should
+		 *   have a the region as a copy.
+		 */
 
-    typedef std::set< GateTemplatePort_shptr >::iterator port_iterator;
+		GateTemplate(unsigned int width, unsigned int height);
 
-    /**
-     * The constructor to set up a new gate template.
-     * @deprecated A gate template should not rely on positions. Instead it should
-     *   have a the region as a copy.
-     */
 
-    GateTemplate(unsigned int width, unsigned int height);
+		/**
+		 * The constructor to set up a new gate template.
+		 * @deprecated A gate template should not rely on positions. Instead it should
+		 *   have a the region as a copy.
+		 */
 
+		GateTemplate(int _min_x, int _max_x, int _min_y, int _max_y);
 
-    /**
-     * The constructor to set up a new gate template.
-     * @deprecated A gate template should not rely on positions. Instead it should
-     *   have a the region as a copy.
-     */
+		/**
+		 * Default constructor.
+		 */
 
-    GateTemplate(int _min_x, int _max_x, int _min_y, int _max_y);
+		GateTemplate();
 
-    /**
-     * Default constructor.
-     */
+		/**
+		 * The destructor.
+		 */
 
-    GateTemplate();
+		virtual ~GateTemplate();
 
-    /**
-     * The destructor.
-     */
+		//@{
+		DeepCopyable_shptr cloneShallow() const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		//@}
 
-    virtual ~GateTemplate();
+		/**
+		 * Get the width of a gate template.
+		 */
 
-    //@{
-    DeepCopyable_shptr cloneShallow() const;
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
-    //@}
+		virtual unsigned int get_width() const;
+
+		/**
+		 * Get the height of a gate template.
+		 */
+
+		virtual unsigned int get_height() const;
+
+
+		/**
+		 * Set the width of a gate template.
+		 * It does not adjust dimensions of gates that reference this template.
+		 */
+
+		virtual void set_width(unsigned int width);
+
+		/**
+		 * Set the height of a gate template.
+		 * It does not adjust dimensions of gates that reference this template.
+		 */
 
-    /**
-     * Get the width of a gate template.
-     */
+		virtual void set_height(unsigned int);
 
-    virtual unsigned int get_width() const;
+		/**
+		 * Get the bounding box of the template.
+		 * @deprecated
+		 */
 
-    /**
-     * Get the height of a gate template.
-     */
+		virtual BoundingBox const& get_bounding_box() const;
 
-    virtual unsigned int get_height() const;
-
-
-    /**
-     * Set the width of a gate template.
-     * It does not adjust dimensions of gates that reference this template.
-     */
+		/**
+		 * Set a reference image for the template.
+		 * You can store reference images for different layers, that is for
+		 * the transistor layer, for the logic layer and for a metal layer.
+		 * The images must have equal image dimensions. It is not checked here.
+		 *
+		 * @todo: Here we might need a hook for storing different image types,
+		 *   e.g. a template image that is an average image or sth. like that.
+		 * @exception InvalidPointerException Throws this excpetion, if \p img is NULL.
+		 */
 
-    virtual void set_width(unsigned int width);
-
-    /**
-     * Set the height of a gate template.
-     * It does not adjust dimensions of gates that reference this template.
-     */
+		virtual void set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img);
 
-    virtual void set_height(unsigned int);
+		/**
+		 * Get a reference image for the template.
+		 * @see set_image()
+		 * @exception CollectionLookupException Throws this exception, if there is no image.
+		 */
 
-    /**
-     * Get the bounding box of the template.
-     * @deprecated
-     */
+		virtual GateTemplateImage_shptr get_image(Layer::LAYER_TYPE layer_type);
 
-    virtual BoundingBox const & get_bounding_box() const;
 
-    /**
-     * Set a reference image for the template.
-     * You can store reference images for different layers, that is for
-     * the transistor layer, for the logic layer and for a metal layer.
-     * The images must have equal image dimensions. It is not checked here.
-     *
-     * @todo: Here we might need a hook for storing different image types,
-     *   e.g. a template image that is an average image or sth. like that.
-     * @exception InvalidPointerException Throws this excpetion, if \p img is NULL.
-     */
+		/**
+		 * Check if there is a reference image for a layer type.
+		 */
 
-    virtual void set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img);
+		virtual bool has_image(Layer::LAYER_TYPE layer_type) const;
 
-    /**
-     * Get a reference image for the template.
-     * @see set_image()
-     * @exception CollectionLookupException Throws this exception, if there is no image.
-     */
+		/**
+		 * Add a template port to a gate template.
+		 * This is an isolated function. The port is just added to the gate template.
+		 * Nothing else. Adding a port to a template requires some updates in the logic
+		 * model. Therefore you should prefer the corresponding method from the LogicModel
+		 * class.
+		 * @exception InvalidObjectIDException This exception is thrown if the template port
+		 *   has no valid object ID.
+		 * @todo In order to make the API hard to misuse, this method might be made private.
+		 * @see LogicModel::add_template_port
+		 */
 
-    virtual GateTemplateImage_shptr get_image(Layer::LAYER_TYPE layer_type);
+		virtual void add_template_port(GateTemplatePort_shptr template_port);
 
+		/**
+		 * Remove a port from a gate template.
+		 * This is an isolated function. The port is just removed from the gate template.
+		 * Nothing else. Removing a port from a template requires some updates in the logic
+		 * model. Therefore you should prefer the corresponding method from the LogicModel
+		 * class.
+		 * @todo In order to make the API hard to misuse, this method might be made private.
+		 * @see LogicModel::remove_template_port
+		 */
 
-    /**
-     * Check if there is a reference image for a layer type.
-     */
+		virtual bool remove_template_port(GateTemplatePort_shptr template_port);
 
-    virtual bool has_image(Layer::LAYER_TYPE layer_type) const;
+		/**
+		 * Remove a port from a gate template.
+		 * @exception InvalidObjectIDException This exception is thrown if the template port
+		 *   has no valid object ID.
+		 * @see remove_template_port(GateTemplatePort_shptr template_port)
+		 */
 
-    /**
-     * Add a template port to a gate template.
-     * This is an isolated function. The port is just added to the gate template.
-     * Nothing else. Adding a port to a template requires some updates in the logic
-     * model. Therefore you should prefer the corresponding method from the LogicModel
-     * class.
-     * @exception InvalidObjectIDException This exception is thrown if the template port
-     *   has no valid object ID.
-     * @todo In order to make the API hard to misuse, this method might be made private.
-     * @see LogicModel::add_template_port
-     */
+		virtual bool remove_template_port(object_id_t object_id);
 
-    virtual void add_template_port(GateTemplatePort_shptr template_port);
+		/**
+		 * Get a template port.
+		 * @exception InvalidObjectIDException This exception is thrown if the
+		 *   object ID is invalid.
+		 * @exception CollectionLookupException This exception is thrown if a
+		 *   template port with object ID \p object_id was not found.
+		 */
 
-    /**
-     * Remove a port from a gate template.
-     * This is an isolated function. The port is just removed from the gate template.
-     * Nothing else. Removing a port from a template requires some updates in the logic
-     * model. Therefore you should prefer the corresponding method from the LogicModel
-     * class.
-     * @todo In order to make the API hard to misuse, this method might be made private.
-     * @see LogicModel::remove_template_port
-     */
+		virtual GateTemplatePort_shptr get_template_port(object_id_t object_id);
 
-    virtual bool remove_template_port(GateTemplatePort_shptr template_port);
 
-    /**
-     * Remove a port from a gate template.
-     * @exception InvalidObjectIDException This exception is thrown if the template port
-     *   has no valid object ID.
-     * @see remove_template_port(GateTemplatePort_shptr template_port)
-     */
+		/**
+		 * Check if a template has a specific template port.
+		 * @exception InvalidObjectIDException This exception is thrown if the
+		 *   object ID is invalid.
+		 */
 
-    virtual bool remove_template_port(object_id_t object_id);
+		virtual bool has_template_port(object_id_t object_id) const;
 
-    /**
-     * Get a template port.
-     * @exception InvalidObjectIDException This exception is thrown if the
-     *   object ID is invalid.
-     * @exception CollectionLookupException This exception is thrown if a
-     *   template port with object ID \p object_id was not found.
-     */
+		/**
+		 * Get an iterator.
+		 */
 
-    virtual GateTemplatePort_shptr get_template_port(object_id_t object_id);
+		virtual port_iterator ports_begin();
 
 
-    /**
-     * Check if a template has a specific template port.
-     * @exception InvalidObjectIDException This exception is thrown if the
-     *   object ID is invalid.
-     */
+		/**
+		 * Get end marker for the iteration over ports.
+		 */
 
-    virtual bool has_template_port(object_id_t object_id) const;
+		virtual port_iterator ports_end();
 
-    /**
-     * Get an iterator.
-     */
 
-    virtual port_iterator ports_begin();
+		/**
+		 * Get an iterator to iterate over images.
+		 */
 
+		virtual image_iterator images_begin();
 
-    /**
-     * Get end marker for the iteration over ports.
-     */
+		/**
+		 * Get end marker for the iteration over images.
+		 */
 
-    virtual port_iterator ports_end();
+		virtual image_iterator images_end();
 
+		/**
+		 * Get the reference counter.
+		 * @return Returns how many gates reference this gate template.
+		 */
 
-    /**
-     * Get an iterator to iterate over images.
-     */
+		virtual unsigned int get_reference_counter() const;
 
-    virtual image_iterator images_begin();
 
-    /**
-     * Get end marker for the iteration over images.
-     */
+		/**
+		 * Get an iterator to iterate over implementations.
+		 */
 
-    virtual image_iterator images_end();
+		virtual implementation_iter implementations_begin();
 
-    /**
-     * Get the reference counter.
-     * @return Returns how many gates reference this gate template.
-     */
+		/**
+		 * Get an end marker for the iteration.
+		 */
 
-    virtual unsigned int get_reference_counter() const;
+		virtual implementation_iter implementations_end();
 
 
-    /**
-     * Get an iterator to iterate over implementations.
-     */
+		/**
+		 * Set VHDL/Verilog implementation for the gate template.
+		 * @param impl_type Set VHDL or Verilog.
+		 * @param code The implementation.
+		 */
 
-    virtual implementation_iter implementations_begin();
+		virtual void set_implementation(IMPLEMENTATION_TYPE impl_type, std::string const& code);
 
-    /**
-     * Get an end marker for the iteration.
-     */
+		/**
+		 * Get code for an implementation type.
+		 * @exception CollectionLookupException Throws an exception, if there is no code for the requested type.
+		 */
 
-    virtual implementation_iter implementations_end();
+		std::string get_implementation(IMPLEMENTATION_TYPE impl_type) const;
 
+		/**
+		 * Print gate template's meta information to an output stream.
+		 */
 
-    /**
-     * Set VHDL/Verilog implementation for the gate template.
-     * @param impl_type Set VHDL or Verilog.
-     * @param code The implementation.
-     */
+		virtual void print(std::ostream& os);
 
-    virtual void set_implementation(IMPLEMENTATION_TYPE impl_type, std::string const& code);
 
-    /**
-     * Get code for an implementation type.
-     * @exception CollectionLookupException Throws an exception, if there is no code for the requested type.
-     */
+		/**
+		 * Get number of defined ports.
+		 */
 
-    std::string get_implementation(IMPLEMENTATION_TYPE impl_type) const;
+		virtual unsigned int get_number_of_ports() const;
 
-    /**
-     * Print gate template's meta information to an output stream.
-     */
 
-    virtual void print(std::ostream & os);
+		/**
+		 * Set logic class for a standard cell.
+		 *
+		 * There are two reasons for having this kind of tagging. First we
+		 * want to render dedicated electronic symbols for standard gates, e.g.
+		 * nands, xors and flipflops, independed of the standard cells name.
+		 * Second we want to search for common building blocks, e.g.
+		 * linear feedback shift registers, that we basically describe as
+		 * a set of connected flipflops with some xor gates between them,
+		 * independend of the gate's naming.
+		 */
 
+		virtual void set_logic_class(std::string const& logic_class);
 
-    /**
-     * Get number of defined ports.
-     */
+		/**
+		 * Get logic class for a standard cell.
+		 */
 
-    virtual unsigned int get_number_of_ports() const;
+		virtual std::string get_logic_class() const;
 
 
-    /**
-     * Set logic class for a standard cell.
-     *
-     * There are two reasons for having this kind of tagging. First we
-     * want to render dedicated electronic symbols for standard gates, e.g.
-     * nands, xors and flipflops, independed of the standard cells name.
-     * Second we want to search for common building blocks, e.g.
-     * linear feedback shift registers, that we basically describe as
-     * a set of connected flipflops with some xor gates between them,
-     * independend of the gate's naming.
-     */
+		/**
+		 * Convert an implementation-type constant to a printable string.
+		 */
+		static std::string get_impl_type_as_string(IMPLEMENTATION_TYPE impl_type);
 
-    virtual void set_logic_class(std::string const& logic_class);
-
-    /**
-     * Get logic class for a standard cell.
-     */
-
-    virtual std::string get_logic_class() const;
-
-
-    /**
-     * Convert an implementation-type constant to a printable string.
-     */
-    static std::string get_impl_type_as_string(IMPLEMENTATION_TYPE impl_type);
-
-    /**
-     * Convert an implementation type string to a correspondig constant.
-     * @exception DegateRuntimeException Throws this exception, if the string cannot be parsed.
-     */
-    static IMPLEMENTATION_TYPE get_impl_type_from_string(std::string const& impl_type_str);
-
-  };
-
-
-
+		/**
+		 * Convert an implementation type string to a correspondig constant.
+		 * @exception DegateRuntimeException Throws this exception, if the string cannot be parsed.
+		 */
+		static IMPLEMENTATION_TYPE get_impl_type_from_string(std::string const& impl_type_str);
+	};
 }
 
 #endif

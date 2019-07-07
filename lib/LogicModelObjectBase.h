@@ -27,134 +27,134 @@
 #include "DeepCopyable.h"
 #include <boost/format.hpp>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The class LogicModelObjectBase is the base class for basically every class
+	 * that represents a logic model object.
+	 */
+	class LogicModelObjectBase : public DeepCopyableBase
+	{
+	private:
 
-  /**
-   * The class LogicModelObjectBase is the base class for basically every class
-   * that represents a logic model object.
-   */
-  class LogicModelObjectBase : public DeepCopyableBase {
+		object_id_t object_id;
 
-  private:
+		std::string name;
+		std::string description;
 
-    object_id_t object_id;
+	public:
 
-    std::string name;
-    std::string description;
+		/**
+		 * Create a new object.
+		 */
 
-  public:
+		LogicModelObjectBase(object_id_t oid = 0);
 
-    /**
-     * Create a new object.
-     */
+		/**
+		 * The constructor.
+		 */
 
-    LogicModelObjectBase(object_id_t oid = 0);
+		LogicModelObjectBase(std::string const& object_name,
+		                     std::string const& object_description);
 
-    /**
-     * The constructor.
-     */
+		/**
+		 * The constructor.
+		 */
 
-    LogicModelObjectBase(std::string const& object_name,
-			 std::string const& object_description);
+		LogicModelObjectBase(object_id_t oid,
+		                     std::string const& object_name,
+		                     std::string const& object_description);
 
-    /**
-     * The constructor.
-     */
+		/**
+		 * The dtor.
+		 */
 
-    LogicModelObjectBase(object_id_t oid,
-			 std::string const& object_name,
-			 std::string const& object_description);
+		virtual ~LogicModelObjectBase();
 
-    /**
-     * The dtor.
-     */
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-    virtual ~LogicModelObjectBase();
+		/**
+		 * Set the name for a logic model object. It is up to the user
+		 * how the object is named. But it should be identifying.
+		 */
 
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+		virtual void set_name(std::string const& name);
 
-    /**
-     * Set the name for a logic model object. It is up to the user
-     * how the object is named. But it should be identifying.
-     */
+		/**
+		 * Set the description for a logic model object. It is up to the user
+		 * how the object is described.
+		 */
 
-    virtual void set_name(std::string const& name);
+		virtual void set_description(std::string const& description);
 
-    /**
-     * Set the description for a logic model object. It is up to the user
-     * how the object is described.
-     */
+		/**
+		 * Get the name for a logic model object.
+		 */
 
-    virtual void set_description(std::string const & description);
+		virtual std::string const& get_name() const;
 
-    /**
-     * Get the name for a logic model object.
-     */
+		/**
+		 * Get the description for a logic model object.
+		 */
 
-    virtual std::string const & get_name() const;
+		virtual std::string const& get_description() const;
 
-    /**
-     * Get the description for a logic model object.
-     */
+		/**
+		 * Check if a logic model object has a name.
+		 */
 
-    virtual std::string const & get_description() const;
+		virtual bool has_name() const;
 
-    /**
-     * Check if a logic model object has a name.
-     */
+		/**
+		 * Check if a logic model object has a description.
+		 */
 
-    virtual bool has_name() const;
+		virtual bool has_description() const;
 
-    /**
-     * Check if a logic model object has a description.
-     */
+		/**
+		 * Set the object ID for a logic model object.
+		 */
 
-    virtual bool has_description() const;
+		virtual void set_object_id(object_id_t oid);
 
-    /**
-     * Set the object ID for a logic model object.
-     */
+		/**
+		 * Get the object ID for a logic model object.
+		 */
 
-    virtual void set_object_id(object_id_t oid);
+		virtual object_id_t get_object_id() const;
 
-    /**
-     * Get the object ID for a logic model object.
-     */
+		/**
+		 * Check if the logic model object has a valid object ID.
+		 */
 
-    virtual object_id_t get_object_id() const;
-
-    /**
-     * Check if the logic model object has a valid object ID.
-     */
-
-    virtual bool has_valid_object_id() const;
+		virtual bool has_valid_object_id() const;
 
 
-    /**
-     * Get a human readable string that describes the whole
-     * logic model object. The string should be unique in order
-     * to let the user identify the concrete object. But that
-     * is not a must.
-     */
+		/**
+		 * Get a human readable string that describes the whole
+		 * logic model object. The string should be unique in order
+		 * to let the user identify the concrete object. But that
+		 * is not a must.
+		 */
 
-    virtual const std::string get_descriptive_identifier() const;
+		virtual const std::string get_descriptive_identifier() const;
 
-    /**
-     * Get a human readable string that names the object type,
-     * e.g. "Wire" or "Gate port".
-     */
+		/**
+		 * Get a human readable string that names the object type,
+		 * e.g. "Wire" or "Gate port".
+		 */
 
-    virtual const std::string get_object_type_name() const;
+		virtual const std::string get_object_type_name() const;
+	};
 
-  };
+	typedef std::shared_ptr<LogicModelObjectBase> LogicModelObjectBase_shptr;
 
-  typedef std::shared_ptr<LogicModelObjectBase> LogicModelObjectBase_shptr;
-  
-  class LMOCompare {
-  public:
-    bool operator() (const LogicModelObjectBase &a, const LogicModelObjectBase &b) const;
-    bool operator() (const LogicModelObjectBase_shptr &a, const LogicModelObjectBase_shptr &b) const;
-  };
+	class LMOCompare
+	{
+	public:
+		bool operator()(const LogicModelObjectBase& a, const LogicModelObjectBase& b) const;
+		bool operator()(const LogicModelObjectBase_shptr& a, const LogicModelObjectBase_shptr& b) const;
+	};
 }
 
 #endif

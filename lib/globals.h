@@ -33,21 +33,22 @@
 /**
  * @namespace degate The namespace 'degate' is the namespace for everything that belongs to libdegate.
  */
-namespace degate {
-
+namespace degate
+{
 #define DEBUG 1
 
 #define SIGNUM(x) ((x > 0) ? 1 : (x < 0) ? -1 : 0)
 
-enum ret_t {
-  RET_OK = 0,
-  RET_ERR = 1,
-  RET_INV_PTR = 2,
-  RET_MALLOC_FAILED = 3,
-  RET_INV_PATH = 4,
-  RET_MATH_ERR = 5,
-  RET_CANCEL = 6
-};
+	enum ret_t
+	{
+		RET_OK = 0,
+		RET_ERR = 1,
+		RET_INV_PTR = 2,
+		RET_MALLOC_FAILED = 3,
+		RET_INV_PATH = 4,
+		RET_MATH_ERR = 5,
+		RET_CANCEL = 6
+	};
 
 #define RET_IS_OK(call_res) ((call_res) == RET_OK)
 #define RET_IS_NOT_OK(call_res) ((call_res) != RET_OK)
@@ -61,113 +62,113 @@ enum ret_t {
 #elif (__SIZEOF_POINTER__ == 8) || (__WORDSIZE == 64)
 #define ARCH_64
 #else
-//#error "Unknown architecture" TODO
+	//#error "Unknown architecture" TODO
 #endif
 
 
 #define DEGATE_VERSION "0.1.3"
-
 }
 
 #define TM __FILE__,__LINE__
 
 #ifdef DEBUG
-void debug(const char * const module, int line, const char * const format, ...);
+void debug(const char* const module, int line, const char* const format, ...);
 #else
 #define debug(module, line, format, ...) ;
 #endif
 
 
-namespace degate {
-  // we need some forward declarations here
+namespace degate
+{
+	// we need some forward declarations here
 
-  class Circle;
-  typedef std::shared_ptr<Circle> Circle_shptr;
+	class Circle;
+	typedef std::shared_ptr<Circle> Circle_shptr;
 
-  class Line;
-  typedef std::shared_ptr<Line> Line_shptr;
+	class Line;
+	typedef std::shared_ptr<Line> Line_shptr;
 
-  class Rectangle;
-  typedef std::shared_ptr<Rectangle> Rectangle_shptr;
+	class Rectangle;
+	typedef std::shared_ptr<Rectangle> Rectangle_shptr;
 
-  class ConnectedLogicModelObject;
-  typedef std::shared_ptr<ConnectedLogicModelObject> ConnectedLogicModelObject_shptr;
+	class ConnectedLogicModelObject;
+	typedef std::shared_ptr<ConnectedLogicModelObject> ConnectedLogicModelObject_shptr;
 
-  class PlacedLogicModelObject;
-  typedef std::shared_ptr<PlacedLogicModelObject> PlacedLogicModelObject_shptr;
+	class PlacedLogicModelObject;
+	typedef std::shared_ptr<PlacedLogicModelObject> PlacedLogicModelObject_shptr;
 
-  class RemoteObject;
-  typedef std::shared_ptr<RemoteObject> RemoteObject_shptr;
+	class RemoteObject;
+	typedef std::shared_ptr<RemoteObject> RemoteObject_shptr;
 
-  class Net;
-  typedef std::shared_ptr<Net> Net_shptr;
+	class Net;
+	typedef std::shared_ptr<Net> Net_shptr;
 
-  class Gate;
+	class Gate;
 
-  class GatePort;
-  typedef std::shared_ptr<GatePort> GatePort_shptr;
+	class GatePort;
+	typedef std::shared_ptr<GatePort> GatePort_shptr;
 
-  class GateTemplate;
-  typedef std::shared_ptr<GateTemplate> GateTemplate_shptr;
+	class GateTemplate;
+	typedef std::shared_ptr<GateTemplate> GateTemplate_shptr;
 
-  class GateLibrary;
-  typedef std::shared_ptr<GateLibrary> GateLibrary_shptr;
+	class GateLibrary;
+	typedef std::shared_ptr<GateLibrary> GateLibrary_shptr;
 
-  class Layer;
-  typedef std::shared_ptr<Layer> Layer_shptr;
+	class Layer;
+	typedef std::shared_ptr<Layer> Layer_shptr;
 
-  class Wire;
-  typedef std::shared_ptr<Wire> Wire_shptr;
+	class Wire;
+	typedef std::shared_ptr<Wire> Wire_shptr;
 
-  class Via;
-  typedef std::shared_ptr<Via> Via_shptr;
+	class Via;
+	typedef std::shared_ptr<Via> Via_shptr;
 
-  class EMarker;
-  typedef std::shared_ptr<EMarker> EMarker_shptr;
+	class EMarker;
+	typedef std::shared_ptr<EMarker> EMarker_shptr;
 
-  class Annotation;
-  typedef std::shared_ptr<Annotation> Annotation_shptr;
+	class Annotation;
+	typedef std::shared_ptr<Annotation> Annotation_shptr;
 
-  class Module;
-  typedef std::shared_ptr<Module> Module_shptr;
-
-
-  class LogicModel;
-  typedef std::shared_ptr<LogicModel> LogicModel_shptr;
-
-  typedef unsigned int layer_position_t;
+	class Module;
+	typedef std::shared_ptr<Module> Module_shptr;
 
 
-  /** defines the type for colors */
-  typedef uint32_t color_t;
+	class LogicModel;
+	typedef std::shared_ptr<LogicModel> LogicModel_shptr;
 
-  typedef unsigned long long object_id_t;
-  typedef unsigned long long layer_id_t;
-  typedef unsigned long long transaction_id_t;
-  typedef unsigned int diameter_t;
-  typedef unsigned int length_t;
-  typedef int pos_t;
+	typedef unsigned int layer_position_t;
 
 
-  std::string gen_tabs(int n);
+	/** defines the type for colors */
+	typedef uint32_t color_t;
+
+	typedef unsigned long long object_id_t;
+	typedef unsigned long long layer_id_t;
+	typedef unsigned long long transaction_id_t;
+	typedef unsigned int diameter_t;
+	typedef unsigned int length_t;
+	typedef int pos_t;
 
 
-  enum ENTITY_COLOR {
-    DEFAULT_COLOR_WIRE,
-    DEFAULT_COLOR_VIA_UP,
-    DEFAULT_COLOR_VIA_DOWN,
-    DEFAULT_COLOR_GRID,
-    DEFAULT_COLOR_ANNOTATION,
-    DEFAULT_COLOR_ANNOTATION_FRAME,
-    DEFAULT_COLOR_GATE,
-    DEFAULT_COLOR_GATE_FRAME,
-    DEFAULT_COLOR_GATE_PORT,
-    DEFAULT_COLOR_TEXT,
-    DEFAULT_COLOR_EMARKER
-  };
+	std::string gen_tabs(int n);
 
-  typedef std::map<ENTITY_COLOR, color_t> default_colors_t;
 
+	enum ENTITY_COLOR
+	{
+		DEFAULT_COLOR_WIRE,
+		DEFAULT_COLOR_VIA_UP,
+		DEFAULT_COLOR_VIA_DOWN,
+		DEFAULT_COLOR_GRID,
+		DEFAULT_COLOR_ANNOTATION,
+		DEFAULT_COLOR_ANNOTATION_FRAME,
+		DEFAULT_COLOR_GATE,
+		DEFAULT_COLOR_GATE_FRAME,
+		DEFAULT_COLOR_GATE_PORT,
+		DEFAULT_COLOR_TEXT,
+		DEFAULT_COLOR_EMARKER
+	};
+
+	typedef std::map<ENTITY_COLOR, color_t> default_colors_t;
 }
 
 #endif

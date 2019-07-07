@@ -26,61 +26,61 @@
 #include <ImageProcessorBase.h>
 #include <FilterKernel.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Processor: Convolve an image.
+	 */
 
-  /**
-   * Processor: Convolve an image.
-   */
+	template <typename ImageTypeIn, typename ImageTypeOut>
+	class IPConvolve : public ImageProcessorBase
+	{
+	private:
+		FilterKernel_shptr kernel;
 
-  template<typename ImageTypeIn, typename ImageTypeOut>
-  class IPConvolve : public ImageProcessorBase {
+	public:
 
-  private:
-    FilterKernel_shptr kernel;
+		/**
+		 * The constructor.
+		 */
 
-  public:
+		IPConvolve(FilterKernel_shptr _kernel) :
+			ImageProcessorBase("IPConvolve",
+			                   "Convolve an image.",
+			                   false,
+			                   typeid(typename ImageTypeIn::pixel_type),
+			                   typeid(typename ImageTypeOut::pixel_type)),
+			kernel(_kernel)
+		{
+		}
 
-    /**
-     * The constructor.
-     */
+		/**
+		 * The destructor.
+		 */
 
-    IPConvolve(FilterKernel_shptr _kernel) :
-      ImageProcessorBase("IPConvolve",
-			 "Convolve an image.",
-			 false,
-			 typeid(typename ImageTypeIn::pixel_type),
-			 typeid(typename ImageTypeOut::pixel_type)),
-	kernel(_kernel) { }
-
-    /**
-     * The destructor.
-     */
-
-    virtual ~IPConvolve() {}
-
-
-    virtual ImageBase_shptr run(ImageBase_shptr _in) {
-
-      assert(_in != NULL);
-
-      std::shared_ptr<ImageTypeIn> img_in =
-	std::dynamic_pointer_cast<ImageTypeIn>(_in);
-
-      std::shared_ptr<ImageTypeOut>
-	img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
-
-      assert(img_in != NULL);
-      assert(img_out != NULL);
-
-      convolve<ImageTypeOut, ImageTypeIn>(img_out, img_in, kernel);
-
-      return img_out;
-    }
+		virtual ~IPConvolve()
+		{
+		}
 
 
-  };
+		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		{
+			assert(_in != NULL);
 
+			std::shared_ptr<ImageTypeIn> img_in =
+				std::dynamic_pointer_cast<ImageTypeIn>(_in);
+
+			std::shared_ptr<ImageTypeOut>
+				img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
+
+			assert(img_in != NULL);
+			assert(img_out != NULL);
+
+			convolve<ImageTypeOut, ImageTypeIn>(img_out, img_in, kernel);
+
+			return img_out;
+		}
+	};
 }
 
 #endif
-

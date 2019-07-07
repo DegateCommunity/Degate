@@ -31,84 +31,85 @@
 #include <Line.h>
 #include <RemoteObject.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Represents a wire.
+	 */
+	class Wire : public Line, public ConnectedLogicModelObject, public RemoteObject
+	{
+	public:
 
-  /**
-   * Represents a wire.
-   */
-  class Wire : public Line, public ConnectedLogicModelObject, public RemoteObject {
+		/**
+		 * The constructor for a wire object.
+		 */
+		Wire(int _from_x, int _from_y, int _to_x, int _to_y, diameter_t _diameter);
 
-  public:
+		/**
+		 * Destructor for a wire object.
+		 */
+		virtual ~Wire()
+		{
+		}
 
-    /**
-     * The constructor for a wire object.
-     */
-    Wire(int _from_x, int _from_y, int _to_x, int _to_y, diameter_t _diameter);
+		//@{
+		DeepCopyable_shptr cloneShallow() const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		//@}
 
-    /**
-     * Destructor for a wire object.
-     */
-    virtual ~Wire() {}
+		/**
+		 * Get a human readable string that describes the whole
+		 * logic model object. The string should be unique in order
+		 * to let the user identify the concrete object. But that
+		 * is not a must.
+		 */
 
-    //@{
-    DeepCopyable_shptr cloneShallow() const;
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
-    //@}
-    
-    /**
-     * Get a human readable string that describes the whole
-     * logic model object. The string should be unique in order
-     * to let the user identify the concrete object. But that
-     * is not a must.
-     */
+		virtual const std::string get_descriptive_identifier() const;
 
-    virtual const std::string get_descriptive_identifier() const;
+		/**
+		 * Get a human readable string that names the object type.
+		 * Here it is "Wire".
+		 */
 
-    /**
-     * Get a human readable string that names the object type.
-     * Here it is "Wire".
-     */
+		virtual const std::string get_object_type_name() const;
 
-    virtual const std::string get_object_type_name() const;
-
-    /**
-     * Print wire.
-     */
-    void print(std::ostream & os = std::cout, int n_tabs = 0) const;
-
-
-
-
-
-    void shift_x(int delta_x) {
-      Line::shift_x(delta_x);
-      notify_shape_change();
-    }
-
-    void shift_y(int delta_y) {
-      Line::shift_y(delta_y);
-      notify_shape_change();
-    }
-
-    virtual bool in_bounding_box(BoundingBox const& bbox) const {
-      return in_bounding_box(bbox);
-    }
-
-    virtual BoundingBox const& get_bounding_box() const {
-      return Line::get_bounding_box();
-    }
-
-    virtual bool in_shape(int x, int y, int max_distance = 0) const {
-      return Line::in_shape(x, y, max_distance);
-    }
-
-  protected:
-
-    virtual object_id_t push_object_to_server(std::string const& server_url);
-
-  };
+		/**
+		 * Print wire.
+		 */
+		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
 
 
+		void shift_x(int delta_x)
+		{
+			Line::shift_x(delta_x);
+			notify_shape_change();
+		}
+
+		void shift_y(int delta_y)
+		{
+			Line::shift_y(delta_y);
+			notify_shape_change();
+		}
+
+		virtual bool in_bounding_box(BoundingBox const& bbox) const
+		{
+			return in_bounding_box(bbox);
+		}
+
+		virtual BoundingBox const& get_bounding_box() const
+		{
+			return Line::get_bounding_box();
+		}
+
+		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		{
+			return Line::in_shape(x, y, max_distance);
+		}
+
+	protected:
+
+		virtual object_id_t push_object_to_server(std::string const& server_url);
+	};
 }
 
 #endif

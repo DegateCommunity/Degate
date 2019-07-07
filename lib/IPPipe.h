@@ -26,93 +26,92 @@
 #include <ImageProcessorBase.h>
 #include <ProgressControl.h>
 
-namespace degate {
-
-  /**
-   * Represents an image processing pipe for multiple image processors.
-   */
-
-
-  class IPPipe : public ProgressControl {
-
-  private:
-
-    typedef std::list<std::shared_ptr<ImageProcessorBase> > processor_list_type;
-    processor_list_type processor_list;
-
-  public:
-
-    /**
-     * The constructor for a processing pipe.
-     */
-
-    IPPipe() {
-    }
-
-    /**
-     * The destructor for a plugin.
-     */
-
-    virtual ~IPPipe() {}
+namespace degate
+{
+	/**
+	 * Represents an image processing pipe for multiple image processors.
+	 */
 
 
-    /**
-     * Add a processor.
-     */
+	class IPPipe : public ProgressControl
+	{
+	private:
 
-    void add(std::shared_ptr<ImageProcessorBase> processor) {
-      processor_list.push_back(processor);
-    }
+		typedef std::list<std::shared_ptr<ImageProcessorBase>> processor_list_type;
+		processor_list_type processor_list;
 
-    /**
-     * Check if the pipe is empty
-     * @see size()
-     */
+	public:
 
-    bool is_empty() const {
-      return processor_list.empty();
-    }
+		/**
+		 * The constructor for a processing pipe.
+		 */
 
-    /**
-     * Get the number of processing elements in the pipe.
-     * @see empty()
-     */
+		IPPipe()
+		{
+		}
 
-    size_t size() const {
-      return processor_list.size();
-    }
+		/**
+		 * The destructor for a plugin.
+		 */
 
+		virtual ~IPPipe()
+		{
+		}
 
 
+		/**
+		 * Add a processor.
+		 */
 
-    /**
-     * Start processing.
-     */
-    ImageBase_shptr run(ImageBase_shptr img_in) {
+		void add(std::shared_ptr<ImageProcessorBase> processor)
+		{
+			processor_list.push_back(processor);
+		}
 
-      assert(img_in != NULL);
+		/**
+		 * Check if the pipe is empty
+		 * @see size()
+		 */
 
-      ImageBase_shptr last_img = img_in;
+		bool is_empty() const
+		{
+			return processor_list.empty();
+		}
 
-      // iterate over list
-      for(processor_list_type::iterator iter = processor_list.begin();
-	  iter != processor_list.end(); ++iter) {
+		/**
+		 * Get the number of processing elements in the pipe.
+		 * @see empty()
+		 */
 
-	ImageProcessorBase_shptr ip = *iter;
-
-	assert(last_img != NULL);
-	last_img = ip->run(last_img);
-	assert(last_img != NULL);
-      }
-
-      return last_img;
-    }
-
+		size_t size() const
+		{
+			return processor_list.size();
+		}
 
 
-  };
+		/**
+		 * Start processing.
+		 */
+		ImageBase_shptr run(ImageBase_shptr img_in)
+		{
+			assert(img_in != NULL);
 
+			ImageBase_shptr last_img = img_in;
+
+			// iterate over list
+			for (processor_list_type::iterator iter = processor_list.begin();
+			     iter != processor_list.end(); ++iter)
+			{
+				ImageProcessorBase_shptr ip = *iter;
+
+				assert(last_img != NULL);
+				last_img = ip->run(last_img);
+				assert(last_img != NULL);
+			}
+
+			return last_img;
+		}
+	};
 }
 
 #endif
-

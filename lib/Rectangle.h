@@ -27,61 +27,59 @@
 #include "DeepCopyable.h"
 #include "Shape.h"
 
-namespace degate {
+namespace degate
+{
+	class Rectangle : public AbstractShape, public DeepCopyableBase
+	{
+	private:
+		int min_x, max_x, min_y, max_y;
 
-  class Rectangle : public AbstractShape, public DeepCopyableBase {
+		BoundingBox bounding_box;
 
-  private:
-    int min_x, max_x, min_y, max_y;
+		void calculate_bounding_box();
 
-    BoundingBox bounding_box;
+	public:
 
-    void calculate_bounding_box();
+		Rectangle();
 
-  public:
+		Rectangle(int min_x, int max_x, int min_y, int max_y);
+		Rectangle(const Rectangle&);
 
-    Rectangle();
+		virtual ~Rectangle();
 
-    Rectangle(int min_x, int max_x, int min_y, int max_y);
-    Rectangle(const Rectangle&);
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-    virtual ~Rectangle();
-    
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
+		virtual bool in_shape(int x, int y, int max_distance = 0) const;
+		virtual bool in_bounding_box(BoundingBox const& bbox) const;
+		virtual BoundingBox const& get_bounding_box() const;
 
-    virtual bool in_shape(int x, int y, int max_distance = 0) const;
-    virtual bool in_bounding_box(BoundingBox const& bbox) const;
-    virtual BoundingBox const& get_bounding_box() const;
+		virtual bool operator==(const Rectangle& other) const;
+		virtual bool operator!=(const Rectangle& other) const;
 
-    virtual bool operator==(const Rectangle& other) const;
-    virtual bool operator!=(const Rectangle& other) const;
+		virtual bool intersects(Rectangle const& rect) const;
+		virtual bool complete_within(Rectangle const& rect) const;
 
-    virtual bool intersects(Rectangle const & rect) const;
-    virtual bool complete_within(Rectangle const & rect) const;
+		virtual unsigned int get_width() const;
+		virtual unsigned int get_height() const;
 
-    virtual unsigned int get_width() const;
-    virtual unsigned int get_height() const;
+		virtual int get_min_x() const;
+		virtual int get_max_x() const;
+		virtual int get_min_y() const;
+		virtual int get_max_y() const;
 
-    virtual int get_min_x() const;
-    virtual int get_max_x() const;
-    virtual int get_min_y() const;
-    virtual int get_max_y() const;
+		virtual int get_center_x() const;
+		virtual int get_center_y() const;
 
-    virtual int get_center_x() const;
-    virtual int get_center_y() const;
+		virtual void set_min_x(int min_x);
+		virtual void set_min_y(int min_y);
+		virtual void set_max_x(int max_x);
+		virtual void set_max_y(int max_y);
 
-    virtual void set_min_x(int min_x);
-    virtual void set_min_y(int min_y);
-    virtual void set_max_x(int max_x);
-    virtual void set_max_y(int max_y);
+		virtual void set_position(int min_x, int max_x, int min_y, int max_y);
 
-    virtual void set_position(int min_x, int max_x, int min_y, int max_y);
-
-    virtual void shift_x(int delta_x);
-    virtual void shift_y(int delta_y);
-
-  };
-
+		virtual void shift_x(int delta_x);
+		virtual void shift_y(int delta_y);
+	};
 }
 
 #endif

@@ -2,4 +2,3 @@
 #include <memory>
 
 using namespace degate;
-

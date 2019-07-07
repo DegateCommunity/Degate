@@ -28,74 +28,82 @@
 #include <memory>
 #include <boost/foreach.hpp>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Returns true if the object can be removed from the Logic Model.
+	 */
+	bool is_removable(PlacedLogicModelObject_shptr o);
 
-  /**
-   * Returns true if the object can be removed from the Logic Model.
-   */
-  bool is_removable(PlacedLogicModelObject_shptr o);
+	/**
+	 * Check if an object can be electrically interconnected with another object.
+	 */
+	bool is_interconnectable(PlacedLogicModelObject_shptr o);
 
-  /**
-   * Check if an object can be electrically interconnected with another object.
-   */
-  bool is_interconnectable(PlacedLogicModelObject_shptr o);
+	template <typename Type>
+	bool is_of_object_type(PlacedLogicModelObject_shptr o)
+	{
+		return std::dynamic_pointer_cast<Type>(o) != NULL;
+	}
 
-  template<typename Type>
-  bool is_of_object_type(PlacedLogicModelObject_shptr o) {
-    return std::dynamic_pointer_cast<Type>(o) != NULL;
-  }
+	class ObjectSet
+	{
+	public:
+		typedef std::set<PlacedLogicModelObject_shptr, LMOCompare> object_set_type;
+		typedef object_set_type::const_iterator const_iterator;
+		typedef object_set_type::iterator iterator;
 
-  class ObjectSet {
+	private:
+		object_set_type objects;
 
-  public:
-    typedef std::set<PlacedLogicModelObject_shptr, LMOCompare> object_set_type;
-    typedef object_set_type::const_iterator const_iterator;
-    typedef object_set_type::iterator iterator;
+	public:
+		virtual ~ObjectSet()
+		{
+		}
 
-  private:
-    object_set_type objects;
+		virtual void clear();
+		virtual void add(PlacedLogicModelObject_shptr object);
+		virtual void remove(PlacedLogicModelObject_shptr object);
 
-  public:
-    virtual ~ObjectSet() {}
-    virtual void clear();
-    virtual void add(PlacedLogicModelObject_shptr object);
-    virtual void remove(PlacedLogicModelObject_shptr object);
+		size_t size() const { return objects.size(); }
 
-    size_t size() const { return objects.size(); }
+		const_iterator begin() const { return objects.begin(); }
+		const_iterator end() const { return objects.end(); }
+		iterator begin() { return objects.begin(); }
+		iterator end() { return objects.end(); }
 
-    const_iterator begin() const { return objects.begin(); }
-    const_iterator end() const { return objects.end(); }
-    iterator begin() { return objects.begin(); }
-    iterator end() { return objects.end(); }
+		bool empty() const { return objects.empty(); }
 
-    bool empty() const { return objects.empty(); }
+		bool contains(PlacedLogicModelObject_shptr o) const { return objects.find(o) != objects.end(); }
 
-    bool contains(PlacedLogicModelObject_shptr o) const { return objects.find(o) != objects.end(); }
-    /**
-     * Check if all objects evaluate to true for a check.
-     * If there are no objects, false is returned.
-     */
-    bool check_for_all(bool (*check_function)(PlacedLogicModelObject_shptr)) const {
-      if(empty()) return false;
+		/**
+		 * Check if all objects evaluate to true for a check.
+		 * If there are no objects, false is returned.
+		 */
+		bool check_for_all(bool (*check_function)(PlacedLogicModelObject_shptr)) const
+		{
+			if (empty()) return false;
 
-      BOOST_FOREACH(PlacedLogicModelObject_shptr o, objects) {
-	if(check_function(o) == false) return false;
-      }
-      return true;
-    }
+			BOOST_FOREACH(PlacedLogicModelObject_shptr o, objects)
+			{
+				if (check_function(o) == false) return false;
+			}
+			return true;
+		}
 
-    template<typename ObjectType>
-      std::shared_ptr<ObjectType> get_single_object() const {
-      std::shared_ptr<ObjectType> o;
+		template <typename ObjectType>
+		std::shared_ptr<ObjectType> get_single_object() const
+		{
+			std::shared_ptr<ObjectType> o;
 
-      if(size() == 1) {
-	const_iterator it = objects.begin();
-	if(o = std::dynamic_pointer_cast<ObjectType>(*it)) return o;
-      }
-      return o;
-    }
-
-  };
+			if (size() == 1)
+			{
+				const_iterator it = objects.begin();
+				if (o = std::dynamic_pointer_cast<ObjectType>(*it)) return o;
+			}
+			return o;
+		}
+	};
 }
 
 #endif

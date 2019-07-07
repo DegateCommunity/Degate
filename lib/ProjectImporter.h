@@ -28,63 +28,66 @@
 
 #include <stdexcept>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Parser for degate's project files.
+	 *
+	 * The ProjectImporter parses the degate's project files. Basically this is the
+	 * file project.xml, that is present in every degate project directory.
+	 * The ProjectImporter loads associated files, e.g. the logic model file and
+	 * the gate library, as well.
+	 */
+	class ProjectImporter : public XMLImporter
+	{
+	private:
 
-/**
- * Parser for degate's project files.
- *
- * The ProjectImporter parses the degate's project files. Basically this is the
- * file project.xml, that is present in every degate project directory.
- * The ProjectImporter loads associated files, e.g. the logic model file and
- * the gate library, as well.
- */
-class ProjectImporter : public XMLImporter {
+		void parse_project_element(Project_shptr parent_prj, QDomElement const project_node);
+		void parse_grids_element(QDomElement const project_node, Project_shptr prj);
+		void parse_layers_element(QDomElement const layers_node, Project_shptr prj);
+		void parse_port_colors_element(QDomElement const port_colors_elem, Project_shptr prj);
 
-private:
+		void parse_colors_element(QDomElement const port_colors_elem, Project_shptr prj);
 
-  void parse_project_element(Project_shptr parent_prj, QDomElement const project_node);
-  void parse_grids_element(QDomElement const project_node, Project_shptr prj);
-  void parse_layers_element(QDomElement const layers_node, Project_shptr prj);
-  void parse_port_colors_element(QDomElement const port_colors_elem, Project_shptr prj);
+		std::string get_project_filename(std::string const& dir) const;
 
-  void parse_colors_element(QDomElement const port_colors_elem, Project_shptr prj);
+		/**
+		 * Load a background image and set it to the layer. In case of a conversion
+		 * from old  single file images to tile based images, the new image is stored
+		 * in the project directory.
+		 */
+		void load_background_image(Layer_shptr layer,
+		                           std::string const& image_filename,
+		                           Project_shptr prj);
 
-  std::string get_project_filename(std::string const& dir) const;
+	public:
+		ProjectImporter()
+		{
+		}
 
-  /**
-   * Load a background image and set it to the layer. In case of a conversion
-   * from old  single file images to tile based images, the new image is stored
-   * in the project directory.
-   */
-  void load_background_image(Layer_shptr layer,
-			     std::string const& image_filename,
-			     Project_shptr prj);
+		~ProjectImporter()
+		{
+		}
 
-public:
-  ProjectImporter() {}
-  ~ProjectImporter() {}
+		/**
+		 * Import a degate project.
+		 * @param path The parameter path specifies the project directory
+		 *             or the path to the project.xml file. It is determined automatically.
+		 * @exception InvalidPathException This exception is raised if \p path does not exists.
+		 * @exception InvalidXMLException This exception is raised if there is a parsing error.
+		 * @return Returns a pointer to a project object.
+		 */
+		Project_shptr import(std::string const& path);
 
-  /**
-   * Import a degate project.
-   * @param path The parameter path specifies the project directory
-   *             or the path to the project.xml file. It is determined automatically.
-   * @exception InvalidPathException This exception is raised if \p path does not exists.
-   * @exception InvalidXMLException This exception is raised if there is a parsing error.
-   * @return Returns a pointer to a project object.
-   */
-  Project_shptr import(std::string const& path);
-
-  /**
-   * Import a complete degate project, including the default gate library and the logic model.
-   * @param path The parameter path specifies the project directory
-   *             or the path to the project.xml file. It is determined automatically.
-   * @exception std::runtime_error If there are parsing problems.
-   * @return Returns a pointer to a project object.
-   */
-  Project_shptr import_all(std::string const& path);
-
-};
-
+		/**
+		 * Import a complete degate project, including the default gate library and the logic model.
+		 * @param path The parameter path specifies the project directory
+		 *             or the path to the project.xml file. It is determined automatically.
+		 * @exception std::runtime_error If there are parsing problems.
+		 * @return Returns a pointer to a project object.
+		 */
+		Project_shptr import_all(std::string const& path);
+	};
 }
 
 #endif

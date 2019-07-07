@@ -26,9 +26,8 @@
 #include <ColoredObject.h>
 #include <AbstractShape.h>
 
-namespace degate {
-
-
+namespace degate
+{
 }
 
 #endif

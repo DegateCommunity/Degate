@@ -27,110 +27,123 @@
 using namespace degate;
 
 EMarker::EMarker(int _x, int _y, diameter_t _diameter) :
-  Circle(_x, _y, _diameter) {
+	Circle(_x, _y, _diameter)
+{
 }
 
-EMarker::~EMarker() {}
-
-DeepCopyable_shptr EMarker::cloneShallow() const {
-  auto clone = std::make_shared<EMarker>();
-  return clone;
+EMarker::~EMarker()
+{
 }
 
-void EMarker::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
-  auto clone = std::dynamic_pointer_cast<EMarker>(dest);
-  Circle::cloneDeepInto(clone, oldnew);
-  ConnectedLogicModelObject::cloneDeepInto(clone, oldnew);
-  RemoteObject::cloneDeepInto(clone, oldnew);
+DeepCopyable_shptr EMarker::cloneShallow() const
+{
+	auto clone = std::make_shared<EMarker>();
+	return clone;
 }
 
-const std::string EMarker::get_descriptive_identifier() const {
-  if(has_name()) {
-    boost::format fmter("emarker %1% (%2%)");
-    fmter % get_name() % get_object_id();
-    return fmter.str();
-  }
-  else {
-    boost::format fmter("emarker (%1%)");
-    fmter % get_object_id();
-    return fmter.str();
-  }
+void EMarker::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+{
+	auto clone = std::dynamic_pointer_cast<EMarker>(dest);
+	Circle::cloneDeepInto(clone, oldnew);
+	ConnectedLogicModelObject::cloneDeepInto(clone, oldnew);
+	RemoteObject::cloneDeepInto(clone, oldnew);
 }
 
-const std::string EMarker::get_object_type_name() const {
-  return std::string("EMarker");
+const std::string EMarker::get_descriptive_identifier() const
+{
+	if (has_name())
+	{
+		boost::format fmter("emarker %1% (%2%)");
+		fmter % get_name() % get_object_id();
+		return fmter.str();
+	}
+	else
+	{
+		boost::format fmter("emarker (%1%)");
+		fmter % get_object_id();
+		return fmter.str();
+	}
 }
 
-
-void EMarker::print(std::ostream & os, int n_tabs) const {
-
-  os
-    << gen_tabs(n_tabs) << "EMarker name      : " << get_name() << std::endl
-    << gen_tabs(n_tabs) << "Object ID         : " << get_object_id() << std::endl
-    << gen_tabs(n_tabs) << "EMarker position  : " << get_x() << " / " << get_y() << std::endl
-    << gen_tabs(n_tabs) << "Bounding box      : " << Circle::get_bounding_box().to_string() << std::endl
-    << std::endl;
-    ;
-
-}
-
-void EMarker::shift_x(int delta_x) {
-  Circle::shift_x(delta_x);
-  notify_shape_change();
-}
-
-void EMarker::shift_y(int delta_y) {
-  Circle::shift_y(delta_y);
-  notify_shape_change();
-}
-
-void EMarker::set_x(int x) {
-  Circle::set_x(x);
-  notify_shape_change();
-}
-
-void EMarker::set_y(int y) {
-  Circle::set_y(y);
-  notify_shape_change();
-}
-
-void EMarker::set_diameter(unsigned int diameter) {
-  Circle::set_diameter(diameter);
-  notify_shape_change();
+const std::string EMarker::get_object_type_name() const
+{
+	return std::string("EMarker");
 }
 
 
-object_id_t EMarker::push_object_to_server(std::string const& server_url) {
+void EMarker::print(std::ostream& os, int n_tabs) const
+{
+	os
+		<< gen_tabs(n_tabs) << "EMarker name      : " << get_name() << std::endl
+		<< gen_tabs(n_tabs) << "Object ID         : " << get_object_id() << std::endl
+		<< gen_tabs(n_tabs) << "EMarker position  : " << get_x() << " / " << get_y() << std::endl
+		<< gen_tabs(n_tabs) << "Bounding box      : " << Circle::get_bounding_box().to_string() << std::endl
+		<< std::endl;;
+}
 
-  try {
+void EMarker::shift_x(int delta_x)
+{
+	Circle::shift_x(delta_x);
+	notify_shape_change();
+}
 
-    xmlrpc_c::paramList params;
-    params.add(xmlrpc_c::value_string("add"));
-    params.add(xmlrpc_c::value_string("emarker"));
+void EMarker::shift_y(int delta_y)
+{
+	Circle::shift_y(delta_y);
+	notify_shape_change();
+}
 
-    Layer_shptr layer = get_layer();
-    assert(layer != NULL);
-    params.add(xmlrpc_c::value_int(layer->get_layer_id()));
+void EMarker::set_x(int x)
+{
+	Circle::set_x(x);
+	notify_shape_change();
+}
 
-    params.add(xmlrpc_c::value_int(get_x()));
-    params.add(xmlrpc_c::value_int(get_y()));
-    params.add(xmlrpc_c::value_int(get_diameter()));
+void EMarker::set_y(int y)
+{
+	Circle::set_y(y);
+	notify_shape_change();
+}
 
-    int const transaction_id =
-      xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
+void EMarker::set_diameter(unsigned int diameter)
+{
+	Circle::set_diameter(diameter);
+	notify_shape_change();
+}
 
-    set_remote_object_id(transaction_id);
 
-    std::cout << "Pushed via to server. remote id is: " << transaction_id << std::endl;
-    return transaction_id;
-  }
-  catch(std::exception const& e) {
-    std::cerr << "Client threw error: " << e.what() << std::endl;
-    throw XMLRPCException(e.what());
-  }
-  catch(...) {
-    std::cerr << "Client threw unexpected error." << std::endl;
-    throw XMLRPCException("Client threw unexpected error.");
-  }
+object_id_t EMarker::push_object_to_server(std::string const& server_url)
+{
+	try
+	{
+		xmlrpc_c::paramList params;
+		params.add(xmlrpc_c::value_string("add"));
+		params.add(xmlrpc_c::value_string("emarker"));
 
+		Layer_shptr layer = get_layer();
+		assert(layer != NULL);
+		params.add(xmlrpc_c::value_int(layer->get_layer_id()));
+
+		params.add(xmlrpc_c::value_int(get_x()));
+		params.add(xmlrpc_c::value_int(get_y()));
+		params.add(xmlrpc_c::value_int(get_diameter()));
+
+		int const transaction_id =
+			xmlrpc_c::value_int(remote_method_call(server_url, "degate.push", params));
+
+		set_remote_object_id(transaction_id);
+
+		std::cout << "Pushed via to server. remote id is: " << transaction_id << std::endl;
+		return transaction_id;
+	}
+	catch (std::exception const& e)
+	{
+		std::cerr << "Client threw error: " << e.what() << std::endl;
+		throw XMLRPCException(e.what());
+	}
+	catch (...)
+	{
+		std::cerr << "Client threw unexpected error." << std::endl;
+		throw XMLRPCException("Client threw unexpected error.");
+	}
 }

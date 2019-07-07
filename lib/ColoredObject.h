@@ -25,62 +25,67 @@
 
 #include "DeepCopyable.h"
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Represents an object that has a frame and a fill color.
+	 */
 
-  /**
-   * Represents an object that has a frame and a fill color.
-   */
+	class ColoredObject : public DeepCopyableBase
+	{
+	private:
+		color_t fill_color;
+		color_t frame_color;
 
-  class ColoredObject : public DeepCopyableBase {
-  private:
-    color_t fill_color;
-    color_t frame_color;
+	public:
+		ColoredObject() : fill_color(0), frame_color(0)
+		{
+		}
 
-  public:
-    ColoredObject() : fill_color(0), frame_color(0) {}
-    virtual ~ColoredObject() {}
+		virtual ~ColoredObject()
+		{
+		}
 
-    //@{
-    void cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
-      auto clone = std::dynamic_pointer_cast<ColoredObject>(dest);
-      clone->fill_color = fill_color;
-      clone->frame_color = frame_color;
-    };
-    //@}
-    
-    /**
-     * Is there a frame color definition.
-     */
-    virtual bool has_frame_color() const { return frame_color != 0; }
+		//@{
+		void cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+		{
+			auto clone = std::dynamic_pointer_cast<ColoredObject>(dest);
+			clone->fill_color = fill_color;
+			clone->frame_color = frame_color;
+		};
+		//@}
 
-    /**
-     * Is there a fill color definition.
-     */
-    virtual bool has_fill_color() const { return fill_color != 0; }
+		/**
+		 * Is there a frame color definition.
+		 */
+		virtual bool has_frame_color() const { return frame_color != 0; }
 
-    /**
-     * Get the frame color.
-     */
-    virtual color_t get_frame_color() const { return frame_color; }
+		/**
+		 * Is there a fill color definition.
+		 */
+		virtual bool has_fill_color() const { return fill_color != 0; }
 
-    /**
-     * Get the fill color.
-     */
-    virtual color_t get_fill_color() const { return fill_color; }
+		/**
+		 * Get the frame color.
+		 */
+		virtual color_t get_frame_color() const { return frame_color; }
 
-    /**
-     * Set the frame color.
-     */
+		/**
+		 * Get the fill color.
+		 */
+		virtual color_t get_fill_color() const { return fill_color; }
 
-    virtual void set_frame_color(color_t c) { frame_color = c; }
+		/**
+		 * Set the frame color.
+		 */
 
-    /**
-     * Set the fill color.
-     */
-    virtual void set_fill_color(color_t c) { fill_color = c; }
+		virtual void set_frame_color(color_t c) { frame_color = c; }
 
-  };
-
+		/**
+		 * Set the fill color.
+		 */
+		virtual void set_fill_color(color_t c) { fill_color = c; }
+	};
 }
 
 #endif

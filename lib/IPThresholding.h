@@ -26,61 +26,61 @@
 #include <ImageProcessorBase.h>
 #include <FilterKernel.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Processor: Create a binary image from a single channel image.
+	 */
 
-  /**
-   * Processor: Create a binary image from a single channel image.
-   */
+	template <typename ImageTypeIn, typename ImageTypeOut>
+	class IPThresholding : public ImageProcessorBase
+	{
+	private:
+		double threshold;
 
-  template<typename ImageTypeIn, typename ImageTypeOut>
-  class IPThresholding : public ImageProcessorBase {
+	public:
 
-  private:
-    double threshold;
+		/**
+		 * The constructor.
+		 */
 
-  public:
+		IPThresholding(double _threshold = 0.5) :
+			ImageProcessorBase("IPThresholding",
+			                   "Binarize an image.",
+			                   false,
+			                   typeid(typename ImageTypeIn::pixel_type),
+			                   typeid(typename ImageTypeOut::pixel_type)),
+			threshold(_threshold)
+		{
+		}
 
-    /**
-     * The constructor.
-     */
+		/**
+		 * The destructor.
+		 */
 
-    IPThresholding(double _threshold = 0.5) :
-      ImageProcessorBase("IPThresholding",
-			 "Binarize an image.",
-			 false,
-			 typeid(typename ImageTypeIn::pixel_type),
-			 typeid(typename ImageTypeOut::pixel_type)),
-      threshold(_threshold) { }
-
-    /**
-     * The destructor.
-     */
-
-    virtual ~IPThresholding() {}
-
-
-    virtual ImageBase_shptr run(ImageBase_shptr _in) {
-
-      assert(_in != NULL);
-
-      std::shared_ptr<ImageTypeIn> img_in =
-	std::dynamic_pointer_cast<ImageTypeIn>(_in);
-
-      std::shared_ptr<ImageTypeOut>
-	img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
-
-      assert(img_in != NULL);
-      assert(img_out != NULL);
-
-      thresholding_image<ImageTypeOut, ImageTypeIn>(img_out, img_in, threshold);
-
-      return img_out;
-    }
+		virtual ~IPThresholding()
+		{
+		}
 
 
-  };
+		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		{
+			assert(_in != NULL);
 
+			std::shared_ptr<ImageTypeIn> img_in =
+				std::dynamic_pointer_cast<ImageTypeIn>(_in);
+
+			std::shared_ptr<ImageTypeOut>
+				img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
+
+			assert(img_in != NULL);
+			assert(img_out != NULL);
+
+			thresholding_image<ImageTypeOut, ImageTypeIn>(img_out, img_in, threshold);
+
+			return img_out;
+		}
+	};
 }
 
 #endif
-

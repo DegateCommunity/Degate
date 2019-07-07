@@ -29,130 +29,132 @@
 #include "StoragePolicies.h"
 #include "ImageReaderBase.h"
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The JPEGReader parses jpeg images.
+	 */
 
+	template <class ImageType>
+	class JPEGReader : public ImageReaderBase<ImageType>
+	{
+	private:
 
-  /**
-   * The JPEGReader parses jpeg images.
-   */
+		unsigned char* image_buffer;
+		int depth;
 
-  template<class ImageType>
-  class JPEGReader : public ImageReaderBase<ImageType> {
+	public:
 
-  private:
+		using ImageReaderBase<ImageType>::get_filename;
+		using ImageReaderBase<ImageType>::set_width;
+		using ImageReaderBase<ImageType>::set_height;
+		using ImageReaderBase<ImageType>::get_width;
+		using ImageReaderBase<ImageType>::get_height;
 
-    unsigned char * image_buffer;
-    int depth;
+		JPEGReader(std::string const& filename) :
+			ImageReaderBase<ImageType>(filename),
+			image_buffer(NULL)
+		{
+		}
 
-  public:
+		~JPEGReader()
+		{
+			if (image_buffer != NULL) free(image_buffer);
+		}
 
-    using ImageReaderBase<ImageType>::get_filename;
-    using ImageReaderBase<ImageType>::set_width;
-    using ImageReaderBase<ImageType>::set_height;
-    using ImageReaderBase<ImageType>::get_width;
-    using ImageReaderBase<ImageType>::get_height;
+		bool read();
 
-    JPEGReader(std::string const& filename) :
-      ImageReaderBase<ImageType>(filename),
-      image_buffer(NULL) {}
+		bool get_image(std::shared_ptr<ImageType>);
+	};
 
-    ~JPEGReader() {
-      if(image_buffer != NULL) free(image_buffer);
-    }
+	template <class ImageType>
+	bool JPEGReader<ImageType>::read()
+	{
+		struct jpeg_decompress_struct cinfo;
+		struct jpeg_error_mgr jerr;
+		FILE* infile; /* source file */
+		depth = 0;
 
-    bool read();
+		JSAMPARRAY buffer; /* Output row buffer */
+		int row_stride; /* physical row width in output buffer */
+		unsigned int p = 0;
 
-    bool get_image(std::shared_ptr<ImageType>);
+		if ((infile = fopen(get_filename().c_str(), "rb")) == NULL)
+		{
+			debug(TM, "can't open %s\n", get_filename().c_str());
+			return false;
+		}
 
+		cinfo.err = jpeg_std_error(&jerr);
 
-  };
+		jpeg_create_decompress(&cinfo);
+		jpeg_stdio_src(&cinfo, infile);
 
-  template<class ImageType>
-  bool JPEGReader<ImageType>::read() {
+		jpeg_read_header(&cinfo, TRUE);
+		jpeg_start_decompress(&cinfo);
 
-    struct jpeg_decompress_struct cinfo;
-    struct jpeg_error_mgr jerr;
-    FILE * infile;     /* source file */
-    depth = 0;
+		set_width(cinfo.output_width);
+		set_height(cinfo.output_height);
+		depth = cinfo.num_components;
 
-    JSAMPARRAY buffer; /* Output row buffer */
-    int row_stride;    /* physical row width in output buffer */
-    unsigned int p = 0;
+		debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
 
-    if ((infile = fopen(get_filename().c_str(), "rb")) == NULL) {
-      debug(TM, "can't open %s\n", get_filename().c_str());
-      return false;
-    }
+		image_buffer = (unsigned char *)malloc(depth * get_width() * get_height());
 
-    cinfo.err = jpeg_std_error(&jerr);
+		if (image_buffer != NULL)
+		{
+			row_stride = cinfo.output_width * cinfo.output_components;
+			buffer = (*cinfo.mem->alloc_sarray)
+				((j_common_ptr) & cinfo, JPOOL_IMAGE, row_stride, 1);
 
-    jpeg_create_decompress(&cinfo);
-    jpeg_stdio_src(&cinfo, infile);
+			debug(TM, "Row stride is %d\n", row_stride);
+			while (cinfo.output_scanline < cinfo.output_height)
+			{
+				jpeg_read_scanlines(&cinfo, buffer, 1);
 
-    jpeg_read_header(&cinfo, TRUE);
-    jpeg_start_decompress(&cinfo);
+				memcpy(&image_buffer[p], buffer[0], row_stride);
+				p += row_stride;
+				//        put_scanline_someplace(buffer[0], row_stride);
+			}
 
-    set_width(cinfo.output_width);
-    set_height(cinfo.output_height);
-    depth = cinfo.num_components;
+			debug(TM, "Image read\n");
+		}
 
-    debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
+		jpeg_finish_decompress(&cinfo);
+		jpeg_destroy_decompress(&cinfo);
+		fclose(infile);
 
-    image_buffer = (unsigned char *)malloc(depth * get_width() * get_height());
-
-    if(image_buffer != NULL) {
-
-      row_stride = cinfo.output_width * cinfo.output_components;
-      buffer = (*cinfo.mem->alloc_sarray)
-	((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
-
-      debug(TM,"Row stride is %d\n",row_stride);
-      while (cinfo.output_scanline < cinfo.output_height) {
-        jpeg_read_scanlines(&cinfo, buffer, 1);
-
-        memcpy(&image_buffer[p],buffer[0],row_stride);
-        p+=row_stride;
-        //        put_scanline_someplace(buffer[0], row_stride);
-      }
-
-      debug(TM,"Image read\n");
-    }
-
-    jpeg_finish_decompress(&cinfo);
-    jpeg_destroy_decompress(&cinfo);
-    fclose(infile);
-
-    return true;
-  }
-
-  template<class ImageType>
-  bool JPEGReader<ImageType>::get_image(std::shared_ptr<ImageType> img) {
-
-    if(img == NULL) return false;
-
-    for(unsigned int y = 0; y < get_height(); y++) {
-      for(unsigned int x = 0; x < get_width(); x++) {
-
-	uint8_t v1, v2, v3;
-	if(depth == 1) {
-	  v1 = v2 = v3 = image_buffer[(y * get_width() + x)];
+		return true;
 	}
-	else if(depth == 3) {
-	  v1 = image_buffer[depth * (y * get_width() + x)];
-	  v2 = image_buffer[depth * (y * get_width() + x) + 1];
-	  v3 = image_buffer[depth * (y * get_width() + x) + 2];
+
+	template <class ImageType>
+	bool JPEGReader<ImageType>::get_image(std::shared_ptr<ImageType> img)
+	{
+		if (img == NULL) return false;
+
+		for (unsigned int y = 0; y < get_height(); y++)
+		{
+			for (unsigned int x = 0; x < get_width(); x++)
+			{
+				uint8_t v1, v2, v3;
+				if (depth == 1)
+				{
+					v1 = v2 = v3 = image_buffer[(y * get_width() + x)];
+				}
+				else if (depth == 3)
+				{
+					v1 = image_buffer[depth * (y * get_width() + x)];
+					v2 = image_buffer[depth * (y * get_width() + x) + 1];
+					v3 = image_buffer[depth * (y * get_width() + x) + 2];
+				}
+				else throw std::runtime_error("Unexpected number of channels in JPG file.");
+
+				img->set_pixel(x, y, MERGE_CHANNELS(v1, v2, v3, 0xff));
+			}
+		}
+
+		return true;
 	}
-	else throw std::runtime_error("Unexpected number of channels in JPG file.");
-
-	img->set_pixel(x, y, MERGE_CHANNELS(v1, v2, v3, 0xff));
-
-      }
-    }
-
-    return true;
-  }
-
-
 }
 
 #endif

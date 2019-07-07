@@ -36,85 +36,89 @@
 
 #include <cerrno>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The TIFFWriter parses tiff images.
+	 */
+
+	template <class ImageType>
+	class TIFFWriter : public ImageWriterBase<ImageType>
+	{
+	public:
+
+		using ImageWriterBase<ImageType>::get_filename;
+		using ImageWriterBase<ImageType>::get_width;
+		using ImageWriterBase<ImageType>::get_height;
 
 
-  /**
-   * The TIFFWriter parses tiff images.
-   */
+		TIFFWriter(unsigned int width, unsigned int height,
+		           std::string const& filename) :
+			ImageWriterBase<ImageType>(width, height, filename)
+		{
+		}
 
-  template<class ImageType>
-  class TIFFWriter : public ImageWriterBase<ImageType> {
+		virtual ~TIFFWriter()
+		{
+		}
 
-  public:
-
-    using ImageWriterBase<ImageType>::get_filename;
-    using ImageWriterBase<ImageType>::get_width;
-    using ImageWriterBase<ImageType>::get_height;
-
-
-    TIFFWriter(unsigned int width, unsigned int height,
-	       std::string const& filename) :
-      ImageWriterBase<ImageType>(width, height, filename) {}
-
-    virtual ~TIFFWriter() { }
-
-    /**
-     * exception FileSystemException
-     */
-    bool write_image(std::shared_ptr<ImageType> img);
-  };
+		/**
+		 * exception FileSystemException
+		 */
+		bool write_image(std::shared_ptr<ImageType> img);
+	};
 
 
-  template<class ImageType>
-  bool TIFFWriter<ImageType>::write_image(std::shared_ptr<ImageType> img) {
+	template <class ImageType>
+	bool TIFFWriter<ImageType>::write_image(std::shared_ptr<ImageType> img)
+	{
+		TIFF* tif = TIFFOpen(get_filename().c_str(), "w");
+		if (tif == NULL)
+		{
+			throw FileSystemException(strerror(errno));
+		}
 
-    TIFF * tif = TIFFOpen(get_filename().c_str(), "w");
-    if(tif == NULL) {
-      throw FileSystemException(strerror(errno));
-    }
+		size_t npixels = get_width() * get_height();
 
-    size_t npixels = get_width() * get_height();
+		char* raster = (char*)_TIFFmalloc(npixels * 3);
+		if (raster == NULL) return false;
 
-    char * raster = (char*) _TIFFmalloc(npixels * 3);
-    if(raster == NULL) return false;
+		for (unsigned int y = 0; y < get_height(); y++)
+		{
+			for (unsigned int x = 0; x < get_width(); x++)
+			{
+				rgba_pixel_t p =
+					img->template get_pixel_as<rgba_pixel_t>(x, y);
 
-    for(unsigned int y = 0; y < get_height(); y++) {
-      for(unsigned int x = 0; x < get_width(); x++) {
-
-	rgba_pixel_t p =
-	  img->template get_pixel_as<rgba_pixel_t>(x, y);
-
-	raster[3*(y * get_width() + x)] = MASK_R(p);
-	raster[3*(y * get_width() + x)+1] = MASK_G(p);
-	raster[3*(y * get_width() + x)+2] = MASK_B(p);
-      }
-    }
-
-
-    // Write the tiff tags to the file
-    TIFFSetField(tif, TIFFTAG_IMAGEWIDTH, get_width());
-    TIFFSetField(tif, TIFFTAG_IMAGELENGTH, get_height());
-    TIFFSetField(tif, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
-    TIFFSetField(tif, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-    TIFFSetField(tif, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
-    TIFFSetField(tif, TIFFTAG_BITSPERSAMPLE, 8);
-    TIFFSetField(tif, TIFFTAG_SAMPLESPERPIXEL, 3);
-
-    bool ret = true;
-
-    // Actually write the image
-    if(TIFFWriteEncodedStrip(tif, 0, raster, npixels * 3) == 0) {
-      ret = false;
-    }
-
-    if(tif != NULL) TIFFClose(tif);
-    _TIFFfree(raster);
-
-    return ret;
-  }
+				raster[3 * (y * get_width() + x)] = MASK_R(p);
+				raster[3 * (y * get_width() + x) + 1] = MASK_G(p);
+				raster[3 * (y * get_width() + x) + 2] = MASK_B(p);
+			}
+		}
 
 
+		// Write the tiff tags to the file
+		TIFFSetField(tif, TIFFTAG_IMAGEWIDTH, get_width());
+		TIFFSetField(tif, TIFFTAG_IMAGELENGTH, get_height());
+		TIFFSetField(tif, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
+		TIFFSetField(tif, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+		TIFFSetField(tif, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
+		TIFFSetField(tif, TIFFTAG_BITSPERSAMPLE, 8);
+		TIFFSetField(tif, TIFFTAG_SAMPLESPERPIXEL, 3);
+
+		bool ret = true;
+
+		// Actually write the image
+		if (TIFFWriteEncodedStrip(tif, 0, raster, npixels * 3) == 0)
+		{
+			ret = false;
+		}
+
+		if (tif != NULL) TIFFClose(tif);
+		_TIFFfree(raster);
+
+		return ret;
+	}
 }
 
 #endif

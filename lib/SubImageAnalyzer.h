@@ -30,47 +30,47 @@
 #include <Image.h>
 #include <TypeConstraints.h>
 
-namespace degate {
+namespace degate
+{
+	template <typename ImageType>
+	class SubImageAnalyzer
+	{
+	private:
+		std::shared_ptr<ImageType> img;
+		unsigned int width;
 
-  template<typename ImageType>
-  class SubImageAnalyzer {
+	public:
+		SubImageAnalyzer(std::shared_ptr<ImageType> _img,
+		                 unsigned int width) :
+			img(_img),
+			width(_width)
+		{
+			assert_is_multi_channel_image<ImageType>();
+		}
 
-  private:
-    std::shared_ptr<ImageType> img;
-    unsigned int width;
+		void run()
+		{
+			std::vector<rgba_pixel_t> v(width * width);
 
-  public:
-    SubImageAnalyzer(std::shared_ptr<ImageType> _img,
-		     unsigned int width) :
-      img(_img),
-      width(_width) {
+			int radius = width >> 1;
+			unsigned int i = 0;
 
-      assert_is_multi_channel_image<ImageType>();
-    }
+			for (unsigned int y = width; y < img->get_height() - radius; y++)
+				for (unsigned int x = width; x < img->get_width() - radius; x++, i++)
+				{
+					for (int _y = -radius; _y < radius; _y++)
+						for (int _x = -radius; _x < radius; _x++)
+						{
+							rgba_pixel_t p = img->get_pixel(x + _x, y + _y);
+							vector[i] = p;
+						}
+				}
 
-    void run() {
-
-      std::vector<rgba_pixel_t> v(width * width);
-
-      int radius = width >> 1;
-      unsigned int i = 0;
-
-      for(unsigned int y = width; y < img->get_height() - radius; y++)
-	for(unsigned int x = width; x < img->get_width() - radius; x++, i++) {
-
-	  for(int _y = -radius; _y < radius; _y++)
-	    for(int _x = -radius; _x < radius; _x++) {
-	      rgba_pixel_t p = img->get_pixel(x + _x, y + _y);
-	      vector[i] = p;
-	    }
-	}
-
-      virtual bool calc(std::vector<rgba_pixel_t> const& v) const = 0;
-    }
-
-  };
-
-
+			virtual bool calc(std::vector<rgba_pixel_t> const& v) const
+			=
+			0;
+		}
+	};
 }
 
 #endif

@@ -35,29 +35,31 @@
 
 using namespace degate;
 
-QDomElement XMLImporter::get_dom_twig(QDomElement const start_node, std::string const & element_name) const {
-  return start_node.elementsByTagName(QString::fromStdString(element_name)).at(0).toElement();
+QDomElement XMLImporter::get_dom_twig(QDomElement const start_node, std::string const& element_name) const
+{
+	return start_node.elementsByTagName(QString::fromStdString(element_name)).at(0).toElement();
 }
 
 
-color_t XMLImporter::parse_color_string(std::string const& color_string) const {
-  const unsigned int correct_length = 1 + 4 * 2;
-  if(color_string.size() != correct_length) return 0;
+color_t XMLImporter::parse_color_string(std::string const& color_string) const
+{
+	const unsigned int correct_length = 1 + 4 * 2;
+	if (color_string.size() != correct_length) return 0;
 
-  int r = 0;
-  int g = 0;
-  int b = 0;
-  int a = 0;
+	int r = 0;
+	int g = 0;
+	int b = 0;
+	int a = 0;
 
-  std::istringstream iss_r(color_string.substr(1, 2));
-  std::istringstream iss_g(color_string.substr(3, 2));
-  std::istringstream iss_b(color_string.substr(5, 2));
-  std::istringstream iss_a(color_string.substr(7, 2));
+	std::istringstream iss_r(color_string.substr(1, 2));
+	std::istringstream iss_g(color_string.substr(3, 2));
+	std::istringstream iss_b(color_string.substr(5, 2));
+	std::istringstream iss_a(color_string.substr(7, 2));
 
-  iss_r >> std::hex >> r;
-  iss_g >> std::hex >> g;
-  iss_b >> std::hex >> b;
-  iss_a >> std::hex >> a;
+	iss_r >> std::hex >> r;
+	iss_g >> std::hex >> g;
+	iss_b >> std::hex >> b;
+	iss_a >> std::hex >> a;
 
-  return MERGE_CHANNELS(r,g,b,a);
+	return MERGE_CHANNELS(r, g, b, a);
 }

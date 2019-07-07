@@ -29,181 +29,216 @@
 #define M_PI       3.14159265358979323846
 #include <boost/format.hpp>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The class FilterKernel implemements a container for 2D filter kernel data.
+	 */
 
-  /**
-   * The class FilterKernel implemements a container for 2D filter kernel data.
-   */
+	class FilterKernel
+	{
+	private:
+		unsigned int columns, rows;
+		std::vector<double> data;
 
-  class FilterKernel {
+	public:
 
-  private:
-    unsigned int columns, rows;
-    std::vector<double> data;
+		FilterKernel(unsigned int _columns, unsigned int _rows) :
+			columns(_columns),
+			rows(_rows),
+			data(_columns * _rows)
+		{
+		}
 
-  public:
+		virtual ~FilterKernel()
+		{
+		}
 
-    FilterKernel(unsigned int _columns, unsigned int _rows) :
-      columns(_columns),
-      rows(_rows),
-      data(_columns * _rows) {
-    }
+		inline unsigned int get_columns() const
+		{
+			return columns;
+		}
 
-    virtual ~FilterKernel() {}
+		inline unsigned int get_rows() const
+		{
+			return rows;
+		}
 
-    inline unsigned int get_columns() const {
-      return columns;
-    }
+		inline unsigned int get_center_row() const
+		{
+			return rows >> 1;
+		}
 
-    inline unsigned int get_rows() const {
-      return rows;
-    }
+		inline unsigned int get_center_column() const
+		{
+			return columns >> 1;
+		}
 
-    inline unsigned int get_center_row() const {
-      return rows >> 1;
-    }
+		inline double get(int column, int row) const
+		{
+			return data[row * columns + column];
+		}
 
-    inline unsigned int get_center_column() const {
-      return columns >> 1;
-    }
+		inline void set(int column, int row, double val)
+		{
+			data[row * columns + column] = val;
+		}
 
-    inline double get(int column, int row) const {
-      return data[row * columns + column];
-    }
+		void print() const
+		{
+			unsigned int x, y;
+			for (y = 0; y < columns; y++)
+			{
+				for (x = 0; x < rows; x++)
+				{
+					boost::format f("%5.10f ");
+					f % get(x, y);
+					std::cout << f.str();
+				}
+				std::cout << std::endl;
+			}
+		}
+	};
 
-    inline void set(int column, int row, double val) {
-      data[row * columns + column] = val;
-    }
+	typedef std::shared_ptr<FilterKernel> FilterKernel_shptr;
 
-    void print() const {
-      unsigned int x, y;
-      for(y = 0; y < columns; y++) {
-	for(x = 0; x < rows; x++) {
-	  boost::format f("%5.10f ");
-	  f % get(x, y);
-	  std::cout << f.str();
-	}
-	std::cout << std::endl;
-      }
-    }
-  };
+	class SobelXOperator : public FilterKernel
+	{
+	public:
+		SobelXOperator() : FilterKernel(3, 3)
+		{
+			set(0, 0, 1);
+			set(0, 1, 2);
+			set(0, 2, 1);
 
-  typedef std::shared_ptr<FilterKernel> FilterKernel_shptr;
+			set(1, 0, 0);
+			set(1, 1, 0);
+			set(1, 2, 0);
 
-  class SobelXOperator : public FilterKernel {
-  public:
-    SobelXOperator() : FilterKernel(3, 3) {
-      set(0, 0, 1);
-      set(0, 1, 2);
-      set(0, 2, 1);
+			set(2, 0, -1);
+			set(2, 1, -2);
+			set(2, 2, -1);
+		}
 
-      set(1, 0, 0);
-      set(1, 1, 0);
-      set(1, 2, 0);
+		virtual ~SobelXOperator()
+		{
+		}
+	};
 
-      set(2, 0, -1);
-      set(2, 1, -2);
-      set(2, 2, -1);
-    }
-    virtual ~SobelXOperator() {}
-  };
+	typedef std::shared_ptr<SobelXOperator> SobelXOperator_shptr;
 
-  typedef std::shared_ptr<SobelXOperator> SobelXOperator_shptr;
+	class SobelYOperator : public FilterKernel
+	{
+	public:
+		SobelYOperator() : FilterKernel(3, 3)
+		{
+			set(0, 0, 1);
+			set(0, 1, 0);
+			set(0, 2, -1);
 
-  class SobelYOperator : public FilterKernel {
-  public:
-    SobelYOperator() : FilterKernel(3, 3) {
-      set(0, 0, 1);
-      set(0, 1, 0);
-      set(0, 2, -1);
+			set(1, 0, 2);
+			set(1, 1, 0);
+			set(1, 2, -2);
 
-      set(1, 0, 2);
-      set(1, 1, 0);
-      set(1, 2, -2);
+			set(2, 0, 1);
+			set(2, 1, 0);
+			set(2, 2, -1);
+		}
 
-      set(2, 0, 1);
-      set(2, 1, 0);
-      set(2, 2, -1);
-    }
-    virtual ~SobelYOperator() {}
-  };
+		virtual ~SobelYOperator()
+		{
+		}
+	};
 
-  typedef std::shared_ptr<SobelYOperator> SobelYOperator_shptr;
+	typedef std::shared_ptr<SobelYOperator> SobelYOperator_shptr;
 
 
-  class SobelOperator : public FilterKernel {
-  public:
-    SobelOperator() : FilterKernel(3, 3) {
-      set(0, 0, 0);
-      set(0, 1, 1);
-      set(0, 2, 2);
+	class SobelOperator : public FilterKernel
+	{
+	public:
+		SobelOperator() : FilterKernel(3, 3)
+		{
+			set(0, 0, 0);
+			set(0, 1, 1);
+			set(0, 2, 2);
 
-      set(1, 0, -1);
-      set(1, 1, 0);
-      set(1, 2, 1);
+			set(1, 0, -1);
+			set(1, 1, 0);
+			set(1, 2, 1);
 
-      set(2, 0, -2);
-      set(2, 1, -1);
-      set(2, 2, 0);
-    }
-    virtual ~SobelOperator() {}
-  };
+			set(2, 0, -2);
+			set(2, 1, -1);
+			set(2, 2, 0);
+		}
 
-  typedef std::shared_ptr<SobelOperator> SobelOperator_shptr;
+		virtual ~SobelOperator()
+		{
+		}
+	};
 
-  class GaussianBlur : public FilterKernel {
-  public:
-    GaussianBlur(unsigned int width, unsigned int height, double sigma = 1.4) :
-      FilterKernel(width, height) {
-      unsigned int x, y;
+	typedef std::shared_ptr<SobelOperator> SobelOperator_shptr;
 
-      for(y = 0; y < get_rows(); y++) {
-	for(x = 0; x < get_columns(); x++) {
+	class GaussianBlur : public FilterKernel
+	{
+	public:
+		GaussianBlur(unsigned int width, unsigned int height, double sigma = 1.4) :
+			FilterKernel(width, height)
+		{
+			unsigned int x, y;
 
-	  double _x = (double)x - (double)get_center_column();
-	  double _y = (double)y - (double)get_center_row();
+			for (y = 0; y < get_rows(); y++)
+			{
+				for (x = 0; x < get_columns(); x++)
+				{
+					double _x = (double)x - (double)get_center_column();
+					double _y = (double)y - (double)get_center_row();
 
-	  double v = 1.0/(2.0 * M_PI * pow(sigma, 2)) * exp(-(pow(_x, 2) + pow(_y, 2)) / (2*pow(sigma,2)));
+					double v = 1.0 / (2.0 * M_PI * pow(sigma, 2)) * exp(
+						-(pow(_x, 2) + pow(_y, 2)) / (2 * pow(sigma, 2)));
 
-	  set(x, y, v);
-	}
+					set(x, y, v);
+				}
+			}
+		}
 
-      }
-    }
+		virtual ~GaussianBlur()
+		{
+		}
+	};
 
-    virtual ~GaussianBlur() {}
-  };
+	/**
+	 * Implements a Laplacian of Gaussian.
+	 */
+	class LoG : public FilterKernel
+	{
+	public:
+		LoG(unsigned int width, unsigned int height, double sigma = 1.4) : FilterKernel(width, height)
+		{
+			unsigned int x, y;
 
-  /**
-   * Implements a Laplacian of Gaussian.
-   */
-  class LoG : public FilterKernel {
-  public:
-    LoG(unsigned int width, unsigned int height, double sigma = 1.4) : FilterKernel(width, height) {
-      unsigned int x, y;
+			for (y = 0; y < get_rows(); y++)
+			{
+				for (x = 0; x < get_columns(); x++)
+				{
+					double _x = (double)x - (double)get_center_column();
+					double _y = (double)y - (double)get_center_row();
 
-      for(y = 0; y < get_rows(); y++) {
-	for(x = 0; x < get_columns(); x++) {
+					double v =
+						-1.0 / (M_PI * pow(sigma, 4)) *
+						(1.0 - (pow(_x, 2) + pow(_y, 2)) / (2.0 * pow(sigma, 2))) *
+						exp(-(pow(_x, 2) + pow(_y, 2)) / (2.0 * pow(sigma, 2)));
 
-	  double _x = (double)x - (double)get_center_column();
-	  double _y = (double)y - (double)get_center_row();
+					set(x, y, v);
+				}
+			}
+		}
 
-	  double v =
-	    -1.0/(M_PI * pow(sigma, 4)) *
-	    (1.0 - (pow(_x, 2) + pow(_y, 2)) / (2.0*pow(sigma, 2))) *
-	    exp(-(pow(_x, 2) + pow(_y, 2)) / (2.0*pow(sigma,2)));
+		virtual ~LoG()
+		{
+		}
+	};
 
-	  set(x, y, v);
-	}
-
-      }
-    }
-
-   virtual ~LoG() {}
-  };
-
-  typedef std::shared_ptr<LoG> LoG_shptr;
-
+	typedef std::shared_ptr<LoG> LoG_shptr;
 }
 
 #endif

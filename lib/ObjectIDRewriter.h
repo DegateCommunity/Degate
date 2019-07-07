@@ -28,64 +28,69 @@
 #include <sstream>
 #include <map>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * This class is used to defragment object IDs from a logic model.
+	 *
+	 * Each logic model object has a uniquie identifier. The logic model keeps track which
+	 * object IDs are in use and which are free. Internally there are cases where we want to
+	 * reorganize the object IDs. The ObjectIDRewriter is used therefore.
+	 *
+	 */
 
-/**
- * This class is used to defragment object IDs from a logic model.
- *
- * Each logic model object has a uniquie identifier. The logic model keeps track which
- * object IDs are in use and which are free. Internally there are cases where we want to
- * reorganize the object IDs. The ObjectIDRewriter is used therefore.
- *
- */
+	class ObjectIDRewriter
+	{
+	private:
 
-class ObjectIDRewriter {
+		std::map<object_id_t, object_id_t> table;
+		object_id_t oid_counter;
 
-private:
+		bool enable_id_rewrite;
 
-  std::map<object_id_t, object_id_t> table;
-  object_id_t oid_counter;
+	public:
 
-  bool enable_id_rewrite;
+		/**
+		 * Construct a new Rewriter.
+		 * @param _enable_id_rewrite If this parameter is set to false, then there is no object ID rewriting.
+		 */
+		ObjectIDRewriter(bool _enable_id_rewrite = true) :
+			oid_counter(2342),
+			enable_id_rewrite(_enable_id_rewrite)
+		{
+		};
 
-public:
+		/**
+		 * The destructor.
+		 */
 
-  /**
-   * Construct a new Rewriter.
-   * @param _enable_id_rewrite If this parameter is set to false, then there is no object ID rewriting.
-   */
-  ObjectIDRewriter(bool _enable_id_rewrite = true) :
-    oid_counter(2342),
-    enable_id_rewrite(_enable_id_rewrite) {};
+		virtual ~ObjectIDRewriter()
+		{
+		};
 
-  /**
-   * The destructor.
-   */
+		/**
+		 * Get an object ID replacement.
+		 * If you called the ctor with 'false', then you will get the the same object ID back. This is somehow
+		 * a pass through mode.
+		 * @param old_id For this object ID yoy will get a defragmented object ID.
+		 * @return Returns another object ID.
+		 */
+		object_id_t get_new_object_id(object_id_t old_id)
+		{
+			if (!enable_id_rewrite) return old_id;
+			else
+			{
+				if (table.find(old_id) == table.end())
+				{
+					table[old_id] = oid_counter;
+					return oid_counter++;
+				}
+				else return table[old_id];
+			}
+		}
+	};
 
-  virtual ~ObjectIDRewriter() {};
-
-  /**
-   * Get an object ID replacement.
-   * If you called the ctor with 'false', then you will get the the same object ID back. This is somehow
-   * a pass through mode.
-   * @param old_id For this object ID yoy will get a defragmented object ID.
-   * @return Returns another object ID.
-   */
-  object_id_t get_new_object_id(object_id_t old_id) {
-    if(!enable_id_rewrite) return old_id;
-    else {
-      if(table.find(old_id) == table.end()) {
-	table[old_id] = oid_counter;
-	return oid_counter++;
-      }
-      else return table[old_id];
-    }
-  }
-
-};
-
-typedef std::shared_ptr<ObjectIDRewriter> ObjectIDRewriter_shptr;
-
+	typedef std::shared_ptr<ObjectIDRewriter> ObjectIDRewriter_shptr;
 }
 
 #endif

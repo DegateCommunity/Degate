@@ -24,34 +24,35 @@
 using namespace degate;
 
 void DOTAttributes::add(std::string const& attribute_name,
-			std::string const& value) {
-  std::ostringstream stm;
-  stm << attribute_name << "=\"" << value << "\"";
-  attributes[attribute_name] = stm.str();
+                        std::string const& value)
+{
+	std::ostringstream stm;
+	stm << attribute_name << "=\"" << value << "\"";
+	attributes[attribute_name] = stm.str();
 }
-
 
 
 void DOTAttributes::add_position(long center_x, long center_y,
-				 bool preserve_position) {
-  std::ostringstream stm;
-  stm << "pos" << "=\"" << center_x << "," << center_y;
-  if(preserve_position) stm << "!";
-  stm << "\"";
-  attributes["pos"] = stm.str();
+                                 bool preserve_position)
+{
+	std::ostringstream stm;
+	stm << "pos" << "=\"" << center_x << "," << center_y;
+	if (preserve_position) stm << "!";
+	stm << "\"";
+	attributes["pos"] = stm.str();
 }
 
 
-std::string DOTAttributes::get_string() const {
-  std::string result;
+std::string DOTAttributes::get_string() const
+{
+	std::string result;
 
-  for(std::map<std::string, std::string>::const_iterator iter = attributes.begin();
-      iter != attributes.end(); ++iter) {
+	for (std::map<std::string, std::string>::const_iterator iter = attributes.begin();
+	     iter != attributes.end(); ++iter)
+	{
+		if (result.size() > 0) result += ",";
+		result += (*iter).second;
+	}
 
-    if(result.size() > 0) result += ",";
-    result += (*iter).second;
-  }
-
-  return std::string("[") + result + std::string("];");
+	return std::string("[") + result + std::string("];");
 }
-

@@ -26,61 +26,60 @@
 #include "globals.h"
 #include <iostream>
 
-namespace degate {
-class BoundingBox {
+namespace degate
+{
+	class BoundingBox
+	{
+	private:
+		int min_x, max_x, min_y, max_y;
 
- private:
-  int min_x, max_x, min_y, max_y;
+	public:
+		BoundingBox();
 
- public:
-  BoundingBox();
+		BoundingBox(int min_x, int max_x, int min_y, int max_y);
+		BoundingBox(int width, int height);
+		BoundingBox(const BoundingBox&);
 
-  BoundingBox(int min_x, int max_x, int min_y, int max_y);
-  BoundingBox(int width, int height);
-  BoundingBox(const BoundingBox&);
+		virtual ~BoundingBox();
 
-  virtual ~BoundingBox();
+		BoundingBox const& get_bounding_box() const;
+		bool in_shape(int x, int y, int max_distance = 0) const;
 
-  BoundingBox const& get_bounding_box() const;
-  bool in_shape(int x, int y, int max_distance = 0) const;
+		/**
+		 * Check if this bounding box is completly within the bounding box given as parameter.
+		 */
 
-  /**
-   * Check if this bounding box is completly within the bounding box given as parameter.
-   */
+		bool in_bounding_box(BoundingBox const& bbox) const;
+		bool operator==(const BoundingBox& other) const;
+		bool operator!=(const BoundingBox& other) const;
 
-  bool in_bounding_box(BoundingBox const& bbox) const;
-  bool operator==(const BoundingBox& other) const;
-  bool operator!=(const BoundingBox& other) const;
+		bool intersects(BoundingBox const& rect) const;
+		bool complete_within(BoundingBox const& rect) const;
 
-  bool intersects(BoundingBox const & rect) const;
-  bool complete_within(BoundingBox const & rect) const;
+		unsigned int get_width() const;
+		unsigned int get_height() const;
 
-  unsigned int get_width() const;
-  unsigned int get_height() const;
+		int get_min_x() const;
+		int get_max_x() const;
+		int get_min_y() const;
+		int get_max_y() const;
 
-  int get_min_x() const;
-  int get_max_x() const;
-  int get_min_y() const;
-  int get_max_y() const;
+		int get_center_x() const;
+		int get_center_y() const;
 
-  int get_center_x() const;
-  int get_center_y() const;
+		void set_min_x(int min_x);
+		void set_min_y(int min_y);
+		void set_max_x(int max_x);
+		void set_max_y(int max_y);
 
-  void set_min_x(int min_x);
-  void set_min_y(int min_y);
-  void set_max_x(int max_x);
-  void set_max_y(int max_y);
+		void set(int min_x, int max_x, int min_y, int max_y);
 
-  void set(int min_x, int max_x, int min_y, int max_y);
+		void shift_x(int delta_x);
+		void shift_y(int delta_y);
+		void shift(int delta_x, int delta_y);
 
-  void shift_x(int delta_x);
-  void shift_y(int delta_y);
-  void shift(int delta_x, int delta_y);
-
-  void print(std::ostream & os = std::cout, int n_tabs = 0) const;
-  std::string to_string() const;
-
-};
-
+		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
+		std::string to_string() const;
+	};
 }
 #endif

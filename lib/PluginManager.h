@@ -24,25 +24,31 @@
 
 #include <degate.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The plugin manager that handles complex image processing plugins.
+	 * The plugin manager is implemented as a singelton.
+	 *
+	 */
 
-  /**
-   * The plugin manager that handles complex image processing plugins.
-   * The plugin manager is implemented as a singelton.
-   *
-   */
+	class PluginManager
+	{
+	private:
 
-  class PluginManager {
-  private:
+		PluginManager()
+		{
+		}
 
-    PluginManager() {}
-    ~PluginManager() {}
+		~PluginManager()
+		{
+		}
 
-  public:
+	public:
 
-    PluginManager *
-  }
-
+		PluginManager*
+  
+	}
 }
 
 #endif

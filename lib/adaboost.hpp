@@ -32,46 +32,47 @@ public:
 	// clsfrs is a collection of weak classifiers
 	// this ada-boost implementation will first run the weak classifiers against all the training samples
 	// and therefore the acutal trainning will be very fast 
-	static vector<float> adaboost(vector<Classifier<T>*> clsfrs, vector<T*> data, vector<int> label, const int maxround = 80)
+	static vector<float> adaboost(vector<Classifier<T>*> clsfrs, vector<T*> data, vector<int> label,
+	                              const int maxround = 80)
 	{
 		vector<float> alpha;
 		vector<float> d;
-		
-		if (data.size()!=label.size() || clsfrs.size()==0 || label.size()==0)
+
+		if (data.size() != label.size() || clsfrs.size() == 0 || label.size() == 0)
 			return alpha;
-		
+
 		d.resize(label.size());
 		alpha.resize(clsfrs.size());
 
 
-		for (unsigned int i=0;i<label.size();i++)
-			d[i]=float(1.0)/float(label.size());
-		vector< vector<int> > rec;
+		for (unsigned int i = 0; i < label.size(); i++)
+			d[i] = float(1.0) / float(label.size());
+		vector<vector<int>> rec;
 		rec.resize(clsfrs.size());
 
 		// run the weak classifiers on all the trainning data first
-		for (unsigned int j=0;j<clsfrs.size();j++)
+		for (unsigned int j = 0; j < clsfrs.size(); j++)
 		{
 			rec[j].resize(label.size());
-			for (unsigned int i=0;i<label.size();i++)
-				rec[j][i]=clsfrs[j]->recognize(*data[i]);
+			for (unsigned int i = 0; i < label.size(); i++)
+				rec[j][i] = clsfrs[j]->recognize(*data[i]);
 		}
 
 		//run maxround times of iteration
-		
-		for (int round=0;round<maxround;round++)
+
+		for (int round = 0; round < maxround; round++)
 		{
-			float minerr=(float)label.size();
+			float minerr = (float)label.size();
 			int best = 0;
-			for (unsigned int j=0;j<clsfrs.size();j++) 
+			for (unsigned int j = 0; j < clsfrs.size(); j++)
 			{
-				float err=0;
-				for (unsigned int i=0;i<label.size();i++)
+				float err = 0;
+				for (unsigned int i = 0; i < label.size(); i++)
 				{
-					if (rec[j][i]!=label[i])
-					err += d[i];
+					if (rec[j][i] != label[i])
+						err += d[i];
 				}
-				if (err<minerr)
+				if (err < minerr)
 				{
 					minerr = err;
 					best = j;
@@ -79,18 +80,18 @@ public:
 			}
 			if (minerr >= 0.5) break;
 
-			float a= log((1.0f-minerr)/minerr)/2;
-			alpha[best]+=a;
-			vector<float> d1=d;
+			float a = log((1.0f - minerr) / minerr) / 2;
+			alpha[best] += a;
+			vector<float> d1 = d;
 			float z = 0;
-			for (unsigned int i=0;i<label.size();i++)
+			for (unsigned int i = 0; i < label.size(); i++)
 			{
-				d1[i]=d[i]*exp(-a*label[i]*rec[best][i]);
-				z+=d1[i];
+				d1[i] = d[i] * exp(-a * label[i] * rec[best][i]);
+				z += d1[i];
 			}
-			for (unsigned int i=0;i<label.size();i++)
+			for (unsigned int i = 0; i < label.size(); i++)
 			{
-				d[i]=d1[i]/z;
+				d[i] = d1[i] / z;
 			}
 		}
 		return alpha;
@@ -100,26 +101,29 @@ public:
 //The linear combination of weak classifiers i.e. the strong classifier
 
 template <class T>
-class MultiClassifier :public Classifier<T>
+class MultiClassifier : public Classifier<T>
 {
 private:
 	vector<float> weights;
 	vector<Classifier<T>*> clsfrs;
 public:
 	float score;
+
 	MultiClassifier(vector<float> w, vector<Classifier<T>*> c)
-	{	
+	{
 		this->weights = w;
 		this->clsfrs = c;
 	}
-  std::string get_name() const { return "MultiClassifier"; }
-    int recognize(T& obj)
+
+	std::string get_name() const { return "MultiClassifier"; }
+
+	int recognize(T& obj)
 	{
-		float res=0;
-		for (unsigned int i=0;i<weights.size();i++)
-		  if(weights[i]> 0) res+=weights[i]*clsfrs[i]->recognize(obj);
-		score=res;
-		if (res>=0) 
+		float res = 0;
+		for (unsigned int i = 0; i < weights.size(); i++)
+			if (weights[i] > 0) res += weights[i] * clsfrs[i]->recognize(obj);
+		score = res;
+		if (res >= 0)
 			return 1;
 		else
 			return -1;
@@ -129,28 +133,28 @@ public:
 // the utility function that tests a (strong) classifier over all the test data
 
 template <class T>
-void testClassifier(Classifier<T>* cls, vector<T*> data, vector<int> label, float & fpos, float & fneg)
+void testClassifier(Classifier<T>* cls, vector<T*> data, vector<int> label, float& fpos, float& fneg)
 {
 	int pos = 0, neg = 0;
-	fpos=fneg=0;
-	for (int i=0;i<label.size();i++)
+	fpos = fneg = 0;
+	for (int i = 0; i < label.size(); i++)
 	{
 		int rec = cls->recognize(*data[i]);
-		if (label[i]==1)
+		if (label[i] == 1)
 		{
 			pos++;
-			if (rec!=1)
-				fneg=fneg+1;
+			if (rec != 1)
+				fneg = fneg + 1;
 		}
-		if (label[i]==-1)
+		if (label[i] == -1)
 		{
 			neg++;
-			if (rec!=-1)
-				fpos=fpos+1;
+			if (rec != -1)
+				fpos = fpos + 1;
 		}
 	}
-	fpos = fpos/neg;
-	fneg = fneg/pos;
+	fpos = fpos / neg;
+	fneg = fneg / pos;
 }
 
 #endif

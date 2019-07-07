@@ -25,169 +25,185 @@
 using namespace degate;
 
 EdgeDetection::EdgeDetection(unsigned int _min_x, unsigned int _max_x,
-			     unsigned int _min_y, unsigned int _max_y,
-			     unsigned int _median_filter_width,
-			     unsigned int _blur_kernel_size,
-			     double _sigma) :
-  min_x(_min_x),
-  max_x(_max_x),
-  min_y(_min_y),
-  max_y(_max_y),
-  median_filter_width(_median_filter_width),
-  blur_kernel_size(_blur_kernel_size),
-  border(_blur_kernel_size >> 1),
-  sigma(_sigma),
-  has_path(false) {
-
-  setup_pipe();
+                             unsigned int _min_y, unsigned int _max_y,
+                             unsigned int _median_filter_width,
+                             unsigned int _blur_kernel_size,
+                             double _sigma) :
+	min_x(_min_x),
+	max_x(_max_x),
+	min_y(_min_y),
+	max_y(_max_y),
+	median_filter_width(_median_filter_width),
+	blur_kernel_size(_blur_kernel_size),
+	border(_blur_kernel_size >> 1),
+	sigma(_sigma),
+	has_path(false)
+{
+	setup_pipe();
 }
 
 
-EdgeDetection::~EdgeDetection() {
+EdgeDetection::~EdgeDetection()
+{
 }
 
-unsigned int EdgeDetection::get_border() const {
-  return border;
-}
-
-
-void EdgeDetection::setup_pipe() {
-
-  debug(TM, "will extract background image (%d, %d) (%d, %d)", min_x, min_y, max_x, max_y);
-  std::shared_ptr<IPCopy<TileImage_RGBA, TileImage_GS_DOUBLE> > copy_rgba_to_gs
-    (new IPCopy<TileImage_RGBA, TileImage_GS_DOUBLE>(min_x, max_x, min_y, max_y) );
-
-  pipe.add(copy_rgba_to_gs);
-
-  if(median_filter_width > 0) {
-    std::shared_ptr<IPMedianFilter<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE> > median_filter
-      (new IPMedianFilter<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(median_filter_width));
-
-    pipe.add(median_filter);
-  }
-
-
-  std::shared_ptr<IPNormalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE> > normalizer
-    (new IPNormalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(0, 1) );
-  pipe.add(normalizer);
-
-
-  if(blur_kernel_size > 0) {
-    std::shared_ptr<GaussianBlur>
-      GaussianB(new GaussianBlur(blur_kernel_size, blur_kernel_size, sigma));
-
-    GaussianB->print();
-    std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE> > gaussian_blur
-      (new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(GaussianB) );
-
-    pipe.add(gaussian_blur);
-  }
-
+unsigned int EdgeDetection::get_border() const
+{
+	return border;
 }
 
 
-unsigned int EdgeDetection::get_width() const {
-  return max_x - min_x;
-}
+void EdgeDetection::setup_pipe()
+{
+	debug(TM, "will extract background image (%d, %d) (%d, %d)", min_x, min_y, max_x, max_y);
+	std::shared_ptr<IPCopy<TileImage_RGBA, TileImage_GS_DOUBLE>> copy_rgba_to_gs
+		(new IPCopy<TileImage_RGBA, TileImage_GS_DOUBLE>(min_x, max_x, min_y, max_y));
 
-unsigned int EdgeDetection::get_height() const {
-  return max_y - min_y;
-}
+	pipe.add(copy_rgba_to_gs);
 
-void EdgeDetection::set_directory(std::string const& path) {
-  directory = path;
-  has_path = true;
-}
+	if (median_filter_width > 0)
+	{
+		std::shared_ptr<IPMedianFilter<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> median_filter
+			(new IPMedianFilter<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(median_filter_width));
 
-std::string EdgeDetection::get_directory() const {
-  return directory;
-}
+		pipe.add(median_filter);
+	}
 
-bool EdgeDetection::has_directory() const {
-  return has_path;
-}
 
-void EdgeDetection::run_edge_detection(ImageBase_shptr in) {
+	std::shared_ptr<IPNormalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> normalizer
+		(new IPNormalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(0, 1));
+	pipe.add(normalizer);
 
-  ImageBase_shptr out = pipe.run(in);
-  assert(out != NULL);
 
-  std::shared_ptr<SobelYOperator> SobelY(new SobelYOperator());
-  std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE> > edge_filter_x
-    (new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(SobelY) );
+	if (blur_kernel_size > 0)
+	{
+		std::shared_ptr<GaussianBlur>
+			GaussianB(new GaussianBlur(blur_kernel_size, blur_kernel_size, sigma));
 
-  std::shared_ptr<SobelXOperator> SobelX(new SobelXOperator());
-  std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE> > edge_filter_y
-    (new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(SobelX) );
+		GaussianB->print();
+		std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> gaussian_blur
+			(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(GaussianB));
 
-  i1 = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(edge_filter_x->run(out));
-  i2 = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(edge_filter_y->run(out));
-  assert(i1 != NULL && i2 != NULL);
-
-  if(has_path) save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "01_sobelx.tif"), i1);
-  if(has_path) save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "02_sobely.tif"), i2);
-}
-
-TileImage_GS_DOUBLE_shptr EdgeDetection::get_horizontal_edges() {
-  return i1;
-}
-
-TileImage_GS_DOUBLE_shptr EdgeDetection::get_vertical_edges() {
-  return i2;
+		pipe.add(gaussian_blur);
+	}
 }
 
 
-TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_magnitude_image(TileImage_GS_DOUBLE_shptr probability_map) {
+unsigned int EdgeDetection::get_width() const
+{
+	return max_x - min_x;
+}
 
-  if(i1 == NULL || i2 == NULL) return TileImage_GS_DOUBLE_shptr();
+unsigned int EdgeDetection::get_height() const
+{
+	return max_y - min_y;
+}
 
-  TileImage_GS_DOUBLE_shptr edge_mag_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
+void EdgeDetection::set_directory(std::string const& path)
+{
+	directory = path;
+	has_path = true;
+}
 
-  for(unsigned int y = border +2; y < get_height() - border -1; y++) {
-    for(unsigned int x = border+2; x < get_width() - border -1; x++) {
-      double gx = i1->get_pixel(x, y);
-      double gy = i2->get_pixel(x, y);
-      double g = sqrt(pow(gx,2) + pow(gy, 2));
-      if(probability_map != NULL) {
-	if(probability_map->get_pixel(x, y) > 0)
-	  edge_mag_image->set_pixel(x, y, g);
-      }
-      else
-	edge_mag_image->set_pixel(x, y, g);
-    }
-  }
+std::string EdgeDetection::get_directory() const
+{
+	return directory;
+}
 
-  if(has_path) save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory,
-								      "03_edge_mag_image.tif"),
-							  edge_mag_image);
-  return edge_mag_image;
+bool EdgeDetection::has_directory() const
+{
+	return has_path;
+}
+
+void EdgeDetection::run_edge_detection(ImageBase_shptr in)
+{
+	ImageBase_shptr out = pipe.run(in);
+	assert(out != NULL);
+
+	std::shared_ptr<SobelYOperator> SobelY(new SobelYOperator());
+	std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> edge_filter_x
+		(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(SobelY));
+
+	std::shared_ptr<SobelXOperator> SobelX(new SobelXOperator());
+	std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> edge_filter_y
+		(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(SobelX));
+
+	i1 = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(edge_filter_x->run(out));
+	i2 = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(edge_filter_y->run(out));
+	assert(i1 != NULL && i2 != NULL);
+
+	if (has_path) save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "01_sobelx.tif"), i1);
+	if (has_path) save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "02_sobely.tif"), i2);
+}
+
+TileImage_GS_DOUBLE_shptr EdgeDetection::get_horizontal_edges()
+{
+	return i1;
+}
+
+TileImage_GS_DOUBLE_shptr EdgeDetection::get_vertical_edges()
+{
+	return i2;
 }
 
 
+TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_magnitude_image(TileImage_GS_DOUBLE_shptr probability_map)
+{
+	if (i1 == NULL || i2 == NULL) return TileImage_GS_DOUBLE_shptr();
 
-TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_image(TileImage_GS_DOUBLE_shptr probability_map) {
+	TileImage_GS_DOUBLE_shptr edge_mag_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
 
-  if(i1 == NULL || i2 == NULL) return TileImage_GS_DOUBLE_shptr();
+	for (unsigned int y = border + 2; y < get_height() - border - 1; y++)
+	{
+		for (unsigned int x = border + 2; x < get_width() - border - 1; x++)
+		{
+			double gx = i1->get_pixel(x, y);
+			double gy = i2->get_pixel(x, y);
+			double g = sqrt(pow(gx, 2) + pow(gy, 2));
+			if (probability_map != NULL)
+			{
+				if (probability_map->get_pixel(x, y) > 0)
+					edge_mag_image->set_pixel(x, y, g);
+			}
+			else
+				edge_mag_image->set_pixel(x, y, g);
+		}
+	}
 
-  TileImage_GS_DOUBLE_shptr edge_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
-
-  for(unsigned int y = border +2; y < get_height() - border -1; y++) {
-    for(unsigned int x = border+2; x < get_width() - border -1; x++) {
-      double gx = i1->get_pixel(x, y);
-      double gy = i2->get_pixel(x, y);
-
-      if(probability_map != NULL) {
-	if(probability_map->get_pixel(x, y) > 0)
-	  edge_image->set_pixel(x, y, gx + gy);
-      }
-      else
-	edge_image->set_pixel(x, y, gx + gy);
-    }
-  }
-  if(has_path) save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory,
-								      "03_edge_image.tif"),
-							  edge_image);
-
-  return edge_image;
+	if (has_path)
+		save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory,
+		                                                       "03_edge_mag_image.tif"),
+		                                           edge_mag_image);
+	return edge_mag_image;
 }
 
+
+TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_image(TileImage_GS_DOUBLE_shptr probability_map)
+{
+	if (i1 == NULL || i2 == NULL) return TileImage_GS_DOUBLE_shptr();
+
+	TileImage_GS_DOUBLE_shptr edge_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
+
+	for (unsigned int y = border + 2; y < get_height() - border - 1; y++)
+	{
+		for (unsigned int x = border + 2; x < get_width() - border - 1; x++)
+		{
+			double gx = i1->get_pixel(x, y);
+			double gy = i2->get_pixel(x, y);
+
+			if (probability_map != NULL)
+			{
+				if (probability_map->get_pixel(x, y) > 0)
+					edge_image->set_pixel(x, y, gx + gy);
+			}
+			else
+				edge_image->set_pixel(x, y, gx + gy);
+		}
+	}
+	if (has_path)
+		save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory,
+		                                                       "03_edge_image.tif"),
+		                                           edge_image);
+
+	return edge_image;
+}

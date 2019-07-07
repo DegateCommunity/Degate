@@ -24,56 +24,53 @@
 
 #include <EdgeDetection.h>
 
-namespace degate {
+namespace degate
+{
+	class ZeroCrossingEdgeDetection : public EdgeDetection
+	{
+	private:
 
-  class ZeroCrossingEdgeDetection : public EdgeDetection {
+		unsigned int min_d;
+		unsigned int max_d;
+		double edge_threshold, zero_threshold;
 
-  private:
+	private:
 
-    unsigned int min_d;
-    unsigned int max_d;
-    double edge_threshold, zero_threshold;
+		bool trace(TileImage_GS_DOUBLE_shptr edge_image,
+		           int _x, int _y,
+		           int inc_x, int inc_y,
+		           int* start_x, int* stop_x,
+		           int* start_y, int* stop_y,
+		           double* mag,
+		           double edge_threshold,
+		           double zero_threshold,
+		           unsigned int min_d, unsigned int max_d);
 
-  private:
+		TileImage_GS_DOUBLE_shptr analyze_edge_image(TileImage_GS_DOUBLE_shptr edge_image,
+		                                             TileImage_GS_DOUBLE_shptr probability_map,
+		                                             unsigned int min_d, unsigned int max_d);
 
-    bool trace(TileImage_GS_DOUBLE_shptr edge_image,
-	       int _x, int _y,
-	       int inc_x, int inc_y,
-	       int * start_x, int * stop_x,
-	       int * start_y, int * stop_y,
-	       double * mag,
-	       double edge_threshold,
-	       double zero_threshold,
-	       unsigned int min_d, unsigned int max_d);
+		void overlay_result(TileImage_GS_DOUBLE_shptr zc,
+		                    TileImage_GS_DOUBLE_shptr bg,
+		                    //TileImage_RGBA_shptr bg,
+		                    std::string const& directory) const;
+	public:
 
-    TileImage_GS_DOUBLE_shptr analyze_edge_image(TileImage_GS_DOUBLE_shptr edge_image,
-						 TileImage_GS_DOUBLE_shptr probability_map,
-						 unsigned int min_d, unsigned int max_d);
+		ZeroCrossingEdgeDetection(unsigned int min_x, unsigned int max_x,
+		                          unsigned int min_y, unsigned int max_y,
+		                          unsigned int median_filter_width = 3,
+		                          unsigned int blur_kernel_size = 10,
+		                          double sigma = 0.5,
+		                          unsigned int _min_d = 1, unsigned int _max_d = 10,
+		                          double _edge_threshold = 0.25, double _zero_threshold = 0.4);
 
-    void overlay_result(TileImage_GS_DOUBLE_shptr zc,
-			TileImage_GS_DOUBLE_shptr bg,
-			//TileImage_RGBA_shptr bg,
-			std::string const& directory) const;
-  public:
+		TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
+		                              TileImage_GS_DOUBLE_shptr probability_map,
+		                              std::string const& directory);
 
-    ZeroCrossingEdgeDetection(unsigned int min_x, unsigned int max_x,
-			      unsigned int min_y, unsigned int max_y,
-			      unsigned int median_filter_width = 3,
-			      unsigned int blur_kernel_size = 10,
-			      double sigma = 0.5,
-			      unsigned int _min_d = 1, unsigned int _max_d = 10,
-			      double _edge_threshold = 0.25, double _zero_threshold = 0.4);
-
-    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
-				  TileImage_GS_DOUBLE_shptr probability_map,
-				  std::string const& directory);
-
-    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
-				  TileImage_GS_DOUBLE_shptr probability_map);
-
-
-  };
-
+		TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
+		                              TileImage_GS_DOUBLE_shptr probability_map);
+	};
 }
 
 

@@ -24,4 +24,3 @@
 #include <RemoteObject.h>
 
 using namespace degate;
-

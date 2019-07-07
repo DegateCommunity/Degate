@@ -31,47 +31,58 @@
 
 using namespace degate;
 
-ConnectedLogicModelObject::ConnectedLogicModelObject() {
+ConnectedLogicModelObject::ConnectedLogicModelObject()
+{
 }
 
-ConnectedLogicModelObject:: ~ConnectedLogicModelObject() {
-  remove_net();
+ConnectedLogicModelObject::~ConnectedLogicModelObject()
+{
+	remove_net();
 };
 
-void ConnectedLogicModelObject::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t *oldnew) const {
-  PlacedLogicModelObject::cloneDeepInto(dest, oldnew);
-  
-  auto clone = std::dynamic_pointer_cast<ConnectedLogicModelObject>(dest);
-  if (net.get() != nullptr) {
-    clone->net = std::dynamic_pointer_cast<Net>(net->cloneDeep(oldnew));
-  }
+void ConnectedLogicModelObject::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+{
+	PlacedLogicModelObject::cloneDeepInto(dest, oldnew);
+
+	auto clone = std::dynamic_pointer_cast<ConnectedLogicModelObject>(dest);
+	if (net.get() != nullptr)
+	{
+		clone->net = std::dynamic_pointer_cast<Net>(net->cloneDeep(oldnew));
+	}
 }
 
-void ConnectedLogicModelObject::set_net(Net_shptr net) {
-  if(this->net != NULL) {
-    this->net->remove_object(get_object_id());
-  }
-  this->net = net;
-  this->net->add_object(get_object_id());
+void ConnectedLogicModelObject::set_net(Net_shptr net)
+{
+	if (this->net != NULL)
+	{
+		this->net->remove_object(get_object_id());
+	}
+	this->net = net;
+	this->net->add_object(get_object_id());
 }
 
-void ConnectedLogicModelObject::remove_net() {
-  if(net != NULL) {
-    net->remove_object(get_object_id());
-    net.reset();
-  }
+void ConnectedLogicModelObject::remove_net()
+{
+	if (net != NULL)
+	{
+		net->remove_object(get_object_id());
+		net.reset();
+	}
 }
 
 
-Net_shptr ConnectedLogicModelObject::get_net()  {
-  return net;
+Net_shptr ConnectedLogicModelObject::get_net()
+{
+	return net;
 }
 
-bool ConnectedLogicModelObject::is_connected() const {
-  if(net == NULL) return false;
-  if(net->size() >= 2) return true;
-  BOOST_FOREACH(object_id_t oid, *net) {
-    if(oid != get_object_id()) return true;
-  }
-  return false;
+bool ConnectedLogicModelObject::is_connected() const
+{
+	if (net == NULL) return false;
+	if (net->size() >= 2) return true;
+	BOOST_FOREACH(object_id_t oid, *net)
+	{
+		if (oid != get_object_id()) return true;
+	}
+	return false;
 }

@@ -24,27 +24,27 @@
 
 #include <Image.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	   Otsu's algorithm for calculating a threshold for image binarysation:
+	   https://en.wikipedia.org/wiki/Otsu's_method
+	 */
+	class Otsu
+	{
+	private:
 
-  /**
-     Otsu's algorithm for calculating a threshold for image binarysation:
-     https://en.wikipedia.org/wiki/Otsu's_method
-   */
-  class Otsu {
+		double otsu_threshold;
 
-  private:
+	public:
 
-    double otsu_threshold;
+		Otsu();
+		~Otsu();
 
-  public:
+		double get_otsu_threshold();
 
-    Otsu();
-    ~Otsu();
-
-    double get_otsu_threshold();
-
-    void run(TileImage_GS_DOUBLE_shptr gray);
-  };
+		void run(TileImage_GS_DOUBLE_shptr gray);
+	};
 }
 
 #endif

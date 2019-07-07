@@ -34,198 +34,208 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * An annotation is a descriptive meta object that can be
+	 * placed on a logic model's layer to mark a region of interest.
+	 *
+	 * The semantics of an annotation is user defined. The libdegate
+	 * does not establish a relationship from an annotaion to another
+	 * logic model object or to an background image region.
+	 *
+	 * Each annotation should have a class ID. This might be used
+	 * to classify the kind of annotation. For example you can place
+	 * an annotation 'above' a distored part of the background image to
+	 * remember yourself, that this image part should be rephotographed.
+	 * An image recognition algorithm may auto-annotate, that it is unsure
+	 * e.g. if there is a via or not due to fuzzy thresholds.
+	 *
+	 * You can set a name and a description for the annotation as well.
+	 *
+	 * This class is designed to be derived for concrete annotations.
+	 *
+	 * @see set_name()
+	 * @see set_description()
+	 */
 
-  /**
-   * An annotation is a descriptive meta object that can be
-   * placed on a logic model's layer to mark a region of interest.
-   *
-   * The semantics of an annotation is user defined. The libdegate
-   * does not establish a relationship from an annotaion to another
-   * logic model object or to an background image region.
-   *
-   * Each annotation should have a class ID. This might be used
-   * to classify the kind of annotation. For example you can place
-   * an annotation 'above' a distored part of the background image to
-   * remember yourself, that this image part should be rephotographed.
-   * An image recognition algorithm may auto-annotate, that it is unsure
-   * e.g. if there is a via or not due to fuzzy thresholds.
-   *
-   * You can set a name and a description for the annotation as well.
-   *
-   * This class is designed to be derived for concrete annotations.
-   *
-   * @see set_name()
-   * @see set_description()
-   */
+	class Annotation : public Rectangle, public PlacedLogicModelObject
+	{
+	public:
 
-  class Annotation : public Rectangle, public PlacedLogicModelObject {
+		typedef unsigned int class_id_t;
 
-  public:
+		/**
+		 * Enums to declare the type of annotation.
+		 */
 
-    typedef unsigned int class_id_t;
+		enum ANNOTATION_TYPE
+		{
+			UNDEFINED = 0,
+			SUBPROJECT = 1
+		};
 
-    /**
-     * Enums to declare the type of annotation.
-     */
+		typedef std::map<std::string, /* param name */
+		                 std::string /* param value */> parameter_set_type;
 
-    enum ANNOTATION_TYPE {
-      UNDEFINED = 0,
-      SUBPROJECT = 1
-    };
+	private:
 
-    typedef std::map<std::string, /* param name */
-		     std::string  /* param value */ > parameter_set_type;
+		class_id_t class_id;
+		parameter_set_type parameters;
 
-  private:
-
-    class_id_t class_id;
-    parameter_set_type parameters;
-
-  protected:
-
-
-    /**
-     * Set a parameter.
-     */
-
-    void set_parameter(std::string const& parameter_name,
-		       std::string const& parameter_value) {
-      parameters[parameter_name] = parameter_value;
-    }
-
-  public:
-
-    explicit Annotation() {};
-
-    /**
-     * Create a new annotation.
-     */
-
-    Annotation(int _min_x, int _max_x, int _min_y, int _max_y,
-	       class_id_t _class_id = UNDEFINED);
-
-    /**
-     * Create a new annotation.
-     */
-
-    Annotation(BoundingBox const& bbox,
-	       class_id_t _class_id = UNDEFINED);
+	protected:
 
 
-    /**
-     * The destructor for an annotaion.
-     */
+		/**
+		 * Set a parameter.
+		 */
 
-    virtual ~Annotation();
+		void set_parameter(std::string const& parameter_name,
+		                   std::string const& parameter_value)
+		{
+			parameters[parameter_name] = parameter_value;
+		}
 
-    //@{
-    DeepCopyable_shptr cloneShallow() const;
-    void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t *oldnew) const;
-    //@}
-    
-    /**
-     * Get the class ID for an annotation.
-     */
+	public:
 
-    virtual class_id_t get_class_id() const;
+		explicit Annotation()
+		{
+		};
 
-    /**
-     * Set the class ID for an annotation.
-     */
+		/**
+		 * Create a new annotation.
+		 */
 
-    virtual void set_class_id(class_id_t _class_id);
+		Annotation(int _min_x, int _max_x, int _min_y, int _max_y,
+		           class_id_t _class_id = UNDEFINED);
 
-    /**
-     * Get a human readable string that describes the whole
-     * logic model object. The string should be unique in order
-     * to let the user identify the concrete object. But that
-     * is not a must.
-     */
+		/**
+		 * Create a new annotation.
+		 */
 
-    virtual const std::string get_descriptive_identifier() const;
-
-    /**
-     * Get a human readable string that names the object type.
-     * Here it is "Annotation".
-     */
-
-    virtual const std::string get_object_type_name() const;
-
-    /**
-     * Print annotation.
-     */
-    void print(std::ostream & os = std::cout, int n_tabs = 0) const;
+		Annotation(BoundingBox const& bbox,
+		           class_id_t _class_id = UNDEFINED);
 
 
+		/**
+		 * The destructor for an annotaion.
+		 */
 
-    void shift_x(int delta_x) {
-      Rectangle::shift_x(delta_x);
-      notify_shape_change();
-    }
+		virtual ~Annotation();
 
-    void shift_y(int delta_y) {
-      Rectangle::shift_y(delta_y);
-      notify_shape_change();
-    }
+		//@{
+		DeepCopyable_shptr cloneShallow() const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		//@}
 
-    virtual bool in_bounding_box(BoundingBox const& bbox) const {
-      return in_bounding_box(bbox);
-    }
+		/**
+		 * Get the class ID for an annotation.
+		 */
 
-    virtual BoundingBox const& get_bounding_box() const {
-      return Rectangle::get_bounding_box();
-    }
+		virtual class_id_t get_class_id() const;
 
-    virtual bool in_shape(int x, int y, int max_distance = 0) const {
-      return Rectangle::in_shape(x, y, max_distance);
-    }
+		/**
+		 * Set the class ID for an annotation.
+		 */
+
+		virtual void set_class_id(class_id_t _class_id);
+
+		/**
+		 * Get a human readable string that describes the whole
+		 * logic model object. The string should be unique in order
+		 * to let the user identify the concrete object. But that
+		 * is not a must.
+		 */
+
+		virtual const std::string get_descriptive_identifier() const;
+
+		/**
+		 * Get a human readable string that names the object type.
+		 * Here it is "Annotation".
+		 */
+
+		virtual const std::string get_object_type_name() const;
+
+		/**
+		 * Print annotation.
+		 */
+		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
 
 
-    /**
-     * Get a parameter value.
-     *
-     * @exception boost::bad_lexical_cast This exception is thrown if the parameter value
-     *   cannot be converted to the desired type.
-     * @exception CollectionLookupException This exception is thrown if the parameter is
-     *   not stored in the lookup table.
-     */
+		void shift_x(int delta_x)
+		{
+			Rectangle::shift_x(delta_x);
+			notify_shape_change();
+		}
 
-    template<typename NewType>
-    NewType get_parameter(std::string parameter_name) const {
+		void shift_y(int delta_y)
+		{
+			Rectangle::shift_y(delta_y);
+			notify_shape_change();
+		}
 
-      parameter_set_type::const_iterator iter = parameters.find(parameter_name);
-      if(iter == parameters.end()) {
-	boost::format f("Failed to lookup parameter %1%.");
-	f % parameter_name;
-	throw CollectionLookupException(f.str());
-      }
+		virtual bool in_bounding_box(BoundingBox const& bbox) const
+		{
+			return in_bounding_box(bbox);
+		}
 
-      if(typeid(NewType) == typeid(std::string) ||
-	 typeid(NewType) == typeid(boost::filesystem::path)) {
+		virtual BoundingBox const& get_bounding_box() const
+		{
+			return Rectangle::get_bounding_box();
+		}
 
-	return NewType(iter->second);
-      }
+		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		{
+			return Rectangle::in_shape(x, y, max_distance);
+		}
 
-      try {
-	return boost::lexical_cast<NewType>(iter->second);
-      }
-      catch(boost::bad_lexical_cast &) {
-	debug(TM, "Failed to convert value string '%s'.", iter->second.c_str());
-	throw;
-      }
-    }
 
-    /**
-     * Get an iterator to iterate over parameters.
-     */
-    parameter_set_type::const_iterator parameters_begin() const;
+		/**
+		 * Get a parameter value.
+		 *
+		 * @exception boost::bad_lexical_cast This exception is thrown if the parameter value
+		 *   cannot be converted to the desired type.
+		 * @exception CollectionLookupException This exception is thrown if the parameter is
+		 *   not stored in the lookup table.
+		 */
 
-    /**
-     * Get an end marker for the parameter iteration.
-     */
-    parameter_set_type::const_iterator parameters_end() const;
-  };
+		template <typename NewType>
+		NewType get_parameter(std::string parameter_name) const
+		{
+			parameter_set_type::const_iterator iter = parameters.find(parameter_name);
+			if (iter == parameters.end())
+			{
+				boost::format f("Failed to lookup parameter %1%.");
+				f % parameter_name;
+				throw CollectionLookupException(f.str());
+			}
 
+			if (typeid(NewType) == typeid(std::string) ||
+				typeid(NewType) == typeid(boost::filesystem::path))
+			{
+				return NewType(iter->second);
+			}
+
+			try
+			{
+				return boost::lexical_cast<NewType>(iter->second);
+			}
+			catch (boost::bad_lexical_cast&)
+			{
+				debug(TM, "Failed to convert value string '%s'.", iter->second.c_str());
+				throw;
+			}
+		}
+
+		/**
+		 * Get an iterator to iterate over parameters.
+		 */
+		parameter_set_type::const_iterator parameters_begin() const;
+
+		/**
+		 * Get an end marker for the parameter iteration.
+		 */
+		parameter_set_type::const_iterator parameters_end() const;
+	};
 }
 #endif

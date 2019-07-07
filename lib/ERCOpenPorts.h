@@ -25,23 +25,21 @@
 #include <RCBase.h>
 #include <LogicModel.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * Electrical Rule Checks that detects open ports, that means if
+	 * a port is electrically unconnected.
+	 */
 
-  /**
-   * Electrical Rule Checks that detects open ports, that means if
-   * a port is electrically unconnected.
-   */
+	class ERCOpenPorts : public RCBase
+	{
+	public:
 
-  class ERCOpenPorts : public RCBase {
+		ERCOpenPorts();
 
-  public:
-
-    ERCOpenPorts();
-
-    void run(LogicModel_shptr lmodel);
-
-  };
-
+		void run(LogicModel_shptr lmodel);
+	};
 }
 
 #endif

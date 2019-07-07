@@ -44,58 +44,52 @@
 
 #include <EdgeDetection.h>
 
-namespace degate {
+namespace degate
+{
+	class CannyEdgeDetection : public EdgeDetection
+	{
+	private:
+
+		double hysteresis_min;
+		double hysteresis_max;
+
+	private:
+
+		void hysteresis(TileImage_GS_DOUBLE_shptr sup_edge_image);
 
 
-  class CannyEdgeDetection : public EdgeDetection {
-
-  private:
-
-    double hysteresis_min;
-    double hysteresis_max;
-
-  private:
-
-    void hysteresis(TileImage_GS_DOUBLE_shptr sup_edge_image);
+		void non_maximum_supression(TileImage_GS_DOUBLE_shptr horizontal_edges,
+		                            TileImage_GS_DOUBLE_shptr vertical_edges,
+		                            TileImage_GS_DOUBLE_shptr edge_image,
+		                            TileImage_GS_DOUBLE_shptr sup_edge_image);
 
 
+		// returns the direction in degrees
+		int get_gradient_direction(TileImage_GS_DOUBLE_shptr horizontal_edges,
+		                           TileImage_GS_DOUBLE_shptr vertical_edges,
+		                           TileImage_GS_DOUBLE_shptr edge_mag_image,
+		                           unsigned int x, unsigned int y);
 
-    void non_maximum_supression(TileImage_GS_DOUBLE_shptr horizontal_edges,
-				TileImage_GS_DOUBLE_shptr vertical_edges,
-				TileImage_GS_DOUBLE_shptr edge_image,
-				TileImage_GS_DOUBLE_shptr sup_edge_image);
+	public:
 
+		CannyEdgeDetection(unsigned int min_x, unsigned int max_x,
+		                   unsigned int min_y, unsigned int max_y,
+		                   unsigned int wire_diameter = 5,
+		                   unsigned int median_filter_width = 3,
+		                   unsigned int blur_kernel_size = 10,
+		                   double sigma = 0.5,
+		                   double _hysteresis_min = 0.28,
+		                   double _hysteresis_max = 0.40);
 
-    // returns the direction in degrees
-    int get_gradient_direction(TileImage_GS_DOUBLE_shptr horizontal_edges,
-			       TileImage_GS_DOUBLE_shptr vertical_edges,
-			       TileImage_GS_DOUBLE_shptr edge_mag_image,
-			       unsigned int x, unsigned int y);
+		~CannyEdgeDetection();
 
-  public:
+		TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
+		                              TileImage_GS_DOUBLE_shptr probability_map,
+		                              std::string const& directory);
 
-    CannyEdgeDetection(unsigned int min_x, unsigned int max_x,
-		       unsigned int min_y, unsigned int max_y,
-		       unsigned int wire_diameter = 5,
-		       unsigned int median_filter_width = 3,
-		       unsigned int blur_kernel_size = 10,
-		       double sigma = 0.5,
-		       double _hysteresis_min = 0.28,
-		       double _hysteresis_max = 0.40);
-
-    ~CannyEdgeDetection();
-
-    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
-				  TileImage_GS_DOUBLE_shptr probability_map,
-				  std::string const& directory);
-
-    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
-				  TileImage_GS_DOUBLE_shptr probability_map);
-
-
-  };
-
+		TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
+		                              TileImage_GS_DOUBLE_shptr probability_map);
+	};
 }
 
 #endif
-

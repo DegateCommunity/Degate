@@ -29,43 +29,46 @@
 
 #include <stdexcept>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The GateLibraryExporter exports a gate library. That is the file
+	 * gate_library.xml from your degate project.
+	 */
 
-/**
- * The GateLibraryExporter exports a gate library. That is the file
- * gate_library.xml from your degate project.
- */
+	class GateLibraryExporter : public XMLExporter
+	{
+	private:
 
-class GateLibraryExporter : public XMLExporter {
+		void add_gates(xmlpp::Element* templates_elem, GateLibrary_shptr gate_lib,
+		               std::string const& directory);
 
-private:
+		void add_images(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
+		                std::string const& directory);
 
-  void add_gates(xmlpp::Element* templates_elem, GateLibrary_shptr gate_lib,
-		 std::string const& directory);
+		void add_implementations(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
+		                         std::string const& directory);
 
-  void add_images(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
-		  std::string const& directory);
+		void add_ports(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl);
 
-  void add_implementations(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
-			   std::string const& directory);
+		ObjectIDRewriter_shptr oid_rewriter;
 
-  void add_ports(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl);
+	public:
+		GateLibraryExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter)
+		{
+		}
 
-  ObjectIDRewriter_shptr oid_rewriter;
+		~GateLibraryExporter()
+		{
+		}
 
-public:
-  GateLibraryExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter) {}
-  ~GateLibraryExporter() {}
-
-  /**
-   * @exception InvalidPathException
-   * @exception InvalidPointerException
-   * @exception std::runtime_error
-   */
-  void export_data(std::string const& filename, GateLibrary_shptr gate_lib);
-
-};
-
+		/**
+		 * @exception InvalidPathException
+		 * @exception InvalidPointerException
+		 * @exception std::runtime_error
+		 */
+		void export_data(std::string const& filename, GateLibrary_shptr gate_lib);
+	};
 }
 
 #endif

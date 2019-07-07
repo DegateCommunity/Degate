@@ -27,69 +27,67 @@
 #include <Region.h>
 #include <RegionList.h>
 
-namespace degate {
+namespace degate
+{
+	class BinaryLineDetection
+	{
+	private:
 
-  class BinaryLineDetection {
+		IPPipe pipe;
 
-  private:
+		unsigned int min_x, max_x, min_y, max_y;
+		unsigned int wire_diameter;
+		unsigned int median_filter_width;
 
-    IPPipe pipe;
+		unsigned int blur_kernel_size, border;
+		double sigma;
+		bool has_path;
 
-    unsigned int min_x, max_x, min_y, max_y;
-    unsigned int wire_diameter;
-    unsigned int median_filter_width;
+		TileImage_GS_DOUBLE_shptr grayImage;
+		TileImage_GS_DOUBLE_shptr binImage;
+		TileImage_GS_DOUBLE_shptr meanImage;
+		TileImage_GS_DOUBLE_shptr regionImage;
+		RegionList region;
 
-    unsigned int blur_kernel_size, border;
-    double sigma;
-    bool has_path;
+		std::string directory; // path for storing debug images
 
-    TileImage_GS_DOUBLE_shptr grayImage;
-    TileImage_GS_DOUBLE_shptr binImage;
-    TileImage_GS_DOUBLE_shptr meanImage;
-    TileImage_GS_DOUBLE_shptr regionImage;
-    RegionList region;
+	private:
 
-    std::string directory; // path for storing debug images
+	public:
 
-  private:
+		void setup_pipe();
 
-  public:
+		unsigned int get_width() const;
+		unsigned int get_height() const;
+		unsigned int get_border() const;
 
-  void setup_pipe();
-		
-    unsigned int get_width() const;
-    unsigned int get_height() const;
-    unsigned int get_border() const;
+		std::string get_directory() const;
 
-    std::string get_directory() const;
+		bool has_directory() const;
 
-    bool has_directory() const;
+		void set_directory(std::string const& path);
 
-    void set_directory(std::string const& path);
-		
-    TileImage_GS_DOUBLE_shptr gs_to_binary(TileImage_GS_DOUBLE_shptr gray);
-    TileImage_GS_DOUBLE_shptr gs_by_mean(TileImage_GS_DOUBLE_shptr gray, double scale);
-    TileImage_GS_DOUBLE_shptr binary_to_edge(TileImage_GS_DOUBLE_shptr binary);
-    RegionList binary_to_region(TileImage_GS_DOUBLE_shptr binary);
-    void draw_grid(TileImage_GS_DOUBLE_shptr & binary);
+		TileImage_GS_DOUBLE_shptr gs_to_binary(TileImage_GS_DOUBLE_shptr gray);
+		TileImage_GS_DOUBLE_shptr gs_by_mean(TileImage_GS_DOUBLE_shptr gray, double scale);
+		TileImage_GS_DOUBLE_shptr binary_to_edge(TileImage_GS_DOUBLE_shptr binary);
+		RegionList binary_to_region(TileImage_GS_DOUBLE_shptr binary);
+		void draw_grid(TileImage_GS_DOUBLE_shptr& binary);
 
-  public:
+	public:
 
-    BinaryLineDetection(unsigned int min_x, unsigned int max_x,
-			unsigned int min_y, unsigned int max_y,
-			unsigned int wire_diameter,
-			unsigned int median_filter_width = 3,
-			unsigned int blur_kernel_size = 10,
-			double sigma = 0.5);
+		BinaryLineDetection(unsigned int min_x, unsigned int max_x,
+		                    unsigned int min_y, unsigned int max_y,
+		                    unsigned int wire_diameter,
+		                    unsigned int median_filter_width = 3,
+		                    unsigned int blur_kernel_size = 10,
+		                    double sigma = 0.5);
 
-    ~BinaryLineDetection();
+		~BinaryLineDetection();
 
-    TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
-				TileImage_GS_DOUBLE_shptr probability_map,
-				std::string const& directory);
-
-  };
-
+		TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
+		                              TileImage_GS_DOUBLE_shptr probability_map,
+		                              std::string const& directory);
+	};
 }
 
 #endif

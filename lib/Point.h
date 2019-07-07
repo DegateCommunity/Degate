@@ -24,40 +24,40 @@
 
 #include "Shape.h"
 
-namespace degate {
+namespace degate
+{
+	class Point
+	{
+	private:
+		int x, y;
 
-  class Point {
+	public:
 
-  private:
-    int x, y;
+		Point();
+		Point(int x, int y);
 
-  public:
+		bool operator==(const Point& other) const;
+		bool operator!=(const Point& other) const;
 
-    Point();
-    Point(int x, int y);
+		int get_x() const;
+		int get_y() const;
 
-    bool operator==(const Point& other) const;
-    bool operator!=(const Point& other) const;
+		void set_x(int x);
+		void set_y(int y);
 
-    int get_x() const;
-    int get_y() const;
+		void shift_x(int delta_x);
+		void shift_y(int delta_y);
 
-    void set_x(int x);
-    void set_y(int y);
-
-    void shift_x(int delta_x);
-    void shift_y(int delta_y);
-
-    /**
-     * Calculate the distance to another point.
-     */
-    unsigned int get_distance(Point const& p) const;
+		/**
+		 * Calculate the distance to another point.
+		 */
+		unsigned int get_distance(Point const& p) const;
 
 
-    std::string to_string() const;
-  };
+		std::string to_string() const;
+	};
 
-  typedef std::shared_ptr<Point> Point_shptr;
+	typedef std::shared_ptr<Point> Point_shptr;
 }
 
 #endif

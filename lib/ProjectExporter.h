@@ -28,65 +28,68 @@
 
 #include <stdexcept>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The ProjectExporter exports a degate project.
+	 *
+	 */
 
-  /**
-   * The ProjectExporter exports a degate project.
-   *
-   */
+	class ProjectExporter : public XMLExporter
+	{
+	private:
 
-  class ProjectExporter : public XMLExporter {
+		void set_project_node_attributes(xmlpp::Element* prj_elem, Project_shptr prj);
 
-  private:
+		void add_grids(xmlpp::Element* prj_elem, Project_shptr prj);
 
-    void set_project_node_attributes(xmlpp::Element* prj_elem, Project_shptr prj);
+		void add_regular_grid(xmlpp::Element* grids_elem,
+		                      const RegularGrid_shptr grid,
+		                      std::string const& grid_orientation);
 
-    void add_grids(xmlpp::Element* prj_elem, Project_shptr prj);
+		void add_irregular_grid(xmlpp::Element* grids_elem,
+		                        const IrregularGrid_shptr grid,
+		                        std::string const& grid_orientation);
 
-    void add_regular_grid(xmlpp::Element* grids_elem,
-			  const RegularGrid_shptr grid,
-			  std::string const & grid_orientation);
+		void add_layers(xmlpp::Element* prj_elem,
+		                LogicModel_shptr lmodel,
+		                std::string const& project_dir);
 
-    void add_irregular_grid(xmlpp::Element* grids_elem,
-			    const IrregularGrid_shptr grid,
-			    std::string const & grid_orientation);
+		void add_port_colors(xmlpp::Element* prj_elem,
+		                     PortColorManager_shptr port_color_manager);
 
-    void add_layers(xmlpp::Element* prj_elem,
-		    LogicModel_shptr lmodel,
-		    std::string const& project_dir);
+		void add_colors(xmlpp::Element* prj_elem, Project_shptr prj);
 
-    void add_port_colors(xmlpp::Element* prj_elem,
-			 PortColorManager_shptr port_color_manager);
+	public:
+		ProjectExporter()
+		{
+		}
 
-    void add_colors(xmlpp::Element* prj_elem, Project_shptr prj);
+		~ProjectExporter()
+		{
+		}
 
-  public:
-    ProjectExporter() {}
-    ~ProjectExporter() {}
+		/**
+		 * @exception InvalidPathException
+		 * @exception InvalidPointerException
+		 * @exception std::runtime_error
+		 */
 
-    /**
-     * @exception InvalidPathException
-     * @exception InvalidPointerException
-     * @exception std::runtime_error
-     */
+		void export_data(std::string const& filename, Project_shptr prj);
 
-    void export_data(std::string const& filename, Project_shptr prj);
+		/**
+		 * @exception InvalidPathException
+		 * @exception InvalidPointerException
+		 * @exception std::runtime_error
+		 */
 
-    /**
-     * @exception InvalidPathException
-     * @exception InvalidPointerException
-     * @exception std::runtime_error
-     */
-
-    void export_all(std::string const& project_directory, Project_shptr prj,
-		    bool enable_oid_rewrite = true,
-		    std::string const& project_file = "project.xml",
-		    std::string const& lmodel_file = "lmodel.xml",
-		    std::string const& gatelib_file = "gate_library.xml",
-		    std::string const& rcbl_file = "rc_blacklist.xml");
-
-  };
-
+		void export_all(std::string const& project_directory, Project_shptr prj,
+		                bool enable_oid_rewrite = true,
+		                std::string const& project_file = "project.xml",
+		                std::string const& lmodel_file = "lmodel.xml",
+		                std::string const& gatelib_file = "gate_library.xml",
+		                std::string const& rcbl_file = "rc_blacklist.xml");
+	};
 }
 
 #endif

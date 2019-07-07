@@ -28,88 +28,93 @@
 
 #include <stdexcept>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * This class implements a logic model loader.
+	 */
+	class LogicModelImporter : public XMLImporter
+	{
+	private:
 
-/**
- * This class implements a logic model loader.
- */
-class LogicModelImporter : public XMLImporter {
-private:
+		unsigned int width, height;
+		GateLibrary_shptr gate_library;
 
-  unsigned int width, height;
-  GateLibrary_shptr gate_library;
+		std::list<Gate_shptr> gates;
 
-  std::list<Gate_shptr> gates;
+		void parse_logic_model_element(const xmlpp::Element* const lm_element,
+		                               LogicModel_shptr lmodel);
 
-  void parse_logic_model_element(const xmlpp::Element * const lm_element,
-				 LogicModel_shptr lmodel);
+		void parse_gates_element(const xmlpp::Element* const gates_element, LogicModel_shptr lmodel);
 
-  void parse_gates_element(const xmlpp::Element * const gates_element, LogicModel_shptr lmodel);
+		void parse_vias_element(const xmlpp::Element* const vias_element,
+		                        LogicModel_shptr lmodel);
 
-  void parse_vias_element(const xmlpp::Element * const vias_element,
-			  LogicModel_shptr lmodel) ;
+		void parse_emarkers_element(const xmlpp::Element* const emarkers_element,
+		                            LogicModel_shptr lmodel);
 
-  void parse_emarkers_element(const xmlpp::Element * const emarkers_element,
-			      LogicModel_shptr lmodel) ;
+		void parse_wires_element(const xmlpp::Element* const wires_element,
+		                         LogicModel_shptr lmodel);
 
-  void parse_wires_element(const xmlpp::Element * const wires_element,
-			   LogicModel_shptr lmodel);
+		void parse_nets_element(const xmlpp::Element* const nets_element,
+		                        LogicModel_shptr lmodel);
 
-  void parse_nets_element(const xmlpp::Element * const nets_element,
-			  LogicModel_shptr lmodel);
+		void parse_annotations_element(const xmlpp::Element* const annotations_element,
+		                               LogicModel_shptr lmodel);
 
-  void parse_annotations_element(const xmlpp::Element * const annotations_element,
-				 LogicModel_shptr lmodel) ;
+		std::list<Module_shptr> parse_modules_element(const xmlpp::Element* const modules_element,
+		                                              LogicModel_shptr lmodel);
 
-  std::list<Module_shptr> parse_modules_element(const xmlpp::Element * const modules_element,
-				     LogicModel_shptr lmodel) ;
+	public:
 
-public:
+		/**
+		 * Create a logic model importer.
+		 * @param _width The geometrical width of the logic model.
+		 * @param _height The geometrical height of the logic model.
+		 * @param _gate_library The gate library to resolve references to gate templates.
+		 *              The gate library is stored into the logic model. You should not set it by yourself.
+		 */
 
-  /**
-   * Create a logic model importer.
-   * @param _width The geometrical width of the logic model.
-   * @param _height The geometrical height of the logic model.
-   * @param _gate_library The gate library to resolve references to gate templates.
-   *              The gate library is stored into the logic model. You should not set it by yourself.
-   */
-
-  LogicModelImporter(unsigned int _width, unsigned int _height, GateLibrary_shptr _gate_library) :
-    width(_width),
-    height(_height),
-    gate_library(_gate_library) {}
-
-
-  /**
-   * Create a logic model importer. The gate library is not used to resolve references.
-   * @param _width The geometrical width of the logic model.
-   * @param _height The geometrical height of the logic model.
-   */
-
-  LogicModelImporter(unsigned int _width, unsigned int _height) :
-    width(_width),
-    height(_height) {}
+		LogicModelImporter(unsigned int _width, unsigned int _height, GateLibrary_shptr _gate_library) :
+			width(_width),
+			height(_height),
+			gate_library(_gate_library)
+		{
+		}
 
 
-  /**
-   * The destructor.
-   */
+		/**
+		 * Create a logic model importer. The gate library is not used to resolve references.
+		 * @param _width The geometrical width of the logic model.
+		 * @param _height The geometrical height of the logic model.
+		 */
 
-  ~LogicModelImporter() {}
+		LogicModelImporter(unsigned int _width, unsigned int _height) :
+			width(_width),
+			height(_height)
+		{
+		}
 
-  /**
-   * import a logic model.
-   */
-  LogicModel_shptr import(std::string const& filename);
+
+		/**
+		 * The destructor.
+		 */
+
+		~LogicModelImporter()
+		{
+		}
+
+		/**
+		 * import a logic model.
+		 */
+		LogicModel_shptr import(std::string const& filename);
 
 
-  /**
-   * Import a logic model that is stored in a XML file into an existing logic model.
-   */
-  void import_into(LogicModel_shptr lmodel, std::string const& filename);
-
-};
-
+		/**
+		 * Import a logic model that is stored in a XML file into an existing logic model.
+		 */
+		void import_into(LogicModel_shptr lmodel, std::string const& filename);
+	};
 }
 
 #endif

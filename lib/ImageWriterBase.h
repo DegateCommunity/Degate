@@ -32,88 +32,88 @@
 #include "FileSystem.h"
 #include <degate_exceptions.h>
 
-namespace degate {
+namespace degate
+{
+	/**
+	 * The base class for image readers.
+	 */
 
-  /**
-   * The base class for image readers.
-   */
+	template <class ImageType>
+	class ImageWriterBase
+	{
+	private:
 
-  template<class ImageType>
-  class ImageWriterBase {
-  private:
+		std::string filename;
+		unsigned int width, height;
 
-    std::string filename;
-    unsigned int width, height;
+	protected:
 
-  protected:
-
-    /**
-     * Set the width of the image.
-     * This method should be called by derived image readers to set
-     * the image size.
-     */
-    void set_width(unsigned int _width) { width = _width; }
-
-
-    /**
-     * Set the height of the image.
-     * This method should be called by derived image readers to set
-     * the image size.
-     */
-    void set_height(unsigned int _height) { height = _height; }
+		/**
+		 * Set the width of the image.
+		 * This method should be called by derived image readers to set
+		 * the image size.
+		 */
+		void set_width(unsigned int _width) { width = _width; }
 
 
-  public:
-
-    /**
-     * Constructor.
-     */
-
-    ImageWriterBase(unsigned int _width,
-		    unsigned int _height,
-		    std::string const & _filename) :
-      filename(_filename),
-      width(_width),
-      height(_height) {}
-
-    /**
-     * The destructor.
-     */
-
-    virtual ~ImageWriterBase() {}
-
-    /**
-     * Get the filename.
-     */
-
-    std::string get_filename() const { return filename; }
-
-    /**
-     * Get the image width.
-     * You have to call read() before.
-     */
-
-    unsigned int get_width() const { return width; }
-
-    /**
-     * Get the image height.
-     * You have to call read() before.
-     */
-
-    unsigned int get_height() const { return height; }
+		/**
+		 * Set the height of the image.
+		 * This method should be called by derived image readers to set
+		 * the image size.
+		 */
+		void set_height(unsigned int _height) { height = _height; }
 
 
+	public:
 
-    /**
-     * Writer the image into a file.
-     */
+		/**
+		 * Constructor.
+		 */
 
-    virtual bool write_image(std::shared_ptr<ImageType> img) = 0;
+		ImageWriterBase(unsigned int _width,
+		                unsigned int _height,
+		                std::string const& _filename) :
+			filename(_filename),
+			width(_width),
+			height(_height)
+		{
+		}
 
-  };
+		/**
+		 * The destructor.
+		 */
+
+		virtual ~ImageWriterBase()
+		{
+		}
+
+		/**
+		 * Get the filename.
+		 */
+
+		std::string get_filename() const { return filename; }
+
+		/**
+		 * Get the image width.
+		 * You have to call read() before.
+		 */
+
+		unsigned int get_width() const { return width; }
+
+		/**
+		 * Get the image height.
+		 * You have to call read() before.
+		 */
+
+		unsigned int get_height() const { return height; }
 
 
+		/**
+		 * Writer the image into a file.
+		 */
 
+		virtual bool write_image(std::shared_ptr<ImageType> img) = 0;
+	};
 }
 
 #endif
