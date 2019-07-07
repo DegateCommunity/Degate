@@ -39,24 +39,24 @@ namespace degate
 	{
 	private:
 
-		GateLibrary_shptr parse_gate_library_element(const xmlpp::Element* const gl_element,
+		GateLibrary_shptr parse_gate_library_element(QDomElement const gl_element,
 		                                             std::string const& directory);
 
-		void parse_gate_templates_element(const xmlpp::Element* const gate_templates_element,
+		void parse_gate_templates_element(QDomElement const gate_templates_element,
 		                                  GateLibrary_shptr gate_lib,
 		                                  std::string const& directory);
 
 
-		void parse_template_images_element(const xmlpp::Element* const template_images_element,
+		void parse_template_images_element(QDomElement const template_images_element,
 		                                   GateTemplate_shptr gate_tmpl,
 		                                   std::string const& directory);
 
-		void parse_template_implementations_element(const xmlpp::Element* const implementations_element,
+		void parse_template_implementations_element(QDomElement const implementations_element,
 		                                            GateTemplate_shptr gate_tmpl,
 		                                            std::string const& directory);
 
 
-		void parse_template_ports_element(const xmlpp::Element* const template_ports_element,
+		void parse_template_ports_element(QDomElement const template_ports_element,
 		                                  GateTemplate_shptr gate_tmpl,
 		                                  GateLibrary_shptr gate_lib);
 

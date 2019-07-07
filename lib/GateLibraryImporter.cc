@@ -25,7 +25,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+//#include <unistd.h> : Linux only
 #include <cerrno>
 
 #include <string>
@@ -35,6 +35,8 @@
 #include <stdexcept>
 #include <list>
 #include <memory>
+
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 using namespace degate;
@@ -51,19 +53,24 @@ GateLibrary_shptr GateLibraryImporter::import(std::string const& filename)
 
 	try
 	{
-		//debug(TM, "try to parse file %s", filename.c_str());
+		QDomDocument parser;
 
-		xmlpp::DomParser parser;
-		parser.set_substitute_entities(); // We just want the text to be resolved/unescaped automatically.
+		QFile file(QString::fromStdString(filename));
+		if (!file.open(QIODevice::ReadOnly))
+		{
+			debug(TM, "Problem: can't open the file %s.", filename.c_str());
+			throw InvalidFileFormatException("The GateLibraryImporter cannot load the project file. Can't open the file.");
+		}
 
-		parser.parse_file(filename);
-		assert(parser == true);
+		if (!parser.setContent(&file))
+		{
+			debug(TM, "Problem: can't parse the file %s.", filename.c_str());
+			throw InvalidXMLException("The GateLibraryImporter cannot load the project file. Can't parse the file.");
+		}
+		file.close();
 
-		const xmlpp::Document* doc = parser.get_document();
-		assert(doc != NULL);
-
-		const xmlpp::Element* root_elem = doc->get_root_node(); // deleted by DomParser
-		assert(root_elem != NULL);
+		const QDomElement root_elem = parser.documentElement();
+		assert(!root_elem.isNull());
 
 		return parse_gate_library_element(root_elem, directory);
 	}
@@ -74,31 +81,32 @@ GateLibrary_shptr GateLibraryImporter::import(std::string const& filename)
 	}
 }
 
-GateLibrary_shptr GateLibraryImporter::parse_gate_library_element(const xmlpp::Element* const gt_elem,
+GateLibrary_shptr GateLibraryImporter::parse_gate_library_element(QDomElement const gt_elem,
                                                                   std::string const& directory)
 {
 	// parse width and height
 	GateLibrary_shptr gate_lib(new GateLibrary());
 	assert(gate_lib != NULL);
 
-	const xmlpp::Element* e = get_dom_twig(gt_elem, "gate-templates");
-	if (e != NULL) parse_gate_templates_element(e, gate_lib, directory);
+	const QDomElement e = get_dom_twig(gt_elem, "gate-templates");
+	if (!e.isNull()) parse_gate_templates_element(e, gate_lib, directory);
 
 	return gate_lib;
 }
 
-void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element* const gate_template_element,
+void GateLibraryImporter::parse_gate_templates_element(QDomElement const gate_template_element,
                                                        GateLibrary_shptr gate_lib,
                                                        std::string const& directory)
 {
-	if (gate_template_element == NULL || gate_lib == NULL) throw(InvalidPointerException("Invalid pointer"));
+	if (gate_template_element.isNull() || gate_lib == NULL) throw(InvalidPointerException("Invalid pointer"));
 
-	const xmlpp::Node::NodeList gate_list = gate_template_element->get_children("gate");
-	for (xmlpp::Node::NodeList::const_iterator iter = gate_list.begin();
-	     iter != gate_list.end();
-	     ++iter)
+	const QDomNodeList gate_list = gate_template_element.elementsByTagName("gate");
+
+	QDomElement gate_elem;
+	for (int i = 0; i < gate_list.count(); i++)
 	{
-		if (const xmlpp::Element* gate_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		gate_elem = gate_list.at(i).toElement();
+		if (!gate_elem.isNull())
 		{
 			object_id_t object_id = parse_number<object_id_t>(gate_elem, "type-id");
 			int min_x = parse_number<int>(gate_elem, "min-x", 0);
@@ -109,11 +117,11 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element* con
 			int width = parse_number<int>(gate_elem, "width", 0);
 			int height = parse_number<int>(gate_elem, "height", 0);
 
-			const Glib::ustring name(gate_elem->get_attribute_value("name"));
-			const Glib::ustring description(gate_elem->get_attribute_value("description"));
-			const Glib::ustring logic_class(gate_elem->get_attribute_value("logic-class"));
-			const Glib::ustring frame_color_str(gate_elem->get_attribute_value("frame-color"));
-			const Glib::ustring fill_color_str(gate_elem->get_attribute_value("fill-color"));
+			const std::string name(gate_elem.attribute("name").toStdString());
+			const std::string description(gate_elem.attribute("description").toStdString());
+			const std::string logic_class(gate_elem.attribute("logic-class").toStdString());
+			const std::string frame_color_str(gate_elem.attribute("frame-color").toStdString());
+			const std::string fill_color_str(gate_elem.attribute("fill-color").toStdString());
 
 			GateTemplate_shptr gate_template;
 
@@ -134,15 +142,15 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element* con
 			gate_template->set_frame_color(parse_color_string(frame_color_str));
 
 
-			const xmlpp::Element* images = get_dom_twig(gate_elem, "images");
-			if (images != NULL) parse_template_images_element(images, gate_template, directory);
+			const QDomElement images = get_dom_twig(gate_elem, "images");
+			if (!images.isNull()) parse_template_images_element(images, gate_template, directory);
 
 
-			const xmlpp::Element* ports = get_dom_twig(gate_elem, "ports");
-			if (ports != NULL) parse_template_ports_element(ports, gate_template, gate_lib);
+			const QDomElement ports = get_dom_twig(gate_elem, "ports");
+			if (!ports.isNull()) parse_template_ports_element(ports, gate_template, gate_lib);
 
-			const xmlpp::Element* implementations = get_dom_twig(gate_elem, "implementations");
-			if (implementations != NULL)
+			const QDomElement implementations = get_dom_twig(gate_elem, "implementations");
+			if (!implementations.isNull())
 				parse_template_implementations_element(implementations, gate_template, directory);
 
 			gate_lib->add_template(gate_template);
@@ -150,22 +158,24 @@ void GateLibraryImporter::parse_gate_templates_element(const xmlpp::Element* con
 	}
 }
 
-void GateLibraryImporter::parse_template_images_element(const xmlpp::Element* const template_images_element,
+void GateLibraryImporter::parse_template_images_element(QDomElement const template_images_element,
                                                         GateTemplate_shptr gate_tmpl,
                                                         std::string const& directory)
 {
-	if (template_images_element == NULL ||
+	if (template_images_element.isNull() ||
 		gate_tmpl == NULL)
 		throw InvalidPointerException("Invalid pointer");
 
-	const xmlpp::Node::NodeList image_list = template_images_element->get_children("image");
-	for (xmlpp::Node::NodeList::const_iterator iter = image_list.begin();
-	     iter != image_list.end(); ++iter)
+	const QDomNodeList image_list = template_images_element.elementsByTagName("image");
+
+	QDomElement image_elem;
+	for (int i = 0; i < image_list.count(); i++)
 	{
-		if (const xmlpp::Element* image_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		image_elem = image_list.at(i).toElement();
+		if (!image_elem.isNull())
 		{
-			const std::string layer_type_str(image_elem->get_attribute_value("layer-type"));
-			const std::string image_file(image_elem->get_attribute_value("image"));
+			const std::string layer_type_str(image_elem.attribute("layer-type").toStdString());
+			const std::string image_file(image_elem.attribute("image").toStdString());
 
 			Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
 			GateTemplateImage_shptr img = load_image<GateTemplateImage>(join_pathes(directory, image_file));
@@ -176,22 +186,24 @@ void GateLibraryImporter::parse_template_images_element(const xmlpp::Element* co
 	}
 }
 
-void GateLibraryImporter::parse_template_implementations_element(const xmlpp::Element* const implementations_element,
+void GateLibraryImporter::parse_template_implementations_element(QDomElement const implementations_element,
                                                                  GateTemplate_shptr gate_tmpl,
                                                                  std::string const& directory)
 {
-	if (implementations_element == NULL ||
+	if (implementations_element.isNull() ||
 		gate_tmpl == NULL)
 		throw InvalidPointerException("Invalid pointer");
 
-	const xmlpp::Node::NodeList impl_list = implementations_element->get_children("implementation");
-	for (xmlpp::Node::NodeList::const_iterator iter = impl_list.begin();
-	     iter != impl_list.end(); ++iter)
+	const QDomNodeList impl_list = implementations_element.elementsByTagName("implementation");
+
+	QDomElement impl_elem;
+	for (int i = 0; i < impl_list.count(); i++)
 	{
-		if (const xmlpp::Element* impl_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		impl_elem = impl_list.at(i).toElement();
+		if (!impl_elem.isNull())
 		{
-			const std::string impl_type_str(impl_elem->get_attribute_value("type"));
-			const std::string impl_file_attr(impl_elem->get_attribute_value("file"));
+			const std::string impl_type_str(impl_elem.attribute("type").toStdString());
+			const std::string impl_file_attr(impl_elem.attribute("file").toStdString());
 			const std::string impl_file(join_pathes(directory, impl_file_attr));
 
 			if (!impl_file_attr.empty())
@@ -235,20 +247,21 @@ void GateLibraryImporter::parse_template_implementations_element(const xmlpp::El
 }
 
 
-void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element* const template_ports_element,
+void GateLibraryImporter::parse_template_ports_element(QDomElement const template_ports_element,
                                                        GateTemplate_shptr gate_tmpl,
                                                        GateLibrary_shptr gate_lib)
 {
-	if (template_ports_element == NULL ||
+	if (template_ports_element.isNull() ||
 		gate_tmpl == NULL)
 		throw InvalidPointerException("Invalid pointer");
 
-	const xmlpp::Node::NodeList port_list = template_ports_element->get_children("port");
-	for (xmlpp::Node::NodeList::const_iterator iter = port_list.begin();
-	     iter != port_list.end();
-	     ++iter)
+	const QDomNodeList port_list = template_ports_element.elementsByTagName("port");
+
+	QDomElement port_elem;
+	for (int i = 0; i < port_list.count(); i++)
 	{
-		if (const xmlpp::Element* port_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		port_elem = port_list.at(i).toElement();
+		if (!port_elem.isNull())
 		{
 			object_id_t object_id = parse_number<object_id_t>(port_elem, "id");
 
@@ -262,9 +275,9 @@ void GateLibraryImporter::parse_template_ports_element(const xmlpp::Element* con
 			}
 
 
-			const std::string name(port_elem->get_attribute_value("name"));
-			const std::string description(port_elem->get_attribute_value("description"));
-			const std::string type_str(port_elem->get_attribute_value("type").lowercase());
+			const std::string name(port_elem.attribute("name").toStdString());
+			const std::string description(port_elem.attribute("description").toStdString());
+			const std::string type_str(boost::algorithm::to_lower_copy(port_elem.attribute("type").toStdString()));
 
 			GateTemplatePort::PORT_TYPE port_type = GateTemplatePort::get_port_type_from_string(type_str);
 
