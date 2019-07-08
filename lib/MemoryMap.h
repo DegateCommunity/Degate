@@ -40,7 +40,9 @@
 #include <memory>
 #include <boost/utility.hpp>
 
-#ifdef _MSC_VER
+#include "Prerequisites.h"
+
+#ifdef SYS_WINDOWS
 #define NOMINMAX
 #include <Windows.h>
 #define PATH_MAX MAX_PATH
