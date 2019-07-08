@@ -40,6 +40,14 @@
 #include <memory>
 #include <boost/utility.hpp>
 
+#ifdef _MSC_VER
+#define NOMINMAX
+#include <Windows.h>
+#define PATH_MAX MAX_PATH
+#else
+#include <limits.h> // PATH_MAX for UNIX
+#endif
+
 namespace degate
 {
 	enum MAP_STORAGE_TYPE
