@@ -38,7 +38,7 @@ namespace degate
 	{
 	private:
 
-		void parse_list(const xmlpp::Element* const element, RCBase::container_type& blacklist);
+		void parse_list(QDomElement const element, RCBase::container_type& blacklist);
 		LogicModel_shptr _lmodel;
 
 	public:

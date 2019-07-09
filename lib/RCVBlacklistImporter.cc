@@ -25,7 +25,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+//#include <unistd.h> : Linux only
 #include <cerrno>
 
 #include <string>
@@ -52,17 +52,24 @@ void RCVBlacklistImporter::import_into(std::string const& filename,
 
 	try
 	{
-		xmlpp::DomParser parser;
-		parser.set_substitute_entities(); // We just want the text to be resolved/unescaped automatically.
+		QDomDocument parser;
 
-		parser.parse_file(filename);
-		assert(parser == true);
+		QFile file(QString::fromStdString(filename));
+		if (!file.open(QIODevice::ReadOnly))
+		{
+			debug(TM, "Problem: can't open the file %s.", filename.c_str());
+			throw InvalidFileFormatException("The ProjectImporter cannot load the project file. Can't open the file.");
+		}
 
-		const xmlpp::Document* doc = parser.get_document();
-		assert(doc != NULL);
+		if (!parser.setContent(&file))
+		{
+			debug(TM, "Problem: can't parse the file %s.", filename.c_str());
+			throw InvalidXMLException("The ProjectImporter cannot load the project file. Can't parse the file.");
+		}
+		file.close();
 
-		const xmlpp::Element* root_elem = doc->get_root_node(); // deleted by DomParser
-		assert(root_elem != NULL);
+		const QDomElement root_elem = parser.documentElement(); // deleted by DomParser
+		assert(!root_elem.isNull());
 
 		parse_list(root_elem, blacklist);
 	}
@@ -74,20 +81,21 @@ void RCVBlacklistImporter::import_into(std::string const& filename,
 }
 
 
-void RCVBlacklistImporter::parse_list(const xmlpp::Element* const elem,
+void RCVBlacklistImporter::parse_list(const QDomElement const elem,
                                       RCBase::container_type& blacklist)
 {
-	const xmlpp::Node::NodeList rcv_list = elem->get_children("rc-violation");
-	for (xmlpp::Node::NodeList::const_iterator iter = rcv_list.begin();
-	     iter != rcv_list.end(); ++iter)
+	const QDomNodeList rcv_list = elem.elementsByTagName("rc-violation");
+	for (int i = 0; i < rcv_list.count(); i++)
 	{
-		if (const xmlpp::Element* e = dynamic_cast<const xmlpp::Element*>(*iter))
+		QDomElement e = rcv_list.at(i).toElement();
+
+		if (e.isNull())
 		{
 			object_id_t object_id = parse_number<object_id_t>(e, "object-id");
 
-			const Glib::ustring rcv_class(e->get_attribute_value("rc-violation-class"));
-			const Glib::ustring description(e->get_attribute_value("description"));
-			const Glib::ustring severity(e->get_attribute_value("severity"));
+			const std::string rcv_class(e.attribute("rc-violation-class").toStdString());
+			const std::string description(e.attribute("description").toStdString());
+			const std::string severity(e.attribute("severity").toStdString());
 
 			RCViolation_shptr rcv(new RCViolation(_lmodel->get_object(object_id),
 			                                      description,
