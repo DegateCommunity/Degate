@@ -51,4 +51,6 @@
 #define COMP_UNDEFINED
 #endif
 
+#define XML_ENCODING "version='1.0' encoding='UTF-8'" // old encoding : ISO-8859-1
+
 #endif
