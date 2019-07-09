@@ -39,26 +39,19 @@ namespace degate
 	{
 	private:
 
-		void set_project_node_attributes(xmlpp::Element* prj_elem, Project_shptr prj);
+		void set_project_node_attributes(QDomDocument & doc, QDomElement & prj_elem, Project_shptr prj);
 
-		void add_grids(xmlpp::Element* prj_elem, Project_shptr prj);
+		void add_grids(QDomDocument & doc, QDomElement & prj_elem, Project_shptr prj);
 
-		void add_regular_grid(xmlpp::Element* grids_elem,
-		                      const RegularGrid_shptr grid,
-		                      std::string const& grid_orientation);
+		void add_regular_grid(QDomDocument & doc, QDomElement & grids_elem, const RegularGrid_shptr grid, std::string const& grid_orientation);
 
-		void add_irregular_grid(xmlpp::Element* grids_elem,
-		                        const IrregularGrid_shptr grid,
-		                        std::string const& grid_orientation);
+		void add_irregular_grid(QDomDocument & doc, QDomElement & grids_elem, const IrregularGrid_shptr grid, std::string const& grid_orientation);
 
-		void add_layers(xmlpp::Element* prj_elem,
-		                LogicModel_shptr lmodel,
-		                std::string const& project_dir);
+		void add_layers(QDomDocument & doc, QDomElement & prj_elem, LogicModel_shptr lmodel, std::string const& project_dir);
 
-		void add_port_colors(xmlpp::Element* prj_elem,
-		                     PortColorManager_shptr port_color_manager);
+		void add_port_colors(QDomDocument & doc, QDomElement & prj_elem, PortColorManager_shptr port_color_manager);
 
-		void add_colors(xmlpp::Element* prj_elem, Project_shptr prj);
+		void add_colors(QDomDocument & doc, QDomElement & prj_elem, Project_shptr prj);
 
 	public:
 		ProjectExporter()

@@ -30,7 +30,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+//#include <unistd.h> : Linux only
 #include <cerrno>
 
 #include <string>
@@ -89,18 +89,33 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
 
 	try
 	{
-		xmlpp::Document doc;
+		QDomDocument doc;
 
-		xmlpp::Element* root_elem = doc.create_root_node("project");
-		assert(root_elem != NULL);
-		set_project_node_attributes(root_elem, prj);
+		QDomProcessingInstruction head = doc.createProcessingInstruction("xml", XML_ENCODING);
+		doc.appendChild(head);
 
-		add_layers(root_elem, prj->get_logic_model(), prj->get_project_directory());
-		add_grids(root_elem, prj);
-		add_colors(root_elem, prj);
-		add_port_colors(root_elem, prj->get_port_color_manager());
+		QDomElement root_elem = doc.createElement("project");
+		assert(!root_elem.isNull());
 
-		doc.write_to_file_formatted(filename, "ISO-8859-1");
+		set_project_node_attributes(doc, root_elem, prj);
+
+		add_layers(doc, root_elem, prj->get_logic_model(), prj->get_project_directory());
+		add_grids(doc, root_elem, prj);
+		add_colors(doc, root_elem, prj);
+		add_port_colors(doc, root_elem, prj->get_port_color_manager());
+
+		doc.appendChild(root_elem);
+		
+		QFile file(QString::fromStdString(filename));
+		if(!file.open(QFile::ReadWrite))
+		{
+			throw InvalidPathException("Can't create export file.");
+		}
+
+		QTextStream stream(&file);
+		stream << doc.toString();
+
+		file.close();
 	}
 	catch (const std::exception& ex)
 	{
@@ -109,118 +124,137 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
 	}
 }
 
-void ProjectExporter::add_grids(xmlpp::Element* prj_elem, Project_shptr prj)
+void ProjectExporter::add_grids(QDomDocument & doc, QDomElement & prj_elem, Project_shptr prj)
 {
-	xmlpp::Element* grids_elem = prj_elem->add_child("grids");
-	if (grids_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement grids_elem = doc.createElement("grids");
 
+	if (grids_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-	add_regular_grid(grids_elem, prj->get_regular_horizontal_grid(), "horizontal");
-	add_regular_grid(grids_elem, prj->get_regular_vertical_grid(), "vertical");
+	add_regular_grid(doc, grids_elem, prj->get_regular_horizontal_grid(), "horizontal");
+	add_regular_grid(doc, grids_elem, prj->get_regular_vertical_grid(), "vertical");
 
-	add_irregular_grid(grids_elem, prj->get_irregular_horizontal_grid(), "horizontal");
-	add_irregular_grid(grids_elem, prj->get_irregular_vertical_grid(), "vertical");
+	add_irregular_grid(doc, grids_elem, prj->get_irregular_horizontal_grid(), "horizontal");
+	add_irregular_grid(doc, grids_elem, prj->get_irregular_vertical_grid(), "vertical");
+
+	prj_elem.appendChild(grids_elem);
 }
 
-void ProjectExporter::add_regular_grid(xmlpp::Element* grids_elem,
+void ProjectExporter::add_regular_grid(QDomDocument & doc, 
+									   QDomElement & grids_elem,
                                        const RegularGrid_shptr grid,
                                        std::string const& grid_orientation)
 {
-	xmlpp::Element* grid_elem = grids_elem->add_child("regular-grid");
-	if (grid_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement grid_elem = doc.createElement("regular-grid");
+	if (grid_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-	grid_elem->set_attribute("enabled", grid->is_enabled() ? "true" : "false");
-	grid_elem->set_attribute("distance", number_to_string<double>(grid->get_distance()));
-	grid_elem->set_attribute("offset", number_to_string<int>(grid->get_min()));
-	grid_elem->set_attribute("orientation", grid_orientation);
+	grid_elem.setAttribute("enabled", grid->is_enabled() ? "true" : "false");
+	grid_elem.setAttribute("distance", QString::fromStdString(number_to_string<double>(grid->get_distance())));
+	grid_elem.setAttribute("offset", QString::fromStdString(number_to_string<int>(grid->get_min())));
+	grid_elem.setAttribute("orientation", QString::fromStdString(grid_orientation));
+
+	grids_elem.appendChild(grid_elem);
 }
 
-void ProjectExporter::add_irregular_grid(xmlpp::Element* grids_elem,
+void ProjectExporter::add_irregular_grid(QDomDocument & doc, 
+										 QDomElement & grids_elem,
                                          const IrregularGrid_shptr grid,
                                          std::string const& grid_orientation)
 {
-	xmlpp::Element* grid_elem = grids_elem->add_child("irregular-grid");
-	if (grid_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement grid_elem = doc.createElement("irregular-grid");
+	if (grid_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-	grid_elem->set_attribute("enabled", grid->is_enabled() ? "true" : "false");
-	grid_elem->set_attribute("orientation", grid_orientation);
+	grid_elem.setAttribute("enabled", grid->is_enabled() ? "true" : "false");
+	grid_elem.setAttribute("orientation", QString::fromStdString(grid_orientation));
 
-	xmlpp::Element* offsets_elem = grid_elem->add_child("offsets");
-	if (offsets_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement offsets_elem = doc.createElement("offsets");
+	if (offsets_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 	for (IrregularGrid::grid_iter iter = grid->begin();
 	     iter != grid->end(); ++iter)
 	{
-		xmlpp::Element* offset_elem = offsets_elem->add_child("offset-entry");
-		if (offset_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		QDomElement offset_elem = doc.createElement("offset-entry");
+		if (offset_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-		offset_elem->set_attribute("offset", number_to_string<int>(*iter));
+		offset_elem.setAttribute("offset", QString::fromStdString(number_to_string<int>(*iter)));
+
+		offsets_elem.appendChild(offset_elem);
 	}
+
+	grid_elem.appendChild(offsets_elem);
+
+	grids_elem.appendChild(grid_elem);
 }
 
 
-void ProjectExporter::set_project_node_attributes(xmlpp::Element* prj_elem,
+void ProjectExporter::set_project_node_attributes(QDomDocument & doc, 
+												  QDomElement & prj_elem,
                                                   Project_shptr prj)
 {
-	prj_elem->set_attribute("degate-version", prj->get_degate_version());
-	prj_elem->set_attribute("name", prj->get_name());
-	prj_elem->set_attribute("description", prj->get_description());
-	prj_elem->set_attribute("width", number_to_string<int>(prj->get_width()));
-	prj_elem->set_attribute("height", number_to_string<int>(prj->get_height()));
-
-	prj_elem->set_attribute("lambda", number_to_string<length_t>(prj->get_lambda()));
-	prj_elem->set_attribute("pin-diameter", number_to_string<length_t>(prj->get_default_pin_diameter()));
-	prj_elem->set_attribute("wire-diameter", number_to_string<length_t>(prj->get_default_wire_diameter()));
-	prj_elem->set_attribute("port-diameter", number_to_string<length_t>(prj->get_default_port_diameter()));
-
-	prj_elem->set_attribute("pixel-per-um", number_to_string<double>(prj->get_pixel_per_um()));
-	prj_elem->set_attribute("template-dimension", number_to_string<int>(prj->get_template_dimension()));
-	prj_elem->set_attribute("font-size", number_to_string<unsigned int>(prj->get_font_size()));
-
-	prj_elem->set_attribute("server-url", prj->get_server_url());
-	prj_elem->set_attribute("last-pulled-transaction-id",
-	                        number_to_string<transaction_id_t>(prj->get_last_pulled_tid()));
+	prj_elem.setAttribute("degate-version", QString::fromStdString(prj->get_degate_version()));
+	prj_elem.setAttribute("name", QString::fromStdString(prj->get_name()));
+	prj_elem.setAttribute("description", QString::fromStdString(prj->get_description()));
+	prj_elem.setAttribute("width", QString::fromStdString(number_to_string<int>(prj->get_width())));
+	prj_elem.setAttribute("height", QString::fromStdString(number_to_string<int>(prj->get_height())));
+	
+	prj_elem.setAttribute("lambda", QString::fromStdString(number_to_string<length_t>(prj->get_lambda())));
+	prj_elem.setAttribute("pin-diameter", QString::fromStdString(number_to_string<length_t>(prj->get_default_pin_diameter())));
+	prj_elem.setAttribute("wire-diameter", QString::fromStdString(number_to_string<length_t>(prj->get_default_wire_diameter())));
+	prj_elem.setAttribute("port-diameter", QString::fromStdString(number_to_string<length_t>(prj->get_default_port_diameter())));
+	
+	prj_elem.setAttribute("pixel-per-um", QString::fromStdString(number_to_string<double>(prj->get_pixel_per_um())));
+	prj_elem.setAttribute("template-dimension", QString::fromStdString(number_to_string<int>(prj->get_template_dimension())));
+	prj_elem.setAttribute("font-size", QString::fromStdString(number_to_string<unsigned int>(prj->get_font_size())));
+	
+	prj_elem.setAttribute("server-url", QString::fromStdString(prj->get_server_url()));
+	prj_elem.setAttribute("last-pulled-transaction-id",
+	                        QString::fromStdString(number_to_string<transaction_id_t>(prj->get_last_pulled_tid())));
 }
 
 
-void ProjectExporter::add_layers(xmlpp::Element* prj_elem,
+void ProjectExporter::add_layers(QDomDocument & doc, 
+								 QDomElement & prj_elem,
                                  LogicModel_shptr lmodel,
                                  std::string const& project_dir)
 {
 	if (lmodel == NULL) throw InvalidPointerException();
 
-	xmlpp::Element* layers_elem = prj_elem->add_child("layers");
-	if (layers_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement layers_elem = doc.createElement("layers");
+	if (layers_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 	for (LogicModel::layer_collection::iterator layer_iter = lmodel->layers_begin();
 	     layer_iter != lmodel->layers_end(); ++layer_iter)
 	{
-		xmlpp::Element* layer_elem = layers_elem->add_child("layer");
-		if (layer_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		QDomElement layer_elem = doc.createElement("layer");
+		if (layer_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 		Layer_shptr layer = *layer_iter;
 		assert(layer->has_valid_layer_id());
 
-		layer_elem->set_attribute("position", number_to_string<layer_position_t>(layer->get_layer_pos()));
-		layer_elem->set_attribute("id", number_to_string<layer_id_t>(layer->get_layer_id()));
-		layer_elem->set_attribute("type", layer->get_layer_type_as_string());
-		layer_elem->set_attribute("description", layer->get_description());
-		layer_elem->set_attribute("enabled", layer->is_enabled() ? "true" : "false");
+		layer_elem.setAttribute("position", QString::fromStdString(number_to_string<layer_position_t>(layer->get_layer_pos())));
+		layer_elem.setAttribute("id", QString::fromStdString(number_to_string<layer_id_t>(layer->get_layer_id())));
+		layer_elem.setAttribute("type", QString::fromStdString(layer->get_layer_type_as_string()));
+		layer_elem.setAttribute("description", QString::fromStdString(layer->get_description()));
+		layer_elem.setAttribute("enabled", QString::fromStdString(layer->is_enabled() ? "true" : "false"));
 
 		if (layer->has_background_image())
-			layer_elem->set_attribute("image-filename",
-			                          get_relative_path(layer->get_image_filename(), project_dir));
+			layer_elem.setAttribute("image-filename",
+			                          QString::fromStdString(get_relative_path(layer->get_image_filename(), project_dir)));
+
+		layers_elem.appendChild(layer_elem);
 	}
+
+	prj_elem.appendChild(layers_elem);
 }
 
 
-void ProjectExporter::add_port_colors(xmlpp::Element* prj_elem,
+void ProjectExporter::add_port_colors(QDomDocument & doc, 
+									  QDomElement & prj_elem,
                                       PortColorManager_shptr port_color_manager)
 {
 	if (port_color_manager == NULL) throw InvalidPointerException();
 
-	xmlpp::Element* port_colors_elem = prj_elem->add_child("port-colors");
-	if (port_colors_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement port_colors_elem = doc.createElement("port-colors");
+	if (port_colors_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 	for (PortColorManager::port_color_collection::iterator iter = port_color_manager->begin();
 	     iter != port_color_manager->end(); ++iter)
@@ -229,26 +263,30 @@ void ProjectExporter::add_port_colors(xmlpp::Element* prj_elem,
 		const color_t frame_color = port_color_manager->get_frame_color(port_name);
 		const color_t fill_color = port_color_manager->get_fill_color(port_name);
 
-		xmlpp::Element* color_elem = port_colors_elem->add_child("port-color");
-		if (color_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		QDomElement color_elem = doc.createElement("port-color");
+		if (color_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-		color_elem->set_attribute("fill-color", to_color_string(fill_color));
-		color_elem->set_attribute("frame-color", to_color_string(frame_color));
+		color_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(fill_color)));
+		color_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(frame_color)));
+
+		port_colors_elem.appendChild(color_elem);
 	}
+
+	prj_elem.appendChild(port_colors_elem);
 }
 
-void ProjectExporter::add_colors(xmlpp::Element* prj_elem, Project_shptr prj)
+void ProjectExporter::add_colors(QDomDocument & doc, QDomElement & prj_elem, Project_shptr prj)
 {
 	if (prj == NULL) throw InvalidPointerException();
 
-	xmlpp::Element* colors_elem = prj_elem->add_child("default-colors");
-	if (colors_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement colors_elem = doc.createElement("default-colors");
+	if (colors_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 	default_colors_t default_colors = prj->get_default_colors();
 	BOOST_FOREACH(default_colors_t::value_type const& p, default_colors)
 	{
-		xmlpp::Element* color_elem = colors_elem->add_child("color");
-		if (color_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		QDomElement color_elem = doc.createElement("color");
+		if (color_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 		std::string o;
 		switch (p.first)
@@ -279,7 +317,11 @@ void ProjectExporter::add_colors(xmlpp::Element* prj_elem, Project_shptr prj)
 			throw std::runtime_error("Invalid object type.");
 		}
 
-		color_elem->set_attribute("object", o);
-		color_elem->set_attribute("color", to_color_string(p.second));
+		color_elem.setAttribute("object", QString::fromStdString(o));
+		color_elem.setAttribute("color", QString::fromStdString(to_color_string(p.second)));
+
+		colors_elem.appendChild(color_elem);
 	}
+
+	prj_elem.appendChild(colors_elem);
 }
