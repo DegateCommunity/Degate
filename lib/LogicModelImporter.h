@@ -42,27 +42,27 @@ namespace degate
 
 		std::list<Gate_shptr> gates;
 
-		void parse_logic_model_element(const xmlpp::Element* const lm_element,
+		void parse_logic_model_element(QDomElement const lm_element,
 		                               LogicModel_shptr lmodel);
 
-		void parse_gates_element(const xmlpp::Element* const gates_element, LogicModel_shptr lmodel);
+		void parse_gates_element(QDomElement const gates_element, LogicModel_shptr lmodel);
 
-		void parse_vias_element(const xmlpp::Element* const vias_element,
+		void parse_vias_element(QDomElement const vias_element,
 		                        LogicModel_shptr lmodel);
 
-		void parse_emarkers_element(const xmlpp::Element* const emarkers_element,
+		void parse_emarkers_element(QDomElement const emarkers_element,
 		                            LogicModel_shptr lmodel);
 
-		void parse_wires_element(const xmlpp::Element* const wires_element,
+		void parse_wires_element(QDomElement const wires_element,
 		                         LogicModel_shptr lmodel);
 
-		void parse_nets_element(const xmlpp::Element* const nets_element,
+		void parse_nets_element(QDomElement const nets_element,
 		                        LogicModel_shptr lmodel);
 
-		void parse_annotations_element(const xmlpp::Element* const annotations_element,
+		void parse_annotations_element(QDomElement const annotations_element,
 		                               LogicModel_shptr lmodel);
 
-		std::list<Module_shptr> parse_modules_element(const xmlpp::Element* const modules_element,
+		std::list<Module_shptr> parse_modules_element(QDomElement const modules_element,
 		                                              LogicModel_shptr lmodel);
 
 	public:

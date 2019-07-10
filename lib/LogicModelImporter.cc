@@ -25,7 +25,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+//#include <unistd.h> : Linux only
 #include <cerrno>
 
 #include <memory>
@@ -37,6 +37,7 @@
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 
 using namespace std;
 using namespace degate;
@@ -52,19 +53,24 @@ void LogicModelImporter::import_into(LogicModel_shptr lmodel,
 
 	try
 	{
-		//debug(TM, "try to parse file %s", filename.c_str());
+		QDomDocument parser;
 
-		xmlpp::DomParser parser;
-		parser.set_substitute_entities(); // We just want the text to be resolved/unescaped automatically.
+		QFile file(QString::fromStdString(filename));
+		if (!file.open(QIODevice::ReadOnly))
+		{
+			debug(TM, "Problem: can't open the file %s.", filename.c_str());
+			throw InvalidFileFormatException("The LogicModelImporter cannot load the project file. Can't open the file.");
+		}
 
-		parser.parse_file(filename);
-		assert(parser == true);
+		if (!parser.setContent(&file))
+		{
+			debug(TM, "Problem: can't parse the file %s.", filename.c_str());
+			throw InvalidXMLException("The LogicModelImporter cannot load the project file. Can't parse the file.");
+		}
+		file.close();
 
-		const xmlpp::Document* doc = parser.get_document();
-		assert(doc != NULL);
-
-		const xmlpp::Element* root_elem = doc->get_root_node(); // deleted by DomParser
-		assert(root_elem != NULL);
+		const QDomElement root_elem = parser.documentElement();
+		assert(!root_elem.isNull());
 
 		lmodel->set_gate_library(gate_library);
 
@@ -93,29 +99,29 @@ LogicModel_shptr LogicModelImporter::import(std::string const& filename)
 	return lmodel;
 }
 
-void LogicModelImporter::parse_logic_model_element(const xmlpp::Element* const lm_elem,
+void LogicModelImporter::parse_logic_model_element(QDomElement const lm_elem,
                                                    LogicModel_shptr lmodel)
 {
-	const xmlpp::Element* gates_elem = get_dom_twig(lm_elem, "gates");
-	if (gates_elem != NULL) parse_gates_element(gates_elem, lmodel);
+	const QDomElement gates_elem = get_dom_twig(lm_elem, "gates");
+	if (!gates_elem.isNull()) parse_gates_element(gates_elem, lmodel);
 
-	const xmlpp::Element* vias_elem = get_dom_twig(lm_elem, "vias");
-	if (vias_elem != NULL) parse_vias_element(vias_elem, lmodel);
+	const QDomElement vias_elem = get_dom_twig(lm_elem, "vias");
+	if (!vias_elem.isNull()) parse_vias_element(vias_elem, lmodel);
 
-	const xmlpp::Element* emarkers_elem = get_dom_twig(lm_elem, "emarkers");
-	if (emarkers_elem != NULL) parse_emarkers_element(emarkers_elem, lmodel);
+	const QDomElement emarkers_elem = get_dom_twig(lm_elem, "emarkers");
+	if (!emarkers_elem.isNull()) parse_emarkers_element(emarkers_elem, lmodel);
 
-	const xmlpp::Element* wires_elem = get_dom_twig(lm_elem, "wires");
-	if (wires_elem != NULL) parse_wires_element(wires_elem, lmodel);
+	const QDomElement wires_elem = get_dom_twig(lm_elem, "wires");
+	if (!wires_elem.isNull()) parse_wires_element(wires_elem, lmodel);
 
-	const xmlpp::Element* nets_elem = get_dom_twig(lm_elem, "nets");
-	if (nets_elem != NULL) parse_nets_element(nets_elem, lmodel);
+	const QDomElement nets_elem = get_dom_twig(lm_elem, "nets");
+	if (!nets_elem.isNull()) parse_nets_element(nets_elem, lmodel);
 
-	const xmlpp::Element* annotations_elem = get_dom_twig(lm_elem, "annotations");
-	if (annotations_elem != NULL) parse_annotations_element(annotations_elem, lmodel);
+	const QDomElement annotations_elem = get_dom_twig(lm_elem, "annotations");
+	if (!annotations_elem.isNull()) parse_annotations_element(annotations_elem, lmodel);
 
-	const xmlpp::Element* modules_elem = get_dom_twig(lm_elem, "modules");
-	if (modules_elem != NULL)
+	const QDomElement modules_elem = get_dom_twig(lm_elem, "modules");
+	if (!modules_elem.isNull())
 	{
 		std::list<Module_shptr> mods = parse_modules_element(modules_elem, lmodel);
 		assert(mods.size() == 1);
@@ -123,31 +129,30 @@ void LogicModelImporter::parse_logic_model_element(const xmlpp::Element* const l
 	}
 }
 
-void LogicModelImporter::parse_nets_element(const xmlpp::Element* const nets_element,
+void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
                                             LogicModel_shptr lmodel)
 {
-	if (nets_element == NULL || lmodel == NULL)
+	if (nets_element.isNull() || lmodel == NULL)
 		throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_nets_element()");
 
-	const xmlpp::Node::NodeList net_list = nets_element->get_children("net");
-	for (xmlpp::Node::NodeList::const_iterator iter = net_list.begin();
-	     iter != net_list.end();
-	     ++iter)
+	const QDomNodeList net_list = nets_element.elementsByTagName("net");
+	for (int i = 0; i < net_list.count(); i++)
 	{
 		int object_counter = 0;
-		if (const xmlpp::Element* net_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+
+		QDomElement net_elem = net_list.at(i).toElement();
+		if (!net_elem.isNull())
 		{
 			object_id_t net_id = parse_number<object_id_t>(net_elem, "id");
 
 			Net_shptr net(new Net());
 			net->set_object_id(net_id);
 
-			const xmlpp::Node::NodeList connection_list = net_elem->get_children("connection");
-			for (xmlpp::Node::NodeList::const_iterator iter2 = connection_list.begin();
-			     iter2 != connection_list.end();
-			     ++iter2)
+			const QDomNodeList connection_list = net_elem.elementsByTagName("connection");
+			for (int j = 0; j < connection_list.count(); j++)
 			{
-				if (const xmlpp::Element* conn_elem = dynamic_cast<const xmlpp::Element*>(*iter2))
+				QDomElement conn_elem = connection_list.at(j).toElement();
+				if (!conn_elem.isNull())
 				{
 					object_id_t object_id = parse_number<object_id_t>(conn_elem, "object-id");
 
@@ -200,18 +205,17 @@ void LogicModelImporter::parse_nets_element(const xmlpp::Element* const nets_ele
 	}
 }
 
-void LogicModelImporter::parse_wires_element(const xmlpp::Element* const wires_element,
+void LogicModelImporter::parse_wires_element(QDomElement const wires_element,
                                              LogicModel_shptr lmodel)
 {
-	if (wires_element == NULL || lmodel == NULL)
+	if (wires_element.isNull() || lmodel == NULL)
 		throw InvalidPointerException("Null pointer in LogicModelImporter::parse_wires_element()");
 
-	const xmlpp::Node::NodeList wire_list = wires_element->get_children("wire");
-	for (xmlpp::Node::NodeList::const_iterator iter = wire_list.begin();
-	     iter != wire_list.end();
-	     ++iter)
+	const QDomNodeList wire_list = wires_element.elementsByTagName("wire");
+	for (int i = 0; i < wire_list.count(); i++)
 	{
-		if (const xmlpp::Element* wire_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		QDomElement wire_elem = wire_list.at(i).toElement();
+		if (!wire_elem.isNull())
 		{
 			// XXX PORT ID REPLACER ...
 
@@ -224,10 +228,10 @@ void LogicModelImporter::parse_wires_element(const xmlpp::Element* const wires_e
 			int layer = parse_number<int>(wire_elem, "layer");
 			int remote_id = parse_number<object_id_t>(wire_elem, "remote-id", 0);
 
-			const Glib::ustring name(wire_elem->get_attribute_value("name"));
-			const Glib::ustring description(wire_elem->get_attribute_value("description"));
-			const Glib::ustring fill_color_str(wire_elem->get_attribute_value("fill-color"));
-			const Glib::ustring frame_color_str(wire_elem->get_attribute_value("frame-color"));
+			const std::string name(wire_elem.attribute("name").toStdString());
+			const std::string description(wire_elem.attribute("description").toStdString());
+			const std::string fill_color_str(wire_elem.attribute("fill-color").toStdString());
+			const std::string frame_color_str(wire_elem.attribute("frame-color").toStdString());
 
 
 			Wire_shptr wire(new Wire(from_x, from_y, to_x, to_y, diameter));
@@ -243,17 +247,16 @@ void LogicModelImporter::parse_wires_element(const xmlpp::Element* const wires_e
 	}
 }
 
-void LogicModelImporter::parse_vias_element(const xmlpp::Element* const vias_element,
+void LogicModelImporter::parse_vias_element(QDomElement const vias_element,
                                             LogicModel_shptr lmodel)
 {
-	if (vias_element == NULL || lmodel == NULL) throw InvalidPointerException();
+	if (vias_element.isNull() || lmodel == NULL) throw InvalidPointerException();
 
-	const xmlpp::Node::NodeList via_list = vias_element->get_children("via");
-	for (xmlpp::Node::NodeList::const_iterator iter = via_list.begin();
-	     iter != via_list.end();
-	     ++iter)
+	const QDomNodeList via_list = vias_element.elementsByTagName("via");
+	for (int i = 0; i < via_list.count(); i++)
 	{
-		if (const xmlpp::Element* via_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		QDomElement via_elem = via_list.at(i).toElement();
+		if (!via_elem.isNull())
 		{
 			// XXX PORT ID REPLACER ...
 
@@ -264,11 +267,11 @@ void LogicModelImporter::parse_vias_element(const xmlpp::Element* const vias_ele
 			int layer = parse_number<int>(via_elem, "layer");
 			int remote_id = parse_number<object_id_t>(via_elem, "remote-id", 0);
 
-			const Glib::ustring name(via_elem->get_attribute_value("name"));
-			const Glib::ustring description(via_elem->get_attribute_value("description"));
-			const Glib::ustring fill_color_str(via_elem->get_attribute_value("fill-color"));
-			const Glib::ustring frame_color_str(via_elem->get_attribute_value("frame-color"));
-			const Glib::ustring direction_str(via_elem->get_attribute_value("direction").lowercase());
+			const std::string name(via_elem.attribute("name").toStdString());
+			const std::string description(via_elem.attribute("description").toStdString());
+			const std::string fill_color_str(via_elem.attribute("fill-color").toStdString());
+			const std::string frame_color_str(via_elem.attribute("frame-color").toStdString());
+			const std::string direction_str(boost::algorithm::to_lower_copy(via_elem.attribute("direction").toStdString()));
 
 			Via::DIRECTION direction;
 			if (direction_str == "undefined") direction = Via::DIRECTION_UNDEFINED;
@@ -295,17 +298,16 @@ void LogicModelImporter::parse_vias_element(const xmlpp::Element* const vias_ele
 	}
 }
 
-void LogicModelImporter::parse_emarkers_element(const xmlpp::Element* const emarkers_element,
+void LogicModelImporter::parse_emarkers_element(QDomElement const emarkers_element,
                                                 LogicModel_shptr lmodel)
 {
-	if (emarkers_element == NULL || lmodel == NULL) throw InvalidPointerException();
+	if (emarkers_element.isNull() || lmodel == NULL) throw InvalidPointerException();
 
-	const xmlpp::Node::NodeList emarker_list = emarkers_element->get_children("emarker");
-	for (xmlpp::Node::NodeList::const_iterator iter = emarker_list.begin();
-	     iter != emarker_list.end();
-	     ++iter)
+	const QDomNodeList emarker_list = emarkers_element.elementsByTagName("emarker");
+	for (int i = 0; i < emarker_list.count(); i++)
 	{
-		if (const xmlpp::Element* emarker_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		QDomElement emarker_elem = emarker_list.at(i).toElement();
+		if (!emarker_elem.isNull())
 		{
 			// XXX PORT ID REPLACER ...
 
@@ -316,11 +318,11 @@ void LogicModelImporter::parse_emarkers_element(const xmlpp::Element* const emar
 			int layer = parse_number<int>(emarker_elem, "layer");
 			int remote_id = parse_number<object_id_t>(emarker_elem, "remote-id", 0);
 
-			const Glib::ustring name(emarker_elem->get_attribute_value("name"));
-			const Glib::ustring description(emarker_elem->get_attribute_value("description"));
-			const Glib::ustring fill_color_str(emarker_elem->get_attribute_value("fill-color"));
-			const Glib::ustring frame_color_str(emarker_elem->get_attribute_value("frame-color"));
-			const Glib::ustring direction_str(emarker_elem->get_attribute_value("direction").lowercase());
+			const std::string name(emarker_elem.attribute("name").toStdString());
+			const std::string description(emarker_elem.attribute("description").toStdString());
+			const std::string fill_color_str(emarker_elem.attribute("fill-color").toStdString());
+			const std::string frame_color_str(emarker_elem.attribute("frame-color").toStdString());
+			const std::string direction_str(boost::algorithm::to_lower_copy(emarker_elem.attribute("direction").toStdString()));
 
 			EMarker_shptr emarker(new EMarker(x, y, diameter));
 			emarker->set_name(name.c_str());
@@ -336,18 +338,17 @@ void LogicModelImporter::parse_emarkers_element(const xmlpp::Element* const emar
 	}
 }
 
-void LogicModelImporter::parse_gates_element(const xmlpp::Element* const gates_element,
+void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
                                              LogicModel_shptr lmodel)
 {
-	if (gates_element == NULL || lmodel == NULL) throw InvalidPointerException();
+	if (gates_element.isNull() || lmodel == NULL) throw InvalidPointerException();
 
 
-	const xmlpp::Node::NodeList gate_list = gates_element->get_children("gate");
-	for (xmlpp::Node::NodeList::const_iterator iter = gate_list.begin();
-	     iter != gate_list.end();
-	     ++iter)
+	const QDomNodeList gate_list = gates_element.elementsByTagName("gate");
+	for (int i = 0; i < gate_list.count(); i++)
 	{
-		if (const xmlpp::Element* gate_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		QDomElement gate_elem = gate_list.at(i).toElement();
+		if (!gate_elem.isNull())
 		{
 			object_id_t object_id = parse_number<object_id_t>(gate_elem, "id");
 			int min_x = parse_number<int>(gate_elem, "min-x");
@@ -358,11 +359,11 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element* const gates_e
 			int layer = parse_number<int>(gate_elem, "layer");
 
 			int gate_type_id = parse_number<int>(gate_elem, "type-id");
-			const Glib::ustring name(gate_elem->get_attribute_value("name"));
-			const Glib::ustring description(gate_elem->get_attribute_value("description"));
-			const Glib::ustring orientation_str(gate_elem->get_attribute_value("orientation").lowercase());
-			const Glib::ustring frame_color_str(gate_elem->get_attribute_value("frame-color"));
-			const Glib::ustring fill_color_str(gate_elem->get_attribute_value("fill-color"));
+			const std::string name(gate_elem.attribute("name").toStdString());
+			const std::string description(gate_elem.attribute("description").toStdString());
+			const std::string orientation_str(boost::algorithm::to_lower_copy(gate_elem.attribute("orientation").toStdString()));
+			const std::string frame_color_str(gate_elem.attribute("frame-color").toStdString());
+			const std::string fill_color_str(gate_elem.attribute("fill-color").toStdString());
 
 			Gate::ORIENTATION orientation;
 			if (orientation_str == "undefined") orientation = Gate::ORIENTATION_UNDEFINED;
@@ -390,12 +391,11 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element* const gates_e
 			}
 
 			// parse port instances
-			const xmlpp::Node::NodeList port_list = gate_elem->get_children("port");
-			for (xmlpp::Node::NodeList::const_iterator iter2 = port_list.begin();
-			     iter2 != port_list.end();
-			     ++iter2)
+			const QDomNodeList port_list = gate_elem.elementsByTagName("port");
+			for (int j = 0; j < port_list.count(); j++)
 			{
-				if (const xmlpp::Element* port_elem = dynamic_cast<const xmlpp::Element*>(*iter2))
+				QDomElement port_elem = port_list.at(j).toElement();
+				if (!port_elem.isNull())
 				{
 					object_id_t template_port_id = parse_number<object_id_t>(port_elem, "type-id");
 
@@ -426,17 +426,16 @@ void LogicModelImporter::parse_gates_element(const xmlpp::Element* const gates_e
 }
 
 
-void LogicModelImporter::parse_annotations_element(const xmlpp::Element* const annotations_element,
+void LogicModelImporter::parse_annotations_element(QDomElement const annotations_element,
                                                    LogicModel_shptr lmodel)
 {
-	if (annotations_element == NULL || lmodel == NULL) throw InvalidPointerException();
+	if (annotations_element.isNull() || lmodel == NULL) throw InvalidPointerException();
 
-	const xmlpp::Node::NodeList annotation_list = annotations_element->get_children("annotation");
-	for (xmlpp::Node::NodeList::const_iterator iter = annotation_list.begin();
-	     iter != annotation_list.end();
-	     ++iter)
+	const QDomNodeList annotation_list = annotations_element.elementsByTagName("annotation");
+	for (int i = 0; i < annotation_list.count(); i++)
 	{
-		if (const xmlpp::Element* annotation_elem = dynamic_cast<const xmlpp::Element*>(*iter))
+		QDomElement annotation_elem = annotation_list.at(i).toElement();
+		if (!annotation_elem.isNull())
 		{
 			object_id_t object_id = parse_number<object_id_t>(annotation_elem, "id");
 
@@ -448,17 +447,17 @@ void LogicModelImporter::parse_annotations_element(const xmlpp::Element* const a
 			int layer = parse_number<int>(annotation_elem, "layer");
 			Annotation::class_id_t class_id = parse_number<Annotation::class_id_t>(annotation_elem, "class-id");
 
-			const Glib::ustring name(annotation_elem->get_attribute_value("name"));
-			const Glib::ustring description(annotation_elem->get_attribute_value("description"));
-			const Glib::ustring fill_color_str(annotation_elem->get_attribute_value("fill-color"));
-			const Glib::ustring frame_color_str(annotation_elem->get_attribute_value("frame-color"));
+			const std::string name(annotation_elem.attribute("name").toStdString());
+			const std::string description(annotation_elem.attribute("description").toStdString());
+			const std::string fill_color_str(annotation_elem.attribute("fill-color").toStdString());
+			const std::string frame_color_str(annotation_elem.attribute("frame-color").toStdString());
 
 
 			Annotation_shptr annotation;
 
 			if (class_id == Annotation::SUBPROJECT)
 			{
-				const std::string path = annotation_elem->get_attribute_value("subproject-directory");
+				const std::string path = annotation_elem.attribute("subproject-directory").toStdString();
 				annotation = Annotation_shptr(new SubProjectAnnotation(min_x, max_x, min_y, max_y, path));
 			}
 			else
@@ -475,37 +474,38 @@ void LogicModelImporter::parse_annotations_element(const xmlpp::Element* const a
 	}
 }
 
-std::list<Module_shptr> LogicModelImporter::parse_modules_element(const xmlpp::Element* const modules_element,
+std::list<Module_shptr> LogicModelImporter::parse_modules_element(QDomElement const modules_element,
                                                                   LogicModel_shptr lmodel)
 {
-	if (modules_element == NULL || lmodel == NULL)
+	if (modules_element.isNull() || lmodel == NULL)
 		throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_modules_element()");
 
 	std::list<Module_shptr> modules;
 
-	const xmlpp::Node::NodeList module_list = modules_element->get_children("module");
+	const QDomNodeList module_list = modules_element.elementsByTagName("module");
 
-	for (xmlpp::Node::NodeList::const_iterator m_iter = module_list.begin(); m_iter != module_list.end(); ++m_iter)
+	for (int i = 0; i < module_list.count(); i++)
 	{
-		if (const xmlpp::Element* module_elem = dynamic_cast<const xmlpp::Element*>(*m_iter))
+		QDomElement module_elem = module_list.at(i).toElement();
+		if (!module_elem.isNull())
 		{
 			// parse module attributes
 			object_id_t id = parse_number<object_id_t>(module_elem, "id");
-			const Glib::ustring name(module_elem->get_attribute_value("name"));
-			const Glib::ustring entity(module_elem->get_attribute_value("entity"));
+			const std::string name(module_elem.attribute("name").toStdString());
+			const std::string entity(module_elem.attribute("entity").toStdString());
 
 			Module_shptr module(new Module(name, entity));
 			module->set_object_id(id);
 
 			// parse standard cell list
-			const xmlpp::Element* cells_elem = get_dom_twig(module_elem, "cells");
-			if (cells_elem != NULL)
+			const QDomElement cells_elem = get_dom_twig(module_elem, "cells");
+			if (!cells_elem.isNull())
 			{
-				const xmlpp::Node::NodeList cell_list = cells_elem->get_children("cell");
-				for (xmlpp::Node::NodeList::const_iterator c_iter = cell_list.begin();
-				     c_iter != cell_list.end(); ++c_iter)
+				const QDomNodeList cell_list = cells_elem.elementsByTagName("cell");
+				for (int j = 0; j < cell_list.count(); j++)
 				{
-					if (const xmlpp::Element* cell_elem = dynamic_cast<const xmlpp::Element*>(*c_iter))
+					QDomElement cell_elem = cell_list.at(j).toElement();
+					if (!cell_elem.isNull())
 					{
 						object_id_t cell_id = parse_number<object_id_t>(cell_elem, "object-id");
 
@@ -517,16 +517,16 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(const xmlpp::E
 			}
 
 			// parse module ports
-			const xmlpp::Element* mports_elem = get_dom_twig(module_elem, "module-ports");
-			if (mports_elem != NULL)
+			const QDomElement mports_elem = get_dom_twig(module_elem, "module-ports");
+			if (!mports_elem.isNull())
 			{
-				const xmlpp::Node::NodeList mport_list = mports_elem->get_children("module-port");
-				for (xmlpp::Node::NodeList::const_iterator mp_iter = mport_list.begin();
-				     mp_iter != mport_list.end(); ++mp_iter)
+				const QDomNodeList mport_list = mports_elem.elementsByTagName("module-port");
+				for (int k = 0; k < mport_list.count(); k++)
 				{
-					if (const xmlpp::Element* mport_elem = dynamic_cast<const xmlpp::Element*>(*mp_iter))
+					QDomElement mport_elem = mport_list.at(k).toElement();
+					if (!mport_elem.isNull())
 					{
-						const Glib::ustring port_name(mport_elem->get_attribute_value("name"));
+						const std::string port_name(mport_elem.attribute("name").toStdString());
 						object_id_t ref_id = parse_number<object_id_t>(mport_elem, "object-id");
 
 						// Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
@@ -538,8 +538,8 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(const xmlpp::E
 
 
 			// parse sub-modules
-			const xmlpp::Element* sub_modules_elem = get_dom_twig(module_elem, "modules");
-			if (sub_modules_elem != NULL)
+			const QDomElement sub_modules_elem = get_dom_twig(module_elem, "modules");
+			if (!sub_modules_elem.isNull())
 			{
 				std::list<Module_shptr> sub_modules = parse_modules_element(sub_modules_elem, lmodel);
 				BOOST_FOREACH(Module_shptr submod, sub_modules) module->add_module(submod);
