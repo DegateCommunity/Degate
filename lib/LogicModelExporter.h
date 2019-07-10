@@ -40,19 +40,19 @@ namespace degate
 	class LogicModelExporter : public XMLExporter
 	{
 	private:
-		typedef std::map<object_id_t /* net id */, xmlpp::Element *> net_element_map_type;
+		typedef std::map<object_id_t /* net id */, QDomElement&> net_element_map_type;
 
-		void add_gate(xmlpp::Element* gates_elem, Gate_shptr gate, layer_position_t layer_pos);
-		void add_wire(xmlpp::Element* wires_elem, Wire_shptr wire, layer_position_t layer_pos);
-		void add_via(xmlpp::Element* vias_elem, Via_shptr via, layer_position_t layer_pos);
+		void add_gate(QDomDocument & doc, QDomElement & gates_elem, Gate_shptr gate, layer_position_t layer_pos);
+		void add_wire(QDomDocument & doc, QDomElement & wires_elem, Wire_shptr wire, layer_position_t layer_pos);
+		void add_via(QDomDocument & doc, QDomElement & vias_elem, Via_shptr via, layer_position_t layer_pos);
 
-		void add_emarker(xmlpp::Element* emarkers_elem, EMarker_shptr emarker, layer_position_t layer_pos);
+		void add_emarker(QDomDocument & doc, QDomElement & emarkers_elem, EMarker_shptr emarker, layer_position_t layer_pos);
 
-		void add_nets(xmlpp::Element* nets_elem, LogicModel_shptr lmodel);
+		void add_nets(QDomDocument & doc, QDomElement & nets_elem, LogicModel_shptr lmodel);
 
-		void add_annotation(xmlpp::Element* annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos);
+		void add_annotation(QDomDocument & doc, QDomElement & annotations_elem, Annotation_shptr annotation, layer_position_t layer_pos);
 
-		void add_module(xmlpp::Element* modules_elem, LogicModel_shptr lmodel, Module_shptr module);
+		void add_module(QDomDocument & doc, QDomElement & modules_elem, LogicModel_shptr lmodel, Module_shptr module);
 
 		ObjectIDRewriter_shptr oid_rewriter;
 
