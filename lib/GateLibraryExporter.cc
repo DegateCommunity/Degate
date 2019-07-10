@@ -27,7 +27,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+//#include <unistd.h> : Linux only
 #include <cerrno>
 
 #include <string>
@@ -50,17 +50,33 @@ void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_s
 
 	try
 	{
-		xmlpp::Document doc;
+		QDomDocument doc;
 
-		xmlpp::Element* root_elem = doc.create_root_node("gate-library");
-		assert(root_elem != NULL);
+		QDomProcessingInstruction head = doc.createProcessingInstruction("xml", XML_ENCODING);
+		doc.appendChild(head);
 
-		xmlpp::Element* templates_elem = root_elem->add_child("gate-templates");
-		if (templates_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		QDomElement root_elem = doc.createElement("gate-library");
+		assert(!root_elem.isNull());
 
-		add_gates(templates_elem, gate_lib, directory);
+		QDomElement templates_elem = doc.createElement("gate-templates");
+		if (templates_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-		doc.write_to_file_formatted(filename, "ISO-8859-1");
+		add_gates(doc, templates_elem, gate_lib, directory);
+
+		root_elem.appendChild(templates_elem);
+
+		doc.appendChild(root_elem);
+		
+		QFile file(QString::fromStdString(filename));
+		if(!file.open(QFile::ReadWrite))
+		{
+			throw InvalidPathException("Can't create export file.");
+		}
+
+		QTextStream stream(&file);
+		stream << doc.toString();
+
+		file.close();
 	}
 	catch (const std::exception& ex)
 	{
@@ -69,7 +85,8 @@ void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_s
 	}
 }
 
-void GateLibraryExporter::add_gates(xmlpp::Element* templates_elem,
+void GateLibraryExporter::add_gates(QDomDocument & doc,
+									QDomElement & templates_elem,
                                     GateLibrary_shptr gate_lib,
                                     std::string const& directory)
 {
@@ -78,36 +95,39 @@ void GateLibraryExporter::add_gates(xmlpp::Element* templates_elem,
 	{
 		GateTemplate_shptr gate_tmpl((*iter).second);
 
-		xmlpp::Element* gate_elem = templates_elem->add_child("gate");
-		if (gate_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		QDomElement gate_elem = doc.createElement("gate");
+		if (gate_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 		object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
-		gate_elem->set_attribute("type-id", number_to_string<object_id_t>(new_oid));
-		gate_elem->set_attribute("name", gate_tmpl->get_name());
-		gate_elem->set_attribute("description", gate_tmpl->get_description());
-		gate_elem->set_attribute("logic-class", gate_tmpl->get_logic_class());
+		gate_elem.setAttribute("type-id", QString::fromStdString(number_to_string<object_id_t>(new_oid)));
+		gate_elem.setAttribute("name", QString::fromStdString(gate_tmpl->get_name()));
+		gate_elem.setAttribute("description", QString::fromStdString(gate_tmpl->get_description()));
+		gate_elem.setAttribute("logic-class", QString::fromStdString(gate_tmpl->get_logic_class()));
+		
+		gate_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(gate_tmpl->get_fill_color())));
+		gate_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(gate_tmpl->get_frame_color())));
+		
+		gate_elem.setAttribute("width", QString::fromStdString(number_to_string<unsigned int>(gate_tmpl->get_width())));
+		gate_elem.setAttribute("height", QString::fromStdString(number_to_string<unsigned int>(gate_tmpl->get_height())));
 
-		gate_elem->set_attribute("fill-color", to_color_string(gate_tmpl->get_fill_color()));
-		gate_elem->set_attribute("frame-color", to_color_string(gate_tmpl->get_frame_color()));
+		add_images(doc, gate_elem, gate_tmpl, directory);
+		add_ports(doc, gate_elem, gate_tmpl);
+		add_implementations(doc, gate_elem, gate_tmpl, directory);
 
-		gate_elem->set_attribute("width", number_to_string<unsigned int>(gate_tmpl->get_width()));
-		gate_elem->set_attribute("height", number_to_string<unsigned int>(gate_tmpl->get_height()));
-
-		add_images(gate_elem, gate_tmpl, directory);
-		add_ports(gate_elem, gate_tmpl);
-		add_implementations(gate_elem, gate_tmpl, directory);
+		templates_elem.appendChild(gate_elem);
 	}
 }
 
 
-void GateLibraryExporter::add_images(xmlpp::Element* gate_elem,
+void GateLibraryExporter::add_images(QDomDocument & doc,
+									 QDomElement & gate_elem,
                                      GateTemplate_shptr gate_tmpl,
                                      std::string const& directory)
 {
 	// export images
 
-	xmlpp::Element* images_elem = gate_elem->add_child("images");
-	if (images_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement images_elem = doc.createElement("images");
+	if (images_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 	for (GateTemplate::image_iterator img_iter = gate_tmpl->images_begin();
 	     img_iter != gate_tmpl->images_end(); ++img_iter)
@@ -116,10 +136,10 @@ void GateLibraryExporter::add_images(xmlpp::Element* gate_elem,
 		GateTemplateImage_shptr img = (*img_iter).second;
 		assert(img != NULL);
 
-		xmlpp::Element* img_elem = images_elem->add_child("image");
-		if (img_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		QDomElement img_elem = doc.createElement("image");
+		if (img_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-		img_elem->set_attribute("layer-type", Layer::get_layer_type_as_string(layer_type));
+		img_elem.setAttribute("layer-type", QString::fromStdString(Layer::get_layer_type_as_string(layer_type)));
 
 		// export the image
 		object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
@@ -127,48 +147,58 @@ void GateLibraryExporter::add_images(xmlpp::Element* gate_elem,
 		fmter % new_oid % Layer::get_layer_type_as_string(layer_type);
 		std::string filename(fmter.str());
 
-		img_elem->set_attribute("image", filename);
+		img_elem.setAttribute("image", QString::fromStdString(filename));
 
 		save_image<GateTemplateImage>(join_pathes(directory, filename), img);
+
+		images_elem.appendChild(img_elem);
 	}
+
+	gate_elem.appendChild(images_elem);
 }
 
-void GateLibraryExporter::add_ports(xmlpp::Element* gate_elem,
+void GateLibraryExporter::add_ports(QDomDocument & doc,
+									QDomElement & gate_elem,
                                     GateTemplate_shptr gate_tmpl)
 {
-	xmlpp::Element* ports_elem = gate_elem->add_child("ports");
-	if (ports_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement ports_elem = doc.createElement("ports");
+	if (ports_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 	for (GateTemplate::port_iterator piter = gate_tmpl->ports_begin();
 	     piter != gate_tmpl->ports_end(); ++piter)
 	{
-		xmlpp::Element* port_elem = ports_elem->add_child("port");
-		if (port_elem == NULL) throw(std::runtime_error("Failed to create node."));
+		QDomElement port_elem = doc.createElement("port");
+		if (port_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 		GateTemplatePort_shptr tmpl_port((*piter));
 
 		object_id_t new_port_id = oid_rewriter->get_new_object_id(tmpl_port->get_object_id());
-		port_elem->set_attribute("id", number_to_string<object_id_t>(new_port_id));
-		port_elem->set_attribute("name", tmpl_port->get_name());
-		port_elem->set_attribute("description", tmpl_port->get_description());
-
-		port_elem->set_attribute("type", tmpl_port->get_port_type_as_string());
+		port_elem.setAttribute("id", QString::fromStdString(number_to_string<object_id_t>(new_port_id)));
+		port_elem.setAttribute("name", QString::fromStdString(tmpl_port->get_name()));
+		port_elem.setAttribute("description", QString::fromStdString(tmpl_port->get_description()));
+		
+		port_elem.setAttribute("type", QString::fromStdString(tmpl_port->get_port_type_as_string()));
 
 		if (tmpl_port->is_position_defined())
 		{
 			Point const& point = tmpl_port->get_point();
-			port_elem->set_attribute("x", number_to_string<int>(point.get_x()));
-			port_elem->set_attribute("y", number_to_string<int>(point.get_y()));
+			port_elem.setAttribute("x", QString::fromStdString(number_to_string<int>(point.get_x())));
+			port_elem.setAttribute("y", QString::fromStdString(number_to_string<int>(point.get_y())));
 		}
+
+		ports_elem.appendChild(port_elem);
 	}
+
+	gate_elem.appendChild(ports_elem);
 }
 
-void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem,
+void GateLibraryExporter::add_implementations(QDomDocument & doc,
+											  QDomElement & gate_elem,
                                               GateTemplate_shptr gate_tmpl,
                                               std::string const& directory)
 {
-	xmlpp::Element* implementations_elem = gate_elem->add_child("implementations");
-	if (implementations_elem == NULL) throw(std::runtime_error("Failed to create node."));
+	QDomElement implementations_elem = doc.createElement("implementations");
+	if (implementations_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 	for (GateTemplate::implementation_iter iter = gate_tmpl->implementations_begin();
 	     iter != gate_tmpl->implementations_end(); ++iter)
@@ -179,8 +209,8 @@ void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem,
 		//std::cout << "Code: " << code;
 		if (t != GateTemplate::UNDEFINED && !code.empty())
 		{
-			xmlpp::Element* impl_elem = implementations_elem->add_child("implementation");
-			if (impl_elem == NULL) throw(std::runtime_error("Failed to create node."));
+			QDomElement impl_elem = doc.createElement("implementation");
+			if (impl_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 			object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
 			boost::format fmter("%1%%2%.%3%");
@@ -202,8 +232,12 @@ void GateLibraryExporter::add_implementations(xmlpp::Element* gate_elem,
 
 			write_string_to_file(join_pathes(directory, filename), code);
 
-			impl_elem->set_attribute("type", GateTemplate::get_impl_type_as_string(t));
-			impl_elem->set_attribute("file", filename);
+			impl_elem.setAttribute("type", QString::fromStdString(GateTemplate::get_impl_type_as_string(t)));
+			impl_elem.setAttribute("file", QString::fromStdString(filename));
+
+			implementations_elem.appendChild(impl_elem);
 		}
 	}
+
+	gate_elem.appendChild(implementations_elem);
 }

@@ -40,16 +40,16 @@ namespace degate
 	{
 	private:
 
-		void add_gates(xmlpp::Element* templates_elem, GateLibrary_shptr gate_lib,
+		void add_gates(QDomDocument & doc, QDomElement & templates_elem, GateLibrary_shptr gate_lib,
 		               std::string const& directory);
 
-		void add_images(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
+		void add_images(QDomDocument & doc, QDomElement & gate_elem, GateTemplate_shptr gate_tmpl,
 		                std::string const& directory);
 
-		void add_implementations(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl,
+		void add_implementations(QDomDocument & doc, QDomElement & gate_elem, GateTemplate_shptr gate_tmpl,
 		                         std::string const& directory);
 
-		void add_ports(xmlpp::Element* gate_elem, GateTemplate_shptr gate_tmpl);
+		void add_ports(QDomDocument & doc, QDomElement & gate_elem, GateTemplate_shptr gate_tmpl);
 
 		ObjectIDRewriter_shptr oid_rewriter;
 
