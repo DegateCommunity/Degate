@@ -26,7 +26,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+//#include <unistd.h> : Linux only
 #include <cerrno>
 
 #include <string>
@@ -48,17 +48,32 @@ void RCVBlacklistExporter::export_data(std::string const& filename,
 
 	try
 	{
-		xmlpp::Document doc;
+		QDomDocument doc;
 
-		xmlpp::Element* root_elem = doc.create_root_node("rc-blacklist");
-		assert(root_elem != NULL);
+		QDomProcessingInstruction head = doc.createProcessingInstruction("xml", XML_ENCODING);
+		doc.appendChild(head);
+
+		QDomElement root_elem = doc.createElement("rc-blacklist");
+		assert(!root_elem.isNull());
 
 		BOOST_FOREACH(RCViolation_shptr rcv, violations)
 		{
-			add_rcv(root_elem, rcv);
+			add_rcv(doc, root_elem, rcv);
 		}
 
-		doc.write_to_file_formatted(filename, "ISO-8859-1");
+		doc.appendChild(root_elem);
+		
+		QFile file(QString::fromStdString(filename));
+		if(!file.open(QFile::ReadWrite))
+		{
+			throw InvalidPathException("Can't create export file.");
+		}
+
+		QTextStream stream(&file);
+		stream << doc.toString();
+
+		file.close();
+
 	}
 	catch (const std::exception& ex)
 	{
@@ -67,18 +82,20 @@ void RCVBlacklistExporter::export_data(std::string const& filename,
 	}
 }
 
-void RCVBlacklistExporter::add_rcv(xmlpp::Element* root_elem,
+void RCVBlacklistExporter::add_rcv(QDomDocument & doc, 
+								   QDomElement & root_elem,
                                    RCViolation_shptr rcv)
 {
-	xmlpp::Element* rcv_elem = root_elem->add_child("rc-violation");
-	if (rcv_elem == NULL) throw(std::runtime_error("Failed to create node."));
-
+	QDomElement rcv_elem = doc.createElement("rc-violation");
+	if (rcv_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
 	PlacedLogicModelObject_shptr o = rcv->get_object();
 	object_id_t new_oid = oid_rewriter->get_new_object_id(o->get_object_id());
 
-	rcv_elem->set_attribute("object-id", number_to_string<object_id_t>(new_oid));
-	rcv_elem->set_attribute("rc-violation-class", rcv->get_rc_violation_class());
-	rcv_elem->set_attribute("severity", rcv->get_severity_as_string());
-	rcv_elem->set_attribute("description", rcv->get_problem_description());
+	rcv_elem.setAttribute("object-id", QString::fromStdString(number_to_string<object_id_t>(new_oid)));
+	rcv_elem.setAttribute("rc-violation-class", QString::fromStdString(rcv->get_rc_violation_class()));
+	rcv_elem.setAttribute("severity", QString::fromStdString(rcv->get_severity_as_string()));
+	rcv_elem.setAttribute("description", QString::fromStdString(rcv->get_problem_description()));
+
+	root_elem.appendChild(rcv_elem);
 }
