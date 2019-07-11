@@ -24,7 +24,7 @@
 
 #include <list>
 #include <memory>
-#include <jpeglib.h>
+#include <QImageReader>
 
 #include "StoragePolicies.h"
 #include "ImageReaderBase.h"
@@ -40,7 +40,7 @@ namespace degate
 	{
 	private:
 
-		unsigned char* image_buffer;
+		QImage* image = NULL;
 		int depth;
 
 	public:
@@ -53,13 +53,14 @@ namespace degate
 
 		JPEGReader(std::string const& filename) :
 			ImageReaderBase<ImageType>(filename),
-			image_buffer(NULL)
+			image(NULL)
 		{
 		}
 
 		~JPEGReader()
 		{
 			if (image_buffer != NULL) free(image_buffer);
+			if (image != NULL) delete image;
 		}
 
 		bool read();
@@ -70,59 +71,29 @@ namespace degate
 	template <class ImageType>
 	bool JPEGReader<ImageType>::read()
 	{
-		struct jpeg_decompress_struct cinfo;
-		struct jpeg_error_mgr jerr;
-		FILE* infile; /* source file */
-		depth = 0;
-
-		JSAMPARRAY buffer; /* Output row buffer */
-		int row_stride; /* physical row width in output buffer */
-		unsigned int p = 0;
-
-		if ((infile = fopen(get_filename().c_str(), "rb")) == NULL)
+		QImageReader reader(get_filename().c_str());
+		QSize size = reader.size();
+		if(!size.isValid())
 		{
-			debug(TM, "can't open %s\n", get_filename().c_str());
+			debug(TM, "can't read size of %s\n", get_filename().c_str());
 			return false;
 		}
 
-		cinfo.err = jpeg_std_error(&jerr);
+		set_width(size.width());
+		set_height(size.height());
 
-		jpeg_create_decompress(&cinfo);
-		jpeg_stdio_src(&cinfo, infile);
-
-		jpeg_read_header(&cinfo, TRUE);
-		jpeg_start_decompress(&cinfo);
-
-		set_width(cinfo.output_width);
-		set_height(cinfo.output_height);
-		depth = cinfo.num_components;
+		image = new QImage(size.width(), size.height(), reader.imageFormat());
 
 		debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
 
-		image_buffer = (unsigned char *)malloc(depth * get_width() * get_height());
-
-		if (image_buffer != NULL)
+		if(!reader.read(image))
 		{
-			row_stride = cinfo.output_width * cinfo.output_components;
-			buffer = (*cinfo.mem->alloc_sarray)
-				((j_common_ptr) & cinfo, JPOOL_IMAGE, row_stride, 1);
-
-			debug(TM, "Row stride is %d\n", row_stride);
-			while (cinfo.output_scanline < cinfo.output_height)
-			{
-				jpeg_read_scanlines(&cinfo, buffer, 1);
-
-				memcpy(&image_buffer[p], buffer[0], row_stride);
-				p += row_stride;
-				//        put_scanline_someplace(buffer[0], row_stride);
-			}
-
-			debug(TM, "Image read\n");
+			debug(TM, "can't read %s\n", get_filename().c_str());
+			return false;
 		}
+		depth = image->depth();
 
-		jpeg_finish_decompress(&cinfo);
-		jpeg_destroy_decompress(&cinfo);
-		fclose(infile);
+		debug(TM, "Image read\n");
 
 		return true;
 	}
@@ -131,25 +102,14 @@ namespace degate
 	bool JPEGReader<ImageType>::get_image(std::shared_ptr<ImageType> img)
 	{
 		if (img == NULL) return false;
+		if (image == NULL) return false;
 
 		for (unsigned int y = 0; y < get_height(); y++)
 		{
 			for (unsigned int x = 0; x < get_width(); x++)
 			{
-				uint8_t v1, v2, v3;
-				if (depth == 1)
-				{
-					v1 = v2 = v3 = image_buffer[(y * get_width() + x)];
-				}
-				else if (depth == 3)
-				{
-					v1 = image_buffer[depth * (y * get_width() + x)];
-					v2 = image_buffer[depth * (y * get_width() + x) + 1];
-					v3 = image_buffer[depth * (y * get_width() + x) + 2];
-				}
-				else throw std::runtime_error("Unexpected number of channels in JPG file.");
-
-				img->set_pixel(x, y, MERGE_CHANNELS(v1, v2, v3, 0xff));
+				QRgb rgb = image->pixel(x,y);
+				img->set_pixel(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), 0xff));
 			}
 		}
 
