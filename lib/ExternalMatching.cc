@@ -138,7 +138,7 @@ PlacedLogicModelObject_shptr ExternalMatching::parse_line(std::string const& lin
 
 	if (tokens.size() == 0) return plo;
 	else if (tokens[0].at(0) == '#') return plo;
-	else if (tokens[0] == "wire" and
+	else if (tokens[0] == "wire" &&
 	tokens.size() >= 6
 	)
 	{
@@ -152,7 +152,7 @@ PlacedLogicModelObject_shptr ExternalMatching::parse_line(std::string const& lin
 		return Wire_shptr(new Wire(x1, y1, x2, y2, diameter));
 	}
 	else
-	if (tokens[0] == "via" and
+	if (tokens[0] == "via" &&
 	tokens.size() >= 6
 	)
 	{
