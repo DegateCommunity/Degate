@@ -24,7 +24,7 @@
 
 #include <list>
 #include <memory>
-#include "tiffio.h"
+#include <QImageReader>
 
 //#include "ImageReaderFactory.h"
 #include "StoragePolicies.h"
@@ -41,7 +41,7 @@ namespace degate
 	{
 	private:
 
-		TIFF* tif;
+		QImage* image = NULL;
 
 
 	public:
@@ -54,13 +54,13 @@ namespace degate
 
 		TIFFReader(std::string const& filename) :
 			ImageReaderBase<ImageType>(filename),
-			tif(NULL)
+			image(NULL)
 		{
 		}
 
 		~TIFFReader()
 		{
-			if (tif != NULL) TIFFClose(tif);
+			if (image != NULL) delete image;
 		}
 
 		bool read();
@@ -71,15 +71,30 @@ namespace degate
 	template <class ImageType>
 	bool TIFFReader<ImageType>::read()
 	{
-		tif = TIFFOpen(get_filename().c_str(), "r");
-		if (tif == NULL) return false;
+		QImageReader reader(get_filename().c_str());
+		QSize size = reader.size();
+		if(!size.isValid())
+		{
+			debug(TM, "can't read size of %s\n", get_filename().c_str());
+			return false;
+		}
 
-		uint32 w, h;
-		TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
-		TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
+		set_width(size.width());
+		set_height(size.height());
 
-		set_width(w);
-		set_height(h);
+		assert(reader.imageFormat() == QImage::Format_ARGB32 || reader.imageFormat() == QImage::Format_RGB32);
+
+		image = new QImage(size.width(), size.height(), reader.imageFormat());
+
+		debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
+
+		if(!reader.read(image))
+		{
+			debug(TM, "can't read %s\n", get_filename().c_str());
+			return false;
+		}
+
+		debug(TM, "Image read\n");
 
 		return true;
 	}
@@ -87,23 +102,18 @@ namespace degate
 	template <class ImageType>
 	bool TIFFReader<ImageType>::get_image(std::shared_ptr<ImageType> img)
 	{
-		size_t npixels = get_width() * get_height();
-		uint32* raster = (uint32*)_TIFFmalloc(npixels * sizeof (uint32));
-		if (raster == NULL) return false;
+		if (image == NULL) return false;
+		if (img == NULL) return false;
 
-		if (TIFFReadRGBAImage(tif, get_width(), get_height(), raster, 0))
+		for (unsigned int y = 0; y < get_height(); y++)
 		{
-			for (unsigned int y = 0; y < get_height(); y++)
+			for (unsigned int x = 0; x < get_width(); x++)
 			{
-				for (unsigned int x = 0; x < get_width(); x++)
-				{
-					uint32 v = raster[y * get_width() + x];
-
-					img->set_pixel(x, get_height() - y - 1, v);
-				}
+				QRgb rgb = image->pixel(x,y);
+				img->set_pixel(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), 0xff));
 			}
 		}
-		_TIFFfree(raster);
+
 		return true;
 	}
 }
