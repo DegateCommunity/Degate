@@ -554,7 +554,8 @@ void TemplateMatching::hill_climbing(unsigned int start_x, unsigned int start_y,
 	const unsigned int radius = get_max_step_size();
 	const unsigned int size = (2 * radius + 1) * (2 * radius + 1);
 
-	unsigned int positions_x[size], positions_y[size];
+	auto positions_x = new unsigned int[size];
+	auto positions_y = new unsigned int[size];
 
 	while (running)
 	{
@@ -609,6 +610,9 @@ void TemplateMatching::hill_climbing(unsigned int start_x, unsigned int start_y,
 	*max_corr_x_out = max_corr_x;
 	*max_corr_y_out = max_corr_y;
 	*max_xcorr_out = max_corr;
+
+	delete[] positions_x;
+	delete[] positions_y;
 }
 
 
