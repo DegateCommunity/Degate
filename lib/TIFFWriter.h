@@ -24,7 +24,7 @@
 
 #include <list>
 #include <memory>
-#include "tiffio.h"
+#include <QImageWriter>
 
 #include <globals.h>
 #include <degate_exceptions.h>
@@ -72,16 +72,20 @@ namespace degate
 	template <class ImageType>
 	bool TIFFWriter<ImageType>::write_image(std::shared_ptr<ImageType> img)
 	{
-		TIFF* tif = TIFFOpen(get_filename().c_str(), "w");
-		if (tif == NULL)
-		{
-			throw FileSystemException(strerror(errno));
-		}
+		QImageWriter writer(get_filename().c_str());
 
-		size_t npixels = get_width() * get_height();
+		// Write the tiff tags to the file
+		writer.setFormat("TIFF");
+		writer.setCompression(0);
+		writer.setText("ImageWidth", QString::number(get_width()));
+		writer.setText("ImageLength", QString::number(get_height()));
+		writer.setText("Compression", "1");
+		writer.setText("PlanarConfiguration", "1");
+		writer.setText("PhotometricInterpretation", "2");
+		writer.setText("BitsPerSample", "8");
+		writer.setText("SamplesPerPixel", "3");
 
-		char* raster = (char*)_TIFFmalloc(npixels * 3);
-		if (raster == NULL) return false;
+		QImage image(get_width(), get_width(), QImage::Format_RGB32);
 
 		for (unsigned int y = 0; y < get_height(); y++)
 		{
@@ -90,34 +94,16 @@ namespace degate
 				rgba_pixel_t p =
 					img->template get_pixel_as<rgba_pixel_t>(x, y);
 
-				raster[3 * (y * get_width() + x)] = MASK_R(p);
-				raster[3 * (y * get_width() + x) + 1] = MASK_G(p);
-				raster[3 * (y * get_width() + x) + 2] = MASK_B(p);
+				image.setPixel(x, y, p);
 			}
 		}
 
-
-		// Write the tiff tags to the file
-		TIFFSetField(tif, TIFFTAG_IMAGEWIDTH, get_width());
-		TIFFSetField(tif, TIFFTAG_IMAGELENGTH, get_height());
-		TIFFSetField(tif, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
-		TIFFSetField(tif, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-		TIFFSetField(tif, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
-		TIFFSetField(tif, TIFFTAG_BITSPERSAMPLE, 8);
-		TIFFSetField(tif, TIFFTAG_SAMPLESPERPIXEL, 3);
-
-		bool ret = true;
-
-		// Actually write the image
-		if (TIFFWriteEncodedStrip(tif, 0, raster, npixels * 3) == 0)
+		if(!writer.write(image))
 		{
-			ret = false;
+			return false;
 		}
 
-		if (tif != NULL) TIFFClose(tif);
-		_TIFFfree(raster);
-
-		return ret;
+		return true;
 	}
 }
 
