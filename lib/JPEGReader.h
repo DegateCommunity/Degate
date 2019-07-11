@@ -82,6 +82,8 @@ namespace degate
 		set_width(size.width());
 		set_height(size.height());
 
+		assert(reader.imageFormat() == QImage::Format_ARGB32 || reader.imageFormat() == QImage::Format_RGB32);
+
 		image = new QImage(size.width(), size.height(), reader.imageFormat());
 
 		debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
