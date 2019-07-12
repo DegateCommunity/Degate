@@ -34,6 +34,7 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
@@ -139,25 +140,20 @@ std::string degate::generate_temp_file_pattern()
 
 std::list<std::string> degate::read_directory(std::string const& path, bool prefix_path)
 {
-	// dirent.h : Linux only header
+	boost::filesystem::path p(get_realpath(path));
 
-	DIR* dir = NULL;
-	struct dirent* dir_ent = NULL;
-
-	std::string rpth = get_realpath(path);
-
-	if ((dir = opendir(rpth.c_str())) == NULL)
-		throw degate::FileSystemException(strerror(errno));
+	boost::filesystem::directory_iterator end_itr;
 
 	std::list<std::string> retlist;
 
-	while ((dir_ent = readdir(dir)) != NULL)
-		if (!(!strcmp(dir_ent->d_name, ".") ||
-			!strcmp(dir_ent->d_name, "..")))
-
-			retlist.push_back(prefix_path ? join_pathes(path, dir_ent->d_name) : dir_ent->d_name);
-
-	closedir(dir);
+	for(boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
+	{
+		std::string file_name = itr->path().filename().string();
+		if(!strcmp(file_name.c_str(), ".") && !strcmp(file_name.c_str(), ".."))
+		{
+			retlist.push_back(prefix_path ? join_pathes(path, file_name) : file_name);
+		}
+	}
 
 	return retlist;
 }
