@@ -28,7 +28,7 @@
 #include <ConnectedLogicModelObject.h>
 #include <degate_exceptions.h>
 #include <Wire.h>
-#include <XmlRpc.h>
+//#include <XmlRpc.h>
 #include <exception>
 
 using namespace degate;
@@ -77,6 +77,7 @@ void Wire::print(std::ostream& os, int n_tabs) const
 
 object_id_t Wire::push_object_to_server(std::string const& server_url)
 {
+	/*
 	try
 	{
 		xmlrpc_c::paramList params;
@@ -110,4 +111,5 @@ object_id_t Wire::push_object_to_server(std::string const& server_url)
 		std::cerr << "Client threw unexpected error." << std::endl;
 		throw XMLRPCException("Client threw unexpected error.");
 	}
+	*/
 }

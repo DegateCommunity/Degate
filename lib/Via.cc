@@ -21,7 +21,7 @@
 */
 
 #include "Via.h"
-#include <XmlRpc.h>
+//#include <XmlRpc.h>
 #include <boost/format.hpp>
 
 using namespace degate;
@@ -148,6 +148,7 @@ void Via::set_diameter(unsigned int diameter)
 
 object_id_t Via::push_object_to_server(std::string const& server_url)
 {
+	/*
 	try
 	{
 		xmlrpc_c::paramList params;
@@ -181,4 +182,5 @@ object_id_t Via::push_object_to_server(std::string const& server_url)
 		std::cerr << "Client threw unexpected error." << std::endl;
 		throw XMLRPCException("Client threw unexpected error.");
 	}
+	*/
 }
