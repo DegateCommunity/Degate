@@ -59,7 +59,6 @@ namespace degate
 
 		~JPEGReader()
 		{
-			if (image_buffer != NULL) free(image_buffer);
 			if (image != NULL) delete image;
 		}
 
