@@ -34,6 +34,8 @@ namespace degate
 	 *
 	 */
 
+	/* Dropped archiver/zip support for the moment.
+
 	class ProjectArchiver
 	{
 	private:
@@ -64,6 +66,7 @@ namespace degate
 		                 boost::filesystem::path const& archive_file,
 		                 boost::filesystem::path const& prepend_dir) const;
 	};
+	*/
 }
 
 #endif

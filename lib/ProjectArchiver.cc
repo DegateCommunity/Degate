@@ -19,7 +19,7 @@
 
 */
 
-#include <zip.h>
+//#include <zip.h>
 
 #include <globals.h>
 #include <ProjectArchiver.h>
@@ -31,7 +31,7 @@
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 
-
+/*
 using namespace std;
 using namespace degate;
 using namespace boost::filesystem;
@@ -152,3 +152,4 @@ void ProjectArchiver::export_data(path const& project_dir,
 		throw ZipException(f.str());
 	}
 }
+*/
