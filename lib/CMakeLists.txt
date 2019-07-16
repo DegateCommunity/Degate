@@ -34,25 +34,15 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 ############# Boost
-find_package(Boost COMPONENTS filesystem system thread)
-
-if(NOT Boost_FOUND)
-	include_directories("../thirdparty/inc")
-
-	if (CMAKE_SIZEOF_VOID_P MATCHES 8) # if x64
-		LinkAllDirectories(../thirdparty/lib/x64/)
-	else()	# if x86
-		LinkAllDirectories(../thirdparty/lib/x86/)
-	endif()
-	set(LIBS ${LIBS} Boost filesystem system thread)
-else()
-	include_directories(Boost_INCLUDE_DIRS)
-	set(LIBS ${LIBS} ${Boost_LIBRARIES})
-endif()
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+find_package(Boost COMPONENTS filesystem system thread REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+set(LIBS ${Boost_LIBRARIES})
 
 ############# Qt
-find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
-set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core)
+find_package(Qt5 COMPONENTS Core Widgets Gui Xml REQUIRED)
+set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml)
 
 ############################################################################
 
@@ -78,7 +68,7 @@ configure_file(Configuration.h.in ${PROJECT_SOURCE_DIR}/lib/Configuration.h)
 #
 # Link
 #
-add_library(degate SHARED ${SRC_FILES} ${HEADER_FILES})
+add_executable(degate ${SRC_FILES} ${HEADER_FILES})
 target_link_libraries(degate ${LIBS})
 
 ############################################################################
@@ -94,21 +84,4 @@ target_link_libraries(degate ${LIBS})
 #   message("Warning: Doxygen not found. Ignoring. You should "
 #   	"install the doxygen package to generate the documentation for libdegate.")
 #ENDIF(DOXYGEN_FOUND)
-
-
-if(WIN32)
-    set(_library_dir bin)   # .dll are in PATH, like executables
-else()
-    set(_library_dir lib)
-endif()
-
-set(LIB_INSTALL_DIR "${_library_dir}${LIB_SUFFIX}")
-
-set(_INSTALL_DESTINATIONS
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-    ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
-)
-
-install(TARGETS degate ${_INSTALL_DESTINATIONS})
 
