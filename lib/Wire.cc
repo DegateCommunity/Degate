@@ -112,4 +112,6 @@ object_id_t Wire::push_object_to_server(std::string const& server_url)
 		throw XMLRPCException("Client threw unexpected error.");
 	}
 	*/
+
+	return 0;
 }
