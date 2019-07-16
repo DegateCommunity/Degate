@@ -10,9 +10,15 @@ Degate is a software for semi-automatic VLSI reverse engineering of digital logi
 
 Only 2 dependencies : Boost and Qt5.
 
-For Boost a pre-built version is provided FOR WINDOWS if the lib is not found by CMake.
+For Boost, you can specify to CMake a custom path with : -DBOOST_ROOT="custom_path_to_boost". Prebuilt versions for windows are available here : https://sourceforge.net/projects/boost/files/boost-binaries/.
 
-For Qt5 you need to specify to CMake the path to Qt with the Qt5_DIR variable, for windows : .../Qt/VERSION/COMPILER/lib/cmake/Qt5.
+For Qt5, you can specify to CMake a custom path with : -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example on windows : Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here : https://www.qt.io/download.
+
+Keep your CMake installation up to date.
+
+# Build
+
+After installing Boost and Qt5, build Degate with cmake : cmake [path_to_source] [optional:] -DBOOST_ROOT="custom_path_to_boost" [optional:] -DCMAKE_PREFIX_PATH="custom_path_to_qt"
 
 # License
 
