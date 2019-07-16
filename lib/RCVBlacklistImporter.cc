@@ -81,7 +81,7 @@ void RCVBlacklistImporter::import_into(std::string const& filename,
 }
 
 
-void RCVBlacklistImporter::parse_list(const QDomElement const elem,
+void RCVBlacklistImporter::parse_list(QDomElement const elem,
                                       RCBase::container_type& blacklist)
 {
 	const QDomNodeList rcv_list = elem.elementsByTagName("rc-violation");
