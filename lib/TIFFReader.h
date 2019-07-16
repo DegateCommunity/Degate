@@ -29,6 +29,7 @@
 //#include "ImageReaderFactory.h"
 #include "StoragePolicies.h"
 #include "ImageReaderBase.h"
+#include "Image.h"
 
 namespace degate
 {
