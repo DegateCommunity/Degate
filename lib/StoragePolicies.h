@@ -26,7 +26,6 @@
 #include "MemoryMap.h"
 #include "Configuration.h"
 #include "FileSystem.h"
-#include "Image.h"
 
 namespace degate
 {
