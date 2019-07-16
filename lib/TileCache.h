@@ -22,9 +22,9 @@
 #ifndef __TILECACHE_H__
 #define __TILECACHE_H__
 
-#include <MemoryMap.h>
-#include <FileSystem.h>
-#include <Configuration.h>
+#include "MemoryMap.h"
+#include "FileSystem.h"
+#include "Configuration.h"
 
 #include <string>
 #include <map>
@@ -36,7 +36,7 @@
 
 #include <chrono>
 
-void get_clock(struct timespec * ts)
+static void get_clock(struct timespec * ts)
 {
 	assert(ts != NULL);
 
