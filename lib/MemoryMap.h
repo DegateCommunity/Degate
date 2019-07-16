@@ -49,6 +49,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <limits.h> // PATH_MAX for UNIX
+#include <sys/stat.h>
 #else
 #error "Unknown architecture"
 #endif
@@ -389,7 +390,7 @@ namespace degate
 
 		#else
 
-			file = open(filename.c_str(), O_RDWR | O_CREAT, 0600)
+			file = open(filename.c_str(), O_RDWR | O_CREAT, 0600);
 			if(file == -1)
 			{
 				debug(TM, "can't open file: %s", filename.c_str());
@@ -432,7 +433,7 @@ namespace degate
 
 		#else
 
-			mem_view = (T*)mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, fd, 0);
+			mem_view = (T*)mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, file, 0);
 
 			if(mem_view == (void*)(-1))
 			{
