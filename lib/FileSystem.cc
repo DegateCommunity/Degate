@@ -49,22 +49,54 @@ using namespace boost::filesystem;
 
 bool degate::is_directory(std::string const& path)
 {
-	return boost::filesystem::is_directory(path);
+	try
+	{
+		return boost::filesystem::is_directory(path);
+	}
+	catch (filesystem_error const & e)
+	{
+		debug(TM, e.what());
+		return false;
+	}
 }
 
 bool degate::is_file(std::string const& path)
 {
-	return boost::filesystem::is_regular_file(path);
+	try
+	{
+		return boost::filesystem::is_regular_file(path);
+	}
+	catch (filesystem_error const & e)
+	{
+		debug(TM, e.what());
+		return false;
+	}
 }
 
 bool degate::is_symlink(std::string const& path)
 {
-	return boost::filesystem::is_symlink(path);
+	try
+	{
+		return boost::filesystem::is_symlink(path);
+	}
+	catch (filesystem_error const & e)
+	{
+		debug(TM, e.what());
+		return false;
+	}
 }
 
 bool degate::file_exists(std::string const& path)
 {
-	return boost::filesystem::exists(path);
+	try
+	{
+		return boost::filesystem::exists(path);
+	}
+	catch (filesystem_error const & e)
+	{
+		debug(TM, e.what());
+		return false;
+	}
 }
 
 std::string degate::get_basedir(std::string const& path)
@@ -110,12 +142,26 @@ std::string degate::get_file_suffix(std::string const& path)
 
 void degate::remove_file(std::string const& path)
 {
-	boost::filesystem::remove(path);
+	try
+	{
+		boost::filesystem::remove(path);
+	}
+	catch (filesystem_error const & e)
+	{
+		debug(TM, e.what());
+	}
 }
 
 void degate::remove_directory(std::string const& path)
 {
-	boost::filesystem::remove_all(path);
+	try
+	{
+		boost::filesystem::remove_all(path);
+	}
+	catch (filesystem_error const & e)
+	{
+		debug(TM, e.what());
+	}
 }
 
 void degate::create_directory(std::string const& directory)
