@@ -81,8 +81,8 @@ namespace degate
 			initialize_openlist();
 
 
-			Gate_shptr g = openlist.front();
-			openlist.pop_front();
+			//Gate_shptr g = openlist.front();
+			//openlist.pop_front();
 
 			/*
 			trace_recursive(g);
