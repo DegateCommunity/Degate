@@ -364,14 +364,14 @@ namespace degate
 				filesize = mem_size;
 
 				DWORD res = SetFilePointer(file, filesize - 1, NULL, FILE_BEGIN);
-				if(res == INVALID_SET_FILE_POINTER)
+				if(res == INVALID_SET_FILE_POINTER || res == ERROR_NEGATIVE_SEEK)
 				{
 					debug(TM, "can't set file pointer of file: %s", filename.c_str());
 					return RET_ERR;
 				}
 
 				DWORD dwBytesWritten = 0;
-				char str[] = "\0";
+				char str[] = " ";
 
 				bool write_res = WriteFile(file, str, strlen(str), &dwBytesWritten, NULL);
 				if(!write_res)
@@ -410,7 +410,7 @@ namespace degate
 			{
 				filesize = mem_size;
 				lseek(file, filesize - 1, SEEK_SET);
-				if (write(file, "\0", 1) != 1)
+				if (write(file, " ", 1) != 1)
 				{
 					debug(TM, "can't open file: %s", filename.c_str());
 					return RET_ERR;
@@ -419,7 +419,7 @@ namespace degate
 
 		#endif
 
-		assert(filesize == mem_size);
+		assert(filesize >= mem_size);
 
 		#ifdef SYS_WINDOWS
 
