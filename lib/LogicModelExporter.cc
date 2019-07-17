@@ -69,9 +69,12 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 		QDomElement annotations_elem = doc.createElement("annotations");
 		if (annotations_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-		for (LogicModel::layer_collection::iterator layer_iter = lmodel->layers_begin();
+		for (auto layer_iter = lmodel->layers_begin();
 		     layer_iter != lmodel->layers_end(); ++layer_iter)
 		{
+			if((*layer_iter) == NULL || (*layer_iter)->is_empty())
+				continue;
+
 			Layer_shptr layer = *layer_iter;
 
 			for (Layer::object_iterator iter = layer->objects_begin();
