@@ -41,7 +41,7 @@ namespace degate
 
 	public:
 		SubImageAnalyzer(std::shared_ptr<ImageType> _img,
-		                 unsigned int width) :
+		                 unsigned int _width) :
 			img(_img),
 			width(_width)
 		{
@@ -65,11 +65,9 @@ namespace degate
 							vector[i] = p;
 						}
 				}
-
-			virtual bool calc(std::vector<rgba_pixel_t> const& v) const
-			=
-			0;
 		}
+
+		virtual bool calc(std::vector<rgba_pixel_t> const& v) const = 0;
 	};
 }
 
