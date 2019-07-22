@@ -1,32 +1,6 @@
-############################################################################
-macro(LinkAllDirectories _DIR)
-	LINK_DIRECTORIES("${_DIR}")
-	unset(FULL_LIST)
-	list(APPEND FULL_LIST "")
+include_directories (../inc/)
 
-	
-	file(GLOB SUB_DIR_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/${_DIR}" LIST_DIRECTORIES true 
-		"${CMAKE_CURRENT_SOURCE_DIR}/${_DIR}*"
-	)
-
-	foreach(SUB_DIR ${SUB_DIR_LIST})
-		if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_DIR}${SUB_DIR})
-			list(APPEND FULL_LIST "${_DIR}${SUB_DIR}")
-		endif()
-	endforeach()
-
-	
-	foreach(DIR ${FULL_LIST})
-		if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${DIR})
-			LinkAllDirectories("${DIR}")
-		endif()
-	endforeach()
-endmacro()
-############################################################################
-
-include_directories (.)
-
-############################################################################				# Dependencies
+############################ Dependencies ##################################
 
 # Turn on automatic invocation of the MOC, UIC & RCC
 set(CMAKE_AUTOMOC ON)
@@ -57,19 +31,34 @@ file(GLOB_RECURSE  SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIRECTO
 # The header files
 #
 file(GLOB_RECURSE  HEADER_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIRECTORIES false 
-	"../../inc/${PROJECT_FOLDER_NAME}/*"
+	"../inc/*"
 )
 
 #
 # The config
 #
-configure_file(Configuration.h.in ${PROJECT_SOURCE_DIR}/lib/Configuration.h)
+configure_file(../inc/Configuration.h.in ${PROJECT_SOURCE_DIR}/inc/Configuration.h)
 
 #
 # Link
 #
-add_executable(degate ${SRC_FILES} ${HEADER_FILES})
-target_link_libraries(degate ${LIBS})
+add_executable(Degate ${SRC_FILES} ${HEADER_FILES})
+target_link_libraries(Degate ${LIBS})
+
+#
+# Installation specifications
+#
+install (TARGETS Degate DESTINATION ../out/bin)
+
+#
+# Output specifications
+#
+set_target_properties(Degate
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "../out/lib"
+    LIBRARY_OUTPUT_DIRECTORY "../out/lib"
+    RUNTIME_OUTPUT_DIRECTORY "../out/bin"
+)
 
 ############################################################################
 #
