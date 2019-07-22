@@ -1,15 +1,2 @@
-.DS_Store
-*~
-
-CMakeFiles/
-CMakeCache.txt
-Makefile
-cmake_install.cmake
-
-libtest/testfiles/
-CTestTestfile.cmake
-libtest/libdegate_test
-lib/libdegate.dylib
-lib/libdegate.so
-
 build/*
+!build/.keepme
