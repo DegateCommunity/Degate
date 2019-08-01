@@ -62,9 +62,9 @@ void RCVBlacklistExporter::export_data(std::string const& filename,
 		}
 
 		doc.appendChild(root_elem);
-		
+
 		QFile file(QString::fromStdString(filename));
-		if(!file.open(QFile::ReadWrite))
+		if (!file.open(QFile::ReadWrite))
 		{
 			throw InvalidPathException("Can't create export file.");
 		}
@@ -73,7 +73,6 @@ void RCVBlacklistExporter::export_data(std::string const& filename,
 		stream << doc.toString();
 
 		file.close();
-
 	}
 	catch (const std::exception& ex)
 	{
@@ -82,8 +81,8 @@ void RCVBlacklistExporter::export_data(std::string const& filename,
 	}
 }
 
-void RCVBlacklistExporter::add_rcv(QDomDocument & doc, 
-								   QDomElement & root_elem,
+void RCVBlacklistExporter::add_rcv(QDomDocument& doc,
+                                   QDomElement& root_elem,
                                    RCViolation_shptr rcv)
 {
 	QDomElement rcv_elem = doc.createElement("rc-violation");

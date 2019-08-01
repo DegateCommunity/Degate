@@ -114,7 +114,8 @@ namespace degate
 			if (!file_exists(_directory)) create_directory(_directory);
 
 			unsigned temp_tile_size = 1 << _tile_width_exp;
-			tiles_number = static_cast<unsigned>(ceil(_width / temp_tile_size)) * static_cast<unsigned>(ceil(_height / temp_tile_size));
+			tiles_number = static_cast<unsigned>(ceil(_width / temp_tile_size)) * static_cast<unsigned>(ceil(
+				_height / temp_tile_size));
 		}
 
 		/**

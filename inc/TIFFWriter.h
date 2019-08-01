@@ -98,7 +98,7 @@ namespace degate
 			}
 		}
 
-		if(!writer.write(image))
+		if (!writer.write(image))
 		{
 			return false;
 		}

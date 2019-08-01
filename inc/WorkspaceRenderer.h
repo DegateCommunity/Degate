@@ -36,10 +36,10 @@ namespace degate
 {
 	class WorkspaceRenderer : public QOpenGLWidget, protected QOpenGLFunctions
 	{
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
-		WorkspaceRenderer(QWidget * parent = 0);
+		WorkspaceRenderer(QWidget* parent = 0);
 		~WorkspaceRenderer();
 
 		/**
@@ -57,7 +57,7 @@ namespace degate
 	     * 
 	     * @param new_project : the project to set.
 	     */
-		void set_project(const Project_shptr & new_project);
+		void set_project(const Project_shptr& new_project);
 
 	protected:
 		/*
@@ -68,20 +68,20 @@ namespace degate
 		void paintGL() override;
 		void resizeGL(int w, int h) override;
 
-		void mousePressEvent(QMouseEvent *event) override;
-	    void mouseReleaseEvent(QMouseEvent *event) override;
-	    void mouseMoveEvent(QMouseEvent *event) override;
-	    void wheelEvent(QWheelEvent *event) override;
-		void keyPressEvent(QKeyEvent *event) override;
-		void keyReleaseEvent(QKeyEvent *event) override;
-		void mouseDoubleClickEvent(QMouseEvent *event) override;
+		void mousePressEvent(QMouseEvent* event) override;
+		void mouseReleaseEvent(QMouseEvent* event) override;
+		void mouseMoveEvent(QMouseEvent* event) override;
+		void wheelEvent(QWheelEvent* event) override;
+		void keyPressEvent(QKeyEvent* event) override;
+		void keyReleaseEvent(QKeyEvent* event) override;
+		void mouseDoubleClickEvent(QMouseEvent* event) override;
 
 		/**
 	     * Calculate the lower offset to top or left for a tile.
 	     */
 		unsigned int to_lower_tile_offset(unsigned int pos, unsigned int tile_width) const
 		{
-		  return (pos & ~(tile_width - 1));
+			return (pos & ~(tile_width - 1));
 		}
 
 		/**
@@ -89,7 +89,7 @@ namespace degate
 		 */
 		unsigned int to_upper_tile_offset(unsigned int pos, unsigned int tile_width) const
 		{
-		  return (pos & ~(tile_width - 1)) + (tile_width - 1);
+			return (pos & ~(tile_width - 1)) + (tile_width - 1);
 		}
 
 
@@ -129,7 +129,6 @@ namespace degate
 		std::list<std::tuple<unsigned int, unsigned int, GLuint>> background_textures;
 		BackgroundImage_shptr background_image = NULL;
 		GLuint background_vbo;
-
 	};
 }
 

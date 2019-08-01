@@ -24,10 +24,9 @@
 
 namespace degate
 {
-	
 	MainWindow::MainWindow(int width, int height)
 	{
-		if(width == 0 || height == 0)
+		if (width == 0 || height == 0)
 			resize(QDesktopWidget().availableGeometry(this).size() * 0.6);
 		else
 			resize(width, height);
@@ -50,29 +49,29 @@ namespace degate
 
 	MainWindow::~MainWindow()
 	{
-		if(workspace != NULL)
+		if (workspace != NULL)
 			delete workspace;
 	}
 
 	void MainWindow::on_menu_about_degate()
 	{
 		const QString about_message = "<html><center>"
-									  "<img src='res/degate_logo.png' alt='' width='100' height='87'> <br>"
-									  "<strong> This is a forked version of Degate </strong> <br>"
-									  "Degate is originally developed by Martin Schobert (martin@weltregierung.de). <br>"
-									  "This software is released under the GNU General Public License Version 3. <br>"
-									  "<a href='https://github.com/DorianBDev/degate'>Github</a> <br>"
-									  "<a href='http://www.degate.org/'>Original website</a>"
-									  "</center></html>";
+			"<img src='res/degate_logo.png' alt='' width='100' height='87'> <br>"
+			"<strong> This is a forked version of Degate </strong> <br>"
+			"Degate is originally developed by Martin Schobert (martin@weltregierung.de). <br>"
+			"This software is released under the GNU General Public License Version 3. <br>"
+			"<a href='https://github.com/DorianBDev/degate'>Github</a> <br>"
+			"<a href='http://www.degate.org/'>Original website</a>"
+			"</center></html>";
 
 		QMessageBox about("About degate",
-						  about_message,
-						  QMessageBox::Icon::NoIcon,
-						  QMessageBox::Button::Ok,
-						  QMessageBox::Button::NoButton,
-						  QMessageBox::Button::NoButton,
-						  this
-						  );
+		                  about_message,
+		                  QMessageBox::Icon::NoIcon,
+		                  QMessageBox::Button::Ok,
+		                  QMessageBox::Button::NoButton,
+		                  QMessageBox::Button::NoButton,
+		                  this
+		);
 
 		about.exec();
 	}

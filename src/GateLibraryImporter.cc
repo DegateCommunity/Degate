@@ -59,7 +59,8 @@ GateLibrary_shptr GateLibraryImporter::import(std::string const& filename)
 		if (!file.open(QIODevice::ReadOnly))
 		{
 			debug(TM, "Problem: can't open the file %s.", filename.c_str());
-			throw InvalidFileFormatException("The GateLibraryImporter cannot load the project file. Can't open the file.");
+			throw InvalidFileFormatException(
+				"The GateLibraryImporter cannot load the project file. Can't open the file.");
 		}
 
 		if (!parser.setContent(&file))

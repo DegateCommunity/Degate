@@ -59,7 +59,8 @@ void LogicModelImporter::import_into(LogicModel_shptr lmodel,
 		if (!file.open(QIODevice::ReadOnly))
 		{
 			debug(TM, "Problem: can't open the file %s.", filename.c_str());
-			throw InvalidFileFormatException("The LogicModelImporter cannot load the project file. Can't open the file.");
+			throw InvalidFileFormatException(
+				"The LogicModelImporter cannot load the project file. Can't open the file.");
 		}
 
 		if (!parser.setContent(&file))
@@ -271,7 +272,8 @@ void LogicModelImporter::parse_vias_element(QDomElement const vias_element,
 			const std::string description(via_elem.attribute("description").toStdString());
 			const std::string fill_color_str(via_elem.attribute("fill-color").toStdString());
 			const std::string frame_color_str(via_elem.attribute("frame-color").toStdString());
-			const std::string direction_str(boost::algorithm::to_lower_copy(via_elem.attribute("direction").toStdString()));
+			const std::string direction_str(
+				boost::algorithm::to_lower_copy(via_elem.attribute("direction").toStdString()));
 
 			Via::DIRECTION direction;
 			if (direction_str == "undefined") direction = Via::DIRECTION_UNDEFINED;
@@ -322,7 +324,8 @@ void LogicModelImporter::parse_emarkers_element(QDomElement const emarkers_eleme
 			const std::string description(emarker_elem.attribute("description").toStdString());
 			const std::string fill_color_str(emarker_elem.attribute("fill-color").toStdString());
 			const std::string frame_color_str(emarker_elem.attribute("frame-color").toStdString());
-			const std::string direction_str(boost::algorithm::to_lower_copy(emarker_elem.attribute("direction").toStdString()));
+			const std::string direction_str(
+				boost::algorithm::to_lower_copy(emarker_elem.attribute("direction").toStdString()));
 
 			EMarker_shptr emarker(new EMarker(x, y, diameter));
 			emarker->set_name(name.c_str());
@@ -361,7 +364,8 @@ void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
 			int gate_type_id = parse_number<int>(gate_elem, "type-id");
 			const std::string name(gate_elem.attribute("name").toStdString());
 			const std::string description(gate_elem.attribute("description").toStdString());
-			const std::string orientation_str(boost::algorithm::to_lower_copy(gate_elem.attribute("orientation").toStdString()));
+			const std::string orientation_str(
+				boost::algorithm::to_lower_copy(gate_elem.attribute("orientation").toStdString()));
 			const std::string frame_color_str(gate_elem.attribute("frame-color").toStdString());
 			const std::string fill_color_str(gate_elem.attribute("fill-color").toStdString());
 

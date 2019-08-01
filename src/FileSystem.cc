@@ -53,7 +53,7 @@ bool degate::is_directory(std::string const& path)
 	{
 		return boost::filesystem::is_directory(path);
 	}
-	catch (filesystem_error const & e)
+	catch (filesystem_error const& e)
 	{
 		debug(TM, e.what());
 		return false;
@@ -66,7 +66,7 @@ bool degate::is_file(std::string const& path)
 	{
 		return boost::filesystem::is_regular_file(path);
 	}
-	catch (filesystem_error const & e)
+	catch (filesystem_error const& e)
 	{
 		debug(TM, e.what());
 		return false;
@@ -79,7 +79,7 @@ bool degate::is_symlink(std::string const& path)
 	{
 		return boost::filesystem::is_symlink(path);
 	}
-	catch (filesystem_error const & e)
+	catch (filesystem_error const& e)
 	{
 		debug(TM, e.what());
 		return false;
@@ -92,7 +92,7 @@ bool degate::file_exists(std::string const& path)
 	{
 		return boost::filesystem::exists(path);
 	}
-	catch (filesystem_error const & e)
+	catch (filesystem_error const& e)
 	{
 		debug(TM, e.what());
 		return false;
@@ -146,7 +146,7 @@ void degate::remove_file(std::string const& path)
 	{
 		boost::filesystem::remove(path);
 	}
-	catch (filesystem_error const & e)
+	catch (filesystem_error const& e)
 	{
 		debug(TM, e.what());
 	}
@@ -158,7 +158,7 @@ void degate::remove_directory(std::string const& path)
 	{
 		boost::filesystem::remove_all(path);
 	}
-	catch (filesystem_error const & e)
+	catch (filesystem_error const& e)
 	{
 		debug(TM, e.what());
 	}
@@ -192,10 +192,10 @@ std::list<std::string> degate::read_directory(std::string const& path, bool pref
 
 	std::list<std::string> retlist;
 
-	for(boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
+	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
 	{
 		std::string file_name = itr->path().filename().string();
-		if(!strcmp(file_name.c_str(), ".") && !strcmp(file_name.c_str(), ".."))
+		if (!strcmp(file_name.c_str(), ".") && !strcmp(file_name.c_str(), ".."))
 		{
 			retlist.push_back(prefix_path ? join_pathes(path, file_name) : file_name);
 		}

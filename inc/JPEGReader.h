@@ -72,7 +72,7 @@ namespace degate
 	{
 		QImageReader reader(get_filename().c_str());
 		QSize size = reader.size();
-		if(!size.isValid())
+		if (!size.isValid())
 		{
 			debug(TM, "can't read size of %s\n", get_filename().c_str());
 			return false;
@@ -87,7 +87,7 @@ namespace degate
 
 		debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
 
-		if(!reader.read(image))
+		if (!reader.read(image))
 		{
 			debug(TM, "can't read %s\n", get_filename().c_str());
 			return false;
@@ -109,7 +109,7 @@ namespace degate
 		{
 			for (unsigned int x = 0; x < get_width(); x++)
 			{
-				QRgb rgb = image->pixel(x,y);
+				QRgb rgb = image->pixel(x, y);
 				img->set_pixel(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), 0xff));
 			}
 		}

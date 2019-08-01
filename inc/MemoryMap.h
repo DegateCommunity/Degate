@@ -80,12 +80,12 @@ namespace degate
 		size_t filesize;
 		size_t mem_size;
 
-		#ifdef SYS_WINDOWS
-			typedef void* fd;
-			void* mem_file;
-		#else
+#ifdef SYS_WINDOWS
+		typedef void* fd;
+		void* mem_file;
+#else
 			typedef int fd;
-		#endif
+#endif
 
 		fd file;
 		T* mem_view;
@@ -130,7 +130,7 @@ namespace degate
 		 * @param file_to_map The name of the file, which should be mmap().
 		 */
 		MemoryMap(unsigned int width, unsigned int height,
-				  MAP_STORAGE_TYPE mode, std::string const& file_to_map);
+		          MAP_STORAGE_TYPE mode, std::string const& file_to_map);
 
 		/**
 		 * The destructor.
@@ -146,7 +146,7 @@ namespace degate
 		void clear();
 
 		void clear_area(unsigned int min_x, unsigned int min_y,
-						unsigned int width, unsigned int height);
+		                unsigned int width, unsigned int height);
 
 		/**
 		 * Set the value of a memory element.
@@ -180,9 +180,9 @@ namespace degate
 		filesize(0),
 		mem_size(_width * _height * sizeof(T)),
 		file(0),
-		#ifdef SYS_WINDOWS
+#ifdef SYS_WINDOWS
 		mem_file(NULL),
-		#endif
+#endif
 		mem_view(NULL)
 	{
 		assert(width > 0 && height > 0);
@@ -193,16 +193,16 @@ namespace degate
 
 	template <typename T>
 	MemoryMap<T>::MemoryMap(unsigned int _width, unsigned int _height,
-							MAP_STORAGE_TYPE mode, std::string const& file_to_map) :
+	                        MAP_STORAGE_TYPE mode, std::string const& file_to_map) :
 		width(_width), height(_height),
 		storage_type(mode),
 		filename(file_to_map),
 		file(0),
 		filesize(0),
 		mem_size(_width * _height * sizeof(T)),
-		#ifdef SYS_WINDOWS
+#ifdef SYS_WINDOWS
 		mem_file(NULL),
-		#endif
+#endif
 		mem_view(NULL)
 	{
 		assert(mode == MAP_STORAGE_TYPE_PERSISTENT_FILE || mode == MAP_STORAGE_TYPE_TEMP_FILE);
@@ -240,42 +240,42 @@ namespace degate
 
 			break;
 		case MAP_STORAGE_TYPE_PERSISTENT_FILE:
-			
+
 			break;
 		case MAP_STORAGE_TYPE_TEMP_FILE:
 
-			if(mem_view)
+			if (mem_view)
 			{
-				#ifdef SYS_WINDOWS
-					UnmapViewOfFile(mem_view);
-				#else
+#ifdef SYS_WINDOWS
+				UnmapViewOfFile(mem_view);
+#else
 					msync(mem_view, filesize, MS_SYNC);
 					munmap(mem_view, filesize);
-				#endif
+#endif
 				mem_view = NULL;
 			}
 
-			#ifdef SYS_WINDOWS
-				if(mem_file)
-				{
-					CloseHandle(mem_file);
-					mem_file = NULL;
-				}
-			#endif
-
-			if(file)
+#ifdef SYS_WINDOWS
+			if (mem_file)
 			{
-				#ifdef SYS_WINDOWS
-					CloseHandle(file);
-				#else
+				CloseHandle(mem_file);
+				mem_file = NULL;
+			}
+#endif
+
+			if (file)
+			{
+#ifdef SYS_WINDOWS
+				CloseHandle(file);
+#else
 					close(file);
-				#endif
+#endif
 				file = 0;
 			}
 
 			filesize = 0;
 
-			if(remove(filename.c_str()) != 0) // For Linux can be unlink
+			if (remove(filename.c_str()) != 0) // For Linux can be unlink
 			{
 				debug(TM, "can't delete file: %s", filename.c_str());
 			}
@@ -319,7 +319,7 @@ namespace degate
 	 */
 	template <typename T>
 	void MemoryMap<T>::clear_area(unsigned int min_x, unsigned int min_y,
-								  unsigned int width, unsigned int height)
+	                              unsigned int width, unsigned int height)
 	{
 		assert(mem_view != NULL);
 
@@ -342,53 +342,54 @@ namespace degate
 
 		this->filename = filename;
 
-		#ifdef SYS_WINDOWS
+#ifdef SYS_WINDOWS
 
-			file = CreateFileA(filename.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-			if(!file)
+		file = CreateFileA(filename.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+		                   OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (!file)
+		{
+			debug(TM, "can't open file: %s", filename.c_str());
+			return RET_ERR;
+		}
+
+		LARGE_INTEGER res;
+		if (!GetFileSizeEx(file, &res))
+		{
+			debug(TM, "can't get size of file: %s", filename.c_str());
+			return RET_ERR;
+		}
+		filesize = static_cast<size_t>(res.QuadPart);
+
+		if (filesize < mem_size)
+		{
+			filesize = mem_size;
+
+			DWORD res = SetFilePointer(file, filesize - 1, NULL, FILE_BEGIN);
+			if (res == INVALID_SET_FILE_POINTER || res == ERROR_NEGATIVE_SEEK)
 			{
-				debug(TM, "can't open file: %s", filename.c_str());
+				debug(TM, "can't set file pointer of file: %s", filename.c_str());
 				return RET_ERR;
 			}
 
-			LARGE_INTEGER res;
-			if(!GetFileSizeEx(file, &res))
+			DWORD dwBytesWritten = 0;
+			char str[] = " ";
+
+			bool write_res = WriteFile(file, str, strlen(str), &dwBytesWritten, NULL);
+			if (!write_res)
 			{
-				debug(TM, "can't get size of file: %s", filename.c_str());
+				debug(TM, "can't write to file: %s", filename.c_str());
 				return RET_ERR;
 			}
-			filesize = static_cast<size_t>(res.QuadPart);
+		}
 
-			if(filesize < mem_size)
-			{
-				filesize = mem_size;
+		mem_file = CreateFileMapping(file, NULL, PAGE_READWRITE, 0, 0, NULL);
+		if (!mem_file)
+		{
+			debug(TM, "can't map file: %s", filename.c_str());
+			return RET_ERR;
+		}
 
-				DWORD res = SetFilePointer(file, filesize - 1, NULL, FILE_BEGIN);
-				if(res == INVALID_SET_FILE_POINTER || res == ERROR_NEGATIVE_SEEK)
-				{
-					debug(TM, "can't set file pointer of file: %s", filename.c_str());
-					return RET_ERR;
-				}
-
-				DWORD dwBytesWritten = 0;
-				char str[] = " ";
-
-				bool write_res = WriteFile(file, str, strlen(str), &dwBytesWritten, NULL);
-				if(!write_res)
-				{
-					debug(TM, "can't write to file: %s", filename.c_str());
-					return RET_ERR;
-				}
-			}
-
-			mem_file = CreateFileMapping(file, NULL, PAGE_READWRITE, 0, 0, NULL);
-			if(!mem_file)
-			{
-				debug(TM, "can't map file: %s", filename.c_str());
-				return RET_ERR;
-			}
-
-		#else
+#else
 
 			file = open(filename.c_str(), O_RDWR | O_CREAT, 0600);
 			if(file == -1)
@@ -417,21 +418,21 @@ namespace degate
 				}
 			}
 
-		#endif
+#endif
 
 		assert(filesize >= mem_size);
 
-		#ifdef SYS_WINDOWS
+#ifdef SYS_WINDOWS
 
-			mem_view = (T*)MapViewOfFile(mem_file, FILE_MAP_ALL_ACCESS, 0, 0, mem_size);
+		mem_view = (T*)MapViewOfFile(mem_file, FILE_MAP_ALL_ACCESS, 0, 0, mem_size);
 
-			if(!mem_view)
-			{
-				debug(TM, "can't create memory map");
-				return RET_ERR;
-			}
+		if (!mem_view)
+		{
+			debug(TM, "can't create memory map");
+			return RET_ERR;
+		}
 
-		#else
+#else
 
 			mem_view = (T*)mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, file, 0);
 
@@ -441,7 +442,7 @@ namespace degate
 				return RET_ERR;
 			}
 
-		#endif
+#endif
 
 		return RET_OK;
 	}

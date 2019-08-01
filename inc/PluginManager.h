@@ -47,7 +47,8 @@ namespace degate
 	public:
 
 		PluginManager*
-  
+
+	
 	}
 }
 

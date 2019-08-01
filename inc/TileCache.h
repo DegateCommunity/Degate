@@ -36,14 +36,15 @@
 
 #include <chrono>
 
-static void get_clock(struct timespec * ts)
+static void get_clock(struct timespec* ts)
 {
 	assert(ts != NULL);
 
 	std::chrono::steady_clock::time_point tp = std::chrono::steady_clock::now();
 
-    auto secs = std::chrono::time_point_cast<std::chrono::seconds>(tp);
-    auto ns = std::chrono::time_point_cast<std::chrono::nanoseconds>(tp) - std::chrono::time_point_cast<std::chrono::nanoseconds>(secs);
+	auto secs = std::chrono::time_point_cast<std::chrono::seconds>(tp);
+	auto ns = std::chrono::time_point_cast<std::chrono::nanoseconds>(tp) - std::chrono::time_point_cast<std::chrono::
+		nanoseconds>(secs);
 
 	ts->tv_sec = secs.time_since_epoch().count();
 	ts->tv_nsec = ns.count();

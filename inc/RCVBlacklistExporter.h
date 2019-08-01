@@ -40,7 +40,7 @@ namespace degate
 	{
 	private:
 
-		void add_rcv(QDomDocument & doc, QDomElement & templates_elem, RCViolation_shptr rcv);
+		void add_rcv(QDomDocument& doc, QDomElement& templates_elem, RCViolation_shptr rcv);
 
 		ObjectIDRewriter_shptr oid_rewriter;
 

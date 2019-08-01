@@ -105,9 +105,9 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
 		add_port_colors(doc, root_elem, prj->get_port_color_manager());
 
 		doc.appendChild(root_elem);
-		
+
 		QFile file(QString::fromStdString(filename));
-		if(!file.open(QFile::ReadWrite))
+		if (!file.open(QFile::ReadWrite))
 		{
 			throw InvalidPathException("Can't create export file.");
 		}
@@ -124,7 +124,7 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
 	}
 }
 
-void ProjectExporter::add_grids(QDomDocument & doc, QDomElement & prj_elem, Project_shptr prj)
+void ProjectExporter::add_grids(QDomDocument& doc, QDomElement& prj_elem, Project_shptr prj)
 {
 	QDomElement grids_elem = doc.createElement("grids");
 
@@ -139,8 +139,8 @@ void ProjectExporter::add_grids(QDomDocument & doc, QDomElement & prj_elem, Proj
 	prj_elem.appendChild(grids_elem);
 }
 
-void ProjectExporter::add_regular_grid(QDomDocument & doc, 
-									   QDomElement & grids_elem,
+void ProjectExporter::add_regular_grid(QDomDocument& doc,
+                                       QDomElement& grids_elem,
                                        const RegularGrid_shptr grid,
                                        std::string const& grid_orientation)
 {
@@ -155,8 +155,8 @@ void ProjectExporter::add_regular_grid(QDomDocument & doc,
 	grids_elem.appendChild(grid_elem);
 }
 
-void ProjectExporter::add_irregular_grid(QDomDocument & doc, 
-										 QDomElement & grids_elem,
+void ProjectExporter::add_irregular_grid(QDomDocument& doc,
+                                         QDomElement& grids_elem,
                                          const IrregularGrid_shptr grid,
                                          std::string const& grid_orientation)
 {
@@ -186,8 +186,8 @@ void ProjectExporter::add_irregular_grid(QDomDocument & doc,
 }
 
 
-void ProjectExporter::set_project_node_attributes(QDomDocument & doc, 
-												  QDomElement & prj_elem,
+void ProjectExporter::set_project_node_attributes(QDomDocument& doc,
+                                                  QDomElement& prj_elem,
                                                   Project_shptr prj)
 {
 	prj_elem.setAttribute("degate-version", QString::fromStdString(prj->get_degate_version()));
@@ -195,24 +195,28 @@ void ProjectExporter::set_project_node_attributes(QDomDocument & doc,
 	prj_elem.setAttribute("description", QString::fromStdString(prj->get_description()));
 	prj_elem.setAttribute("width", QString::fromStdString(number_to_string<int>(prj->get_width())));
 	prj_elem.setAttribute("height", QString::fromStdString(number_to_string<int>(prj->get_height())));
-	
+
 	prj_elem.setAttribute("lambda", QString::fromStdString(number_to_string<length_t>(prj->get_lambda())));
-	prj_elem.setAttribute("pin-diameter", QString::fromStdString(number_to_string<length_t>(prj->get_default_pin_diameter())));
-	prj_elem.setAttribute("wire-diameter", QString::fromStdString(number_to_string<length_t>(prj->get_default_wire_diameter())));
-	prj_elem.setAttribute("port-diameter", QString::fromStdString(number_to_string<length_t>(prj->get_default_port_diameter())));
-	
+	prj_elem.setAttribute("pin-diameter",
+	                      QString::fromStdString(number_to_string<length_t>(prj->get_default_pin_diameter())));
+	prj_elem.setAttribute("wire-diameter",
+	                      QString::fromStdString(number_to_string<length_t>(prj->get_default_wire_diameter())));
+	prj_elem.setAttribute("port-diameter",
+	                      QString::fromStdString(number_to_string<length_t>(prj->get_default_port_diameter())));
+
 	prj_elem.setAttribute("pixel-per-um", QString::fromStdString(number_to_string<double>(prj->get_pixel_per_um())));
-	prj_elem.setAttribute("template-dimension", QString::fromStdString(number_to_string<int>(prj->get_template_dimension())));
+	prj_elem.setAttribute("template-dimension",
+	                      QString::fromStdString(number_to_string<int>(prj->get_template_dimension())));
 	prj_elem.setAttribute("font-size", QString::fromStdString(number_to_string<unsigned int>(prj->get_font_size())));
-	
+
 	prj_elem.setAttribute("server-url", QString::fromStdString(prj->get_server_url()));
 	prj_elem.setAttribute("last-pulled-transaction-id",
-	                        QString::fromStdString(number_to_string<transaction_id_t>(prj->get_last_pulled_tid())));
+	                      QString::fromStdString(number_to_string<transaction_id_t>(prj->get_last_pulled_tid())));
 }
 
 
-void ProjectExporter::add_layers(QDomDocument & doc, 
-								 QDomElement & prj_elem,
+void ProjectExporter::add_layers(QDomDocument& doc,
+                                 QDomElement& prj_elem,
                                  LogicModel_shptr lmodel,
                                  std::string const& project_dir)
 {
@@ -230,7 +234,8 @@ void ProjectExporter::add_layers(QDomDocument & doc,
 		Layer_shptr layer = *layer_iter;
 		assert(layer->has_valid_layer_id());
 
-		layer_elem.setAttribute("position", QString::fromStdString(number_to_string<layer_position_t>(layer->get_layer_pos())));
+		layer_elem.setAttribute(
+			"position", QString::fromStdString(number_to_string<layer_position_t>(layer->get_layer_pos())));
 		layer_elem.setAttribute("id", QString::fromStdString(number_to_string<layer_id_t>(layer->get_layer_id())));
 		layer_elem.setAttribute("type", QString::fromStdString(layer->get_layer_type_as_string()));
 		layer_elem.setAttribute("description", QString::fromStdString(layer->get_description()));
@@ -238,7 +243,8 @@ void ProjectExporter::add_layers(QDomDocument & doc,
 
 		if (layer->has_background_image())
 			layer_elem.setAttribute("image-filename",
-			                          QString::fromStdString(get_relative_path(layer->get_image_filename(), project_dir)));
+			                        QString::fromStdString(
+				                        get_relative_path(layer->get_image_filename(), project_dir)));
 
 		layers_elem.appendChild(layer_elem);
 	}
@@ -247,8 +253,8 @@ void ProjectExporter::add_layers(QDomDocument & doc,
 }
 
 
-void ProjectExporter::add_port_colors(QDomDocument & doc, 
-									  QDomElement & prj_elem,
+void ProjectExporter::add_port_colors(QDomDocument& doc,
+                                      QDomElement& prj_elem,
                                       PortColorManager_shptr port_color_manager)
 {
 	if (port_color_manager == NULL) throw InvalidPointerException();
@@ -275,7 +281,7 @@ void ProjectExporter::add_port_colors(QDomDocument & doc,
 	prj_elem.appendChild(port_colors_elem);
 }
 
-void ProjectExporter::add_colors(QDomDocument & doc, QDomElement & prj_elem, Project_shptr prj)
+void ProjectExporter::add_colors(QDomDocument& doc, QDomElement& prj_elem, Project_shptr prj)
 {
 	if (prj == NULL) throw InvalidPointerException();
 

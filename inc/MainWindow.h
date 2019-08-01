@@ -36,8 +36,8 @@ namespace degate
 {
 	class MainWindow : public QMainWindow
 	{
-		Q_OBJECT
-		
+	Q_OBJECT
+
 	public:
 		MainWindow(int width = 0, int height = 0);
 		~MainWindow();

@@ -72,7 +72,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 		for (auto layer_iter = lmodel->layers_begin();
 		     layer_iter != lmodel->layers_end(); ++layer_iter)
 		{
-			if((*layer_iter) == NULL || (*layer_iter)->is_empty())
+			if ((*layer_iter) == NULL || (*layer_iter)->is_empty())
 				continue;
 
 			Layer_shptr layer = *layer_iter;
@@ -111,7 +111,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
 		QDomElement modules_elem = doc.createElement("modules");
 		if (modules_elem.isNull()) throw(std::runtime_error("Failed to create node."));
-		
+
 		add_module(doc, modules_elem, lmodel, lmodel->get_main_module());
 
 		root_elem.appendChild(modules_elem);
@@ -123,9 +123,9 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 		root_elem.appendChild(gates_elem);
 
 		doc.appendChild(root_elem);
-		
+
 		QFile file(QString::fromStdString(filename));
-		if(!file.open(QFile::ReadWrite))
+		if (!file.open(QFile::ReadWrite))
 		{
 			throw InvalidPathException("Can't create export file.");
 		}
@@ -142,7 +142,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 	}
 }
 
-void LogicModelExporter::add_nets(QDomDocument & doc, QDomElement & nets_elem, LogicModel_shptr lmodel)
+void LogicModelExporter::add_nets(QDomDocument& doc, QDomElement& nets_elem, LogicModel_shptr lmodel)
 {
 	for (LogicModel::net_collection::iterator net_iter = lmodel->nets_begin();
 	     net_iter != lmodel->nets_end(); ++net_iter)
@@ -168,7 +168,8 @@ void LogicModelExporter::add_nets(QDomDocument & doc, QDomElement & nets_elem, L
 
 			QDomElement conn_elem = doc.createElement("connection");
 			conn_elem.setAttribute("object-id",
-			                         QString::fromStdString(number_to_string<object_id_t>(oid_rewriter->get_new_object_id(oid))));
+			                       QString::fromStdString(
+				                       number_to_string<object_id_t>(oid_rewriter->get_new_object_id(oid))));
 			net_elem.appendChild(conn_elem);
 		}
 
@@ -176,7 +177,8 @@ void LogicModelExporter::add_nets(QDomDocument & doc, QDomElement & nets_elem, L
 	}
 }
 
-void LogicModelExporter::add_gate(QDomDocument & doc, QDomElement & gates_elem, Gate_shptr gate, layer_position_t layer_pos)
+void LogicModelExporter::add_gate(QDomDocument& doc, QDomElement& gates_elem, Gate_shptr gate,
+                                  layer_position_t layer_pos)
 {
 	QDomElement gate_elem = doc.createElement("gate");
 	if (gate_elem.isNull()) throw(std::runtime_error("Failed to create node."));
@@ -187,15 +189,15 @@ void LogicModelExporter::add_gate(QDomDocument & doc, QDomElement & gates_elem, 
 	gate_elem.setAttribute("description", QString::fromStdString(gate->get_description()));
 	gate_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
 	gate_elem.setAttribute("orientation", QString::fromStdString(gate->get_orienation_type_as_string()));
-	
+
 	gate_elem.setAttribute("min-x", QString::fromStdString(number_to_string<int>(gate->get_min_x())));
 	gate_elem.setAttribute("min-y", QString::fromStdString(number_to_string<int>(gate->get_min_y())));
 	gate_elem.setAttribute("max-x", QString::fromStdString(number_to_string<int>(gate->get_max_x())));
 	gate_elem.setAttribute("max-y", QString::fromStdString(number_to_string<int>(gate->get_max_y())));
-	
+
 	gate_elem.setAttribute("type-id",
-	                         QString::fromStdString(number_to_string<object_id_t>(
-		                         oid_rewriter->get_new_object_id(gate->get_template_type_id()))));
+	                       QString::fromStdString(number_to_string<object_id_t>(
+		                       oid_rewriter->get_new_object_id(gate->get_template_type_id()))));
 
 
 	for (Gate::port_iterator iter = gate->ports_begin();
@@ -210,7 +212,8 @@ void LogicModelExporter::add_gate(QDomDocument & doc, QDomElement & gates_elem, 
 		port_elem.setAttribute("id", QString::fromStdString(number_to_string<object_id_t>(new_port_id)));
 
 		if (port->get_name().size() > 0) port_elem.setAttribute("name", QString::fromStdString(port->get_name()));
-		if (port->get_description().size() > 0) port_elem.setAttribute("description", QString::fromStdString(port->get_description()));
+		if (port->get_description().size() > 0) port_elem.setAttribute("description",
+		                                                               QString::fromStdString(port->get_description()));
 
 		object_id_t new_type_id = oid_rewriter->get_new_object_id(port->get_template_port_type_id());
 		port_elem.setAttribute("type-id", QString::fromStdString(number_to_string<object_id_t>(new_type_id)));
@@ -223,7 +226,8 @@ void LogicModelExporter::add_gate(QDomDocument & doc, QDomElement & gates_elem, 
 	gates_elem.appendChild(gate_elem);
 }
 
-void LogicModelExporter::add_wire(QDomDocument & doc, QDomElement & wires_elem, Wire_shptr wire, layer_position_t layer_pos)
+void LogicModelExporter::add_wire(QDomDocument& doc, QDomElement& wires_elem, Wire_shptr wire,
+                                  layer_position_t layer_pos)
 {
 	QDomElement wire_elem = doc.createElement("wire");
 	if (wire_elem.isNull()) throw(std::runtime_error("Failed to create node."));
@@ -234,22 +238,22 @@ void LogicModelExporter::add_wire(QDomDocument & doc, QDomElement & wires_elem, 
 	wire_elem.setAttribute("description", QString::fromStdString(wire->get_description()));
 	wire_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
 	wire_elem.setAttribute("diameter", QString::fromStdString(number_to_string<unsigned int>(wire->get_diameter())));
-	
+
 	wire_elem.setAttribute("from-x", QString::fromStdString(number_to_string<int>(wire->get_from_x())));
 	wire_elem.setAttribute("from-y", QString::fromStdString(number_to_string<int>(wire->get_from_y())));
 	wire_elem.setAttribute("to-x", QString::fromStdString(number_to_string<int>(wire->get_to_x())));
 	wire_elem.setAttribute("to-y", QString::fromStdString(number_to_string<int>(wire->get_to_y())));
-	
+
 	wire_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(wire->get_fill_color())));
 	wire_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(wire->get_frame_color())));
-	
+
 	wire_elem.setAttribute("remote-id",
-	                         QString::fromStdString(number_to_string<object_id_t>(wire->get_remote_object_id())));
+	                       QString::fromStdString(number_to_string<object_id_t>(wire->get_remote_object_id())));
 
 	wires_elem.appendChild(wire_elem);
 }
 
-void LogicModelExporter::add_via(QDomDocument & doc, QDomElement & vias_elem, Via_shptr via, layer_position_t layer_pos)
+void LogicModelExporter::add_via(QDomDocument& doc, QDomElement& vias_elem, Via_shptr via, layer_position_t layer_pos)
 {
 	QDomElement via_elem = doc.createElement("via");
 	if (via_elem.isNull()) throw(std::runtime_error("Failed to create node."));
@@ -260,21 +264,21 @@ void LogicModelExporter::add_via(QDomDocument & doc, QDomElement & vias_elem, Vi
 	via_elem.setAttribute("description", QString::fromStdString(via->get_description()));
 	via_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
 	via_elem.setAttribute("diameter", QString::fromStdString(number_to_string<unsigned int>(via->get_diameter())));
-	
+
 	via_elem.setAttribute("x", QString::fromStdString(number_to_string<int>(via->get_x())));
 	via_elem.setAttribute("y", QString::fromStdString(number_to_string<int>(via->get_y())));
-	
+
 	via_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(via->get_fill_color())));
 	via_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(via->get_frame_color())));
-	
+
 	via_elem.setAttribute("direction", QString::fromStdString(via->get_direction_as_string()));
 	via_elem.setAttribute("remote-id",
-	                        QString::fromStdString(number_to_string<object_id_t>(via->get_remote_object_id())));
+	                      QString::fromStdString(number_to_string<object_id_t>(via->get_remote_object_id())));
 
 	vias_elem.appendChild(via_elem);
 }
 
-void LogicModelExporter::add_emarker(QDomDocument & doc, QDomElement & emarkers_elem, EMarker_shptr emarker,
+void LogicModelExporter::add_emarker(QDomDocument& doc, QDomElement& emarkers_elem, EMarker_shptr emarker,
                                      layer_position_t layer_pos)
 {
 	QDomElement emarker_elem = doc.createElement("emarker");
@@ -285,22 +289,23 @@ void LogicModelExporter::add_emarker(QDomDocument & doc, QDomElement & emarkers_
 	emarker_elem.setAttribute("name", QString::fromStdString(emarker->get_name()));
 	emarker_elem.setAttribute("description", QString::fromStdString(emarker->get_description()));
 	emarker_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
-	emarker_elem.setAttribute("diameter", QString::fromStdString(number_to_string<unsigned int>(emarker->get_diameter())));
-	
+	emarker_elem.setAttribute(
+		"diameter", QString::fromStdString(number_to_string<unsigned int>(emarker->get_diameter())));
+
 	emarker_elem.setAttribute("x", QString::fromStdString(number_to_string<int>(emarker->get_x())));
 	emarker_elem.setAttribute("y", QString::fromStdString(number_to_string<int>(emarker->get_y())));
-	
+
 	emarker_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(emarker->get_fill_color())));
 	emarker_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(emarker->get_frame_color())));
-	
+
 	emarker_elem.setAttribute("remote-id",
-	                            QString::fromStdString(number_to_string<object_id_t>(emarker->get_remote_object_id())));
+	                          QString::fromStdString(number_to_string<object_id_t>(emarker->get_remote_object_id())));
 
 	emarkers_elem.appendChild(emarker_elem);
 }
 
 
-void LogicModelExporter::add_annotation(QDomDocument & doc, QDomElement & annotations_elem, Annotation_shptr annotation,
+void LogicModelExporter::add_annotation(QDomDocument& doc, QDomElement& annotations_elem, Annotation_shptr annotation,
                                         layer_position_t layer_pos)
 {
 	QDomElement annotation_elem = doc.createElement("annotation");
@@ -311,13 +316,14 @@ void LogicModelExporter::add_annotation(QDomDocument & doc, QDomElement & annota
 	annotation_elem.setAttribute("name", QString::fromStdString(annotation->get_name()));
 	annotation_elem.setAttribute("description", QString::fromStdString(annotation->get_description()));
 	annotation_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
-	annotation_elem.setAttribute("class-id", QString::fromStdString(number_to_string<layer_position_t>(annotation->get_class_id())));
-	
+	annotation_elem.setAttribute(
+		"class-id", QString::fromStdString(number_to_string<layer_position_t>(annotation->get_class_id())));
+
 	annotation_elem.setAttribute("min-x", QString::fromStdString(number_to_string<int>(annotation->get_min_x())));
 	annotation_elem.setAttribute("min-y", QString::fromStdString(number_to_string<int>(annotation->get_min_y())));
 	annotation_elem.setAttribute("max-x", QString::fromStdString(number_to_string<int>(annotation->get_max_x())));
 	annotation_elem.setAttribute("max-y", QString::fromStdString(number_to_string<int>(annotation->get_max_y())));
-	
+
 	annotation_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(annotation->get_fill_color())));
 	annotation_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(annotation->get_frame_color())));
 
@@ -331,7 +337,8 @@ void LogicModelExporter::add_annotation(QDomDocument & doc, QDomElement & annota
 }
 
 
-void LogicModelExporter::add_module(QDomDocument & doc, QDomElement & modules_elem, LogicModel_shptr lmodel, Module_shptr module)
+void LogicModelExporter::add_module(QDomDocument& doc, QDomElement& modules_elem, LogicModel_shptr lmodel,
+                                    Module_shptr module)
 {
 	QDomElement this_elem = doc.createElement("module");
 	if (this_elem.isNull()) throw(std::runtime_error("Failed to create node."));
@@ -381,7 +388,8 @@ void LogicModelExporter::add_module(QDomDocument & doc, QDomElement & modules_el
 		GatePort_shptr gport = p_iter->second;
 
 		mport_elem.setAttribute("name", QString::fromStdString(p_iter->first));
-		mport_elem.setAttribute("object-id", QString::fromStdString(number_to_string<object_id_t>(gport->get_object_id())));
+		mport_elem.setAttribute("object-id",
+		                        QString::fromStdString(number_to_string<object_id_t>(gport->get_object_id())));
 
 		module_ports_elem.appendChild(mport_elem);
 	}
@@ -393,7 +401,8 @@ void LogicModelExporter::add_module(QDomDocument & doc, QDomElement & modules_el
 		QDomElement cell_elem = doc.createElement("cell");
 		if (cell_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-		cell_elem.setAttribute("object-id", QString::fromStdString(number_to_string<object_id_t>((*g_iter)->get_object_id())));
+		cell_elem.setAttribute("object-id",
+		                       QString::fromStdString(number_to_string<object_id_t>((*g_iter)->get_object_id())));
 
 		cells_elem.appendChild(cell_elem);
 	}

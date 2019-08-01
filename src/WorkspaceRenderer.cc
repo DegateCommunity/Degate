@@ -23,19 +23,23 @@
 
 namespace degate
 {
-
 	class Vertex2D
 	{
 	public:
-	    Vertex2D(){}
-	    Vertex2D(const QPointF &p, const QPointF &c) : pos(p), texCoord(c)
-	    {
-	    }
-	    QVector2D pos;
-	    QVector2D texCoord;
+		Vertex2D()
+		{
+		}
+
+		Vertex2D(const QPointF& p, const QPointF& c) : pos(p), texCoord(c)
+		{
+		}
+
+		QVector2D pos;
+		QVector2D texCoord;
 	};
 
-	WorkspaceRenderer::WorkspaceRenderer(QWidget * parent) : QOpenGLWidget(parent), background_vbo(QOpenGLBuffer::VertexBuffer)
+	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent),
+	                                                        background_vbo(QOpenGLBuffer::VertexBuffer)
 	{
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
@@ -46,13 +50,13 @@ namespace degate
 	WorkspaceRenderer::~WorkspaceRenderer()
 	{
 		doneCurrent();
-		if(program != NULL)
+		if (program != NULL)
 			delete program;
 	}
 
 	void WorkspaceRenderer::update_screen()
 	{
-		if(project == NULL)
+		if (project == NULL)
 			return;
 
 		update_background();
@@ -62,14 +66,14 @@ namespace degate
 
 	void WorkspaceRenderer::update_background()
 	{
-		if(project == NULL)
+		if (project == NULL)
 			return;
 
 		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
 		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(scale);
 
 		background_image = elem.second;
-		if(background_image == NULL)
+		if (background_image == NULL)
 			return;
 
 		free_textures();
@@ -79,9 +83,9 @@ namespace degate
 		glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(Vertex2D), 0, GL_STATIC_DRAW);
 
 		unsigned index = 0;
-		for(unsigned int x = 0; x < background_image->get_width(); x+=background_image->get_tile_size())
+		for (unsigned int x = 0; x < background_image->get_width(); x += background_image->get_tile_size())
 		{
-			for(unsigned int y = 0; y < background_image->get_height(); y+=background_image->get_tile_size())
+			for (unsigned int y = 0; y < background_image->get_height(); y += background_image->get_tile_size())
 			{
 				background_textures.push_back(std::make_tuple(x, y, create_background_tile(x, y, elem.first, index)));
 
@@ -92,7 +96,7 @@ namespace degate
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void WorkspaceRenderer::set_project(const Project_shptr & new_project)
+	void WorkspaceRenderer::set_project(const Project_shptr& new_project)
 	{
 		assert(new_project != NULL);
 
@@ -105,7 +109,7 @@ namespace degate
 
 	void WorkspaceRenderer::free_textures()
 	{
-		for(auto const& e : background_textures)
+		for (auto const& e : background_textures)
 		{
 			glDeleteTextures(1, &std::get<2>(e));
 		}
@@ -118,37 +122,37 @@ namespace degate
 		initializeOpenGLFunctions();
 
 		glClearColor(0.0, 0.0, 0.0, 0.0);
-	    glEnable(GL_DEPTH_TEST);
-	    glEnable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
 
-	    QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
-	    const char *vsrc =
-	        "attribute vec2 pos;\n"
-	        "attribute vec2 texCoord;\n"
-	        "uniform mat4 mvp;\n"
-	        "varying vec2 texCoord0;\n"
-	        "void main(void)\n"
-	        "{\n"
-	        "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
-	        "    texCoord0 = texCoord;\n"
-	        "}\n";
-	    vshader->compileSourceCode(vsrc);
+		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
+		const char* vsrc =
+			"attribute vec2 pos;\n"
+			"attribute vec2 texCoord;\n"
+			"uniform mat4 mvp;\n"
+			"varying vec2 texCoord0;\n"
+			"void main(void)\n"
+			"{\n"
+			"    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
+			"    texCoord0 = texCoord;\n"
+			"}\n";
+		vshader->compileSourceCode(vsrc);
 
-	    QOpenGLShader *fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
-	    const char *fsrc =
-	        "uniform sampler2D texture;\n"
-	        "varying vec2 texCoord0;\n"
-	        "void main(void)\n"
-	        "{\n"
-	        "    gl_FragColor = texture2D(texture, texCoord0);\n"
-	        "}\n";
-	    fshader->compileSourceCode(fsrc);
+		QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
+		const char* fsrc =
+			"uniform sampler2D texture;\n"
+			"varying vec2 texCoord0;\n"
+			"void main(void)\n"
+			"{\n"
+			"    gl_FragColor = texture2D(texture, texCoord0);\n"
+			"}\n";
+		fshader->compileSourceCode(fsrc);
 
-	    program = new QOpenGLShaderProgram;
-	    program->addShader(vshader);
-	    program->addShader(fshader);
+		program = new QOpenGLShaderProgram;
+		program->addShader(vshader);
+		program->addShader(fshader);
 
-	    program->link();
+		program->link();
 
 		glGenBuffers(1, &background_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, background_vbo);
@@ -179,7 +183,7 @@ namespace degate
 		glBindBuffer(GL_ARRAY_BUFFER, background_vbo);
 
 		unsigned index = 0;
-		for(auto& e : background_textures)
+		for (auto& e : background_textures)
 		{
 			glBindTexture(GL_TEXTURE_2D, std::get<2>(e));
 			glDrawArrays(GL_TRIANGLES, index * 6, 6);
@@ -191,7 +195,7 @@ namespace degate
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-	    glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
 		program->release();
 	}
 
@@ -246,15 +250,15 @@ namespace degate
 
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
 		assert(glGetError() == GL_NO_ERROR);
-	
+
 		glTexImage2D(GL_TEXTURE_2D,
-			       0, // level
-			       GL_RGBA, // BGRA,
-			       tile_width, tile_width,
-			       0, // border
-			       GL_RGBA,
-			       GL_UNSIGNED_BYTE,
-			       data);
+		             0, // level
+		             GL_RGBA, // BGRA,
+		             tile_width, tile_width,
+		             0, // border
+		             GL_RGBA,
+		             GL_UNSIGNED_BYTE,
+		             data);
 		assert(glGetError() == GL_NO_ERROR);
 
 		delete[] data;
@@ -303,7 +307,8 @@ namespace degate
 	QPointF WorkspaceRenderer::get_opengl_mouse_position() const
 	{
 		const QPointF widget_mouse_position = get_widget_mouse_position();
-		return QPoint(viewport_min_x + widget_mouse_position.x() * scale, viewport_min_y + widget_mouse_position.y() * scale);
+		return QPoint(viewport_min_x + widget_mouse_position.x() * scale,
+		              viewport_min_y + widget_mouse_position.y() * scale);
 	}
 
 	void WorkspaceRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
@@ -323,25 +328,25 @@ namespace degate
 		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
 	}
 
-	void WorkspaceRenderer::mousePressEvent(QMouseEvent *event)
+	void WorkspaceRenderer::mousePressEvent(QMouseEvent* event)
 	{
 		QOpenGLWidget::mousePressEvent(event);
 
 		mouse_last_pos = get_opengl_mouse_position();
 
-		if(event->button() == Qt::LeftButton)
+		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::ClosedHandCursor);
 	}
 
-	void WorkspaceRenderer::mouseReleaseEvent(QMouseEvent *event)
+	void WorkspaceRenderer::mouseReleaseEvent(QMouseEvent* event)
 	{
 		QOpenGLWidget::mouseReleaseEvent(event);
-		
-		if(event->button() == Qt::LeftButton)
+
+		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::CrossCursor);
 	}
 
-	void WorkspaceRenderer::mouseMoveEvent(QMouseEvent *event)
+	void WorkspaceRenderer::mouseMoveEvent(QMouseEvent* event)
 	{
 		QOpenGLWidget::mouseMoveEvent(event);
 
@@ -358,11 +363,11 @@ namespace degate
 		}
 	}
 
-	void WorkspaceRenderer::wheelEvent(QWheelEvent *event)
+	void WorkspaceRenderer::wheelEvent(QWheelEvent* event)
 	{
 		QOpenGLWidget::wheelEvent(event);
 
-		if(project == NULL)
+		if (project == NULL)
 			return;
 
 		event->delta() > 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
@@ -371,24 +376,18 @@ namespace degate
 		update();
 	}
 
-	void WorkspaceRenderer::keyPressEvent(QKeyEvent *event)
+	void WorkspaceRenderer::keyPressEvent(QKeyEvent* event)
 	{
 		QOpenGLWidget::keyPressEvent(event);
-
 	}
 
-	void WorkspaceRenderer::keyReleaseEvent(QKeyEvent *event)
+	void WorkspaceRenderer::keyReleaseEvent(QKeyEvent* event)
 	{
 		QOpenGLWidget::keyReleaseEvent(event);
-
-
 	}
 
-	void WorkspaceRenderer::mouseDoubleClickEvent(QMouseEvent *event)
+	void WorkspaceRenderer::mouseDoubleClickEvent(QMouseEvent* event)
 	{
 		QOpenGLWidget::mouseDoubleClickEvent(event);
-
-
 	}
-
 }

@@ -66,9 +66,9 @@ void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_s
 		root_elem.appendChild(templates_elem);
 
 		doc.appendChild(root_elem);
-		
+
 		QFile file(QString::fromStdString(filename));
-		if(!file.open(QFile::ReadWrite))
+		if (!file.open(QFile::ReadWrite))
 		{
 			throw InvalidPathException("Can't create export file.");
 		}
@@ -85,8 +85,8 @@ void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_s
 	}
 }
 
-void GateLibraryExporter::add_gates(QDomDocument & doc,
-									QDomElement & templates_elem,
+void GateLibraryExporter::add_gates(QDomDocument& doc,
+                                    QDomElement& templates_elem,
                                     GateLibrary_shptr gate_lib,
                                     std::string const& directory)
 {
@@ -103,12 +103,13 @@ void GateLibraryExporter::add_gates(QDomDocument & doc,
 		gate_elem.setAttribute("name", QString::fromStdString(gate_tmpl->get_name()));
 		gate_elem.setAttribute("description", QString::fromStdString(gate_tmpl->get_description()));
 		gate_elem.setAttribute("logic-class", QString::fromStdString(gate_tmpl->get_logic_class()));
-		
+
 		gate_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(gate_tmpl->get_fill_color())));
 		gate_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(gate_tmpl->get_frame_color())));
-		
+
 		gate_elem.setAttribute("width", QString::fromStdString(number_to_string<unsigned int>(gate_tmpl->get_width())));
-		gate_elem.setAttribute("height", QString::fromStdString(number_to_string<unsigned int>(gate_tmpl->get_height())));
+		gate_elem.setAttribute(
+			"height", QString::fromStdString(number_to_string<unsigned int>(gate_tmpl->get_height())));
 
 		add_images(doc, gate_elem, gate_tmpl, directory);
 		add_ports(doc, gate_elem, gate_tmpl);
@@ -119,8 +120,8 @@ void GateLibraryExporter::add_gates(QDomDocument & doc,
 }
 
 
-void GateLibraryExporter::add_images(QDomDocument & doc,
-									 QDomElement & gate_elem,
+void GateLibraryExporter::add_images(QDomDocument& doc,
+                                     QDomElement& gate_elem,
                                      GateTemplate_shptr gate_tmpl,
                                      std::string const& directory)
 {
@@ -157,8 +158,8 @@ void GateLibraryExporter::add_images(QDomDocument & doc,
 	gate_elem.appendChild(images_elem);
 }
 
-void GateLibraryExporter::add_ports(QDomDocument & doc,
-									QDomElement & gate_elem,
+void GateLibraryExporter::add_ports(QDomDocument& doc,
+                                    QDomElement& gate_elem,
                                     GateTemplate_shptr gate_tmpl)
 {
 	QDomElement ports_elem = doc.createElement("ports");
@@ -176,7 +177,7 @@ void GateLibraryExporter::add_ports(QDomDocument & doc,
 		port_elem.setAttribute("id", QString::fromStdString(number_to_string<object_id_t>(new_port_id)));
 		port_elem.setAttribute("name", QString::fromStdString(tmpl_port->get_name()));
 		port_elem.setAttribute("description", QString::fromStdString(tmpl_port->get_description()));
-		
+
 		port_elem.setAttribute("type", QString::fromStdString(tmpl_port->get_port_type_as_string()));
 
 		if (tmpl_port->is_position_defined())
@@ -192,8 +193,8 @@ void GateLibraryExporter::add_ports(QDomDocument & doc,
 	gate_elem.appendChild(ports_elem);
 }
 
-void GateLibraryExporter::add_implementations(QDomDocument & doc,
-											  QDomElement & gate_elem,
+void GateLibraryExporter::add_implementations(QDomDocument& doc,
+                                              QDomElement& gate_elem,
                                               GateTemplate_shptr gate_tmpl,
                                               std::string const& directory)
 {
