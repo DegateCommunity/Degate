@@ -30,7 +30,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QFileDialog>
-#include <QLabel>
+#include <QToolBar>
 
 namespace degate
 {
@@ -45,9 +45,12 @@ namespace degate
 	public slots:
 		void on_menu_about_degate();
 		void on_menu_project_importer();
+		void on_tool_via_up();
+		void on_tool_via_down();
 
 	private:
 		QMenuBar menu_bar;
+		QToolBar* tool_bar;
 
 		Project_shptr project;
 		WorkspaceRenderer* workspace;

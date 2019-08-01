@@ -27,11 +27,14 @@ namespace degate
 	MainWindow::MainWindow(int width, int height)
 	{
 		if (width == 0 || height == 0)
-			resize(QDesktopWidget().availableGeometry(this).size() * 0.6);
+			resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
 		else
 			resize(width, height);
 
 		setWindowIcon(QIcon("res/degate_logo.png"));
+
+
+		// Menu bar
 
 		setMenuBar(&menu_bar);
 
@@ -42,6 +45,23 @@ namespace degate
 		QMenu* about_menu = menu_bar.addMenu("About");
 		QAction* about_action = about_menu->addAction("Degate");
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_about_degate()));
+
+
+		// Tool bar
+
+		tool_bar = addToolBar("");
+		tool_bar->setIconSize(QSize(30, 30));
+		tool_bar->setMovable(false);
+		tool_bar->setFloatable(false);
+
+		QAction* tool_via_up_action = tool_bar->addAction(QIcon("res/tools_via_up.png"), "Via up");
+		QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
+
+		QAction* tool_via_down_action = tool_bar->addAction(QIcon("res/tools_via_down.png"), "Via down");
+		QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
+
+
+		// Workspace
 
 		workspace = new WorkspaceRenderer(this);
 		setCentralWidget(workspace);
@@ -90,5 +110,27 @@ namespace degate
 
 		QString message = "The project <i>" + project_name + "</i> was successfully loaded.";
 		QMessageBox::information(this, "Import project", message);
+	}
+
+	void MainWindow::on_tool_via_up()
+	{
+		if(project == NULL)
+			return;
+
+		if(project->get_logic_model()->get_current_layer()->get_layer_id() >= project->get_logic_model()->get_num_layers() - 1)
+			return;
+
+		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_id() + 1);
+	}
+
+	void MainWindow::on_tool_via_down()
+	{
+		if(project == NULL)
+			return;
+
+		if(project->get_logic_model()->get_current_layer()->get_layer_id() <= 0)
+			return;
+
+		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_id() - 1);
 	}
 }
