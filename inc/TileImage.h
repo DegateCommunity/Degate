@@ -58,6 +58,8 @@ namespace degate
 		// A helper class to load tiles.
 		mutable TileCache<PixelPolicy> tile_cache;
 
+		unsigned int tiles_number;
+
 	private:
 
 
@@ -110,6 +112,9 @@ namespace degate
 			tile_cache(_directory, _tile_width_exp, _persistent)
 		{
 			if (!file_exists(_directory)) create_directory(_directory);
+
+			unsigned temp_tile_size = 1 << _tile_width_exp;
+			tiles_number = static_cast<unsigned>(ceil(_width / temp_tile_size)) * static_cast<unsigned>(ceil(_height / temp_tile_size));
 		}
 
 		/**
@@ -120,6 +125,10 @@ namespace degate
 			if (persistent == false) remove_directory(directory);
 		}
 
+		inline unsigned int get_tiles_number() const
+		{
+			return tiles_number;
+		}
 
 		/**
 		 * Get the width / height of a single tile. The size is a power of two.
