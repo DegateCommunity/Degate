@@ -22,21 +22,35 @@
 #ifndef __MAINWINDOW_H__
 #define __MAINWINDOW_H__
 
+#include "ProjectImporter.h"
+#include "WorkspaceRenderer.h"
+
 #include <degate.h>
 #include <QMainWindow>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QLabel>
 
 namespace degate
 {
 	class MainWindow : public QMainWindow
 	{
+		Q_OBJECT
 		
 	public:
-		MainWindow(int width = 500, int height = 300);
+		MainWindow(int width = 0, int height = 0);
 		~MainWindow();
 
-	private:
-		QWidget centralWidget;
+	public slots:
+		void on_menu_about_degate();
+		void on_menu_project_importer();
 
+	private:
+		QMenuBar menu_bar;
+
+		Project_shptr project;
+		WorkspaceRenderer* workspace;
 	};
 }
 
