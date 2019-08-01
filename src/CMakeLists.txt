@@ -15,8 +15,8 @@ include_directories(${Boost_INCLUDE_DIRS})
 set(LIBS ${Boost_LIBRARIES})
 
 ############# Qt
-find_package(Qt5 COMPONENTS Core Widgets Gui Xml REQUIRED)
-set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml)
+find_package(Qt5 COMPONENTS Core Widgets Gui Xml OpenGL REQUIRED)
+set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml Qt5::OpenGL)
 
 ############################################################################
 
