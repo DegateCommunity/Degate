@@ -207,14 +207,13 @@ namespace degate
 		assert(project != NULL);
 		assert(background_image != NULL);
 
-		const float tile_width = static_cast<float>(background_image->get_tile_size());
-
+		const unsigned int tile_width = background_image->get_tile_size();
 
 		// Real pixel coordinates
 		float min_x = (static_cast<float>(x) - width() / 2.0) * pre_scaling;
 		float min_y = (static_cast<float>(y) - height() / 2.0) * pre_scaling;
-		float max_x = min_x + tile_width * pre_scaling;
-		float max_y = min_y + tile_width * pre_scaling;
+		float max_x = min_x + static_cast<float>(tile_width) * pre_scaling;
+		float max_y = min_y + static_cast<float>(tile_width) * pre_scaling;
 
 
 		// Texture
