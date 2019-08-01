@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<logic-model>
+  <gates/>
+  <vias/>
+  <wires/>
+  <nets/>
+  <annotations>
+    <annotation id="2342" name="DECT Standard Cipher" description="" layer="0" class-id="1" min-x="2712" min-y="358" max-x="3693" max-y="479" fill-color="#FF00007F" frame-color="#00000000" subproject-directory="subproject_1"/>
+  </annotations>
+</logic-model>

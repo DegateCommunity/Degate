@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<gate-library>
+  <gate-templates>
+    <gate type-id="2343" name="2-NAND" description="16" fill-color="#7FA0A0A0" frame-color="#FF00FF24" width="22" height="71">
+      <images>
+        <image layer-type="logic" image="2343_logic.tif"/>
+        <image layer-type="transistor" image="2343_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2347" name="b" description="" type="in" x="11" y="35"/>
+        <port id="2349" name="y" description="" type="out" x="4" y="35"/>
+        <port id="2345" name="a" description="" type="in" x="19" y="35"/>
+      </ports>
+    </gate>
+    <gate type-id="2351" name="26" description="26" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="65" height="62">
+      <images>
+        <image layer-type="logic" image="2351_logic.tif"/>
+        <image layer-type="transistor" image="2351_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2355" name="y" description="" type="out" x="3" y="26"/>
+        <port id="2353" name="a" description="" type="in" x="61" y="26"/>
+        <port id="2357" name="b" description="" type="in" x="53" y="27"/>
+        <port id="2359" name="c" description="" type="in" x="45" y="26"/>
+      </ports>
+    </gate>
+    <gate type-id="2361" name="FF1" description="" fill-color="#09000000" frame-color="#560000FF" width="204" height="47">
+      <images>
+        <image layer-type="logic" image="2361_logic.tif"/>
+        <image layer-type="transistor" image="2361_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2363" name="D" description="" type="in" x="200" y="25"/>
+        <port id="2365" name="!Q" description="" type="out" x="26" y="25"/>
+        <port id="2367" name="Q" description="" type="out" x="3" y="22"/>
+      </ports>
+    </gate>
+    <gate type-id="2378" name="22-AOI" description="14" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="42" height="70">
+      <images>
+        <image layer-type="logic" image="2378_logic.tif"/>
+        <image layer-type="transistor" image="2378_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2388" name="y" description="" type="out" x="4" y="33"/>
+        <port id="2386" name="a" description="" type="in" x="36" y="33"/>
+        <port id="2384" name="b" description="" type="in" x="28" y="34"/>
+        <port id="2382" name="c" description="" type="in" x="20" y="33"/>
+        <port id="2380" name="d" description="" type="in" x="13" y="33"/>
+      </ports>
+    </gate>
+    <gate type-id="2390" name="2NOR:15" description="15" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="46" height="58">
+      <images>
+        <image layer-type="logic" image="2390_logic.tif"/>
+        <image layer-type="transistor" image="2390_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2396" name="y" description="" type="out" x="26" y="33"/>
+        <port id="2394" name="a" description="" type="in" x="40" y="32"/>
+        <port id="2392" name="b" description="" type="in" x="10" y="33"/>
+      </ports>
+    </gate>
+    <gate type-id="2462" name="inv" description="" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="12" height="58">
+      <images>
+        <image layer-type="logic" image="2462_logic.tif"/>
+        <image layer-type="transistor" image="2462_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2466" name="y" description="" type="out" x="2" y="27"/>
+        <port id="2464" name="a" description="" type="in" x="9" y="28"/>
+      </ports>
+    </gate>
+    <gate type-id="2471999" name="FF3" description="" fill-color="#00A0A0A0" frame-color="#FFFFFFFF" width="245" height="48">
+      <images>
+        <image layer-type="logic" image="2471_logic.tif"/>
+        <image layer-type="transistor" image="2471_transistor.tif"/>
+      </images>
+      <ports/>
+    </gate>
+    <gate type-id="2473" name="FF2" description="" fill-color="#00A0A0A0" frame-color="#FFEA00FF" width="236" height="48">
+      <images>
+        <image layer-type="logic" image="2473_logic.tif"/>
+        <image layer-type="transistor" image="2473_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2475" name="B" description="" type="in" x="215" y="27"/>
+        <port id="2477" name="!Q" description="" type="out" x="1" y="23"/>
+        <port id="2471" name="Q" description="" type="out" x="18" y="21"/>
+        <port id="2480" name="A" description="" type="in" x="232" y="21"/>
+        <port id="2482" name="C" description="" type="in" x="183" y="21"/>
+        <port id="2484" name="rst" description="" type="in" x="141" y="20"/>
+        <port id="2486" name="clk" description="" type="in" x="99" y="21"/>
+      </ports>
+    </gate>
+    <gate type-id="2480" name="06" description="" fill-color="#7FA0A0A0" frame-color="#FFFFA400" width="112" height="51">
+      <images>
+        <image layer-type="logic" image="2480_logic.tif"/>
+        <image layer-type="transistor" image="2480_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="3004" name="c" description="" type="in" x="43" y="31"/>
+        <port id="3002" name="b" description="" type="in" x="35" y="32"/>
+        <port id="2998" name="y" description="" type="out" x="92" y="29"/>
+        <port id="3000" name="a" description="" type="in" x="3" y="32"/>
+      </ports>
+    </gate>
+    <gate type-id="2484" name="222OAI" description="17" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="70" height="46">
+      <images>
+        <image layer-type="logic" image="2484_logic.tif"/>
+        <image layer-type="transistor" image="2484_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2809" name="y" description="" type="out" x="60" y="24"/>
+        <port id="2811" name="a" description="" type="in" x="2" y="26"/>
+        <port id="2813" name="b" description="" type="in" x="10" y="24"/>
+        <port id="2815" name="c" description="" type="in" x="18" y="24"/>
+        <port id="2817" name="d" description="" type="in" x="35" y="26"/>
+        <port id="2819" name="e" description="" type="in" x="44" y="25"/>
+        <port id="2821" name="f" description="" type="in" x="51" y="24"/>
+      </ports>
+    </gate>
+    <gate type-id="2486" name="XOR" description="11" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="52" height="71">
+      <images>
+        <image layer-type="logic" image="2486_logic.tif"/>
+        <image layer-type="transistor" image="2486_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2579" name="a" description="" type="in" x="6" y="38"/>
+        <port id="2581" name="b" description="" type="in" x="22" y="38"/>
+        <port id="2583" name="y" description="" type="out" x="29" y="37"/>
+      </ports>
+    </gate>
+    <gate type-id="2512" name="21-OAI:13" description="13" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="38" height="75">
+      <images>
+        <image layer-type="logic" image="2512_logic.tif"/>
+        <image layer-type="transistor" image="2512_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2518" name="b" description="" type="in" x="13" y="36"/>
+        <port id="2520" name="c" description="" type="in" x="29" y="35"/>
+        <port id="2514" name="y" description="" type="out" x="20" y="35"/>
+        <port id="2516" name="a" description="" type="in" x="5" y="36"/>
+      </ports>
+    </gate>
+    <gate type-id="2526" name="33AOI" description="18" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="62" height="69">
+      <images>
+        <image layer-type="logic" image="2526_logic.tif"/>
+        <image layer-type="transistor" image="2526_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2532" name="y" description="" type="out" x="35" y="35"/>
+        <port id="2534" name="a" description="" type="in" x="3" y="36"/>
+        <port id="2530" name="b" description="" type="in" x="11" y="34"/>
+        <port id="2528" name="c" description="" type="in" x="19" y="36"/>
+        <port id="2536" name="d" description="" type="in" x="44" y="35"/>
+        <port id="2538" name="e" description="" type="in" x="51" y="35"/>
+        <port id="2540" name="f" description="" type="in" x="58" y="34"/>
+      </ports>
+    </gate>
+    <gate type-id="2542" name="4NOR" description="27" fill-color="#7FA0A0A0" frame-color="#FFFFB300" width="46" height="70">
+      <images>
+        <image layer-type="logic" image="2542_logic.tif"/>
+        <image layer-type="transistor" image="2542_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2544" name="y" description="" type="out" x="43" y="36"/>
+        <port id="2546" name="a" description="" type="in" x="3" y="36"/>
+        <port id="2548" name="b" description="" type="in" x="11" y="35"/>
+        <port id="2550" name="c" description="" type="in" x="19" y="34"/>
+        <port id="2552" name="d" description="" type="in" x="36" y="37"/>
+      </ports>
+    </gate>
+    <gate type-id="2558" name="22-OAI" description="12" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="46" height="69">
+      <images>
+        <image layer-type="logic" image="2558_logic.tif"/>
+        <image layer-type="transistor" image="2558_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2560" name="y" description="" type="out" x="43" y="28"/>
+        <port id="2562" name="a" description="" type="in" x="3" y="29"/>
+        <port id="2564" name="b" description="" type="in" x="12" y="29"/>
+        <port id="2566" name="c" description="" type="in" x="21" y="29"/>
+        <port id="2568" name="d" description="" type="in" x="29" y="29"/>
+      </ports>
+    </gate>
+    <gate type-id="2585" name="21OAI:25" description="25" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="70" height="66">
+      <images>
+        <image layer-type="logic" image="2585_logic.tif"/>
+        <image layer-type="transistor" image="2585_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2587" name="y" description="" type="out" x="8" y="32"/>
+        <port id="2589" name="a" description="" type="in" x="64" y="32"/>
+        <port id="2591" name="b" description="" type="in" x="58" y="32"/>
+        <port id="2593" name="c" description="" type="in" x="49" y="32"/>
+      </ports>
+    </gate>
+    <gate type-id="2617" name="221-AOI" description="20" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="55" height="75">
+      <images>
+        <image layer-type="logic" image="2617_logic.tif"/>
+        <image layer-type="transistor" image="2617_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2619" name="y" description="" type="out" x="44" y="37"/>
+        <port id="2621" name="a" description="" type="in" x="3" y="37"/>
+        <port id="2623" name="b" description="" type="in" x="11" y="36"/>
+        <port id="2625" name="c" description="" type="in" x="20" y="36"/>
+        <port id="2627" name="d" description="" type="in" x="29" y="36"/>
+        <port id="2629" name="e" description="" type="in" x="52" y="44"/>
+      </ports>
+    </gate>
+    <gate type-id="2635" name="32OAI" description="23" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="58" height="74">
+      <images>
+        <image layer-type="logic" image="2635_logic.tif"/>
+        <image layer-type="transistor" image="2635_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2637" name="y" description="" type="out" x="53" y="37"/>
+        <port id="2639" name="a" description="" type="in" x="3" y="38"/>
+        <port id="2641" name="b" description="" type="in" x="21" y="37"/>
+        <port id="2643" name="c" description="" type="in" x="29" y="37"/>
+        <port id="2645" name="d" description="" type="in" x="37" y="35"/>
+        <port id="2647" name="e" description="" type="in" x="45" y="37"/>
+      </ports>
+    </gate>
+    <gate type-id="2665" name="INV" description="" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="42" height="50">
+      <images>
+        <image layer-type="logic" image="2665_logic.tif"/>
+        <image layer-type="transistor" image="2665_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2669" name="y" description="" type="out" x="37" y="27"/>
+        <port id="2667" name="a" description="" type="in" x="6" y="27"/>
+      </ports>
+    </gate>
+    <gate type-id="2703" name="XNOR" description="10" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="50" height="70">
+      <images>
+        <image layer-type="logic" image="2703_logic.tif"/>
+        <image layer-type="transistor" image="2703_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2705" name="y" description="" type="out" x="30" y="33"/>
+        <port id="2707" name="a" description="" type="in" x="4" y="33"/>
+        <port id="2709" name="b" description="" type="in" x="21" y="33"/>
+      </ports>
+    </gate>
+    <gate type-id="2848" name="21AOI:30" description="30" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="41" height="70">
+      <images>
+        <image layer-type="logic" image="2848_logic.tif"/>
+        <image layer-type="transistor" image="2848_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2856" name="y" description="" type="out" x="14" y="38"/>
+        <port id="2854" name="a" description="" type="in" x="38" y="37"/>
+        <port id="2852" name="b" description="" type="in" x="31" y="38"/>
+        <port id="2850" name="c" description="" type="in" x="22" y="38"/>
+      </ports>
+    </gate>
+    <gate type-id="2923" name="2NOR:33" description="33" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="43" height="69">
+      <images>
+        <image layer-type="logic" image="2923_logic.tif"/>
+        <image layer-type="transistor" image="2923_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2925" name="y" description="" type="out" x="8" y="39"/>
+        <port id="2927" name="a" description="" type="in" x="40" y="39"/>
+        <port id="2929" name="b" description="" type="in" x="16" y="39"/>
+      </ports>
+    </gate>
+    <gate type-id="2972" name="31AOI" description="32" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="45" height="68">
+      <images>
+        <image layer-type="logic" image="2972_logic.tif"/>
+        <image layer-type="transistor" image="2972_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="2978" name="b" description="" type="in" x="34" y="30"/>
+        <port id="2976" name="c" description="" type="in" x="26" y="30"/>
+        <port id="2974" name="d" description="" type="in" x="9" y="29"/>
+        <port id="2982" name="y" description="" type="out" x="2" y="30"/>
+        <port id="2980" name="a" description="" type="in" x="41" y="30"/>
+      </ports>
+    </gate>
+    <gate type-id="3035" name="07" description="07" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="118" height="55">
+      <images>
+        <image layer-type="logic" image="3035_logic.tif"/>
+        <image layer-type="transistor" image="3035_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="3037" name="y" description="" type="out" x="102" y="27"/>
+        <port id="3039" name="a" description="" type="in" x="2" y="26"/>
+        <port id="3041" name="b" description="" type="in" x="35" y="27"/>
+        <port id="3043" name="c" description="" type="in" x="43" y="26"/>
+      </ports>
+    </gate>
+    <gate type-id="3075" name="21OAI:25" description="25" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="59" height="70">
+      <images>
+        <image layer-type="logic" image="3075_logic.tif"/>
+        <image layer-type="transistor" image="3075_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="3077" name="y" description="" type="out" x="5" y="33"/>
+        <port id="3079" name="a" description="" type="in" x="55" y="32"/>
+        <port id="3081" name="b" description="" type="in" x="46" y="31"/>
+        <port id="3083" name="c" description="" type="in" x="38" y="31"/>
+      </ports>
+    </gate>
+    <gate type-id="3085" name="09" description="09" fill-color="#7FA0A0A0" frame-color="#FF89FF00" width="64" height="56">
+      <images>
+        <image layer-type="logic" image="3085_logic.tif"/>
+        <image layer-type="transistor" image="3085_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="3087" name="y" description="" type="out" x="60" y="27"/>
+        <port id="3089" name="a" description="" type="in" x="5" y="27"/>
+        <port id="3091" name="b" description="" type="in" x="37" y="26"/>
+        <port id="3093" name="c" description="" type="in" x="46" y="27"/>
+      </ports>
+    </gate>
+    <gate type-id="3114" name="22" description="22" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="31" height="60">
+      <images>
+        <image layer-type="logic" image="3114_logic.tif"/>
+        <image layer-type="transistor" image="3114_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="3116" name="y" description="" type="out" x="13" y="30"/>
+        <port id="3118" name="a" description="" type="in" x="28" y="29"/>
+        <port id="3120" name="b" description="" type="in" x="4" y="29"/>
+      </ports>
+    </gate>
+    <gate type-id="3455" name="inv2" description="" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="21" height="69">
+      <images>
+        <image layer-type="logic" image="3455_logic.tif"/>
+        <image layer-type="transistor" image="3455_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="3459" name="y" description="" type="out" x="12" y="32"/>
+        <port id="3457" name="a" description="" type="in" x="3" y="32"/>
+      </ports>
+    </gate>
+    <gate type-id="3468" name="31OAI" description="31" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="47" height="66">
+      <images>
+        <image layer-type="logic" image="3468_logic.tif"/>
+        <image layer-type="transistor" image="3468_transistor.tif"/>
+      </images>
+      <ports>
+        <port id="3478" name="y" description="" type="out" x="44" y="36"/>
+        <port id="3476" name="a" description="" type="in" x="3" y="36"/>
+        <port id="3474" name="b" description="" type="in" x="12" y="35"/>
+        <port id="3472" name="c" description="" type="in" x="20" y="36"/>
+        <port id="3470" name="d" description="" type="in" x="36" y="35"/>
+      </ports>
+    </gate>
+  </gate-templates>
+</gate-library>

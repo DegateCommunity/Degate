@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project degate-version="" name="SC14421CVF - DECT" description="" width="4096" height="4096" lambda="5" pin-diameter="5" wire-diameter="5">
+  <layers>
+    <layer position="0" type="undefined" description="" enabled="true" image-filename="./layer_0.dimg"/>
+  </layers>
+  <grids>
+    <regular-grid enabled="false" distance="0" offset="0" orientation="horizontal"/>
+    <regular-grid enabled="false" distance="0" offset="0" orientation="vertical"/>
+    <irregular-grid enabled="false" orientation="horizontal">
+      <offsets/>
+    </irregular-grid>
+    <irregular-grid enabled="false" orientation="vertical">
+      <offsets/>
+    </irregular-grid>
+  </grids>
+  <port-colors/>
+</project>
