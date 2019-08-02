@@ -117,10 +117,12 @@ namespace degate
 		if(project == NULL)
 			return;
 
-		if(project->get_logic_model()->get_current_layer()->get_layer_id() >= project->get_logic_model()->get_num_layers() - 1)
+		if(project->get_logic_model()->get_current_layer()->get_layer_pos() <= 0)
 			return;
 
-		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_id() + 1);
+		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_pos() - 1);
+
+		workspace->update_screen();
 	}
 
 	void MainWindow::on_tool_via_down()
@@ -128,9 +130,11 @@ namespace degate
 		if(project == NULL)
 			return;
 
-		if(project->get_logic_model()->get_current_layer()->get_layer_id() <= 0)
+		if(project->get_logic_model()->get_current_layer()->get_layer_pos() >= project->get_logic_model()->get_num_layers() - 1)
 			return;
 
-		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_id() - 1);
+		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1);
+
+		workspace->update_screen();
 	}
 }

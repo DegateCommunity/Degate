@@ -69,14 +69,14 @@ namespace degate
 		if (project == NULL)
 			return;
 
+		free_textures();
+
 		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
 		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(scale);
 
 		background_image = elem.second;
 		if (background_image == NULL)
 			return;
-
-		free_textures();
 
 		glBindBuffer(GL_ARRAY_BUFFER, background_vbo);
 
