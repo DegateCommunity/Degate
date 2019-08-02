@@ -54,10 +54,10 @@ namespace degate
 		tool_bar->setMovable(false);
 		tool_bar->setFloatable(false);
 
-		QAction* tool_via_up_action = tool_bar->addAction(QIcon("res/tools_via_up.png"), "Via up");
+		QAction* tool_via_up_action = tool_bar->addAction(style()->standardIcon(QStyle::SP_ArrowUp), "Via up");
 		QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
 
-		QAction* tool_via_down_action = tool_bar->addAction(QIcon("res/tools_via_down.png"), "Via down");
+		QAction* tool_via_down_action = tool_bar->addAction(style()->standardIcon(QStyle::SP_ArrowDown), "Via down");
 		QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
 
 

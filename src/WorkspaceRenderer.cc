@@ -72,7 +72,7 @@ namespace degate
 		free_textures();
 
 		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
-		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(scale);
+		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(1/*scale*/); //Todo: fix scaling manager
 
 		background_image = elem.second;
 		if (background_image == NULL)
@@ -87,7 +87,7 @@ namespace degate
 		{
 			for (unsigned int y = 0; y < background_image->get_height(); y += background_image->get_tile_size())
 			{
-				background_textures.push_back(std::make_tuple(x, y, create_background_tile(x, y, elem.first, index)));
+				background_textures.push_back(std::make_tuple(x, y, create_background_tile(x, y, 1/*elem.first*/, index))); //Todo: fix scaling manager
 
 				index++;
 			}
@@ -373,6 +373,7 @@ namespace degate
 		event->delta() > 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
 
 		event->accept();
+		//Todo: update_screen(); after fixed the scaling manager
 		update();
 	}
 
