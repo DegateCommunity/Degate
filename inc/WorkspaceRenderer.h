@@ -23,6 +23,8 @@
 #define __WORKSPACERENDERER_H__
 
 #include "Project.h"
+#include "WorkspaceBackground.h"
+#include "WorkspaceGates.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>
@@ -48,11 +50,6 @@ namespace degate
 		void update_screen();
 
 		/**
-	     * Update the background (all textures are reloaded).
-	     */
-		void update_background();
-
-		/**
 	     * Set the project for the workspace (the screen will be updated).
 	     * 
 	     * @param new_project : the project to set.
@@ -76,25 +73,7 @@ namespace degate
 		void keyReleaseEvent(QKeyEvent* event) override;
 		void mouseDoubleClickEvent(QMouseEvent* event) override;
 
-		/**
-	     * Calculate the lower offset to top or left for a tile.
-	     */
-		unsigned int to_lower_tile_offset(unsigned int pos, unsigned int tile_width) const
-		{
-			return (pos & ~(tile_width - 1));
-		}
-
-		/**
-		 * Calculate the upper offset to top or left for a tile.
-		 */
-		unsigned int to_upper_tile_offset(unsigned int pos, unsigned int tile_width) const
-		{
-			return (pos & ~(tile_width - 1)) + (tile_width - 1);
-		}
-
-
 	private:
-		GLuint create_background_tile(unsigned int x, unsigned int y, float pre_scaling, unsigned indice);
 
 		/*
 		 * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
@@ -119,16 +98,16 @@ namespace degate
 		Project_shptr project = NULL;
 		QOpenGLShaderProgram* program = NULL;
 		QMatrix4x4 projection;
-		QMatrix4x4 view;
 		float scale = 1;
 		float center_x = 0, center_y = 0;
 		float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
 		QPointF mouse_last_pos;
 
 		// Background
-		std::list<std::tuple<unsigned int, unsigned int, GLuint>> background_textures;
-		BackgroundImage_shptr background_image = NULL;
-		GLuint background_vbo;
+		WorkspaceBackground background;
+
+		// Gates
+		WorkspaceGates gates;
 	};
 }
 

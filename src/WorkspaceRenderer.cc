@@ -23,35 +23,16 @@
 
 namespace degate
 {
-	class Vertex2D
-	{
-	public:
-		Vertex2D()
-		{
-		}
 
-		Vertex2D(const QPointF& p, const QPointF& c) : pos(p), texCoord(c)
-		{
-		}
-
-		QVector2D pos;
-		QVector2D texCoord;
-	};
-
-	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent),
-	                                                        background_vbo(QOpenGLBuffer::VertexBuffer)
+	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this)
 	{
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
-
-		view.setToIdentity();
 	}
 
 	WorkspaceRenderer::~WorkspaceRenderer()
 	{
 		doneCurrent();
-		if (program != NULL)
-			delete program;
 	}
 
 	void WorkspaceRenderer::update_screen()
@@ -59,41 +40,10 @@ namespace degate
 		if (project == NULL)
 			return;
 
-		update_background();
+		background.update();
+		gates.update();
 
 		update();
-	}
-
-	void WorkspaceRenderer::update_background()
-	{
-		if (project == NULL)
-			return;
-
-		free_textures();
-
-		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
-		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(1/*scale*/); //Todo: fix scaling manager
-
-		background_image = elem.second;
-		if (background_image == NULL)
-			return;
-
-		glBindBuffer(GL_ARRAY_BUFFER, background_vbo);
-
-		glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(Vertex2D), 0, GL_STATIC_DRAW);
-
-		unsigned index = 0;
-		for (unsigned int x = 0; x < background_image->get_width(); x += background_image->get_tile_size())
-		{
-			for (unsigned int y = 0; y < background_image->get_height(); y += background_image->get_tile_size())
-			{
-				background_textures.push_back(std::make_tuple(x, y, create_background_tile(x, y, 1/*elem.first*/, index))); //Todo: fix scaling manager
-
-				index++;
-			}
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	void WorkspaceRenderer::set_project(const Project_shptr& new_project)
@@ -102,19 +52,15 @@ namespace degate
 
 		project = new_project;
 
-		background_image = project->get_logic_model()->get_current_layer()->get_image();
+		background.set_project(new_project);
+		gates.set_project(new_project);
 
 		update_screen();
 	}
 
 	void WorkspaceRenderer::free_textures()
 	{
-		for (auto const& e : background_textures)
-		{
-			glDeleteTextures(1, &std::get<2>(e));
-		}
-
-		background_textures.clear();
+		background.free_textures();
 	}
 
 	void WorkspaceRenderer::initializeGL()
@@ -122,50 +68,11 @@ namespace degate
 		initializeOpenGLFunctions();
 
 		glClearColor(0.0, 0.0, 0.0, 0.0);
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
-		const char* vsrc =
-			"attribute vec2 pos;\n"
-			"attribute vec2 texCoord;\n"
-			"uniform mat4 mvp;\n"
-			"varying vec2 texCoord0;\n"
-			"void main(void)\n"
-			"{\n"
-			"    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
-			"    texCoord0 = texCoord;\n"
-			"}\n";
-		vshader->compileSourceCode(vsrc);
-
-		QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
-		const char* fsrc =
-			"uniform sampler2D texture;\n"
-			"varying vec2 texCoord0;\n"
-			"void main(void)\n"
-			"{\n"
-			"    gl_FragColor = texture2D(texture, texCoord0);\n"
-			"}\n";
-		fshader->compileSourceCode(fsrc);
-
-		program = new QOpenGLShaderProgram;
-		program->addShader(vshader);
-		program->addShader(fshader);
-
-		program->link();
-
-		glGenBuffers(1, &background_vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, background_vbo);
-
-		program->bind();
-		program->enableAttributeArray("pos");
-		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(Vertex2D));
-
-		program->enableAttributeArray("texCoord");
-		program->setAttributeBuffer("texCoord", GL_FLOAT, 2 * sizeof(float), 2, sizeof(Vertex2D));
-		program->release();
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		background.init();
+		gates.init();
 	}
 
 	void WorkspaceRenderer::paintGL()
@@ -174,29 +81,8 @@ namespace degate
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		program->bind();
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_BLEND);
-
-		program->setUniformValue("mvp", projection * view);
-
-		glBindBuffer(GL_ARRAY_BUFFER, background_vbo);
-
-		unsigned index = 0;
-		for (auto& e : background_textures)
-		{
-			glBindTexture(GL_TEXTURE_2D, std::get<2>(e));
-			glDrawArrays(GL_TRIANGLES, index * 6, 6);
-
-			index++;
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		glDisable(GL_TEXTURE_2D);
-		program->release();
+		background.draw(projection);
+		gates.draw(projection);
 	}
 
 	void WorkspaceRenderer::resizeGL(int w, int h)
@@ -204,98 +90,6 @@ namespace degate
 		glViewport(0, 0, w, h);
 
 		set_projection(NO_ZOOM, center_x, center_y);
-	}
-
-	GLuint WorkspaceRenderer::create_background_tile(unsigned x, unsigned y, float pre_scaling, unsigned indice)
-	{
-		assert(project != NULL);
-		assert(background_image != NULL);
-
-		const unsigned int tile_width = background_image->get_tile_size();
-
-		// Real pixel coordinates
-		float min_x = (static_cast<float>(x) - width() / 2.0) * pre_scaling;
-		float min_y = (static_cast<float>(y) - height() / 2.0) * pre_scaling;
-		float max_x = min_x + static_cast<float>(tile_width) * pre_scaling;
-		float max_y = min_y + static_cast<float>(tile_width) * pre_scaling;
-
-
-		// Texture
-
-		auto data = new GLuint[tile_width * tile_width];
-		assert(data != NULL);
-
-		memset(data, 0, tile_width * tile_width * sizeof(GLuint));
-		background_image->raw_copy(data, x, y);
-
-		GLuint texture = 0;
-
-		glGenTextures(1, &texture);
-		assert(glGetError() == GL_NO_ERROR);
-
-		glBindTexture(GL_TEXTURE_2D, texture);
-		assert(glGetError() == GL_NO_ERROR);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		assert(glGetError() == GL_NO_ERROR);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		assert(glGetError() == GL_NO_ERROR);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		assert(glGetError() == GL_NO_ERROR);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		assert(glGetError() == GL_NO_ERROR);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
-		assert(glGetError() == GL_NO_ERROR);
-
-		glTexImage2D(GL_TEXTURE_2D,
-		             0, // level
-		             GL_RGBA, // BGRA,
-		             tile_width, tile_width,
-		             0, // border
-		             GL_RGBA,
-		             GL_UNSIGNED_BYTE,
-		             data);
-		assert(glGetError() == GL_NO_ERROR);
-
-		delete[] data;
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-
-		// Vertices
-
-		Vertex2D temp;
-
-		temp.pos = QVector2D(min_x, min_y);
-		temp.texCoord = QVector2D(0, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
-
-		temp.pos = QVector2D(max_x, min_y);
-		temp.texCoord = QVector2D(1, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
-
-		temp.pos = QVector2D(min_x, max_y);
-		temp.texCoord = QVector2D(0, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
-
-		temp.pos = QVector2D(max_x, min_y);
-		temp.texCoord = QVector2D(1, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
-
-		temp.pos = QVector2D(min_x, max_y);
-		temp.texCoord = QVector2D(0, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
-
-		temp.pos = QVector2D(max_x, max_y);
-		temp.texCoord = QVector2D(1, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
-
-
-		return texture;
 	}
 
 	QPointF WorkspaceRenderer::get_widget_mouse_position() const
@@ -373,7 +167,7 @@ namespace degate
 		event->delta() > 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
 
 		event->accept();
-		//Todo: update_screen(); after fixed the scaling manager
+		//Todo: update_screen(); after fixed the scaling manager (in the background class).
 		update();
 	}
 
