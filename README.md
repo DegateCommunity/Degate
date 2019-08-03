@@ -14,6 +14,8 @@ For Boost, you can specify to CMake a custom path with : -DBOOST_ROOT="custom_pa
 
 For Qt5, you can specify to CMake a custom path with : -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example on windows : Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here : https://www.qt.io/download.
 
+For linux, don't forgot to install the Qt5 add-on module : ImageFormats (you just need to have the package installed, it will be embedded in the Qt5::Core module after). See https://doc.qt.io/qt-5/qtimageformats-index.html. For example, on debian, the package is : qt5-image-formats-plugins.
+
 Keep your CMake installation up to date.
 
 # Build
