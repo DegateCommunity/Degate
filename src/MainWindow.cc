@@ -101,7 +101,7 @@ namespace degate
 		QString dir = QFileDialog::getExistingDirectory(this, "Import project");
 
 		ProjectImporter projectImporter;
-		project = projectImporter.import(dir.toStdString());
+		project = projectImporter.import_all(dir.toStdString());
 		QString project_name = QString::fromStdString(project->get_name());
 
 		setWindowTitle("Degate : " + project_name + " project");
