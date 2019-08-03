@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<logic-model>
+  <gates/>
+  <vias/>
+  <emarkers/>
+  <wires/>
+  <nets/>
+  <annotations>
+    <annotation id="2342" name="Logic area" description="" layer="0" class-id="1" min-x="814" min-y="953" max-x="3909" max-y="2249" fill-color="#FF00007F" frame-color="#00000000" subproject-directory="subproject_1"/>
+    <annotation id="2343" name="antenna pad 2" description="" layer="0" class-id="0" min-x="3843" min-y="200" max-x="4181" max-y="529" fill-color="#00000000" frame-color="#00000000"/>
+    <annotation id="2344" name="antenna pad 1" description="" layer="0" class-id="0" min-x="577" min-y="196" max-x="899" max-y="529" fill-color="#00000000" frame-color="#00000000"/>
+    <annotation id="2345" name="pad" description="probably for debugging." layer="0" class-id="0" min-x="163" min-y="1182" max-x="485" max-y="1496" fill-color="#00000000" frame-color="#00000000"/>
+    <annotation id="2346" name="pad" description="probably for debugging." layer="0" class-id="0" min-x="163" min-y="1820" max-x="489" max-y="2158" fill-color="#00000000" frame-color="#00000000"/>
+    <annotation id="1" name="Memory" description="" layer="0" class-id="0" min-x="964" min-y="2798" max-x="2236" max-y="3758" fill-color="#00000000" frame-color="#00000000"/>
+  </annotations>
+  <modules>
+    <module id="0" name="main_module" entity="">
+      <module-ports/>
+      <cells/>
+      <modules/>
+    </module>
+  </modules>
+</logic-model>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<gate-library>
+  <gate-templates>
+    <gate type-id="9990" name="FF1" description="DQ-FF" logic-class="" fill-color="#7F000000" frame-color="#FF0000FF" width="207" height="62">
+      <images>
+        <image layer-type="logic" image="9990_logic.tif"/>
+      </images>
+      <ports>
+        <port id="5" name="rst" description="" type="in" x="8" y="43"/>
+        <port id="1" name="D" description="" type="in" x="149" y="23"/>
+        <port id="2" name="clk" description="" type="in" x="50" y="26"/>
+        <port id="3" name="!Q" description="" type="out" x="43" y="46"/>
+        <port id="4" name="Q" description="" type="out" x="29" y="26"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="9991" name="FF2" description="" logic-class="flipflop" fill-color="#7F000000" frame-color="#FFEC00FF" width="176" height="66">
+      <images>
+        <image layer-type="logic" image="9991_logic.tif"/>
+      </images>
+      <ports>
+        <port id="65538" name="clk" description="clk" type="in" x="34" y="32"/>
+        <port id="65539" name="Q" description="Q" type="out" x="18" y="27"/>
+        <port id="65540" name="Q" description="Q" type="out" x="5" y="23"/>
+        <port id="65537" name="D" description="D" type="in" x="135" y="24"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="9991.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="9992" name="FF3" description="" logic-class="" fill-color="#7F000000" frame-color="#FF0090FF" width="204" height="64">
+      <images>
+        <image layer-type="logic" image="9992_logic.tif"/>
+      </images>
+      <ports>
+        <port id="131076" name="Q" description="" type="out" x="191" y="34"/>
+        <port id="131077" name="!Q" description="" type="out" x="199" y="22"/>
+        <port id="131073" name="D" description="" type="in" x="53" y="21"/>
+        <port id="131074" name="clk" description="" type="in" x="161" y="30"/>
+        <port id="131075" name="rst" description="" type="in" x="7" y="40"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="9994" name="Switch" description="set-reset-switch" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="67" height="66">
+      <images>
+        <image layer-type="logic" image="9994_logic.tif"/>
+      </images>
+      <ports>
+        <port id="262148" name="y2" description="" type="out" x="5" y="39"/>
+        <port id="262145" name="a" description="" type="in" x="63" y="23"/>
+        <port id="262147" name="y1" description="" type="out" x="41" y="38"/>
+        <port id="262146" name="b" description="" type="in" x="53" y="41"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="9995" name="2AOI" description="" logic-class="aoi" fill-color="#7F000000" frame-color="#FFFFFFFF" width="54" height="61">
+      <images>
+        <image layer-type="logic" image="9995_logic.tif"/>
+      </images>
+      <ports>
+        <port id="327681" name="a" description="a" type="in" x="49" y="34"/>
+        <port id="327683" name="c" description="c" type="in" x="17" y="34"/>
+        <port id="327682" name="b" description="b" type="in" x="41" y="20"/>
+        <port id="327684" name="d" description="d" type="in" x="5" y="27"/>
+        <port id="327685" name="y" description="y" type="out" x="29" y="20"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="9995.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="9996" name="MUX" description="MUX" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="79" height="62">
+      <images>
+        <image layer-type="logic" image="9996_logic.tif"/>
+      </images>
+      <ports>
+        <port id="393220" name="y" description="" type="out" x="72" y="16"/>
+        <port id="393218" name="b" description="" type="in" x="26" y="37"/>
+        <port id="393219" name="c" description="" type="in" x="63" y="36"/>
+        <port id="393217" name="a" description="" type="in" x="5" y="36"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="9997" name="XNOR" description="2-XNOR" logic-class="xnor" fill-color="#A0303030" frame-color="#FFFAFF00" width="71" height="62">
+      <images>
+        <image layer-type="logic" image="9997_logic.tif"/>
+      </images>
+      <ports>
+        <port id="458754" name="b" description="b" type="in" x="59" y="27"/>
+        <port id="458755" name="y" description="y" type="out" x="47" y="31"/>
+        <port id="458753" name="a" description="a" type="in" x="26" y="15"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="9997.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="9998" name="TRI1" description="tristate inverter" logic-class="tristate-inverter" fill-color="#7F000000" frame-color="#FFFFFFFF" width="63" height="62">
+      <images>
+        <image layer-type="logic" image="9998_logic.tif"/>
+      </images>
+      <ports>
+        <port id="524291" name="y" description="y" type="out" x="46" y="36"/>
+        <port id="524290" name="b" description="b" type="in" x="14" y="28"/>
+        <port id="524292" name="y2" description="y2" type="out" x="35" y="39"/>
+        <port id="524289" name="a" description="a" type="in" x="58" y="39"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="9998.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="9999" name="4NOR" description="4-NOR" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="54" height="63">
+      <images>
+        <image layer-type="logic" image="9999_logic.tif"/>
+      </images>
+      <ports>
+        <port id="589825" name="a" description="" type="in" x="51" y="34"/>
+        <port id="589827" name="c" description="" type="in" x="18" y="36"/>
+        <port id="589829" name="y" description="" type="out" x="28" y="15"/>
+        <port id="589826" name="b" description="" type="in" x="38" y="34"/>
+        <port id="589828" name="d" description="" type="in" x="5" y="39"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99910" name="3NAND" description="3-NAND" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="45" height="60">
+      <images>
+        <image layer-type="logic" image="99910_logic.tif"/>
+      </images>
+      <ports>
+        <port id="655362" name="b" description="" type="in" x="12" y="25"/>
+        <port id="655361" name="a" description="" type="in" x="5" y="37"/>
+        <port id="655363" name="c" description="" type="in" x="33" y="31"/>
+        <port id="655364" name="y" description="" type="out" x="42" y="11"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99912" name="2NAND" description="2-NAND" logic-class="nand" fill-color="#7F000000" frame-color="#FFFFFFFF" width="31" height="58">
+      <images>
+        <image layer-type="logic" image="99912_logic.tif"/>
+      </images>
+      <ports>
+        <port id="786434" name="b" description="b" type="in" x="5" y="39"/>
+        <port id="786435" name="Y" description="Y" type="out" x="16" y="25"/>
+        <port id="786433" name="a" description="a" type="in" x="27" y="39"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="99912.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="99913" name="22AOI" description="22-AOI" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="63" height="58">
+      <images>
+        <image layer-type="logic" image="99913_logic.tif"/>
+      </images>
+      <ports>
+        <port id="851972" name="d" description="" type="in" x="8" y="20"/>
+        <port id="851973" name="y" description="" type="out" x="47" y="24"/>
+        <port id="851974" name="y" description="" type="out" x="47" y="52"/>
+        <port id="851971" name="c" description="" type="in" x="19" y="23"/>
+        <port id="851969" name="a" description="" type="in" x="59" y="19"/>
+        <port id="851970" name="b" description="" type="in" x="36" y="19"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99914" name="2NOR" description="2-NOR" logic-class="nor" fill-color="#7F000000" frame-color="#FFFFFFFF" width="28" height="57">
+      <images>
+        <image layer-type="logic" image="99914_logic.tif"/>
+      </images>
+      <ports>
+        <port id="917505" name="a" description="a" type="in" x="4" y="32"/>
+        <port id="917506" name="b" description="b" type="in" x="25" y="41"/>
+        <port id="917507" name="y" description="y" type="out" x="13" y="19"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="99914.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="99915" name="3NOR" description="3-NOR" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="41" height="61">
+      <images>
+        <image layer-type="logic" image="99915_logic.tif"/>
+      </images>
+      <ports>
+        <port id="983042" name="b" description="" type="in" x="25" y="24"/>
+        <port id="983044" name="y" description="" type="out" x="10" y="45"/>
+        <port id="983041" name="a" description="" type="in" x="37" y="24"/>
+        <port id="983043" name="c" description="" type="in" x="4" y="24"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99917" name="2OAI" description="2-OAI" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="57" height="58">
+      <images>
+        <image layer-type="logic" image="99917_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1114115" name="c" description="" type="in" x="20" y="24"/>
+        <port id="1114116" name="d" description="" type="in" x="8" y="41"/>
+        <port id="1114113" name="a" description="" type="in" x="56" y="31"/>
+        <port id="1114117" name="y" description="" type="out" x="32" y="28"/>
+        <port id="1114114" name="b" description="" type="in" x="43" y="30"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99918" name="222AOI" description="222-AOI" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="115" height="57">
+      <images>
+        <image layer-type="logic" image="99918_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1179653" name="e" description="" type="in" x="30" y="17"/>
+        <port id="1179652" name="d" description="" type="in" x="42" y="23"/>
+        <port id="1179650" name="b" description="" type="in" x="86" y="5"/>
+        <port id="1179649" name="a" description="" type="in" x="111" y="27"/>
+        <port id="1179651" name="c" description="" type="in" x="74" y="8"/>
+        <port id="1179655" name="y" description="" type="out" x="18" y="20"/>
+        <port id="1179656" name="y" description="" type="out" x="19" y="52"/>
+        <port id="1179654" name="f" description="" type="in" x="7" y="17"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99919" name="TRI3" description="tristate inverter / mux" logic-class="tristate-inverter" fill-color="#7F000000" frame-color="#FFFFFFFF" width="40" height="57">
+      <images>
+        <image layer-type="logic" image="99919_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1245187" name="c" description="c" type="in" x="35" y="18"/>
+        <port id="1245188" name="y" description="y" type="out" x="15" y="33"/>
+        <port id="1245186" name="b" description="b" type="in" x="27" y="36"/>
+        <port id="1245185" name="a" description="a" type="in" x="3" y="38"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="99919.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="99921" name="TRI2" description="tristate inverter" logic-class="tristate-inverter" fill-color="#7F000000" frame-color="#FFFFFFFF" width="61" height="57">
+      <images>
+        <image layer-type="logic" image="99921_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1376260" name="y2" description="y2" type="out" x="28" y="37"/>
+        <port id="1376257" name="a" description="a" type="in" x="4" y="37"/>
+        <port id="1376258" name="b" description="b" type="in" x="48" y="27"/>
+        <port id="1376259" name="y" description="y" type="out" x="16" y="34"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="99921.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="99922" name="INV1" description="inverter" logic-class="inverter" fill-color="#7F000000" frame-color="#FF00FFFB" width="20" height="58">
+      <images>
+        <image layer-type="logic" image="99922_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1441794" name="y" description="y" type="out" x="4" y="39"/>
+        <port id="1441793" name="a" description="a" type="in" x="16" y="28"/>
+      </ports>
+      <implementations>
+        <implementation type="verilog" file="99922.v"/>
+      </implementations>
+    </gate>
+    <gate type-id="99925" name="INV2" description="inverter" logic-class="" fill-color="#7F000000" frame-color="#FF00FBFF" width="30" height="62">
+      <images>
+        <image layer-type="logic" image="99925_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1638402" name="y" description="y" type="out" x="15" y="23"/>
+        <port id="1638401" name="a" description="a" type="in" x="26" y="37"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99926" name="4NAND" description="4-NAND" logic-class="" fill-color="#7F000000" frame-color="#FFFFFFFF" width="57" height="62">
+      <images>
+        <image layer-type="logic" image="99926_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1703940" name="d" description="" type="in" x="52" y="23"/>
+        <port id="1703938" name="b" description="" type="in" x="10" y="26"/>
+        <port id="1703939" name="c" description="" type="in" x="31" y="32"/>
+        <port id="1703937" name="a" description="" type="in" x="3" y="37"/>
+        <port id="1703941" name="y" description="" type="out" x="41" y="43"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99927" name="FF4" description="" logic-class="" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="243" height="62">
+      <images>
+        <image layer-type="logic" image="99927_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1769478" name="select" description="" type="in" x="237" y="42"/>
+        <port id="1769476" name="clk" description="" type="in" x="89" y="41"/>
+        <port id="1769473" name="D" description="" type="in" x="24" y="30"/>
+        <port id="1769474" name="Q" description="" type="out" x="41" y="30"/>
+        <port id="1769477" name="click to edit" description="" type="in" x="174" y="20"/>
+        <port id="1769475" name="!Q" description="" type="out" x="67" y="27"/>
+      </ports>
+      <implementations/>
+    </gate>
+    <gate type-id="99930" name="Latch" description="Latch" logic-class="" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" width="138" height="62">
+      <images>
+        <image layer-type="logic" image="99930_logic.tif"/>
+      </images>
+      <ports>
+        <port id="1966081" name="a" description="" type="in" x="7" y="40"/>
+        <port id="1966082" name="clk" description="" type="in" x="39" y="20"/>
+        <port id="1966083" name="y" description="" type="out" x="76" y="39"/>
+      </ports>
+      <implementations/>
+    </gate>
+  </gate-templates>
+</gate-library>

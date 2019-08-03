@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project degate-version="" name="Legic prime" description="" width="4500" height="4000" lambda="5" pin-diameter="5" wire-diameter="5" port-diameter="5" pixel-per-um="0" template-dimension="0" font-size="10" server-url="http://degate.org/cgi-bin/xmlrpc-server-cgi.pl?channel=fzjrnkwqnyhwlyadyqaym" last-pulled-transaction-id="0">
+  <layers>
+    <layer position="0" type="undefined" description="overview" enabled="true" image-filename="./layer_0.dimg"/>
+  </layers>
+  <grids>
+    <regular-grid enabled="false" distance="0" offset="0" orientation="horizontal"/>
+    <regular-grid enabled="false" distance="0" offset="0" orientation="vertical"/>
+    <irregular-grid enabled="false" orientation="horizontal">
+      <offsets/>
+    </irregular-grid>
+    <irregular-grid enabled="false" orientation="vertical">
+      <offsets/>
+    </irregular-grid>
+  </grids>
+  <default-colors>
+    <color object="wire" color="#FBA300FF"/>
+    <color object="via-up" color="#0089FFFF"/>
+    <color object="via-down" color="#FF2300FF"/>
+    <color object="grid" color="#0012FFFF"/>
+    <color object="annotation" color="#303030A0"/>
+    <color object="annotation-frame" color="#32D932A0"/>
+    <color object="gate" color="#303030A0"/>
+    <color object="gate-frame" color="#D9B032A0"/>
+    <color object="gate-port" color="#FF0000FF"/>
+    <color object="text" color="#FFFFFFFF"/>
+    <color object="emarker" color="#FFA0A0FF"/>
+  </default-colors>
+  <port-colors/>
+</project>

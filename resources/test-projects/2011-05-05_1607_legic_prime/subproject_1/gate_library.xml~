@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes" ?>
+<gate-library>
+
+  <gate-templates>
+    <gate description="DQ-FF" fill-color="#7F000000" frame-color="#FF0000FF" max-x="1415" max-y="116" min-x="1208" min-y="54" name="FF1" type-id="0">
+      <ports>
+        <port id="0" name="D" type="in" x="149" y="23"/>
+        <port id="1" name="clk" type="in" x="50" y="26"/>
+        <port id="2" name="!Q" type="out" x="43" y="46"/>
+        <port id="3" name="Q" type="out" x="29" y="26"/>
+        <port id="4" name="rst" type="in" x="8" y="43"/>
+      </ports>
+    </gate>
+    <gate description="" fill-color="#7F000000" frame-color="#FFEC00FF" max-x="1336" max-y="1377" min-x="1160" min-y="1311" name="FF2" type-id="1">
+      <ports>
+        <port id="65536" name="D" type="in" x="135" y="24"/>
+        <port id="65537" name="clk" type="in" x="34" y="32"/>
+        <port id="65538" name="Q" type="out" x="18" y="27"/>
+        <port id="65539" name="!Q" type="out" x="5" y="23"/>
+      </ports>
+    </gate>
+    <gate description="" fill-color="#7F000000" frame-color="#FF0090FF" max-x="3797" max-y="278" min-x="3593" min-y="214" name="FF3" type-id="2">
+      <ports>
+        <port id="131072" name="D" type="in" x="53" y="21"/>
+        <port id="131073" name="clk" type="in" x="161" y="30"/>
+        <port id="131074" name="rst" type="in" x="7" y="40"/>
+        <port id="131075" name="Q" type="out" x="191" y="34"/>
+        <port id="131076" name="!Q" type="out" x="199" y="22"/>
+      </ports>
+    </gate>
+    <gate description="set-reset-switch" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="2944" max-y="1537" min-x="2877" min-y="1471" name="Switch" type-id="4">
+      <ports>
+        <port id="262144" name="a" type="in" x="63" y="23"/>
+        <port id="262145" name="b" type="in" x="53" y="41"/>
+        <port id="262146" name="y1" type="out" x="41" y="38"/>
+        <port id="262147" name="y2" type="out" x="5" y="39"/>
+      </ports>
+    </gate>
+    <gate description="2-AOI" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="1156" max-y="1374" min-x="1102" min-y="1313" name="2AOI" type-id="5">
+      <ports>
+        <port id="327680" name="a" type="in" x="49" y="34"/>
+        <port id="327681" name="b" type="in" x="41" y="20"/>
+        <port id="327682" name="c" type="in" x="17" y="34"/>
+        <port id="327683" name="d" type="in" x="5" y="27"/>
+        <port id="327684" name="y" type="out" x="29" y="20"/>
+      </ports>
+    </gate>
+    <gate description="MUX" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="1087" max-y="884" min-x="1008" min-y="822" name="MUX" type-id="6">
+      <ports>
+        <port id="393216" name="a" type="in" x="5" y="36"/>
+        <port id="393217" name="b" type="in" x="26" y="37"/>
+        <port id="393218" name="c" type="in" x="63" y="36"/>
+        <port id="393219" name="y" type="out" x="72" y="16"/>
+      </ports>
+    </gate>
+    <gate description="2-XOR" fill-color="#A0303030" frame-color="#FFFAFF00" max-x="2117" max-y="723" min-x="2046" min-y="661" name="XOR" type-id="7">
+      <ports>
+        <port id="458752" name="a" type="in" x="26" y="15"/>
+        <port id="458753" name="b" type="in" x="59" y="27"/>
+        <port id="458754" name="y" type="out" x="47" y="31"/>
+      </ports>
+    </gate>
+    <gate description="tristate inverter" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="3422" max-y="1375" min-x="3359" min-y="1313" name="TRI" type-id="8">
+      <ports>
+        <port id="524288" name="a" type="in" x="58" y="39"/>
+        <port id="524289" name="b" type="in" x="14" y="28"/>
+        <port id="524290" name="y" type="out" x="46" y="36"/>
+        <port id="524291" name="y2" type="out" x="35" y="39"/>
+      </ports>
+    </gate>
+    <gate description="4-NOR" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="2487" max-y="1054" min-x="2433" min-y="991" name="4NOR" type-id="9">
+      <ports>
+        <port id="589824" name="a" type="in" x="51" y="34"/>
+        <port id="589825" name="b" type="in" x="38" y="34"/>
+        <port id="589826" name="c" type="in" x="18" y="36"/>
+        <port id="589827" name="d" type="in" x="5" y="39"/>
+        <port id="589828" name="y" type="out" x="28" y="15"/>
+      </ports>
+    </gate>
+    <gate description="3-NAND" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="1838" max-y="1052" min-x="1793" min-y="992" name="3NAND" type-id="10">
+      <ports>
+        <port id="655360" name="a" type="in" x="5" y="37"/>
+        <port id="655361" name="b" type="in" x="12" y="25"/>
+        <port id="655362" name="c" type="in" x="33" y="31"/>
+        <port id="655363" name="y" type="out" x="42" y="11"/>
+      </ports>
+    </gate>
+    <gate description="2-NAND" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="701" max-y="1371" min-x="670" min-y="1313" name="2NAND" type-id="12">
+      <ports>
+        <port id="786432" name="a" type="in" x="27" y="39"/>
+        <port id="786433" name="b" type="in" x="5" y="39"/>
+        <port id="786434" name="Y" type="out" x="16" y="25"/>
+      </ports>
+    </gate>
+    <gate description="22-AOI" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="466" max-y="274" min-x="403" min-y="216" name="22AOI" type-id="13">
+      <ports>
+        <port id="851968" name="a" type="in" x="59" y="19"/>
+        <port id="851969" name="b" type="in" x="36" y="19"/>
+        <port id="851970" name="c" type="in" x="19" y="23"/>
+        <port id="851971" name="d" type="in" x="8" y="20"/>
+        <port id="851972" name="y" type="out" x="47" y="24"/>
+        <port id="851973" name="y" type="out" x="47" y="52"/>
+      </ports>
+    </gate>
+    <gate description="2-NOR" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="499" max-y="426" min-x="471" min-y="369" name="2NOR" type-id="14">
+      <ports>
+        <port id="917504" name="a" type="in" x="4" y="32"/>
+        <port id="917505" name="b" type="in" x="25" y="41"/>
+        <port id="917506" name="y" type="out" x="13" y="19"/>
+      </ports>
+    </gate>
+    <gate description="3-NOR" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="731" max-y="723" min-x="690" min-y="662" name="3NOR" type-id="15">
+      <ports>
+        <port id="983040" name="a" type="in" x="37" y="24"/>
+        <port id="983041" name="b" type="in" x="25" y="24"/>
+        <port id="983042" name="c" type="in" x="4" y="24"/>
+        <port id="983043" name="y" type="out" x="10" y="45"/>
+      </ports>
+    </gate>
+    <gate description="2-OAI" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="1838" max-y="568" min-x="1781" min-y="510" name="2OAI" type-id="17">
+      <ports>
+        <port id="1114112" name="a" type="in" x="56" y="31"/>
+        <port id="1114113" name="b" type="in" x="43" y="30"/>
+        <port id="1114114" name="c" type="in" x="20" y="24"/>
+        <port id="1114115" name="d" type="in" x="8" y="41"/>
+        <port id="1114116" name="y" type="out" x="32" y="28"/>
+      </ports>
+    </gate>
+    <gate description="222-AOI" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="1436" max-y="882" min-x="1321" min-y="825" name="222AOI" type-id="18">
+      <ports>
+        <port id="1179648" name="a" type="in" x="111" y="27"/>
+        <port id="1179649" name="b" type="in" x="86" y="5"/>
+        <port id="1179650" name="c" type="in" x="74" y="8"/>
+        <port id="1179651" name="d" type="in" x="42" y="23"/>
+        <port id="1179652" name="e" type="in" x="30" y="17"/>
+        <port id="1179653" name="f" type="in" x="7" y="17"/>
+        <port id="1179654" name="y" type="out" x="18" y="20"/>
+        <port id="1179655" name="y" type="out" x="19" y="52"/>
+      </ports>
+    </gate>
+    <gate description="tristate inverter" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="2508" max-y="569" min-x="2468" min-y="512" name="TRI" type-id="19">
+      <ports>
+        <port id="1245184" name="a" type="in" x="3" y="38"/>
+        <port id="1245185" name="b" type="in" x="27" y="36"/>
+        <port id="1245186" name="c" type="in" x="35" y="18"/>
+        <port id="1245187" name="y" type="out" x="15" y="33"/>
+      </ports>
+    </gate>
+    <gate description="tristate inverter" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="2965" max-y="721" min-x="2904" min-y="664" name="TRI" type-id="21">
+      <ports>
+        <port id="1376256" name="a" type="in" x="4" y="37"/>
+        <port id="1376257" name="b" type="in" x="48" y="27"/>
+        <port id="1376258" name="y" type="out" x="16" y="34"/>
+        <port id="1376259" name="y2" type="out" x="28" y="37"/>
+      </ports>
+    </gate>
+    <gate description="inverter" fill-color="#7F000000" frame-color="#FF00FFFB" max-x="2255" max-y="881" min-x="2235" min-y="823" name="INV" type-id="22">
+      <ports>
+        <port id="1441792" name="a" type="in" x="16" y="28"/>
+        <port id="1441793" name="y" type="out" x="4" y="39"/>
+      </ports>
+    </gate>
+    <gate description="inverter" fill-color="#7F000000" frame-color="#FF00FBFF" max-x="1622" max-y="276" min-x="1592" min-y="214" name="INV" type-id="25">
+      <ports>
+        <port id="1638400" name="a" type="in" x="26" y="37"/>
+        <port id="1638401" name="y" type="out" x="15" y="23"/>
+      </ports>
+    </gate>
+    <gate description="4-NAND" fill-color="#7F000000" frame-color="#FFFFFFFF" max-x="3042" max-y="1053" min-x="2985" min-y="991" name="4NAND" type-id="26">
+      <ports>
+        <port id="1703936" name="a" type="in" x="3" y="37"/>
+        <port id="1703937" name="b" type="in" x="10" y="26"/>
+        <port id="1703938" name="c" type="in" x="31" y="32"/>
+        <port id="1703939" name="d" type="in" x="52" y="23"/>
+        <port id="1703940" name="y" type="out" x="41" y="43"/>
+      </ports>
+    </gate>
+    <gate description="" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" max-x="455" max-y="429" min-x="212" min-y="367" name="FF4" type-id="27">
+      <ports>
+        <port id="1769472" name="D" type="in" x="24" y="30"/>
+        <port id="1769473" name="Q" type="out" x="41" y="30"/>
+        <port id="1769474" name="!Q" type="out" x="67" y="27"/>
+        <port id="1769475" name="clk" type="in" x="89" y="41"/>
+        <port id="1769476" name="click to edit" type="in" x="174" y="20"/>
+        <port id="1769477" name="select" type="in" x="237" y="42"/>
+      </ports>
+    </gate>
+    <gate description="Latch" fill-color="#7FA0A0A0" frame-color="#FFFFFFFF" max-x="3673" max-y="1535" min-x="3535" min-y="1473" name="Latch" type-id="30">
+      <ports>
+        <port id="1966080" name="a" type="in" x="7" y="40"/>
+        <port id="1966081" name="clk" type="in" x="39" y="20"/>
+        <port id="1966082" name="y" type="out" x="76" y="39"/>
+      </ports>
+    </gate>
+  </gate-templates>
+
+</gate-library>
