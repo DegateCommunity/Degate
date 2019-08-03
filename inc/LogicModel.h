@@ -514,6 +514,15 @@ namespace degate
 
 
 		/**
+		 * Get the number of gates.
+		 */
+
+		inline unsigned get_gates_count()
+		{
+			return gates.size();
+		}
+
+		/**
 		 * Get a iterator to iterate over all gates.
 		 */
 
@@ -525,6 +534,15 @@ namespace degate
 		 */
 
 		gate_collection::iterator gates_end();
+
+		/**
+		 * Get the number of vias.
+		 */
+
+		inline unsigned get_vias_count()
+		{
+			return vias.size();
+		}
 
 		/**
 		 * Get a iterator to iterate over all vias.
@@ -564,6 +582,15 @@ namespace degate
 
 		net_collection::iterator nets_end();
 
+
+		/**
+		 * Get the number of annotations.
+		 */
+
+		inline unsigned get_annotations_count()
+		{
+			return annotations.size();
+		}
 
 		/**
 		 * Get a iterator to iterate over all annotations.
