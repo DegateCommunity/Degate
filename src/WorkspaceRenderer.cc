@@ -33,6 +33,8 @@ namespace degate
 	WorkspaceRenderer::~WorkspaceRenderer()
 	{
 		doneCurrent();
+
+		WorkspaceText::delete_font();
 	}
 
 	void WorkspaceRenderer::update_screen()
@@ -55,6 +57,8 @@ namespace degate
 		background.set_project(new_project);
 		gates.set_project(new_project);
 
+		set_projection(1, width() / 2.0, height() / 2.0);
+
 		update_screen();
 	}
 
@@ -67,8 +71,11 @@ namespace degate
 	{
 		initializeOpenGLFunctions();
 
+		WorkspaceText::init_font();
+
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glEnable(GL_BLEND);
+		glDisable(GL_DEPTH);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 		background.init();
@@ -95,7 +102,7 @@ namespace degate
 	QPointF WorkspaceRenderer::get_widget_mouse_position() const
 	{
 		const QPointF qt_widget_relative = mapFromGlobal(QCursor::pos());
-		return QPoint(qt_widget_relative.x(), height() - qt_widget_relative.y());
+		return QPoint(qt_widget_relative.x(), qt_widget_relative.y());
 	}
 
 	QPointF WorkspaceRenderer::get_opengl_mouse_position() const
@@ -118,7 +125,7 @@ namespace degate
 		viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
 
 		projection.setToIdentity();
-		projection.scale(1, -1, 1);
+		projection.scale(1, 1, 1);
 		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
 	}
 
@@ -160,9 +167,6 @@ namespace degate
 	void WorkspaceRenderer::wheelEvent(QWheelEvent* event)
 	{
 		QOpenGLWidget::wheelEvent(event);
-
-		if (project == NULL)
-			return;
 
 		event->delta() > 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
 

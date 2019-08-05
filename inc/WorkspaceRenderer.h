@@ -25,6 +25,7 @@
 #include "Project.h"
 #include "WorkspaceBackground.h"
 #include "WorkspaceGates.h"
+#include "WorkspaceText.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>

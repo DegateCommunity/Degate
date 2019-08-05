@@ -23,6 +23,7 @@
 #define __WORKSPACEGATES_H__
 
 #include "WorkspaceElement.h"
+#include "WorkspaceText.h"
 
 namespace degate
 {
@@ -43,7 +44,9 @@ namespace degate
 		void update() override;
 
 		/*
-	     * Draw the background (all tiles will be draw).
+	     * Draw all gates.
+	     * 
+	     * @param projection : the projection matrix to apply.
 	     */
 		void draw(const QMatrix4x4& projection) override;
 
@@ -53,6 +56,8 @@ namespace degate
 		 * Create on gate.
 		 */
 		void create_gate(Gate_shptr& gate, unsigned indice);
+
+		WorkspaceText text;
 
 	};
 }
