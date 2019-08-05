@@ -38,12 +38,14 @@ namespace degate
 
 		setMenuBar(&menu_bar);
 
-		QMenu* file_menu = menu_bar.addMenu("File");
-		QAction* file_import_project_action = file_menu->addAction("Import project");
-		QObject::connect(file_import_project_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
+		QMenu* project_menu = menu_bar.addMenu("Project");
+		QAction* project_import_action = project_menu->addAction("Open");
+		project_import_action->setIcon(style()->standardIcon(QStyle::SP_DirOpenIcon));
+		QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
 
 		QMenu* about_menu = menu_bar.addMenu("About");
 		QAction* about_action = about_menu->addAction("Degate");
+		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_about_degate()));
 
 
