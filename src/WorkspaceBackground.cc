@@ -72,7 +72,7 @@ namespace degate
 
 		program->link();
 
-		glGenBuffers(1, &vbo);
+		context->glGenBuffers(1, &vbo);
 	}
 
 	void WorkspaceBackground::update()
@@ -89,9 +89,9 @@ namespace degate
 		if (background_image == NULL)
 			return;
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(Vertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(Vertex2D), 0, GL_STATIC_DRAW);
 
 		unsigned index = 0;
 		for (unsigned int x = 0; x < background_image->get_width(); x += background_image->get_tile_size())
@@ -104,18 +104,18 @@ namespace degate
 			}
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	void WorkspaceBackground::draw(const QMatrix4x4& projection)
 	{
 		program->bind();
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_BLEND);
+		context->glEnable(GL_TEXTURE_2D);
+		context->glEnable(GL_BLEND);
 
 		program->setUniformValue("mvp", projection);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		program->enableAttributeArray("pos");
 		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(Vertex2D));
@@ -126,17 +126,17 @@ namespace degate
 		unsigned index = 0;
 		for (auto& e : background_textures)
 		{
-			glBindTexture(GL_TEXTURE_2D, e);
-			glDrawArrays(GL_TRIANGLES, index * 6, 6);
+			context->glBindTexture(GL_TEXTURE_2D, e);
+			context->glDrawArrays(GL_TRIANGLES, index * 6, 6);
 
 			index++;
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		context->glBindTexture(GL_TEXTURE_2D, 0);
 
-		glDisable(GL_TEXTURE_2D);
+		context->glDisable(GL_TEXTURE_2D);
 		program->release();
 	}
 
@@ -145,7 +145,7 @@ namespace degate
 		if(background_textures.size() < 1)
 			return;
 
-		glDeleteTextures(background_textures.size(), &background_textures[0]);
+		context->glDeleteTextures(background_textures.size(), &background_textures[0]);
 
 		background_textures.clear();
 	}
@@ -174,28 +174,28 @@ namespace degate
 
 		GLuint texture = 0;
 
-		glGenTextures(1, &texture);
-		assert(glGetError() == GL_NO_ERROR);
+		context->glGenTextures(1, &texture);
+		assert(context->glGetError() == GL_NO_ERROR);
 
-		glBindTexture(GL_TEXTURE_2D, texture);
-		assert(glGetError() == GL_NO_ERROR);
+		context->glBindTexture(GL_TEXTURE_2D, texture);
+		assert(context->glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		assert(glGetError() == GL_NO_ERROR);
+		context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		assert(context->glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		assert(glGetError() == GL_NO_ERROR);
+		context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		assert(context->glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		assert(glGetError() == GL_NO_ERROR);
+		context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		assert(context->glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		assert(glGetError() == GL_NO_ERROR);
+		context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		assert(context->glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
-		assert(glGetError() == GL_NO_ERROR);
+		context->glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
+		assert(context->glGetError() == GL_NO_ERROR);
 
-		glTexImage2D(GL_TEXTURE_2D,
+		context->glTexImage2D(GL_TEXTURE_2D,
 		             0, // level
 		             GL_RGBA, // BGRA,
 		             tile_width, tile_width,
@@ -203,11 +203,11 @@ namespace degate
 		             GL_RGBA,
 		             GL_UNSIGNED_BYTE,
 		             data);
-		assert(glGetError() == GL_NO_ERROR);
+		assert(context->glGetError() == GL_NO_ERROR);
 
 		delete[] data;
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		context->glBindTexture(GL_TEXTURE_2D, 0);
 
 
 		// Vertices
@@ -216,27 +216,27 @@ namespace degate
 
 		temp.pos = QVector2D(min_x, min_y);
 		temp.texCoord = QVector2D(0, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
 
 		temp.pos = QVector2D(max_x, min_y);
 		temp.texCoord = QVector2D(1, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
 
 		temp.pos = QVector2D(min_x, max_y);
 		temp.texCoord = QVector2D(0, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
 
 		temp.pos = QVector2D(max_x, min_y);
 		temp.texCoord = QVector2D(1, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
 
 		temp.pos = QVector2D(min_x, max_y);
 		temp.texCoord = QVector2D(0, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
 
 		temp.pos = QVector2D(max_x, max_y);
 		temp.texCoord = QVector2D(1, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
 
 
 		return texture;

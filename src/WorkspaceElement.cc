@@ -33,7 +33,10 @@ namespace degate
 		if (program != NULL)
 			delete program;
 
-		glDeleteBuffers(1, &vbo);
+		if(QOpenGLContext::currentContext() == NULL || context == NULL)
+			return;
+
+		context->glDeleteBuffers(1, &vbo);
 	}
 
 	void WorkspaceElement::set_project(const Project_shptr& new_project)
@@ -43,6 +46,6 @@ namespace degate
 
 	void WorkspaceElement::init()
 	{
-		initializeOpenGLFunctions();
+		context = QOpenGLContext::currentContext()->functions();
 	}
 }

@@ -28,7 +28,7 @@
 
 namespace degate
 {
-	class WorkspaceElement : protected QOpenGLFunctions
+	class WorkspaceElement
 	{
 	public:
 		WorkspaceElement(QWidget* widget_parent);
@@ -53,6 +53,8 @@ namespace degate
 
 		/*
 	     * Draw.
+	     * 
+	     * @param projection : the projection matrix to apply. 
 	     */
 		virtual void draw(const QMatrix4x4& projection) = 0;
 
@@ -61,6 +63,7 @@ namespace degate
 		Project_shptr project = NULL;
 		QOpenGLShaderProgram* program = NULL;
 		GLuint vbo;
+		QOpenGLFunctions* context;
 	};
 }
 

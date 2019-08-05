@@ -46,6 +46,8 @@ namespace degate
 
 		/*
 	     * Draw the background (all tiles will be draw).
+	     * 
+	     * @param projection : the projection matrix to apply. 
 	     */
 		void draw(const QMatrix4x4& projection) override;
 
