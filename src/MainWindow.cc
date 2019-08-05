@@ -49,24 +49,32 @@ namespace degate
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_about_degate()));
 
 
-		// Tool bar
-
-		tool_bar = addToolBar("");
-		tool_bar->setIconSize(QSize(30, 30));
-		tool_bar->setMovable(false);
-		tool_bar->setFloatable(false);
-
-		QAction* tool_via_up_action = tool_bar->addAction(style()->standardIcon(QStyle::SP_ArrowUp), "Via up");
-		QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
-
-		QAction* tool_via_down_action = tool_bar->addAction(style()->standardIcon(QStyle::SP_ArrowDown), "Via down");
-		QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
-
-
 		// Workspace
 
 		workspace = new WorkspaceRenderer(this);
 		setCentralWidget(workspace);
+
+
+		// Tool bar
+
+		tool_bar = addToolBar("");
+		tool_bar->setIconSize(QSize(20, 20));
+		tool_bar->setMovable(false);
+		tool_bar->setFloatable(false);
+
+		QAction* tool_via_up_action = tool_bar->addAction(QIcon("res/icon_up.png"), "Layer up");
+		QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
+
+		QAction* tool_via_down_action = tool_bar->addAction(QIcon("res/icon_down.png"), "Layer down");
+		QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
+
+		tool_bar->addSeparator();
+
+		QAction* tool_zoom_in_action = tool_bar->addAction(QIcon("res/icon_plus.png"), "Zoom in");
+		QObject::connect(tool_zoom_in_action, SIGNAL(triggered()), workspace, SLOT(zoom_in()));
+
+		QAction* tool_zoom_out_action = tool_bar->addAction(QIcon("res/icon_minus.png"), "Zoom out");
+		QObject::connect(tool_zoom_out_action, SIGNAL(triggered()), workspace, SLOT(zoom_out()));
 	}
 
 	MainWindow::~MainWindow()

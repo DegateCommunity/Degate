@@ -31,8 +31,8 @@
 #include <list>
 #include <tuple>
 
-#define ZOOM_IN 10.0 / 9.0
-#define ZOOM_OUT 9.0 / 10.0
+#define ZOOM_OUT 10.0 / 9.0
+#define ZOOM_IN 9.0 / 10.0
 #define NO_ZOOM 1
 
 namespace degate
@@ -73,6 +73,10 @@ namespace degate
 		void keyPressEvent(QKeyEvent* event) override;
 		void keyReleaseEvent(QKeyEvent* event) override;
 		void mouseDoubleClickEvent(QMouseEvent* event) override;
+
+	public slots:
+		void zoom_in();
+		void zoom_out();
 
 	private:
 

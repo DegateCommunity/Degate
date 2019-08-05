@@ -168,7 +168,7 @@ namespace degate
 	{
 		QOpenGLWidget::wheelEvent(event);
 
-		event->delta() > 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
+		event->delta() < 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
 
 		event->accept();
 		//Todo: update_screen(); after fixed the scaling manager (in the background class).
@@ -188,5 +188,19 @@ namespace degate
 	void WorkspaceRenderer::mouseDoubleClickEvent(QMouseEvent* event)
 	{
 		QOpenGLWidget::mouseDoubleClickEvent(event);
+	}
+
+	void WorkspaceRenderer::zoom_in()
+	{
+		set_projection(ZOOM_IN, center_x, center_y);
+
+		update();
+	}
+
+	void WorkspaceRenderer::zoom_out()
+	{
+		set_projection(ZOOM_OUT, center_x, center_y);
+
+		update();
 	}
 }
