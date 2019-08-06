@@ -53,12 +53,19 @@ namespace degate
 
 	private:
 		/*
-		 * Create on gate.
+		 * Create a gate.
 		 */
 		void create_gate(Gate_shptr& gate, unsigned indice);
 
+		/*
+		 * Create all ports of a specific gate.
+		 */
+		void create_ports(Gate_shptr& gate, unsigned offset);
+
 		WorkspaceText text;
 		GLuint line_vbo;
+		GLuint port_vbo;
+		unsigned port_count = 0;
 
 	};
 }

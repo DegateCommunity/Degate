@@ -233,6 +233,15 @@ namespace degate
 
 
 		/**
+		 * Get the number of ports for this gate.
+		 */
+
+		inline virtual unsigned get_ports_number()
+		{
+			return gate_ports.size();
+		}
+
+		/**
 		 * Get an iterator to iterated over ports.
 		 */
 
