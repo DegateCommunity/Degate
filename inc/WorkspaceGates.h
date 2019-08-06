@@ -58,6 +58,7 @@ namespace degate
 		void create_gate(Gate_shptr& gate, unsigned indice);
 
 		WorkspaceText text;
+		GLuint line_vbo;
 
 	};
 }
