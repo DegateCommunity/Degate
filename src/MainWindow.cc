@@ -110,6 +110,8 @@ namespace degate
 	{
 		QString dir = QFileDialog::getExistingDirectory(this, "Import project");
 
+		setEnabled(false);
+
 		ProjectImporter projectImporter;
 		project = projectImporter.import_all(dir.toStdString());
 		QString project_name = QString::fromStdString(project->get_name());
@@ -117,6 +119,8 @@ namespace degate
 		setWindowTitle("Degate : " + project_name + " project");
 
 		workspace->set_project(project);
+
+		setEnabled(true);
 
 		QString message = "The project <i>" + project_name + "</i> was successfully loaded.";
 		QMessageBox::information(this, "Import project", message);

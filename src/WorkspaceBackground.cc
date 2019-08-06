@@ -111,7 +111,6 @@ namespace degate
 	{
 		program->bind();
 		context->glEnable(GL_TEXTURE_2D);
-		context->glEnable(GL_BLEND);
 
 		program->setUniformValue("mvp", projection);
 
