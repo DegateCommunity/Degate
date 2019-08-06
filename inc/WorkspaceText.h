@@ -24,7 +24,7 @@
 
 #include <QtOpenGL/QtOpenGL>
 
-#define TEXT_SPACE 3
+#define TEXT_SPACE 1
 #define FONT_GLYPH_SIZE 32
 #define FONT_ATLAS_SIZE 512.0
 #define FONT_GLYPH_PER_LINE 16
@@ -53,8 +53,10 @@ namespace degate
 		 * @param text : text to draw;
 		 * @param projection : the projection matrix to apply. 
 		 * @param size : size of the text, the texture atlas is Arial 20.
+		 * @param color : the color of the text, (R,G,B) with values between 0 and 255.
+		 * @param alpha : the opacity of the text, between 0 and 1.
 		 */
-		static void draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size = FONT_DEFAULT_SIZE);
+		static void draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1);
 
 		WorkspaceText(QWidget* new_parent);
 		~WorkspaceText();
@@ -79,8 +81,10 @@ namespace degate
 		 * @param y : left bottom corner y coordinate of the first letter.
 		 * @param text : text to draw;
 		 * @param size : size of the text, the texture atlas is Arial 20.
+		 * @param color : the color of the text, (R,G,B) with values between 0 and 255.
+		 * @param alpha : the opacity of the text, between 0 and 1.
 	     */
-		void add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size = FONT_DEFAULT_SIZE);
+		void add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1);
 
 		/*
 	     * Draw all text in the vbo.
@@ -93,6 +97,7 @@ namespace degate
 		static GLuint font_texture;
 		static QOpenGLShaderProgram program;
 		static QOpenGLFunctions* context;
+		static GLuint temp_vbo;
 
 		QWidget* parent;
 		GLuint vbo;

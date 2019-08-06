@@ -39,11 +39,14 @@ namespace degate
 	GLuint WorkspaceText::font_texture;
 	QOpenGLShaderProgram WorkspaceText::program;
 	QOpenGLFunctions* WorkspaceText::context;
+	GLuint WorkspaceText::temp_vbo;
 
 	struct Vertex2D
 	{
 		QVector2D pos;
 		QVector2D tex_uv;
+		QVector3D color;
+		float alpha;
 	};
 
 	void WorkspaceText::init_font()
@@ -54,12 +57,16 @@ namespace degate
 		const char* vsrc =
 			"attribute vec2 pos;\n"
 			"attribute vec2 uv;\n"
+			"attribute vec3 color;\n"
+			"attribute float alpha;\n"
 			"uniform mat4 mvp;\n"
 			"varying vec2 uv0;\n"
+			"varying vec4 out_color;\n"
 			"void main(void)\n"
 			"{\n"
 			"    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
 			"    uv0 = uv;\n"
+			"	 out_color = vec4(color, alpha);\n"
 			"}\n";
 		vshader->compileSourceCode(vsrc);
 
@@ -67,9 +74,10 @@ namespace degate
 		const char* fsrc =
 			"uniform sampler2D texture;\n"
 			"varying vec2 uv0;\n"
+			"varying vec4 out_color;\n"
 			"void main(void)\n"
 			"{\n"
-			"    gl_FragColor = texture2D(texture, uv0);\n"
+			"    gl_FragColor = out_color * texture2D(texture, uv0);\n"
 			"}\n";
 		fshader->compileSourceCode(fsrc);
 
@@ -78,7 +86,7 @@ namespace degate
 
 		program.link();
 
-		QImage font_atlas("res/FontAtlas.bmp");
+		QImage font_atlas("res/FontAtlas.png");
 		assert(!font_atlas.isNull());
 
 		auto data = new GLuint[512 * 512];
@@ -120,6 +128,8 @@ namespace degate
 		delete[] data;
 
 		context->glBindTexture(GL_TEXTURE_2D, 0);
+
+		context->glGenBuffers(1, &temp_vbo);
 	}
 
 	void WorkspaceText::delete_font()
@@ -133,17 +143,16 @@ namespace degate
 			return;
 
 		context->glDeleteTextures(1, &font_texture);
+
+		context->glDeleteBuffers(1, &temp_vbo);
 	}
 
-	void WorkspaceText::draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size)
+	void WorkspaceText::draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size, const QVector3D& color, const float alpha)
 	{
-		static GLuint temp_vbo;
-
 		float s = size / static_cast<float>(FONT_DEFAULT_SIZE);
 		unsigned int len = strlen(text);
 		const unsigned char* str = reinterpret_cast<const unsigned char*>(text);
-
-		context->glGenBuffers(1, &temp_vbo);
+		QVector3D final_color = color / 255.0;
 
 		program.bind();
 		program.setUniformValue("mvp", projection);
@@ -157,7 +166,16 @@ namespace degate
 		program.enableAttributeArray("uv");
 		program.setAttributeBuffer("uv", GL_FLOAT, 2 * sizeof(float), 2, sizeof(Vertex2D));
 
+		program.enableAttributeArray("color");
+		program.setAttributeBuffer("color", GL_FLOAT, 4 * sizeof(float), 3, sizeof(Vertex2D));
+
+		program.enableAttributeArray("alpha");
+		program.setAttributeBuffer("alpha", GL_FLOAT, 7 * sizeof(float), 1, sizeof(Vertex2D));
+
 		Vertex2D temp;
+		temp.alpha = alpha;
+		temp.color = final_color;
+
 		unsigned pixel_size = 0;
 		for(unsigned i = 0; i < len; i++)
 		{
@@ -200,8 +218,6 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 		program.release();
-
-		context->glDeleteBuffers(1, &temp_vbo);
 	}
 
 	WorkspaceText::WorkspaceText(QWidget* new_parent) : parent(new_parent)
@@ -230,15 +246,19 @@ namespace degate
 		total_size = size;
 	}
 
-	void WorkspaceText::add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size)
+	void WorkspaceText::add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size, const QVector3D& color, const float alpha)
 	{
 		float s = size / static_cast<float>(FONT_DEFAULT_SIZE);
 		unsigned int len = strlen(text);
 		const unsigned char* str = reinterpret_cast<const unsigned char*>(text);
+		QVector3D final_color = color / 255.0;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		Vertex2D temp;
+		temp.color = final_color;
+		temp.alpha = alpha;
+
 		unsigned pixel_size = 0;
 		for(unsigned i = 0; i < len; i++)
 		{
@@ -286,6 +306,12 @@ namespace degate
 
 		program.enableAttributeArray("uv");
 		program.setAttributeBuffer("uv", GL_FLOAT, 2 * sizeof(float), 2, sizeof(Vertex2D));
+
+		program.enableAttributeArray("color");
+		program.setAttributeBuffer("color", GL_FLOAT, 4 * sizeof(float), 3, sizeof(Vertex2D));
+
+		program.enableAttributeArray("alpha");
+		program.setAttributeBuffer("alpha", GL_FLOAT, 7 * sizeof(float), 1, sizeof(Vertex2D));
 
 		context->glEnable(GL_TEXTURE_2D);
 		context->glBindTexture(GL_TEXTURE_2D, font_texture);
