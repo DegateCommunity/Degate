@@ -25,10 +25,10 @@
 #include <QtOpenGL/QtOpenGL>
 
 #define TEXT_SPACE 1
-#define FONT_GLYPH_SIZE 32
-#define FONT_ATLAS_SIZE 512.0
+#define FONT_GLYPH_SIZE 64
+#define FONT_ATLAS_SIZE 1024.0
 #define FONT_GLYPH_PER_LINE 16
-#define FONT_DEFAULT_SIZE 20
+#define FONT_DEFAULT_SIZE 40
 
 namespace degate
 {
@@ -52,7 +52,7 @@ namespace degate
 		 * @param y : left bottom corner y coordinate of the first letter.
 		 * @param text : text to draw;
 		 * @param projection : the projection matrix to apply. 
-		 * @param size : size of the text, the texture atlas is Arial 20.
+		 * @param size : size of the text, the texture atlas is bold Arial 40.
 		 * @param color : the color of the text, (R,G,B) with values between 0 and 255.
 		 * @param alpha : the opacity of the text, between 0 and 1.
 		 */
@@ -80,7 +80,7 @@ namespace degate
 	     * @param x : left bottom corner x coordinate of the first letter.
 		 * @param y : left bottom corner y coordinate of the first letter.
 		 * @param text : text to draw;
-		 * @param size : size of the text, the texture atlas is Arial 20.
+		 * @param size : size of the text, the texture atlas is bold Arial 40.
 		 * @param color : the color of the text, (R,G,B) with values between 0 and 255.
 		 * @param alpha : the opacity of the text, between 0 and 1.
 	     */

@@ -23,7 +23,7 @@
 
 namespace degate
 {
-	const static unsigned font_char_width[256] =
+	const static unsigned font_char_width_old[256] =
 	{
 		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
 		5, 5, 6, 9, 9, 15, 11, 3, 6, 6, 7, 10, 5, 6, 5, 5, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 5, 5, 10, 10, 10, 9, 
@@ -35,13 +35,25 @@ namespace degate
 		9, 9, 9, 9, 9, 9, 15, 9, 9, 9, 9, 9, 5, 5, 5, 5, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
 	};
 
+	const static unsigned font_char_width[256] =
+	{
+		26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
+		9, 11, 16, 19, 19, 31, 25, 8, 11, 11, 13, 20, 9, 11, 9, 9, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 11, 11, 20, 20, 20, 21,
+		33, 23, 24, 25, 25, 23, 21, 26, 25, 9, 19, 25, 21, 29, 25, 26, 23, 26, 25, 23, 21, 25, 23, 31, 23, 23, 21, 11, 9, 11, 20, 19,
+		11, 19, 21, 19, 21, 19, 11, 21, 20, 9, 10, 19, 9, 31, 20, 21, 21, 21, 14, 19, 11, 20, 19, 25, 19, 20, 17, 13, 10, 13, 20, 26,
+		19, 26, 9, 19, 17, 34, 19, 19, 11, 33, 23, 11, 34, 26, 21, 26, 26, 9, 9, 17, 17, 12, 19, 34, 11, 34, 19, 11, 32, 26, 17, 23,
+		9, 11, 19, 19, 19, 19, 10, 19, 11, 25, 13, 19, 20, 11, 25, 19, 14, 19, 11, 11, 11, 20, 19, 11, 11, 11, 12, 19, 28, 28, 28, 21,
+		25, 25, 25, 25, 25, 25, 34, 25, 23, 23, 23, 23, 9, 9, 9, 9, 25, 25, 26, 26, 26, 26, 26, 20, 26, 25, 25, 25, 25, 23, 23, 21,
+		19, 19, 19, 19, 19, 19, 30, 19, 19, 19, 19, 19, 9, 9, 9, 9, 21, 21, 21, 21, 21, 21, 21, 19, 21, 21, 21, 21, 21, 19, 21, 19
+	};
+
 
 	GLuint WorkspaceText::font_texture;
 	QOpenGLShaderProgram WorkspaceText::program;
 	QOpenGLFunctions* WorkspaceText::context;
 	GLuint WorkspaceText::temp_vbo;
 
-	struct Vertex2D
+	struct AnnotationsVertex2D
 	{
 		QVector2D pos;
 		QVector2D tex_uv;
@@ -89,10 +101,10 @@ namespace degate
 		QImage font_atlas("res/FontAtlas.png");
 		assert(!font_atlas.isNull());
 
-		auto data = new GLuint[512 * 512];
+		auto data = new GLuint[FONT_ATLAS_SIZE * FONT_ATLAS_SIZE];
 		assert(data != NULL);
 
-		memcpy(data, font_atlas.bits(), 512 * 512 * sizeof(GLuint));
+		memcpy(data, font_atlas.bits(), FONT_ATLAS_SIZE * FONT_ATLAS_SIZE * sizeof(GLuint));
 
 		context->glGenTextures(1, &font_texture);
 		assert(context->glGetError() == GL_NO_ERROR);
@@ -118,7 +130,7 @@ namespace degate
 		context->glTexImage2D(GL_TEXTURE_2D,
 		             0, // level
 		             GL_RGBA, // BGRA,
-		             512, 512,
+		             FONT_ATLAS_SIZE, FONT_ATLAS_SIZE,
 		             0, // border
 		             GL_RGBA,
 		             GL_UNSIGNED_BYTE,
@@ -158,21 +170,21 @@ namespace degate
 		program.setUniformValue("mvp", projection);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, temp_vbo);
-		context->glBufferData(GL_ARRAY_BUFFER, len * 6 * sizeof(Vertex2D), 0, GL_DYNAMIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, len * 6 * sizeof(AnnotationsVertex2D), 0, GL_DYNAMIC_DRAW);
 
 		program.enableAttributeArray("pos");
-		program.setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(Vertex2D));
+		program.setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(AnnotationsVertex2D));
 
 		program.enableAttributeArray("uv");
-		program.setAttributeBuffer("uv", GL_FLOAT, 2 * sizeof(float), 2, sizeof(Vertex2D));
+		program.setAttributeBuffer("uv", GL_FLOAT, 2 * sizeof(float), 2, sizeof(AnnotationsVertex2D));
 
 		program.enableAttributeArray("color");
-		program.setAttributeBuffer("color", GL_FLOAT, 4 * sizeof(float), 3, sizeof(Vertex2D));
+		program.setAttributeBuffer("color", GL_FLOAT, 4 * sizeof(float), 3, sizeof(AnnotationsVertex2D));
 
 		program.enableAttributeArray("alpha");
-		program.setAttributeBuffer("alpha", GL_FLOAT, 7 * sizeof(float), 1, sizeof(Vertex2D));
+		program.setAttributeBuffer("alpha", GL_FLOAT, 7 * sizeof(float), 1, sizeof(AnnotationsVertex2D));
 
-		Vertex2D temp;
+		AnnotationsVertex2D temp;
 		temp.alpha = alpha;
 		temp.color = final_color;
 
@@ -183,27 +195,27 @@ namespace degate
 
 			temp.pos = QVector2D(x + pixel_size, y);
 			temp.tex_uv = QVector2D(uv.x(), uv.y());
-			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + font_char_width[str[i]] * s + pixel_size, y);
 			temp.tex_uv = QVector2D(uv.x() + font_char_width[str[i]] / FONT_ATLAS_SIZE, uv.y());
-			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(AnnotationsVertex2D) + 1 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + pixel_size, y + FONT_GLYPH_SIZE * s);
 			temp.tex_uv = QVector2D(uv.x(), (uv.y() + FONT_GLYPH_SIZE / FONT_ATLAS_SIZE));
-			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(AnnotationsVertex2D) + 2 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + pixel_size, y + FONT_GLYPH_SIZE * s);
 			temp.tex_uv = QVector2D(uv.x(), (uv.y() + FONT_GLYPH_SIZE / FONT_ATLAS_SIZE));
-			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(AnnotationsVertex2D) + 3 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + font_char_width[str[i]] * s + pixel_size, y);
 			temp.tex_uv = QVector2D(uv.x() + font_char_width[str[i]] / FONT_ATLAS_SIZE, uv.y());
-			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(AnnotationsVertex2D) + 4 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + font_char_width[str[i]] * s + pixel_size, y + FONT_GLYPH_SIZE * s);
 			temp.tex_uv = QVector2D(uv.x() + font_char_width[str[i]] / FONT_ATLAS_SIZE, (uv.y() + FONT_GLYPH_SIZE / FONT_ATLAS_SIZE));
-			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, i * 6 * sizeof(AnnotationsVertex2D) + 5 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			pixel_size += font_char_width[str[i]] * s + TEXT_SPACE;
 		}
@@ -240,7 +252,7 @@ namespace degate
 	void WorkspaceText::update(unsigned size)
 	{
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		context->glBufferData(GL_ARRAY_BUFFER, size * 6 * sizeof(Vertex2D), 0, GL_DYNAMIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, size * 6 * sizeof(AnnotationsVertex2D), 0, GL_DYNAMIC_DRAW);
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		total_size = size;
@@ -255,7 +267,7 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		Vertex2D temp;
+		AnnotationsVertex2D temp;
 		temp.color = final_color;
 		temp.alpha = alpha;
 
@@ -266,27 +278,27 @@ namespace degate
 
 			temp.pos = QVector2D(x + pixel_size, y);
 			temp.tex_uv = QVector2D(uv.x(), uv.y());
-			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(Vertex2D) + i * 6 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(AnnotationsVertex2D) + i * 6 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + font_char_width[str[i]] * s + pixel_size, y);
 			temp.tex_uv = QVector2D(uv.x() + font_char_width[str[i]] / FONT_ATLAS_SIZE, uv.y());
-			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(Vertex2D) + i * 6 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(AnnotationsVertex2D) + i * 6 * sizeof(AnnotationsVertex2D) + 1 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + pixel_size, y + FONT_GLYPH_SIZE * s);
 			temp.tex_uv = QVector2D(uv.x(), (uv.y() + FONT_GLYPH_SIZE / FONT_ATLAS_SIZE));
-			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(Vertex2D) + i * 6 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(AnnotationsVertex2D) + i * 6 * sizeof(AnnotationsVertex2D) + 2 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + pixel_size, y + FONT_GLYPH_SIZE * s);
 			temp.tex_uv = QVector2D(uv.x(), (uv.y() + FONT_GLYPH_SIZE / FONT_ATLAS_SIZE));
-			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(Vertex2D) + i * 6 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(AnnotationsVertex2D) + i * 6 * sizeof(AnnotationsVertex2D) + 3 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + font_char_width[str[i]] * s + pixel_size, y);
 			temp.tex_uv = QVector2D(uv.x() + font_char_width[str[i]] / FONT_ATLAS_SIZE, uv.y());
-			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(Vertex2D) + i * 6 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(AnnotationsVertex2D) + i * 6 * sizeof(AnnotationsVertex2D) + 4 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			temp.pos = QVector2D(x + font_char_width[str[i]] * s + pixel_size, y + FONT_GLYPH_SIZE * s);
 			temp.tex_uv = QVector2D(uv.x() + font_char_width[str[i]] / FONT_ATLAS_SIZE, (uv.y() + FONT_GLYPH_SIZE / FONT_ATLAS_SIZE));
-			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(Vertex2D) + i * 6 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+			context->glBufferSubData(GL_ARRAY_BUFFER, offset * 6 * sizeof(AnnotationsVertex2D) + i * 6 * sizeof(AnnotationsVertex2D) + 5 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 			pixel_size += font_char_width[str[i]] * s + TEXT_SPACE;
 		}
@@ -302,16 +314,16 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		program.enableAttributeArray("pos");
-		program.setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(Vertex2D));
+		program.setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(AnnotationsVertex2D));
 
 		program.enableAttributeArray("uv");
-		program.setAttributeBuffer("uv", GL_FLOAT, 2 * sizeof(float), 2, sizeof(Vertex2D));
+		program.setAttributeBuffer("uv", GL_FLOAT, 2 * sizeof(float), 2, sizeof(AnnotationsVertex2D));
 
 		program.enableAttributeArray("color");
-		program.setAttributeBuffer("color", GL_FLOAT, 4 * sizeof(float), 3, sizeof(Vertex2D));
+		program.setAttributeBuffer("color", GL_FLOAT, 4 * sizeof(float), 3, sizeof(AnnotationsVertex2D));
 
 		program.enableAttributeArray("alpha");
-		program.setAttributeBuffer("alpha", GL_FLOAT, 7 * sizeof(float), 1, sizeof(Vertex2D));
+		program.setAttributeBuffer("alpha", GL_FLOAT, 7 * sizeof(float), 1, sizeof(AnnotationsVertex2D));
 
 		context->glEnable(GL_TEXTURE_2D);
 		context->glBindTexture(GL_TEXTURE_2D, font_texture);
