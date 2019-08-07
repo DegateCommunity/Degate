@@ -59,6 +59,7 @@ namespace degate
 
 		HIGHLIGHTING_STATE highlight_state;
 		std::shared_ptr<Layer> layer;
+		unsigned index;
 
 	protected:
 
@@ -120,6 +121,25 @@ namespace degate
 		 */
 
 		virtual void print(std::ostream& os = std::cout, int n_tabs = 0) const = 0;
+
+
+		/**
+		 * Set the index of the object.
+		 */
+
+		inline void set_index(unsigned value)
+		{
+			index = value;
+		}
+
+		/**
+		 * Get the index of the object.
+		 */
+
+		inline unsigned get_index()
+		{
+			return index;
+		}
 	};
 
 	static inline uint32_t highlight_color(uint32_t col) 

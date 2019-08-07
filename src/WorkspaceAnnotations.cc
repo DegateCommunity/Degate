@@ -97,13 +97,14 @@ namespace degate
 
 		unsigned text_size = 0;
 
-		unsigned indice = 0;
+		unsigned index = 0;
 		for(LogicModel::annotation_collection::iterator iter = project->get_logic_model()->annotations_begin(); iter != project->get_logic_model()->annotations_end(); ++iter)
 		{
-			create_annotation(iter->second, indice);
+			create_annotation(iter->second, index);
+			iter->second->set_index(index);
 
 			text_size += iter->second->get_name().length();
-			indice++;
+			index++;
 		}
 
 		text.update(text_size);
@@ -114,8 +115,16 @@ namespace degate
 			text.add_sub_text(text_offset, iter->second->get_min_x(), iter->second->get_min_y(), iter->second->get_name().c_str(), 20, QVector3D(255, 255, 255), 1);
 
 			text_offset += iter->second->get_name().length();
-			indice++;
+			index++;
 		}
+	}
+
+	void WorkspaceAnnotations::update(Annotation_shptr& annotation)
+	{
+		if(annotation == NULL)
+			return;
+
+		create_annotation(annotation, annotation->get_index());
 	}
 
 	void WorkspaceAnnotations::draw(const QMatrix4x4& projection)
@@ -162,7 +171,7 @@ namespace degate
 		text.draw(projection);
 	}
 
-	void WorkspaceAnnotations::create_annotation(Annotation_shptr& annotation, unsigned indice)
+	void WorkspaceAnnotations::create_annotation(Annotation_shptr& annotation, unsigned index)
 	{
 		if(annotation == NULL)
 			return;
@@ -179,22 +188,22 @@ namespace degate
 		temp.alpha = 0.25; // MASK_A(annotation->get_fill_color())
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_max_x(), annotation->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(AnnotationsVertex2D) + 1 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(AnnotationsVertex2D) + 1 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(AnnotationsVertex2D) + 2 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(AnnotationsVertex2D) + 2 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_max_x(), annotation->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(AnnotationsVertex2D) + 4 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(AnnotationsVertex2D) + 4 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(AnnotationsVertex2D) + 3 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(AnnotationsVertex2D) + 3 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_max_x(), annotation->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(AnnotationsVertex2D) + 5 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(AnnotationsVertex2D) + 5 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 
 		// Lines
@@ -207,28 +216,28 @@ namespace degate
 		temp.alpha = 1; // MASK_A(annotation->get_frame_color())
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_max_x(), annotation->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(AnnotationsVertex2D) + 1 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 1 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(AnnotationsVertex2D) + 2 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 2 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(AnnotationsVertex2D) + 3 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 3 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_max_x(), annotation->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(AnnotationsVertex2D) + 4 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 4 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_max_x(), annotation->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(AnnotationsVertex2D) + 5 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 5 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(AnnotationsVertex2D) + 6 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 6 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		temp.pos = QVector2D(annotation->get_max_x(), annotation->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(AnnotationsVertex2D) + 7 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 7 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}

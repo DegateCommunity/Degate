@@ -114,6 +114,7 @@ namespace degate
 		float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
 		QPointF mouse_last_pos;
 		bool is_movement = false;
+		PlacedLogicModelObject_shptr selected_object = NULL;
 
 		// Background
 		WorkspaceBackground background;

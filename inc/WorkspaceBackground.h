@@ -63,9 +63,9 @@ namespace degate
 		 * @param x
 		 * @param y
 		 * @param pre_scaling : scaling of the image.
-		 * @param indice : indice of the tile.
+		 * @param index : index of the tile.
 		 */
-		GLuint create_background_tile(unsigned int x, unsigned int y, float pre_scaling, unsigned indice);
+		GLuint create_background_tile(unsigned int x, unsigned int y, float pre_scaling, unsigned index);
 
 		std::vector<GLuint> background_textures;
 		BackgroundImage_shptr background_image = NULL;

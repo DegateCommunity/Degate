@@ -44,6 +44,13 @@ namespace degate
 		void update() override;
 
 		/*
+		 * Update a specific annotation.
+		 * 
+		 * @param annotation : the annotation object.
+		 */
+		void update(Annotation_shptr& annotation);
+
+		/*
 	     * Draw all annotations.
 	     * 
 	     * @param projection : the projection matrix to apply.
@@ -54,7 +61,7 @@ namespace degate
 		/*
 		 * Create an annotation.
 		 */
-		void create_annotation(Annotation_shptr& annotation, unsigned indice);
+		void create_annotation(Annotation_shptr& annotation, unsigned index);
 
 		GLuint line_vbo;
 		WorkspaceText text;

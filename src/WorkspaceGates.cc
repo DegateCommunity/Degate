@@ -99,14 +99,15 @@ namespace degate
 		unsigned text_size = 0;
 		port_count = 0;
 
-		unsigned indice = 0;
+		unsigned index = 0;
 		for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
-			create_gate(iter->second, indice);
+			create_gate(iter->second, index);
+			iter->second->set_index(index);
 
 			text_size += iter->second->get_gate_template()->get_name().length();
 			port_count += iter->second->get_ports_number();
-			indice++;
+			index++;
 		}
 
 		text.update(text_size);
@@ -118,16 +119,23 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		unsigned text_offset = 0;
-		unsigned ports_offset = 0;
+		unsigned ports_index = 0;
 		for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
 			text.add_sub_text(text_offset, iter->second->get_min_x(), iter->second->get_min_y(), iter->second->get_gate_template()->get_name().c_str(), 10, QVector3D(255, 255, 255), 1);
-			create_ports(iter->second, ports_offset);
+			create_ports(iter->second, ports_index);
 
 			text_offset += iter->second->get_gate_template()->get_name().length();
-			ports_offset += iter->second->get_ports_number();
-			indice++;
+			ports_index += iter->second->get_ports_number();
 		}
+	}
+
+	void WorkspaceGates::update(Gate_shptr& gate)
+	{
+		if(gate == NULL)
+			return;
+
+		create_gate(gate, gate->get_index());
 	}
 
 	void WorkspaceGates::draw(const QMatrix4x4& projection)
@@ -189,7 +197,7 @@ namespace degate
 		text.draw(projection);
 	}
 
-	void WorkspaceGates::create_gate(Gate_shptr& gate, unsigned indice)
+	void WorkspaceGates::create_gate(Gate_shptr& gate, unsigned index)
 	{
 		if(gate == NULL)
 			return;
@@ -206,22 +214,22 @@ namespace degate
 		temp.alpha = 0.25; // MASK_A(gate->get_fill_color())
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 
 		// Lines
@@ -234,28 +242,28 @@ namespace degate
 		temp.alpha = 1; // MASK_A(gate->get_frame_color())
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 6 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 6 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 7 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 7 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
@@ -371,7 +379,41 @@ namespace degate
 		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 8 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 	}
 
-	void WorkspaceGates::create_ports(Gate_shptr& gate, unsigned offset)
+	void WorkspaceGates::update(GatePort_shptr& port)
+	{
+		if(port == NULL)
+			return;
+
+		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
+
+		GateTemplatePort_shptr tmpl_port = port->get_template_port();
+		color_t color = port->get_fill_color() == 0 ? DEFAULT_COLOR_GATE_PORT : port->get_fill_color();
+
+		color = highlight_color_by_state(color, port->get_highlighted());
+
+		switch(tmpl_port->get_port_type()) 
+		{
+			case GateTemplatePort::PORT_TYPE_UNDEFINED:
+				draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, port->get_index());
+				break;
+		    case GateTemplatePort::PORT_TYPE_IN:
+			    draw_port_in(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, port->get_index());
+			    break;
+		    case GateTemplatePort::PORT_TYPE_OUT:
+			    draw_port_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, port->get_index());
+			    break;
+		    case GateTemplatePort::PORT_TYPE_INOUT:
+			    draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, port->get_index());
+			    break;
+			default:
+				draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, port->get_index());
+				break;
+		}
+
+		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void WorkspaceGates::create_ports(Gate_shptr& gate, unsigned index)
 	{
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
@@ -386,23 +428,25 @@ namespace degate
 			switch(tmpl_port->get_port_type()) 
 			{
 				case GateTemplatePort::PORT_TYPE_UNDEFINED:
-					draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, offset);
+					draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, index);
 					break;
 			    case GateTemplatePort::PORT_TYPE_IN:
-				    draw_port_in(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, offset);
+				    draw_port_in(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, index);
 				    break;
 			    case GateTemplatePort::PORT_TYPE_OUT:
-				    draw_port_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, offset);
+				    draw_port_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, index);
 				    break;
 			    case GateTemplatePort::PORT_TYPE_INOUT:
-				    draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, offset);
+				    draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, index);
 				    break;
 				default:
-					draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, offset);
+					draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color), MASK_G(color), MASK_B(color)), 0.6/*MASK_A(color)*/, index);
 					break;
 			}
 
-			offset++;
+			port->set_index(index);
+
+			index++;
 		}
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);

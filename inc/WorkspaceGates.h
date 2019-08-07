@@ -44,6 +44,20 @@ namespace degate
 		void update() override;
 
 		/*
+		 * Update a specific gate.
+		 * 
+		 * @param gate : the gate object.
+		 */
+		void update(Gate_shptr& gate);
+
+		/*
+		 * Update a specific port.
+		 * 
+		 * @param port : the port object.
+		 */
+		void update(GatePort_shptr& port);
+
+		/*
 	     * Draw all gates.
 	     * 
 	     * @param projection : the projection matrix to apply.
@@ -55,12 +69,12 @@ namespace degate
 		/*
 		 * Create a gate.
 		 */
-		void create_gate(Gate_shptr& gate, unsigned indice);
+		void create_gate(Gate_shptr& gate, unsigned index);
 
 		/*
 		 * Create all ports of a specific gate.
 		 */
-		void create_ports(Gate_shptr& gate, unsigned offset);
+		void create_ports(Gate_shptr& gate, unsigned index);
 
 		WorkspaceText text;
 		GLuint line_vbo;

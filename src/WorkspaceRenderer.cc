@@ -150,6 +150,7 @@ namespace degate
 		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::CrossCursor);
 
+		// Selection
 		if (event->button() == Qt::LeftButton && !is_movement)
 		{
 			if(project == NULL)
@@ -174,12 +175,51 @@ namespace degate
 				}
 			}
 
+			bool was_selected = false;
+
+			if(selected_object != NULL)
+			{
+				selected_object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+
+				if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
+				{
+					annotations.update(o);
+				}
+				else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(selected_object))
+				{
+					gates.update(o);
+				}
+				else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(selected_object))
+				{
+					gates.update(o);
+				}
+
+				selected_object = NULL;
+				was_selected = true;
+			}
+			
 			if(plo != NULL)
 			{
-				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT); // Todo: temp, no unhighlighted
+				selected_object = plo;
 
-				gates.update();
-				annotations.update();
+				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
+			}
+
+			if(plo != NULL || was_selected)
+			{
+				if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
+				{
+					annotations.update(o);
+				}
+				else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(selected_object))
+				{
+					gates.update(o);
+				}
+				else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(selected_object))
+				{
+					gates.update(o);
+				}
+
 				update();
 			}
 		}
