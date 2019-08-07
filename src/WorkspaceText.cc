@@ -101,10 +101,12 @@ namespace degate
 		QImage font_atlas("res/FontAtlas.png");
 		assert(!font_atlas.isNull());
 
-		auto data = new GLuint[FONT_ATLAS_SIZE * FONT_ATLAS_SIZE];
+		unsigned size = static_cast<unsigned>(FONT_ATLAS_SIZE);
+
+		auto data = new GLuint[size * size];
 		assert(data != NULL);
 
-		memcpy(data, font_atlas.bits(), FONT_ATLAS_SIZE * FONT_ATLAS_SIZE * sizeof(GLuint));
+		memcpy(data, font_atlas.bits(), size * size * sizeof(GLuint));
 
 		context->glGenTextures(1, &font_texture);
 		assert(context->glGetError() == GL_NO_ERROR);
@@ -130,7 +132,7 @@ namespace degate
 		context->glTexImage2D(GL_TEXTURE_2D,
 		             0, // level
 		             GL_RGBA, // BGRA,
-		             FONT_ATLAS_SIZE, FONT_ATLAS_SIZE,
+		             size, size,
 		             0, // border
 		             GL_RGBA,
 		             GL_UNSIGNED_BYTE,

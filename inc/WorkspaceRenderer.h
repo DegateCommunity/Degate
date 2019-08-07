@@ -82,7 +82,7 @@ namespace degate
 		void zoom_out();
 
 	signals:
-		void project_changed(std::string& path);
+		void project_changed(std::string path);
 
 	private:
 

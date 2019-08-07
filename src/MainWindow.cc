@@ -78,7 +78,7 @@ namespace degate
 
 
 		// Other
-		QObject::connect(workspace, SIGNAL(project_changed(std::string&)), this, SLOT(open_project(std::string&)));
+		QObject::connect(workspace, SIGNAL(project_changed(std::string)), this, SLOT(open_project(std::string)));
 	}
 
 	MainWindow::~MainWindow()
@@ -157,7 +157,7 @@ namespace degate
 		workspace->update_screen();
 	}
 
-	void MainWindow::open_project(std::string& path)
+	void MainWindow::open_project(std::string path)
 	{
 		ProjectImporter projectImporter;
 		project = projectImporter.import_all(path);

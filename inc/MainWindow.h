@@ -47,7 +47,7 @@ namespace degate
 		void on_menu_project_importer();
 		void on_tool_via_up();
 		void on_tool_via_down();
-		void open_project(std::string& path);
+		void open_project(std::string path);
 
 	private:
 		QMenuBar menu_bar;
