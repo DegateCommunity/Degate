@@ -23,7 +23,7 @@
 
 namespace degate
 {
-	struct Vertex2D
+	struct BackgroundVertex2D
 	{
 		QVector2D pos;
 		QVector2D texCoord;
@@ -71,8 +71,6 @@ namespace degate
 		program->addShader(fshader);
 
 		program->link();
-
-		context->glGenBuffers(1, &vbo);
 	}
 
 	void WorkspaceBackground::update()
@@ -91,7 +89,7 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(Vertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(BackgroundVertex2D), 0, GL_STATIC_DRAW);
 
 		unsigned index = 0;
 		for (unsigned int x = 0; x < background_image->get_width(); x += background_image->get_tile_size())
@@ -117,10 +115,10 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		program->enableAttributeArray("pos");
-		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(Vertex2D));
+		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(BackgroundVertex2D));
 
 		program->enableAttributeArray("texCoord");
-		program->setAttributeBuffer("texCoord", GL_FLOAT, 2 * sizeof(float), 2, sizeof(Vertex2D));
+		program->setAttributeBuffer("texCoord", GL_FLOAT, 2 * sizeof(float), 2, sizeof(BackgroundVertex2D));
 
 		unsigned index = 0;
 		for (auto& e : background_textures)
@@ -211,31 +209,31 @@ namespace degate
 
 		// Vertices
 
-		Vertex2D temp;
+		BackgroundVertex2D temp;
 
 		temp.pos = QVector2D(min_x, min_y);
 		temp.texCoord = QVector2D(0, 0);
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(BackgroundVertex2D) + 0 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
 
 		temp.pos = QVector2D(max_x, min_y);
 		temp.texCoord = QVector2D(1, 0);
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(BackgroundVertex2D) + 1 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
 
 		temp.pos = QVector2D(min_x, max_y);
 		temp.texCoord = QVector2D(0, 1);
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(BackgroundVertex2D) + 2 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
 
 		temp.pos = QVector2D(max_x, min_y);
 		temp.texCoord = QVector2D(1, 0);
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(BackgroundVertex2D) + 3 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
 
 		temp.pos = QVector2D(min_x, max_y);
 		temp.texCoord = QVector2D(0, 1);
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(BackgroundVertex2D) + 4 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
 
 		temp.pos = QVector2D(max_x, max_y);
 		temp.texCoord = QVector2D(1, 1);
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(BackgroundVertex2D) + 5 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
 
 
 		return texture;

@@ -47,5 +47,7 @@ namespace degate
 	void WorkspaceElement::init()
 	{
 		context = QOpenGLContext::currentContext()->functions();
+
+		context->glGenBuffers(1, &vbo);
 	}
 }

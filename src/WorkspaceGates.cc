@@ -23,7 +23,7 @@
 
 namespace degate
 {
-	struct Vertex2D
+	struct GatesVertex2D
 	{
 		QVector2D pos;
 		QVector3D color;
@@ -75,7 +75,6 @@ namespace degate
 
 		program->link();
 
-		context->glGenBuffers(1, &vbo);
 		context->glGenBuffers(1, &line_vbo);
 		context->glGenBuffers(1, &port_vbo);
 
@@ -89,11 +88,11 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 6 * sizeof(Vertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 6 * sizeof(GatesVertex2D), 0, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 8 * sizeof(Vertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 8 * sizeof(GatesVertex2D), 0, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -114,7 +113,7 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, port_count * 9 * sizeof(Vertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, port_count * 9 * sizeof(GatesVertex2D), 0, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -122,7 +121,7 @@ namespace degate
 		unsigned ports_offset = 0;
 		for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
-			text.add_sub_text(text_offset, iter->second->get_min_x(), iter->second->get_min_y(), iter->second->get_gate_template()->get_name().c_str(), 10, QVector3D(50, 50, 50), 1);
+			text.add_sub_text(text_offset, iter->second->get_min_x(), iter->second->get_min_y(), iter->second->get_gate_template()->get_name().c_str(), 10, QVector3D(255, 255, 255), 1);
 			create_ports(iter->second, ports_offset);
 
 			text_offset += iter->second->get_gate_template()->get_name().length();
@@ -145,26 +144,26 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		program->enableAttributeArray("pos");
-		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(Vertex2D));
+		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(GatesVertex2D));
 
 		program->enableAttributeArray("color");
-		program->setAttributeBuffer("color", GL_FLOAT, 2 * sizeof(float), 3, sizeof(Vertex2D));
+		program->setAttributeBuffer("color", GL_FLOAT, 2 * sizeof(float), 3, sizeof(GatesVertex2D));
 
 		program->enableAttributeArray("alpha");
-		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(Vertex2D));
+		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(GatesVertex2D));
 
 		context->glDrawArrays(GL_TRIANGLES, 0, project->get_logic_model()->get_gates_count() * 6);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
 		program->enableAttributeArray("pos");
-		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(Vertex2D));
+		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(GatesVertex2D));
 
 		program->enableAttributeArray("color");
-		program->setAttributeBuffer("color", GL_FLOAT, 2 * sizeof(float), 3, sizeof(Vertex2D));
+		program->setAttributeBuffer("color", GL_FLOAT, 2 * sizeof(float), 3, sizeof(GatesVertex2D));
 
 		program->enableAttributeArray("alpha");
-		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(Vertex2D));
+		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(GatesVertex2D));
 
 		context->glDrawArrays(GL_LINES, 0, project->get_logic_model()->get_gates_count() * 8);
 
@@ -173,13 +172,13 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
 		program->enableAttributeArray("pos");
-		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(Vertex2D));
+		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(GatesVertex2D));
 
 		program->enableAttributeArray("color");
-		program->setAttributeBuffer("color", GL_FLOAT, 2 * sizeof(float), 3, sizeof(Vertex2D));
+		program->setAttributeBuffer("color", GL_FLOAT, 2 * sizeof(float), 3, sizeof(GatesVertex2D));
 
 		program->enableAttributeArray("alpha");
-		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(Vertex2D));
+		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(GatesVertex2D));
 
 		context->glDrawArrays(GL_TRIANGLES, 0, port_count * 9);
 
@@ -197,68 +196,73 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+
 		// Vertices and colors
 
-		Vertex2D temp;
-		temp.color = QVector3D(MASK_R(gate->get_fill_color()), MASK_G(gate->get_fill_color()), MASK_B(gate->get_fill_color()));
+		color_t color = highlight_color_by_state(gate->get_fill_color(), gate->get_highlighted());
+
+		GatesVertex2D temp;
+		temp.color = QVector3D(MASK_R(color), MASK_G(color), MASK_B(color));
 		temp.alpha = 0.25; // MASK_A(gate->get_fill_color())
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 6 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 
 		// Lines
 
+		color = highlight_color_by_state(gate->get_frame_color(), gate->get_highlighted());
+
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
-		temp.color = QVector3D(MASK_R(gate->get_frame_color()), MASK_G(gate->get_frame_color()), MASK_B(gate->get_frame_color()));
+		temp.color = QVector3D(MASK_R(color), MASK_G(color), MASK_B(color));
 		temp.alpha = 1; // MASK_A(gate->get_frame_color())
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_min_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(Vertex2D) + 6 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 6 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(gate->get_max_x(), gate->get_max_y());
-		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(Vertex2D) + 7 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, indice * 8 * sizeof(GatesVertex2D) + 7 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	void draw_port_in_out(QOpenGLFunctions* context, unsigned x, unsigned y, unsigned size, QVector3D& color, float alpha, unsigned offset)
 	{
-		Vertex2D temp;
+		GatesVertex2D temp;
 
 		temp.color = color;
 		temp.alpha = alpha;
@@ -266,36 +270,36 @@ namespace degate
 		unsigned mid = size / 2.0;
 
 		temp.pos = QVector2D(x - mid, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x - mid, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 6 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 6 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 7 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 7 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x - mid, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 8 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 8 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 	}
 
 	void draw_port_in(QOpenGLFunctions* context, unsigned x, unsigned y, unsigned size, QVector3D& color, float alpha, unsigned offset)
 	{
-		Vertex2D temp;
+		GatesVertex2D temp;
 
 		temp.color = color;
 		temp.alpha = alpha;
@@ -303,36 +307,36 @@ namespace degate
 		unsigned mid = size / 2.0;
 
 		temp.pos = QVector2D(x - mid, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 6 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 6 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x - mid, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 7 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 7 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 8 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 8 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 	}
 
 	void draw_port_out(QOpenGLFunctions* context, unsigned x, unsigned y, unsigned size, QVector3D& color, float alpha, unsigned offset)
 	{
-		Vertex2D temp;
+		GatesVertex2D temp;
 
 		temp.color = color;
 		temp.alpha = alpha;
@@ -340,31 +344,31 @@ namespace degate
 		unsigned mid = size / 2.0;
 
 		temp.pos = QVector2D(x - mid, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 0 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 1 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 1 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 2 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 2 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x - mid, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 3 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 3 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x - mid, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 4 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 4 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 5 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 5 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y - mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 6 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 6 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x + mid, y);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 7 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 7 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
 		temp.pos = QVector2D(x, y + mid);
-		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(Vertex2D) + 8 * sizeof(Vertex2D), sizeof(Vertex2D), &temp);
+		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 8 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 	}
 
 	void WorkspaceGates::create_ports(Gate_shptr& gate, unsigned offset)
@@ -376,6 +380,8 @@ namespace degate
 			GatePort_shptr port = *iter;
 			GateTemplatePort_shptr tmpl_port = port->get_template_port();
 			color_t color = port->get_fill_color() == 0 ? DEFAULT_COLOR_GATE_PORT : port->get_fill_color();
+
+			color = highlight_color_by_state(color, port->get_highlighted());
 
 			switch(tmpl_port->get_port_type()) 
 			{
