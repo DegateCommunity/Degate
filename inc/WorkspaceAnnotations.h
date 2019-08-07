@@ -19,42 +19,46 @@
 
 */
 
-#ifndef __MAINWINDOW_H__
-#define __MAINWINDOW_H__
+#ifndef __WORKSPACEANNOTATIONS_H__
+#define __WORKSPACEANNOTATIONS_H__
 
-#include "ProjectImporter.h"
-#include "WorkspaceRenderer.h"
-
-#include <degate.h>
-#include <QMainWindow>
-#include <QMenuBar>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QToolBar>
+#include "WorkspaceElement.h"
+#include "WorkspaceText.h"
 
 namespace degate
 {
-	class MainWindow : public QMainWindow
+	class WorkspaceAnnotations : public WorkspaceElement
 	{
-	Q_OBJECT
-
 	public:
-		MainWindow(int width = 0, int height = 0);
-		~MainWindow();
+		WorkspaceAnnotations(QWidget* new_parent);
+		~WorkspaceAnnotations();
 
-	public slots:
-		void on_menu_about_degate();
-		void on_menu_project_importer();
-		void on_tool_via_up();
-		void on_tool_via_down();
-		void open_project(std::string& path);
+		/*
+		 * Init all background OpenGL routine (vbo).
+		 */
+		void init() override;
+
+		/*
+	     * Update all annotations.
+	     */
+		void update() override;
+
+		/*
+	     * Draw all annotations.
+	     * 
+	     * @param projection : the projection matrix to apply.
+	     */
+		void draw(const QMatrix4x4& projection) override;
 
 	private:
-		QMenuBar menu_bar;
-		QToolBar* tool_bar;
+		/*
+		 * Create an annotation.
+		 */
+		void create_annotation(Annotation_shptr& annotation, unsigned indice);
 
-		Project_shptr project;
-		WorkspaceRenderer* workspace;
+		GLuint line_vbo;
+		WorkspaceText text;
+
 	};
 }
 

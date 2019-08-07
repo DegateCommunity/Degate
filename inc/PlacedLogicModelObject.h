@@ -23,6 +23,8 @@
 #ifndef __PLACEDLOGICMODELOBJECT_H__
 #define __PLACEDLOGICMODELOBJECT_H__
 
+#include "Image.h"
+
 #include <globals.h>
 #include <LogicModelObjectBase.h>
 #include <Layer.h>
@@ -119,6 +121,31 @@ namespace degate
 
 		virtual void print(std::ostream& os = std::cout, int n_tabs = 0) const = 0;
 	};
+
+	static inline uint32_t highlight_color(uint32_t col) 
+	{
+		uint8_t r = MASK_R(col);
+		uint8_t g = MASK_G(col);
+		uint8_t b = MASK_B(col);
+		uint8_t a = MASK_A(col);
+
+		return MERGE_CHANNELS((((255-r)>>1) + r), (((255-g)>>1) + g), (((255-b)>>1) + b), (a < 128 ? 128 : a));
+	}
+
+
+	static inline uint32_t highlight_color_by_state(uint32_t col, PlacedLogicModelObject::HIGHLIGHTING_STATE state)
+	{
+		switch(state) 
+		{
+			case PlacedLogicModelObject::HLIGHTSTATE_DIRECT:
+				return highlight_color(highlight_color(col));
+			case PlacedLogicModelObject::HLIGHTSTATE_ADJACENT:
+				return highlight_color(col);
+			case PlacedLogicModelObject::HLIGHTSTATE_NOT:
+			default:
+				return col;
+		}
+	}
 }
 
 #endif

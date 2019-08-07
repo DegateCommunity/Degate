@@ -26,6 +26,9 @@
 #include "WorkspaceBackground.h"
 #include "WorkspaceGates.h"
 #include "WorkspaceText.h"
+#include "WorkspaceAnnotations.h"
+#include "SubProjectAnnotation.h"
+#include "LogicModelHelper.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>
@@ -78,6 +81,9 @@ namespace degate
 		void zoom_in();
 		void zoom_out();
 
+	signals:
+		void project_changed(std::string& path);
+
 	private:
 
 		/*
@@ -107,12 +113,16 @@ namespace degate
 		float center_x = 0, center_y = 0;
 		float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
 		QPointF mouse_last_pos;
+		bool is_movement = false;
 
 		// Background
 		WorkspaceBackground background;
 
 		// Gates
 		WorkspaceGates gates;
+
+		// Annotations
+		WorkspaceAnnotations annotations;
 	};
 }
 

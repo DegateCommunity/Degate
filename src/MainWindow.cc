@@ -75,6 +75,10 @@ namespace degate
 
 		QAction* tool_zoom_out_action = tool_bar->addAction(QIcon("res/icon_minus.png"), "Zoom out");
 		QObject::connect(tool_zoom_out_action, SIGNAL(triggered()), workspace, SLOT(zoom_out()));
+
+
+		// Other
+		QObject::connect(workspace, SIGNAL(project_changed(std::string&)), this, SLOT(open_project(std::string&)));
 	}
 
 	MainWindow::~MainWindow()
@@ -112,13 +116,14 @@ namespace degate
 
 		setEnabled(false);
 
-		ProjectImporter projectImporter;
-		project = projectImporter.import_all(dir.toStdString());
+		if(project != NULL)
+			project.reset();
+
+		open_project(dir.toStdString());
+		
 		QString project_name = QString::fromStdString(project->get_name());
 
 		setWindowTitle("Degate : " + project_name + " project");
-
-		workspace->set_project(project);
 
 		setEnabled(true);
 
@@ -150,5 +155,13 @@ namespace degate
 		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1);
 
 		workspace->update_screen();
+	}
+
+	void MainWindow::open_project(std::string& path)
+	{
+		ProjectImporter projectImporter;
+		project = projectImporter.import_all(path);
+
+		workspace->set_project(project);
 	}
 }

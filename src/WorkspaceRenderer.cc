@@ -24,7 +24,7 @@
 namespace degate
 {
 
-	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this)
+	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this)
 	{
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
@@ -44,6 +44,7 @@ namespace degate
 
 		background.update();
 		gates.update();
+		annotations.update();
 
 		update();
 	}
@@ -56,6 +57,7 @@ namespace degate
 
 		background.set_project(new_project);
 		gates.set_project(new_project);
+		annotations.set_project(new_project);
 
 		set_projection(1, width() / 2.0, height() / 2.0);
 
@@ -80,6 +82,7 @@ namespace degate
 
 		background.init();
 		gates.init();
+		annotations.init();
 	}
 
 	void WorkspaceRenderer::paintGL()
@@ -90,6 +93,7 @@ namespace degate
 
 		background.draw(projection);
 		gates.draw(projection);
+		annotations.draw(projection);
 	}
 
 	void WorkspaceRenderer::resizeGL(int w, int h)
@@ -145,6 +149,42 @@ namespace degate
 
 		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::CrossCursor);
+
+		if (event->button() == Qt::LeftButton && !is_movement)
+		{
+			if(project == NULL)
+				return;
+
+			QPointF pos = get_opengl_mouse_position();
+
+			LogicModel_shptr lmodel = project->get_logic_model();
+			Layer_shptr layer = lmodel->get_current_layer();
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 4);
+
+			// check if there is a gate or gate port on the logic layer
+			if(plo == NULL) 
+			{
+				try 
+				{
+					layer = get_first_logic_layer(lmodel);
+					plo = layer->get_object_at_position(pos.x(), pos.y(), 4);
+			    }
+				catch(CollectionLookupException const& ex)
+				{
+				}
+			}
+
+			if(plo != NULL)
+			{
+				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT); // Todo: temp, no unhighlighted
+
+				gates.update();
+				annotations.update();
+				update();
+			}
+		}
+
+		is_movement = false;
 	}
 
 	void WorkspaceRenderer::mouseMoveEvent(QMouseEvent* event)
@@ -153,6 +193,8 @@ namespace degate
 
 		if (event->buttons() & Qt::LeftButton)
 		{
+			is_movement = true;
+
 			int dx = get_opengl_mouse_position().x() - mouse_last_pos.x();
 			int dy = get_opengl_mouse_position().y() - mouse_last_pos.y();
 
@@ -188,6 +230,29 @@ namespace degate
 	void WorkspaceRenderer::mouseDoubleClickEvent(QMouseEvent* event)
 	{
 		QOpenGLWidget::mouseDoubleClickEvent(event);
+
+		if (event->button() == Qt::LeftButton)
+		{
+			if(project == NULL)
+				return;
+
+			QPointF pos = get_opengl_mouse_position();
+
+			LogicModel_shptr lmodel = project->get_logic_model();
+			Layer_shptr layer = lmodel->get_current_layer();
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 4);
+
+			if(plo != NULL)
+			{
+				if(SubProjectAnnotation_shptr sp = std::dynamic_pointer_cast<SubProjectAnnotation>(plo))
+				{
+					std::string dir = join_pathes(project->get_project_directory(), sp->get_path());
+					debug(TM, "Will open or create project at %s", dir.c_str());
+
+					emit project_changed(dir);
+				}
+			}
+		}
 	}
 
 	void WorkspaceRenderer::zoom_in()
