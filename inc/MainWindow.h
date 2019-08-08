@@ -24,6 +24,8 @@
 
 #include "ProjectImporter.h"
 #include "WorkspaceRenderer.h"
+#include "ProjectExporter.h"
+#include "NewProjectDialog.h"
 
 #include <degate.h>
 #include <QMainWindow>
@@ -45,6 +47,11 @@ namespace degate
 	public slots:
 		void on_menu_about_degate();
 		void on_menu_project_importer();
+		void on_menu_project_exporter();
+		void on_menu_project_close();
+		void on_menu_project_new();
+		void on_menu_layer_import_background();
+		void on_menu_quit();
 		void on_tool_via_up();
 		void on_tool_via_down();
 		void open_project(std::string path);
@@ -52,6 +59,7 @@ namespace degate
 	private:
 		QMenuBar menu_bar;
 		QToolBar* tool_bar;
+		QStatusBar status_bar;
 
 		Project_shptr project;
 		WorkspaceRenderer* workspace;

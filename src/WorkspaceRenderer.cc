@@ -51,8 +51,6 @@ namespace degate
 
 	void WorkspaceRenderer::set_project(const Project_shptr& new_project)
 	{
-		assert(new_project != NULL);
-
 		project = new_project;
 
 		background.set_project(new_project);

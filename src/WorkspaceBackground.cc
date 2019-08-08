@@ -75,12 +75,16 @@ namespace degate
 
 	void WorkspaceBackground::update()
 	{
+		free_textures();
+
 		if (project == NULL)
 			return;
 
-		free_textures();
-
 		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
+
+		if(smgr == NULL)
+			return;
+
 		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(1/*scale*/); //Todo: fix scaling manager
 
 		background_image = elem.second;
@@ -107,6 +111,9 @@ namespace degate
 
 	void WorkspaceBackground::draw(const QMatrix4x4& projection)
 	{
+		if (project == NULL)
+			return;
+
 		program->bind();
 		context->glEnable(GL_TEXTURE_2D);
 
