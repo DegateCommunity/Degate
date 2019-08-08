@@ -23,7 +23,7 @@
 #define __NEWPROJECTWINDOW_H__
 
 #include <QDialog>
-#include <QSpinBox.h>
+#include <QSpinBox>
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
