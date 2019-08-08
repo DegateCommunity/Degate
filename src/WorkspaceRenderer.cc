@@ -24,7 +24,7 @@
 namespace degate
 {
 
-	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this)
+	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this), selection_tool(this)
 	{
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
@@ -83,6 +83,7 @@ namespace degate
 		background.init();
 		gates.init();
 		annotations.init();
+		selection_tool.init();
 	}
 
 	void WorkspaceRenderer::paintGL()
@@ -94,6 +95,7 @@ namespace degate
 		background.draw(projection);
 		gates.draw(projection);
 		annotations.draw(projection);
+		selection_tool.draw(projection);
 	}
 
 	void WorkspaceRenderer::resizeGL(int w, int h)
@@ -141,6 +143,13 @@ namespace degate
 
 		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::ClosedHandCursor);
+
+		// Selection
+		if(event->button() == Qt::RightButton)
+		{
+			selection_tool.set_selection(true);
+			selection_tool.set_origin(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
+		}
 	}
 
 	void WorkspaceRenderer::mouseReleaseEvent(QMouseEvent* event)
@@ -150,7 +159,7 @@ namespace degate
 		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::CrossCursor);
 
-		// Selection
+		// Movement
 		if (event->button() == Qt::LeftButton && !is_movement)
 		{
 			if(project == NULL)
@@ -202,7 +211,7 @@ namespace degate
 			{
 				selected_object = plo;
 
-				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
+				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_DIRECT);
 			}
 
 			if(plo != NULL || was_selected)
@@ -231,6 +240,7 @@ namespace degate
 	{
 		QOpenGLWidget::mouseMoveEvent(event);
 
+		// Movement
 		if (event->buttons() & Qt::LeftButton)
 		{
 			is_movement = true;
@@ -241,6 +251,14 @@ namespace degate
 			center_x -= dx;
 			center_y -= dy;
 			set_projection(NO_ZOOM, center_x, center_y);
+
+			update();
+		}
+
+		// Selection
+		if(event->buttons() & Qt::RightButton)
+		{
+			selection_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
 			update();
 		}
@@ -292,6 +310,13 @@ namespace degate
 					emit project_changed(dir);
 				}
 			}
+		}
+
+		// Selection
+		if (event->button() == Qt::RightButton)
+		{
+			selection_tool.set_selection(false);
+			update();
 		}
 	}
 

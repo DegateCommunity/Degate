@@ -112,7 +112,7 @@ namespace degate
 		unsigned text_offset = 0;
 		for(LogicModel::annotation_collection::iterator iter = project->get_logic_model()->annotations_begin(); iter != project->get_logic_model()->annotations_end(); ++iter)
 		{
-			text.add_sub_text(text_offset, iter->second->get_min_x(), iter->second->get_min_y(), iter->second->get_name().c_str(), 20, QVector3D(255, 255, 255), 1);
+			text.add_sub_text(text_offset, iter->second->get_min_x() + TEXT_SPACE, iter->second->get_min_y() + TEXT_SPACE, iter->second->get_name().c_str(), 20, QVector3D(255, 255, 255), 1);
 
 			text_offset += iter->second->get_name().length();
 			index++;

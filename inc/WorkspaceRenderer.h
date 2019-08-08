@@ -29,6 +29,7 @@
 #include "WorkspaceAnnotations.h"
 #include "SubProjectAnnotation.h"
 #include "LogicModelHelper.h"
+#include "WorkspaceSelectionTool.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>
@@ -124,6 +125,9 @@ namespace degate
 
 		// Annotations
 		WorkspaceAnnotations annotations;
+
+		// Selection tool
+		WorkspaceSelectionTool selection_tool;
 	};
 }
 

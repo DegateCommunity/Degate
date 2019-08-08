@@ -122,7 +122,7 @@ namespace degate
 		unsigned ports_index = 0;
 		for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
-			text.add_sub_text(text_offset, iter->second->get_min_x(), iter->second->get_min_y(), iter->second->get_gate_template()->get_name().c_str(), 10, QVector3D(255, 255, 255), 1);
+			text.add_sub_text(text_offset, iter->second->get_min_x() + TEXT_SPACE, iter->second->get_min_y() + TEXT_SPACE, iter->second->get_gate_template()->get_name().c_str(), 10, QVector3D(255, 255, 255), 1);
 			create_ports(iter->second, ports_index);
 
 			text_offset += iter->second->get_gate_template()->get_name().length();
