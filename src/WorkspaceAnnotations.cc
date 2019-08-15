@@ -184,8 +184,8 @@ namespace degate
 
 		color_t color = highlight_color_by_state(annotation->get_fill_color(), annotation->get_highlighted());
 
-		temp.color = QVector3D(MASK_R(color), MASK_G(color), MASK_B(color));
-		temp.alpha = 0.25; // MASK_A(annotation->get_fill_color())
+		temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
+		temp.alpha = 0.25; // MASK_A(annotation->get_fill_color()) / 255.0
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_min_y());
 		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
@@ -212,8 +212,8 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
-		temp.color = QVector3D(MASK_R(color), MASK_G(color), MASK_B(color));
-		temp.alpha = 1; // MASK_A(annotation->get_frame_color())
+		temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
+		temp.alpha = 1; // MASK_A(annotation->get_frame_color()) / 255.0
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_min_y());
 		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
