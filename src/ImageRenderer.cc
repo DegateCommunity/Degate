@@ -179,6 +179,8 @@ namespace degate
 		program->addShader(fshader);
 
 		program->link();
+
+		glGenBuffers(1, &vbo);
 	}
 
 	void ImageRenderer::paintGL()

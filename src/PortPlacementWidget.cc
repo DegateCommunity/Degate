@@ -108,8 +108,6 @@ namespace degate
 
 		glGenBuffers(1, &vbo);
 
-		glEnable(GL_LINE_SMOOTH);
-
 		update_screen();
 	}
 
