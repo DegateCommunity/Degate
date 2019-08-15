@@ -114,13 +114,13 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 
 		add_module(doc, modules_elem, lmodel, lmodel->get_main_module());
 
-		root_elem.appendChild(modules_elem);
+		root_elem.appendChild(gates_elem);
+		root_elem.appendChild(vias_elem);
+		root_elem.appendChild(emarkers_elem);
+		root_elem.appendChild(wires_elem);
 		root_elem.appendChild(annotations_elem);
 		root_elem.appendChild(nets_elem);
-		root_elem.appendChild(wires_elem);
-		root_elem.appendChild(emarkers_elem);
-		root_elem.appendChild(vias_elem);
-		root_elem.appendChild(gates_elem);
+		root_elem.appendChild(modules_elem);
 
 		doc.appendChild(root_elem);
 
@@ -388,8 +388,9 @@ void LogicModelExporter::add_module(QDomDocument& doc, QDomElement& modules_elem
 		GatePort_shptr gport = p_iter->second;
 
 		mport_elem.setAttribute("name", QString::fromStdString(p_iter->first));
+		new_mod_id = oid_rewriter->get_new_object_id(gport->get_object_id());
 		mport_elem.setAttribute("object-id",
-		                        QString::fromStdString(number_to_string<object_id_t>(gport->get_object_id())));
+		                        QString::fromStdString(number_to_string<object_id_t>(new_mod_id)));
 
 		module_ports_elem.appendChild(mport_elem);
 	}
@@ -401,8 +402,9 @@ void LogicModelExporter::add_module(QDomDocument& doc, QDomElement& modules_elem
 		QDomElement cell_elem = doc.createElement("cell");
 		if (cell_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
+		new_mod_id = oid_rewriter->get_new_object_id((*g_iter)->get_object_id());
 		cell_elem.setAttribute("object-id",
-		                       QString::fromStdString(number_to_string<object_id_t>((*g_iter)->get_object_id())));
+		                       QString::fromStdString(number_to_string<object_id_t>(new_mod_id)));
 
 		cells_elem.appendChild(cell_elem);
 	}
