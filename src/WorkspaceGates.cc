@@ -400,13 +400,13 @@ namespace degate
 			    draw_port_in(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0, port->get_index());
 			    break;
 		    case GateTemplatePort::PORT_TYPE_OUT:
-			    draw_port_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color)) / 255.0, MASK_A(color) / 255.0, port->get_index());
+			    draw_port_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0, port->get_index());
 			    break;
 		    case GateTemplatePort::PORT_TYPE_INOUT:
-			    draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color)) / 255.0, MASK_A(color) / 255.0, port->get_index());
+			    draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0, port->get_index());
 			    break;
 			default:
-				draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color)) / 255.0, MASK_A(color) / 255.0, port->get_index());
+				draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0, port->get_index());
 				break;
 		}
 

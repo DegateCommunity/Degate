@@ -195,7 +195,7 @@ namespace degate
 		temp.color = color;
 		temp.alpha = alpha;
 
-		unsigned mid = size / 2.0;
+		int mid = size / 2.0;
 
 		temp.pos = QVector2D(x - mid, y - mid);
 		glBufferSubData(GL_ARRAY_BUFFER, 0 * sizeof(PortVertex2D), sizeof(PortVertex2D), &temp);

@@ -227,7 +227,7 @@ namespace degate
 			{
 				selected_object = plo;
 
-				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_DIRECT);
+				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
 			}
 
 			if(plo != NULL || was_selected)
