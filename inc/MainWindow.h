@@ -26,6 +26,7 @@
 #include "WorkspaceRenderer.h"
 #include "ProjectExporter.h"
 #include "NewProjectDialog.h"
+#include "GateEditDialog.h"
 
 #include <degate.h>
 #include <QMainWindow>
@@ -33,6 +34,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QToolBar>
+
+#define DEFAULT_STATUS_MESSAGE_DURATION 8
 
 namespace degate
 {
@@ -51,6 +54,8 @@ namespace degate
 		void on_menu_project_close();
 		void on_menu_project_new();
 		void on_menu_layer_import_background();
+		void on_menu_gate_new_gate();
+		void on_menu_gate_edit();
 		void on_menu_quit();
 		void on_tool_via_up();
 		void on_tool_via_down();

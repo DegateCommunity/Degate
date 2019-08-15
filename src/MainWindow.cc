@@ -62,6 +62,12 @@ namespace degate
 		QAction* background_import_action = layer_menu->addAction("Import background image");
 		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
 
+		QMenu* gate_menu = menu_bar.addMenu("Gate");
+		QAction* edit_gate_action = gate_menu->addAction("Edit selected");
+		QObject::connect(edit_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
+		QAction* new_gate_action = gate_menu->addAction("Create from selection");
+		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
+
 		QMenu* about_menu = menu_bar.addMenu("About");
 		QAction* about_action = about_menu->addAction("Degate");
 		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
@@ -77,7 +83,7 @@ namespace degate
 		// Status bar
 
 		setStatusBar(&status_bar);
-		status_bar.showMessage("Initialization...", SECOND(10));
+		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 
 		// Tool bar
@@ -162,17 +168,17 @@ namespace degate
 		if(project == NULL)
 			return; // Todo: create new project
 
-		status_bar.showMessage("Save project...", SECOND(5));
+		status_bar.showMessage("Save project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		ProjectExporter exporter;
 		exporter.export_all(project->get_project_directory(), project);
 
-		status_bar.showMessage("Project saved.", SECOND(5));
+		status_bar.showMessage("Project saved.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::on_menu_project_close()
 	{
-		status_bar.showMessage("Closing project...", SECOND(5));
+		status_bar.showMessage("Closing project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		if(project == NULL)
 			return;
@@ -207,12 +213,12 @@ namespace degate
 		workspace->set_project(NULL);
 		workspace->update_screen();
 
-		status_bar.showMessage("Project closed.", SECOND(5));
+		status_bar.showMessage("Project closed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::on_menu_project_new()
 	{
-		status_bar.showMessage("Creating a new project...", SECOND(5));
+		status_bar.showMessage("Creating a new project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		QString dir = QFileDialog::getExistingDirectory(this, "Select the directory where the project will be created");
 		NewProjectDialog dialog(this);
@@ -227,7 +233,7 @@ namespace degate
 		{
 			QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
 
-			status_bar.showMessage("New project operation cancelled.", SECOND(5));
+			status_bar.showMessage("New project operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 			return;
 		}
@@ -246,18 +252,18 @@ namespace degate
 			on_menu_project_exporter();
 		}
 
-		status_bar.showMessage("Created a new project.", SECOND(5));
+		status_bar.showMessage("Created a new project.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::on_menu_layer_import_background()
 	{
 		if(project == NULL)
 		{
-			status_bar.showMessage("Failed to import new background image : no project opened.", SECOND(5));
+			status_bar.showMessage("Failed to import new background image : no project opened.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 			return;
 		}
 
-		status_bar.showMessage("Importing a new background image for the layer...", SECOND(5));
+		status_bar.showMessage("Importing a new background image for the layer...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		QString res = QFileDialog::getOpenFileName(this, "Select the new background image");
 		const std::string file_name = res.toStdString();
@@ -266,7 +272,41 @@ namespace degate
 
 		workspace->update_screen();
 
-		status_bar.showMessage("Imported a new background image for the layer.", SECOND(5));
+		status_bar.showMessage("Imported a new background image for the layer.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+	}
+
+	void MainWindow::on_menu_gate_new_gate()
+	{
+		if(!workspace->has_selection())
+			return;
+
+		//Todo : orientation window here
+		//Todo : check if logic layer
+
+		GateTemplate_shptr new_gate_template(new GateTemplate(workspace->get_selection().get_width(), workspace->get_selection().get_height()));
+		grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_selection());
+
+		GateEditDialog dialog(this, new_gate_template, project);
+		dialog.exec();
+
+		project->get_logic_model()->add_gate_template(new_gate_template);
+
+		Gate_shptr new_gate(new Gate(workspace->get_selection()));
+		new_gate->set_gate_template(new_gate_template);
+		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
+
+		workspace->update_screen();
+	}
+
+	void MainWindow::on_menu_gate_edit()
+	{
+		if(Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_object()))
+		{
+			GateEditDialog dialog(this, o->get_gate_template(), project);
+			dialog.exec();
+		}
+
+		workspace->update_screen();
 	}
 
 	void MainWindow::on_menu_quit()
@@ -302,13 +342,13 @@ namespace degate
 
 	void MainWindow::open_project(std::string path)
 	{
-		status_bar.showMessage("Import project/subproject...", SECOND(5));
+		status_bar.showMessage("Import project/subproject...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		ProjectImporter projectImporter;
 		project = projectImporter.import_all(path);
 
 		workspace->set_project(project);
 
-		status_bar.showMessage("Project/Subproject imported.", SECOND(5));
+		status_bar.showMessage("Project/Subproject imported.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 }
