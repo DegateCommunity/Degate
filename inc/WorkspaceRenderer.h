@@ -61,6 +61,21 @@ namespace degate
 	     */
 		void set_project(const Project_shptr& new_project);
 
+		/*
+		 * Get the selection state, if true there is a selection otherwise not.
+		 */
+		bool has_selection();
+
+		/*
+		 * Get selection bounding box.
+		 */
+		BoundingBox get_selection();
+
+		/*
+		 * Get the selected object.
+		 */
+		PlacedLogicModelObject_shptr get_selected_object();
+
 	protected:
 		/*
 		 * Destroy all OpenGL textures.
@@ -77,15 +92,6 @@ namespace degate
 		void keyPressEvent(QKeyEvent* event) override;
 		void keyReleaseEvent(QKeyEvent* event) override;
 		void mouseDoubleClickEvent(QMouseEvent* event) override;
-
-	public slots:
-		void zoom_in();
-		void zoom_out();
-
-	signals:
-		void project_changed(std::string path);
-
-	private:
 
 		/*
 		 * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
@@ -106,6 +112,14 @@ namespace degate
 		 */
 		void set_projection(float scale_factor, float new_center_x, float new_center_y);
 
+	public slots:
+		void zoom_in();
+		void zoom_out();
+
+	signals:
+		void project_changed(std::string path);
+
+	private:
 		// General
 		Project_shptr project = NULL;
 		QOpenGLShaderProgram* program = NULL;

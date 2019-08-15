@@ -39,6 +39,8 @@ namespace degate
 
 	void WorkspaceRenderer::update_screen()
 	{
+		makeCurrent();
+
 		if (project == NULL)
 			return;
 
@@ -62,6 +64,21 @@ namespace degate
 		update_screen();
 	}
 
+	bool WorkspaceRenderer::has_selection()
+	{
+		return selection_tool.is_selection();
+	}
+
+	BoundingBox WorkspaceRenderer::get_selection()
+	{
+		return selection_tool.get_selection_box();
+	}
+
+	PlacedLogicModelObject_shptr WorkspaceRenderer::get_selected_object()
+	{
+		return selected_object;
+	}
+
 	void WorkspaceRenderer::free_textures()
 	{
 		background.free_textures();
@@ -69,6 +86,8 @@ namespace degate
 
 	void WorkspaceRenderer::initializeGL()
 	{
+		makeCurrent();
+
 		initializeOpenGLFunctions();
 
 		WorkspaceText::init_font();
@@ -129,7 +148,6 @@ namespace degate
 		viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
 
 		projection.setToIdentity();
-		projection.scale(1, 1, 1);
 		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
 	}
 
@@ -157,7 +175,7 @@ namespace degate
 		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::CrossCursor);
 
-		// Movement
+		// Selection
 		if (event->button() == Qt::LeftButton && !is_movement)
 		{
 			if(project == NULL)
@@ -167,7 +185,7 @@ namespace degate
 
 			LogicModel_shptr lmodel = project->get_logic_model();
 			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 4);
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
 
 			// check if there is a gate or gate port on the logic layer
 			if(plo == NULL) 
@@ -175,7 +193,7 @@ namespace degate
 				try 
 				{
 					layer = get_first_logic_layer(lmodel);
-					plo = layer->get_object_at_position(pos.x(), pos.y(), 4);
+					plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
 			    }
 				catch(CollectionLookupException const& ex)
 				{
@@ -243,8 +261,8 @@ namespace degate
 		{
 			is_movement = true;
 
-			int dx = get_opengl_mouse_position().x() - mouse_last_pos.x();
-			int dy = get_opengl_mouse_position().y() - mouse_last_pos.y();
+			float dx = get_opengl_mouse_position().x() - mouse_last_pos.x();
+			float dy = get_opengl_mouse_position().y() - mouse_last_pos.y();
 
 			center_x -= dx;
 			center_y -= dy;
@@ -296,7 +314,7 @@ namespace degate
 
 			LogicModel_shptr lmodel = project->get_logic_model();
 			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 4);
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
 
 			if(plo != NULL)
 			{
