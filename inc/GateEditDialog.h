@@ -155,19 +155,42 @@ namespace degate
 		/*
 		 * Save all changes.
 		 */
-		void validate();
+		virtual void validate();
+
+	protected:
+		QDialogButtonBox button_box;
+		QVBoxLayout layout;
+		Project_shptr project = NULL;
 
 	private:
 		GateTemplate_shptr gate = NULL;
-		Project_shptr project = NULL;
 
 		QTabWidget tab;
-		QDialogButtonBox button_box;
-		QVBoxLayout layout;
 
 		GateEditEntityTab entity_tab;
 		GateEditBehaviourTab behaviour_tab;
 		GateEditLayoutTab layout_tab;
+	};
+
+	class GateInstanceEditDialog : public GateEditDialog
+	{
+		Q_OBJECT
+
+	public:
+		GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project);
+		~GateInstanceEditDialog();
+
+	public slots:
+		/*
+		 * Save all changes.
+		 */
+		void validate();
+
+	private:
+		Gate_shptr gate = NULL;
+
+		QLabel orientation_label;
+		QComboBox orientation;
 	};
 }
 

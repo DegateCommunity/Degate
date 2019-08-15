@@ -286,13 +286,14 @@ namespace degate
 		GateTemplate_shptr new_gate_template(new GateTemplate(workspace->get_selection().get_width(), workspace->get_selection().get_height()));
 		grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_selection());
 
-		GateEditDialog dialog(this, new_gate_template, project);
-		dialog.exec();
-
-		project->get_logic_model()->add_gate_template(new_gate_template);
-
 		Gate_shptr new_gate(new Gate(workspace->get_selection()));
 		new_gate->set_gate_template(new_gate_template);
+
+		GateInstanceEditDialog dialog(this, new_gate, project);
+		dialog.exec();
+
+		project->get_logic_model()->update_ports(new_gate);
+		project->get_logic_model()->add_gate_template(new_gate_template);
 		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
 
 		workspace->update_screen();
@@ -302,8 +303,10 @@ namespace degate
 	{
 		if(Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_object()))
 		{
-			GateEditDialog dialog(this, o->get_gate_template(), project);
+			GateInstanceEditDialog dialog(this, o, project);
 			dialog.exec();
+
+			project->get_logic_model()->update_ports(o);
 		}
 
 		workspace->update_screen();

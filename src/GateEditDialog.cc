@@ -351,4 +351,40 @@ namespace degate
 
 		close();
 	}
+
+	GateInstanceEditDialog::GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project) : GateEditDialog(parent, gate->get_gate_template(), project), gate(gate)
+	{
+		orientation_label.setText("Gate instance orientation :");
+		orientation.addItem("undefined");
+		orientation.addItem("normal");
+		orientation.addItem("flipped-up-down");
+		orientation.addItem("flipped-left-right");
+		orientation.addItem("flipped-both");
+		orientation.setCurrentText(QString::fromStdString(gate->get_orienation_type_as_string()));
+
+		layout.insertWidget(0, &orientation);
+		layout.insertSpacing(1, 10);
+	}
+
+	GateInstanceEditDialog::~GateInstanceEditDialog()
+	{
+	}
+
+	void GateInstanceEditDialog::validate()
+	{
+		if(orientation.currentText() == "undefined")
+			gate->set_orientation(Gate::ORIENTATION_UNDEFINED);
+		else if(orientation.currentText() == "normal")
+			gate->set_orientation(Gate::ORIENTATION_NORMAL);
+		else if(orientation.currentText() == "flipped-up-down")
+			gate->set_orientation(Gate::ORIENTATION_FLIPPED_UP_DOWN);
+		else if(orientation.currentText() == "flipped-left-right")
+			gate->set_orientation(Gate::ORIENTATION_FLIPPED_LEFT_RIGHT);
+		else if(orientation.currentText() == "flipped-both")
+			gate->set_orientation(Gate::ORIENTATION_FLIPPED_BOTH);
+		else
+			gate->set_orientation(Gate::ORIENTATION_UNDEFINED);
+
+		GateEditDialog::validate();
+	}
 }
