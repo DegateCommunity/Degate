@@ -102,6 +102,14 @@ namespace degate
 		{
 			memory_map.set(x, y, new_val);
 		}
+
+		/**
+		 * Copy the raw data into a buffer.
+		 */
+		void raw_copy(void* dst_buf) const
+		{
+			memory_map.raw_copy(dst_buf);
+		}
 	};
 
 
@@ -142,6 +150,14 @@ namespace degate
 		                      typename PixelPolicy::pixel_type new_val)
 		{
 			memory_map.set(x, y, new_val);
+		}
+
+		/**
+		 * Copy the raw data into a buffer.
+		 */
+		void raw_copy(void* dst_buf) const
+		{
+			memory_map.raw_copy(dst_buf);
 		}
 	};
 
