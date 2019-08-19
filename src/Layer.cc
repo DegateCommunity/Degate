@@ -248,6 +248,9 @@ bool Layer::has_background_image() const
 
 void Layer::unset_image()
 {
+	if(!has_background_image())
+		return;
+	
 	if (scaling_manager == NULL) throw DegateLogicException("There is no scaling manager.");
 	std::string img_dir = get_image_filename();
 	scaling_manager.reset();
