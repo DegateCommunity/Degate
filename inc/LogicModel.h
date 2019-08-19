@@ -223,12 +223,6 @@ namespace degate
 		 */
 		void remove_object(PlacedLogicModelObject_shptr o, bool add_to_remove_list);
 
-
-		/**
-		 * Create a new layer ID.
-		 */
-		layer_id_t get_new_layer_id();
-
 		bool exists_layer_id(layer_collection const& layers, layer_id_t lid) const;
 
 	public:
@@ -409,7 +403,7 @@ namespace degate
 		void add_layer(layer_position_t pos);
 
 		/**
-		 * Get a layer by its posiion index.
+		 * Get a layer by its position index.
 		 */
 
 		Layer_shptr get_layer(layer_position_t pos);
@@ -419,6 +413,11 @@ namespace degate
 		 * @exception CollectionLookupException This exception is thrown, if there is no matching layer.
 		 */
 		Layer_shptr get_layer_by_id(layer_id_t lid);
+
+		/**
+		 * Create a new layer ID.
+		 */
+		layer_id_t get_new_layer_id();
 
 
 		/**
