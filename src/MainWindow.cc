@@ -59,6 +59,8 @@ namespace degate
 		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_quit()));
 
 		QMenu* layer_menu = menu_bar.addMenu("Layer");
+		QAction* layers_edit_action = layer_menu->addAction("Edit layers");
+		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
 		QAction* background_import_action = layer_menu->addAction("Import background image");
 		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
 
@@ -166,7 +168,7 @@ namespace degate
 	void MainWindow::on_menu_project_exporter()
 	{
 		if(project == NULL)
-			return; // Todo: create new project
+			return;
 
 		status_bar.showMessage("Save project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
@@ -249,10 +251,24 @@ namespace degate
 
 			workspace->set_project(project);
 
+			LayersEditDialog layers_edit_dialog(project, this);
+			layers_edit_dialog.exec();
+
 			on_menu_project_exporter();
 		}
 
 		status_bar.showMessage("Created a new project.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+	}
+
+	void MainWindow::on_menu_layer_edit()
+	{
+		if(project == NULL)
+			return;
+		
+		LayersEditDialog layers_edit_dialog(project, this);
+		layers_edit_dialog.exec();
+
+		workspace->update_screen();
 	}
 
 	void MainWindow::on_menu_layer_import_background()
@@ -322,10 +338,7 @@ namespace degate
 		if(project == NULL)
 			return;
 
-		if(project->get_logic_model()->get_current_layer()->get_layer_pos() <= 0)
-			return;
-
-		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_pos() - 1);
+		project->get_logic_model()->set_current_layer(get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
 
 		workspace->update_screen();
 	}
@@ -335,10 +348,7 @@ namespace degate
 		if(project == NULL)
 			return;
 
-		if(project->get_logic_model()->get_current_layer()->get_layer_pos() >= project->get_logic_model()->get_num_layers() - 1)
-			return;
-
-		project->get_logic_model()->set_current_layer(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1);
+		project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
 
 		workspace->update_screen();
 	}

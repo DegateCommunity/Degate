@@ -27,6 +27,7 @@
 #include "ProjectExporter.h"
 #include "NewProjectDialog.h"
 #include "GateEditDialog.h"
+#include "LayersEditDialog.h"
 
 #include <degate.h>
 #include <QMainWindow>
@@ -53,6 +54,7 @@ namespace degate
 		void on_menu_project_exporter();
 		void on_menu_project_close();
 		void on_menu_project_new();
+		void on_menu_layer_edit();
 		void on_menu_layer_import_background();
 		void on_menu_gate_new_gate();
 		void on_menu_gate_edit();
