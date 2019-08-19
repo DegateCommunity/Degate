@@ -77,10 +77,10 @@ namespace degate
 		ports_label.setText("Ports :");
 		ports.setColumnCount(6);
 		QStringList list;
-		list.append("Port ID");
-		list.append("Port Name");
-		list.append("Port Description");
-		list.append("Port Color");
+		list.append("ID");
+		list.append("Name");
+		list.append("Description");
+		list.append("Color");
 		list.append("In");
 		list.append("Out");
 		ports.setHorizontalHeaderLabels(list);
@@ -195,6 +195,8 @@ namespace degate
 		GateTemplatePort_shptr new_port(new GateTemplatePort());
 		new_port->set_object_id(project->get_logic_model()->get_new_object_id());
 		gate->add_template_port(new_port);
+
+		project->get_logic_model()->update_ports(gate);
 		
 		update_ports_list();
 	}
@@ -213,8 +215,10 @@ namespace degate
 		for(auto sel = index.begin(); sel != index.end(); ++sel)
 		{
 			if(sel->isValid())
-				gate->remove_template_port(ports.item(sel->row(), sel->column())->text().toInt());
+				gate->remove_template_port(ports.item(sel->row(), 0)->text().toInt());
 		}
+
+		project->get_logic_model()->update_ports(gate);
 
 		update_ports_list();
 	}
@@ -229,8 +233,12 @@ namespace degate
 
 			ports.insertRow(ports.rowCount());
 
-			// Id, name and description
-			ports.setItem(ports.rowCount() - 1, 0, new QTableWidgetItem(QString::number(tmpl_port->get_object_id())));
+			// Id
+			QTableWidgetItem* id_item = new QTableWidgetItem(QString::number(tmpl_port->get_object_id()));
+			id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+			ports.setItem(ports.rowCount() - 1, 0, id_item);
+
+			// name and description
 			ports.setItem(ports.rowCount() - 1, 1, new QTableWidgetItem(QString::fromStdString(tmpl_port->get_name())));
 			ports.setItem(ports.rowCount() - 1, 2, new QTableWidgetItem(QString::fromStdString(tmpl_port->get_description())));
 
