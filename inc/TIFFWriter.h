@@ -85,16 +85,15 @@ namespace degate
 		writer.setText("BitsPerSample", "8");
 		writer.setText("SamplesPerPixel", "3");
 
-		QImage image(get_width(), get_width(), QImage::Format_RGB32);
+		QImage image(get_width(), get_height(), QImage::Format_ARGB32);
 
 		for (unsigned int y = 0; y < get_height(); y++)
 		{
 			for (unsigned int x = 0; x < get_width(); x++)
 			{
-				rgba_pixel_t p =
-					img->template get_pixel_as<rgba_pixel_t>(x, y);
+				rgba_pixel_t p = img->template get_pixel_as<rgba_pixel_t>(x, y);
 
-				image.setPixel(x, y, p);
+				image.setPixel(x, y, qRgba(MASK_R(p), MASK_G(p), MASK_B(p), MASK_A(p)));
 			}
 		}
 

@@ -83,7 +83,7 @@ namespace degate
 		set_width(size.width());
 		set_height(size.height());
 
-		assert(reader.imageFormat() == QImage::Format_ARGB32 || reader.imageFormat() == QImage::Format_RGB32);
+		//assert(reader.imageFormat() == QImage::Format_ARGB32 || reader.imageFormat() == QImage::Format_RGB32);
 
 		image = new QImage(size.width(), size.height(), reader.imageFormat());
 
@@ -111,7 +111,7 @@ namespace degate
 			for (unsigned int x = 0; x < get_width(); x++)
 			{
 				QRgb rgb = image->pixel(x, y);
-				img->set_pixel(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), 0xff));
+				img->set_pixel(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), qAlpha(rgb)));
 			}
 		}
 
