@@ -267,6 +267,8 @@ namespace degate
 		// Background
 		LayerBackgroundSelectionButton* bb = new LayerBackgroundSelectionButton(NULL, this);
 		layers.setCellWidget(layers.rowCount() - 1, 4, bb);
+
+		layers.selectRow(layers.rowCount() - 1);
 	}
 
 	void LayersEditWidget::on_layer_remove()
@@ -399,6 +401,8 @@ namespace degate
 			layers.setItem(row_indice, 2, destination.description);
 			layers.setCellWidget(row_indice, 3, destination.type);
 			layers.setCellWidget(row_indice, 4, destination.background);
+
+			layers.selectRow(row_indice - 1);
 		}
 		else
 		{
@@ -433,6 +437,8 @@ namespace degate
 			layers.setItem(row_indice, 2, destination.description);
 			layers.setCellWidget(row_indice, 3, destination.type);
 			layers.setCellWidget(row_indice, 4, destination.background);
+
+			layers.selectRow(row_indice + 1);
 		}
 	}
 }
