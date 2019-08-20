@@ -189,6 +189,7 @@ namespace degate
 	private:
 		Gate_shptr gate = NULL;
 
+		QHBoxLayout orientation_layout;
 		QLabel orientation_label;
 		QComboBox orientation;
 	};

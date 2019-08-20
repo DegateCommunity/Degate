@@ -284,7 +284,7 @@ namespace degate
 		{
 			if(sel->isValid())
 			{
-				PortPlacementDialog dialog(this, project, gate, gate->get_template_port(ports.item(sel->row(), sel->column())->text().toInt()));
+				PortPlacementDialog dialog(this, project, gate, gate->get_template_port(ports.item(sel->row(), 0)->text().toInt()));
 				dialog.exec();
 			}
 		}
@@ -370,7 +370,9 @@ namespace degate
 		orientation.addItem("flipped-both");
 		orientation.setCurrentText(QString::fromStdString(gate->get_orienation_type_as_string()));
 
-		layout.insertWidget(0, &orientation);
+		orientation_layout.addWidget(&orientation_label);
+		orientation_layout.addWidget(&orientation);
+		layout.insertLayout(0, &orientation_layout);
 		layout.insertSpacing(1, 10);
 	}
 
