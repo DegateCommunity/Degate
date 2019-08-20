@@ -79,6 +79,12 @@ namespace degate
 		return selected_object;
 	}
 
+	void WorkspaceRenderer::reset_selection()
+	{
+		selection_tool.set_selection(false);
+		update();
+	}
+
 	void WorkspaceRenderer::free_textures()
 	{
 		background.free_textures();
