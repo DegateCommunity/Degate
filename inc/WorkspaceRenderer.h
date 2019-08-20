@@ -62,14 +62,19 @@ namespace degate
 		void set_project(const Project_shptr& new_project);
 
 		/**
-		 * Get the selection state, if true there is a selection otherwise not.
+		 * Get the area selection state, if true there is a selection area otherwise not.
 		 */
-		bool has_selection();
+		bool has_area_selection();
 
 		/**
-		 * Get selection bounding box.
+		 * Get the area selection bounding box.
 		 */
-		BoundingBox get_selection();
+		BoundingBox get_area_selection();
+
+		/**
+		 * No more area selection.
+		 */
+		void reset_area_selection();
 		
 		/**
 		 * Get the selected object.
@@ -80,6 +85,16 @@ namespace degate
 		 * No more selection.
 		 */
 		void reset_selection();
+
+		/**
+		 * Get the selection state, if true there is a selection otherwise not.
+		 */
+		bool has_selection();
+
+		/**
+		 * Return the selected object and reset the selection.
+		 */
+		PlacedLogicModelObject_shptr pop_selected_object();
 
 	protected:
 		/**

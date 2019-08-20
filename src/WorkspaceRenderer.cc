@@ -64,12 +64,12 @@ namespace degate
 		update_screen();
 	}
 
-	bool WorkspaceRenderer::has_selection()
+	bool WorkspaceRenderer::has_area_selection()
 	{
 		return selection_tool.is_selection();
 	}
 
-	BoundingBox WorkspaceRenderer::get_selection()
+	BoundingBox WorkspaceRenderer::get_area_selection()
 	{
 		return selection_tool.get_selection_box();
 	}
@@ -79,10 +79,67 @@ namespace degate
 		return selected_object;
 	}
 
-	void WorkspaceRenderer::reset_selection()
+	void WorkspaceRenderer::reset_area_selection()
 	{
 		selection_tool.set_selection(false);
 		update();
+	}
+
+	void WorkspaceRenderer::reset_selection()
+	{
+		if(selected_object == NULL)
+			return;
+		
+		selected_object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+
+		if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
+		{
+			annotations.update(o);
+		}
+		else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(selected_object))
+		{
+			gates.update(o);
+		}
+		else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(selected_object))
+		{
+			gates.update(o);
+		}
+
+		selected_object = NULL;
+	}
+
+	bool WorkspaceRenderer::has_selection()
+	{
+		if(selected_object == NULL)
+			return false;
+		else
+			return true;
+	}
+
+	PlacedLogicModelObject_shptr WorkspaceRenderer::pop_selected_object()
+	{
+		if(selected_object == NULL)
+			return NULL;
+		
+		selected_object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+
+		if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
+		{
+			annotations.update(o);
+		}
+		else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(selected_object))
+		{
+			gates.update(o);
+		}
+		else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(selected_object))
+		{
+			gates.update(o);
+		}
+
+		PlacedLogicModelObject_shptr temp = selected_object;
+		selected_object = NULL;
+
+		return temp;
 	}
 
 	void WorkspaceRenderer::free_textures()
@@ -210,22 +267,7 @@ namespace degate
 
 			if(selected_object != NULL)
 			{
-				selected_object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
-
-				if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
-				{
-					annotations.update(o);
-				}
-				else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(selected_object))
-				{
-					gates.update(o);
-				}
-				else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(selected_object))
-				{
-					gates.update(o);
-				}
-
-				selected_object = NULL;
+				reset_selection();
 				was_selected = true;
 			}
 			
