@@ -67,7 +67,9 @@ namespace degate
 		QMenu* gate_menu = menu_bar.addMenu("Gate");
 		QAction* edit_gate_action = gate_menu->addAction("Edit selected");
 		QObject::connect(edit_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
-		QAction* new_gate_action = gate_menu->addAction("Create from selection");
+		QAction* new_gate_template_action = gate_menu->addAction("Create gate template from selection");
+		QObject::connect(new_gate_template_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
+		QAction* new_gate_action = gate_menu->addAction("Create gate from selection");
 		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
 
 		QMenu* about_menu = menu_bar.addMenu("About");
@@ -291,27 +293,64 @@ namespace degate
 		status_bar.showMessage("Imported a new background image for the layer.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
-	void MainWindow::on_menu_gate_new_gate()
+	void MainWindow::on_menu_gate_new_gate_template()
 	{
 		if(!workspace->has_selection())
 			return;
 
-		//Todo : orientation window here
-		//Todo : check if logic layer
+		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
+		{
+			QMessageBox::warning(this, "Warning", "You can create a new gate only on a logic layer.");
+			return;
+		}
 
 		GateTemplate_shptr new_gate_template(new GateTemplate(workspace->get_selection().get_width(), workspace->get_selection().get_height()));
 		grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_selection());
 
 		Gate_shptr new_gate(new Gate(workspace->get_selection()));
 		new_gate->set_gate_template(new_gate_template);
+		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
+		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
 
 		GateInstanceEditDialog dialog(this, new_gate, project);
 		dialog.exec();
 
-		project->get_logic_model()->update_ports(new_gate);
 		project->get_logic_model()->add_gate_template(new_gate_template);
 		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
+		project->get_logic_model()->update_ports(new_gate);
 
+		workspace->reset_selection();
+		workspace->update_screen();
+	}
+
+	void MainWindow::on_menu_gate_new_gate()
+	{
+		if(!workspace->has_selection())
+			return;
+
+		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
+		{
+			QMessageBox::warning(this, "Warning", "You can create a new gate only on a logic layer.");
+			return;
+		}
+
+		SelectGateTemplateDialog select_dialog(project, this);
+		select_dialog.exec();
+
+		GateTemplate_shptr gate_template = select_dialog.get_selected_gate();
+
+		Gate_shptr new_gate(new Gate(workspace->get_selection()));
+		new_gate->set_gate_template(gate_template);
+		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
+		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
+
+		GateInstanceEditDialog dialog(this, new_gate, project);
+		dialog.exec();
+
+		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
+		project->get_logic_model()->update_ports(new_gate);
+		
+		workspace->reset_selection();
 		workspace->update_screen();
 	}
 
