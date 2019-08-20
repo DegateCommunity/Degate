@@ -50,7 +50,7 @@ namespace degate
 		~MainWindow();
 
 	public slots:
-		void on_menu_about_degate();
+		void on_menu_help_about();
 		void on_menu_project_importer();
 		void on_menu_project_exporter();
 		void on_menu_project_close();
@@ -60,6 +60,7 @@ namespace degate
 		void on_menu_gate_new_gate_template();
 		void on_menu_gate_new_gate();
 		void on_menu_gate_edit();
+		void on_menu_logic_remove_selected_object();
 		void on_menu_quit();
 		void on_tool_via_up();
 		void on_tool_via_down();

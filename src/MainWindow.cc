@@ -72,10 +72,14 @@ namespace degate
 		QAction* new_gate_action = gate_menu->addAction("Create gate from selection");
 		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
 
-		QMenu* about_menu = menu_bar.addMenu("About");
-		QAction* about_action = about_menu->addAction("Degate");
+		QMenu* logic_menu = menu_bar.addMenu("Logic");
+		QAction* remove_object_action = logic_menu->addAction("Remove selected object");
+		QObject::connect(remove_object_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
+
+		QMenu* help_menu = menu_bar.addMenu("Help");
+		QAction* about_action = help_menu->addAction("About");
 		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
-		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_about_degate()));
+		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
 
 
 		// Workspace
@@ -123,7 +127,7 @@ namespace degate
 			delete workspace;
 	}
 
-	void MainWindow::on_menu_about_degate()
+	void MainWindow::on_menu_help_about()
 	{
 		const QString about_message = "<html><center>"
 			"<img src='res/degate_logo.png' alt='' width='100' height='87'> <br>"
@@ -295,7 +299,7 @@ namespace degate
 
 	void MainWindow::on_menu_gate_new_gate_template()
 	{
-		if(!workspace->has_selection())
+		if(!workspace->has_area_selection())
 			return;
 
 		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
@@ -304,10 +308,10 @@ namespace degate
 			return;
 		}
 
-		GateTemplate_shptr new_gate_template(new GateTemplate(workspace->get_selection().get_width(), workspace->get_selection().get_height()));
-		grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_selection());
+		GateTemplate_shptr new_gate_template(new GateTemplate(workspace->get_area_selection().get_width(), workspace->get_area_selection().get_height()));
+		grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_area_selection());
 
-		Gate_shptr new_gate(new Gate(workspace->get_selection()));
+		Gate_shptr new_gate(new Gate(workspace->get_area_selection()));
 		new_gate->set_gate_template(new_gate_template);
 		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
 		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
@@ -319,13 +323,13 @@ namespace degate
 		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
 		project->get_logic_model()->update_ports(new_gate);
 
-		workspace->reset_selection();
+		workspace->reset_area_selection();
 		workspace->update_screen();
 	}
 
 	void MainWindow::on_menu_gate_new_gate()
 	{
-		if(!workspace->has_selection())
+		if(project == NULL || !workspace->has_area_selection())
 			return;
 
 		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
@@ -339,7 +343,7 @@ namespace degate
 
 		GateTemplate_shptr gate_template = select_dialog.get_selected_gate();
 
-		Gate_shptr new_gate(new Gate(workspace->get_selection()));
+		Gate_shptr new_gate(new Gate(workspace->get_area_selection()));
 		new_gate->set_gate_template(gate_template);
 		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
 		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
@@ -350,7 +354,7 @@ namespace degate
 		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
 		project->get_logic_model()->update_ports(new_gate);
 		
-		workspace->reset_selection();
+		workspace->reset_area_selection();
 		workspace->update_screen();
 	}
 
@@ -364,6 +368,15 @@ namespace degate
 			project->get_logic_model()->update_ports(o);
 		}
 
+		workspace->update_screen();
+	}
+
+	void MainWindow::on_menu_logic_remove_selected_object()
+	{
+		if(project == NULL || !workspace->has_selection())
+			return;
+
+		project->get_logic_model()->remove_object(workspace->pop_selected_object());
 		workspace->update_screen();
 	}
 
