@@ -29,6 +29,7 @@
 #include "GateEditDialog.h"
 #include "LayersEditDialog.h"
 #include "SelectGateTemplateDialog.h"
+#include "GateLibraryDialog.h"
 
 #include <degate.h>
 #include <QMainWindow>
@@ -60,6 +61,7 @@ namespace degate
 		void on_menu_gate_new_gate_template();
 		void on_menu_gate_new_gate();
 		void on_menu_gate_edit();
+		void on_menu_gate_library();
 		void on_menu_logic_remove_selected_object();
 		void on_menu_quit();
 		void on_tool_via_up();

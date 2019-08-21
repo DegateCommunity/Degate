@@ -71,6 +71,9 @@ namespace degate
 		QObject::connect(new_gate_template_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
 		QAction* new_gate_action = gate_menu->addAction("Create gate from selection");
 		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
+		gate_menu->addSeparator();
+		QAction* gate_library_action = gate_menu->addAction("Gate library");
+		QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
 		QMenu* logic_menu = menu_bar.addMenu("Logic");
 		QAction* remove_object_action = logic_menu->addAction("Remove selected object");
@@ -367,6 +370,17 @@ namespace degate
 
 			project->get_logic_model()->update_ports(o);
 		}
+
+		workspace->update_screen();
+	}
+
+	void MainWindow::on_menu_gate_library()
+	{
+		if(project == NULL)
+			return;
+		
+		GateLibraryDialog dialog(project, this);
+		dialog.exec();
 
 		workspace->update_screen();
 	}
