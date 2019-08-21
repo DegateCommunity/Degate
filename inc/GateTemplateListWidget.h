@@ -44,7 +44,7 @@ namespace degate
 		 * Get a vector of the selected gates templates.
 		 * It can return an empty vector.
 		 */
-		const std::vector<GateTemplate_shptr>& get_selected_gates();
+		std::vector<GateTemplate_shptr> get_selected_gates();
 
 		/**
 		 * Get the first selected gate template.

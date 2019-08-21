@@ -42,7 +42,7 @@ namespace degate
 		
 	}
 
-	const std::vector<GateTemplate_shptr>& GateTemplateListWidget::get_selected_gates()
+	std::vector<GateTemplate_shptr> GateTemplateListWidget::get_selected_gates()
 	{
 		QItemSelectionModel* select = selectionModel();
 
@@ -104,10 +104,18 @@ namespace degate
 			id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 			setItem(rowCount() - 1, 0, id_item);
 
-			// name and description
-			setItem(rowCount() - 1, 1, new QTableWidgetItem(QString::fromStdString(gate->get_name())));
-			setItem(rowCount() - 1, 2, new QTableWidgetItem(QString::fromStdString(gate->get_description())));
+			// Name
+			QTableWidgetItem* name_item = new QTableWidgetItem(QString::fromStdString(gate->get_name()));
+			name_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+			setItem(rowCount() - 1, 1, name_item);
+
+			// Description
+			QTableWidgetItem* description_item = new QTableWidgetItem(QString::fromStdString(gate->get_description()));
+			description_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+			setItem(rowCount() - 1, 2, description_item);
 		}
 
+		resizeColumnsToContents();
+		resizeRowsToContents();
 	}
 }
