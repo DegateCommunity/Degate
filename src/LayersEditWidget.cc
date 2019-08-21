@@ -178,8 +178,6 @@ namespace degate
 		list.append("Type");
 		list.append("Background");
 		layers.setHorizontalHeaderLabels(list);
-		layers.resizeColumnsToContents();
-		layers.resizeRowsToContents();
 
 		// Add/remove Buttons
 		layers_add_button.setText("Add");
@@ -232,6 +230,9 @@ namespace degate
 			LayerBackgroundSelectionButton* bb = new LayerBackgroundSelectionButton(layer, this);
 			layers.setCellWidget(layers.rowCount() - 1, 4, bb);
 		}
+
+		layers.resizeColumnsToContents();
+		layers.resizeRowsToContents();
 
 		QObject::connect(&layers_add_button, SIGNAL(clicked()), this, SLOT(on_layer_add()));
 		QObject::connect(&layers_remove_button, SIGNAL(clicked()), this, SLOT(on_layer_remove()));

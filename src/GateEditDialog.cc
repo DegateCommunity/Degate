@@ -257,6 +257,9 @@ namespace degate
 			out->setCheckState(tmpl_port->is_outport() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
 			ports.setItem(ports.rowCount() - 1, 5, out);
 		}
+
+		ports.resizeColumnsToContents();
+		ports.resizeRowsToContents();
 	}
 
 	void GateEditEntityTab::reset_fill_color()
@@ -334,6 +337,7 @@ namespace degate
 																											  project(project)
 	{
 		setWindowTitle("Edit gate");
+		resize(500, 400);
 
 		tab.addTab(&entity_tab, "Entity");
 		tab.addTab(&behaviour_tab, "Behaviour");
@@ -362,6 +366,9 @@ namespace degate
 
 	GateInstanceEditDialog::GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project) : GateEditDialog(parent, gate->get_gate_template(), project), gate(gate)
 	{
+		setWindowTitle("Edit gate instance");
+		resize(500, 400);
+		
 		orientation_label.setText("Gate instance orientation :");
 		orientation.addItem("undefined");
 		orientation.addItem("normal");

@@ -25,6 +25,9 @@ namespace degate
 {
 	LayersEditDialog::LayersEditDialog(Project_shptr project, QWidget* parent) : layers(project, parent), QDialog(parent), project(project)
 	{
+		setWindowTitle("Edit layers");
+		resize(500, 400);
+		
 		validate_button.setText("Ok");
 		cancel_button.setText("Cancel");
 
