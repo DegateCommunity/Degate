@@ -30,9 +30,11 @@ namespace degate
 		float alpha;
 	};
 
-	PortPlacementWidget::PortPlacementWidget(Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port, QWidget* parent) : ImageRenderer(gate->get_image(Layer::LAYER_TYPE::LOGIC), parent), gate(gate), port(port), project(project)
+	PortPlacementWidget::PortPlacementWidget(Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port, QWidget* parent) : ImageRenderer(gate->get_image(Layer::LAYER_TYPE::LOGIC), parent, false), gate(gate), port(port), project(project)
 	{
 		layer = Layer::LAYER_TYPE::LOGIC;
+
+		pos = port->get_point();
 	}
 
 	PortPlacementWidget::~PortPlacementWidget()
@@ -53,6 +55,11 @@ namespace degate
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		ImageRenderer::update_screen();
+	}
+
+	Point PortPlacementWidget::get_new_port_position()
+	{
+		return pos;
 	}
 
 	void PortPlacementWidget::next_layer()
@@ -76,7 +83,7 @@ namespace degate
 	void PortPlacementWidget::initializeGL()
 	{
 		ImageRenderer::initializeGL();
-
+		
 		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
 		const char* vsrc =
 			"attribute vec2 pos;\n"
@@ -155,7 +162,7 @@ namespace degate
 			&& get_opengl_mouse_position().x() <= gate->get_width() 
 			&& get_opengl_mouse_position().y() <= gate->get_height())
 		{
-			port->set_point(Point(get_opengl_mouse_position().x(), get_opengl_mouse_position().y()));
+			pos = Point(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
 			update_screen();
 		}
@@ -177,7 +184,7 @@ namespace degate
 			&& get_opengl_mouse_position().x() <= gate->get_width() 
 			&& get_opengl_mouse_position().y() <= gate->get_height())
 		{
-			port->set_point(Point(get_opengl_mouse_position().x(), get_opengl_mouse_position().y()));
+			pos = Point(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
 			update_screen();
 		}
@@ -306,19 +313,19 @@ namespace degate
 		switch(port->get_port_type()) 
 		{
 			case GateTemplatePort::PORT_TYPE_UNDEFINED:
-				draw_port_in_out(port->get_x(), port->get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+				draw_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 				break;
 		    case GateTemplatePort::PORT_TYPE_IN:
-			    draw_port_in(port->get_x(), port->get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+			    draw_port_in(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 			    break;
 		    case GateTemplatePort::PORT_TYPE_OUT:
-			    draw_port_out(port->get_x(), port->get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+			    draw_port_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 			    break;
 		    case GateTemplatePort::PORT_TYPE_INOUT:
-			    draw_port_in_out(port->get_x(), port->get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+			    draw_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 			    break;
 			default:
-				draw_port_in_out(port->get_x(), port->get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+				draw_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 				break;
 		}
 	}

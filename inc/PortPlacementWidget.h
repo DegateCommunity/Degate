@@ -44,6 +44,8 @@ namespace degate
 	     */
 		void update_screen();
 
+		Point get_new_port_position();
+
 	public slots:
 		void next_layer();
 		void previous_layer();
@@ -73,6 +75,8 @@ namespace degate
 		unsigned int layer;
 		GLuint vbo;
 		QOpenGLShaderProgram* program = NULL;
+
+		Point pos;
 
 	};
 }

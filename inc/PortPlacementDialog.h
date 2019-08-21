@@ -46,8 +46,11 @@ namespace degate
 		GateTemplatePort_shptr port;
 
 		QVBoxLayout layout;
+		QHBoxLayout quit_buttons_layout;
+		QHBoxLayout layers_buttons_layout;
 		PortPlacementWidget placement;
 		QPushButton validate_button;
+		QPushButton cancel_button;
 		QPushButton next_layer_button;
 		QPushButton previous_layer_button;
 	};

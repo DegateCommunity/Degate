@@ -34,17 +34,24 @@ namespace degate
 		next_layer_button.setText("Next layer");
 		previous_layer_button.setText("Previous layer");
 		validate_button.setText("Ok");
+		cancel_button.setText("Cancel");
+
+		layers_buttons_layout.addWidget(&next_layer_button);
+		layers_buttons_layout.addWidget(&previous_layer_button);
+		
+		quit_buttons_layout.addWidget(&validate_button);
+		quit_buttons_layout.addWidget(&cancel_button);
 
 		layout.addWidget(&placement);
-		layout.addWidget(&next_layer_button);
-		layout.addWidget(&previous_layer_button);
-		layout.addWidget(&validate_button);
+		layout.addLayout(&layers_buttons_layout);
+		layout.addLayout(&quit_buttons_layout);
 
 		setLayout(&layout);
 
 		QObject::connect(&next_layer_button, SIGNAL(clicked()), &placement, SLOT(next_layer()));
 		QObject::connect(&previous_layer_button, SIGNAL(clicked()), &placement, SLOT(previous_layer()));
 		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(on_validation()));
+		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
 	}
 
 	PortPlacementDialog::~PortPlacementDialog()
@@ -54,6 +61,7 @@ namespace degate
 
 	void PortPlacementDialog::on_validation()
 	{
+		port->set_point(placement.get_new_port_position());
 		project->get_logic_model()->update_ports(gate);
 
 		close();
