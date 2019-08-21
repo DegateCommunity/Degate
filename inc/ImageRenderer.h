@@ -38,7 +38,7 @@ namespace degate
 		Q_OBJECT
 
 	public:
-		ImageRenderer(MemoryImage_shptr image, QWidget* parent);
+		ImageRenderer(MemoryImage_shptr image, QWidget* parent, bool update_on_gl_initialize = true);
 		~ImageRenderer();
 
 		/**
@@ -96,9 +96,10 @@ namespace degate
 		float center_x = 0, center_y = 0;
 		float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
 		QPointF mouse_last_pos;
-		GLuint vbo;
-		GLuint texture;
+		GLuint vbo = 0;
+		GLuint texture = 0;
 		QOpenGLShaderProgram* program = NULL;
+		bool update_on_gl_initialize;
 
 		MemoryImage_shptr image;
 	};

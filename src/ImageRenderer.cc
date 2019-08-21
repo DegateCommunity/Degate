@@ -29,7 +29,7 @@ namespace degate
 		QVector2D texCoord;
 	};
 
-	ImageRenderer::ImageRenderer(MemoryImage_shptr image, QWidget* parent) : QOpenGLWidget(parent), image(image)
+	ImageRenderer::ImageRenderer(MemoryImage_shptr image, QWidget* parent, bool update_on_gl_initialize) : QOpenGLWidget(parent), image(image), update_on_gl_initialize(update_on_gl_initialize)
 	{
 		assert(image != NULL);
 
@@ -137,7 +137,8 @@ namespace degate
 
 	void ImageRenderer::free_texture()
 	{
-		glDeleteTextures(1, &texture);
+		if(texture != 0)
+			glDeleteTextures(1, &texture);
 	}
 
 	void ImageRenderer::initializeGL()
@@ -149,7 +150,6 @@ namespace degate
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//glDisable(GL_DEPTH);
 
 		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
 		const char* vsrc =
@@ -181,6 +181,10 @@ namespace degate
 		program->link();
 
 		glGenBuffers(1, &vbo);
+
+
+		if(update_on_gl_initialize)
+			update_screen();
 	}
 
 	void ImageRenderer::paintGL()
