@@ -315,10 +315,46 @@ namespace degate
 
 	GateEditLayoutTab::GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project) : QWidget(parent), gate(gate_to_edit), project(project)
 	{
+		if(gate->has_image(Layer::METAL))
+		{
+			metal_label.setText("Metal :");
+			metal = new ImageRenderer(gate->get_image(Layer::METAL), this);
+			metal_layout.addWidget(&metal_label);
+			metal_layout.addWidget(metal);
+			layout.addLayout(&metal_layout);
+		}
+
+		if(gate->has_image(Layer::LOGIC))
+		{
+			logic_label.setText("Logic :");
+			logic = new ImageRenderer(gate->get_image(Layer::LOGIC), this);
+			logic_layout.addWidget(&logic_label);
+			logic_layout.addWidget(logic);
+			layout.addLayout(&logic_layout);
+		}
+
+		if(gate->has_image(Layer::TRANSISTOR))
+		{
+			transistor_label.setText("Transistor :");
+			transistor = new ImageRenderer(gate->get_image(Layer::TRANSISTOR), this);
+			transistor_layout.addWidget(&transistor_label);
+			transistor_layout.addWidget(transistor);
+			layout.addLayout(&transistor_layout);
+		}
+
+		setLayout(&layout);
 	}
 
 	GateEditLayoutTab::~GateEditLayoutTab()
 	{
+		if(transistor != NULL) 
+			delete transistor;
+		
+		if(logic != NULL) 
+			delete logic;
+		
+		if(metal != NULL) 
+			delete metal;
 	}
 
 	void GateEditLayoutTab::validate()

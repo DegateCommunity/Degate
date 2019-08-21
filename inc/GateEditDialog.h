@@ -141,6 +141,23 @@ namespace degate
 		GateTemplate_shptr gate = NULL;
 		Project_shptr project = NULL;
 
+		QVBoxLayout layout;
+
+		// Metal layer
+		QHBoxLayout metal_layout;
+		QLabel metal_label;
+		ImageRenderer* metal = NULL;
+
+		// Logic layer
+		QHBoxLayout logic_layout;
+		QLabel logic_label;
+		ImageRenderer* logic = NULL;
+
+		// Transistor layer
+		QHBoxLayout transistor_layout;
+		QLabel transistor_label;
+		ImageRenderer* transistor = NULL;
+
 	};
 
 	class GateEditDialog : public QDialog
