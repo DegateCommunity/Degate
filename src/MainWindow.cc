@@ -35,6 +35,9 @@ namespace degate
 
 		setWindowIcon(QIcon("res/degate_logo.png"));
 
+		// Set the actual theme and icon theme from preferences
+		THEME_MANAGER.init(PREFERENCES_HANDLER.get_theme(), PREFERENCES_HANDLER.get_icon_theme());
+		
 
 		// Menu bar
 
@@ -42,41 +45,45 @@ namespace degate
 
 		QMenu* project_menu = menu_bar.addMenu("Project");
 		QAction* project_new_action = project_menu->addAction("New");
-		project_new_action->setIcon(style()->standardIcon(QStyle::SP_FileDialogNewFolder));
+		project_new_action->setIcon(QIcon(GET_ICON_PATH("folder_new.png")));
 		QObject::connect(project_new_action, SIGNAL(triggered()), this, SLOT(on_menu_project_new()));
 		QAction* project_import_action = project_menu->addAction("Open");
-		project_import_action->setIcon(style()->standardIcon(QStyle::SP_DirOpenIcon));
+		project_import_action->setIcon(QIcon(GET_ICON_PATH("folder.png")));
 		QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
 		QAction* project_export_action = project_menu->addAction("Save");
-		project_export_action->setIcon(style()->standardIcon(QStyle::SP_DriveFDIcon));
+		project_export_action->setIcon(QIcon(GET_ICON_PATH("save.png")));
 		QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_exporter()));
 		QAction* project_close_action = project_menu->addAction("Close");
-		project_close_action->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
+		project_close_action->setIcon(QIcon(GET_ICON_PATH("close.png")));
 		QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
 		project_menu->addSeparator();
 		QAction* project_quit_action = project_menu->addAction("Quit");
-		project_quit_action->setIcon(style()->standardIcon(QStyle::SP_DockWidgetCloseButton));
+		project_quit_action->setIcon(QIcon(GET_ICON_PATH("quit.png")));
 		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_quit()));
 
+		QMenu* edit_menu = menu_bar.addMenu("Edit");
+		QAction* preferences_edit_action = edit_menu->addAction("Preferences");
+		QObject::connect(preferences_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_edit_preferences()));
+
 		QMenu* layer_menu = menu_bar.addMenu("Layer");
-		QAction* layers_edit_action = layer_menu->addAction("Edit layers");
+		QAction* layers_edit_action = layer_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit layers");
 		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
 		QAction* background_import_action = layer_menu->addAction("Import background image");
 		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
 
 		QMenu* gate_menu = menu_bar.addMenu("Gate");
-		QAction* edit_gate_action = gate_menu->addAction("Edit selected");
+		QAction* edit_gate_action = gate_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
 		QObject::connect(edit_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
 		QAction* new_gate_template_action = gate_menu->addAction("Create gate template from selection");
 		QObject::connect(new_gate_template_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
 		QAction* new_gate_action = gate_menu->addAction("Create gate from selection");
 		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
 		gate_menu->addSeparator();
-		QAction* gate_library_action = gate_menu->addAction("Gate library");
+		QAction* gate_library_action = gate_menu->addAction(QIcon(GET_ICON_PATH("book.png")), "Gate library");
 		QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
 		QMenu* logic_menu = menu_bar.addMenu("Logic");
-		QAction* remove_object_action = logic_menu->addAction("Remove selected object");
+		QAction* remove_object_action = logic_menu->addAction(QIcon(GET_ICON_PATH("remove.png")), "Remove selected object");
 		QObject::connect(remove_object_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
 
 		QMenu* help_menu = menu_bar.addMenu("Help");
@@ -94,30 +101,35 @@ namespace degate
 		// Status bar
 
 		setStatusBar(&status_bar);
-		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION * 2));
 
 
 		// Tool bar
 
 		tool_bar = addToolBar("");
-		tool_bar->setIconSize(QSize(20, 20));
+		tool_bar->setIconSize(QSize(25, 25));
 		tool_bar->setMovable(false);
 		tool_bar->setFloatable(false);
 		setContextMenuPolicy(Qt::NoContextMenu);
 
-		QAction* tool_via_up_action = tool_bar->addAction(QIcon("res/icon_up.png"), "Layer up");
+		QAction* tool_via_up_action = tool_bar->addAction(QIcon(GET_ICON_PATH("layer_up.png")), "Layer up");
 		QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
 
-		QAction* tool_via_down_action = tool_bar->addAction(QIcon("res/icon_down.png"), "Layer down");
+		QAction* tool_via_down_action = tool_bar->addAction(QIcon(GET_ICON_PATH("layer_down.png")), "Layer down");
 		QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
 
 		tool_bar->addSeparator();
 
-		QAction* tool_zoom_in_action = tool_bar->addAction(QIcon("res/icon_plus.png"), "Zoom in");
+		QAction* tool_zoom_in_action = tool_bar->addAction(QIcon(GET_ICON_PATH("plus.png")), "Zoom in");
 		QObject::connect(tool_zoom_in_action, SIGNAL(triggered()), workspace, SLOT(zoom_in()));
 
-		QAction* tool_zoom_out_action = tool_bar->addAction(QIcon("res/icon_minus.png"), "Zoom out");
+		QAction* tool_zoom_out_action = tool_bar->addAction(QIcon(GET_ICON_PATH("minus.png")), "Zoom out");
 		QObject::connect(tool_zoom_out_action, SIGNAL(triggered()), workspace, SLOT(zoom_out()));
+
+		tool_bar->addSeparator();
+
+		QAction* tool_gate_library = tool_bar->addAction(QIcon(GET_ICON_PATH("book.png")), "Gate library");
+		QObject::connect(tool_gate_library, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
 
 		// Other
@@ -162,7 +174,16 @@ namespace degate
 		if(project != NULL)
 			project.reset();
 
-		open_project(dir.toStdString());
+		try
+		{
+			open_project(dir.toStdString());
+		}
+		catch (const std::exception& ex)
+		{
+			setEnabled(true);
+			
+			return;
+		}
 		
 		QString project_name = QString::fromStdString(project->get_name());
 
@@ -267,6 +288,12 @@ namespace degate
 		}
 
 		status_bar.showMessage("Created a new project.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+	}
+
+	void MainWindow::on_menu_edit_preferences()
+	{
+		PreferencesDialog dialog(this);
+		dialog.exec();
 	}
 
 	void MainWindow::on_menu_layer_edit()
@@ -424,7 +451,19 @@ namespace degate
 		status_bar.showMessage("Import project/subproject...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		ProjectImporter projectImporter;
-		project = projectImporter.import_all(path);
+
+		try
+		{
+			project = projectImporter.import_all(path);
+		}
+		catch (const std::exception& ex)
+		{
+			std::cout << "Exception caught: " << ex.what() << std::endl;
+			status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+			project = NULL;
+
+			throw ex;
+		}
 
 		workspace->set_project(project);
 

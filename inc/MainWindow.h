@@ -30,6 +30,9 @@
 #include "LayersEditDialog.h"
 #include "SelectGateTemplateDialog.h"
 #include "GateLibraryDialog.h"
+#include "ThemeManager.h"
+#include "PreferencesHandler.h"
+#include "PreferencesDialog.h"
 
 #include <degate.h>
 #include <QMainWindow>
@@ -38,7 +41,7 @@
 #include <QFileDialog>
 #include <QToolBar>
 
-#define DEFAULT_STATUS_MESSAGE_DURATION 8
+#define DEFAULT_STATUS_MESSAGE_DURATION 10
 
 namespace degate
 {
@@ -56,6 +59,7 @@ namespace degate
 		void on_menu_project_exporter();
 		void on_menu_project_close();
 		void on_menu_project_new();
+		void on_menu_edit_preferences();
 		void on_menu_layer_edit();
 		void on_menu_layer_import_background();
 		void on_menu_gate_new_gate_template();
