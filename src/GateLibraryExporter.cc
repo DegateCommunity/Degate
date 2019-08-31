@@ -68,7 +68,7 @@ void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_s
 		doc.appendChild(root_elem);
 
 		QFile file(QString::fromStdString(filename));
-		if (!file.open(QFile::ReadWrite))
+		if (!file.open(QIODevice::WriteOnly))
 		{
 			throw InvalidPathException("Can't create export file.");
 		}

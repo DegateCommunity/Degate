@@ -125,7 +125,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 		doc.appendChild(root_elem);
 
 		QFile file(QString::fromStdString(filename));
-		if (!file.open(QFile::ReadWrite))
+		if (!file.open(QIODevice::WriteOnly))
 		{
 			throw InvalidPathException("Can't create export file.");
 		}
