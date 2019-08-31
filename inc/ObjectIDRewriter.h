@@ -55,7 +55,7 @@ namespace degate
 		 * @param _enable_id_rewrite If this parameter is set to false, then there is no object ID rewriting.
 		 */
 		ObjectIDRewriter(bool _enable_id_rewrite = true) :
-			oid_counter(2342),
+			oid_counter(1),
 			enable_id_rewrite(_enable_id_rewrite)
 		{
 		};

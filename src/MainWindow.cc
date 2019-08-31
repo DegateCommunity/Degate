@@ -340,11 +340,13 @@ namespace degate
 
 		GateTemplate_shptr new_gate_template(new GateTemplate(workspace->get_area_selection().get_width(), workspace->get_area_selection().get_height()));
 		grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_area_selection());
+		new_gate_template->set_object_id(project->get_logic_model()->get_new_object_id());
 
 		Gate_shptr new_gate(new Gate(workspace->get_area_selection()));
 		new_gate->set_gate_template(new_gate_template);
 		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
 		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
+		new_gate->set_object_id(project->get_logic_model()->get_new_object_id());
 
 		GateInstanceEditDialog dialog(this, new_gate, project);
 		dialog.exec();
