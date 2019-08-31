@@ -26,7 +26,8 @@
 
 #include <QWidget>
 #include <QComboBox>
-#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QLabel>
 
 namespace degate
 {
@@ -52,9 +53,11 @@ namespace degate
 		IconTheme get_icon_theme();
 		
 	private:
-		QVBoxLayout layout;
+		QGridLayout layout;
 
+		QLabel theme_label;
 		QComboBox theme_box;
+		QLabel icon_theme_label;
 		QComboBox icon_theme_box;
 		
 	};

@@ -25,6 +25,7 @@ namespace degate
 {
 	ThemePickerWidget::ThemePickerWidget(QWidget* parent, Theme actual_theme, IconTheme actual_icon_theme) : QWidget(parent)
 	{
+		theme_label.setText("Theme :");
 		QStringList theme_list;
 		theme_list.append("native");
 		theme_list.append("light");
@@ -32,14 +33,17 @@ namespace degate
 		theme_box.addItems(theme_list);
 		theme_box.setCurrentText(QString::fromStdString(theme_to_string(actual_theme)));
 
+		icon_theme_label.setText("Icon theme :");
 		QStringList icon_theme_list;
 		icon_theme_list.append("light");
 		icon_theme_list.append("dark");
 		icon_theme_box.addItems(icon_theme_list);
 		icon_theme_box.setCurrentText(QString::fromStdString(icon_theme_to_string(actual_icon_theme)));
 
-		layout.addWidget(&theme_box);
-		layout.addWidget(&icon_theme_box);
+		layout.addWidget(&theme_label, 0, 0);
+		layout.addWidget(&theme_box, 0, 1);
+		layout.addWidget(&icon_theme_label, 1, 0);
+		layout.addWidget(&icon_theme_box, 1, 1);
 		
 		setLayout(&layout);
 	}
