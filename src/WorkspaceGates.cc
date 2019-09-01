@@ -140,7 +140,9 @@ namespace degate
 
 			for(Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
 			{
-				port_text.add_sub_text(port_text_offset, (*port_iter)->get_x() + (*port_iter)->get_diameter() / 2.0 + TEXT_SPACE, (*port_iter)->get_y() - 5 / 2.0, (*port_iter)->get_name().c_str(), 5, QVector3D(255, 255, 255), 1);
+				unsigned x = (*port_iter)->get_x();
+				unsigned y = (*port_iter)->get_y() + (*port_iter)->get_diameter() / 2.0 + 5;
+				port_text.add_sub_text(port_text_offset, x, y, (*port_iter)->get_name().c_str(), 5, QVector3D(255, 255, 255), 1, 1);
 				port_text_offset += (*port_iter)->get_name().length();
 			}
 		}
