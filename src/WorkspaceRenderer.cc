@@ -20,6 +20,7 @@
 */
 
 #include "WorkspaceRenderer.h"
+#include "GateEditDialog.h"
 
 namespace degate
 {
@@ -32,9 +33,9 @@ namespace degate
 
 	WorkspaceRenderer::~WorkspaceRenderer()
 	{
-		doneCurrent();
-
 		WorkspaceText::delete_font();
+
+		doneCurrent();
 	}
 
 	void WorkspaceRenderer::update_screen()
@@ -423,6 +424,19 @@ namespace degate
 			Layer_shptr layer = lmodel->get_current_layer();
 			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
 
+			// check if there is a gate or gate port on the logic layer
+			if(plo == NULL) 
+			{
+				try 
+				{
+					layer = get_first_logic_layer(lmodel);
+					plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
+			    }
+				catch(CollectionLookupException const& ex)
+				{
+				}
+			}
+
 			if(plo != NULL)
 			{
 				if(SubProjectAnnotation_shptr sp = std::dynamic_pointer_cast<SubProjectAnnotation>(plo))
@@ -431,6 +445,28 @@ namespace degate
 					debug(TM, "Will open or create project at %s", dir.c_str());
 
 					emit project_changed(dir);
+				}
+
+				if(Gate_shptr sp = std::dynamic_pointer_cast<Gate>(plo))
+				{
+					GateInstanceEditDialog dialog(this, sp, project);
+					dialog.exec();
+
+					update_screen();
+				}
+
+				if(GatePort_shptr sp = std::dynamic_pointer_cast<GatePort>(plo))
+				{
+					{
+						PortPlacementDialog dialog(this, project, sp->get_gate()->get_gate_template(), sp->get_template_port());
+						dialog.exec();
+					}
+
+					project->get_logic_model()->update_ports(sp->get_gate());
+
+					makeCurrent();
+					gates.update();
+					update();
 				}
 			}
 		}
@@ -441,6 +477,8 @@ namespace degate
 			selection_tool.set_selection(false);
 			update();
 		}
+
+		setCursor(Qt::CrossCursor);
 	}
 
 	void WorkspaceRenderer::zoom_in()
