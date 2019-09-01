@@ -161,7 +161,7 @@ namespace degate
 		context->glDeleteBuffers(1, &temp_vbo);
 	}
 
-	void WorkspaceText::draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size, const QVector3D& color, const float alpha)
+	void WorkspaceText::draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size, const QVector3D& color, const float alpha, const bool center)
 	{
 		float s = size / static_cast<float>(FONT_DEFAULT_SIZE);
 		unsigned int len = strlen(text);
@@ -189,6 +189,18 @@ namespace degate
 		AnnotationsVertex2D temp;
 		temp.alpha = alpha;
 		temp.color = final_color;
+
+		if(center == true)
+		{
+			unsigned offset = 0;
+			for(unsigned i = 0; i < len; i++)
+			{
+				offset += font_char_width[str[i]] * s + TEXT_SPACE;
+			}
+
+			x -= offset / 2.0;
+			y -= (FONT_GLYPH_SIZE * s) / 2.0;
+		}
 
 		unsigned pixel_size = 0;
 		for(unsigned i = 0; i < len; i++)
@@ -260,12 +272,24 @@ namespace degate
 		total_size = size;
 	}
 
-	void WorkspaceText::add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size, const QVector3D& color, const float alpha)
+	void WorkspaceText::add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size, const QVector3D& color, const float alpha, const bool center)
 	{
 		float s = size / static_cast<float>(FONT_DEFAULT_SIZE);
 		unsigned int len = strlen(text);
 		const unsigned char* str = reinterpret_cast<const unsigned char*>(text);
 		QVector3D final_color = color / 255.0;
+
+		if(center == true)
+		{
+			unsigned offset = 0;
+			for(unsigned i = 0; i < len; i++)
+			{
+				offset += font_char_width[str[i]] * s + TEXT_SPACE;
+			}
+
+			x -= offset / 2.0;
+			y -= (FONT_GLYPH_SIZE * s) / 2.0;
+		}
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 

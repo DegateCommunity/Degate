@@ -55,8 +55,9 @@ namespace degate
 		 * @param size : size of the text, the texture atlas is bold Arial 40.
 		 * @param color : the color of the text, (R,G,B) with values between 0 and 255.
 		 * @param alpha : the opacity of the text, between 0 and 1.
+		 * @param center : if true, the text will be centered around the (x,y) point.
 		 */
-		static void draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1);
+		static void draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1, const bool center = false);
 
 		WorkspaceText(QWidget* new_parent);
 		~WorkspaceText();
@@ -83,8 +84,9 @@ namespace degate
 		 * @param size : size of the text, the texture atlas is bold Arial 40.
 		 * @param color : the color of the text, (R,G,B) with values between 0 and 255.
 		 * @param alpha : the opacity of the text, between 0 and 1.
+		 * @param center : if true, the text will be centered around the (x,y) point.
 	     */
-		void add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1);
+		void add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1, const bool center = false);
 
 		/*
 	     * Draw all text in the vbo.
