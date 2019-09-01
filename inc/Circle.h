@@ -33,7 +33,7 @@ namespace degate
 	{
 	private:
 		int x, y;
-		unsigned int diameter;
+		unsigned int diameter = 5;
 
 		BoundingBox bounding_box;
 

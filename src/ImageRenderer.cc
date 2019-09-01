@@ -39,6 +39,8 @@ namespace degate
 
 	ImageRenderer::~ImageRenderer()
 	{
+		makeCurrent();
+		
 		free_texture();
 
 		doneCurrent();
@@ -219,6 +221,8 @@ namespace degate
 
 	void ImageRenderer::resizeGL(int w, int h)
 	{
+		makeCurrent();
+		
 		glViewport(0, 0, w, h);
 
 		set_projection(NO_ZOOM, center_x, center_y);

@@ -114,7 +114,7 @@ namespace degate
 		 */
 		roid_mapping_t roid_mapping;
 
-		diameter_t port_diameter;
+		diameter_t port_diameter = 5;
 
 	private:
 

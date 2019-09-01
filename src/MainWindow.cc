@@ -374,10 +374,13 @@ namespace degate
 		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
 		new_gate->set_object_id(project->get_logic_model()->get_new_object_id());
 
-		GateInstanceEditDialog dialog(this, new_gate, project);
-		dialog.exec();
-
 		project->get_logic_model()->add_gate_template(new_gate_template);
+
+		{
+			GateInstanceEditDialog dialog(this, new_gate, project);
+			dialog.exec();
+		}
+
 		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
 		project->get_logic_model()->update_ports(new_gate);
 
@@ -405,9 +408,11 @@ namespace degate
 		new_gate->set_gate_template(gate_template);
 		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
 		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
-
-		GateInstanceEditDialog dialog(this, new_gate, project);
-		dialog.exec();
+		
+		{
+			GateInstanceEditDialog dialog(this, new_gate, project);
+			dialog.exec();
+		}
 
 		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
 		project->get_logic_model()->update_ports(new_gate);

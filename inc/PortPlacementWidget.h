@@ -65,9 +65,9 @@ namespace degate
 		 * Create a port of a specific gate.
 		 */
 		void create_port(GateTemplatePort_shptr port);
-		void draw_port_out(int x, int y, int size, QVector3D color, float alpha);
-		void draw_port_in(int x, int y, int size, QVector3D color, float alpha);
-		void draw_port_in_out(int x, int y, int size, QVector3D color, float alpha);
+		void draw_port_out(int x, int y, unsigned size, QVector3D color, float alpha);
+		void draw_port_in(int x, int y, unsigned size, QVector3D color, float alpha);
+		void draw_port_in_out(int x, int y, unsigned size, QVector3D color, float alpha);
 
 		GateTemplate_shptr gate;
 		Project_shptr project;
