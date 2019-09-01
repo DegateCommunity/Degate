@@ -142,6 +142,48 @@ namespace degate
 		return temp;
 	}
 
+	void WorkspaceRenderer::show_gates(bool value)
+	{
+		draw_gates = value;
+
+		update();
+	}
+
+	void WorkspaceRenderer::show_gates_name(bool value)
+	{
+		draw_gates_name = value;
+
+		update();
+	}
+
+	void WorkspaceRenderer::show_ports(bool value)
+	{
+		draw_ports = value;
+
+		update();
+	}
+
+	void WorkspaceRenderer::show_ports_name(bool value)
+	{
+		draw_ports_name = value;
+
+		update();
+	}
+
+	void WorkspaceRenderer::show_annotations(bool value)
+	{
+		draw_annotations = value;
+
+		update();
+	}
+
+	void WorkspaceRenderer::show_annotations_name(bool value)
+	{
+		draw_annotations_name = value;
+
+		update();
+	}
+
 	void WorkspaceRenderer::free_textures()
 	{
 		background.free_textures();
@@ -173,8 +215,25 @@ namespace degate
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		background.draw(projection);
-		gates.draw(projection);
-		annotations.draw(projection);
+
+		if(draw_gates)
+			gates.draw(projection);
+		
+		if(draw_gates_name)
+			gates.draw_gates_name(projection);
+
+		if(draw_ports)
+			gates.draw_ports(projection);
+
+		if(draw_ports_name)
+			gates.draw_ports_name(projection);
+
+		if(draw_annotations)
+			annotations.draw(projection);
+
+		if(draw_annotations_name)
+			annotations.draw_name(projection);
+		
 		selection_tool.draw(projection);
 	}
 

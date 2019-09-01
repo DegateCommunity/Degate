@@ -167,7 +167,13 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		program->release();
+	}
 
+	void WorkspaceAnnotations::draw_name(const QMatrix4x4& projection)
+	{
+		if(project == NULL || project->get_logic_model()->get_annotations_count() == 0)
+			return;
+		
 		text.draw(projection);
 	}
 

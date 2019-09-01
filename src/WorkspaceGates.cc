@@ -30,7 +30,7 @@ namespace degate
 		float alpha;
 	};
 
-	WorkspaceGates::WorkspaceGates(QWidget* new_parent) : WorkspaceElement(new_parent), text(new_parent)
+	WorkspaceGates::WorkspaceGates(QWidget* new_parent) : WorkspaceElement(new_parent), text(new_parent), port_text(new_parent)
 	{
 	}
 
@@ -45,6 +45,7 @@ namespace degate
 		WorkspaceElement::init();
 
 		text.init();
+		port_text.init();
 
 		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
 		const char* vsrc =
@@ -97,6 +98,7 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		unsigned text_size = 0;
+		unsigned port_text_size = 0;
 		port_count = 0;
 
 		unsigned index = 0;
@@ -107,10 +109,17 @@ namespace degate
 
 			text_size += iter->second->get_gate_template()->get_name().length();
 			port_count += iter->second->get_ports_number();
+
+			for(Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
+			{
+				port_text_size += (*port_iter)->get_name().length();
+			}
+			
 			index++;
 		}
 
 		text.update(text_size);
+		port_text.update(port_text_size);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
@@ -119,6 +128,7 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		unsigned text_offset = 0;
+		unsigned port_text_offset = 0;
 		unsigned ports_index = 0;
 		for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
@@ -127,6 +137,12 @@ namespace degate
 
 			text_offset += iter->second->get_gate_template()->get_name().length();
 			ports_index += iter->second->get_ports_number();
+
+			for(Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
+			{
+				port_text.add_sub_text(port_text_offset, (*port_iter)->get_x() + (*port_iter)->get_diameter() / 2.0 + TEXT_SPACE, (*port_iter)->get_y() - 5 / 2.0, (*port_iter)->get_name().c_str(), 5, QVector3D(255, 255, 255), 1);
+				port_text_offset += (*port_iter)->get_name().length();
+			}
 		}
 	}
 
@@ -177,6 +193,24 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+		program->release();
+	}
+
+	void WorkspaceGates::draw_gates_name(const QMatrix4x4& projection)
+	{
+		if(project == NULL || project->get_logic_model()->get_gates_count() == 0)
+			return;
+		
+		text.draw(projection);
+	}
+
+	void WorkspaceGates::draw_ports(const QMatrix4x4& projection)
+	{
+		if(project == NULL || project->get_logic_model()->get_gates_count() == 0)
+			return;
+		
+		program->bind();
+		
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
 		program->enableAttributeArray("pos");
@@ -193,8 +227,14 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		program->release();
+	}
 
-		text.draw(projection);
+	void WorkspaceGates::draw_ports_name(const QMatrix4x4& projection)
+	{
+		if(project == NULL || project->get_logic_model()->get_gates_count() == 0)
+			return;
+		
+		port_text.draw(projection);
 	}
 
 	void WorkspaceGates::create_gate(Gate_shptr& gate, unsigned index)

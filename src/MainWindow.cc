@@ -37,6 +37,12 @@ namespace degate
 
 		// Set the actual theme and icon theme from preferences
 		THEME_MANAGER.init(PREFERENCES_HANDLER.get_theme(), PREFERENCES_HANDLER.get_icon_theme());
+
+
+		// Workspace
+
+		workspace = new WorkspaceRenderer(this);
+		setCentralWidget(workspace);
 		
 
 		// Menu bar
@@ -65,6 +71,32 @@ namespace degate
 		QAction* preferences_edit_action = edit_menu->addAction("Preferences");
 		QObject::connect(preferences_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_edit_preferences()));
 
+		QMenu* view_menu = menu_bar.addMenu("View");
+		QAction* show_gates_view_action = view_menu->addAction("Show gates");
+		show_gates_view_action->setCheckable(true);
+		show_gates_view_action->setChecked(true);
+		QObject::connect(show_gates_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates(bool)));
+		QAction* show_gates_name_view_action = view_menu->addAction("Show gates name");
+		show_gates_name_view_action->setCheckable(true);
+		show_gates_name_view_action->setChecked(true);
+		QObject::connect(show_gates_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates_name(bool)));
+		QAction* show_ports_view_action = view_menu->addAction("Show ports");
+		show_ports_view_action->setCheckable(true);
+		show_ports_view_action->setChecked(true);
+		QObject::connect(show_ports_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports(bool)));
+		QAction* show_ports_name_view_action = view_menu->addAction("Show ports name");
+		show_ports_name_view_action->setCheckable(true);
+		show_ports_name_view_action->setChecked(true);
+		QObject::connect(show_ports_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports_name(bool)));
+		QAction* show_annotations_view_action = view_menu->addAction("Show annotations");
+		show_annotations_view_action->setCheckable(true);
+		show_annotations_view_action->setChecked(true);
+		QObject::connect(show_annotations_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations(bool)));
+		QAction* show_annotations_name_view_action = view_menu->addAction("Show annotations name");
+		show_annotations_name_view_action->setCheckable(true);
+		show_annotations_name_view_action->setChecked(true);
+		QObject::connect(show_annotations_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations_name(bool)));
+
 		QMenu* layer_menu = menu_bar.addMenu("Layer");
 		QAction* layers_edit_action = layer_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit layers");
 		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
@@ -90,12 +122,6 @@ namespace degate
 		QAction* about_action = help_menu->addAction("About");
 		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
-
-
-		// Workspace
-
-		workspace = new WorkspaceRenderer(this);
-		setCentralWidget(workspace);
 
 
 		// Status bar

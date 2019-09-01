@@ -64,6 +64,26 @@ namespace degate
 	     */
 		void draw(const QMatrix4x4& projection) override;
 
+		/**
+		 * Draw gates name.
+		 *
+		 * @param projection : the projection matrix to apply.
+		 */
+		void draw_gates_name(const QMatrix4x4& projection);
+
+		/**
+		 * Draw ports.
+		 *
+		 * @param projection : the projection matrix to apply.
+		 */
+		void draw_ports(const QMatrix4x4& projection);
+
+		/**
+		 * Draw ports name.
+		 *
+		 * @param projection : the projection matrix to apply.
+		 */
+		void draw_ports_name(const QMatrix4x4& projection);
 
 	private:
 		/*
@@ -77,6 +97,7 @@ namespace degate
 		void create_ports(Gate_shptr& gate, unsigned index);
 
 		WorkspaceText text;
+		WorkspaceText port_text;
 		GLuint line_vbo;
 		GLuint port_vbo;
 		unsigned port_count = 0;

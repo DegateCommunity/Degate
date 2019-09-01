@@ -57,6 +57,13 @@ namespace degate
 	     */
 		void draw(const QMatrix4x4& projection) override;
 
+		/**
+		 * Draw annotations name.
+		 *
+		 * @param projection : the projection matrix to apply.
+		 */
+		void draw_name(const QMatrix4x4& projection);
+
 	private:
 		/*
 		 * Create an annotation.

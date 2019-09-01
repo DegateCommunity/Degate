@@ -133,8 +133,45 @@ namespace degate
 		void set_projection(float scale_factor, float new_center_x, float new_center_y);
 
 	public slots:
+		/**
+		 * Zoom in.
+		 */
 		void zoom_in();
+
+		/**
+		 * Zoom out.
+		 */
 		void zoom_out();
+
+		/**
+		 * Draw gates or not.
+		 */
+		void show_gates(bool value);
+		
+		/**
+		 * Draw gates name or not.
+		 */
+		void show_gates_name(bool value);
+		
+		/**
+		 * Draw ports or not.
+		 */
+		void show_ports(bool value);
+
+		/**
+		 * Draw ports name or not.
+		 */
+		void show_ports_name(bool value);
+
+		/**
+		 * Draw annotations or not.
+		 */
+		void show_annotations(bool value);
+
+		/**
+		 * Draw annotations name or not.
+		 */
+		void show_annotations_name(bool value);
 
 	signals:
 		void project_changed(std::string path);
@@ -162,6 +199,15 @@ namespace degate
 
 		// Selection tool
 		WorkspaceSelectionTool selection_tool;
+
+		// View parameters
+		bool draw_gates            = true;
+		bool draw_gates_name       = true;
+		bool draw_ports            = true;
+		bool draw_ports_name       = true;
+		bool draw_annotations      = true;
+		bool draw_annotations_name = true;
+		
 	};
 }
 
