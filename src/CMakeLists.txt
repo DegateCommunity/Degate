@@ -60,6 +60,13 @@ set_target_properties(Degate
     RUNTIME_OUTPUT_DIRECTORY "../out/bin"
 )
 
+#
+# No console on Windows when release.
+#
+if(MSVC) # If using the VS compiler...
+    set_target_properties(Degate PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+endif()
+
 ############################################################################
 #
 # Documentation
