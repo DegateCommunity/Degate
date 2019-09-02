@@ -72,6 +72,7 @@ namespace degate
 
 		GLuint line_vbo;
 		WorkspaceText text;
+		unsigned annotation_count = 0;
 
 	};
 }

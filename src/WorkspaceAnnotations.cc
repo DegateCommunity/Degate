@@ -82,41 +82,59 @@ namespace degate
 
 	void WorkspaceAnnotations::update()
 	{
-		if(project == NULL || project->get_logic_model()->get_annotations_count() == 0)
+		if(project == NULL)
+			return;
+
+		Layer_shptr layer = project->get_logic_model()->get_current_layer();
+
+		if(layer == NULL)
+			return;
+
+		std::vector<Annotation_shptr> annotations;
+		for(Layer::object_iterator iter = layer->objects_begin(); iter != layer->objects_end(); ++iter) 
+		{
+			if(Annotation_shptr a = std::dynamic_pointer_cast<Annotation>(*iter)) 
+			{
+				annotations.push_back(a);
+			}
+		}
+		annotation_count = annotations.size();
+
+		if(annotation_count == 0)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_annotations_count() * 6 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, annotation_count * 6 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_annotations_count() * 8 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, annotation_count * 8 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		unsigned text_size = 0;
 
 		unsigned index = 0;
-		for(LogicModel::annotation_collection::iterator iter = project->get_logic_model()->annotations_begin(); iter != project->get_logic_model()->annotations_end(); ++iter)
+		for(auto& e : annotations)
 		{
-			create_annotation(iter->second, index);
-			iter->second->set_index(index);
+			create_annotation(e, index);
+			e->set_index(index);
 
-			text_size += iter->second->get_name().length();
+			text_size += e->get_name().length();
 			index++;
 		}
 
 		text.update(text_size);
 
 		unsigned text_offset = 0;
-		for(LogicModel::annotation_collection::iterator iter = project->get_logic_model()->annotations_begin(); iter != project->get_logic_model()->annotations_end(); ++iter)
+		for(auto& e : annotations)
 		{
-			unsigned x = iter->second->get_min_x() + (iter->second->get_max_x() - iter->second->get_min_x()) / 2.0;
-			unsigned y = iter->second->get_min_y() + (iter->second->get_max_y() - iter->second->get_min_y()) / 2.0;
-			text.add_sub_text(text_offset, x, y, iter->second->get_name().c_str(), 20, QVector3D(255, 255, 255), 1, true);
+			unsigned x = e->get_min_x() + (e->get_max_x() - e->get_min_x()) / 2.0;
+			unsigned y = e->get_min_y() + (e->get_max_y() - e->get_min_y()) / 2.0;
+			text.add_sub_text(text_offset, x, y, e->get_name().c_str(), 20, QVector3D(255, 255, 255), 1, true);
 
-			text_offset += iter->second->get_name().length();
+			text_offset += e->get_name().length();
 			index++;
 		}
 	}
@@ -131,7 +149,7 @@ namespace degate
 
 	void WorkspaceAnnotations::draw(const QMatrix4x4& projection)
 	{
-		if(project == NULL || project->get_logic_model()->get_annotations_count() == 0)
+		if(project == NULL || annotation_count == 0)
 			return;
 
 		program->bind();
@@ -173,7 +191,7 @@ namespace degate
 
 	void WorkspaceAnnotations::draw_name(const QMatrix4x4& projection)
 	{
-		if(project == NULL || project->get_logic_model()->get_annotations_count() == 0)
+		if(project == NULL || annotation_count == 0)
 			return;
 		
 		text.draw(projection);
