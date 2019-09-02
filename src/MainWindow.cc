@@ -114,6 +114,12 @@ namespace degate
 		QAction* gate_library_action = gate_menu->addAction(QIcon(GET_ICON_PATH("book.png")), "Gate library");
 		QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
+		QMenu* annotation_menu = menu_bar.addMenu("Annotation");
+		QAction* edit_annotation_action = annotation_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
+		QObject::connect(edit_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
+		QAction* create_annotation_action = annotation_menu->addAction("Create from selection");
+		QObject::connect(create_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
+
 		QMenu* logic_menu = menu_bar.addMenu("Logic");
 		QAction* remove_object_action = logic_menu->addAction(QIcon(GET_ICON_PATH("remove.png")), "Remove selected object");
 		QObject::connect(remove_object_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
@@ -423,6 +429,9 @@ namespace degate
 
 	void MainWindow::on_menu_gate_edit()
 	{
+		if(project == NULL || !workspace->has_selection())
+			return;
+		
 		if(Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_object()))
 		{
 			GateInstanceEditDialog dialog(this, o, project);
@@ -443,6 +452,40 @@ namespace degate
 		dialog.exec();
 
 		workspace->update_screen();
+	}
+
+	void MainWindow::on_menu_annotation_create()
+	{
+		if(project == NULL || !workspace->has_area_selection())
+			return;
+
+		Annotation_shptr new_annotation(new Annotation(workspace->get_area_selection()));
+		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
+		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
+
+		{
+			AnnotationEditDialog dialog(new_annotation, this);
+			dialog.exec();
+		}
+
+		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
+
+		workspace->reset_area_selection();
+		workspace->update_screen();
+	}
+
+	void MainWindow::on_menu_annotation_edit()
+	{
+		if(project == NULL || !workspace->has_selection())
+			return;
+
+		if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(workspace->get_selected_object()))
+		{
+			AnnotationEditDialog dialog(o, this);
+			dialog.exec();
+
+			workspace->update_screen();
+		}
 	}
 
 	void MainWindow::on_menu_logic_remove_selected_object()

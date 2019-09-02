@@ -21,6 +21,7 @@
 
 #include "WorkspaceRenderer.h"
 #include "GateEditDialog.h"
+#include "AnnotationEditDialog.h"
 
 namespace degate
 {
@@ -450,16 +451,16 @@ namespace degate
 
 					emit project_changed(dir);
 				}
-
-				if(Gate_shptr sp = std::dynamic_pointer_cast<Gate>(plo))
+				else if(Gate_shptr sp = std::dynamic_pointer_cast<Gate>(plo))
 				{
 					GateInstanceEditDialog dialog(this, sp, project);
 					dialog.exec();
 
-					update_screen();
+					makeCurrent();
+					gates.update();
+					update();
 				}
-
-				if(GatePort_shptr sp = std::dynamic_pointer_cast<GatePort>(plo))
+				else if(GatePort_shptr sp = std::dynamic_pointer_cast<GatePort>(plo))
 				{
 					{
 						PortPlacementDialog dialog(this, project, sp->get_gate()->get_gate_template(), sp->get_template_port());
@@ -470,6 +471,14 @@ namespace degate
 
 					makeCurrent();
 					gates.update();
+					update();
+				}
+				else if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(get_selected_object()))
+				{
+					AnnotationEditDialog dialog(o, this);
+					dialog.exec();
+
+					annotations.update();
 					update();
 				}
 			}
