@@ -61,7 +61,7 @@ namespace degate
 
 	PreferencesHandler::~PreferencesHandler()
 	{
-		save();
+		//save();
 	}
 
 	void PreferencesHandler::save()

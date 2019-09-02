@@ -24,9 +24,9 @@
 
 #include "SingletonBase.h"
 
-#include <QIcon.h>
-#include <QStyleFactory.h>
-#include <QApplication.h>
+#include <QIcon>
+#include <QStyleFactory>
+#include <QApplication>
 #include <QMainWindow>
 #include <QCommonStyle>
 
