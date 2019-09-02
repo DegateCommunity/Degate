@@ -60,6 +60,7 @@ namespace degate
 		void on_menu_project_exporter();
 		void on_menu_project_close();
 		void on_menu_project_new();
+		void on_menu_project_create_subproject();
 		void on_menu_edit_preferences();
 		void on_menu_layer_edit();
 		void on_menu_layer_import_background();

@@ -33,6 +33,7 @@ namespace degate
 		else
 			resize(width, height);
 
+		setWindowTitle("Degate");
 		setWindowIcon(QIcon("res/degate_logo.png"));
 
 		// Set the actual theme and icon theme from preferences
@@ -62,6 +63,9 @@ namespace degate
 		QAction* project_close_action = project_menu->addAction("Close");
 		project_close_action->setIcon(QIcon(GET_ICON_PATH("close.png")));
 		QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
+		project_menu->addSeparator();
+		QAction* project_create_subproject_action = project_menu->addAction("Create subproject from selection");
+		QObject::connect(project_create_subproject_action, SIGNAL(triggered()), this, SLOT(on_menu_project_create_subproject()));
 		project_menu->addSeparator();
 		QAction* project_quit_action = project_menu->addAction("Quit");
 		project_quit_action->setIcon(QIcon(GET_ICON_PATH("quit.png")));
@@ -219,8 +223,6 @@ namespace degate
 		
 		QString project_name = QString::fromStdString(project->get_name());
 
-		setWindowTitle("Degate : " + project_name + " project");
-
 		setEnabled(true);
 
 		QString message = "The project <i>" + project_name + "</i> was successfully loaded.";
@@ -277,6 +279,8 @@ namespace degate
 		workspace->set_project(NULL);
 		workspace->update_screen();
 
+		setWindowTitle("Degate");
+		
 		status_bar.showMessage("Project closed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
@@ -320,6 +324,29 @@ namespace degate
 		}
 
 		status_bar.showMessage("Created a new project.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+	}
+
+	void MainWindow::on_menu_project_create_subproject()
+	{
+		if(project == NULL || !workspace->has_area_selection())
+			return;
+
+		boost::format f("subproject_%1%");
+		f % project->get_logic_model()->get_new_object_id();
+
+		SubProjectAnnotation_shptr new_annotation(new SubProjectAnnotation(workspace->get_area_selection(), f.str()));
+		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
+		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
+
+		{
+			AnnotationEditDialog dialog(new_annotation, this);
+			dialog.exec();
+		}
+
+		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
+
+		workspace->reset_area_selection();
+		workspace->update_screen();
 	}
 
 	void MainWindow::on_menu_edit_preferences()
@@ -528,21 +555,65 @@ namespace degate
 
 		ProjectImporter projectImporter;
 
+		if(project != NULL)
+			on_menu_project_exporter();
+
 		try
 		{
 			project = projectImporter.import_all(path);
 		}
 		catch (const std::exception& ex)
 		{
-			std::cout << "Exception caught: " << ex.what() << std::endl;
-			status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-			project = NULL;
+			QMessageBox::StandardButton reply;
+			reply = QMessageBox::question(this, "Project/Subproject", "The project do not exist, do you want to create it ?", QMessageBox::Yes | QMessageBox::No);
 
-			throw ex;
+			if(reply == QMessageBox::Yes)
+			{
+				NewProjectDialog dialog(this);
+				dialog.exec();
+
+				std::string project_name = dialog.get_project_name();
+				unsigned layer_count = dialog.get_layer_count();
+				unsigned width = dialog.get_width();
+				unsigned height = dialog.get_height();
+
+				if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
+				{
+					QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
+
+					status_bar.showMessage("New project operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+
+					return;
+				}
+				else
+				{
+					if(!file_exists(path)) 
+						create_directory(path);
+
+					project = Project_shptr(new Project(width, height, path, layer_count));
+					project->set_name(project_name);
+
+					LayersEditDialog layers_edit_dialog(project, this);
+					layers_edit_dialog.exec();
+
+					on_menu_project_exporter();
+				}
+			}
+			else
+			{
+				std::cout << "Exception caught: " << ex.what() << std::endl;
+				status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+				project = NULL;
+				setWindowTitle("Degate");
+
+				throw ex;
+			}
 		}
 
 		workspace->set_project(project);
 
+		setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
+		
 		status_bar.showMessage("Project/Subproject imported.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 }
