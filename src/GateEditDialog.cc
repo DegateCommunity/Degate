@@ -438,6 +438,8 @@ namespace degate
 		else
 			gate->set_orientation(Gate::ORIENTATION_UNDEFINED);
 
+		project->get_logic_model()->update_ports(gate);
+		
 		GateEditDialog::validate();
 	}
 }
