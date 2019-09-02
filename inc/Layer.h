@@ -301,20 +301,25 @@ namespace degate
 
 		/**
 		 * Get an object at a specific position.
-		 * If multiple objects are placed at coordinate \p x, \p y, then the first
-		 * one is returned. But if there is a gate port, the port is returned.
+		 * If multiple objects are placed at coordinate \p x, \p y, then if
+		 * there is a port it will be returned, if not and if there is a gate
+		 * it will be returned and if there is no port and no gate and an
+		 * annotation then it will be returned.
 		 * @param x The x-position.
 		 * @param y The y-position.
 		 * @param max_distance It is possible to check for objects, which are
 		 *   not directly placed in a way, that \p x and \p y are within the shape
 		 *   of an object. Therefore the parameter \p max_distance specifies an
 		 *   allowed distance to the object.
+		 * @param ignore_annotations If true no annotations will be considered.
+		 * @param ignore_gates If true no gates will be considered.
+		 * @param ignore_ports If true no ports will be considered.
 		 * @return If there is an object at the position, a shared pointer to
 		 *   it is returned. If there is no object, then a NULL pointer representation
 		 *   is returned.
 		 */
 
-		PlacedLogicModelObject_shptr get_object_at_position(int x, int y, int max_distance = 0);
+		PlacedLogicModelObject_shptr get_object_at_position(int x, int y, int max_distance = 0, bool ignore_annotations = false, bool ignore_gates = false, bool ignore_ports = false);
 
 		/**
 		 * Check for placed objects in a region of type given by template param.

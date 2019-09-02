@@ -291,10 +291,12 @@ void Layer::notify_shape_change(object_id_t object_id)
 }
 
 
-PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance)
+PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance, bool ignore_annotations, bool ignore_gates, bool ignore_ports)
 {
 	debug(TM, "get_object_at_position %d, %d (max-dist: %d)", x, y, max_distance);
-	PlacedLogicModelObject_shptr plo;
+
+	PlacedLogicModelObject_shptr annotations;
+	PlacedLogicModelObject_shptr gates;
 
 	for (qt_region_iterator iter = quadtree.region_iter_begin(x - max_distance,
 	                                                          x + max_distance,
@@ -304,16 +306,34 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
 	{
 		if ((*iter)->in_shape(x, y, max_distance))
 		{
-			plo = *iter;
-		}
-
-		/* Prefer gate ports */
-		if (std::dynamic_pointer_cast<GatePort>(*iter) != NULL)
-		{
-			return *iter;
+			if(std::dynamic_pointer_cast<Annotation>((*iter)) != NULL && !ignore_annotations)
+			{
+				annotations = (*iter);
+			}
+			else if (std::dynamic_pointer_cast<Gate>((*iter)) != NULL && !ignore_gates)
+			{
+				gates = (*iter);
+			}
+			else if (std::dynamic_pointer_cast<GatePort>((*iter)) != NULL && !ignore_ports)
+			{
+				/* Prefer gate ports */
+				return *iter;
+			}
 		}
 	}
-	return plo;
+	
+	if(gates != NULL)
+	{
+		return gates;
+	}
+	else if(annotations != NULL)
+	{
+		return annotations;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 unsigned int Layer::get_distance_to_gate_boundary(unsigned int x, unsigned int y,

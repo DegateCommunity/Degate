@@ -220,6 +220,12 @@ namespace degate
 
 		background.draw(projection);
 
+		if(draw_annotations)
+			annotations.draw(projection);
+
+		if(draw_annotations_name)
+			annotations.draw_name(projection);
+		
 		if(draw_gates)
 			gates.draw(projection);
 		
@@ -231,12 +237,6 @@ namespace degate
 
 		if(draw_ports_name)
 			gates.draw_ports_name(projection);
-
-		if(draw_annotations)
-			annotations.draw(projection);
-
-		if(draw_annotations_name)
-			annotations.draw_name(projection);
 		
 		selection_tool.draw(projection);
 	}
@@ -313,7 +313,7 @@ namespace degate
 
 			LogicModel_shptr lmodel = project->get_logic_model();
 			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports);
 
 			// check if there is a gate or gate port on the logic layer
 			if(plo == NULL) 
@@ -321,7 +321,7 @@ namespace degate
 				try 
 				{
 					layer = get_first_logic_layer(lmodel);
-					plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
+					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports);
 			    }
 				catch(CollectionLookupException const& ex)
 				{
@@ -427,7 +427,7 @@ namespace degate
 
 			LogicModel_shptr lmodel = project->get_logic_model();
 			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports);
 
 			// check if there is a gate or gate port on the logic layer
 			if(plo == NULL) 
@@ -435,7 +435,7 @@ namespace degate
 				try 
 				{
 					layer = get_first_logic_layer(lmodel);
-					plo = layer->get_object_at_position(pos.x(), pos.y(), 0);
+					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports);
 			    }
 				catch(CollectionLookupException const& ex)
 				{

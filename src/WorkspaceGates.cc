@@ -212,6 +212,8 @@ namespace degate
 			return;
 		
 		program->bind();
+
+		program->setUniformValue("mvp", projection);
 		
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 

@@ -56,7 +56,7 @@ namespace degate
 
 	PortPlacementDialog::~PortPlacementDialog()
 	{
-
+		placement.doneCurrent();
 	}
 
 	void PortPlacementDialog::on_validation()
