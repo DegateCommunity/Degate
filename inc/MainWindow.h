@@ -82,6 +82,7 @@ namespace degate
 		QToolBar* tool_bar;
 		QStatusBar status_bar;
 		QLabel status_bar_coords;
+		QLabel status_bar_layer;
 
 		Project_shptr project;
 		WorkspaceRenderer* workspace;

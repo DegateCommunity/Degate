@@ -136,10 +136,14 @@ namespace degate
 
 		// Status bar
 
+		status_bar.setStyleSheet("QStatusBar::item { border: none; } ""QStatusBar QLabel { border: 1px solid black; border-radius: 3px; }");
 		setStatusBar(&status_bar);
 		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION * 2));
-		status_bar.addPermanentWidget(&status_bar_coords);
 
+		status_bar.addPermanentWidget(&status_bar_layer);
+		status_bar_layer.setText("Layer :");
+		
+		status_bar.addPermanentWidget(&status_bar_coords);
 		QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
 
 
@@ -539,6 +543,8 @@ namespace degate
 
 		project->get_logic_model()->set_current_layer(get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
 
+		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()));
+
 		workspace->update_screen();
 	}
 
@@ -548,6 +554,8 @@ namespace degate
 			return;
 
 		project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
+
+		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()));
 
 		workspace->update_screen();
 	}
@@ -616,12 +624,14 @@ namespace degate
 		workspace->set_project(project);
 
 		setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
+
+		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()));
 		
 		status_bar.showMessage("Project/Subproject imported.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::change_status_bar_coords(int x, int y)
 	{
-		status_bar_coords.setText(QString::number(x) + "," + QString::number(y));
+		status_bar_coords.setText("Coordinates : " + QString::number(x) + "," + QString::number(y));
 	}
 }
