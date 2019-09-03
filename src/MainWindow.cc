@@ -138,6 +138,9 @@ namespace degate
 
 		setStatusBar(&status_bar);
 		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION * 2));
+		status_bar.addPermanentWidget(&status_bar_coords);
+
+		QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
 
 
 		// Tool bar
@@ -557,7 +560,7 @@ namespace degate
 
 		if(project != NULL)
 			on_menu_project_exporter();
-
+		
 		try
 		{
 			project = projectImporter.import_all(path);
@@ -615,5 +618,10 @@ namespace degate
 		setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
 		
 		status_bar.showMessage("Project/Subproject imported.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+	}
+
+	void MainWindow::change_status_bar_coords(int x, int y)
+	{
+		status_bar_coords.setText(QString::number(x) + "," + QString::number(y));
 	}
 }

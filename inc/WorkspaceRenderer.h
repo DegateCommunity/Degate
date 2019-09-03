@@ -175,6 +175,7 @@ namespace degate
 
 	signals:
 		void project_changed(std::string path);
+		void mouse_coords_changed(int x, int y);
 
 	private:
 		// General

@@ -30,6 +30,7 @@ namespace degate
 	{
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
+		setMouseTracking(true);
 	}
 
 	WorkspaceRenderer::~WorkspaceRenderer()
@@ -391,6 +392,9 @@ namespace degate
 
 			update();
 		}
+
+		// Mouse coord signal
+		emit mouse_coords_changed(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 	}
 
 	void WorkspaceRenderer::wheelEvent(QWheelEvent* event)

@@ -75,11 +75,13 @@ namespace degate
 		void on_tool_via_up();
 		void on_tool_via_down();
 		void open_project(std::string path);
+		void change_status_bar_coords(int x, int y);
 
 	private:
 		QMenuBar menu_bar;
 		QToolBar* tool_bar;
 		QStatusBar status_bar;
+		QLabel status_bar_coords;
 
 		Project_shptr project;
 		WorkspaceRenderer* workspace;
