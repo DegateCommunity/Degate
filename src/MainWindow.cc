@@ -141,9 +141,10 @@ namespace degate
 		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION * 2));
 
 		status_bar.addPermanentWidget(&status_bar_layer);
-		status_bar_layer.setText("Layer :");
+		status_bar_layer.setText("Layer : 0/0 (none)");
 		
 		status_bar.addPermanentWidget(&status_bar_coords);
+		status_bar_coords.setText("Coordinates : 0,0");
 		QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
 
 
@@ -287,6 +288,8 @@ namespace degate
 		workspace->update_screen();
 
 		setWindowTitle("Degate");
+
+		status_bar_layer.setText("Layer : 0/0 (none)");
 		
 		status_bar.showMessage("Project closed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
@@ -543,7 +546,7 @@ namespace degate
 
 		project->get_logic_model()->set_current_layer(get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
 
-		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()));
+		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
 
 		workspace->update_screen();
 	}
@@ -555,7 +558,7 @@ namespace degate
 
 		project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
 
-		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()));
+		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
 
 		workspace->update_screen();
 	}
@@ -625,7 +628,7 @@ namespace degate
 
 		setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
 
-		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()));
+		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
 		
 		status_bar.showMessage("Project/Subproject imported.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
