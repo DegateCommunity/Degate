@@ -80,6 +80,9 @@ namespace degate
 
 		program->link();
 
+		delete vshader;
+		delete fshader;
+
 		context->glEnable(GL_LINE_SMOOTH);
 
 		context->glGenBuffers(1, &vbo);

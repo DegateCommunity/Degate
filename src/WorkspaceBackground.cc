@@ -70,6 +70,9 @@ namespace degate
 		program->addShader(vshader);
 		program->addShader(fshader);
 
+		delete vshader;
+		delete fshader;
+
 		program->link();
 	}
 

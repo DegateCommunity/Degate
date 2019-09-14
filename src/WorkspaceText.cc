@@ -98,6 +98,9 @@ namespace degate
 
 		program.link();
 
+		delete vshader;
+		delete fshader;
+
 		QImage font_atlas("res/FontAtlas.png");
 		assert(!font_atlas.isNull());
 

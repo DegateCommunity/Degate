@@ -76,6 +76,9 @@ namespace degate
 
 		program->link();
 
+		delete vshader;
+		delete fshader;
+
 		context->glGenBuffers(1, &line_vbo);
 		context->glGenBuffers(1, &port_vbo);
 
