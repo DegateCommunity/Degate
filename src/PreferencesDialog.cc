@@ -52,6 +52,9 @@ namespace degate
 		PREFERENCES_HANDLER.set_icon_theme(theme.get_icon_theme());
 
 		PREFERENCES_HANDLER.save();
+
+		QMessageBox::information(this, "Save new preferences", "Reopen Degate for changes take effect.");
+		
 		close();
 	}
 }

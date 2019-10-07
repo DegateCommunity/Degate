@@ -27,6 +27,7 @@
 
 #include <QDialog>
 #include <QPushButton>
+#include <QMessageBox>
 
 namespace degate
 {
