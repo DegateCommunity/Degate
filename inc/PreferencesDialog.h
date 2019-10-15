@@ -31,15 +31,31 @@
 
 namespace degate
 {
+
+	/**
+	 * @class PreferencesDialog
+	 * @brief Dialog to edit preferences.
+	 *
+	 * @see QDialog
+	 */
 	class PreferencesDialog : public QDialog
 	{
 		Q_OBJECT
 		
 	public:
+
+		/**
+		 * Create the preferences edit dialog.
+		 *
+		 * @param parent : the parent of the dialog.
+		 */
 		PreferencesDialog(QWidget* parent);
 		~PreferencesDialog();
 
 	public slots:
+		/**
+		 * Save changes on the preferences.
+		 */
 		void validate();
 
 	private:

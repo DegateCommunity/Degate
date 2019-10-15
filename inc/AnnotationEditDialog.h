@@ -33,15 +33,35 @@
 
 namespace degate
 {
+
+	/**
+	 * @class AnnotationEditDialog
+	 * @brief Dialog to edit an annotation.
+	 *
+	 * @see QDialog
+	 */
 	class AnnotationEditDialog : public QDialog
 	{
 		Q_OBJECT
 		
 	public:
+
+		/**
+		 * Create the dialog, to show it call the exec function.
+		 *
+		 * @param annotation : the annotation to edit.
+		 * @param parent : the parent of the dialog.
+		 *
+		 * @see QDialog
+		 */
 		AnnotationEditDialog(Annotation_shptr annotation, QWidget* parent);
 		~AnnotationEditDialog();
 
 	public slots:
+
+		/**
+		 * Save all changes and close the dialog.
+		 */
 		void validate();
 
 	private:

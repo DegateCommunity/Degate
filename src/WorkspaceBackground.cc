@@ -29,7 +29,7 @@ namespace degate
 		QVector2D texCoord;
 	};
 
-	WorkspaceBackground::WorkspaceBackground(QWidget* widget_parent) : WorkspaceElement(widget_parent)
+	WorkspaceBackground::WorkspaceBackground(QWidget* parent) : WorkspaceElement(parent)
 	{
 
 	}

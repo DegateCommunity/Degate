@@ -32,18 +32,30 @@
 namespace degate
 {
 	/**
-	 * Open a dialog to list all gate template of the logic model and get the selected one.
+	 * @class SelectGateTemplateDialog
+	 * @brief Dialog to list all gates template of the logic model and get the selected one.
+	 *
+	 * @see QDialog
 	 */
 	class SelectGateTemplateDialog : public QDialog
 	{
 		Q_OBJECT
 		
 	public:
+
+		/**
+		 * Create the gate template selection dialog.
+		 *
+		 * @param project : the current active project.
+		 * @param parent : the parent of the dialog.
+		 */
 		SelectGateTemplateDialog(Project_shptr project, QWidget* parent);
 		~SelectGateTemplateDialog();
 
 		/**
 		 * Get the selected gate template.
+		 *
+		 * @return Return the selected gate template.
 		 */
 		GateTemplate_shptr get_selected_gate();
 		

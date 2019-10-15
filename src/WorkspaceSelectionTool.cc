@@ -30,9 +30,9 @@ namespace degate
 		float alpha;
 	};
 
-	WorkspaceSelectionTool::WorkspaceSelectionTool(QWidget* widget_parent)
+	WorkspaceSelectionTool::WorkspaceSelectionTool(QWidget* parent)
 	{
-		parent = widget_parent;
+		this->parent = parent;
 	}
 
 	WorkspaceSelectionTool::~WorkspaceSelectionTool()
@@ -97,30 +97,30 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void WorkspaceSelectionTool::update(int actual_x, int actual_y)
+	void WorkspaceSelectionTool::update(int x, int y)
 	{
 		if(selection == false)
 			return;
 
-		if (actual_x < origin.x())
+		if (x < origin.x())
 		{
 			selection_box.set_max_x(origin.x());
-			selection_box.set_min_x(actual_x);
+			selection_box.set_min_x(x);
 		}
 		else
 		{
-			selection_box.set_max_x(actual_x);
+			selection_box.set_max_x(x);
 			selection_box.set_min_x(origin.x());
 		}
 			
-		if (actual_y < selection_box.get_min_y())
+		if (y < selection_box.get_min_y())
 		{
 			selection_box.set_max_y(origin.y());
-			selection_box.set_min_y(actual_y);
+			selection_box.set_min_y(y);
 		}
 		else
 		{
-			selection_box.set_max_y(actual_y);
+			selection_box.set_max_y(y);
 			selection_box.set_min_y(origin.y());
 		}
 
@@ -245,9 +245,9 @@ namespace degate
 		return selection_box;
 	}
 
-	void WorkspaceSelectionTool::set_origin(int origin_x, int origin_y)
+	void WorkspaceSelectionTool::set_origin(int x, int y)
 	{
-		origin.setX(origin_x);
-		origin.setY(origin_y);
+		origin.setX(x);
+		origin.setY(y);
 	}
 }

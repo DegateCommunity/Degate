@@ -30,17 +30,33 @@
 
 namespace degate
 {
+
+	/**
+	 * @class LayersEditDialog
+	 * @brief Dialog to edit all layers of a project.
+	 *
+	 * @see QDialog
+	 */
 	class LayersEditDialog : public QDialog
 	{
 		Q_OBJECT
 		
 	public:
+
+		/**
+		 * Create the dialog, to show it call the exec function.
+		 *
+		 * @param project : the current active project.
+		 * @param parent : the parent of the dialog.
+		 *
+		 * @see QDialog
+		 */
 		LayersEditDialog(Project_shptr project, QWidget* parent);
 		~LayersEditDialog();
 
 	public slots:
 		/**
-		 * Validate all changes and apply them.
+		 * Save all changes.
 		 */
 		void validate();
 

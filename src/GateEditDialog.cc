@@ -25,19 +25,19 @@ namespace degate
 {
 	// Entity tab
 
-	GateEditEntityTab::GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project) : QWidget(parent), 
-																													gate(gate_to_edit), 
+	GateEditEntityTab::GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent), 
+																													gate(gate), 
 																													fill_color(parent), 
 																													frame_color(parent), 
 																													project(project)
 	{
 		// Name
 		name_label.setText("Name :");
-		name.setText(QString::fromStdString(gate_to_edit->get_name()));
+		name.setText(QString::fromStdString(gate->get_name()));
 
 		// Description
 		description_label.setText("Description :");
-		description.setText(QString::fromStdString(gate_to_edit->get_description()));
+		description.setText(QString::fromStdString(gate->get_description()));
 
 		// Logic class
 		logic_class_label.setText("Logic Class :");
@@ -71,7 +71,7 @@ namespace degate
 		logic_class.addItem("full-adder");
 		logic_class.addItem("mux");
 		logic_class.addItem("demux");
-		logic_class.setCurrentText(QString::fromStdString(gate_to_edit->get_logic_class()));
+		logic_class.setCurrentText(QString::fromStdString(gate->get_logic_class()));
 
 		// Ports list
 		ports_label.setText("Ports :");
@@ -298,7 +298,7 @@ namespace degate
 
 	// Behaviour tab
 
-	GateEditBehaviourTab::GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project) : QWidget(parent), gate(gate_to_edit), project(project)
+	GateEditBehaviourTab::GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent), gate(gate), project(project)
 	{
 	}
 
@@ -313,7 +313,7 @@ namespace degate
 
 	// Layout tab
 
-	GateEditLayoutTab::GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project) : QWidget(parent), gate(gate_to_edit), project(project)
+	GateEditLayoutTab::GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent), gate(gate), project(project)
 	{
 		if(gate->has_image(Layer::METAL))
 		{
@@ -364,12 +364,12 @@ namespace degate
 
 	// Main dialog
 
-	GateEditDialog::GateEditDialog(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project) : QDialog(parent), 
-																											  gate(gate_to_edit), 
+	GateEditDialog::GateEditDialog(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QDialog(parent), 
+																											  gate(gate), 
 																											  button_box(QDialogButtonBox::Ok), 
-																											  entity_tab(parent, gate_to_edit, project), 
-																											  behaviour_tab(parent, gate_to_edit, project), 
-																											  layout_tab(parent, gate_to_edit, project),
+																											  entity_tab(parent, gate, project), 
+																											  behaviour_tab(parent, gate, project), 
+																											  layout_tab(parent, gate, project),
 																											  project(project)
 	{
 		setWindowTitle("Edit gate");

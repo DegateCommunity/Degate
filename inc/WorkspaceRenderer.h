@@ -35,18 +35,52 @@
 #include <list>
 #include <tuple>
 
+/**
+ * This define the zoom out factor (zoom *= zoom_out).
+ *
+ * @see WorkspaceRenderer
+ */
 #define ZOOM_OUT 10.0 / 9.0
+
+/**
+ * This define the zoom in factor (zoom *= zoom_in).
+ *
+ * @see WorkspaceRenderer
+ */
 #define ZOOM_IN 9.0 / 10.0
+
+/**
+ * This define the no zoom factor (zoom = zoom).
+ *
+ * @see WorkspaceRenderer
+ */
 #define NO_ZOOM 1
 
 namespace degate
 {
+
+	/**
+	 * @class WorkspaceRenderer
+	 * @brief Hold all other workspace elements and draw the workspace.
+	 *
+	 * The workspace renderer use a lot of Qt functions (@see QOpenGLWidget and @see QOpenGLFunctions) and is directly connected to the main window.
+	 * Somehow the workspace renderer is the workspace widget.
+	 * This hold all other workspace elements (annotations, gates, background...), draw them and manage all related events.
+	 *
+	 * @warning The workspace renderer get his own OpenGL context (@see WorkspaceElement).
+	 */
 	class WorkspaceRenderer : public QOpenGLWidget, protected QOpenGLFunctions
 	{
 	Q_OBJECT
 
 	public:
-		WorkspaceRenderer(QWidget* parent = 0);
+
+		/**
+		 * Create a workspace renderer.
+		 *
+		 * @param parent : the parent widget pointer (usually the main window).
+		 */
+		WorkspaceRenderer(QWidget* parent = NULL);
 		~WorkspaceRenderer();
 
 		/**
@@ -63,11 +97,15 @@ namespace degate
 
 		/**
 		 * Get the area selection state, if true there is a selection area otherwise not.
+		 *
+		 * @return Return true if there is a area selection.
 		 */
 		bool has_area_selection();
 
 		/**
 		 * Get the area selection bounding box.
+		 *
+		 * @return Return the bounding box of the area selection.
 		 */
 		BoundingBox get_area_selection();
 
@@ -78,6 +116,8 @@ namespace degate
 		
 		/**
 		 * Get the selected object.
+		 *
+		 * @return Return the selected object.
 		 */
 		PlacedLogicModelObject_shptr get_selected_object();
 
@@ -92,7 +132,9 @@ namespace degate
 		bool has_selection();
 
 		/**
-		 * Return the selected object and reset the selection.
+		 * Return the selected object and reset the selection (no more selected object).
+		 *
+		 * @return Return the selected object.
 		 */
 		PlacedLogicModelObject_shptr pop_selected_object();
 
@@ -101,10 +143,13 @@ namespace degate
 		 * Destroy all OpenGL textures.
 		 */
 		void free_textures();
+
+		/* Qt OpenGL functions */
 		void initializeGL() override;
 		void paintGL() override;
 		void resizeGL(int w, int h) override;
 
+		/* Qt mouse and keyboard events functions */
 		void mousePressEvent(QMouseEvent* event) override;
 		void mouseReleaseEvent(QMouseEvent* event) override;
 		void mouseMoveEvent(QMouseEvent* event) override;
@@ -115,11 +160,15 @@ namespace degate
 
 		/**
 		 * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
+		 *
+		 * @return Return the widget relative mouse position.
 		 */
 		QPointF get_widget_mouse_position() const;
 
 		/**
 		 * Get the mouse position relative to the OpenGL world (with 0,0 on the lower left corner).
+		 *
+		 * @return Return the OpenGL relative mouse position.
 		 */
 		QPointF get_opengl_mouse_position() const;
 
@@ -145,36 +194,60 @@ namespace degate
 
 		/**
 		 * Draw gates or not.
+		 *
+		 * @param value : if true then gates will be drawn, not otherwise.
 		 */
 		void show_gates(bool value);
 		
 		/**
 		 * Draw gates name or not.
+		 *
+		 * @param value : if true then gates name will be drawn, not otherwise.
 		 */
 		void show_gates_name(bool value);
 		
 		/**
 		 * Draw ports or not.
+		 *
+		 * @param value : if true then ports will be drawn, not otherwise.
 		 */
 		void show_ports(bool value);
 
 		/**
 		 * Draw ports name or not.
+		 *
+		 * @param value : if true then ports name will be drawn, not otherwise.
 		 */
 		void show_ports_name(bool value);
 
 		/**
 		 * Draw annotations or not.
+		 *
+		 * @param value : if true then annotations will be drawn, not otherwise.
 		 */
 		void show_annotations(bool value);
 
 		/**
 		 * Draw annotations name or not.
+		 *
+		 * @param value : if true then annotations name will be drawn, not otherwise.
 		 */
 		void show_annotations_name(bool value);
 
 	signals:
+		/**
+		 * Signal for when the project need to be changed.
+		 *
+		 * @param path : the path of the new project.
+		 */
 		void project_changed(std::string path);
+
+		/**
+		 * Signal for when the mouse coordinates changed.
+		 *
+		 * @param x : new x coordinate of the mouse.
+		 * @param y : new y coordinate of the mouse.
+		 */
 		void mouse_coords_changed(int x, int y);
 
 	private:

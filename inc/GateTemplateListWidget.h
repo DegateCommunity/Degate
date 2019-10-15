@@ -30,33 +30,51 @@
 namespace degate
 {
 	/**
-	 * List all gate template of the logic model.
+	 * @class GateTemplateListWidget
+	 * @brief List all gates template of the logic model.
+	 *
+	 * @see QTableWidget
 	 */
 	class GateTemplateListWidget : public QTableWidget
 	{
 		Q_OBJECT
 		
 	public:
+
+		/**
+		 * Create a gate template list widget.
+		 *
+		 * @param project : the current active project.
+		 * @param parent : the parent of the widget.
+		 */
 		GateTemplateListWidget(Project_shptr project, QWidget* parent);
 		~GateTemplateListWidget();
 
 		/**
-		 * Get a vector of the selected gates templates.
-		 * It can return an empty vector.
+		 * Get a vector of the selected gates template.
+		 *
+		 * @return Return a vector of selected gates template (can return an empty vector).
 		 */
 		std::vector<GateTemplate_shptr> get_selected_gates();
 
 		/**
 		 * Get the first selected gate template.
+		 *
+		 * @return Return the first selected gate template.
 		 */
 		GateTemplate_shptr get_selected_gate();
 
 		/**
-		 * Return true if at least one gate is selected.
+		 * Know if there an active selection.
+		 *
+		 * @return Return true if at least one gate is selected.
 		 */
 		bool has_selection();
 
 	public slots:
+		/**
+		 * Update the gate template list.
+		 */
 		void update_list();
 
 	private:

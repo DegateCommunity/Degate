@@ -316,7 +316,7 @@ namespace degate
 			Layer_shptr layer = lmodel->get_current_layer();
 			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports);
 
-			// check if there is a gate or gate port on the logic layer
+			// Check if there is a gate or gate port on the logic layer
 			if(plo == NULL) 
 			{
 				try 
@@ -393,7 +393,7 @@ namespace degate
 			update();
 		}
 
-		// Mouse coord signal
+		// Mouse coords signal
 		emit mouse_coords_changed(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 	}
 
@@ -433,7 +433,7 @@ namespace degate
 			Layer_shptr layer = lmodel->get_current_layer();
 			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports);
 
-			// check if there is a gate or gate port on the logic layer
+			// Check if there is a gate or gate port on the logic layer
 			if(plo == NULL) 
 			{
 				try 

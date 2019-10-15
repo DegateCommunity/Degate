@@ -30,7 +30,7 @@ namespace degate
 		float alpha;
 	};
 
-	WorkspaceAnnotations::WorkspaceAnnotations(QWidget* new_parent) : WorkspaceElement(new_parent), text(new_parent)
+	WorkspaceAnnotations::WorkspaceAnnotations(QWidget* parent) : WorkspaceElement(parent), text(parent)
 	{
 
 	}
@@ -93,6 +93,7 @@ namespace degate
 		if(layer == NULL)
 			return;
 
+		// Keep only annotations of the active layer.
 		std::vector<Annotation_shptr> annotations;
 		for(Layer::object_iterator iter = layer->objects_begin(); iter != layer->objects_end(); ++iter) 
 		{

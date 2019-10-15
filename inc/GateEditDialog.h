@@ -42,26 +42,67 @@
 
 namespace degate
 {
+
+	/**
+	 * @class GateEditEntityTab
+	 * @brief The entity tab of the gate edit dialog.
+	 *
+	 * This tab allow the edition of all the properties of the gate template.
+	 *
+	 * @see GateEditDialog
+	 */
 	class GateEditEntityTab : public QWidget
 	{
 		Q_OBJECT
 
 	public:
-		GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project);
+		
+		/**
+		 * Create the entity tab.
+		 *
+		 * @param parent : the parent of the tab.
+		 * @param gate : the gate template to edit.
+		 * @param project : the current active project.
+		 */
+		GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project);
 		~GateEditEntityTab();
 
 	public slots:
-		/*
+		/**
 		 * Save all changes.
 		 */
 		void validate();
 
 	private slots:
+
+		/**
+		 * Add a port to the gate template (can't cancel this action).
+		 */
 		void add_port();
+
+		/**
+		 * Remove a port of the gate template (can't cancel this action).
+		 */
 		void remove_port();
+
+		/**
+		 * Update the ports list.
+		 */
 		void update_ports_list();
+
+		/**
+		 * Reset the fill color.
+		 */
 		void reset_fill_color();
+
+		/**
+		 * Reset the frame color (outline).
+		 */
 		void reset_frame_color();
+
+		/**
+		 * Open a new port placement window for the gate template.
+		 */
 		void on_port_place();
 
 	private:
@@ -103,16 +144,32 @@ namespace degate
 
 	};
 
+	/**
+	 * @class GateEditBehaviourTab
+	 * @brief The behaviour tab of the gate edit dialog.
+	 *
+	 * This tab allow the definition of the behaviour of the gate (VHDL/Verilog).
+	 *
+	 * @see GateEditDialog
+	 */
 	class GateEditBehaviourTab : public QWidget
 	{
 		Q_OBJECT
 
 	public:
-		GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project);
+
+		/**
+		 * Create the behaviour tab.
+		 *
+		 * @param parent : the parent of the tab.
+		 * @param gate : the gate template to edit.
+		 * @param project : the current active project.
+		 */
+		GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project);
 		~GateEditBehaviourTab();
 
 	public slots:
-		/*
+		/**
 		 * Save all changes.
 		 */
 		void validate();
@@ -123,16 +180,33 @@ namespace degate
 
 	};
 
+
+	/**
+	 * @class GateEditLayoutTab
+	 * @brief The layout tab of the gate edit dialog.
+	 *
+	 * This tab show the available images of the gate template on different layers.
+	 *
+	 * @see GateEditDialog
+	 */
 	class GateEditLayoutTab : public QWidget
 	{
 		Q_OBJECT
 
 	public:
-		GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project);
+
+		/**
+		 * Create the layout tab.
+		 *
+		 * @param parent : the parent of the tab.
+		 * @param gate : the gate template to edit.
+		 * @param project : the current active project.
+		 */
+		GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project);
 		~GateEditLayoutTab();
 
 	public slots:
-		/*
+		/**
 		 * Save all changes.
 		 */
 		void validate();
@@ -160,16 +234,34 @@ namespace degate
 
 	};
 
+	/**
+	 * @class GateEditDialog
+	 * @brief Dialog to edit a gate template.
+	 *
+	 * This window is composed of three tabs (@see GateEditEntityTab, @see GateEditBehaviourTab and @see GateEditLayoutTab).
+	 *
+	 * @see QDialog
+	 */
 	class GateEditDialog : public QDialog
 	{
 		Q_OBJECT
 
 	public:
-		GateEditDialog(QWidget* parent, GateTemplate_shptr gate_to_edit, Project_shptr project);
+
+		/**
+		 * Create a gate template edit dialog, to show it call the exec function.
+		 *
+		 * @param parent : the parent of the dialog.
+		 * @param gate : the gate template to edit.
+		 * @param project : the current active project.
+		 *
+		 * @see QDialog
+		 */
+		GateEditDialog(QWidget* parent, GateTemplate_shptr gate, Project_shptr project);
 		~GateEditDialog();
 
 	public slots:
-		/*
+		/**
 		 * Save all changes.
 		 */
 		virtual void validate();
@@ -189,16 +281,34 @@ namespace degate
 		GateEditLayoutTab layout_tab;
 	};
 
+	/**
+	 * @class GateInstanceEditDialog
+	 * @brief Dialog to edit a gate instance (the gate orientation and his attached gate template).
+	 *
+	 * This window is composed of three tabs (@see GateEditEntityTab, @see GateEditBehaviourTab and @see GateEditLayoutTab) and an orientation selector.
+	 *
+	 * @see QDialog
+	 */
 	class GateInstanceEditDialog : public GateEditDialog
 	{
 		Q_OBJECT
 
 	public:
+
+		/**
+		 * Create a gate instance edit dialog, to show it call the exec function.
+		 *
+		 * @param parent : the parent of the dialog.
+		 * @param gate : the gate to edit.
+		 * @param project : the current active project.
+		 *
+		 * @see QDialog
+		 */
 		GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project);
 		~GateInstanceEditDialog();
 
 	public slots:
-		/*
+		/**
 		 * Save all changes.
 		 */
 		void validate();

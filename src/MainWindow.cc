@@ -534,7 +534,7 @@ namespace degate
 		workspace->update_screen();
 	}
 
-	void MainWindow::on_menu_quit()
+	void MainWindow::on_menu_project_quit()
 	{
 		close();
 	}

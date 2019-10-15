@@ -33,11 +33,26 @@ namespace degate
 {
 
 	/**
-	 * Handle all preferences and load/write them from/in a config file.
+	 * @class PreferencesHandler
+	 * @brief Handle all preferences and load/write them from/in a config file.
+	 *
+	 * The preferences handler handle only preferences, not necessarily the runtime used state (@see ThemeManager).
+	 * 
+	 * The theme manager handle the current theme (active at runtime).
+	 * Theme and icon theme can be different in the theme manager and in the preferences handler.
+	 * The preferences handler handle the theme and icon theme that are actually in the preferences (states can be different between runtime and in the preferences).
+	 *
+	 * @see SingletonBase
+	 * @see XMLImporter
+	 * @see XMLExporter
 	 */
 	class PreferencesHandler : public SingletonBase<PreferencesHandler>, public XMLImporter, public XMLExporter
 	{
 	public:
+
+		/**
+		 * Create the preferences handler.
+		 */
 		PreferencesHandler();
 		~PreferencesHandler();
 
@@ -48,23 +63,35 @@ namespace degate
 
 		/**
 		 * Get the theme from preferences (config file).
+		 *
+		 * @return Return the theme currently saved in the preferences.
 		 */
 		Theme get_theme();
 
 		/**
 		 * Set the theme, it will be saved in the config file (preferences).
-		 * The change will be applied after restart when the preferences will be loaded.
+		 * The change will be applied after restart when the preferences will be loaded in the theme manager.
+		 *
+		 * @see ThemeManager
+		 *
+		 * @param theme : the new theme that will be saved in the preferences.
 		 */
 		void set_theme(Theme theme);
 
 		/**
 		 * Get the icon theme from preferences (config file).
+		 *
+		 * @return Return the icon theme currently saved in the preferences.
 		 */
 		IconTheme get_icon_theme();
 
 		/**
 		 * Set the icon theme, it will be saved in the config file (preferences).
-		 * The change will be applied after restart when the preferences will be loaded.
+		 * The change will be applied after restart when the preferences will be loaded in the theme manager.
+		 *
+		 * @see ThemeManager
+		 *
+		 * @param theme : the new icon theme that will be saved in the preferences.
 		 */
 		void set_icon_theme(IconTheme theme);
 
@@ -75,6 +102,9 @@ namespace degate
 	};
 }
 
+/**
+ * Get the preferences handler instance.
+ */
 #define PREFERENCES_HANDLER PreferencesHandler::get_instance()
 
 #endif

@@ -364,82 +364,82 @@ namespace degate
 		}
 	}
 
-	void LayersEditWidget::move_row(unsigned row_indice, RowMoveDirection direction)
+	void LayersEditWidget::move_row(unsigned row_index, RowMoveDirection direction)
 	{
 		LayersEditRow source;
 		LayersEditRow destination;
 
 		if(direction == UP)
 		{
-			if(row_indice == 0)
+			if(row_index == 0)
 				return;
 
 			// Get source
-			source.id = layers.takeItem(row_indice, 0);
-			source.enabled = layers.takeItem(row_indice, 1);
-			source.description = layers.takeItem(row_indice, 2);
-			source.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_indice, 3)));
-			source.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_indice, 4)));
+			source.id = layers.takeItem(row_index, 0);
+			source.enabled = layers.takeItem(row_index, 1);
+			source.description = layers.takeItem(row_index, 2);
+			source.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index, 3)));
+			source.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index, 4)));
 
 			// Get destination
-			destination.id = layers.takeItem(row_indice - 1, 0);
-			destination.enabled = layers.takeItem(row_indice - 1, 1);
-			destination.description = layers.takeItem(row_indice - 1, 2);
-			destination.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_indice - 1, 3)));
-			destination.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_indice - 1, 4)));
+			destination.id = layers.takeItem(row_index - 1, 0);
+			destination.enabled = layers.takeItem(row_index - 1, 1);
+			destination.description = layers.takeItem(row_index - 1, 2);
+			destination.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index - 1, 3)));
+			destination.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index - 1, 4)));
 
 			
 			// Set new source
-			layers.setItem(row_indice - 1, 0, source.id);
-			layers.setItem(row_indice - 1, 1, source.enabled);
-			layers.setItem(row_indice - 1, 2, source.description);
-			layers.setCellWidget(row_indice - 1, 3, source.type);
-			layers.setCellWidget(row_indice - 1, 4, source.background);
+			layers.setItem(row_index - 1, 0, source.id);
+			layers.setItem(row_index - 1, 1, source.enabled);
+			layers.setItem(row_index - 1, 2, source.description);
+			layers.setCellWidget(row_index - 1, 3, source.type);
+			layers.setCellWidget(row_index - 1, 4, source.background);
 
 			// Set new destination
-			layers.setItem(row_indice, 0, destination.id);
-			layers.setItem(row_indice, 1, destination.enabled);
-			layers.setItem(row_indice, 2, destination.description);
-			layers.setCellWidget(row_indice, 3, destination.type);
-			layers.setCellWidget(row_indice, 4, destination.background);
+			layers.setItem(row_index, 0, destination.id);
+			layers.setItem(row_index, 1, destination.enabled);
+			layers.setItem(row_index, 2, destination.description);
+			layers.setCellWidget(row_index, 3, destination.type);
+			layers.setCellWidget(row_index, 4, destination.background);
 
-			layers.selectRow(row_indice - 1);
+			layers.selectRow(row_index - 1);
 		}
 		else
 		{
-			if(row_indice == layers.rowCount() - 1)
+			if(row_index == layers.rowCount() - 1)
 				return;
 
 			// Get source
-			source.id = layers.takeItem(row_indice, 0);
-			source.enabled = layers.takeItem(row_indice, 1);
-			source.description = layers.takeItem(row_indice, 2);
-			source.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_indice, 3)));
-			source.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_indice, 4)));
+			source.id = layers.takeItem(row_index, 0);
+			source.enabled = layers.takeItem(row_index, 1);
+			source.description = layers.takeItem(row_index, 2);
+			source.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index, 3)));
+			source.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index, 4)));
 
 			// Get destination
-			destination.id = layers.takeItem(row_indice + 1, 0);
-			destination.enabled = layers.takeItem(row_indice + 1, 1);
-			destination.description = layers.takeItem(row_indice + 1, 2);
-			destination.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_indice + 1, 3)));
-			destination.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_indice + 1, 4)));
+			destination.id = layers.takeItem(row_index + 1, 0);
+			destination.enabled = layers.takeItem(row_index + 1, 1);
+			destination.description = layers.takeItem(row_index + 1, 2);
+			destination.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index + 1, 3)));
+			destination.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index + 1, 4)));
 
 			
 			// Set new source
-			layers.setItem(row_indice + 1, 0, source.id);
-			layers.setItem(row_indice + 1, 1, source.enabled);
-			layers.setItem(row_indice + 1, 2, source.description);
-			layers.setCellWidget(row_indice + 1, 3, source.type);
-			layers.setCellWidget(row_indice + 1, 4, source.background);
+			layers.setItem(row_index + 1, 0, source.id);
+			layers.setItem(row_index + 1, 1, source.enabled);
+			layers.setItem(row_index + 1, 2, source.description);
+			layers.setCellWidget(row_index + 1, 3, source.type);
+			layers.setCellWidget(row_index + 1, 4, source.background);
 
 			// Set new destination
-			layers.setItem(row_indice, 0, destination.id);
-			layers.setItem(row_indice, 1, destination.enabled);
-			layers.setItem(row_indice, 2, destination.description);
-			layers.setCellWidget(row_indice, 3, destination.type);
-			layers.setCellWidget(row_indice, 4, destination.background);
+			layers.setItem(row_index, 0, destination.id);
+			layers.setItem(row_index, 1, destination.enabled);
+			layers.setItem(row_index, 2, destination.description);
+			layers.setCellWidget(row_index, 3, destination.type);
+			layers.setCellWidget(row_index, 4, destination.background);
 
-			layers.selectRow(row_indice + 1);
+			layers.selectRow(row_index + 1);
 		}
 	}
 }

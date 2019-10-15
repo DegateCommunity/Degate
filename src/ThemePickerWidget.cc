@@ -35,6 +35,7 @@ namespace degate
 
 		icon_theme_label.setText("Icon theme :");
 		QStringList icon_theme_list;
+		icon_theme_list.append("automatic");
 		icon_theme_list.append("light");
 		icon_theme_list.append("dark");
 		icon_theme_box.addItems(icon_theme_list);
@@ -60,6 +61,16 @@ namespace degate
 
 	IconTheme ThemePickerWidget::get_icon_theme()
 	{
-		return string_to_icon_theme(icon_theme_box.currentText().toStdString());;
+		if(icon_theme_box.currentText().toStdString() == "automatic")
+		{
+			if(theme_box.currentText().toStdString() == "native")
+				return DARK_ICON_THEME;
+			else if (theme_box.currentText().toStdString() == "light")
+				return DARK_ICON_THEME;
+			else
+				return LIGHT_ICON_THEME;
+		}
+		else
+			return string_to_icon_theme(icon_theme_box.currentText().toStdString());
 	}
 }

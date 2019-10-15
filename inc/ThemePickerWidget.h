@@ -31,24 +31,39 @@
 
 namespace degate
 {
+
+	/**
+	 * @class ThemePickerWidget
+	 * @brief Widget to select the icon theme and global theme.
+	 *
+	 * @see PreferencesDialog
+	 */
 	class ThemePickerWidget : public QWidget
 	{
 		Q_OBJECT
 		
 	public:
 		/**
-		 * Set the actual state with the actual theme and icon theme.
+		 * Create the theme picker widget.
+		 *
+		 * @param parent : the parent of the widget.
+		 * @param actual_theme : the current active theme.
+		 * @param actual_icon_theme : the current active icon theme.
 		 */
 		ThemePickerWidget(QWidget* parent, Theme actual_theme, IconTheme actual_icon_theme);
 		~ThemePickerWidget();
 
 		/**
 		 * Get the theme.
+		 *
+		 * @return Return the selected theme.
 		 */
 		Theme get_theme();
 
 		/**
 		 * Get the icon theme.
+		 *
+		 * @return Return the selected icon theme.
 		 */
 		IconTheme get_icon_theme();
 		

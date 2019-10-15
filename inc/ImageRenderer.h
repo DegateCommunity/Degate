@@ -27,17 +27,54 @@
 
 #include <QtOpenGL>
 
+/**
+ * This define the zoom out factor (zoom *= zoom_out).
+ *
+ * @see ImageRenderer
+ */
 #define ZOOM_OUT 10.0 / 9.0
+
+/**
+ * This define the zoom in factor (zoom *= zoom_in).
+ *
+ * @see ImageRenderer
+ */
 #define ZOOM_IN 9.0 / 10.0
+
+/**
+ * This define the no zoom factor (zoom = zoom).
+ *
+ * @see ImageRenderer
+ */
 #define NO_ZOOM 1
 
 namespace degate
 {
+
+	/**
+	 * @class ImageRenderer
+	 * @brief Hold and draw an memory image on the screen with OpenGL.
+	 *
+	 * This is a virtual class (eg. @see PortPlacementWidget).
+	 *
+	 * The image renderer use a lot of Qt functions (@see QOpenGLWidget and @see QOpenGLFunctions).
+	 * This draw the image and manage all related events.
+	 *
+	 * @warning Each image renderer get his own OpenGL context (@see WorkspaceElement).
+	 */
 	class ImageRenderer : public QOpenGLWidget, protected QOpenGLFunctions
 	{
 		Q_OBJECT
 
 	public:
+
+		/**
+		 * Create the image renderer.
+		 *
+		 * @param image : the memory image to draw.
+		 * @param parent : the parent of the renderer.
+		 * @param update_on_gl_initialize : if true call the update_screen function after initializeGL function.
+		 */
 		ImageRenderer(MemoryImage_shptr image, QWidget* parent, bool update_on_gl_initialize = true);
 		~ImageRenderer();
 
@@ -48,23 +85,23 @@ namespace degate
 
 		/**
 		 * Change the image with a new one (auto update).
+		 *
+		 * @param image : the new image.
 		 */
 		void change_image(MemoryImage_shptr image);
-
-		/*
-		 * Get the real mouse position (a public name for the opengl mouse position).
-		 */
-		QPointF get_real_mouse_position();
 
 	protected:
 		/*
 		 * Destroy the OpenGL texture.
 		 */
 		void free_texture();
+
+		/* Qt OpenGL functions */
 		virtual void initializeGL();
 		virtual void paintGL();
 		virtual void resizeGL(int w, int h);
 
+		/* Qt mouse and keyboard events functions */
 		virtual void mousePressEvent(QMouseEvent* event);
 		virtual void mouseReleaseEvent(QMouseEvent* event);
 		virtual void mouseMoveEvent(QMouseEvent* event);
@@ -79,13 +116,17 @@ namespace degate
 		 */
 		void set_projection(float scale_factor, float new_center_x, float new_center_y);
 
-		/*
+		/**
 		 * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
+		 *
+		 * @return Return the widget relative mouse position.
 		 */
 		QPointF get_widget_mouse_position() const;
 
-		/*
+		/**
 		 * Get the mouse position relative to the OpenGL world (with 0,0 on the lower left corner).
+		 *
+		 * @return Return the OpenGL relative mouse position.
 		 */
 		QPointF get_opengl_mouse_position() const;
 

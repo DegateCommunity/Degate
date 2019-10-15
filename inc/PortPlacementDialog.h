@@ -29,15 +29,33 @@
 
 namespace degate
 {
+
+	/**
+	 * @class PortPlacementDialog
+	 * @brief Dialog to place a port template of a gate template.
+	 *
+	 * @see QDialog
+	 */
 	class PortPlacementDialog : public QDialog
 	{
 		Q_OBJECT
 
 	public:
+
+		/**
+		 * Create a port placement dialog.
+		 *
+		 * @param parent : the parent of the dialog.
+		 * @param project : the current active project.
+		 * @param port : the port template to place.
+		 */
 		PortPlacementDialog(QWidget* parent, Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port);
 		~PortPlacementDialog();
 
 	public slots:
+		/**
+		 * Save the new position of the port template.
+		 */
 		void on_validation();
 
 	private:

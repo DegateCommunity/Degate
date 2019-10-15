@@ -195,7 +195,7 @@ namespace degate
 		ImageRenderer::wheelEvent(event);
 	}
 
-	void PortPlacementWidget::draw_port_in_out(int x, int y, unsigned size, QVector3D color, float alpha)
+	void PortPlacementWidget::create_port_in_out(int x, int y, unsigned size, QVector3D color, float alpha)
 	{
 		PortVertex2D temp;
 
@@ -232,7 +232,7 @@ namespace degate
 		glBufferSubData(GL_ARRAY_BUFFER, 8 * sizeof(PortVertex2D), sizeof(PortVertex2D), &temp);
 	}
 
-	void PortPlacementWidget::draw_port_in(int x, int y, unsigned size, QVector3D color, float alpha)
+	void PortPlacementWidget::create_port_in(int x, int y, unsigned size, QVector3D color, float alpha)
 	{
 		PortVertex2D temp;
 
@@ -269,7 +269,7 @@ namespace degate
 		glBufferSubData(GL_ARRAY_BUFFER, 8 * sizeof(PortVertex2D), sizeof(PortVertex2D), &temp);
 	}
 
-	void PortPlacementWidget::draw_port_out(int x, int y, unsigned size, QVector3D color, float alpha)
+	void PortPlacementWidget::create_port_out(int x, int y, unsigned size, QVector3D color, float alpha)
 	{
 		PortVertex2D temp;
 
@@ -313,19 +313,19 @@ namespace degate
 		switch(port->get_port_type()) 
 		{
 			case GateTemplatePort::PORT_TYPE_UNDEFINED:
-				draw_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+				create_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 				break;
 		    case GateTemplatePort::PORT_TYPE_IN:
-			    draw_port_in(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+			    create_port_in(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 			    break;
 		    case GateTemplatePort::PORT_TYPE_OUT:
-			    draw_port_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+			    create_port_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 			    break;
 		    case GateTemplatePort::PORT_TYPE_INOUT:
-			    draw_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+			    create_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 			    break;
 			default:
-				draw_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
+				create_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);
 				break;
 		}
 	}

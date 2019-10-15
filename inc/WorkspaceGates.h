@@ -27,37 +27,56 @@
 
 namespace degate
 {
+
+	/**
+	 * @class WorkspaceGates
+	 * @brief Prepare and draw all gates on the workspace.
+	 *
+	 * This will prepare all OpenGL things (buffers, shaders...) to draw all gates on the workspace.
+	 * One gate is composed of a square, an outline, a top-left aligned text, ports and ports name.
+	 *
+	 * The parent vbo buffer will store all squares, the line_vbo buffer will store all outlines and the port_vbo buffer will store all ports.
+	 *
+	 * @see WorkspaceElement
+	 */
 	class WorkspaceGates : public WorkspaceElement
 	{
 	public:
-		WorkspaceGates(QWidget* new_parent);
+
+		/**
+		 * Create a workspace gates element.
+		 * This will only set the parent, real creation will start with init and update functions.
+		 *
+		 * @param parent : the parent widget pointer.
+		 */
+		WorkspaceGates(QWidget* parent);
 		~WorkspaceGates();
 
-		/*
+		/**
 		 * Init all background OpenGL routine (vbo).
 		 */
 		void init() override;
 
-		/*
+		/**
 	     * Update the background (all textures are reloaded).
 	     */
 		void update() override;
 
-		/*
+		/**
 		 * Update a specific gate.
 		 * 
 		 * @param gate : the gate object.
 		 */
 		void update(Gate_shptr& gate);
 
-		/*
+		/**
 		 * Update a specific port.
 		 * 
 		 * @param port : the port object.
 		 */
 		void update(GatePort_shptr& port);
 
-		/*
+		/**
 	     * Draw all gates.
 	     * 
 	     * @param projection : the projection matrix to apply.
@@ -86,20 +105,26 @@ namespace degate
 		void draw_ports_name(const QMatrix4x4& projection);
 
 	private:
-		/*
-		 * Create a gate.
+		/**
+		 * Create a gate in OpenGL buffers.
+		 *
+		 * @param gate : the gate object.
+		 * @param index : the index of the gate for OpenGL buffers.
 		 */
 		void create_gate(Gate_shptr& gate, unsigned index);
 
-		/*
-		 * Create all ports of a specific gate.
+		/**
+		 * Create all ports of a specific gate in OpenGL buffers.
+		 *
+		 * @param gate : the gate object.
+		 * @param index : the index of the gate for OpenGL buffers.
 		 */
 		void create_ports(Gate_shptr& gate, unsigned index);
 
 		WorkspaceText text;
 		WorkspaceText port_text;
-		GLuint line_vbo;
-		GLuint port_vbo;
+		GLuint line_vbo = 0;
+		GLuint port_vbo = 0;
 		unsigned port_count = 0;
 
 	};

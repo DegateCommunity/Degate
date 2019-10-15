@@ -32,15 +32,37 @@
 
 namespace degate
 {
+
+	/**
+	 * @class GateLibraryDialog
+	 * @brief Dialog to show all gates of a project.
+	 *
+	 * It will show all gates template of the current active project.
+	 * It have a button to edit them individually.
+	 *
+	 * @see QDialog
+	 */
 	class GateLibraryDialog : public QDialog
 	{
 		Q_OBJECT
 		
 	public:
+
+		/**
+		 * Create the dialog, to show it call the exec function.
+		 *
+		 * @param project : the current active project.
+		 * @param parent : the parent of the dialog.
+		 *
+		 * @see QDialog
+		 */
 		GateLibraryDialog(Project_shptr project, QWidget* parent);
 		~GateLibraryDialog();
 
 	public slots:
+		/**
+		 * Run a gate edit dialog on all the selected gates template (selected rows).
+		 */
 		void on_edit_gate_button();
 
 	private:

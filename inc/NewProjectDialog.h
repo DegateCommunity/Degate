@@ -31,17 +31,47 @@
 
 namespace degate
 {
+
+	/**
+	 * @class NewProjectDialog
+	 * @brief Dialog for creating a new project.
+	 *
+	 * @see QDialog
+	 */
 	class NewProjectDialog : public QDialog
 	{
 		Q_OBJECT
 
 	public:
+
+		/**
+		 * Create the new project dialog.
+		 *
+		 * @param parent : the parent of the dialog.
+		 */
 		NewProjectDialog(QWidget* parent);
 		~NewProjectDialog();
 
+		/**
+		 * Get the new project name.
+		 *
+		 * @return Return the new project name.
+		 */
 		std::string get_project_name();
 		unsigned get_height();
+
+		/**
+		 * Get the width of the new project.
+		 *
+		 * @return Return the width of the new project.
+		 */
 		unsigned get_width();
+
+		/**
+		 * Get the new project layer count.
+		 *
+		 * @return Return the number of layers of the new project.
+		 */
 		unsigned get_layer_count();
 
 	private:

@@ -30,7 +30,7 @@ namespace degate
 		float alpha;
 	};
 
-	WorkspaceGates::WorkspaceGates(QWidget* new_parent) : WorkspaceElement(new_parent), text(new_parent), port_text(new_parent)
+	WorkspaceGates::WorkspaceGates(QWidget* parent) : WorkspaceElement(parent), text(parent), port_text(parent)
 	{
 	}
 

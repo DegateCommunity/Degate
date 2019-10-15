@@ -41,16 +41,13 @@ namespace degate
 		switch (theme)
 		{
 		case NATIVE_THEME:
-			icon_theme = DARK_ICON_THEME;
 			break;
 		case LIGHT_THEME:
-			icon_theme = DARK_ICON_THEME;
-
+			
 			qApp->setPalette(qApp->style()->standardPalette());
 			
 			break;
 		case DARK_THEME:
-			icon_theme = LIGHT_ICON_THEME;
 
 			qApp->setStyle(QStyleFactory::create("Fusion"));
 			theme_palette.setColor(QPalette::Window, QColor(53,53,53));
@@ -71,7 +68,6 @@ namespace degate
 			
 			break;
 		default:
-			icon_theme = LIGHT_ICON_THEME;
 			break;
 		}
 

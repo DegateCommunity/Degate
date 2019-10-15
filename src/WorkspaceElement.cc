@@ -23,9 +23,9 @@
 
 namespace degate
 {
-	WorkspaceElement::WorkspaceElement(QWidget* widget_parent)
+	WorkspaceElement::WorkspaceElement(QWidget* parent)
 	{
-		parent = widget_parent;
+		this->parent = parent;
 	}
 
 	WorkspaceElement::~WorkspaceElement()
@@ -46,6 +46,7 @@ namespace degate
 
 	void WorkspaceElement::init()
 	{
+		// The OpenGL context of a workspace element is always the current active context.
 		context = QOpenGLContext::currentContext()->functions();
 
 		context->glGenBuffers(1, &vbo);

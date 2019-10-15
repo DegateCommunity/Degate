@@ -28,42 +28,56 @@
 
 namespace degate
 {
+
+	/**
+	 * @class WorkspaceBackground
+	 * @brief Draw the current layer image (as background).
+	 */
 	class WorkspaceBackground : public WorkspaceElement
 	{
 	public:
-		WorkspaceBackground(QWidget* widget_parent);
+
+		/**
+		 * Create a workspace background element.
+		 * This will only set the parent, real creation will start with init and update functions.
+		 *
+		 * @param parent : the parent widget pointer.
+		 */
+		WorkspaceBackground(QWidget* parent);
 		~WorkspaceBackground();
 
-		/*
+		/**
 		 * Init all background OpenGL routine (vbo).
 		 */
 		void init() override;
 
-		/*
+		/**
 	     * Update the background (all textures are reloaded).
 	     */
 		void update() override;
 
-		/*
+		/**
 	     * Draw the background (all tiles will be draw).
 	     * 
 	     * @param projection : the projection matrix to apply. 
 	     */
 		void draw(const QMatrix4x4& projection) override;
 
-		/*
+		/**
 		 * Destroy all OpenGL textures.
 		 */
 		void free_textures();
 
 	private:
-		/*
+		/**
 		 * Create a background tile (OpenGL texture and vertices).
 		 * 
 		 * @param x
 		 * @param y
 		 * @param pre_scaling : scaling of the image.
 		 * @param index : index of the tile.
+		 *
+		 * @return Return the OpenGL texture ID of the tile.
 		 */
 		GLuint create_background_tile(unsigned int x, unsigned int y, float pre_scaling, unsigned index);
 
