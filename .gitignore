@@ -1,3 +1,5 @@
 build/*
 !build/.keepme
 inc/Configuration.h
+.idea/
+cmake-build-debug/
