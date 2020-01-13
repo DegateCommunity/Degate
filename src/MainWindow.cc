@@ -69,7 +69,7 @@ namespace degate
 		project_menu->addSeparator();
 		QAction* project_quit_action = project_menu->addAction("Quit");
 		project_quit_action->setIcon(QIcon(GET_ICON_PATH("quit.png")));
-		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_quit()));
+		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_project_quit()));
 
 		QMenu* edit_menu = menu_bar.addMenu("Edit");
 		QAction* preferences_edit_action = edit_menu->addAction("Preferences");
