@@ -26,6 +26,7 @@
 #include "GateTemplate.h"
 #include "GateTemplatePort.h"
 #include "Project.h"
+#include "Text.h"
 
 /**
  * Define the default port size for port placement.
@@ -142,6 +143,7 @@ namespace degate
 		unsigned int layer;
 		GLuint vbo;
 		QOpenGLShaderProgram* program = NULL;
+		Text port_name_text;
 
 		Point pos;
 

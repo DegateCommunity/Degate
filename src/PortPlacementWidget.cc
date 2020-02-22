@@ -30,7 +30,7 @@ namespace degate
 		float alpha;
 	};
 
-	PortPlacementWidget::PortPlacementWidget(Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port, QWidget* parent) : ImageRenderer(gate->get_image(Layer::LAYER_TYPE::LOGIC), parent, false), gate(gate), port(port), project(project)
+	PortPlacementWidget::PortPlacementWidget(Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port, QWidget* parent) : ImageRenderer(gate->get_image(Layer::LAYER_TYPE::LOGIC), parent, false), gate(gate), port(port), project(project), port_name_text(parent)
 	{
 		layer = Layer::LAYER_TYPE::LOGIC;
 
@@ -39,7 +39,12 @@ namespace degate
 
 	PortPlacementWidget::~PortPlacementWidget()
 	{
+        makeCurrent();
+
 		glDeleteBuffers(1, &vbo);
+        Text::delete_context();
+
+        doneCurrent();
 	}
 
 	void PortPlacementWidget::update_screen()
@@ -53,6 +58,9 @@ namespace degate
 		create_port(port);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        port_name_text.update(port->get_name().length());
+        port_name_text.add_sub_text(0, pos.get_x(), pos.get_y() + DEFAULT_PORT_SIZE / 2.0 + 5, port->get_name().c_str(), 5, QVector3D(255, 255, 255), 1, 1);
 
 		ImageRenderer::update_screen();
 	}
@@ -82,7 +90,11 @@ namespace degate
 
 	void PortPlacementWidget::initializeGL()
 	{
+        makeCurrent();
+
 		ImageRenderer::initializeGL();
+
+		Text::init_context();
 		
 		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
 		const char* vsrc =
@@ -115,11 +127,15 @@ namespace degate
 
 		glGenBuffers(1, &vbo);
 
+        port_name_text.init();
+
 		update_screen();
 	}
 
 	void PortPlacementWidget::paintGL()
 	{
+        makeCurrent();
+
 		ImageRenderer::paintGL();
 
 		program->bind();
@@ -144,15 +160,21 @@ namespace degate
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		program->release();
+
+        port_name_text.draw(projection);
 	}
 
 	void PortPlacementWidget::resizeGL(int w, int h)
 	{
+        makeCurrent();
+
 		ImageRenderer::resizeGL(w, h);
 	}
 
 	void PortPlacementWidget::mousePressEvent(QMouseEvent* event)
 	{
+        makeCurrent();
+
 		ImageRenderer::mousePressEvent(event);
 
 		// Displacement
@@ -170,11 +192,15 @@ namespace degate
 
 	void PortPlacementWidget::mouseReleaseEvent(QMouseEvent* event)
 	{
+        makeCurrent();
+
 		ImageRenderer::mouseReleaseEvent(event);
 	}
 
 	void PortPlacementWidget::mouseMoveEvent(QMouseEvent* event)
 	{
+        makeCurrent();
+
 		ImageRenderer::mouseMoveEvent(event);
 
 		// Displacement
@@ -192,6 +218,8 @@ namespace degate
 
 	void PortPlacementWidget::wheelEvent(QWheelEvent* event)
 	{
+        makeCurrent();
+
 		ImageRenderer::wheelEvent(event);
 	}
 
