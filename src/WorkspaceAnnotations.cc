@@ -210,10 +210,9 @@ namespace degate
 
 		// Vertices and colors
 
-		AnnotationsVertex2D temp;
-
 		color_t color = highlight_color_by_state(annotation->get_fill_color(), annotation->get_highlighted());
 
+        AnnotationsVertex2D temp;
 		temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
 		temp.alpha = MASK_A(annotation->get_fill_color()) / 255.0;
 

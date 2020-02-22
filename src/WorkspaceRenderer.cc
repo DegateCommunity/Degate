@@ -37,7 +37,7 @@ namespace degate
 	{
 		makeCurrent();
 		
-		WorkspaceText::delete_font();
+		Text::delete_context();
 
 		doneCurrent();
 	}
@@ -200,7 +200,7 @@ namespace degate
 
 		initializeOpenGLFunctions();
 
-		WorkspaceText::init_font();
+		Text::init_context();
 
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glEnable(GL_BLEND);
@@ -282,6 +282,8 @@ namespace degate
 
 	void WorkspaceRenderer::mousePressEvent(QMouseEvent* event)
 	{
+        makeCurrent();
+
 		QOpenGLWidget::mousePressEvent(event);
 
 		mouse_last_pos = get_opengl_mouse_position();
@@ -299,6 +301,8 @@ namespace degate
 
 	void WorkspaceRenderer::mouseReleaseEvent(QMouseEvent* event)
 	{
+        makeCurrent();
+
 		QOpenGLWidget::mouseReleaseEvent(event);
 
 		if (event->button() == Qt::LeftButton)
@@ -368,6 +372,8 @@ namespace degate
 
 	void WorkspaceRenderer::mouseMoveEvent(QMouseEvent* event)
 	{
+        makeCurrent();
+
 		QOpenGLWidget::mouseMoveEvent(event);
 
 		// Movement
@@ -399,6 +405,8 @@ namespace degate
 
 	void WorkspaceRenderer::wheelEvent(QWheelEvent* event)
 	{
+        makeCurrent();
+
 		QOpenGLWidget::wheelEvent(event);
 
 		event->delta() < 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
@@ -410,16 +418,22 @@ namespace degate
 
 	void WorkspaceRenderer::keyPressEvent(QKeyEvent* event)
 	{
+        makeCurrent();
+
 		QOpenGLWidget::keyPressEvent(event);
 	}
 
 	void WorkspaceRenderer::keyReleaseEvent(QKeyEvent* event)
 	{
+        makeCurrent();
+
 		QOpenGLWidget::keyReleaseEvent(event);
 	}
 
 	void WorkspaceRenderer::mouseDoubleClickEvent(QMouseEvent* event)
 	{
+        makeCurrent();
+
 		QOpenGLWidget::mouseDoubleClickEvent(event);
 
 		if (event->button() == Qt::LeftButton)

@@ -23,7 +23,7 @@
 #define __WORKSPACEGATES_H__
 
 #include "WorkspaceElement.h"
-#include "WorkspaceText.h"
+#include "Text.h"
 
 namespace degate
 {
@@ -121,8 +121,8 @@ namespace degate
 		 */
 		void create_ports(Gate_shptr& gate, unsigned index);
 
-		WorkspaceText text;
-		WorkspaceText port_text;
+		Text text;
+		Text port_text;
 		GLuint line_vbo = 0;
 		GLuint port_vbo = 0;
 		unsigned port_count = 0;

@@ -23,7 +23,7 @@
 #define __WORKSPACEANNOTATIONS_H__
 
 #include "WorkspaceElement.h"
-#include "WorkspaceText.h"
+#include "Text.h"
 
 namespace degate
 {
@@ -96,7 +96,7 @@ namespace degate
 
 		/* Border buffer */
 		GLuint line_vbo = 0;
-		WorkspaceText text;
+		Text text;
 		unsigned annotation_count = 0;
 
 	};

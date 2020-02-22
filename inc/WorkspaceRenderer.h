@@ -25,7 +25,7 @@
 #include "Project.h"
 #include "WorkspaceBackground.h"
 #include "WorkspaceGates.h"
-#include "WorkspaceText.h"
+#include "Text.h"
 #include "WorkspaceAnnotations.h"
 #include "SubProjectAnnotation.h"
 #include "LogicModelHelper.h"
