@@ -336,6 +336,10 @@ namespace degate
         text_area.setText(QString::fromStdString(code_text[GateTemplate::IMPLEMENTATION_TYPE::TEXT]));
         old_index = GateTemplate::TEXT;
 
+        // Default buttons state (selector on plain text by default)
+        compile_button.setEnabled(false);
+        compile_save_button.setEnabled(false);
+
         layout.addLayout(&buttons_layout);
         layout.addWidget(&text_area);
 
@@ -420,6 +424,20 @@ namespace degate
     {
         int index = language_selector.currentIndex() + 1;
 
+        if(index == GateTemplate::VHDL || index == GateTemplate::VHDL_TESTBENCH)
+        {
+            QMessageBox::warning(this, "Warning", "You can't compile or run VHDL code within Degate, use Verilog language instead.");
+
+            return;
+        }
+
+        if(text_area.toPlainText().length() == 0)
+        {
+            QMessageBox::warning(this, "Warning", "You need to add code before compiling.");
+
+            return;
+        }
+
 	    if(index == GateTemplate::VERILOG)
         {
             int result = std::system("iverilog -V");
@@ -501,6 +519,20 @@ namespace degate
     void GateEditBehaviourTab::compile_save()
     {
         int index = language_selector.currentIndex() + 1;
+
+        if(index == GateTemplate::VHDL || index == GateTemplate::VHDL_TESTBENCH)
+        {
+            QMessageBox::warning(this, "Warning", "You can't compile or run VHDL code within Degate, use Verilog language instead.");
+
+            return;
+        }
+
+        if(text_area.toPlainText().length() == 0)
+        {
+            QMessageBox::warning(this, "Warning", "You need to add code before compiling.");
+
+            return;
+        }
 
         if(index == GateTemplate::VERILOG)
         {
@@ -586,10 +618,16 @@ namespace degate
         text_area.setText(QString::fromStdString(code_text[index + 1]));
         old_index = index + 1;
 
-        if(index + 1 == GateTemplate::VERILOG || index + 1 == GateTemplate::VERILOG_TESTBENCH)
-            compile_button.setEnabled(true);
-        else
+        if(index + 1 == GateTemplate::TEXT)
+        {
             compile_button.setEnabled(false);
+            compile_save_button.setEnabled(false);
+        }
+        else
+        {
+            compile_button.setEnabled(true);
+            compile_save_button.setEnabled(true);
+        }
     }
 
 
