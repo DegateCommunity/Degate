@@ -22,6 +22,8 @@
 #ifndef __DEGATEHELPER_H__
 #define __DEGATEHELPER_H__
 
+#include <vector>
+#include <string>
 
 #define LENGTH_TO_MAX(l) (l > 0 ? l - 1 : 0)
 
