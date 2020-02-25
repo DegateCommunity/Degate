@@ -19,7 +19,14 @@
 
 */
 
+#include <DegateHelper.h>
+#include "CodeTemplateGenerator.h"
+#include "VHDLCodeTemplateGenerator.h"
+#include "VHDLTBCodeTemplateGenerator.h"
+#include "VerilogCodeTemplateGenerator.h"
+#include "VerilogTBCodeTemplateGenerator.h"
 #include "GateEditDialog.h"
+#include "TerminalDialog.h"
 
 namespace degate
 {
@@ -298,20 +305,295 @@ namespace degate
 
 	// Behaviour tab
 
-	GateEditBehaviourTab::GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent), gate(gate), project(project)
+	GateEditBehaviourTab::GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project, GateEditEntityTab& entity_tab) : QWidget(parent), gate(gate), project(project), entity_tab(entity_tab)
 	{
+        language_label.setText("Language :");
+        language_selector.addItem("Free text");
+        language_selector.addItem("VHDL");
+        language_selector.addItem("VHDL/Testbench");
+        language_selector.addItem("Verilog");
+        language_selector.addItem("Verilog/Testbench");
+        QObject::connect(&language_selector, SIGNAL(currentIndexChanged(int)), this, SLOT(on_language_selector_changed(int)));
+
+        generate_button.setText("Generate code template");
+        QObject::connect(&generate_button, SIGNAL(clicked()), this, SLOT(generate()));
+
+        compile_button.setText("Compile");
+        QObject::connect(&compile_button, SIGNAL(clicked()), this, SLOT(compile()));
+
+        compile_save_button.setText("Compile and Save");
+        QObject::connect(&compile_save_button, SIGNAL(clicked()), this, SLOT(compile_save()));
+
+        buttons_layout.addWidget(&language_label);
+        buttons_layout.addWidget(&language_selector);
+        buttons_layout.addWidget(&generate_button);
+        buttons_layout.addWidget(&compile_button);
+        buttons_layout.addWidget(&compile_save_button);
+
+        for(GateTemplate::implementation_iter iter = gate->implementations_begin(); iter != gate->implementations_end(); ++iter)
+            code_text[iter->first] = iter->second;
+
+        text_area.setText(QString::fromStdString(code_text[GateTemplate::IMPLEMENTATION_TYPE::TEXT]));
+        old_index = GateTemplate::TEXT;
+
+        layout.addLayout(&buttons_layout);
+        layout.addWidget(&text_area);
+
+        setLayout(&layout);
 	}
 
 	GateEditBehaviourTab::~GateEditBehaviourTab()
 	{
+
 	}
 
 	void GateEditBehaviourTab::validate()
 	{
+        code_text[language_selector.currentIndex() + 1] = text_area.toPlainText().toStdString();
+
+        BOOST_FOREACH(code_text_map_type::value_type &p, code_text)
+            gate->set_implementation(static_cast<GateTemplate::IMPLEMENTATION_TYPE>(p.first), p.second);
 	}
 
+    void GateEditBehaviourTab::generate()
+    {
+        CodeTemplateGenerator_shptr generator;
 
-	// Layout tab
+        if(code_text[language_selector.currentIndex() + 1].length() != 0)
+        {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Warning", "Are you sure you want to replace the code?", QMessageBox::Yes|QMessageBox::No);
+
+            if (reply == QMessageBox::No)
+                return;
+        }
+
+        int index = language_selector.currentIndex() + 1;
+
+        if(index == GateTemplate::VHDL)
+        {
+            generator = CodeTemplateGenerator_shptr(new VHDLCodeTemplateGenerator(entity_tab.name.text().toStdString().c_str(),
+                                                                                  entity_tab.description.text().toStdString().c_str(),
+                                                                                  entity_tab.logic_class.currentText().toStdString()));
+        }
+        else if(index == GateTemplate::VHDL_TESTBENCH)
+        {
+            generator = CodeTemplateGenerator_shptr(new VHDLTBCodeTemplateGenerator(entity_tab.name.text().toStdString().c_str(),
+                                                                                    entity_tab.description.text().toStdString().c_str(),
+                                                                                    entity_tab.logic_class.currentText().toStdString()));
+        }
+        else if(index == GateTemplate::VERILOG)
+        {
+            generator = CodeTemplateGenerator_shptr(new VerilogCodeTemplateGenerator(entity_tab.name.text().toStdString().c_str(),
+                                                                                     entity_tab.description.text().toStdString().c_str(),
+                                                                                     entity_tab.logic_class.currentText().toStdString()));
+        }
+        else if(index == GateTemplate::VERILOG_TESTBENCH)
+        {
+            generator = CodeTemplateGenerator_shptr(new VerilogTBCodeTemplateGenerator(entity_tab.name.text().toStdString().c_str(),
+                                                                                       entity_tab.description.text().toStdString().c_str(),
+                                                                                       entity_tab.logic_class.currentText().toStdString()));
+        }
+        else
+        {
+            return;
+        }
+
+        for(unsigned int i = 0; i < entity_tab.ports.rowCount(); i++)
+        {
+            generator->add_port(entity_tab.ports.item(i, 1)->text().toStdString(), entity_tab.ports.item(i, 4)->checkState() == Qt::CheckState::Checked ? true : false);
+        }
+
+        try
+        {
+            std::string c = generator->generate();
+            text_area.setText(QString::fromStdString(c));
+            code_text[language_selector.currentIndex() + 1] = c;
+        }
+        catch(std::exception const& e)
+        {
+            QMessageBox::critical(this, "Error", "Failed to create a code template: " + QString(e.what()));
+        }
+    }
+
+    void GateEditBehaviourTab::compile()
+    {
+        int index = language_selector.currentIndex() + 1;
+
+	    if(index == GateTemplate::VERILOG)
+        {
+            int result = std::system("iverilog -V");
+            if(result != 0)
+            {
+                const QString message = "<html><center>"
+                                        "You must install <strong> iverilog </strong> to compile. <br>"
+                                        "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> <br>"
+                                        "Windows: <a href='https://bleyer.org/icarus/'>icarus</a> <br>"
+                                        "</center></html>";
+                QMessageBox::warning(this, "Warning", message);
+
+                return;
+            }
+
+	        std::string dir = create_temp_directory();
+            std::string in_file = join_pathes(dir, "cell.v");
+            std::string out_file = join_pathes(dir, "cell");
+            std::ofstream file;
+
+            degate::write_string_to_file(in_file, text_area.toPlainText().toStdString());
+
+            std::vector<std::string> cmd{"iverilog -o \"" + out_file + "\" \"" + in_file + "\""};
+
+            TerminalDialog terminal(this, cmd);
+            terminal.start();
+            terminal.exec();
+
+            remove_directory(dir);
+        }
+	    else if(index == GateTemplate::VERILOG_TESTBENCH)
+        {
+	        if(code_text[GateTemplate::VERILOG].size() == 0)
+            {
+                QMessageBox::warning(this, "Warning", "You must write the Verilog code for the standard cell's behaviour first.");
+                return;
+            }
+
+            int iverilog_result = std::system("iverilog -V");
+            int gtkwave_result = std::system("gtkwave -V");
+            if(iverilog_result != 0 || gtkwave_result != 0)
+            {
+                const QString message = "<html><center>"
+                                        "You must install <strong> iverilog </strong> and <strong> gtkwave </strong> to compile and run. <br>"
+                                        "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> and <a href='https://sourceforge.net/projects/gtkwave/files/'>gtkwave</a> <br>"
+                                        "Windows: <a href='https://bleyer.org/icarus/'>icarus and gtkwave</a> <br>"
+                                        "</center></html>";
+                QMessageBox::warning(this, "Warning", message);
+
+                return;
+            }
+
+            std::string dir = create_temp_directory();
+            std::string in_file = join_pathes(dir, "cell.v");
+            std::string tb_file = join_pathes(dir, "test_cell.v");
+
+            std::string file_list_file = join_pathes(dir, "combinded.v");
+            std::string out_file = join_pathes(dir, "cell");
+
+            write_string_to_file(in_file, code_text[GateTemplate::VERILOG]);
+            write_string_to_file(tb_file, text_area.toPlainText().toStdString());
+            write_string_to_file(file_list_file, in_file + "\n");
+
+            std::vector<std::string> cmd{
+                    "iverilog " + std::string("-v ") + "-o " + out_file + " -f " + file_list_file + " " + tb_file,
+                    "vvp \"" + out_file + "\"",
+                    "gtkwave test.vcd" //WARNING: the path "test.vcd" to the simulation file (that gtkwave will use) is hardcoded in the VerilogTBCodeTemplateGenerator (included in the generation code with tag "$dumpfile("test.vcd");")
+            };
+
+            TerminalDialog terminal(this, cmd);
+            terminal.start();
+            terminal.exec();
+
+            remove_file("test.vcd");
+            remove_directory(dir);
+        }
+    }
+
+    void GateEditBehaviourTab::compile_save()
+    {
+        int index = language_selector.currentIndex() + 1;
+
+        if(index == GateTemplate::VERILOG)
+        {
+            int result = std::system("iverilog -V");
+            if(result != 0)
+            {
+                const QString message = "<html><center>"
+                                        "You must install <strong> iverilog </strong> to compile. <br>"
+                                        "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> <br>"
+                                        "Windows: <a href='https://bleyer.org/icarus/'>icarus</a> <br>"
+                                        "</center></html>";
+                QMessageBox::warning(this, "Warning", message);
+
+                return;
+            }
+
+            std::string dir = QFileDialog::getExistingDirectory(this, "Select folder to save in").toStdString();
+
+            std::string in_file = join_pathes(dir, "cell.v");
+            std::string out_file = join_pathes(dir, "cell");
+            std::ofstream file;
+
+            degate::write_string_to_file(in_file, text_area.toPlainText().toStdString());
+
+            std::vector<std::string> cmd{"iverilog -o \"" + out_file + "\" \"" + in_file + "\""};
+
+            TerminalDialog terminal(this, cmd);
+            terminal.start();
+            terminal.exec();
+        }
+        else if(index == GateTemplate::VERILOG_TESTBENCH)
+        {
+            if(code_text[GateTemplate::VERILOG].size() == 0)
+            {
+                QMessageBox::warning(this, "Warning", "You must write the Verilog code for the standard cell's behaviour first.");
+                return;
+            }
+
+            int iverilog_result = std::system("iverilog -V");
+            int gtkwave_result = std::system("gtkwave -V");
+            if(iverilog_result != 0 || gtkwave_result != 0)
+            {
+                const QString message = "<html><center>"
+                                        "You must install <strong> iverilog </strong> and <strong> gtkwave </strong> to compile and run. <br>"
+                                        "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> and <a href='https://sourceforge.net/projects/gtkwave/files/'>gtkwave</a> <br>"
+                                        "Windows: <a href='https://bleyer.org/icarus/'>icarus and gtkwave</a> <br>"
+                                        "</center></html>";
+                QMessageBox::warning(this, "Warning", message);
+
+                return;
+            }
+
+            std::string dir = QFileDialog::getExistingDirectory(this, "Select folder to save in").toStdString();
+
+            std::string in_file = join_pathes(dir, "cell.v");
+            std::string tb_file = join_pathes(dir, "test_cell.v");
+
+            std::string file_list_file = join_pathes(dir, "combinded.v");
+            std::string out_file = join_pathes(dir, "cell");
+
+            write_string_to_file(in_file, code_text[GateTemplate::VERILOG]);
+            write_string_to_file(tb_file, text_area.toPlainText().toStdString());
+            write_string_to_file(file_list_file, in_file + "\n");
+
+            std::vector<std::string> cmd{
+                    "iverilog " + std::string("-v ") + "-o " + out_file + " -f " + file_list_file + " " + tb_file,
+                    "vvp \"" + out_file + "\"",
+                    "gtkwave test.vcd" //WARNING: the path "test.vcd" to the simulation file (that gtkwave will use) is hardcoded in the VerilogTBCodeTemplateGenerator (included in the generation code with tag "$dumpfile("test.vcd");")
+            };
+
+            TerminalDialog terminal(this, cmd);
+            terminal.start();
+            terminal.exec();
+
+            move_file("test.vcd", join_pathes(dir, "test.vcd"));
+        }
+    }
+
+    void GateEditBehaviourTab::on_language_selector_changed(int index)
+    {
+        code_text[old_index] = text_area.toPlainText().toStdString();
+
+        text_area.setText(QString::fromStdString(code_text[index + 1]));
+        old_index = index + 1;
+
+        if(index + 1 == GateTemplate::VERILOG || index + 1 == GateTemplate::VERILOG_TESTBENCH)
+            compile_button.setEnabled(true);
+        else
+            compile_button.setEnabled(false);
+    }
+
+
+    // Layout tab
 
 	GateEditLayoutTab::GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent), gate(gate), project(project)
 	{
@@ -368,7 +650,7 @@ namespace degate
 																											  gate(gate), 
 																											  button_box(QDialogButtonBox::Ok), 
 																											  entity_tab(parent, gate, project), 
-																											  behaviour_tab(parent, gate, project), 
+																											  behaviour_tab(parent, gate, project, entity_tab),
 																											  layout_tab(parent, gate, project),
 																											  project(project)
 	{

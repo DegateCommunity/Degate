@@ -43,6 +43,8 @@
 namespace degate
 {
 
+    class GateEditBehaviourTab;
+
 	/**
 	 * @class GateEditEntityTab
 	 * @brief The entity tab of the gate edit dialog.
@@ -54,6 +56,8 @@ namespace degate
 	class GateEditEntityTab : public QWidget
 	{
 		Q_OBJECT
+
+		friend GateEditBehaviourTab;
 
 	public:
 		
@@ -165,7 +169,7 @@ namespace degate
 		 * @param gate : the gate template to edit.
 		 * @param project : the current active project.
 		 */
-		GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project);
+		GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project, GateEditEntityTab& entity_tab);
 		~GateEditBehaviourTab();
 
 	public slots:
@@ -174,10 +178,53 @@ namespace degate
 		 */
 		void validate();
 
+		/**
+		 * Generate code template for a specific language (defined with language_selector).
+		 */
+		void generate();
+
+		/**
+		 * Compile the code in the text area (for verilog only with iverilog) in a temporary directory.
+		 * It will open a degate terminal dialog and, if verilog testbench language is selected, run gtkwave.
+		 */
+		void compile();
+
+        /**
+         * Compile the code in the text area (for verilog only with iverilog) and save all files in a specific directory.
+         * It will open a degate terminal dialog and, if verilog testbench language is selected, run gtkwave.
+         */
+		void compile_save();
+
+		/**
+		 * Update the text are regarding the language selector.
+		 *
+		 * @param index : new index.
+		 */
+		void on_language_selector_changed(int index);
+
 	private:
 		GateTemplate_shptr gate = NULL;
 		Project_shptr project = NULL;
+        GateEditEntityTab& entity_tab;
 
+        // Layouts
+        QVBoxLayout layout;
+		QHBoxLayout buttons_layout;
+
+		// Elements
+        QLabel language_label;
+        QComboBox language_selector;
+        QPushButton generate_button;
+        QPushButton compile_button;
+        QPushButton compile_save_button;
+        QTextEdit text_area;
+
+        // Code text map
+        typedef std::map<int, std::string> code_text_map_type;
+        code_text_map_type code_text;
+
+        // Old index on change, actual index after change.
+        int old_index;
 	};
 
 
@@ -276,6 +323,7 @@ namespace degate
 
 		QTabWidget tab;
 
+		// Tabs
 		GateEditEntityTab entity_tab;
 		GateEditBehaviourTab behaviour_tab;
 		GateEditLayoutTab layout_tab;
@@ -316,6 +364,7 @@ namespace degate
 	private:
 		Gate_shptr gate = NULL;
 
+		// Orientation
 		QHBoxLayout orientation_layout;
 		QLabel orientation_label;
 		QComboBox orientation;
