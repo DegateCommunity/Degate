@@ -164,6 +164,11 @@ void degate::remove_directory(std::string const& path)
 	}
 }
 
+void degate::move_file(std::string const& old_path, std::string const& new_path)
+{
+    boost::filesystem::rename(old_path, new_path);
+}
+
 void degate::create_directory(std::string const& directory)
 {
 	boost::filesystem::create_directory(directory);

@@ -127,6 +127,11 @@ namespace degate
 	 */
 	void remove_directory(std::string const& path);
 
+	/**
+	 * Move a file.
+	 */
+	void move_file(std::string const& old_path, std::string const& new_path);
+
 
 	/**
 	 * Create a directory.
