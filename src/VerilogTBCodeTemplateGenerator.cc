@@ -114,7 +114,7 @@ std::string VerilogTBCodeTemplateGenerator::generate_module(std::string const& d
 		"  initial begin\n"
 		"    // Enable signal dumping\n"
 		"    // Generate a VCD dump file. Please, do not change the filename.\n"
-		"    $dumpfile(\"test.vcd\"); \n"
+		"    $dumpfile(\"test.vcd\"); // WARNING: don't change this.\n" // WARNING: output simulation file path is hardcoded
 		"    $dumpvars(0, testbench_%6%); // for this module\n"
 		"\n"
 		"    // initialize signals on ports\n"
