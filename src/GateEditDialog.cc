@@ -694,6 +694,7 @@ namespace degate
 	{
 		setWindowTitle("Edit gate");
 		resize(500, 400);
+        setWindowFlags(windowFlags() | Qt::WindowMaximizeButtonHint);
 
 		tab.addTab(&entity_tab, "Entity");
 		tab.addTab(&behaviour_tab, "Behaviour");
@@ -735,8 +736,12 @@ namespace degate
 
 		orientation_layout.addWidget(&orientation_label);
 		orientation_layout.addWidget(&orientation);
+
+        gate_template_label.setText("Gate template edition :");
+
 		layout.insertLayout(0, &orientation_layout);
 		layout.insertSpacing(1, 10);
+        layout.insertWidget(2, &gate_template_label);
 	}
 
 	GateInstanceEditDialog::~GateInstanceEditDialog()

@@ -368,6 +368,9 @@ namespace degate
 		QHBoxLayout orientation_layout;
 		QLabel orientation_label;
 		QComboBox orientation;
+
+		// Other
+		QLabel gate_template_label;
 	};
 }
 
