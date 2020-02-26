@@ -549,10 +549,13 @@ namespace degate
                 return;
             }
 
-            std::string dir = QFileDialog::getExistingDirectory(this, "Select folder to save in").toStdString();
+            QString dir = QFileDialog::getExistingDirectory(this, "Select folder to save in");
 
-            std::string in_file = join_pathes(dir, "cell.v");
-            std::string out_file = join_pathes(dir, "cell");
+            if(dir.isNull())
+                return;
+
+            std::string in_file = join_pathes(dir.toStdString(), "cell.v");
+            std::string out_file = join_pathes(dir.toStdString(), "cell");
             std::ofstream file;
 
             degate::write_string_to_file(in_file, text_area.toPlainText().toStdString());
@@ -585,13 +588,16 @@ namespace degate
                 return;
             }
 
-            std::string dir = QFileDialog::getExistingDirectory(this, "Select folder to save in").toStdString();
+            QString dir = QFileDialog::getExistingDirectory(this, "Select folder to save in");
 
-            std::string in_file = join_pathes(dir, "cell.v");
-            std::string tb_file = join_pathes(dir, "test_cell.v");
+            if(dir.isNull())
+                return;
 
-            std::string file_list_file = join_pathes(dir, "combinded.v");
-            std::string out_file = join_pathes(dir, "cell");
+            std::string in_file = join_pathes(dir.toStdString(), "cell.v");
+            std::string tb_file = join_pathes(dir.toStdString(), "test_cell.v");
+
+            std::string file_list_file = join_pathes(dir.toStdString(), "combinded.v");
+            std::string out_file = join_pathes(dir.toStdString(), "cell");
 
             write_string_to_file(in_file, code_text[GateTemplate::VERILOG]);
             write_string_to_file(tb_file, text_area.toPlainText().toStdString());
@@ -607,7 +613,7 @@ namespace degate
             terminal.start();
             terminal.exec();
 
-            move_file("test.vcd", join_pathes(dir, "test.vcd"));
+            move_file("test.vcd", join_pathes(dir.toStdString(), "test.vcd"));
         }
     }
 

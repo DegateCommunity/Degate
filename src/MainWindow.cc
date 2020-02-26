@@ -211,7 +211,16 @@ namespace degate
 
 	void MainWindow::on_menu_project_importer()
 	{
+        status_bar.showMessage("Opening project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+
 		QString dir = QFileDialog::getExistingDirectory(this, "Import project");
+
+		if(dir.isNull())
+        {
+            status_bar.showMessage("Project opening operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+
+            return;
+        }
 
 		setEnabled(false);
 
@@ -299,6 +308,14 @@ namespace degate
 		status_bar.showMessage("Creating a new project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		QString dir = QFileDialog::getExistingDirectory(this, "Select the directory where the project will be created");
+
+        if(dir.isNull())
+        {
+            status_bar.showMessage("Project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+
+            return;
+        }
+
 		NewProjectDialog dialog(this);
 		dialog.exec();
 
