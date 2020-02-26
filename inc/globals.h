@@ -37,6 +37,8 @@ namespace degate
 {
 #define DEBUG 1
 
+#define DEBUG_PROJECT_IMPORT 0
+
 #define SIGNUM(x) ((x > 0) ? 1 : (x < 0) ? -1 : 0)
 
 	enum ret_t

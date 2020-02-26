@@ -420,7 +420,10 @@ void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
 			}
 
 			lmodel->add_object(layer, gate);
-			gate->print();
+
+            #if DEBUG_PROJECT_IMPORT
+			    gate->print();
+            #endif
 
 			// Collect placed standard cells in a first step.
 			// Later we call lmodel->update_ports().
