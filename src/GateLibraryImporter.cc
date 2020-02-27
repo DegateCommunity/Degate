@@ -280,6 +280,9 @@ void GateLibraryImporter::parse_template_ports_element(QDomElement const templat
 			const std::string description(port_elem.attribute("description").toStdString());
 			const std::string type_str(boost::algorithm::to_lower_copy(port_elem.attribute("type").toStdString()));
 
+            // color
+            QString port_fill_color = port_elem.attribute("fill-color");
+
 			GateTemplatePort::PORT_TYPE port_type = GateTemplatePort::get_port_type_from_string(type_str);
 
 			GateTemplatePort_shptr tmpl_port;
@@ -302,6 +305,10 @@ void GateLibraryImporter::parse_template_ports_element(QDomElement const templat
 			tmpl_port->set_name(string(name.c_str()));
 			tmpl_port->set_description(string(description.c_str()));
 			tmpl_port->set_object_id(object_id);
+
+			// color
+            if(!port_fill_color.isNull())
+                tmpl_port->set_fill_color(parse_color_string(port_fill_color.toStdString()));
 
 			// add port to the gate template
 			gate_tmpl->add_template_port(tmpl_port);

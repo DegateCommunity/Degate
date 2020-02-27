@@ -178,6 +178,9 @@ void GateLibraryExporter::add_ports(QDomDocument& doc,
 		port_elem.setAttribute("name", QString::fromStdString(tmpl_port->get_name()));
 		port_elem.setAttribute("description", QString::fromStdString(tmpl_port->get_description()));
 
+		// color
+        port_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(tmpl_port->get_fill_color())));
+
 		port_elem.setAttribute("type", QString::fromStdString(tmpl_port->get_port_type_as_string()));
 
 		if (tmpl_port->is_position_defined())
