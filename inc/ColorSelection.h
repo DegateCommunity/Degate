@@ -27,21 +27,113 @@
 #include <QPushButton>
 #include <QColorDialog>
 #include <QColor>
+#include <QtWidgets/qslider.h>
+#include <QWidget>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QDialogButtonBox>
 
 namespace degate
 {
+    /**
+     * @class ColorPickerDialog
+     * @brief Run a dialog where the user can pick a RGBA color.
+     *
+     * @see QColorDialog
+     */
+    class ColorPickerDialog : public QDialog
+    {
+        Q_OBJECT
+
+    public:
+        /**
+         * Create a color picker dialog.
+         *
+         * @param parent : the parent of the dialog.
+         * @param color : the initial color.
+         */
+        ColorPickerDialog(QWidget* parent, color_t color = 0);
+        ~ColorPickerDialog();
+
+        /**
+         * Get the picked color (call it after the dialog closed).
+         *
+         * @return Return the picked color.
+         */
+        color_t get_color();
+
+    public slots:
+        /**
+         * Update the alpha slider with new value.
+         *
+         * @param value : the new alpha/slider value.
+         */
+        void on_slide_changed(int value);
+
+        /**
+         * Close the dialog.
+         */
+        void validate();
+
+        /**
+         * Change the color.
+         *
+         * @param color : the new color.
+         */
+        void on_color_changed(const QColor& color);
+
+    private:
+        QVBoxLayout layout;
+        QDialogButtonBox button_box;
+
+        // Alpha
+        QSlider alpha_slider;
+        QLabel aplha_label;
+        QHBoxLayout alpha_layout;
+
+        // Color
+        color_t color;
+        QColorDialog color_dialog;
+        QWidget color_preview;
+
+    };
+
+    /**
+     * @class ColorSelectionButton
+     * @brief A colored button that allow color selection on click.
+     */
 	class ColorSelectionButton : public QPushButton
 	{
 	    Q_OBJECT
 
 	public:
-		ColorSelectionButton(QWidget* parent, const QString& name = QString());
+	    /**
+	     * Create a new color selection button.
+	     *
+	     * @param parent : the widget parent.
+	     * @param text : the button text (default none).
+	     */
+		ColorSelectionButton(QWidget* parent, const QString& text = QString());
 		~ColorSelectionButton();
 
+		/**
+		 * Set the button color.
+		 *
+		 * @param color : the new color.
+		 */
 	    void set_color(const color_t& color);
+
+	    /**
+	     * Get the selected color.
+	     *
+	     * @return Return the selected color.
+	     */
 	    color_t get_color();
 
 	public slots:
+	    /**
+	     * Update the color button with current selected color.
+	     */
 	    void update_color();
 
 	private:
