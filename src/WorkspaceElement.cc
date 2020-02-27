@@ -36,7 +36,8 @@ namespace degate
 		if(QOpenGLContext::currentContext() == NULL || context == NULL)
 			return;
 
-		context->glDeleteBuffers(1, &vbo);
+        if(context->glIsBuffer(vbo) == GL_TRUE)
+		    context->glDeleteBuffers(1, &vbo);
 	}
 
 	void WorkspaceElement::set_project(const Project_shptr& new_project)

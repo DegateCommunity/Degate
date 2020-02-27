@@ -43,8 +43,11 @@ namespace degate
 		if(QOpenGLContext::currentContext() == NULL || context == NULL)
 			return;
 
-		context->glDeleteBuffers(1, &vbo);
-		context->glDeleteBuffers(1, &line_vbo);
+		if(context->glIsBuffer(vbo) == GL_TRUE)
+		    context->glDeleteBuffers(1, &vbo);
+
+        if(context->glIsBuffer(line_vbo) == GL_TRUE)
+		    context->glDeleteBuffers(1, &line_vbo);
 	}
 
 	void WorkspaceSelectionTool::init()

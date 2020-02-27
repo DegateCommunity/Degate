@@ -36,8 +36,11 @@ namespace degate
 
 	WorkspaceGates::~WorkspaceGates()
 	{
-		context->glDeleteBuffers(1, &line_vbo);
-		context->glDeleteBuffers(1, &port_vbo);
+        if(context->glIsBuffer(line_vbo) == GL_TRUE)
+		    context->glDeleteBuffers(1, &line_vbo);
+
+        if(context->glIsBuffer(port_vbo) == GL_TRUE)
+		    context->glDeleteBuffers(1, &port_vbo);
 	}
 
 	void WorkspaceGates::init()

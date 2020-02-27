@@ -253,7 +253,6 @@ namespace degate
 	private:
 		// General
 		Project_shptr project = NULL;
-		QOpenGLShaderProgram* program = NULL;
 		QMatrix4x4 projection;
 		float scale = 1;
 		float center_x = 0, center_y = 0;
