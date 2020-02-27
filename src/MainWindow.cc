@@ -59,6 +59,7 @@ namespace degate
 		QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
 		QAction* project_export_action = project_menu->addAction("Save");
 		project_export_action->setIcon(QIcon(GET_ICON_PATH("save.png")));
+        project_export_action->setShortcut(Qt::CTRL + Qt::Key_S);
 		QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_exporter()));
 		QAction* project_close_action = project_menu->addAction("Close");
 		project_close_action->setIcon(QIcon(GET_ICON_PATH("close.png")));
