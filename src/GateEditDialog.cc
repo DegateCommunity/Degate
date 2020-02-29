@@ -83,6 +83,7 @@ namespace degate
 		// Ports list
 		ports_label.setText("Ports :");
 		ports.setColumnCount(6);
+        ports.setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
 		QStringList list;
 		list.append("ID");
 		list.append("Name");
@@ -768,8 +769,6 @@ namespace degate
 			gate->set_orientation(Gate::ORIENTATION_FLIPPED_BOTH);
 		else
 			gate->set_orientation(Gate::ORIENTATION_UNDEFINED);
-
-		project->get_logic_model()->update_ports(gate);
 		
 		GateEditDialog::validate();
 	}

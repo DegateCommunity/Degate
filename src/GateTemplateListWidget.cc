@@ -33,7 +33,9 @@ namespace degate
 		setHorizontalHeaderLabels(list);
 		resizeColumnsToContents();
 		resizeRowsToContents();
-		
+		setSelectionMode(SelectionMode::SingleSelection);
+		setSelectionBehavior(SelectRows);
+
 		update_list();
 	}
 
