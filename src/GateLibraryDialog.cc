@@ -23,14 +23,19 @@
 
 namespace degate
 {
-	GateLibraryDialog::GateLibraryDialog(Project_shptr project, QWidget* parent) : QDialog(parent), list(project, parent), project(project)
+	GateLibraryDialog::GateLibraryDialog(Project_shptr project, QWidget* parent) : QDialog(parent), list(project, parent, false), project(project)
 	{
 		setWindowTitle("Gate library");
 		resize(300, 400);
-		
+
+		// Buttons text
 		edit_gate_button.setText("Edit");
+        remove_gate_button.setText("Remove");
 		validate_button.setText("Ok");
+
+		// Layout
 		buttons_layout.addWidget(&edit_gate_button);
+        buttons_layout.addWidget(&remove_gate_button);
 		buttons_layout.addWidget(&validate_button);
 
 		layout.addWidget(&list);
@@ -38,7 +43,8 @@ namespace degate
 		
 		setLayout(&layout);
 
-		QObject::connect(&edit_gate_button, SIGNAL(clicked()), this, SLOT(on_edit_gate_button()));
+		QObject::connect(&edit_gate_button, SIGNAL(clicked()), this, SLOT(on_gate_edit_button()));
+        QObject::connect(&remove_gate_button, SIGNAL(clicked()), this, SLOT(on_gate_remove_button()));
 		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(close()));
 	}
 
@@ -47,7 +53,7 @@ namespace degate
 		
 	}
 
-	void GateLibraryDialog::on_edit_gate_button()
+	void GateLibraryDialog::on_gate_edit_button()
 	{
 		if(!list.has_selection())
 			return;
@@ -62,4 +68,39 @@ namespace degate
 
 		list.update_list();
 	}
+
+    void GateLibraryDialog::on_gate_remove_button()
+    {
+        if(!list.has_selection())
+            return;
+
+        std::vector<GateTemplate_shptr> selected_gates = list.get_selected_gates();
+
+        for(auto& e : selected_gates)
+        {
+            // Ask for confirmation
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Remove gate template", "Are you sure you want to delete the '" + QString::fromStdString(e->get_name()) + "' gate template and all linked gate instances ?", QMessageBox::Yes | QMessageBox::No);
+
+            if(reply != QMessageBox::Yes)
+                continue;
+
+            // Search every gate instance
+            std::vector<Gate_shptr> delete_list;
+            for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
+            {
+                if(iter->second->get_gate_template() == e)
+                    delete_list.push_back(iter->second);
+            }
+
+            // Delete all gate instances
+            for(auto& gate : delete_list)
+                project->get_logic_model()->remove_object(gate);
+
+            // Delete gate template
+            project->get_logic_model()->remove_gate_template(e);
+        }
+
+        list.update_list();
+    }
 }

@@ -46,8 +46,9 @@ namespace degate
 		 *
 		 * @param project : the current active project.
 		 * @param parent : the parent of the widget.
+		 * @param unique_selection : if true allow only one selection at a time.
 		 */
-		GateTemplateListWidget(Project_shptr project, QWidget* parent);
+		GateTemplateListWidget(Project_shptr project, QWidget* parent, bool unique_selection = true);
 		~GateTemplateListWidget();
 
 		/**

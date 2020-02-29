@@ -63,7 +63,12 @@ namespace degate
 		/**
 		 * Run a gate edit dialog on all the selected gates template (selected rows).
 		 */
-		void on_edit_gate_button();
+		void on_gate_edit_button();
+
+		/**
+		 * Remove a gate template and all derived gate instances.
+		 */
+		void on_gate_remove_button();
 
 	private:
 		Project_shptr project;
@@ -72,6 +77,7 @@ namespace degate
 		QHBoxLayout buttons_layout;
 		GateTemplateListWidget list;
 		QPushButton edit_gate_button;
+		QPushButton remove_gate_button;
 		QPushButton validate_button;
 		
 	};
