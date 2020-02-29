@@ -71,7 +71,7 @@ namespace degate
 
 	bool WorkspaceRenderer::has_area_selection()
 	{
-		return selection_tool.is_selection();
+		return selection_tool.has_selection();
 	}
 
 	BoundingBox WorkspaceRenderer::get_area_selection()
@@ -290,13 +290,6 @@ namespace degate
 
 		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::ClosedHandCursor);
-
-		// Selection
-		if(event->button() == Qt::RightButton)
-		{
-			selection_tool.set_selection(true);
-			selection_tool.set_origin(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
-		}
 	}
 
 	void WorkspaceRenderer::mouseReleaseEvent(QMouseEvent* event)
@@ -309,7 +302,7 @@ namespace degate
 			setCursor(Qt::CrossCursor);
 
 		// Selection
-		if (event->button() == Qt::LeftButton && !is_movement)
+		if ((event->button() == Qt::LeftButton && !mouse_moved) || (event->button() == Qt::RightButton && !selection_tool.has_selection() && selected_object == NULL))
 		{
 			if(project == NULL)
 				return;
@@ -367,7 +360,18 @@ namespace degate
 			}
 		}
 
-		is_movement = false;
+        // Selection imply no area selection
+        if (selected_object != NULL)
+        {
+            reset_area_selection();
+            update();
+        }
+
+        // Emit signal (for mouse context menu)
+		if(event->button() == Qt::RightButton && !mouse_moved)
+		    emit right_mouse_button_released();
+
+		mouse_moved = false;
 	}
 
 	void WorkspaceRenderer::mouseMoveEvent(QMouseEvent* event)
@@ -379,7 +383,7 @@ namespace degate
 		// Movement
 		if (event->buttons() & Qt::LeftButton)
 		{
-			is_movement = true;
+            mouse_moved = true;
 
 			float dx = get_opengl_mouse_position().x() - mouse_last_pos.x();
 			float dy = get_opengl_mouse_position().y() - mouse_last_pos.y();
@@ -394,7 +398,21 @@ namespace degate
 		// Selection
 		if(event->buttons() & Qt::RightButton)
 		{
+            mouse_moved = true;
+
+            // If there is no area selection, start new one and set new origin
+            if(!selection_tool.has_selection())
+            {
+                selection_tool.set_selection(true);
+                selection_tool.set_origin(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
+            }
+
+            // Update other area extremity on mouse position
 			selection_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
+
+            // If an object is selected, reset selection
+			if(selected_object != NULL)
+			    reset_selection();
 
 			update();
 		}
@@ -474,6 +492,8 @@ namespace degate
 					GateInstanceEditDialog dialog(this, sp, project);
 					dialog.exec();
 
+                    project->get_logic_model()->update_ports(sp);
+
 					makeCurrent();
 					gates.update();
 					update();
@@ -502,13 +522,6 @@ namespace degate
 			}
 		}
 
-		// Selection
-		if (event->button() == Qt::RightButton)
-		{
-			selection_tool.set_selection(false);
-			update();
-		}
-
 		setCursor(Qt::CrossCursor);
 	}
 
@@ -526,3 +539,4 @@ namespace degate
 		update();
 	}
 }
+          

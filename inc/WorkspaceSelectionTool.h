@@ -80,7 +80,7 @@ namespace degate
 		 *
 		 * @return Return true if there is a selection, otherwise not.
 		 */
-		bool is_selection();
+		bool has_selection();
 
 		/**
 		 * Set the selection state, if true there is a selection otherwise not.

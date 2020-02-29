@@ -108,11 +108,6 @@ namespace degate
 		 * @return Return the bounding box of the area selection.
 		 */
 		BoundingBox get_area_selection();
-
-		/**
-		 * No more area selection.
-		 */
-		void reset_area_selection();
 		
 		/**
 		 * Get the selected object.
@@ -120,11 +115,6 @@ namespace degate
 		 * @return Return the selected object.
 		 */
 		PlacedLogicModelObject_shptr get_selected_object();
-
-		/**
-		 * No more selection.
-		 */
-		void reset_selection();
 
 		/**
 		 * Get the selection state, if true there is a selection otherwise not.
@@ -234,6 +224,16 @@ namespace degate
 		 */
 		void show_annotations_name(bool value);
 
+        /**
+         * No more area selection.
+         */
+        void reset_area_selection();
+
+        /**
+		 * No more selection.
+		 */
+        void reset_selection();
+
 	signals:
 		/**
 		 * Signal for when the project need to be changed.
@@ -250,6 +250,11 @@ namespace degate
 		 */
 		void mouse_coords_changed(int x, int y);
 
+        /**
+         * Signal emitted when the right mouse button is pressed.
+         */
+        void right_mouse_button_released();
+
 	private:
 		// General
 		Project_shptr project = NULL;
@@ -258,8 +263,9 @@ namespace degate
 		float center_x = 0, center_y = 0;
 		float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
 		QPointF mouse_last_pos;
-		bool is_movement = false;
+		bool mouse_moved = false;
 		PlacedLogicModelObject_shptr selected_object = NULL;
+		QPoint area_selection_origin;
 
 		// Background
 		WorkspaceBackground background;

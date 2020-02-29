@@ -179,6 +179,7 @@ namespace degate
 
 		// Other
 		QObject::connect(workspace, SIGNAL(project_changed(std::string)), this, SLOT(open_project(std::string)));
+        QObject::connect(workspace, SIGNAL(right_mouse_button_released()), this, SLOT(show_context_menu()));
 	}
 
 	MainWindow::~MainWindow()
@@ -416,7 +417,7 @@ namespace degate
 
 	void MainWindow::on_menu_gate_new_gate_template()
 	{
-		if(!workspace->has_area_selection())
+		if(project == NULL || !workspace->has_area_selection())
 			return;
 
 		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
@@ -467,8 +468,6 @@ namespace degate
 
 		Gate_shptr new_gate(new Gate(workspace->get_area_selection()));
 		new_gate->set_gate_template(gate_template);
-		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
-		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
 		
 		{
 			GateInstanceEditDialog dialog(this, new_gate, project);
@@ -508,6 +507,24 @@ namespace degate
 
 		workspace->update_screen();
 	}
+
+    void MainWindow::on_menu_gate_port_edit()
+    {
+        if(project == NULL || !workspace->has_selection())
+            return;
+
+        if(GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(workspace->get_selected_object()))
+        {
+            {
+                PortPlacementDialog dialog(this, project, o->get_gate()->get_gate_template(), o->get_template_port());
+                dialog.exec();
+            }
+
+            project->get_logic_model()->update_ports(o->get_gate());
+        }
+
+        workspace->update_screen();
+    }
 
 	void MainWindow::on_menu_annotation_create()
 	{
@@ -655,4 +672,69 @@ namespace degate
 	{
 		status_bar_coords.setText("Coordinates : " + QString::number(x) + "," + QString::number(y));
 	}
+
+    void MainWindow::show_context_menu()
+    {
+        QMenu contextMenu(("Context menu"), this);
+
+        // New
+        QAction annotation_create_action("Create new annotation", this);
+        QAction gate_template_create_action("Create new gate template", this);
+        QAction gate_create_action("Create new gate", this);
+
+        // Edit
+        QAction annotation_edit_action("Edit selected annotation", this);
+        QAction gate_edit_action("Edit selected gate", this);
+        QAction gate_port_edit_action("Move selected port", this);
+
+        // Delete
+        QAction delete_action("Remove selected object", this);
+
+        // Reset area
+        QAction reset_selection_area_action("Reset selection area", this);
+
+        if(workspace->has_area_selection())
+        {
+            connect(&annotation_create_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
+            contextMenu.addAction(&annotation_create_action);
+
+            connect(&gate_template_create_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
+            contextMenu.addAction(&gate_template_create_action);
+
+            connect(&gate_create_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
+            contextMenu.addAction(&gate_create_action);
+
+            contextMenu.addSeparator();
+
+            connect(&reset_selection_area_action, SIGNAL(triggered()), workspace, SLOT(reset_area_selection()));
+            contextMenu.addAction(&reset_selection_area_action);
+        }
+        else if(workspace->has_selection())
+        {
+            PlacedLogicModelObject_shptr object = workspace->get_selected_object();
+
+            if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(object))
+            {
+                connect(&annotation_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
+                contextMenu.addAction(&annotation_edit_action);
+            }
+            else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(object))
+            {
+                connect(&gate_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
+                contextMenu.addAction(&gate_edit_action);
+            }
+            else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(object))
+            {
+                connect(&gate_port_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_port_edit()));
+                contextMenu.addAction(&gate_port_edit_action);
+            }
+
+            connect(&delete_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
+            contextMenu.addAction(&delete_action);
+        }
+        else
+            return;
+
+        contextMenu.exec(QCursor::pos());
+    }
 }

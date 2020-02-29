@@ -158,6 +158,11 @@ namespace degate
 		 */
 		void on_menu_gate_library();
 
+		/**
+		 * Edit/Move the selected gate port.
+		 */
+		 void on_menu_gate_port_edit();
+
 		
 		/* Annotation menu */
 		
@@ -210,6 +215,11 @@ namespace degate
 		 * @see WorkspaceRenderer::mouse_coords_changed
 		 */
 		void change_status_bar_coords(int x, int y);
+
+		/**
+		 * Show a context menu on mouse.
+		 */
+		void show_context_menu();
 
 	private:
 		QMenuBar menu_bar;

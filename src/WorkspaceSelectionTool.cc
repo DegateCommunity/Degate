@@ -233,7 +233,7 @@ namespace degate
 		program->release();
 	}
 
-	bool WorkspaceSelectionTool::is_selection()
+	bool WorkspaceSelectionTool::has_selection()
 	{
 		return selection;
 	}
