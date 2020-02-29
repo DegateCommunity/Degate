@@ -193,7 +193,7 @@ namespace degate
         return it->second;
     }
 
-    void Text::draw_single(unsigned int x, unsigned int y, const char *text, const QMatrix4x4 &projection,
+    void Text::draw_single(int x, int y, const char *text, const QMatrix4x4 &projection,
                            const unsigned int size, const QVector3D &color, const float alpha, const bool center)
     {
         std::shared_ptr<FontContext> font_context = get_font_context(QOpenGLContext::currentContext());
@@ -227,7 +227,7 @@ namespace degate
 
         if(center == true)
         {
-            unsigned offset = 0;
+            int offset = 0;
             for(unsigned i = 0; i < len; i++)
             {
                 offset += font_char_width[str[i]] * s + TEXT_SPACE;
@@ -237,7 +237,7 @@ namespace degate
             y -= (FONT_GLYPH_SIZE * s) / 2.0;
         }
 
-        unsigned pixel_size = 0;
+        int pixel_size = 0;
         for(unsigned i = 0; i < len; i++)
         {
             QVector2D uv((str[i] % FONT_GLYPH_PER_LINE) / static_cast<float>(FONT_GLYPH_PER_LINE), (str[i] / FONT_GLYPH_PER_LINE) / static_cast<float>(FONT_GLYPH_PER_LINE));
@@ -308,7 +308,7 @@ namespace degate
     }
 
     void
-    Text::add_sub_text(unsigned int offset, unsigned int x, unsigned int y, const char *text, const unsigned int size,
+    Text::add_sub_text(unsigned int offset, int x, int y, const char *text, const unsigned int size,
                        const QVector3D &color, const float alpha, const bool center)
     {
         float s = size / static_cast<float>(FONT_DEFAULT_SIZE);
@@ -318,7 +318,7 @@ namespace degate
 
         if(center == true)
         {
-            unsigned offset = 0;
+            int offset = 0;
             for(unsigned i = 0; i < len; i++)
             {
                 offset += font_char_width[str[i]] * s + TEXT_SPACE;
@@ -334,7 +334,7 @@ namespace degate
         temp.color = final_color;
         temp.alpha = alpha;
 
-        unsigned pixel_size = 0;
+        int pixel_size = 0;
         for(unsigned i = 0; i < len; i++)
         {
             QVector2D uv((str[i] % FONT_GLYPH_PER_LINE) / static_cast<float>(FONT_GLYPH_PER_LINE), (str[i] / FONT_GLYPH_PER_LINE) / static_cast<float>(FONT_GLYPH_PER_LINE));

@@ -80,7 +80,7 @@ namespace degate
 		 * @param alpha : the opacity of the text, between 0 and 1.
 		 * @param center : if true, the text will be centered around the (x,y) point.
 		 */
-        static void draw_single(unsigned x, unsigned y, const char* text, const QMatrix4x4& projection, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1, const bool center = false);
+        static void draw_single(int x, int y, const char* text, const QMatrix4x4& projection, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1, const bool center = false);
 
         Text(QWidget* new_parent);
         ~Text();
@@ -109,7 +109,7 @@ namespace degate
          * @param alpha : the opacity of the text, between 0 and 1.
          * @param center : if true, the text will be centered around the (x,y) point.
          */
-        void add_sub_text(unsigned offset, unsigned x, unsigned y, const char* text, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1, const bool center = false);
+        void add_sub_text(unsigned offset, int x, int y, const char* text, const unsigned size = FONT_DEFAULT_SIZE, const QVector3D& color = QVector3D(255, 255, 255), const float alpha = 1, const bool center = false);
 
         /**
          * Draw all text in the vbo.
