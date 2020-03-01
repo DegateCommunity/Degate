@@ -314,12 +314,13 @@ namespace degate
 		 * @param ignore_annotations If true no annotations will be considered.
 		 * @param ignore_gates If true no gates will be considered.
 		 * @param ignore_ports If true no ports will be considered.
+		 * @param ignore_emarkers If true no emarkers will be considered.
 		 * @return If there is an object at the position, a shared pointer to
 		 *   it is returned. If there is no object, then a NULL pointer representation
 		 *   is returned.
 		 */
 
-		PlacedLogicModelObject_shptr get_object_at_position(int x, int y, int max_distance = 0, bool ignore_annotations = false, bool ignore_gates = false, bool ignore_ports = false);
+		PlacedLogicModelObject_shptr get_object_at_position(int x, int y, int max_distance = 0, bool ignore_annotations = false, bool ignore_gates = false, bool ignore_ports = false, bool ignore_emarkers = false);
 
 		/**
 		 * Check for placed objects in a region of type given by template param.

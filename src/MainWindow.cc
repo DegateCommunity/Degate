@@ -101,6 +101,14 @@ namespace degate
 		show_annotations_name_view_action->setCheckable(true);
 		show_annotations_name_view_action->setChecked(true);
 		QObject::connect(show_annotations_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations_name(bool)));
+        QAction* show_emarkers_view_action = view_menu->addAction("Show emarkers");
+        show_emarkers_view_action->setCheckable(true);
+        show_emarkers_view_action->setChecked(true);
+        QObject::connect(show_emarkers_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers(bool)));
+        QAction* show_emarkers_name_view_action = view_menu->addAction("Show emarkers name");
+        show_emarkers_name_view_action->setCheckable(true);
+        show_emarkers_name_view_action->setChecked(true);
+        QObject::connect(show_emarkers_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers_name(bool)));
 
 		QMenu* layer_menu = menu_bar.addMenu("Layer");
 		QAction* layers_edit_action = layer_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit layers");
@@ -124,6 +132,10 @@ namespace degate
 		QObject::connect(edit_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
 		QAction* create_annotation_action = annotation_menu->addAction("Create from selection");
 		QObject::connect(create_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
+
+        QMenu* emarker_menu = menu_bar.addMenu("EMarker");
+        QAction* edit_emarker_action = emarker_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
+        QObject::connect(edit_emarker_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
 
 		QMenu* logic_menu = menu_bar.addMenu("Logic");
 		QAction* remove_object_action = logic_menu->addAction(QIcon(GET_ICON_PATH("remove.png")), "Remove selected object");
@@ -560,6 +572,20 @@ namespace degate
 		}
 	}
 
+    void MainWindow::on_menu_emarker_edit()
+    {
+        if(project == NULL || !workspace->has_selection())
+            return;
+
+        if(EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(workspace->get_selected_object()))
+        {
+            EMarkerEditDialog dialog(o, this);
+            dialog.exec();
+
+            workspace->update_screen();
+        }
+    }
+
 	void MainWindow::on_menu_logic_remove_selected_object()
 	{
 		if(project == NULL || !workspace->has_selection())
@@ -686,6 +712,8 @@ namespace degate
         QAction annotation_edit_action("Edit selected annotation", this);
         QAction gate_edit_action("Edit selected gate", this);
         QAction gate_port_edit_action("Move selected port", this);
+        QAction emarker_create_action("Create new EMarker", this);
+        QAction emarker_edit_action("Edit selected EMarker", this);
 
         // Delete
         QAction delete_action("Remove selected object", this);
@@ -728,13 +756,41 @@ namespace degate
                 connect(&gate_port_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_port_edit()));
                 contextMenu.addAction(&gate_port_edit_action);
             }
+            else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(object))
+            {
+                connect(&emarker_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
+                contextMenu.addAction(&emarker_edit_action);
+            }
 
             connect(&delete_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
             contextMenu.addAction(&delete_action);
         }
         else
-            return;
+        {
+            connect(&emarker_create_action, SIGNAL(triggered()), this, SLOT(on_emarker_create()));
+            contextMenu.addAction(&emarker_create_action);
+        }
+
 
         contextMenu.exec(QCursor::pos());
+    }
+
+    void MainWindow::on_emarker_create()
+    {
+        if(project == NULL)
+            return;
+
+        QPoint pos = workspace->get_opengl_mouse_position().toPoint();
+        EMarker_shptr new_emarker(new EMarker(pos.x(), pos.y()));
+        new_emarker->set_fill_color(project->get_default_color(DEFAULT_COLOR_EMARKER));
+
+        {
+            EMarkerEditDialog dialog(new_emarker, this);
+            dialog.exec();
+        }
+
+        project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_emarker);
+
+        workspace->update_screen();
     }
 }

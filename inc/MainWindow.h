@@ -34,6 +34,7 @@
 #include "PreferencesHandler.h"
 #include "PreferencesDialog.h"
 #include "AnnotationEditDialog.h"
+#include "EMarkerEditDialog.h"
 
 #include <degate.h>
 #include <QMainWindow>
@@ -176,6 +177,14 @@ namespace degate
 		 */
 		void on_menu_annotation_edit();
 
+
+        /* EMarker menu */
+
+        /**
+         * Open the emarker edit dialog for the selected emarker.
+         */
+        void on_menu_emarker_edit();
+
 		
 		/* Logic menu */
 		
@@ -220,6 +229,11 @@ namespace degate
 		 * Show a context menu on mouse.
 		 */
 		void show_context_menu();
+
+        /**
+         * Create a new emarker at mouse position, this will create the emarker and then open the emarker edit dialog.
+         */
+        void on_emarker_create();
 
 	private:
 		QMenuBar menu_bar;

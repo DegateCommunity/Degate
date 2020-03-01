@@ -30,6 +30,8 @@
 #include "SubProjectAnnotation.h"
 #include "LogicModelHelper.h"
 #include "WorkspaceSelectionTool.h"
+#include "WorkspaceEMarkers.h"
+#include "EMarkerEditDialog.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>
@@ -128,6 +130,20 @@ namespace degate
 		 */
 		PlacedLogicModelObject_shptr pop_selected_object();
 
+        /**
+         * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
+         *
+         * @return Return the widget relative mouse position.
+         */
+        QPointF get_widget_mouse_position() const;
+
+        /**
+         * Get the mouse position relative to the OpenGL world (with 0,0 on the lower left corner).
+         *
+         * @return Return the OpenGL relative mouse position.
+         */
+        QPointF get_opengl_mouse_position() const;
+
 	protected:
 		/**
 		 * Destroy all OpenGL textures.
@@ -147,20 +163,6 @@ namespace degate
 		void keyPressEvent(QKeyEvent* event) override;
 		void keyReleaseEvent(QKeyEvent* event) override;
 		void mouseDoubleClickEvent(QMouseEvent* event) override;
-
-		/**
-		 * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
-		 *
-		 * @return Return the widget relative mouse position.
-		 */
-		QPointF get_widget_mouse_position() const;
-
-		/**
-		 * Get the mouse position relative to the OpenGL world (with 0,0 on the lower left corner).
-		 *
-		 * @return Return the OpenGL relative mouse position.
-		 */
-		QPointF get_opengl_mouse_position() const;
 
 		/**
 		 * Set the new projection matrix with ortho operation.
@@ -224,6 +226,20 @@ namespace degate
 		 */
 		void show_annotations_name(bool value);
 
+		/**
+		 * Draw emarkers or not.
+		 *
+		 * @param value : if true then emarker will be drawn, not otherwise.
+		 */
+		void show_emarkers(bool value);
+
+		/**
+		 * Draw emarkers name or not.
+		 *
+		 * @param value : if true then emarker name will be drawn, not otherwise.
+		 */
+		void show_emarkers_name(bool value);
+
         /**
          * No more area selection.
          */
@@ -276,6 +292,9 @@ namespace degate
 		// Annotations
 		WorkspaceAnnotations annotations;
 
+		// EMarkers
+		WorkspaceEMarkers emarkers;
+
 		// Selection tool
 		WorkspaceSelectionTool selection_tool;
 
@@ -286,6 +305,8 @@ namespace degate
 		bool draw_ports_name       = true;
 		bool draw_annotations      = true;
 		bool draw_annotations_name = true;
+        bool draw_emarkers         = true;
+        bool draw_emarkers_name    = true;
 		
 	};
 }

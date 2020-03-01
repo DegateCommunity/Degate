@@ -26,7 +26,7 @@
 namespace degate
 {
 
-	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this), selection_tool(this)
+	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this), emarkers(this), selection_tool(this)
 	{
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
@@ -52,6 +52,7 @@ namespace degate
 		background.update();
 		gates.update();
 		annotations.update();
+        emarkers.update();
 
 		update();
 	}
@@ -63,6 +64,7 @@ namespace degate
 		background.set_project(new_project);
 		gates.set_project(new_project);
 		annotations.set_project(new_project);
+        emarkers.set_project(new_project);
 
 		set_projection(1, width() / 2.0, height() / 2.0);
 
@@ -109,6 +111,10 @@ namespace degate
 		{
 			gates.update(o);
 		}
+		else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(selected_object))
+        {
+            emarkers.update(o);
+        }
 
 		selected_object = NULL;
 	}
@@ -140,6 +146,10 @@ namespace degate
 		{
 			gates.update(o);
 		}
+        else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(selected_object))
+        {
+            emarkers.update(o);
+        }
 
 		PlacedLogicModelObject_shptr temp = selected_object;
 		selected_object = NULL;
@@ -189,6 +199,20 @@ namespace degate
 		update();
 	}
 
+    void WorkspaceRenderer::show_emarkers(bool value)
+    {
+        draw_emarkers = value;
+
+        update();
+    }
+
+    void WorkspaceRenderer::show_emarkers_name(bool value)
+    {
+        draw_emarkers_name = value;
+
+        update();
+    }
+
 	void WorkspaceRenderer::free_textures()
 	{
 		background.free_textures();
@@ -210,6 +234,7 @@ namespace degate
 		background.init();
 		gates.init();
 		annotations.init();
+        emarkers.init();
 		selection_tool.init();
 	}
 
@@ -238,6 +263,12 @@ namespace degate
 
 		if(draw_ports_name)
 			gates.draw_ports_name(projection);
+
+        if(draw_emarkers)
+            emarkers.draw(projection);
+
+        if(draw_emarkers_name)
+            emarkers.draw_name(projection);
 		
 		selection_tool.draw(projection);
 	}
@@ -302,7 +333,7 @@ namespace degate
 			setCursor(Qt::CrossCursor);
 
 		// Selection
-		if ((event->button() == Qt::LeftButton && !mouse_moved) || (event->button() == Qt::RightButton && !selection_tool.has_selection() && selected_object == NULL))
+		if ((event->button() == Qt::LeftButton && !mouse_moved))
 		{
 			if(project == NULL)
 				return;
@@ -311,7 +342,7 @@ namespace degate
 
 			LogicModel_shptr lmodel = project->get_logic_model();
 			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports);
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers);
 
 			// Check if there is a gate or gate port on the logic layer
 			if(plo == NULL) 
@@ -355,6 +386,10 @@ namespace degate
 				{
 					gates.update(o);
 				}
+                else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(selected_object))
+                {
+                    emarkers.update(o);
+                }
 
 				update();
 			}
@@ -519,6 +554,14 @@ namespace degate
 					annotations.update();
 					update();
 				}
+                else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(get_selected_object()))
+                {
+                    EMarkerEditDialog dialog(o, this);
+                    dialog.exec();
+
+                    emarkers.update();
+                    update();
+                }
 			}
 		}
 
