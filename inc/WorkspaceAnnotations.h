@@ -97,7 +97,7 @@ namespace degate
 		/* Border buffer */
 		GLuint line_vbo = 0;
 		Text text;
-		unsigned annotation_count = 0;
+		unsigned annotations_count = 0;
 
 	};
 }

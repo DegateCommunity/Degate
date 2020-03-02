@@ -109,6 +109,14 @@ namespace degate
         show_emarkers_name_view_action->setCheckable(true);
         show_emarkers_name_view_action->setChecked(true);
         QObject::connect(show_emarkers_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers_name(bool)));
+        QAction* show_vias_view_action = view_menu->addAction("Show vias");
+        show_vias_view_action->setCheckable(true);
+        show_vias_view_action->setChecked(true);
+        QObject::connect(show_vias_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias(bool)));
+        QAction* show_vias_name_view_action = view_menu->addAction("Show vias name");
+        show_vias_name_view_action->setCheckable(true);
+        show_vias_name_view_action->setChecked(true);
+        QObject::connect(show_vias_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias_name(bool)));
 
 		QMenu* layer_menu = menu_bar.addMenu("Layer");
 		QAction* layers_edit_action = layer_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit layers");
@@ -136,6 +144,10 @@ namespace degate
         QMenu* emarker_menu = menu_bar.addMenu("EMarker");
         QAction* edit_emarker_action = emarker_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
         QObject::connect(edit_emarker_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
+
+        QMenu* via_menu = menu_bar.addMenu("Via");
+        QAction* edit_via_action = via_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
+        QObject::connect(edit_via_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
 
 		QMenu* logic_menu = menu_bar.addMenu("Logic");
 		QAction* remove_object_action = logic_menu->addAction(QIcon(GET_ICON_PATH("remove.png")), "Remove selected object");
@@ -586,6 +598,20 @@ namespace degate
         }
     }
 
+    void MainWindow::on_menu_via_edit()
+    {
+        if(project == NULL || !workspace->has_selection())
+            return;
+
+        if(Via_shptr o = std::dynamic_pointer_cast<Via>(workspace->get_selected_object()))
+        {
+            ViaEditDialog dialog(o, this);
+            dialog.exec();
+
+            workspace->update_screen();
+        }
+    }
+
 	void MainWindow::on_menu_logic_remove_selected_object()
 	{
 		if(project == NULL || !workspace->has_selection())
@@ -707,19 +733,24 @@ namespace degate
         QAction annotation_create_action("Create new annotation", this);
         QAction gate_template_create_action("Create new gate template", this);
         QAction gate_create_action("Create new gate", this);
+        QAction emarker_create_action("Create new EMarker", this);
+        QAction via_create_action("Create new via", this);
 
         // Edit
         QAction annotation_edit_action("Edit selected annotation", this);
         QAction gate_edit_action("Edit selected gate", this);
         QAction gate_port_edit_action("Move selected port", this);
-        QAction emarker_create_action("Create new EMarker", this);
         QAction emarker_edit_action("Edit selected EMarker", this);
+        QAction via_edit_action("Edit selected via", this);
 
         // Delete
         QAction delete_action("Remove selected object", this);
 
         // Reset area
         QAction reset_selection_area_action("Reset selection area", this);
+
+        // Get current opengl mouse position
+        context_menu_mouse_position = workspace->get_opengl_mouse_position().toPoint();
 
         if(workspace->has_area_selection())
         {
@@ -761,6 +792,11 @@ namespace degate
                 connect(&emarker_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
                 contextMenu.addAction(&emarker_edit_action);
             }
+            else if (Via_shptr o = std::dynamic_pointer_cast<Via>(object))
+            {
+                connect(&via_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
+                contextMenu.addAction(&via_edit_action);
+            }
 
             connect(&delete_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
             contextMenu.addAction(&delete_action);
@@ -769,6 +805,9 @@ namespace degate
         {
             connect(&emarker_create_action, SIGNAL(triggered()), this, SLOT(on_emarker_create()));
             contextMenu.addAction(&emarker_create_action);
+
+            connect(&via_create_action, SIGNAL(triggered()), this, SLOT(on_via_create()));
+            contextMenu.addAction(&via_create_action);
         }
 
 
@@ -780,8 +819,7 @@ namespace degate
         if(project == NULL)
             return;
 
-        QPoint pos = workspace->get_opengl_mouse_position().toPoint();
-        EMarker_shptr new_emarker(new EMarker(pos.x(), pos.y()));
+        EMarker_shptr new_emarker(new EMarker(context_menu_mouse_position.x(), context_menu_mouse_position.y()));
         new_emarker->set_fill_color(project->get_default_color(DEFAULT_COLOR_EMARKER));
 
         {
@@ -790,6 +828,24 @@ namespace degate
         }
 
         project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_emarker);
+
+        workspace->update_screen();
+    }
+
+    void MainWindow::on_via_create()
+    {
+        if(project == NULL)
+            return;
+
+        Via_shptr new_via(new Via(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UP));
+        new_via->set_diameter(4);
+
+        {
+            ViaEditDialog dialog(new_via, this);
+            dialog.exec();
+        }
+
+        project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_via);
 
         workspace->update_screen();
     }

@@ -125,7 +125,7 @@ namespace degate
 		Text port_text;
 		GLuint line_vbo = 0;
 		GLuint port_vbo = 0;
-		unsigned port_count = 0;
+		unsigned ports_count = 0;
 
 	};
 }

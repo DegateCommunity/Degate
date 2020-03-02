@@ -98,14 +98,14 @@ namespace degate
                 emarkers.push_back(a);
             }
         }
-        emarker_count = emarkers.size();
+        emarkers_count = emarkers.size();
 
-        if(emarker_count == 0)
+        if(emarkers_count == 0)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        context->glBufferData(GL_ARRAY_BUFFER, emarker_count * 6 * sizeof(EMarkersVertex2D), 0, GL_STATIC_DRAW);
+        context->glBufferData(GL_ARRAY_BUFFER, emarkers_count * 6 * sizeof(EMarkersVertex2D), 0, GL_STATIC_DRAW);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -145,7 +145,7 @@ namespace degate
 
     void WorkspaceEMarkers::draw(const QMatrix4x4 &projection)
     {
-        if(project == NULL || emarker_count == 0)
+        if(project == NULL || emarkers_count == 0)
             return;
 
         program->bind();
@@ -165,7 +165,7 @@ namespace degate
         program->enableAttributeArray("alpha");
         program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(EMarkersVertex2D));
 
-        context->glDrawArrays(GL_TRIANGLES, 0, emarker_count * 6);
+        context->glDrawArrays(GL_TRIANGLES, 0, emarkers_count * 6);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -174,7 +174,7 @@ namespace degate
 
     void WorkspaceEMarkers::draw_name(const QMatrix4x4 &projection)
     {
-        if(project == NULL || emarker_count == 0)
+        if(project == NULL || emarkers_count == 0)
             return;
 
         text.draw(projection);
@@ -189,11 +189,13 @@ namespace degate
 
         // Vertices and colors
 
-        color_t color = highlight_color_by_state(emarker->get_fill_color(), emarker->get_highlighted());
+        color_t color = emarker->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_EMARKER) : emarker->get_fill_color();
+
+        color = highlight_color_by_state(color, emarker->get_highlighted());
 
         EMarkersVertex2D temp;
         temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
-        temp.alpha = MASK_A(emarker->get_fill_color()) / 255.0;
+        temp.alpha = MASK_A(color) / 255.0;
 
         temp.pos = QVector2D(emarker->get_x() - emarker->get_diameter() / 2.0, emarker->get_y() - emarker->get_diameter() / 2.0);
         context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(EMarkersVertex2D) + 0 * sizeof(EMarkersVertex2D), sizeof(EMarkersVertex2D), &temp);

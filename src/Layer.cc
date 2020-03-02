@@ -291,13 +291,14 @@ void Layer::notify_shape_change(object_id_t object_id)
 }
 
 
-PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance, bool ignore_annotations, bool ignore_gates, bool ignore_ports, bool ignore_emarkers)
+PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance, bool ignore_annotations, bool ignore_gates, bool ignore_ports, bool ignore_emarkers, bool ignore_vias)
 {
 	debug(TM, "get_object_at_position %d, %d (max-dist: %d)", x, y, max_distance);
 
 	PlacedLogicModelObject_shptr annotation;
 	PlacedLogicModelObject_shptr gate;
     PlacedLogicModelObject_shptr emarker;
+    PlacedLogicModelObject_shptr via;
 
 	for (qt_region_iterator iter = quadtree.region_iter_begin(x - max_distance,
 	                                                          x + max_distance,
@@ -311,6 +312,10 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
 			{
 				annotation = (*iter);
 			}
+            else if (std::dynamic_pointer_cast<Via>((*iter)) != NULL && !ignore_vias)
+            {
+                via = (*iter);
+            }
             else if (std::dynamic_pointer_cast<EMarker>((*iter)) != NULL && !ignore_emarkers)
             {
                 emarker = (*iter);
@@ -328,11 +333,21 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
 	}
 	
 	if(gate != NULL)
-		return gate;
+    {
+        return gate;
+    }
 	else if(annotation != NULL)
-		return annotation;
+    {
+        return annotation;
+    }
+	else if(via != NULL)
+    {
+        return via;
+    }
 	else if(emarker != NULL)
-	    return emarker;
+    {
+        return emarker;
+    }
 	else
 		return NULL;
 }

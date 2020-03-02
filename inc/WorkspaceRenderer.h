@@ -32,6 +32,8 @@
 #include "WorkspaceSelectionTool.h"
 #include "WorkspaceEMarkers.h"
 #include "EMarkerEditDialog.h"
+#include "WorkspaceVia.h"
+#include "ViaEditDialog.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>
@@ -241,6 +243,20 @@ namespace degate
 		void show_emarkers_name(bool value);
 
         /**
+         * Draw vias or not.
+         *
+         * @param value : if true then via will be drawn, not otherwise.
+         */
+        void show_vias(bool value);
+
+        /**
+         * Draw vias name or not.
+         *
+         * @param value : if true then via name will be drawn, not otherwise.
+         */
+        void show_vias_name(bool value);
+
+        /**
          * No more area selection.
          */
         void reset_area_selection();
@@ -295,6 +311,9 @@ namespace degate
 		// EMarkers
 		WorkspaceEMarkers emarkers;
 
+		// Vias
+		WorkspaceVias vias;
+
 		// Selection tool
 		WorkspaceSelectionTool selection_tool;
 
@@ -307,6 +326,8 @@ namespace degate
 		bool draw_annotations_name = true;
         bool draw_emarkers         = true;
         bool draw_emarkers_name    = true;
+        bool draw_vias             = true;
+        bool draw_vias_name        = true;
 		
 	};
 }

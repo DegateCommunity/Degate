@@ -105,7 +105,7 @@ namespace degate
 
 		unsigned text_size = 0;
 		unsigned port_text_size = 0;
-		port_count = 0;
+        ports_count = 0;
 
 		unsigned index = 0;
 		for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
@@ -114,7 +114,7 @@ namespace degate
 			iter->second->set_index(index);
 
 			text_size += iter->second->get_gate_template()->get_name().length();
-			port_count += iter->second->get_ports_number();
+            ports_count += iter->second->get_ports_number();
 
 			for(Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
 			{
@@ -129,7 +129,7 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, port_count * 9 * sizeof(GatesVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, ports_count * 9 * sizeof(GatesVertex2D), 0, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -232,7 +232,7 @@ namespace degate
 		program->enableAttributeArray("alpha");
 		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(GatesVertex2D));
 
-		context->glDrawArrays(GL_TRIANGLES, 0, port_count * 9);
+		context->glDrawArrays(GL_TRIANGLES, 0, ports_count * 9);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -257,11 +257,13 @@ namespace degate
 
 		// Vertices and colors
 
-		color_t color = highlight_color_by_state(gate->get_gate_template()->get_fill_color(), gate->get_highlighted());
+        color_t color = gate->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_GATE) : gate->get_fill_color();
+
+		color = highlight_color_by_state(color, gate->get_highlighted());
 
 		GatesVertex2D temp;
 		temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
-		temp.alpha = MASK_A(gate->get_gate_template()->get_fill_color()) / 255.0;
+		temp.alpha = MASK_A(color) / 255.0;
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_min_y());
 		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
@@ -284,12 +286,14 @@ namespace degate
 
 		// Lines
 
-		color = highlight_color_by_state(gate->get_gate_template()->get_frame_color(), gate->get_highlighted());
+        color = gate->get_frame_color() == 0 ? project->get_default_color(DEFAULT_COLOR_GATE_FRAME) : gate->get_frame_color();
+
+        color = highlight_color_by_state(color, gate->get_highlighted());
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
 		temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
-		temp.alpha = MASK_A(gate->get_gate_template()->get_frame_color()) / 255.0;
+		temp.alpha = MASK_A(color) / 255.0;
 
 		temp.pos = QVector2D(gate->get_min_x(), gate->get_min_y());
 		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 0 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);

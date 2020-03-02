@@ -19,36 +19,35 @@
 
 */
 
-#ifndef __WORKSPACEEMARKER_H__
-#define __WORKSPACEEMARKER_H__
+#ifndef __WORKSPACEVIA_H__
+#define __WORKSPACEVIA_H__
 
 #include "WorkspaceElement.h"
-#include "EMarker.h"
+#include "Via.h"
 #include "Text.h"
 
 namespace degate
 {
-
     /**
-	 * @class WorkspaceEMarkers
-	 * @brief Prepare and draw all emarkers of the active layer on the workspace.
+	 * @class WorkspaceVias
+	 * @brief Prepare and draw all vias of the active layer on the workspace.
 	 *
 	 * The parent vbo buffer will store all squares.
 	 *
 	 * @see WorkspaceElement
 	 */
-    class WorkspaceEMarkers : public WorkspaceElement
+    class WorkspaceVias : public WorkspaceElement
     {
     public:
 
         /**
-		 * Create a workspace emarker element.
+		 * Create a workspace vias element.
 		 * This will only set the parent, real creation will start with init and update functions.
 		 *
 		 * @param parent : the parent widget pointer.
 		 */
-        WorkspaceEMarkers(QWidget* parent);
-        ~WorkspaceEMarkers();
+        WorkspaceVias(QWidget* parent);
+        ~WorkspaceVias();
 
         /**
 		 * Init all OpenGL routine (buffers, shaders...).
@@ -56,28 +55,28 @@ namespace degate
         void init() override;
 
         /**
-         * Update all emarkers (fill buffers).
+         * Update all vias (fill buffers).
          */
         void update() override;
 
         /**
-         * Update a specific emarker (update buffers).
+         * Update a specific via (update buffers).
          *
          * @warning Call the update() function before.
          *
-         * @param emarker : the emarker to update.
+         * @param via : the via to update.
          */
-        void update(EMarker_shptr& emarker);
+        void update(Via_shptr& via);
 
         /**
-         * Draw all emarkers (draw the square and outline buffers).
+         * Draw all vias (draw the square and outline buffers).
          *
          * @param projection : the projection matrix to apply.
          */
         void draw(const QMatrix4x4& projection) override;
 
         /**
-         * Draw emarkers name (draw the text).
+         * Draw vias name (draw the text).
          *
          * @param projection : the projection matrix to apply.
          */
@@ -85,17 +84,17 @@ namespace degate
 
     private:
         /**
-		 * Create an emarker in OpenGL buffers.
+		 * Create an via in OpenGL buffers.
 		 *
-		 * @param emarker : the emarker object.
+		 * @param via : the via object.
 		 * @param index : the index of the annotation for OpenGL buffers.
 		 */
-        void create_emarker(EMarker_shptr& emarker, unsigned index);
+        void create_via(Via_shptr& via, unsigned index);
 
         Text text;
-        unsigned emarkers_count = 0;
+        unsigned vias_count = 0;
 
     };
 }
 
-#endif //__WORKSPACEEMARKER_H__
+#endif //__WORKSPACEVIA_H__

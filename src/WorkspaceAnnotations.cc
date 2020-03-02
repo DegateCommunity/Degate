@@ -103,18 +103,18 @@ namespace degate
 				annotations.push_back(a);
 			}
 		}
-		annotation_count = annotations.size();
+        annotations_count = annotations.size();
 
-		if(annotation_count == 0)
+		if(annotations_count == 0)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, annotation_count * 6 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, annotations_count * 6 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, annotation_count * 8 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, annotations_count * 8 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -154,7 +154,7 @@ namespace degate
 
 	void WorkspaceAnnotations::draw(const QMatrix4x4& projection)
 	{
-		if(project == NULL || annotation_count == 0)
+		if(project == NULL || annotations_count == 0)
 			return;
 
 		program->bind();
@@ -196,7 +196,7 @@ namespace degate
 
 	void WorkspaceAnnotations::draw_name(const QMatrix4x4& projection)
 	{
-		if(project == NULL || annotation_count == 0)
+		if(project == NULL || annotations_count == 0)
 			return;
 		
 		text.draw(projection);
@@ -211,11 +211,13 @@ namespace degate
 
 		// Vertices and colors
 
-		color_t color = highlight_color_by_state(annotation->get_fill_color(), annotation->get_highlighted());
+        color_t color = annotation->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_ANNOTATION) : annotation->get_fill_color();
+
+        color = highlight_color_by_state(color, annotation->get_highlighted());
 
         AnnotationsVertex2D temp;
 		temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
-		temp.alpha = MASK_A(annotation->get_fill_color()) / 255.0;
+		temp.alpha = MASK_A(color) / 255.0;
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_min_y());
 		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);
@@ -238,12 +240,14 @@ namespace degate
 
 		// Lines
 
-		color = highlight_color_by_state(annotation->get_frame_color(), annotation->get_highlighted());
+        color = annotation->get_frame_color() == 0 ? project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME) : annotation->get_frame_color();
+
+        color = highlight_color_by_state(color, annotation->get_highlighted());
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
 		temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
-		temp.alpha = MASK_A(annotation->get_frame_color()) / 255.0;
+		temp.alpha = MASK_A(color) / 255.0;
 
 		temp.pos = QVector2D(annotation->get_min_x(), annotation->get_min_y());
 		context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(AnnotationsVertex2D) + 0 * sizeof(AnnotationsVertex2D), sizeof(AnnotationsVertex2D), &temp);

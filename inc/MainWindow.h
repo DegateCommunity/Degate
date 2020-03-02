@@ -185,6 +185,14 @@ namespace degate
          */
         void on_menu_emarker_edit();
 
+
+        /* Via menu */
+
+        /**
+         * Open the via edit dialog for the selected via.
+         */
+        void on_menu_via_edit();
+
 		
 		/* Logic menu */
 		
@@ -235,6 +243,11 @@ namespace degate
          */
         void on_emarker_create();
 
+        /**
+         * Create a new via at mouse position, this will create the via and then open the via edit dialog.
+         */
+        void on_via_create();
+
 	private:
 		QMenuBar menu_bar;
 		QToolBar* tool_bar = NULL;
@@ -244,6 +257,7 @@ namespace degate
 
 		Project_shptr project;
 		WorkspaceRenderer* workspace = NULL;
+		QPoint context_menu_mouse_position;
 	};
 }
 
