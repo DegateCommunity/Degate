@@ -297,7 +297,7 @@ namespace degate
 		QPointF mouse_last_pos;
 		bool mouse_moved = false;
 		PlacedLogicModelObject_shptr selected_object = NULL;
-		QPoint area_selection_origin;
+		QPointF area_selection_origin;
 
 		// Background
 		WorkspaceBackground background;

@@ -316,13 +316,13 @@ namespace degate
 	QPointF WorkspaceRenderer::get_widget_mouse_position() const
 	{
 		const QPointF qt_widget_relative = mapFromGlobal(QCursor::pos());
-		return QPoint(qt_widget_relative.x(), qt_widget_relative.y());
+		return QPointF(qt_widget_relative.x(), qt_widget_relative.y());
 	}
 
 	QPointF WorkspaceRenderer::get_opengl_mouse_position() const
 	{
 		const QPointF widget_mouse_position = get_widget_mouse_position();
-		return QPoint(viewport_min_x + widget_mouse_position.x() * scale,
+		return QPointF(viewport_min_x + widget_mouse_position.x() * scale,
 		              viewport_min_y + widget_mouse_position.y() * scale);
 	}
 
@@ -364,7 +364,7 @@ namespace degate
 			setCursor(Qt::CrossCursor);
 
 		// Selection
-		if ((event->button() == Qt::LeftButton && !mouse_moved))
+		if (event->button() == Qt::LeftButton && !mouse_moved)
 		{
 			if(project == NULL)
 				return;
