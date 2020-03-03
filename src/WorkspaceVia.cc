@@ -195,8 +195,10 @@ namespace degate
 
         if(via->get_direction() == Via::DIRECTION_UP)
             color = via->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_VIA_UP) : via->get_fill_color();
-        else
+        else if(via->get_direction() == Via::DIRECTION_DOWN)
             color = via->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_VIA_DOWN) : via->get_fill_color();
+        else
+            color = via->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_EMARKER) : via->get_fill_color();
 
         color = highlight_color_by_state(color, via->get_highlighted());
 

@@ -33,13 +33,16 @@ namespace degate
         fill_color.set_color(via->get_fill_color());
 
         direction_label.setText("Via direction :");
+        direction.addItem("Undefined");
         direction.addItem("Up");
         direction.addItem("Down");
 
         if(via->get_direction() == Via::DIRECTION_UP)
             direction.setCurrentText("Up");
-        else
+        else if(via->get_direction() == Via::DIRECTION_DOWN)
             direction.setCurrentText("Down");
+        else
+            direction.setCurrentText("Undefined");
 
         validate_button.setText("Ok");
         cancel_button.setText("Cancel");
@@ -71,8 +74,10 @@ namespace degate
 
         if(direction.currentText() == "Up")
             via->set_direction(Via::DIRECTION_UP);
-        else
+        else if(direction.currentText() == "Down")
             via->set_direction(Via::DIRECTION_DOWN);
+        else
+            via->set_direction(Via::DIRECTION_UNDEFINED);
 
         close();
     }
