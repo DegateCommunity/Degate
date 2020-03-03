@@ -257,7 +257,7 @@ namespace degate
 
 		Project_shptr project;
 		WorkspaceRenderer* workspace = NULL;
-		QPoint context_menu_mouse_position;
+		QPointF context_menu_mouse_position;
 	};
 }
 

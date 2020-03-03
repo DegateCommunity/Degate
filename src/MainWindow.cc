@@ -151,6 +151,7 @@ namespace degate
 
 		QMenu* logic_menu = menu_bar.addMenu("Logic");
 		QAction* remove_object_action = logic_menu->addAction(QIcon(GET_ICON_PATH("remove.png")), "Remove selected object");
+        remove_object_action->setShortcut(Qt::Key_Delete);
 		QObject::connect(remove_object_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
 
 		QMenu* help_menu = menu_bar.addMenu("Help");
@@ -635,6 +636,8 @@ namespace degate
 
 		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
 
+        workspace->reset_selection();
+
 		workspace->update_screen();
 	}
 
@@ -646,6 +649,8 @@ namespace degate
 		project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
 
 		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
+
+        workspace->reset_selection();
 
 		workspace->update_screen();
 	}
@@ -743,6 +748,9 @@ namespace degate
         QAction emarker_edit_action("Edit selected EMarker", this);
         QAction via_edit_action("Edit selected via", this);
 
+        // Via
+        QAction via_follow_action("Follow via", this);
+
         // Delete
         QAction delete_action("Remove selected object", this);
 
@@ -750,7 +758,7 @@ namespace degate
         QAction reset_selection_area_action("Reset selection area", this);
 
         // Get current opengl mouse position
-        context_menu_mouse_position = workspace->get_opengl_mouse_position().toPoint();
+        context_menu_mouse_position = workspace->get_opengl_mouse_position();
 
         if(workspace->has_area_selection())
         {
@@ -794,6 +802,17 @@ namespace degate
             }
             else if (Via_shptr o = std::dynamic_pointer_cast<Via>(object))
             {
+                if(o->get_direction() == Via::DIRECTION_UP)
+                {
+                    connect(&via_follow_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
+                    contextMenu.addAction(&via_follow_action);
+                }
+                else
+                {
+                    connect(&via_follow_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
+                    contextMenu.addAction(&via_follow_action);
+                }
+
                 connect(&via_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
                 contextMenu.addAction(&via_edit_action);
             }
@@ -809,7 +828,6 @@ namespace degate
             connect(&via_create_action, SIGNAL(triggered()), this, SLOT(on_via_create()));
             contextMenu.addAction(&via_create_action);
         }
-
 
         contextMenu.exec(QCursor::pos());
     }
@@ -837,7 +855,7 @@ namespace degate
         if(project == NULL)
             return;
 
-        Via_shptr new_via(new Via(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UP));
+        Via_shptr new_via(new Via(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UNDEFINED));
         new_via->set_diameter(4);
 
         {
