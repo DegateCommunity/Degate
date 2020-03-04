@@ -26,7 +26,7 @@
 namespace degate
 {
 
-	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this), emarkers(this), vias(this), selection_tool(this)
+	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this), emarkers(this), vias(this), wires(this), selection_tool(this)
 	{
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
@@ -54,6 +54,7 @@ namespace degate
 		annotations.update();
         emarkers.update();
         vias.update();
+        wires.update();
 
 		update();
 	}
@@ -67,6 +68,7 @@ namespace degate
 		annotations.set_project(new_project);
         emarkers.set_project(new_project);
         vias.set_project(new_project);
+        wires.set_project(new_project);
 
 		set_projection(1, width() / 2.0, height() / 2.0);
 
@@ -121,6 +123,10 @@ namespace degate
         {
             vias.update(o);
         }
+        else if (Wire_shptr o = std::dynamic_pointer_cast<Wire>(selected_object))
+        {
+            wires.update(o);
+        }
 
 		selected_object = NULL;
 	}
@@ -159,6 +165,10 @@ namespace degate
         else if (Via_shptr o = std::dynamic_pointer_cast<Via>(selected_object))
         {
             vias.update(o);
+        }
+        else if (Wire_shptr o = std::dynamic_pointer_cast<Wire>(selected_object))
+        {
+            wires.update(o);
         }
 
 		PlacedLogicModelObject_shptr temp = selected_object;
@@ -237,6 +247,13 @@ namespace degate
         update();
     }
 
+    void WorkspaceRenderer::show_wires(bool value)
+    {
+        draw_wires = value;
+
+        update();
+    }
+
 	void WorkspaceRenderer::free_textures()
 	{
 		background.free_textures();
@@ -261,6 +278,7 @@ namespace degate
         emarkers.init();
         vias.init();
 		selection_tool.init();
+		wires.init();
 	}
 
 	void WorkspaceRenderer::paintGL()
@@ -270,6 +288,9 @@ namespace degate
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		background.draw(projection);
+
+		if(draw_wires)
+		    wires.draw(projection);
 
 		if(draw_annotations)
 			annotations.draw(projection);
@@ -373,7 +394,7 @@ namespace degate
 
 			LogicModel_shptr lmodel = project->get_logic_model();
 			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias);
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
 
 			// Check if there is a gate or gate port on the logic layer
 			if(plo == NULL) 
@@ -381,7 +402,7 @@ namespace degate
 				try 
 				{
 					layer = get_first_logic_layer(lmodel);
-					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias);
+					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
 			    }
 				catch(CollectionLookupException const& ex)
 				{
@@ -424,6 +445,10 @@ namespace degate
                 else if (Via_shptr o = std::dynamic_pointer_cast<Via>(selected_object))
                 {
                     vias.update(o);
+                }
+                else if (Wire_shptr o = std::dynamic_pointer_cast<Wire>(selected_object))
+                {
+                    wires.update(o);
                 }
 
 				update();
@@ -533,7 +558,7 @@ namespace degate
 
 			LogicModel_shptr lmodel = project->get_logic_model();
 			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias);
+			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
 
 			// Check if there is a gate or gate port on the logic layer
 			if(plo == NULL) 
@@ -541,7 +566,7 @@ namespace degate
 				try 
 				{
 					layer = get_first_logic_layer(lmodel);
-					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias);
+					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
 			    }
 				catch(CollectionLookupException const& ex)
 				{

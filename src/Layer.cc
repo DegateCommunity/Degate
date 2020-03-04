@@ -291,14 +291,11 @@ void Layer::notify_shape_change(object_id_t object_id)
 }
 
 
-PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance, bool ignore_annotations, bool ignore_gates, bool ignore_ports, bool ignore_emarkers, bool ignore_vias)
+PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance, bool ignore_annotations, bool ignore_gates, bool ignore_ports, bool ignore_emarkers, bool ignore_vias, bool ignore_wires)
 {
 	debug(TM, "get_object_at_position %d, %d (max-dist: %d)", x, y, max_distance);
 
-	PlacedLogicModelObject_shptr annotation;
-	PlacedLogicModelObject_shptr gate;
-    PlacedLogicModelObject_shptr emarker;
-    PlacedLogicModelObject_shptr via;
+	PlacedLogicModelObject_shptr object;
 
 	for (qt_region_iterator iter = quadtree.region_iter_begin(x - max_distance,
 	                                                          x + max_distance,
@@ -310,20 +307,24 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
 		{
 			if(std::dynamic_pointer_cast<Annotation>((*iter)) != NULL && !ignore_annotations)
 			{
-				annotation = (*iter);
+                object = (*iter);
 			}
             else if (std::dynamic_pointer_cast<Via>((*iter)) != NULL && !ignore_vias)
             {
-                via = (*iter);
+                object = (*iter);
             }
             else if (std::dynamic_pointer_cast<EMarker>((*iter)) != NULL && !ignore_emarkers)
             {
-                emarker = (*iter);
+                object = (*iter);
             }
 			else if (std::dynamic_pointer_cast<Gate>((*iter)) != NULL && !ignore_gates)
 			{
-				gate = (*iter);
+                object = (*iter);
 			}
+            else if (std::dynamic_pointer_cast<Wire>((*iter)) != NULL && !ignore_wires)
+            {
+                object = (*iter);
+            }
 			else if (std::dynamic_pointer_cast<GatePort>((*iter)) != NULL && !ignore_ports)
 			{
 				/* Prefer gate ports */
@@ -332,22 +333,8 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max
 		}
 	}
 	
-	if(gate != NULL)
-    {
-        return gate;
-    }
-	else if(annotation != NULL)
-    {
-        return annotation;
-    }
-	else if(via != NULL)
-    {
-        return via;
-    }
-	else if(emarker != NULL)
-    {
-        return emarker;
-    }
+	if(object != NULL)
+        return object;
 	else
 		return NULL;
 }

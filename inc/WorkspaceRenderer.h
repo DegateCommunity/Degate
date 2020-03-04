@@ -32,8 +32,9 @@
 #include "WorkspaceSelectionTool.h"
 #include "WorkspaceEMarkers.h"
 #include "EMarkerEditDialog.h"
-#include "WorkspaceVia.h"
+#include "WorkspaceVias.h"
 #include "ViaEditDialog.h"
+#include "WorkspaceWires.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>
@@ -257,6 +258,13 @@ namespace degate
         void show_vias_name(bool value);
 
         /**
+         * Draw wires or not.
+         *
+         * @param value : if true then via will be drawn, not otherwise.
+         */
+        void show_wires(bool value);
+
+        /**
          * No more area selection.
          */
         void reset_area_selection();
@@ -314,6 +322,9 @@ namespace degate
 		// Vias
 		WorkspaceVias vias;
 
+		// Wires
+		WorkspaceWires wires;
+
 		// Selection tool
 		WorkspaceSelectionTool selection_tool;
 
@@ -328,6 +339,7 @@ namespace degate
         bool draw_emarkers_name    = true;
         bool draw_vias             = true;
         bool draw_vias_name        = true;
+        bool draw_wires            = true;
 		
 	};
 }
