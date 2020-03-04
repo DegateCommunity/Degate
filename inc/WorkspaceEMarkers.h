@@ -42,7 +42,7 @@ namespace degate
     public:
 
         /**
-		 * Create a workspace emarker element.
+		 * Create a WorkspaceEMarkers element.
 		 * This will only set the parent, real creation will start with init and update functions.
 		 *
 		 * @param parent : the parent widget pointer.

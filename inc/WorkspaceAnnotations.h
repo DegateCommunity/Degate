@@ -44,7 +44,7 @@ namespace degate
 	public:
 
 		/**
-		 * Create a workspace annotations element.
+		 * Create a WorkspaceAnnotations element.
 		 * This will only set the parent, real creation will start with init and update functions.
 		 *
 		 * @param parent : the parent widget pointer.

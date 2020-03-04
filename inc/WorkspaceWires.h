@@ -1,0 +1,8 @@
+//
+// Created by Doria on 04/03/2020.
+//
+
+#ifndef H_DEGATE_WORKSPACEWIRES_H
+#define H_DEGATE_WORKSPACEWIRES_H
+
+#endif //H_DEGATE_WORKSPACEWIRES_H
