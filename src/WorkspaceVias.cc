@@ -19,7 +19,7 @@
 
 */
 
-#include "WorkspaceVia.h"
+#include "WorkspaceVias.h"
 
 namespace degate
 {
