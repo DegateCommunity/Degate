@@ -26,7 +26,7 @@
 
 using namespace degate;
 
-Via::Via(int _x, int _y, diameter_t _diameter, Via::DIRECTION _direction) :
+Via::Via(float _x, float _y, diameter_t _diameter, Via::DIRECTION _direction) :
 	Circle(_x, _y, _diameter),
 	direction(_direction)
 {
@@ -115,25 +115,25 @@ void Via::print(std::ostream& os, int n_tabs) const
 //  return Circle::in_shape(x,y);
 //}
 
-void Via::shift_x(int delta_x)
+void Via::shift_x(float delta_x)
 {
 	Circle::shift_x(delta_x);
 	notify_shape_change();
 }
 
-void Via::shift_y(int delta_y)
+void Via::shift_y(float delta_y)
 {
 	Circle::shift_y(delta_y);
 	notify_shape_change();
 }
 
-void Via::set_x(int x)
+void Via::set_x(float x)
 {
 	Circle::set_x(x);
 	notify_shape_change();
 }
 
-void Via::set_y(int y)
+void Via::set_y(float y)
 {
 	Circle::set_y(y);
 	notify_shape_change();

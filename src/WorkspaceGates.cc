@@ -322,7 +322,7 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void draw_port_in_out(QOpenGLFunctions* context, int x, int y, unsigned size, QVector3D color, float alpha, unsigned offset)
+	void draw_port_in_out(QOpenGLFunctions* context, float x, float y, unsigned size, QVector3D color, float alpha, unsigned offset)
 	{
 		GatesVertex2D temp;
 
@@ -359,7 +359,7 @@ namespace degate
 		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 8 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 	}
 
-	void draw_port_in(QOpenGLFunctions* context, int x, int y, unsigned size, QVector3D color, float alpha, unsigned offset)
+	void draw_port_in(QOpenGLFunctions* context, float x, float y, unsigned size, QVector3D color, float alpha, unsigned offset)
 	{
 		GatesVertex2D temp;
 
@@ -396,7 +396,7 @@ namespace degate
 		context->glBufferSubData(GL_ARRAY_BUFFER, offset * 9 * sizeof(GatesVertex2D) + 8 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 	}
 
-	void draw_port_out(QOpenGLFunctions* context, int x, int y, unsigned size, QVector3D color, float alpha, unsigned offset)
+	void draw_port_out(QOpenGLFunctions* context, float x, float y, unsigned size, QVector3D color, float alpha, unsigned offset)
 	{
 		GatesVertex2D temp;
 

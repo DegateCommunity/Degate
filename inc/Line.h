@@ -33,7 +33,7 @@ namespace degate
 	class Line : public AbstractShape, public DeepCopyableBase
 	{
 	private:
-		int from_x, from_y, to_x, to_y;
+		float from_x, from_y, to_x, to_y;
 		unsigned int diameter;
 
 		double d_x, d_y;
@@ -55,7 +55,7 @@ namespace degate
 	public:
 
 		Line();
-		Line(int from_x, int from_y, int to_x, int to_y, unsigned int diameter);
+		Line(float from_x, float from_y, float to_x, float to_y, unsigned int diameter);
 
 		virtual ~Line()
 		{
@@ -63,23 +63,23 @@ namespace degate
 
 		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-		virtual bool in_shape(int x, int y, int max_distance = 0) const;
+		virtual bool in_shape(float x, float y, float max_distance = 0) const;
 		virtual bool in_bounding_box(BoundingBox const& bbox) const;
 		virtual BoundingBox const& get_bounding_box() const;
 
 
-		virtual int get_from_x() const;
-		virtual int get_to_x() const;
-		virtual int get_from_y() const;
-		virtual int get_to_y() const;
+		virtual float get_from_x() const;
+		virtual float get_to_x() const;
+		virtual float get_from_y() const;
+		virtual float get_to_y() const;
 
-		virtual void set_from_x(int min_x);
-		virtual void set_from_y(int min_y);
-		virtual void set_to_x(int max_x);
-		virtual void set_to_y(int max_y);
+		virtual void set_from_x(float min_x);
+		virtual void set_from_y(float min_y);
+		virtual void set_to_x(float max_x);
+		virtual void set_to_y(float max_y);
 
-		virtual void shift_x(int delta_x);
-		virtual void shift_y(int delta_y);
+		virtual void shift_x(float delta_x);
+		virtual void shift_y(float delta_y);
 
 		virtual unsigned int get_diameter() const;
 		virtual void set_diameter(unsigned int diameter);

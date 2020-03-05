@@ -74,7 +74,7 @@ namespace degate
 		 * Constructor for a via object.
 		 */
 
-		Via(int _x, int _y, diameter_t _diameter, DIRECTION _direction = DIRECTION_UNDEFINED);
+		Via(float _x, float _y, diameter_t _diameter, DIRECTION _direction = DIRECTION_UNDEFINED);
 
 		/**
 		 * Destructor for a via object.
@@ -134,10 +134,10 @@ namespace degate
 		void print(std::ostream& os, int n_tabs) const;
 
 
-		void shift_x(int delta_x);
-		void shift_y(int delta_y);
-		void set_x(int x);
-		void set_y(int y);
+		void shift_x(float delta_x);
+		void shift_y(float delta_y);
+		void set_x(float x);
+		void set_y(float y);
 		void set_diameter(unsigned int diameter);
 
 		virtual bool in_bounding_box(BoundingBox const& bbox) const
@@ -150,7 +150,7 @@ namespace degate
 			return Circle::get_bounding_box();
 		}
 
-		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		virtual bool in_shape(float x, float y, float max_distance = 0) const
 		{
 			return Circle::in_shape(x, y, max_distance);
 		}

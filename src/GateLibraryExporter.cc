@@ -107,9 +107,9 @@ void GateLibraryExporter::add_gates(QDomDocument& doc,
 		gate_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(gate_tmpl->get_fill_color())));
 		gate_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(gate_tmpl->get_frame_color())));
 
-		gate_elem.setAttribute("width", QString::fromStdString(number_to_string<unsigned int>(gate_tmpl->get_width())));
+		gate_elem.setAttribute("width", QString::fromStdString(number_to_string<float>(gate_tmpl->get_width())));
 		gate_elem.setAttribute(
-			"height", QString::fromStdString(number_to_string<unsigned int>(gate_tmpl->get_height())));
+			"height", QString::fromStdString(number_to_string<float>(gate_tmpl->get_height())));
 
 		add_images(doc, gate_elem, gate_tmpl, directory);
 		add_ports(doc, gate_elem, gate_tmpl);
@@ -186,8 +186,8 @@ void GateLibraryExporter::add_ports(QDomDocument& doc,
 		if (tmpl_port->is_position_defined())
 		{
 			Point const& point = tmpl_port->get_point();
-			port_elem.setAttribute("x", QString::fromStdString(number_to_string<int>(point.get_x())));
-			port_elem.setAttribute("y", QString::fromStdString(number_to_string<int>(point.get_y())));
+			port_elem.setAttribute("x", QString::fromStdString(number_to_string<float>(point.get_x())));
+			port_elem.setAttribute("y", QString::fromStdString(number_to_string<float>(point.get_y())));
 		}
 
 		ports_elem.appendChild(port_elem);

@@ -291,16 +291,14 @@ void Layer::notify_shape_change(object_id_t object_id)
 }
 
 
-PlacedLogicModelObject_shptr Layer::get_object_at_position(int x, int y, int max_distance, bool ignore_annotations, bool ignore_gates, bool ignore_ports, bool ignore_emarkers, bool ignore_vias, bool ignore_wires)
+PlacedLogicModelObject_shptr Layer::get_object_at_position(float x, float y, float max_distance, bool ignore_annotations, bool ignore_gates, bool ignore_ports, bool ignore_emarkers, bool ignore_vias, bool ignore_wires)
 {
-	debug(TM, "get_object_at_position %d, %d (max-dist: %d)", x, y, max_distance);
-
 	PlacedLogicModelObject_shptr object;
 
-	for (qt_region_iterator iter = quadtree.region_iter_begin(x - max_distance,
-	                                                          x + max_distance,
-	                                                          y - max_distance,
-	                                                          y + max_distance);
+	for (qt_region_iterator iter = quadtree.region_iter_begin(std::floor(x - max_distance),
+                                                              std::ceil(x + max_distance),
+                                                              std::floor(y - max_distance),
+                                                              std::ceil(y + max_distance));
 	     iter != quadtree.region_iter_end(); ++iter)
 	{
 		if ((*iter)->in_shape(x, y, max_distance))

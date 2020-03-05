@@ -190,10 +190,10 @@ void LogicModelExporter::add_gate(QDomDocument& doc, QDomElement& gates_elem, Ga
 	gate_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
 	gate_elem.setAttribute("orientation", QString::fromStdString(gate->get_orienation_type_as_string()));
 
-	gate_elem.setAttribute("min-x", QString::fromStdString(number_to_string<int>(gate->get_min_x())));
-	gate_elem.setAttribute("min-y", QString::fromStdString(number_to_string<int>(gate->get_min_y())));
-	gate_elem.setAttribute("max-x", QString::fromStdString(number_to_string<int>(gate->get_max_x())));
-	gate_elem.setAttribute("max-y", QString::fromStdString(number_to_string<int>(gate->get_max_y())));
+	gate_elem.setAttribute("min-x", QString::fromStdString(number_to_string<float>(gate->get_min_x())));
+	gate_elem.setAttribute("min-y", QString::fromStdString(number_to_string<float>(gate->get_min_y())));
+	gate_elem.setAttribute("max-x", QString::fromStdString(number_to_string<float>(gate->get_max_x())));
+	gate_elem.setAttribute("max-y", QString::fromStdString(number_to_string<float>(gate->get_max_y())));
 
 	gate_elem.setAttribute("type-id",
 	                       QString::fromStdString(number_to_string<object_id_t>(
@@ -239,10 +239,10 @@ void LogicModelExporter::add_wire(QDomDocument& doc, QDomElement& wires_elem, Wi
 	wire_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
 	wire_elem.setAttribute("diameter", QString::fromStdString(number_to_string<unsigned int>(wire->get_diameter())));
 
-	wire_elem.setAttribute("from-x", QString::fromStdString(number_to_string<int>(wire->get_from_x())));
-	wire_elem.setAttribute("from-y", QString::fromStdString(number_to_string<int>(wire->get_from_y())));
-	wire_elem.setAttribute("to-x", QString::fromStdString(number_to_string<int>(wire->get_to_x())));
-	wire_elem.setAttribute("to-y", QString::fromStdString(number_to_string<int>(wire->get_to_y())));
+	wire_elem.setAttribute("from-x", QString::fromStdString(number_to_string<float>(wire->get_from_x())));
+	wire_elem.setAttribute("from-y", QString::fromStdString(number_to_string<float>(wire->get_from_y())));
+	wire_elem.setAttribute("to-x", QString::fromStdString(number_to_string<float>(wire->get_to_x())));
+	wire_elem.setAttribute("to-y", QString::fromStdString(number_to_string<float>(wire->get_to_y())));
 
 	wire_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(wire->get_fill_color())));
 	wire_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(wire->get_frame_color())));
@@ -265,8 +265,8 @@ void LogicModelExporter::add_via(QDomDocument& doc, QDomElement& vias_elem, Via_
 	via_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
 	via_elem.setAttribute("diameter", QString::fromStdString(number_to_string<unsigned int>(via->get_diameter())));
 
-	via_elem.setAttribute("x", QString::fromStdString(number_to_string<int>(via->get_x())));
-	via_elem.setAttribute("y", QString::fromStdString(number_to_string<int>(via->get_y())));
+	via_elem.setAttribute("x", QString::fromStdString(number_to_string<float>(via->get_x())));
+	via_elem.setAttribute("y", QString::fromStdString(number_to_string<float>(via->get_y())));
 
 	via_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(via->get_fill_color())));
 	via_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(via->get_frame_color())));
@@ -292,8 +292,8 @@ void LogicModelExporter::add_emarker(QDomDocument& doc, QDomElement& emarkers_el
 	emarker_elem.setAttribute(
 		"diameter", QString::fromStdString(number_to_string<unsigned int>(emarker->get_diameter())));
 
-	emarker_elem.setAttribute("x", QString::fromStdString(number_to_string<int>(emarker->get_x())));
-	emarker_elem.setAttribute("y", QString::fromStdString(number_to_string<int>(emarker->get_y())));
+	emarker_elem.setAttribute("x", QString::fromStdString(number_to_string<float>(emarker->get_x())));
+	emarker_elem.setAttribute("y", QString::fromStdString(number_to_string<float>(emarker->get_y())));
 
 	emarker_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(emarker->get_fill_color())));
 	emarker_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(emarker->get_frame_color())));
@@ -319,10 +319,10 @@ void LogicModelExporter::add_annotation(QDomDocument& doc, QDomElement& annotati
 	annotation_elem.setAttribute(
 		"class-id", QString::fromStdString(number_to_string<layer_position_t>(annotation->get_class_id())));
 
-	annotation_elem.setAttribute("min-x", QString::fromStdString(number_to_string<int>(annotation->get_min_x())));
-	annotation_elem.setAttribute("min-y", QString::fromStdString(number_to_string<int>(annotation->get_min_y())));
-	annotation_elem.setAttribute("max-x", QString::fromStdString(number_to_string<int>(annotation->get_max_x())));
-	annotation_elem.setAttribute("max-y", QString::fromStdString(number_to_string<int>(annotation->get_max_y())));
+	annotation_elem.setAttribute("min-x", QString::fromStdString(number_to_string<float>(annotation->get_min_x())));
+	annotation_elem.setAttribute("min-y", QString::fromStdString(number_to_string<float>(annotation->get_min_y())));
+	annotation_elem.setAttribute("max-x", QString::fromStdString(number_to_string<float>(annotation->get_max_x())));
+	annotation_elem.setAttribute("max-y", QString::fromStdString(number_to_string<float>(annotation->get_max_y())));
 
 	annotation_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(annotation->get_fill_color())));
 	annotation_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(annotation->get_frame_color())));

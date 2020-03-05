@@ -39,7 +39,7 @@ namespace degate
 		 * Check in the Point with coordinates x and y is within the area of the shape.
 		 */
 
-		virtual bool in_shape(int x, int y, int max_distance = 0) const = 0;
+		virtual bool in_shape(float x, float y, float max_distance = 0) const = 0;
 
 
 		/**
@@ -60,14 +60,14 @@ namespace degate
 		 * Note: If you store this shape in a QuadTree, you have to manage the changes in your QuadTree by yourself.
 		 */
 
-		virtual void shift_x(int delta_x) = 0;
+		virtual void shift_x(float delta_x) = 0;
 
 		/**
 		 * Shift the shape horizontally.
 		 * Note: If you store this shape in a QuadTree, you have to manage the changes in your QuadTree by yourself.
 		 */
 
-		virtual void shift_y(int delta_y) = 0;
+		virtual void shift_y(float delta_y) = 0;
 	};
 }
 

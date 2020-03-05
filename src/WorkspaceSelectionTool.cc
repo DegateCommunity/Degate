@@ -100,7 +100,7 @@ namespace degate
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void WorkspaceSelectionTool::update(int x, int y)
+	void WorkspaceSelectionTool::update(float x, float y)
 	{
 		if(selection == false)
 			return;
@@ -248,7 +248,7 @@ namespace degate
 		return selection_box;
 	}
 
-	void WorkspaceSelectionTool::set_origin(int x, int y)
+	void WorkspaceSelectionTool::set_origin(float x, float y)
 	{
 		origin.setX(x);
 		origin.setY(y);

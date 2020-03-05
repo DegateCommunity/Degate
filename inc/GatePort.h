@@ -173,17 +173,17 @@ namespace degate
 		 * Set the absolute position of a port.
 		 */
 
-		void set_x(int x);
+		void set_x(float x);
 
 		/**
 		 * Set the absolute position of a port.
 		 */
 
-		void set_y(int y);
+		void set_y(float y);
 
 
-		void shift_x(int delta_x);
-		void shift_y(int delta_y);
+		void shift_x(float delta_x);
+		void shift_y(float delta_y);
 		void set_diameter(unsigned int diameter);
 
 
@@ -197,7 +197,7 @@ namespace degate
 			return Circle::get_bounding_box();
 		}
 
-		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		virtual bool in_shape(float x, float y, float max_distance = 0) const
 		{
 			return Circle::in_shape(x, y, max_distance);
 		}

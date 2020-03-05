@@ -110,13 +110,13 @@ void GateLibraryImporter::parse_gate_templates_element(QDomElement const gate_te
 		if (!gate_elem.isNull())
 		{
 			object_id_t object_id = parse_number<object_id_t>(gate_elem, "type-id");
-			int min_x = parse_number<int>(gate_elem, "min-x", 0);
-			int min_y = parse_number<int>(gate_elem, "min-y", 0);
-			int max_x = parse_number<int>(gate_elem, "max-x", 0);
-			int max_y = parse_number<int>(gate_elem, "max-y", 0);
+            float min_x = parse_number<float>(gate_elem, "min-x", 0);
+            float min_y = parse_number<float>(gate_elem, "min-y", 0);
+            float max_x = parse_number<float>(gate_elem, "max-x", 0);
+            float max_y = parse_number<float>(gate_elem, "max-y", 0);
 
-			int width = parse_number<int>(gate_elem, "width", 0);
-			int height = parse_number<int>(gate_elem, "height", 0);
+            float width = parse_number<float>(gate_elem, "width", 0);
+            float height = parse_number<float>(gate_elem, "height", 0);
 
 			const std::string name(gate_elem.attribute("name").toStdString());
 			const std::string description(gate_elem.attribute("description").toStdString());
@@ -287,11 +287,11 @@ void GateLibraryImporter::parse_template_ports_element(QDomElement const templat
 
 			GateTemplatePort_shptr tmpl_port;
 
-			int pos_x, pos_y;
+            float pos_x, pos_y;
 			try
 			{
-				pos_x = parse_number<int>(port_elem, "x");
-				pos_y = parse_number<int>(port_elem, "y");
+				pos_x = parse_number<float>(port_elem, "x");
+				pos_y = parse_number<float>(port_elem, "y");
 
 				tmpl_port = GateTemplatePort_shptr(new GateTemplatePort(pos_x, pos_y, port_type));
 			}

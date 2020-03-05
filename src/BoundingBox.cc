@@ -31,7 +31,7 @@ BoundingBox::BoundingBox()
 	max_y = min_y = max_x = min_x = 0;
 }
 
-BoundingBox::BoundingBox(int min_x, int max_x, int min_y, int max_y)
+BoundingBox::BoundingBox(float min_x, float max_x, float min_y, float max_y)
 {
 	this->min_x = std::min(min_x, max_x);
 	this->max_x = std::max(min_x, max_x);
@@ -39,7 +39,7 @@ BoundingBox::BoundingBox(int min_x, int max_x, int min_y, int max_y)
 	this->max_y = std::max(min_y, max_y);
 }
 
-BoundingBox::BoundingBox(int width, int height)
+BoundingBox::BoundingBox(float width, float height)
 {
 	this->min_x = 0;
 	this->max_x = width;
@@ -64,7 +64,7 @@ BoundingBox const& BoundingBox::get_bounding_box() const
 	return *this;
 }
 
-bool BoundingBox::in_shape(int x, int y, int max_distance) const
+bool BoundingBox::in_shape(float x, float y, float max_distance) const
 {
 	return (x >= min_x - max_distance && x <= max_x + max_distance &&
 		       y >= min_y - max_distance && y <= max_y + max_distance)
@@ -115,89 +115,89 @@ bool BoundingBox::complete_within(BoundingBox const& rect) const
 		max_y >= rect.max_y);
 }
 
-unsigned int BoundingBox::get_width() const
+float BoundingBox::get_width() const
 {
 	return max_x - min_x;
 }
 
-unsigned int BoundingBox::get_height() const
+float BoundingBox::get_height() const
 {
 	return max_y - min_y;
 }
 
-int BoundingBox::get_min_x() const
+float BoundingBox::get_min_x() const
 {
 	return min_x;
 }
 
-int BoundingBox::get_max_x() const
+float BoundingBox::get_max_x() const
 {
 	return max_x;
 }
 
-int BoundingBox::get_min_y() const
+float BoundingBox::get_min_y() const
 {
 	return min_y;
 }
 
-int BoundingBox::get_max_y() const
+float BoundingBox::get_max_y() const
 {
 	return max_y;
 }
 
-void BoundingBox::set_min_x(int min_x)
+void BoundingBox::set_min_x(float min_x)
 {
 	this->min_x = std::min(min_x, max_x);
 	this->max_x = std::max(min_x, max_x);
 }
 
-void BoundingBox::set_min_y(int min_y)
+void BoundingBox::set_min_y(float min_y)
 {
 	this->min_y = std::min(min_y, max_y);
 	this->max_y = std::max(min_y, max_y);
 }
 
-void BoundingBox::set_max_x(int max_x)
+void BoundingBox::set_max_x(float max_x)
 {
 	this->min_x = std::min(min_x, max_x);
 	this->max_x = std::max(min_x, max_x);
 }
 
-void BoundingBox::set_max_y(int max_y)
+void BoundingBox::set_max_y(float max_y)
 {
 	this->min_y = std::min(min_y, max_y);
 	this->max_y = std::max(min_y, max_y);
 }
 
-void BoundingBox::shift_y(int delta_y)
+void BoundingBox::shift_y(float delta_y)
 {
 	min_y += delta_y;
 	max_y += delta_y;
 }
 
-void BoundingBox::shift_x(int delta_x)
+void BoundingBox::shift_x(float delta_x)
 {
 	min_x += delta_x;
 	max_x += delta_x;
 }
 
-void BoundingBox::shift(int delta_x, int delta_y)
+void BoundingBox::shift(float delta_x, float delta_y)
 {
 	shift_x(delta_x);
 	shift_y(delta_y);
 }
 
-int BoundingBox::get_center_x() const
+float BoundingBox::get_center_x() const
 {
 	return min_x + get_width() / 2;
 }
 
-int BoundingBox::get_center_y() const
+float BoundingBox::get_center_y() const
 {
 	return min_y + get_height() / 2;
 }
 
-void BoundingBox::set(int min_x, int max_x, int min_y, int max_y)
+void BoundingBox::set(float min_x, float max_x, float min_y, float max_y)
 {
 	this->min_x = std::min(min_x, max_x);
 	this->max_x = std::max(min_x, max_x);

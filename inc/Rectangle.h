@@ -32,7 +32,7 @@ namespace degate
 	class Rectangle : public AbstractShape, public DeepCopyableBase
 	{
 	private:
-		int min_x, max_x, min_y, max_y;
+        float min_x, max_x, min_y, max_y;
 
 		BoundingBox bounding_box;
 
@@ -42,14 +42,14 @@ namespace degate
 
 		Rectangle();
 
-		Rectangle(int min_x, int max_x, int min_y, int max_y);
+		Rectangle(float min_x, float max_x, float min_y, float max_y);
 		Rectangle(const Rectangle&);
 
 		virtual ~Rectangle();
 
 		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-		virtual bool in_shape(int x, int y, int max_distance = 0) const;
+		virtual bool in_shape(float x, float y, float max_distance = 0) const;
 		virtual bool in_bounding_box(BoundingBox const& bbox) const;
 		virtual BoundingBox const& get_bounding_box() const;
 
@@ -59,26 +59,26 @@ namespace degate
 		virtual bool intersects(Rectangle const& rect) const;
 		virtual bool complete_within(Rectangle const& rect) const;
 
-		virtual unsigned int get_width() const;
-		virtual unsigned int get_height() const;
+		virtual float get_width() const;
+		virtual float get_height() const;
 
-		virtual int get_min_x() const;
-		virtual int get_max_x() const;
-		virtual int get_min_y() const;
-		virtual int get_max_y() const;
+		virtual float get_min_x() const;
+		virtual float get_max_x() const;
+		virtual float get_min_y() const;
+		virtual float get_max_y() const;
 
-		virtual int get_center_x() const;
-		virtual int get_center_y() const;
+		virtual float get_center_x() const;
+		virtual float get_center_y() const;
 
-		virtual void set_min_x(int min_x);
-		virtual void set_min_y(int min_y);
-		virtual void set_max_x(int max_x);
-		virtual void set_max_y(int max_y);
+		virtual void set_min_x(float min_x);
+		virtual void set_min_y(float min_y);
+		virtual void set_max_x(float max_x);
+		virtual void set_max_y(float max_y);
 
-		virtual void set_position(int min_x, int max_x, int min_y, int max_y);
+		virtual void set_position(float min_x, float max_x, float min_y, float max_y);
 
-		virtual void shift_x(int delta_x);
-		virtual void shift_y(int delta_y);
+		virtual void shift_x(float delta_x);
+		virtual void shift_y(float delta_y);
 	};
 }
 

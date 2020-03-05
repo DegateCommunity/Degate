@@ -27,7 +27,7 @@
 
 using namespace degate;
 
-Gate::Gate(int _min_x, int _max_x, int _min_y, int _max_y,
+Gate::Gate(float _min_x, float _max_x, float _min_y, float _max_y,
            ORIENTATION _orientation) :
 	Rectangle(_min_x, _max_x, _min_y, _max_y),
 	orientation(_orientation),
@@ -261,7 +261,7 @@ Gate::port_const_iterator Gate::ports_end() const
 }
 
 
-unsigned int Gate::get_relative_x_position_within_gate(int rel_x) const
+unsigned int Gate::get_relative_x_position_within_gate(float rel_x) const
 {
 	switch (orientation)
 	{
@@ -279,7 +279,7 @@ unsigned int Gate::get_relative_x_position_within_gate(int rel_x) const
 }
 
 
-unsigned int Gate::get_relative_y_position_within_gate(int rel_y) const
+unsigned int Gate::get_relative_y_position_within_gate(float rel_y) const
 {
 	switch (orientation)
 	{

@@ -106,7 +106,7 @@ namespace degate
 		 * Create a new annotation.
 		 */
 
-		Annotation(int _min_x, int _max_x, int _min_y, int _max_y,
+		Annotation(float _min_x, float _max_x, float _min_y, float _max_y,
 		           class_id_t _class_id = UNDEFINED);
 
 		/**
@@ -162,13 +162,13 @@ namespace degate
 		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
 
 
-		void shift_x(int delta_x)
+		void shift_x(float delta_x)
 		{
 			Rectangle::shift_x(delta_x);
 			notify_shape_change();
 		}
 
-		void shift_y(int delta_y)
+		void shift_y(float delta_y)
 		{
 			Rectangle::shift_y(delta_y);
 			notify_shape_change();
@@ -184,7 +184,7 @@ namespace degate
 			return Rectangle::get_bounding_box();
 		}
 
-		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		virtual bool in_shape(float x, float y, float max_distance = 0) const
 		{
 			return Rectangle::in_shape(x, y, max_distance);
 		}

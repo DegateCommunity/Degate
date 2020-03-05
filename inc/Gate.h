@@ -76,7 +76,7 @@ namespace degate
 		/**
 		 * Create a gate.
 		 */
-		Gate(int _min_x, int _max_x, int _min_y, int _max_y,
+		Gate(float _min_x, float _max_x, float _min_y, float _max_y,
 		     ORIENTATION _orientation = ORIENTATION_UNDEFINED);
 
 		/**
@@ -275,7 +275,7 @@ namespace degate
 		 * @see has_orientation()
 		 */
 
-		virtual unsigned int get_relative_x_position_within_gate(int rel_x) const;
+		virtual unsigned int get_relative_x_position_within_gate(float rel_x) const;
 
 		/**
 		 * Get the y-coordinate relative to min_y depending on the gate's orientation.
@@ -285,7 +285,7 @@ namespace degate
 		 * @see has_orientation()
 		 */
 
-		virtual unsigned int get_relative_y_position_within_gate(int rel_y) const;
+		virtual unsigned int get_relative_y_position_within_gate(float rel_y) const;
 
 		/**
 		 * Get a human readable string that describes the whole
@@ -310,17 +310,17 @@ namespace degate
 		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
 
 
-		bool in_shape(int x, int y, int max_distance = 0) const
+		bool in_shape(float x, float y, float max_distance = 0) const
 		{
 			return Rectangle::in_shape(x, y, max_distance);
 		}
 
-		void shift_x(int delta_x)
+		void shift_x(float delta_x)
 		{
 			Rectangle::shift_x(delta_x);
 		}
 
-		void shift_y(int delta_y)
+		void shift_y(float delta_y)
 		{
 			Rectangle::shift_y(delta_y);
 		}

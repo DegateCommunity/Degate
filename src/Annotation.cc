@@ -26,7 +26,7 @@
 
 using namespace degate;
 
-Annotation::Annotation(int _min_x, int _max_x, int _min_y, int _max_y,
+Annotation::Annotation(float _min_x, float _max_x, float _min_y, float _max_y,
                        class_id_t _class_id) :
 	Rectangle(_min_x, _max_x, _min_y, _max_y), class_id(_class_id)
 {

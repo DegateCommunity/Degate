@@ -221,10 +221,10 @@ void LogicModelImporter::parse_wires_element(QDomElement const wires_element,
 			// XXX PORT ID REPLACER ...
 
 			object_id_t object_id = parse_number<object_id_t>(wire_elem, "id");
-			int from_x = parse_number<int>(wire_elem, "from-x");
-			int from_y = parse_number<int>(wire_elem, "from-y");
-			int to_x = parse_number<int>(wire_elem, "to-x");
-			int to_y = parse_number<int>(wire_elem, "to-y");
+            float from_x = parse_number<float>(wire_elem, "from-x");
+            float from_y = parse_number<float>(wire_elem, "from-y");
+            float to_x = parse_number<float>(wire_elem, "to-x");
+            float to_y = parse_number<float>(wire_elem, "to-y");
 			int diameter = parse_number<int>(wire_elem, "diameter");
 			int layer = parse_number<int>(wire_elem, "layer");
 			int remote_id = parse_number<object_id_t>(wire_elem, "remote-id", 0);
@@ -262,8 +262,8 @@ void LogicModelImporter::parse_vias_element(QDomElement const vias_element,
 			// XXX PORT ID REPLACER ...
 
 			object_id_t object_id = parse_number<object_id_t>(via_elem, "id");
-			int x = parse_number<int>(via_elem, "x");
-			int y = parse_number<int>(via_elem, "y");
+            float x = parse_number<float>(via_elem, "x");
+            float y = parse_number<float>(via_elem, "y");
 			int diameter = parse_number<int>(via_elem, "diameter");
 			int layer = parse_number<int>(via_elem, "layer");
 			int remote_id = parse_number<object_id_t>(via_elem, "remote-id", 0);
@@ -314,8 +314,8 @@ void LogicModelImporter::parse_emarkers_element(QDomElement const emarkers_eleme
 			// XXX PORT ID REPLACER ...
 
 			object_id_t object_id = parse_number<object_id_t>(emarker_elem, "id");
-			int x = parse_number<int>(emarker_elem, "x");
-			int y = parse_number<int>(emarker_elem, "y");
+            float x = parse_number<float>(emarker_elem, "x");
+            float y = parse_number<float>(emarker_elem, "y");
 			int diameter = parse_number<diameter_t>(emarker_elem, "diameter");
 			int layer = parse_number<int>(emarker_elem, "layer");
 			int remote_id = parse_number<object_id_t>(emarker_elem, "remote-id", 0);
@@ -354,10 +354,10 @@ void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
 		if (!gate_elem.isNull())
 		{
 			object_id_t object_id = parse_number<object_id_t>(gate_elem, "id");
-			int min_x = parse_number<int>(gate_elem, "min-x");
-			int min_y = parse_number<int>(gate_elem, "min-y");
-			int max_x = parse_number<int>(gate_elem, "max-x");
-			int max_y = parse_number<int>(gate_elem, "max-y");
+            float min_x = parse_number<float>(gate_elem, "min-x");
+            float min_y = parse_number<float>(gate_elem, "min-y");
+            float max_x = parse_number<float>(gate_elem, "max-x");
+            float max_y = parse_number<float>(gate_elem, "max-y");
 
 			int layer = parse_number<int>(gate_elem, "layer");
 
@@ -446,10 +446,10 @@ void LogicModelImporter::parse_annotations_element(QDomElement const annotations
 		{
 			object_id_t object_id = parse_number<object_id_t>(annotation_elem, "id");
 
-			int min_x = parse_number<int>(annotation_elem, "min-x");
-			int min_y = parse_number<int>(annotation_elem, "min-y");
-			int max_x = parse_number<int>(annotation_elem, "max-x");
-			int max_y = parse_number<int>(annotation_elem, "max-y");
+            float min_x = parse_number<float>(annotation_elem, "min-x");
+            float min_y = parse_number<float>(annotation_elem, "min-y");
+            float max_x = parse_number<float>(annotation_elem, "max-x");
+            float max_y = parse_number<float>(annotation_elem, "max-y");
 
 			int layer = parse_number<int>(annotation_elem, "layer");
 			Annotation::class_id_t class_id = parse_number<Annotation::class_id_t>(annotation_elem, "class-id");

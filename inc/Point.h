@@ -29,24 +29,24 @@ namespace degate
 	class Point
 	{
 	private:
-		int x, y;
+		float x, y;
 
 	public:
 
 		Point();
-		Point(int x, int y);
+		Point(float x, float y);
 
 		bool operator==(const Point& other) const;
 		bool operator!=(const Point& other) const;
 
-		int get_x() const;
-		int get_y() const;
+        float get_x() const;
+        float get_y() const;
 
-		void set_x(int x);
-		void set_y(int y);
+		void set_x(float x);
+		void set_y(float y);
 
-		void shift_x(int delta_x);
-		void shift_y(int delta_y);
+		void shift_x(float delta_x);
+		void shift_y(float delta_y);
 
 		/**
 		 * Calculate the distance to another point.

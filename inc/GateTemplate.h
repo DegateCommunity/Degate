@@ -101,7 +101,7 @@ namespace degate
 		 *   have a the region as a copy.
 		 */
 
-		GateTemplate(unsigned int width, unsigned int height);
+		GateTemplate(float width, float height);
 
 
 		/**
@@ -110,7 +110,7 @@ namespace degate
 		 *   have a the region as a copy.
 		 */
 
-		GateTemplate(int _min_x, int _max_x, int _min_y, int _max_y);
+		GateTemplate(float _min_x, float _max_x, float _min_y, float _max_y);
 
 		/**
 		 * Default constructor.
@@ -133,13 +133,13 @@ namespace degate
 		 * Get the width of a gate template.
 		 */
 
-		virtual unsigned int get_width() const;
+		virtual float get_width() const;
 
 		/**
 		 * Get the height of a gate template.
 		 */
 
-		virtual unsigned int get_height() const;
+		virtual float get_height() const;
 
 
 		/**
@@ -147,14 +147,14 @@ namespace degate
 		 * It does not adjust dimensions of gates that reference this template.
 		 */
 
-		virtual void set_width(unsigned int width);
+		virtual void set_width(float width);
 
 		/**
 		 * Set the height of a gate template.
 		 * It does not adjust dimensions of gates that reference this template.
 		 */
 
-		virtual void set_height(unsigned int);
+		virtual void set_height(float height);
 
 		/**
 		 * Get the bounding box of the template.

@@ -36,12 +36,12 @@ void GateTemplate::decrement_reference_counter()
 }
 
 
-GateTemplate::GateTemplate(int _min_x, int _max_x, int _min_y, int _max_y) :
+GateTemplate::GateTemplate(float _min_x, float _max_x, float _min_y, float _max_y) :
 	bounding_box(_min_x, _max_x, _min_y, _max_y), reference_counter(0)
 {
 }
 
-GateTemplate::GateTemplate(unsigned int width, unsigned int height) :
+GateTemplate::GateTemplate(float width, float height) :
 	bounding_box(0, width, 0, height), reference_counter(0)
 {
 }
@@ -87,22 +87,22 @@ void GateTemplate::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) cons
 	LogicModelObjectBase::cloneDeepInto(dest, oldnew);
 }
 
-unsigned int GateTemplate::get_width() const
+float GateTemplate::get_width() const
 {
 	return bounding_box.get_width();
 }
 
-unsigned int GateTemplate::get_height() const
+float GateTemplate::get_height() const
 {
 	return bounding_box.get_height();
 }
 
-void GateTemplate::set_width(unsigned int width)
+void GateTemplate::set_width(float width)
 {
 	bounding_box.set_max_x(bounding_box.get_min_x() + width);
 }
 
-void GateTemplate::set_height(unsigned int height)
+void GateTemplate::set_height(float height)
 {
 	bounding_box.set_max_y(bounding_box.get_min_y() + height);
 }

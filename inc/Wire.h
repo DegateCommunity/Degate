@@ -43,7 +43,7 @@ namespace degate
 		/**
 		 * The constructor for a wire object.
 		 */
-		Wire(int _from_x, int _from_y, int _to_x, int _to_y, diameter_t _diameter);
+		Wire(float _from_x, float _from_y, float _to_x, float _to_y, diameter_t _diameter);
 
 		/**
 		 * Destructor for a wire object.
@@ -79,13 +79,13 @@ namespace degate
 		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
 
 
-		void shift_x(int delta_x)
+		void shift_x(float delta_x)
 		{
 			Line::shift_x(delta_x);
 			notify_shape_change();
 		}
 
-		void shift_y(int delta_y)
+		void shift_y(float delta_y)
 		{
 			Line::shift_y(delta_y);
 			notify_shape_change();
@@ -101,7 +101,7 @@ namespace degate
 			return Line::get_bounding_box();
 		}
 
-		virtual bool in_shape(int x, int y, int max_distance = 0) const
+		virtual bool in_shape(float x, float y, float max_distance = 0) const
 		{
 			return Line::in_shape(x, y, max_distance);
 		}

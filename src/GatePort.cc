@@ -187,26 +187,26 @@ void GatePort::print(std::ostream& os, int n_tabs) const
 }
 
 
-void GatePort::set_x(int x)
+void GatePort::set_x(float x)
 {
 	Circle::set_x(x);
 	notify_shape_change();
 }
 
 
-void GatePort::set_y(int y)
+void GatePort::set_y(float y)
 {
 	Circle::set_y(y);
 	notify_shape_change();
 }
 
-void GatePort::shift_x(int delta_x)
+void GatePort::shift_x(float delta_x)
 {
 	Circle::shift_x(delta_x);
 	notify_shape_change();
 }
 
-void GatePort::shift_y(int delta_y)
+void GatePort::shift_y(float delta_y)
 {
 	Circle::shift_y(delta_y);
 	notify_shape_change();

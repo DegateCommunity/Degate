@@ -31,7 +31,7 @@ Point::Point()
 	x = y = 0;
 }
 
-Point::Point(int x, int y)
+Point::Point(float x, float y)
 {
 	this->x = x;
 	this->y = y;
@@ -47,33 +47,33 @@ bool Point::operator!=(const Point& other) const
 	return !(*this == other);
 }
 
-int Point::get_x() const
+float Point::get_x() const
 {
 	return x;
 }
 
-int Point::get_y() const
+float Point::get_y() const
 {
 	return y;
 }
 
-void Point::set_x(int x)
+void Point::set_x(float x)
 {
 	this->x = x;
 }
 
-void Point::set_y(int y)
+void Point::set_y(float y)
 {
 	this->y = y;
 }
 
 
-void Point::shift_y(int delta_y)
+void Point::shift_y(float delta_y)
 {
 	y += delta_y;
 }
 
-void Point::shift_x(int delta_x)
+void Point::shift_x(float delta_x)
 {
 	x += delta_x;
 }

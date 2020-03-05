@@ -61,7 +61,7 @@ namespace degate
 		 * Create a template port.
 		 */
 
-		GateTemplatePort(int _x, int _y, PORT_TYPE _port_type = PORT_TYPE_UNDEFINED) :
+		GateTemplatePort(float _x, float _y, PORT_TYPE _port_type = PORT_TYPE_UNDEFINED) :
 			point(_x, _y), port_type(_port_type), position_defined(true)
 		{
 		}
@@ -185,7 +185,7 @@ namespace degate
 		 *   the gate template.
 		 */
 
-		virtual int get_x() const { return point.get_x(); }
+		virtual float get_x() const { return point.get_x(); }
 
 		/**
 		 * Get the y position for a port.
@@ -193,7 +193,7 @@ namespace degate
 		 *   the gate template.
 		 */
 
-		virtual int get_y() const { return point.get_y(); }
+		virtual float get_y() const { return point.get_y(); }
 
 
 		/**

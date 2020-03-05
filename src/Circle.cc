@@ -34,7 +34,7 @@ Circle::Circle()
 	calculate_bounding_box();
 }
 
-Circle::Circle(int x, int y, unsigned int diameter)
+Circle::Circle(float x, float y, unsigned int diameter)
 {
 	this->x = x;
 	this->y = y;
@@ -51,7 +51,7 @@ void Circle::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 	clone->bounding_box = bounding_box;
 }
 
-bool Circle::in_shape(int x, int y, int max_distance) const
+bool Circle::in_shape(float x, float y, float max_distance) const
 {
 	int delta_x = this->x - x;
 	int delta_y = this->y - y;
@@ -79,12 +79,12 @@ bool Circle::operator!=(const Circle& other) const
 	return !(*this == other);
 }
 
-int Circle::get_x() const
+float Circle::get_x() const
 {
 	return x;
 }
 
-int Circle::get_y() const
+float Circle::get_y() const
 {
 	return y;
 }
@@ -95,13 +95,13 @@ unsigned int Circle::get_diameter() const
 	return diameter;
 }
 
-void Circle::set_x(int x)
+void Circle::set_x(float x)
 {
 	this->x = x;
 	calculate_bounding_box();
 }
 
-void Circle::set_y(int y)
+void Circle::set_y(float y)
 {
 	this->y = y;
 	calculate_bounding_box();
@@ -113,13 +113,13 @@ void Circle::set_diameter(unsigned int diameter)
 	calculate_bounding_box();
 }
 
-void Circle::shift_y(int delta_y)
+void Circle::shift_y(float delta_y)
 {
 	y += delta_y;
 	calculate_bounding_box();
 }
 
-void Circle::shift_x(int delta_x)
+void Circle::shift_x(float delta_x)
 {
 	x += delta_x;
 	calculate_bounding_box();

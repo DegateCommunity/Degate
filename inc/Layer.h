@@ -322,7 +322,7 @@ namespace degate
 		 *   is returned.
 		 */
 
-		PlacedLogicModelObject_shptr get_object_at_position(int x, int y, int max_distance = 0, bool ignore_annotations = false, bool ignore_gates = false, bool ignore_ports = false, bool ignore_emarkers = false, bool ignore_vias = false, bool ignore_wires = false);
+		PlacedLogicModelObject_shptr get_object_at_position(float x, float y, float max_distance = 0, bool ignore_annotations = false, bool ignore_gates = false, bool ignore_ports = false, bool ignore_emarkers = false, bool ignore_vias = false, bool ignore_wires = false);
 
 		/**
 		 * Check for placed objects in a region of type given by template param.

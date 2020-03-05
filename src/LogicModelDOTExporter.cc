@@ -193,8 +193,8 @@ void LogicModelDOTExporter::add_gate(Gate_shptr gate)
 
 	if (properties[PRESERVE_GATE_POSITIONS])
 	{
-		attrs.add_number<unsigned int>("height", lround(scaling * gate->get_height()));
-		attrs.add_number<unsigned int>("width", lround(scaling * gate->get_width()));
+		attrs.add_number<float>("height", lround(scaling * gate->get_height()));
+		attrs.add_number<float>("width", lround(scaling * gate->get_width()));
 	}
 
 	/* Use the placement on the chip as hint for graphviz. Graphviz

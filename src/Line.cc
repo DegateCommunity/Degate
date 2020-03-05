@@ -40,7 +40,7 @@ Line::Line() :
 	calculate_bounding_box();
 }
 
-Line::Line(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diameter) :
+Line::Line(float _from_x, float _from_y, float _to_x, float _to_y, unsigned int _diameter) :
 	from_x(_from_x),
 	from_y(_from_y),
 	to_x(_to_x),
@@ -65,43 +65,43 @@ void Line::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 	clone->calculate_bounding_box();
 }
 
-bool Line::in_shape(int x, int y, int max_distance) const
+bool Line::in_shape(float x, float y, float max_distance) const
 {
-	/*
+    /*
 	  How to check if a point is on a line:
 	  y = m*x + n
 	  m = dy / dx
 	  n = y0 - m*x0
 	  y' = m*x' + n
-  
+
 	  |y' - y| < epsilon?
 	*/
 
-	/*
-	  Check if it is a vertical line (dy ~~ 0). If it is true, the bounding box
-	  describes the line. The same applies to horiontal lines.
-	*/
+    /*
+      Check if it is a vertical line (dy ~~ 0). If it is true, the bounding box
+      describes the line. The same applies to horiontal lines.
+    */
 
-	if (is_vertical() || is_horizontal())
-	{
-		return bounding_box.in_shape(x, y, max_distance);
-	}
-	else
-	{
-		// check if x is outside the x-range
-		if (x < std::min(from_x, to_x) ||
-			x > std::max(from_x, to_x))
-			return false;
+    if (is_vertical() || is_horizontal())
+    {
+        return bounding_box.in_shape(x, y, max_distance);
+    }
+    else
+    {
+        // check if x is outside the x-range
+        if (x < std::min(from_x, to_x) ||
+            x > std::max(from_x, to_x))
+            return false;
 
-		double m = d_y / d_x;
-		double n = (double)from_y - m * (double)from_x;
-		double y_dash = m * (double)x + n;
+        double m = d_y / d_x;
+        double n = (double)from_y - m * (double)from_x;
+        double y_dash = m * (double)x + n;
 
-		if (fabs(y_dash - y) <= diameter / 2 + max_distance)
-			return true;
-		else
-			return false;
-	}
+        if (fabs(y_dash - y) <= diameter / 2.0 + max_distance)
+            return true;
+        else
+            return false;
+    }
 }
 
 bool Line::in_bounding_box(BoundingBox const& bbox) const
@@ -136,62 +136,62 @@ unsigned int Line::get_diameter() const
 	return diameter;
 }
 
-int Line::get_from_x() const
+float Line::get_from_x() const
 {
 	return from_x;
 }
 
-int Line::get_from_y() const
+float Line::get_from_y() const
 {
 	return from_y;
 }
 
-int Line::get_to_x() const
+float Line::get_to_x() const
 {
 	return to_x;
 }
 
-int Line::get_to_y() const
+float Line::get_to_y() const
 {
 	return to_y;
 }
 
-void Line::set_from_x(int from_x)
+void Line::set_from_x(float from_x)
 {
 	this->from_x = from_x;
 	d_x = to_x - from_x;
 	calculate_bounding_box();
 }
 
-void Line::set_to_x(int to_x)
+void Line::set_to_x(float to_x)
 {
 	this->to_x = to_x;
 	d_x = to_x - from_x;
 	calculate_bounding_box();
 }
 
-void Line::set_from_y(int from_y)
+void Line::set_from_y(float from_y)
 {
 	this->from_y = from_y;
 	d_y = to_y - from_y;
 	calculate_bounding_box();
 }
 
-void Line::set_to_y(int to_y)
+void Line::set_to_y(float to_y)
 {
 	this->to_y = to_y;
 	d_y = to_y - from_y;
 	calculate_bounding_box();
 }
 
-void Line::shift_y(int delta_y)
+void Line::shift_y(float delta_y)
 {
 	from_y += delta_y;
 	to_y += delta_y;
 	calculate_bounding_box();
 }
 
-void Line::shift_x(int delta_x)
+void Line::shift_x(float delta_x)
 {
 	from_x += delta_x;
 	to_x += delta_x;
@@ -201,15 +201,15 @@ void Line::shift_x(int delta_x)
 
 void Line::calculate_bounding_box()
 {
-	int radius = diameter >> 1;
+    float radius = diameter / 2.0f;
 
 	if (is_vertical())
-		bounding_box = BoundingBox(std::max(from_x - radius, 0),
-		                           std::max(to_x + radius, 0), from_y, to_y);
+		bounding_box = BoundingBox(std::max(from_x - radius, 0.f),
+                                   std::max(to_x + radius, 0.f), from_y, to_y);
 	else if (is_horizontal())
 		bounding_box = BoundingBox(from_x, to_x,
-		                           std::max(from_y - radius, 0),
-		                           std::max(to_y + radius, 0));
+                                   std::max(from_y - radius, 0.f),
+                                   std::max(to_y + radius, 0.f));
 	else
 		bounding_box = BoundingBox(from_x, to_x, from_y, to_y);
 }

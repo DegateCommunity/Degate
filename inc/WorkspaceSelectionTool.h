@@ -66,7 +66,7 @@ namespace degate
 	     * @param x : the new x coordinate.
 	     * @param y : the new y coordinate.
 	     */
-		void update(int x, int y);
+		void update(float x, float y);
 
 		/**
 	     * Draw the selection.
@@ -102,7 +102,7 @@ namespace degate
 		 * @param x : the x coordinate of the new origin.
 		 * @param y : the y coordinate of the new origin.
 		 */
-		void set_origin(int x, int y);
+		void set_origin(float x, float y);
 
 	private:
 		QWidget* parent;
@@ -112,7 +112,7 @@ namespace degate
 		QOpenGLFunctions* context = NULL;
 		bool selection = false;
 		BoundingBox selection_box;
-		QPoint origin;
+		QPointF origin;
 	};
 }
 

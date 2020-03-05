@@ -33,7 +33,7 @@
 
 using namespace degate;
 
-Wire::Wire(int _from_x, int _from_y, int _to_x, int _to_y, unsigned int _diameter) :
+Wire::Wire(float _from_x, float _from_y, float _to_x, float _to_y, unsigned int _diameter) :
 	Line(_from_x, _from_y, _to_x, _to_y, _diameter)
 {
 }

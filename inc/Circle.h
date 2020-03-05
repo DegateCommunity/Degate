@@ -32,7 +32,7 @@ namespace degate
 	class Circle : public AbstractShape, public DeepCopyableBase
 	{
 	private:
-		int x, y;
+        float x, y;
 		unsigned int diameter = 5;
 
 		BoundingBox bounding_box;
@@ -42,7 +42,7 @@ namespace degate
 	public:
 
 		Circle();
-		Circle(int x, int y, unsigned int diameter);
+		Circle(float x, float y, unsigned int diameter);
 
 		virtual ~Circle()
 		{
@@ -50,7 +50,7 @@ namespace degate
 
 		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-		virtual bool in_shape(int x, int y, int max_distance = 0) const;
+		virtual bool in_shape(float x, float y, float max_distance = 0) const;
 
 		virtual bool in_bounding_box(BoundingBox const& bbox) const;
 		virtual BoundingBox const& get_bounding_box() const;
@@ -58,16 +58,16 @@ namespace degate
 		virtual bool operator==(const Circle& other) const;
 		virtual bool operator!=(const Circle& other) const;
 
-		virtual int get_x() const;
-		virtual int get_y() const;
+		virtual float get_x() const;
+		virtual float get_y() const;
 		virtual unsigned int get_diameter() const;
 
-		virtual void set_x(int x);
-		virtual void set_y(int y);
+		virtual void set_x(float x);
+		virtual void set_y(float y);
 		virtual void set_diameter(unsigned int diameter);
 
-		virtual void shift_x(int delta_x);
-		virtual void shift_y(int delta_y);
+		virtual void shift_x(float delta_x);
+		virtual void shift_y(float delta_y);
 	};
 }
 
