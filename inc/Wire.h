@@ -44,6 +44,7 @@ namespace degate
 		 * The constructor for a wire object.
 		 */
 		Wire(float _from_x, float _from_y, float _to_x, float _to_y, diameter_t _diameter);
+        Wire(Line _line);
 
 		/**
 		 * Destructor for a wire object.

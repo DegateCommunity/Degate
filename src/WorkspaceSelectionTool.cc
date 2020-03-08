@@ -116,7 +116,7 @@ namespace degate
 			selection_box.set_min_x(origin.x());
 		}
 			
-		if (y < selection_box.get_min_y())
+		if (y < origin.y())
 		{
 			selection_box.set_max_y(origin.y());
 			selection_box.set_min_y(y);

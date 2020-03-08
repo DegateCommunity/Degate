@@ -35,6 +35,7 @@
 #include "WorkspaceVias.h"
 #include "ViaEditDialog.h"
 #include "WorkspaceWires.h"
+#include "WorkspaceWireTool.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>
@@ -63,6 +64,14 @@
 
 namespace degate
 {
+    /**
+     * List of usable workspace tools.
+     */
+    enum WorkspaceTool
+    {
+        AREA_SELECTION,
+        WIRE
+    };
 
 	/**
 	 * @class WorkspaceRenderer
@@ -274,6 +283,16 @@ namespace degate
 		 */
         void reset_selection();
 
+        /**
+         * Switch the current used tool to the area selection tool.
+         */
+        void use_area_selection_tool();
+
+        /**
+         * Switch the current used tool to the wire tool.
+         */
+        void use_wire_tool();
+
 	signals:
 		/**
 		 * Signal for when the project need to be changed.
@@ -328,6 +347,9 @@ namespace degate
 		// Selection tool
 		WorkspaceSelectionTool selection_tool;
 
+		// Wire tool
+        WorkspaceWireTool wire_tool;
+
 		// View parameters
 		bool draw_gates            = true;
 		bool draw_gates_name       = true;
@@ -340,7 +362,10 @@ namespace degate
         bool draw_vias             = true;
         bool draw_vias_name        = true;
         bool draw_wires            = true;
-		
+
+        // Used tool
+        WorkspaceTool current_tool;
+
 	};
 }
 

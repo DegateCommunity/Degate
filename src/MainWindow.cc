@@ -26,7 +26,7 @@
 
 namespace degate
 {
-	MainWindow::MainWindow(int width, int height) : status_bar(this)
+	MainWindow::MainWindow(int width, int height) : status_bar(this), tools_group(this)
 	{
 		if (width == 0 || height == 0)
 			resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
@@ -177,7 +177,7 @@ namespace degate
 		// Tool bar
 
 		tool_bar = addToolBar("");
-		tool_bar->setIconSize(QSize(25, 25));
+		tool_bar->setIconSize(QSize(27, 27));
 		tool_bar->setMovable(false);
 		tool_bar->setFloatable(false);
 		setContextMenuPolicy(Qt::NoContextMenu);
@@ -200,6 +200,21 @@ namespace degate
 
 		QAction* tool_gate_library = tool_bar->addAction(QIcon(GET_ICON_PATH("book.png")), "Gate library");
 		QObject::connect(tool_gate_library, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
+
+        tool_bar->addSeparator();
+
+
+        QAction* area_selection_tool = tools_group.addAction(QIcon(GET_ICON_PATH("area_selection_tool.png")), "Area");
+        QObject::connect(area_selection_tool, SIGNAL(triggered()), workspace, SLOT(use_area_selection_tool()));
+        area_selection_tool->setCheckable(true);
+        area_selection_tool->setChecked(true);
+        workspace->use_area_selection_tool();
+
+        QAction* wire_tool = tools_group.addAction(QIcon(GET_ICON_PATH("wire_tool.png")), "Wire");
+        QObject::connect(wire_tool, SIGNAL(triggered()), workspace, SLOT(use_wire_tool()));
+        wire_tool->setCheckable(true);
+
+        tool_bar->addActions(tools_group.actions());
 
 
 		// Other

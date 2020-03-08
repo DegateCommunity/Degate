@@ -38,6 +38,12 @@ Wire::Wire(float _from_x, float _from_y, float _to_x, float _to_y, unsigned int 
 {
 }
 
+Wire::Wire(Line _line) :
+    Line(_line)
+{
+
+}
+
 DeepCopyable_shptr Wire::cloneShallow() const
 {
 	return std::make_shared<Wire>(get_from_x(), get_from_y(), get_to_x(), get_to_y(), get_diameter());

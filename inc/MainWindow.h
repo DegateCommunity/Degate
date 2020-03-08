@@ -255,6 +255,8 @@ namespace degate
 		QLabel status_bar_coords;
 		QLabel status_bar_layer;
 
+		QActionGroup tools_group;
+
 		Project_shptr project;
 		WorkspaceRenderer* workspace = NULL;
 		QPointF context_menu_mouse_position;

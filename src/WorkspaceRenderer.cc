@@ -26,7 +26,7 @@
 namespace degate
 {
 
-	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this), emarkers(this), vias(this), wires(this), selection_tool(this)
+	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this), emarkers(this), vias(this), wires(this), selection_tool(this), wire_tool(this)
 	{
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
@@ -69,6 +69,7 @@ namespace degate
         emarkers.set_project(new_project);
         vias.set_project(new_project);
         wires.set_project(new_project);
+        wire_tool.set_project(new_project);
 
 		set_projection(1, width() / 2.0, height() / 2.0);
 
@@ -130,6 +131,26 @@ namespace degate
 
 		selected_object = NULL;
 	}
+
+    void WorkspaceRenderer::use_area_selection_tool()
+    {
+        reset_selection();
+        wire_tool.reset_line_drawing();
+
+        current_tool = WorkspaceTool::AREA_SELECTION;
+
+        update();
+    }
+
+    void WorkspaceRenderer::use_wire_tool()
+    {
+	    reset_area_selection();
+	    reset_selection();
+
+        current_tool = WorkspaceTool::WIRE;
+
+        update();
+    }
 
 	bool WorkspaceRenderer::has_selection()
 	{
@@ -279,6 +300,7 @@ namespace degate
         vias.init();
 		selection_tool.init();
 		wires.init();
+        wire_tool.init();
 	}
 
 	void WorkspaceRenderer::paintGL()
@@ -286,6 +308,7 @@ namespace degate
 		makeCurrent();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0, 0, 0, 1);
 
 		background.draw(projection);
 
@@ -321,8 +344,12 @@ namespace degate
 
         if(draw_vias_name)
             vias.draw_name(projection);
-		
-		selection_tool.draw(projection);
+
+        if(current_tool == WorkspaceTool::AREA_SELECTION)
+		    selection_tool.draw(projection);
+
+        if(current_tool == WorkspaceTool::WIRE)
+            wire_tool.draw(projection);
 	}
 
 	void WorkspaceRenderer::resizeGL(int w, int h)
@@ -456,10 +483,23 @@ namespace degate
 		}
 
         // Selection imply no area selection
-        if (selected_object != NULL)
+        if (selected_object != NULL && current_tool == WorkspaceTool::AREA_SELECTION)
         {
             reset_area_selection();
             update();
+        }
+
+        if(event->button() == Qt::RightButton && current_tool == WorkspaceTool::WIRE && project != NULL)
+        {
+            wire_tool.end_line_drawing();
+
+            Wire_shptr new_wire(new Wire(wire_tool.get_line()));
+
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_wire);
+
+            wire_tool.start_line_drawing(wire_tool.get_line().get_to_x(), wire_tool.get_line().get_to_y());
+
+            update_screen();
         }
 
         // Emit signal (for mouse context menu)
@@ -491,7 +531,7 @@ namespace degate
 		}
 
 		// Selection
-		if(event->buttons() & Qt::RightButton)
+		if(event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::AREA_SELECTION)
 		{
             mouse_moved = true;
 
@@ -511,6 +551,21 @@ namespace degate
 
 			update();
 		}
+
+		if(event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::WIRE)
+        {
+            mouse_moved = true;
+
+            if(wire_tool.has_ended())
+                wire_tool.reset_line_drawing();
+
+            if(!wire_tool.has_started())
+                wire_tool.start_line_drawing(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
+
+            wire_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
+
+            update();
+        }
 
 		// Mouse coords signal
 		emit mouse_coords_changed(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
@@ -541,6 +596,12 @@ namespace degate
         makeCurrent();
 
 		QOpenGLWidget::keyReleaseEvent(event);
+
+		if(event->key() == Qt::Key_Escape)
+        {
+            wire_tool.reset_line_drawing();
+            update();
+        }
 	}
 
 	void WorkspaceRenderer::mouseDoubleClickEvent(QMouseEvent* event)
