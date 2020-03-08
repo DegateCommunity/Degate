@@ -65,22 +65,14 @@ void Line::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 	clone->calculate_bounding_box();
 }
 
+float Line::distance_to_line(Point const& p) const
+{
+    return fabs((to_y - from_y) * p.get_x() - (to_x - from_x) * p.get_y() + to_x * from_y - to_y * from_x) /
+           sqrt(pow(to_y - from_y, 2) + pow(to_x - from_x, 2));
+}
+
 bool Line::in_shape(float x, float y, float max_distance) const
 {
-    /*
-	  How to check if a point is on a line:
-	  y = m*x + n
-	  m = dy / dx
-	  n = y0 - m*x0
-	  y' = m*x' + n
-
-	  |y' - y| < epsilon?
-	*/
-
-    /*
-      Check if it is a vertical line (dy ~~ 0). If it is true, the bounding box
-      describes the line. The same applies to horiontal lines.
-    */
 
     if (is_vertical() || is_horizontal())
     {
@@ -88,16 +80,7 @@ bool Line::in_shape(float x, float y, float max_distance) const
     }
     else
     {
-        // check if x is outside the x-range
-        if (x < std::min(from_x, to_x) ||
-            x > std::max(from_x, to_x))
-            return false;
-
-        double m = d_y / d_x;
-        double n = (double)from_y - m * (double)from_x;
-        double y_dash = m * (double)x + n;
-
-        if (fabs(y_dash - y) <= diameter / 2.0 + max_distance)
+        if (distance_to_line(Point(x, y)) <= diameter / 2.0 + max_distance)
             return true;
         else
             return false;

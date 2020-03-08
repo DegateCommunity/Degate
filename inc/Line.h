@@ -94,6 +94,8 @@ namespace degate
 
 		virtual void set_p1(Point const& p);
 		virtual void set_p2(Point const& p);
+
+		float distance_to_line(const Point &p) const;
 	};
 }
 
