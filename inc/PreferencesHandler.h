@@ -96,7 +96,7 @@ namespace degate
 		void set_icon_theme(IconTheme theme);
 
 	private:
-		Theme theme = NATIVE_THEME;
+		Theme theme = LIGHT_THEME;
 		IconTheme icon_theme = DARK_ICON_THEME;
 		
 	};

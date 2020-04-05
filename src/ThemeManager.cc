@@ -43,7 +43,8 @@ namespace degate
 		case NATIVE_THEME:
 			break;
 		case LIGHT_THEME:
-			
+
+            qApp->setStyle(QStyleFactory::create("Fusion"));
 			qApp->setPalette(qApp->style()->standardPalette());
 			
 			break;
