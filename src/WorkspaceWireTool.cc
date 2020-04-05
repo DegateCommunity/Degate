@@ -172,6 +172,9 @@ namespace degate
 
     void WorkspaceWireTool::start_line_drawing(float x, float y)
     {
+        if(project == NULL)
+            return;
+
         line.set_from_x(x);
         line.set_from_y(y);
 
@@ -183,11 +186,17 @@ namespace degate
 
     void WorkspaceWireTool::end_line_drawing()
     {
+        if(project == NULL)
+            return;
+
         ended = true;
     }
 
     void WorkspaceWireTool::reset_line_drawing()
     {
+        if(project == NULL)
+            return;
+
         started = false;
         ended = false;
     }
