@@ -72,6 +72,7 @@ namespace degate
         emarkers.set_project(new_project);
         vias.set_project(new_project);
         wires.set_project(new_project);
+        selection_tool.set_project(new_project);
         wire_tool.set_project(new_project);
 
 		set_projection(1, width() / 2.0, height() / 2.0);

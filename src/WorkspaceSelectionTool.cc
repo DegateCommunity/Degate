@@ -102,7 +102,7 @@ namespace degate
 
 	void WorkspaceSelectionTool::update(float x, float y)
 	{
-		if(selection == false)
+		if(selection == false || project == NULL)
 			return;
 
 		if (x < origin.x())
@@ -193,7 +193,7 @@ namespace degate
 
 	void WorkspaceSelectionTool::draw(const QMatrix4x4& projection)
 	{
-		if(selection == false)
+		if(selection == false || project == NULL)
 			return;
 
 		program->bind();
@@ -253,4 +253,9 @@ namespace degate
 		origin.setX(x);
 		origin.setY(y);
 	}
+
+    void WorkspaceSelectionTool::set_project(const Project_shptr& new_project)
+    {
+        project = new_project;
+    }
 }

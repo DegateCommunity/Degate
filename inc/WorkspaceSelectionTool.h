@@ -104,7 +104,15 @@ namespace degate
 		 */
 		void set_origin(float x, float y);
 
+        /**
+         * Set the current active project.
+         *
+         * @param project : the current active project.
+         */
+        void set_project(const Project_shptr& new_project);
+
 	private:
+        Project_shptr project = NULL;
 		QWidget* parent;
 		QOpenGLShaderProgram* program = NULL;
 		GLuint vbo = 0;

@@ -747,6 +747,9 @@ namespace degate
 
     void MainWindow::show_context_menu()
     {
+	    if(project == NULL)
+	        return;
+
         QMenu contextMenu(("Context menu"), this);
 
         // New
