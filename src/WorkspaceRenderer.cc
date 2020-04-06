@@ -61,6 +61,9 @@ namespace degate
 
 	void WorkspaceRenderer::set_project(const Project_shptr& new_project)
 	{
+	    reset_area_selection();
+	    reset_selection();
+
 		project = new_project;
 
 		background.set_project(new_project);

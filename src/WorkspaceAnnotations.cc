@@ -174,7 +174,7 @@ namespace degate
 		program->enableAttributeArray("alpha");
 		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(AnnotationsVertex2D));
 
-		context->glDrawArrays(GL_TRIANGLES, 0, project->get_logic_model()->get_annotations_count() * 6);
+		context->glDrawArrays(GL_TRIANGLES, 0, annotations_count * 6);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
@@ -187,7 +187,7 @@ namespace degate
 		program->enableAttributeArray("alpha");
 		program->setAttributeBuffer("alpha", GL_FLOAT, 5 * sizeof(float), 1, sizeof(AnnotationsVertex2D));
 
-		context->glDrawArrays(GL_LINES, 0, project->get_logic_model()->get_annotations_count() * 8);
+		context->glDrawArrays(GL_LINES, 0, annotations_count * 8);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
