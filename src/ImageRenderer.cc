@@ -149,9 +149,9 @@ namespace degate
 
 		initializeOpenGLFunctions();
 
-		glClearColor(0.0, 0.0, 0.0, 0.0);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
 		const char* vsrc =

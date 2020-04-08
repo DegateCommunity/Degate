@@ -169,8 +169,6 @@ namespace degate
 
 		program->bind();
 
-		context->glEnable(GL_BLEND);
-
 		program->setUniformValue("mvp", projection);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -257,7 +255,7 @@ namespace degate
 
 		// Vertices and colors
 
-        color_t color = gate->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_GATE) : gate->get_fill_color();
+        color_t color = gate->get_gate_template()->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_GATE) : gate->get_gate_template()->get_fill_color();
 
 		color = highlight_color_by_state(color, gate->get_highlighted());
 
@@ -286,7 +284,7 @@ namespace degate
 
 		// Lines
 
-        color = gate->get_frame_color() == 0 ? project->get_default_color(DEFAULT_COLOR_GATE_FRAME) : gate->get_frame_color();
+        color = gate->get_gate_template()->get_frame_color() == 0 ? project->get_default_color(DEFAULT_COLOR_GATE_FRAME) : gate->get_gate_template()->get_frame_color();
 
         color = highlight_color_by_state(color, gate->get_highlighted());
 

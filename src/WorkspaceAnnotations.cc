@@ -159,8 +159,6 @@ namespace degate
 
 		program->bind();
 
-		context->glEnable(GL_BLEND);
-
 		program->setUniformValue("mvp", projection);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);

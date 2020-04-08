@@ -140,8 +140,6 @@ namespace degate
 
 		program->bind();
 
-		glEnable(GL_BLEND);
-
 		program->setUniformValue("mvp", projection);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
