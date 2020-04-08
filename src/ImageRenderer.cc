@@ -43,6 +43,15 @@ namespace degate
 		
 		free_texture();
 
+        if (program != NULL)
+            delete program;
+
+        if(QOpenGLContext::currentContext() == NULL)
+            return;
+
+        if(glIsBuffer(vbo) == GL_TRUE)
+            glDeleteBuffers(1, &vbo);
+
 		doneCurrent();
 	}
 
@@ -139,7 +148,7 @@ namespace degate
 
 	void ImageRenderer::free_texture()
 	{
-		if(texture != 0)
+		if(glIsTexture(texture) == GL_TRUE)
 			glDeleteTextures(1, &texture);
 	}
 
@@ -180,10 +189,12 @@ namespace degate
 		program->addShader(vshader);
 		program->addShader(fshader);
 
+        delete vshader;
+        delete fshader;
+
 		program->link();
 
 		glGenBuffers(1, &vbo);
-
 
 		if(update_on_gl_initialize)
 			update_screen();

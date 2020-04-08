@@ -45,7 +45,7 @@ namespace degate
 	{
 	private:
 
-		std::shared_ptr<Gate> gate;
+		std::weak_ptr<Gate> gate;
 		std::shared_ptr<GateTemplatePort> gate_template_port;
 		object_id_t template_port_id;
 

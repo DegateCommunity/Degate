@@ -58,7 +58,7 @@ namespace degate
 	private:
 
 		HIGHLIGHTING_STATE highlight_state;
-		std::shared_ptr<Layer> layer;
+		std::weak_ptr<Layer> layer;
 		unsigned index;
 
 	protected:

@@ -46,7 +46,7 @@ Gate::Gate(BoundingBox const& bounding_box,
 
 Gate::~Gate()
 {
-	debug(TM, "destroy gate");
+	//debug(TM, "destroy gate");
 	if (gate_template != NULL) remove_template();
 }
 

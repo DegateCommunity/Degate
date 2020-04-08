@@ -45,7 +45,7 @@ void PlacedLogicModelObject::cloneDeepInto(DeepCopyable_shptr destination, oldne
 	auto clone = std::dynamic_pointer_cast<PlacedLogicModelObject>(destination);
 	assert(clone.get () != 0);
 	clone->highlight_state = highlight_state;
-	clone->layer = std::dynamic_pointer_cast<Layer>(layer->cloneDeep(oldnew));
+	clone->layer = std::dynamic_pointer_cast<Layer>(layer.lock()->cloneDeep(oldnew));
 }
 
 PlacedLogicModelObject::HIGHLIGHTING_STATE PlacedLogicModelObject::get_highlighted() const
@@ -71,13 +71,13 @@ void PlacedLogicModelObject::set_layer(std::shared_ptr<Layer> layer)
 
 std::shared_ptr<Layer> PlacedLogicModelObject::get_layer()
 {
-	return layer;
+	return layer.lock();
 }
 
 void PlacedLogicModelObject::notify_shape_change()
 {
-	if (layer != NULL && has_valid_object_id())
+	if (layer.lock() != NULL && has_valid_object_id())
 	{
-		layer->notify_shape_change(get_object_id());
+		layer.lock()->notify_shape_change(get_object_id());
 	}
 }

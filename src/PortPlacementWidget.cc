@@ -41,8 +41,16 @@ namespace degate
 	{
         makeCurrent();
 
-		glDeleteBuffers(1, &vbo);
+        if (program != NULL)
+            delete program;
+
         Text::delete_context();
+
+        if(QOpenGLContext::currentContext() == NULL)
+            return;
+
+        if(glIsBuffer(vbo) == GL_TRUE)
+            glDeleteBuffers(1, &vbo);
 
         doneCurrent();
 	}
@@ -122,6 +130,9 @@ namespace degate
 		program = new QOpenGLShaderProgram;
 		program->addShader(vshader);
 		program->addShader(fshader);
+
+        delete vshader;
+        delete fshader;
 
 		program->link();
 

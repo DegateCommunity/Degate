@@ -71,7 +71,7 @@ void GatePort::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<GatePort>(dest);
 
-	clone->gate = std::dynamic_pointer_cast<Gate>(gate->cloneDeep(oldnew));
+	clone->gate = std::dynamic_pointer_cast<Gate>(gate.lock()->cloneDeep(oldnew));
 	clone->gate_template_port = std::dynamic_pointer_cast<GateTemplatePort>(gate_template_port->cloneDeep(oldnew));
 
 	Circle::cloneDeepInto(dest, oldnew);
@@ -107,11 +107,11 @@ void GatePort::set_template_port(std::shared_ptr<GateTemplatePort>
 	 be ignored. But if the port already belongs to a gate and a a template is
 	 set afterwards, this calculation is used.
 	*/
-	assert(gate != NULL);
-	set_x(gate->get_min_x() +
-		gate->get_relative_x_position_within_gate(gate_template_port->get_x()));
-	set_y(gate->get_min_y() +
-		gate->get_relative_y_position_within_gate(gate_template_port->get_y()));
+	assert(gate.lock() != NULL);
+	set_x(gate.lock()->get_min_x() +
+		gate.lock()->get_relative_x_position_within_gate(gate_template_port->get_x()));
+	set_y(gate.lock()->get_min_y() +
+		gate.lock()->get_relative_y_position_within_gate(gate_template_port->get_y()));
 }
 
 
@@ -122,27 +122,27 @@ bool GatePort::has_template_port() const
 
 bool GatePort::is_assigned_to_a_gate() const
 {
-	return gate != NULL;
+	return gate.lock() != NULL;
 }
 
 
 std::shared_ptr<Gate> GatePort::get_gate()
 {
-	return gate;
+	return gate.lock();
 }
 
 const std::string GatePort::get_descriptive_identifier() const
 {
 	if (has_template_port() && is_assigned_to_a_gate() &&
-		gate->has_template())
+		gate.lock()->has_template())
 	{
-		if (gate->has_name())
+		if (gate.lock()->has_name())
 		{
 			boost::format fmter("%1%: %2% (%3%)");
 			fmter
-				% gate->get_name()
+				% gate.lock()->get_name()
 				% gate_template_port->get_name()
-				% gate->get_gate_template()->get_name();
+				% gate.lock()->get_gate_template()->get_name();
 			return fmter.str();
 		}
 		else
@@ -150,8 +150,8 @@ const std::string GatePort::get_descriptive_identifier() const
 			boost::format fmter("%1% (%2%, gate=%3%)");
 			fmter
 				% gate_template_port->get_name()
-				% gate->get_gate_template()->get_name()
-				% gate->get_object_id();
+				% gate.lock()->get_gate_template()->get_name()
+				% gate.lock()->get_object_id();
 			return fmter.str();
 		}
 	}

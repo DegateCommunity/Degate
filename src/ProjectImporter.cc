@@ -189,7 +189,7 @@ void ProjectImporter::parse_layers_element(QDomElement const layers_elem, Projec
 			Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
 			layer_id_t layer_id = parse_number<layer_id_t>(layer_elem, "id", 0);
 
-			Layer_shptr new_layer(new Layer(prj->get_bounding_box(), layer_type));
+			Layer_shptr new_layer = std::make_shared<Layer>(prj->get_bounding_box(), layer_type);
 			LogicModel_shptr lmodel = prj->get_logic_model();
 
 			debug(TM, "Parsed a layer entry for type %s. This is a %s layer. Background image is %s",

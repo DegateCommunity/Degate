@@ -404,7 +404,7 @@ void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
 					object_id_t template_port_id = parse_number<object_id_t>(port_elem, "type-id");
 
 					// create a new port
-					GatePort_shptr gate_port(new GatePort(gate));
+					GatePort_shptr gate_port = std::make_shared<GatePort>(gate);
 					gate_port->set_object_id(parse_number<object_id_t>(port_elem, "id"));
 					gate_port->set_template_port_type_id(template_port_id);
 					gate_port->set_diameter(parse_number<diameter_t>(port_elem, "diameter", 5));
@@ -465,10 +465,10 @@ void LogicModelImporter::parse_annotations_element(QDomElement const annotations
 			if (class_id == Annotation::SUBPROJECT)
 			{
 				const std::string path = annotation_elem.attribute("subproject-directory").toStdString();
-				annotation = Annotation_shptr(new SubProjectAnnotation(min_x, max_x, min_y, max_y, path));
+				annotation = std::make_shared<SubProjectAnnotation>(min_x, max_x, min_y, max_y, path);
 			}
 			else
-				annotation = Annotation_shptr(new Annotation(min_x, max_x, min_y, max_y, class_id));
+				annotation = std::make_shared<Annotation>(min_x, max_x, min_y, max_y, class_id);
 
 			annotation->set_name(name.c_str());
 			annotation->set_description(description.c_str());
