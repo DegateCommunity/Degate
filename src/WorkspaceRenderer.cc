@@ -440,17 +440,28 @@ namespace degate
 			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
 
 			// Check if there is a gate or gate port on the logic layer
-			if(plo == NULL) 
-			{
-				try 
-				{
-					layer = get_first_logic_layer(lmodel);
-					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
-			    }
-				catch(CollectionLookupException const& ex)
-				{
-				}
-			}
+            try
+            {
+                PlacedLogicModelObject_shptr logic_plo;
+                layer = get_first_logic_layer(lmodel);
+                logic_plo = layer->get_object_at_position(pos.x(), pos.y(), 0, true, !draw_gates, !draw_ports, true, true, true);
+
+                if(plo == nullptr)
+                {
+                    plo = logic_plo;
+                }
+                else if (std::dynamic_pointer_cast<GatePort>(logic_plo) != nullptr)
+                {
+                    plo = logic_plo;
+                }
+                else if (std::dynamic_pointer_cast<Via>(plo) == nullptr && std::dynamic_pointer_cast<EMarker>(plo) == nullptr && std::dynamic_pointer_cast<Gate>(logic_plo) != nullptr)
+                {
+                    plo = logic_plo;
+                }
+            }
+            catch(CollectionLookupException const& ex)
+            {
+            }
 
 			bool was_selected = false;
 

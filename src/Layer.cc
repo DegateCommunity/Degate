@@ -291,9 +291,21 @@ void Layer::notify_shape_change(object_id_t object_id)
 }
 
 
+enum class PlacedLogicModelObjectType
+{
+    NONE,
+    GATE_PORT,
+    VIA,
+    EMARKER,
+    GATE,
+    ANNOTATION,
+    WIRE
+};
+
 PlacedLogicModelObject_shptr Layer::get_object_at_position(float x, float y, float max_distance, bool ignore_annotations, bool ignore_gates, bool ignore_ports, bool ignore_emarkers, bool ignore_vias, bool ignore_wires)
 {
-	PlacedLogicModelObject_shptr object;
+	PlacedLogicModelObject_shptr object = nullptr;
+    auto type = PlacedLogicModelObjectType::NONE;
 
 	for (qt_region_iterator iter = quadtree.region_iter_begin(std::floor(x - max_distance),
                                                               std::ceil(x + max_distance),
@@ -303,38 +315,66 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(float x, float y, flo
 	{
 		if ((*iter)->in_shape(x, y, max_distance))
 		{
-			if(std::dynamic_pointer_cast<Annotation>((*iter)) != NULL && !ignore_annotations)
-			{
-                object = (*iter);
-			}
-            else if (std::dynamic_pointer_cast<Via>((*iter)) != NULL && !ignore_vias)
+            if (std::dynamic_pointer_cast<GatePort>((*iter)) != nullptr && !ignore_ports)
             {
                 object = (*iter);
+                type = PlacedLogicModelObjectType::GATE_PORT;
             }
-            else if (std::dynamic_pointer_cast<EMarker>((*iter)) != NULL && !ignore_emarkers)
+            else if (std::dynamic_pointer_cast<Via>((*iter)) != nullptr && !ignore_vias)
             {
+                if(type == PlacedLogicModelObjectType::GATE_PORT)
+                    continue;
+
                 object = (*iter);
+                type = PlacedLogicModelObjectType::VIA;
             }
-			else if (std::dynamic_pointer_cast<Gate>((*iter)) != NULL && !ignore_gates)
-			{
-                object = (*iter);
-			}
-            else if (std::dynamic_pointer_cast<Wire>((*iter)) != NULL && !ignore_wires)
+            else if (std::dynamic_pointer_cast<EMarker>((*iter)) != nullptr && !ignore_emarkers)
             {
+                if(type == PlacedLogicModelObjectType::GATE_PORT
+                || type == PlacedLogicModelObjectType::VIA)
+                    continue;
+
                 object = (*iter);
+                type = PlacedLogicModelObjectType::EMARKER;
             }
-			else if (std::dynamic_pointer_cast<GatePort>((*iter)) != NULL && !ignore_ports)
+			else if (std::dynamic_pointer_cast<Gate>((*iter)) != nullptr && !ignore_gates)
 			{
-				/* Prefer gate ports */
-				return *iter;
+                if(type == PlacedLogicModelObjectType::GATE_PORT
+                || type == PlacedLogicModelObjectType::VIA
+                || type == PlacedLogicModelObjectType::EMARKER)
+                    continue;
+
+                object = (*iter);
+                type = PlacedLogicModelObjectType::GATE;
 			}
+            else if(std::dynamic_pointer_cast<Annotation>((*iter)) != nullptr && !ignore_annotations)
+            {
+                if(type == PlacedLogicModelObjectType::GATE_PORT
+                || type == PlacedLogicModelObjectType::VIA
+                || type == PlacedLogicModelObjectType::EMARKER
+                || type == PlacedLogicModelObjectType::GATE)
+                    continue;
+
+                object = (*iter);
+                type = PlacedLogicModelObjectType::ANNOTATION;
+            }
+            else if (std::dynamic_pointer_cast<Wire>((*iter)) != nullptr && !ignore_wires)
+            {
+                if(type == PlacedLogicModelObjectType::GATE_PORT
+                || type == PlacedLogicModelObjectType::VIA
+                || type == PlacedLogicModelObjectType::EMARKER
+                || type == PlacedLogicModelObjectType::GATE
+                || type == PlacedLogicModelObjectType::ANNOTATION)
+                    continue;
+
+                object = (*iter);
+                type = PlacedLogicModelObjectType::WIRE;
+            }
+
 		}
 	}
-	
-	if(object != NULL)
-        return object;
-	else
-		return NULL;
+
+	return object;
 }
 
 unsigned int Layer::get_distance_to_gate_boundary(unsigned int x, unsigned int y,

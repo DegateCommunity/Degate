@@ -117,6 +117,10 @@ namespace degate
         show_vias_name_view_action->setCheckable(true);
         show_vias_name_view_action->setChecked(true);
         QObject::connect(show_vias_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias_name(bool)));
+        QAction* show_wires_view_action = view_menu->addAction("Show wires");
+        show_wires_view_action->setCheckable(true);
+        show_wires_view_action->setChecked(true);
+        QObject::connect(show_wires_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_wires(bool)));
 
 		QMenu* layer_menu = menu_bar.addMenu("Layer");
 		QAction* layers_edit_action = layer_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit layers");
