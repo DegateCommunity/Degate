@@ -91,10 +91,15 @@ namespace degate
 		void change_image(MemoryImage_shptr image);
 
 	protected:
-		/*
+		/**
 		 * Destroy the OpenGL texture.
 		 */
 		void free_texture();
+
+		/**
+		 * Delete all opengl objects (called when QOpenGLContext::aboutToBeDestroyed signal is emitted).
+		 */
+		void cleanup();
 
 		/* Qt OpenGL functions */
 		virtual void initializeGL();
@@ -107,7 +112,7 @@ namespace degate
 		virtual void mouseMoveEvent(QMouseEvent* event);
 		virtual void wheelEvent(QWheelEvent* event);
 
-		/*
+		/**
 		 * Set the new projection matrix with ortho operation.
 		 * 
 		 * @param scale_factor : NO_ZOOM, ZOOM_IN or ZOOM_OUT.

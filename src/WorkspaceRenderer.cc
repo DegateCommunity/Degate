@@ -36,6 +36,8 @@ namespace degate
 	WorkspaceRenderer::~WorkspaceRenderer()
 	{
 		makeCurrent();
+
+        // Use cleanup function for opengl objects destruction
 		
 		Text::delete_context();
 
@@ -284,6 +286,15 @@ namespace degate
 		background.free_textures();
 	}
 
+    void WorkspaceRenderer::cleanup()
+    {
+        makeCurrent();
+
+        // Delete opengl objects here
+
+        free_textures();
+    }
+
 	void WorkspaceRenderer::initializeGL()
 	{
 		makeCurrent();
@@ -305,6 +316,8 @@ namespace degate
 		selection_tool.init();
 		wires.init();
         wire_tool.init();
+
+        connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &WorkspaceRenderer::cleanup);
 	}
 
 	void WorkspaceRenderer::paintGL()

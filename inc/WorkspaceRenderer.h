@@ -162,6 +162,11 @@ namespace degate
 		 */
 		void free_textures();
 
+        /**
+         * Delete all opengl objects (called when QOpenGLContext::aboutToBeDestroyed signal is emitted).
+         */
+        void cleanup();
+
 		/* Qt OpenGL functions */
 		void initializeGL() override;
 		void paintGL() override;

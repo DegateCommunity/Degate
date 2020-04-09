@@ -51,8 +51,6 @@ namespace degate
 
         if(glIsBuffer(vbo) == GL_TRUE)
             glDeleteBuffers(1, &vbo);
-
-        doneCurrent();
 	}
 
 	void PortPlacementWidget::update_screen()
