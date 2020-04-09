@@ -36,7 +36,7 @@ namespace degate
 
 	WorkspaceBackground::~WorkspaceBackground()
 	{
-
+        free_textures();
 	}
 
 	void WorkspaceBackground::init()
@@ -149,7 +149,7 @@ namespace degate
 
 	void WorkspaceBackground::free_textures()
 	{
-		if(background_textures.size() < 1)
+		if(background_textures.empty())
 			return;
 
 		context->glDeleteTextures(background_textures.size(), &background_textures[0]);

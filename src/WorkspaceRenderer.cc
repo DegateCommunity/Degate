@@ -291,8 +291,6 @@ namespace degate
         makeCurrent();
 
         // Delete opengl objects here
-
-        free_textures();
     }
 
 	void WorkspaceRenderer::initializeGL()
