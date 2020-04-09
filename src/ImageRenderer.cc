@@ -39,18 +39,9 @@ namespace degate
 
 	ImageRenderer::~ImageRenderer()
 	{
-		makeCurrent();
-		
-		free_texture();
+        makeCurrent();
 
-        if (program != NULL)
-            delete program;
-
-        if(QOpenGLContext::currentContext() == NULL)
-            return;
-
-        if(glIsBuffer(vbo) == GL_TRUE)
-            glDeleteBuffers(1, &vbo);
+        // Use cleanup function for opengl objects destruction
 
 		doneCurrent();
 	}
@@ -152,6 +143,21 @@ namespace degate
 			glDeleteTextures(1, &texture);
 	}
 
+    void ImageRenderer::cleanup()
+    {
+        makeCurrent();
+
+        // Delete opengl objects here
+
+        free_texture();
+
+        if (program != NULL)
+            delete program;
+
+        if(glIsBuffer(vbo) == GL_TRUE)
+            glDeleteBuffers(1, &vbo);
+    }
+
 	void ImageRenderer::initializeGL()
 	{
 		makeCurrent();
@@ -198,6 +204,8 @@ namespace degate
 
 		if(update_on_gl_initialize)
 			update_screen();
+
+        connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &ImageRenderer::cleanup);
 	}
 
 	void ImageRenderer::paintGL()
@@ -218,7 +226,7 @@ namespace degate
 
 		program->enableAttributeArray("texCoord");
 		program->setAttributeBuffer("texCoord", GL_FLOAT, 2 * sizeof(float), 2, sizeof(ImageVertex2D));
-		
+
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -233,7 +241,7 @@ namespace degate
 	void ImageRenderer::resizeGL(int w, int h)
 	{
 		makeCurrent();
-		
+
 		glViewport(0, 0, w, h);
 
 		set_projection(NO_ZOOM, center_x, center_y);
