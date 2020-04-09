@@ -116,26 +116,33 @@ namespace degate
         temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
         temp.alpha = MASK_A(color) / 255.0;
 
+        float radius = static_cast<float>(line.get_diameter()) / 2.0f;
+
         QVector2D difference_vector(line.get_to_x() - line.get_from_x(), line.get_to_y() - line.get_from_y());
+
+        QVector2D parallel_vector = difference_vector;
+        parallel_vector.normalize();
+        float to_x = line.get_to_x() + radius * parallel_vector.x(), from_x = line.get_from_x() - radius * parallel_vector.x();
+        float to_y = line.get_to_y() + radius * parallel_vector.y(), from_y = line.get_from_y() - radius * parallel_vector.y();
         QVector2D perpendicular_vector(difference_vector.y(), -difference_vector.x());
         perpendicular_vector.normalize();
 
-        temp.pos = QVector2D(line.get_from_x() + perpendicular_vector.x() * line.get_diameter() / 2.0, line.get_from_y() + perpendicular_vector.y() * line.get_diameter() / 2.0);
+        temp.pos = QVector2D(from_x + perpendicular_vector.x() * radius, from_y + perpendicular_vector.y() * radius);
         context->glBufferSubData(GL_ARRAY_BUFFER, 0 * sizeof(WireToolVertex2D), sizeof(WireToolVertex2D), &temp);
 
-        temp.pos = QVector2D(line.get_from_x() - perpendicular_vector.x() * line.get_diameter() / 2.0, line.get_from_y() - perpendicular_vector.y() * line.get_diameter() / 2.0);
+        temp.pos = QVector2D(from_x - perpendicular_vector.x() * radius, from_y - perpendicular_vector.y() * radius);
         context->glBufferSubData(GL_ARRAY_BUFFER, 1 * sizeof(WireToolVertex2D), sizeof(WireToolVertex2D), &temp);
 
-        temp.pos = QVector2D(line.get_to_x() + perpendicular_vector.x() * line.get_diameter() / 2.0, line.get_to_y() + perpendicular_vector.y() * line.get_diameter() / 2.0);
+        temp.pos = QVector2D(to_x + perpendicular_vector.x() * radius, to_y + perpendicular_vector.y() * radius);
         context->glBufferSubData(GL_ARRAY_BUFFER, 2 * sizeof(WireToolVertex2D), sizeof(WireToolVertex2D), &temp);
 
-        temp.pos = QVector2D(line.get_to_x() + perpendicular_vector.x() * line.get_diameter() / 2.0, line.get_to_y() + perpendicular_vector.y() * line.get_diameter() / 2.0);
+        temp.pos = QVector2D(to_x + perpendicular_vector.x() * radius, to_y + perpendicular_vector.y() * radius);
         context->glBufferSubData(GL_ARRAY_BUFFER, 4 * sizeof(WireToolVertex2D), sizeof(WireToolVertex2D), &temp);
 
-        temp.pos = QVector2D(line.get_to_x() - perpendicular_vector.x() * line.get_diameter() / 2.0, line.get_to_y() - perpendicular_vector.y() * line.get_diameter() / 2.0);
+        temp.pos = QVector2D(to_x - perpendicular_vector.x() * radius, to_y - perpendicular_vector.y() * radius);
         context->glBufferSubData(GL_ARRAY_BUFFER, 3 * sizeof(WireToolVertex2D), sizeof(WireToolVertex2D), &temp);
 
-        temp.pos = QVector2D(line.get_from_x() - perpendicular_vector.x() * line.get_diameter() / 2.0, line.get_from_y() - perpendicular_vector.y() * line.get_diameter() / 2.0);
+        temp.pos = QVector2D(from_x - perpendicular_vector.x() * radius, from_y - perpendicular_vector.y() * radius);
         context->glBufferSubData(GL_ARRAY_BUFFER, 5 * sizeof(WireToolVertex2D), sizeof(WireToolVertex2D), &temp);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
