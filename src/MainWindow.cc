@@ -510,6 +510,9 @@ namespace degate
 
 		GateTemplate_shptr gate_template = select_dialog.get_selected_gate();
 
+		if(gate_template == nullptr)
+		    return;
+
 		Gate_shptr new_gate(new Gate(workspace->get_area_selection()));
 		new_gate->set_gate_template(gate_template);
 		
