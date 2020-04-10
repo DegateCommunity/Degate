@@ -303,7 +303,8 @@ namespace degate
 
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+        glDisable(GL_LINE_SMOOTH);
         glDisable(GL_DEPTH);
 
 		background.init();
