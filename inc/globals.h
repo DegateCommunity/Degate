@@ -31,13 +31,23 @@
 #include "degate_exceptions.h"
 
 /**
- * @namespace degate The namespace 'degate' is the namespace for everything that belongs to libdegate.
+ * @namespace degate The namespace 'degate' is the namespace for everything that belongs to Degate.
  */
 namespace degate
 {
 #define DEBUG 1
 
 #define DEBUG_PROJECT_IMPORT 0
+
+#define CHECK_PATH(path) if(!QDir(QString::fromStdString(path)).exists()) QDir().mkdir(QString::fromStdString(path));
+
+#define DEGATE_CONFIGURATION_PATH ".degate/"
+
+#define DEGATE_IN_CONFIGURATION(path) std::string(DEGATE_CONFIGURATION_PATH) + std::string(path)
+
+#define DEGATE_CACHE_PATH ".degate/cache/"
+
+#define DEGATE_IN_CACHE(path) std::string(DEGATE_CACHE_PATH) + std::string(path)
 
 #define SIGNUM(x) ((x > 0) ? 1 : (x < 0) ? -1 : 0)
 

@@ -166,7 +166,8 @@ namespace degate
 
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+        glDisable(GL_LINE_SMOOTH);
 
 		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
 		const char* vsrc =
@@ -311,13 +312,13 @@ namespace degate
 	QPointF ImageRenderer::get_widget_mouse_position() const
 	{
 		const QPointF qt_widget_relative = mapFromGlobal(QCursor::pos());
-		return QPoint(qt_widget_relative.x(), qt_widget_relative.y());
+		return QPointF(qt_widget_relative.x(), qt_widget_relative.y());
 	}
 
 	QPointF ImageRenderer::get_opengl_mouse_position() const
 	{
 		const QPointF widget_mouse_position = get_widget_mouse_position();
-		return QPoint(viewport_min_x + widget_mouse_position.x() * scale,
+		return QPointF(viewport_min_x + widget_mouse_position.x() * scale,
 		              viewport_min_y + widget_mouse_position.y() * scale);
 	}
 }

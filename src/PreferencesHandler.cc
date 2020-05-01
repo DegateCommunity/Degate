@@ -25,23 +25,25 @@ namespace degate
 {
 	PreferencesHandler::PreferencesHandler()
 	{
-		ret_t res = check_file(DEGATE_CONFIG_FILE_PATH);
+        CHECK_PATH(DEGATE_CONFIGURATION_PATH)
+
+		ret_t res = check_file(DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME));
 
 		if(res != RET_OK)
 			return;
 
 		QDomDocument parser;
 
-		QFile file(QString::fromStdString(DEGATE_CONFIG_FILE_PATH));
+		QFile file(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME)));
 		if (!file.open(QIODevice::ReadOnly))
 		{
-			debug(TM, "Problem: can't open the file %s.", DEGATE_CONFIG_FILE_PATH);
+			debug(TM, "Problem: can't open the file %s.", DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME));
 			return;
 		}
 
 		if (!parser.setContent(&file))
 		{
-			debug(TM, "Problem: can't parse the file %s.", DEGATE_CONFIG_FILE_PATH);
+			debug(TM, "Problem: can't parse the file %s.", DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME));
 			return;
 		}
 		file.close();
@@ -83,13 +85,14 @@ namespace degate
 		
 		doc.appendChild(root_elem);
 
-		QFile file(QString::fromStdString(DEGATE_CONFIG_FILE_PATH));
+		QFile file(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME)));
 		if (!file.open(QIODevice::WriteOnly))
 		{
 			throw InvalidPathException("Can't create export file.");
 		}
 
 		QTextStream stream(&file);
+        stream.setCodec("UTF-8");
 		stream << doc.toString();
 
 		file.close();

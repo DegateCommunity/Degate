@@ -38,8 +38,6 @@ namespace degate
 		makeCurrent();
 
         // Use cleanup function for opengl objects destruction
-		
-		Text::delete_context();
 
 		doneCurrent();
 	}
@@ -291,6 +289,7 @@ namespace degate
         makeCurrent();
 
         // Delete opengl objects here
+        Text::delete_context();
     }
 
 	void WorkspaceRenderer::initializeGL()
@@ -305,7 +304,6 @@ namespace degate
 		glEnable(GL_BLEND);
         glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
         glDisable(GL_LINE_SMOOTH);
-        glDisable(GL_DEPTH);
 
 		background.init();
 		gates.init();

@@ -27,7 +27,7 @@
 #include "XMLExporter.h"
 #include "XMLImporter.h"
 
-#define DEGATE_CONFIG_FILE_PATH "degate.config"
+#define DEGATE_CONFIG_FILE_NAME "degate.config"
 
 namespace degate
 {

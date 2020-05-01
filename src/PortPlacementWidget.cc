@@ -21,6 +21,8 @@
 
 #include "PortPlacementWidget.h"
 
+#define TEXT_PADDING 2
+
 namespace degate
 {
 	struct PortVertex2D
@@ -66,7 +68,7 @@ namespace degate
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         port_name_text.update(port->get_name().length());
-        port_name_text.add_sub_text(0, pos.get_x(), pos.get_y() + DEFAULT_PORT_SIZE / 2.0 + 5, port->get_name().c_str(), 5, QVector3D(255, 255, 255), 1, 1);
+        port_name_text.add_sub_text(0, pos.get_x(), pos.get_y() + DEFAULT_PORT_SIZE / 2.0 + TEXT_PADDING, port->get_name(), 5, QVector3D(255, 255, 255), 1, true, false);
 
 		ImageRenderer::update_screen();
 	}

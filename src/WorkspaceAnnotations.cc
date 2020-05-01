@@ -137,7 +137,7 @@ namespace degate
 		{
 			unsigned x = e->get_min_x() + (e->get_max_x() - e->get_min_x()) / 2.0;
 			unsigned y = e->get_min_y() + (e->get_max_y() - e->get_min_y()) / 2.0;
-			text.add_sub_text(text_offset, x, y, e->get_name().c_str(), 20, QVector3D(255, 255, 255), 1, true);
+			text.add_sub_text(text_offset, x, y, e->get_name(), 20, QVector3D(255, 255, 255), 1, true, true, e->get_max_x() - e->get_min_x());
 
 			text_offset += e->get_name().length();
 			index++;

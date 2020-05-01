@@ -21,6 +21,8 @@
 
 #include "WorkspaceVias.h"
 
+#define TEXT_PADDING 2
+
 namespace degate
 {
     struct ViasVertex2D
@@ -127,8 +129,8 @@ namespace degate
         for(auto& e : vias)
         {
             unsigned x = e->get_x();
-            unsigned y = e->get_y() + e->get_diameter() / 2.0 + 5;
-            text.add_sub_text(text_offset, x, y, e->get_name().c_str(), 5, QVector3D(255, 255, 255), 1, 1);
+            unsigned y = e->get_y() + e->get_diameter() / 2.0 + TEXT_PADDING;
+            text.add_sub_text(text_offset, x, y, e->get_name(), 5, QVector3D(255, 255, 255), 1, true, false);
 
             text_offset += e->get_name().length();
             index++;

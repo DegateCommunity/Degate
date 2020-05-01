@@ -21,6 +21,8 @@
 
 #include "WorkspaceGates.h"
 
+#define TEXT_PADDING 2
+
 namespace degate
 {
 	struct GatesVertex2D
@@ -136,19 +138,19 @@ namespace degate
 		unsigned text_offset = 0;
 		unsigned port_text_offset = 0;
 		unsigned ports_index = 0;
-		for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
+		for(auto iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
-			text.add_sub_text(text_offset, iter->second->get_min_x() + TEXT_SPACE, iter->second->get_min_y() + TEXT_SPACE, iter->second->get_gate_template()->get_name().c_str(), 10, QVector3D(255, 255, 255), 1);
+			text.add_sub_text(text_offset, iter->second->get_min_x() + TEXT_PADDING, iter->second->get_min_y() + TEXT_PADDING, iter->second->get_gate_template()->get_name().c_str(), 10, QVector3D(255, 255, 255), 1, false, false, iter->second->get_max_x() - iter->second->get_min_x() - TEXT_PADDING * 2);
 			create_ports(iter->second, ports_index);
 
 			text_offset += iter->second->get_gate_template()->get_name().length();
 			ports_index += iter->second->get_ports_number();
 
-			for(Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
+			for(auto port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
 			{
 				unsigned x = (*port_iter)->get_x();
-				unsigned y = (*port_iter)->get_y() + (*port_iter)->get_diameter() / 2.0 + 5;
-				port_text.add_sub_text(port_text_offset, x, y, (*port_iter)->get_name().c_str(), 5, QVector3D(255, 255, 255), 1, 1);
+				unsigned y = (*port_iter)->get_y() + (*port_iter)->get_diameter() / 2.0 + TEXT_PADDING;
+				port_text.add_sub_text(port_text_offset, x, y, (*port_iter)->get_name(), 5, QVector3D(255, 255, 255), 1, true, false);
 				port_text_offset += (*port_iter)->get_name().length();
 			}
 		}

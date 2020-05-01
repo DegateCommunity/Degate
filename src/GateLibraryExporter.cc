@@ -74,6 +74,7 @@ void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_s
 		}
 
 		QTextStream stream(&file);
+        stream.setCodec("UTF-8");
 		stream << doc.toString();
 
 		file.close();

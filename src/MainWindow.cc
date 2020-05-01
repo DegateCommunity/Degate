@@ -230,6 +230,8 @@ namespace degate
 	{
 		if (workspace != NULL)
 			delete workspace;
+
+		Text::save_fonts_to_cache();
 	}
 
 	void MainWindow::on_menu_help_about()
