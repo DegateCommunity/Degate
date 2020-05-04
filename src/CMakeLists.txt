@@ -35,11 +35,6 @@ file(GLOB_RECURSE  HEADER_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIRE
 )
 
 #
-# The config
-#
-configure_file(../inc/Configuration.h.in ${PROJECT_SOURCE_DIR}/inc/Configuration.h)
-
-#
 # Link
 #
 add_executable(Degate ${SRC_FILES} ${HEADER_FILES})
