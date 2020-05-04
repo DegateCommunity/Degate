@@ -93,7 +93,7 @@ namespace degate
 		 *
 		 * @param icon_name : the icon name.
 		 */
-		QString get_icon_path(std::string icon_name);
+		QString get_icon_path(QString icon_name);
 
 	private:
 		Theme theme;

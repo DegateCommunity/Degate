@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 
-	QSplashScreen splash(QPixmap("res/degate_splash.png"));
+	QSplashScreen splash(QPixmap(":/degate_splash.png"));
     splash.show();
 	a.processEvents();
 	

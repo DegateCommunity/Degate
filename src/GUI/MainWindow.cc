@@ -34,7 +34,7 @@ namespace degate
 			resize(width, height);
 
 		setWindowTitle("Degate");
-		setWindowIcon(QIcon("res/degate_logo.png"));
+		setWindowIcon(QIcon(":/degate_logo.png"));
 
 		// Set the actual theme and icon theme from preferences
 		THEME_MANAGER.init(PREFERENCES_HANDLER.get_theme(), PREFERENCES_HANDLER.get_icon_theme());
@@ -237,7 +237,7 @@ namespace degate
 	void MainWindow::on_menu_help_about()
 	{
 		const QString about_message = "<html><center>"
-			"<img src='res/degate_logo.png' alt='' width='100' height='87'> <br>"
+			"<img src=':/degate_logo.png' alt='' width='100' height='87'> <br>"
             "<strong>Version : " DEGATE_VERSION "</strong><br><br>"
 			"<strong> This is a forked version of Degate </strong> <br>"
 			"Degate is originally developed by Martin Schobert (martin@weltregierung.de). <br>"

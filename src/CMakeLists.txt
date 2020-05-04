@@ -37,7 +37,7 @@ file(GLOB_RECURSE  HEADER_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIRE
 #
 # Link
 #
-add_executable(Degate ${SRC_FILES} ${HEADER_FILES})
+add_executable(Degate ${SRC_FILES} ${HEADER_FILES} ../res/resources.qrc)
 target_link_libraries(Degate ${LIBS})
 
 #

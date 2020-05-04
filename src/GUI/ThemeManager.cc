@@ -75,18 +75,18 @@ namespace degate
 		is_init = true;
 	}
 
-	QString ThemeManager::get_icon_path(std::string icon_name)
+	QString ThemeManager::get_icon_path(QString icon_name)
 	{
 		assert(is_init);
 		
 		switch (icon_theme)
 		{
 		case LIGHT_ICON_THEME:
-			return QString::fromStdString("res/light/" + icon_name);
+			return ":/light/" + icon_name;
 		case DARK_ICON_THEME:
-			return QString::fromStdString("res/dark/" + icon_name);
+			return ":/dark/" + icon_name;
 		default:
-			return QString::fromStdString("res/light/" + icon_name);
+			return ":/light/" + icon_name;
 		}
 	}
 
