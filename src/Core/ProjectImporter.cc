@@ -59,7 +59,7 @@ Project_shptr ProjectImporter::import_all(std::string const& directory)
 {
 	Project_shptr prj = import(directory);
 
-	if (prj != NULL)
+	if (prj != nullptr)
 	{
 		GateLibraryImporter gl_importer;
 
@@ -125,7 +125,8 @@ Project_shptr ProjectImporter::import(std::string const& directory)
 	if (RET_IS_NOT_OK(check_file(filename)))
 	{
 		debug(TM, "Problem: file %s not found.", filename.c_str());
-		throw InvalidPathException("The ProjectImporter cannot load the project file. File does not exists.");
+		return nullptr;
+		//throw InvalidPathException("The ProjectImporter cannot load the project file. File does not exists.");
 	}
 
 	try

@@ -47,7 +47,7 @@ namespace degate
 		layout.addWidget(&cancel_button, 3, 1);
 
 		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
-		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
+		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
 
 		setLayout(&layout);
 	}
@@ -63,6 +63,6 @@ namespace degate
 		annotation->set_fill_color(fill_color.get_color());
 		annotation->set_frame_color(frame_color.get_color());
 
-		close();
+		accept();
 	}
 }

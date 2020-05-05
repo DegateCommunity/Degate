@@ -44,7 +44,7 @@ namespace degate
 
 		workspace = new WorkspaceRenderer(this);
 		setCentralWidget(workspace);
-		
+
 
 		// Menu bar
 
@@ -172,7 +172,7 @@ namespace degate
 
 		status_bar.addPermanentWidget(&status_bar_layer);
 		status_bar_layer.setText("Layer : 0/0 (none)");
-		
+
 		status_bar.addPermanentWidget(&status_bar_coords);
 		status_bar_coords.setText("Coordinates : 0,0");
 		QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
@@ -281,10 +281,10 @@ namespace degate
 		catch (const std::exception& ex)
 		{
 			setEnabled(true);
-			
+
 			return;
 		}
-		
+
 		QString project_name = QString::fromStdString(project->get_name());
 
 		setEnabled(true);
@@ -321,7 +321,7 @@ namespace degate
 			msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 			msgBox.setDefaultButton(QMessageBox::Save);
 			int ret = msgBox.exec();
-			
+
 			switch (ret)
 			{
 			 case QMessageBox::Save:
@@ -346,7 +346,7 @@ namespace degate
 		setWindowTitle("Degate");
 
 		status_bar_layer.setText("Layer : 0/0 (none)");
-		
+
 		status_bar.showMessage("Project closed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
@@ -358,46 +358,51 @@ namespace degate
 
         if(dir.isNull())
         {
-            status_bar.showMessage("Project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage("New project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
             return;
         }
 
 		NewProjectDialog dialog(this);
-		dialog.exec();
+        auto res = dialog.exec();
 
-		std::string project_name = dialog.get_project_name();
-		unsigned layer_count = dialog.get_layer_count();
-		unsigned width = dialog.get_width();
-		unsigned height = dialog.get_height();
+        if(res == QDialog::Accepted)
+        {
+            std::string project_name = dialog.get_project_name();
+            unsigned layer_count = dialog.get_layer_count();
+            unsigned width = dialog.get_width();
+            unsigned height = dialog.get_height();
 
-		if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
-		{
-			QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
+            if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
+            {
+                QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
 
-			status_bar.showMessage("New project operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+                status_bar.showMessage("New project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
-			return;
-		}
+                return;
+            }
+            else
+            {
+                const std::string project_dir = dir.toStdString() + "/" + project_name;
+
+                if(!file_exists(project_dir))
+                    create_directory(project_dir);
+
+                project = Project_shptr(new Project(width, height, project_dir, layer_count));
+                project->set_name(project_name);
+
+                workspace->set_project(project);
+
+                LayersEditDialog layers_edit_dialog(project, this);
+                layers_edit_dialog.exec();
+
+                on_menu_project_exporter();
+            }
+
+            status_bar.showMessage("Created a new project.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+        }
 		else
-		{
-			const std::string project_dir = dir.toStdString() + "/" + project_name;
-
-			if(!file_exists(project_dir)) 
-				create_directory(project_dir);
-
-			project = Project_shptr(new Project(width, height, project_dir, layer_count));
-			project->set_name(project_name);
-
-			workspace->set_project(project);
-
-			LayersEditDialog layers_edit_dialog(project, this);
-			layers_edit_dialog.exec();
-
-			on_menu_project_exporter();
-		}
-
-		status_bar.showMessage("Created a new project.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage("New project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::on_menu_project_create_subproject()
@@ -412,15 +417,18 @@ namespace degate
 		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
 		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
-		{
-			AnnotationEditDialog dialog(new_annotation, this);
-			dialog.exec();
-		}
+        AnnotationEditDialog dialog(new_annotation, this);
+        auto res = dialog.exec();
 
-		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
+        if(res == QDialog::Accepted)
+        {
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
 
-		workspace->reset_area_selection();
-		workspace->update_screen();
+            workspace->reset_area_selection();
+            workspace->update_screen();
+        }
+        else
+            new_annotation.reset();
 	}
 
 	void MainWindow::on_menu_edit_preferences()
@@ -433,7 +441,7 @@ namespace degate
 	{
 		if(project == NULL)
 			return;
-		
+
 		LayersEditDialog layers_edit_dialog(project, this);
 		layers_edit_dialog.exec();
 
@@ -452,6 +460,12 @@ namespace degate
 
 		QString res = QFileDialog::getOpenFileName(this, "Select the new background image");
 		const std::string file_name = res.toStdString();
+
+		if(res.isNull())
+        {
+            status_bar.showMessage("New background image import cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            return;
+        }
 
 		load_background_image(project->get_logic_model()->get_current_layer(), project->get_project_directory(), file_name);
 
@@ -483,16 +497,22 @@ namespace degate
 
 		project->get_logic_model()->add_gate_template(new_gate_template);
 
-		{
-			GateInstanceEditDialog dialog(this, new_gate, project);
-			dialog.exec();
-		}
+        GateInstanceEditDialog dialog(this, new_gate, project);
+        auto res = dialog.exec();
 
-		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
-		project->get_logic_model()->update_ports(new_gate);
+        if(res == QDialog::Accepted)
+        {
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
+            project->get_logic_model()->update_ports(new_gate);
 
-		workspace->reset_area_selection();
-		workspace->update_screen();
+            workspace->reset_area_selection();
+            workspace->update_screen();
+        }
+        else
+        {
+            project->get_logic_model()->remove_gate_template(new_gate_template);
+            new_gate_template.reset();
+        }
 	}
 
 	void MainWindow::on_menu_gate_new_gate()
@@ -507,7 +527,10 @@ namespace degate
 		}
 
 		SelectGateTemplateDialog select_dialog(project, this);
-		select_dialog.exec();
+		auto res = select_dialog.exec();
+
+        if(res == QDialog::Rejected)
+            return;
 
 		GateTemplate_shptr gate_template = select_dialog.get_selected_gate();
 
@@ -516,24 +539,30 @@ namespace degate
 
 		Gate_shptr new_gate(new Gate(workspace->get_area_selection()));
 		new_gate->set_gate_template(gate_template);
-		
-		{
-			GateInstanceEditDialog dialog(this, new_gate, project);
-			dialog.exec();
-		}
 
-		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
-		project->get_logic_model()->update_ports(new_gate);
-		
-		workspace->reset_area_selection();
-		workspace->update_screen();
+        GateInstanceEditDialog dialog(this, new_gate, project);
+        res = dialog.exec();
+
+        if(res == QDialog::Accepted)
+        {
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(),
+                                                   new_gate);
+            project->get_logic_model()->update_ports(new_gate);
+
+            workspace->reset_area_selection();
+            workspace->update_screen();
+        }
+        else
+        {
+            new_gate.reset();
+        }
 	}
 
 	void MainWindow::on_menu_gate_edit()
 	{
 		if(project == NULL || !workspace->has_selection())
 			return;
-		
+
 		if(Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_object()))
 		{
 			GateInstanceEditDialog dialog(this, o, project);
@@ -549,7 +578,7 @@ namespace degate
 	{
 		if(project == NULL)
 			return;
-		
+
 		GateLibraryDialog dialog(project, this);
 		dialog.exec();
 
@@ -583,15 +612,18 @@ namespace degate
 		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
 		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
-		{
-			AnnotationEditDialog dialog(new_annotation, this);
-			dialog.exec();
-		}
+        AnnotationEditDialog dialog(new_annotation, this);
+        auto res = dialog.exec();
 
-		project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
+        if(res == QDialog::Accepted)
+        {
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
 
-		workspace->reset_area_selection();
-		workspace->update_screen();
+            workspace->reset_area_selection();
+            workspace->update_screen();
+        }
+        else
+            new_annotation.reset();
 	}
 
 	void MainWindow::on_menu_annotation_edit()
@@ -684,68 +716,81 @@ namespace degate
 
 		ProjectImporter projectImporter;
 
-		if(project != NULL)
-			on_menu_project_exporter();
-		
+		if(project != nullptr)
+		    on_menu_project_exporter();
+
 		try
 		{
-			project = projectImporter.import_all(path);
-		}
-		catch (const std::exception& ex)
-		{
-			QMessageBox::StandardButton reply;
-			reply = QMessageBox::question(this, "Project/Subproject", "The project do not exist, do you want to create it ?", QMessageBox::Yes | QMessageBox::No);
+			std::shared_ptr<Project> imported_project = projectImporter.import_all(path);
 
-			if(reply == QMessageBox::Yes)
-			{
-				NewProjectDialog dialog(this);
-				dialog.exec();
+			if(imported_project == nullptr)
+            {
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(this, "Subproject", "The project/subproject do not exist, do you want to create it ?", QMessageBox::Yes | QMessageBox::No);
 
-				std::string project_name = dialog.get_project_name();
-				unsigned layer_count = dialog.get_layer_count();
-				unsigned width = dialog.get_width();
-				unsigned height = dialog.get_height();
+                if(reply == QMessageBox::Yes)
+                {
+                    NewProjectDialog dialog(this);
+                    auto res = dialog.exec();
 
-				if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
-				{
-					QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
+                    if(res == QDialog::Accepted)
+                    {
+                        std::string project_name = dialog.get_project_name();
+                        unsigned layer_count = dialog.get_layer_count();
+                        unsigned width = dialog.get_width();
+                        unsigned height = dialog.get_height();
 
-					status_bar.showMessage("New project operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+                        if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
+                        {
+                            QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
 
-					return;
-				}
-				else
-				{
-					if(!file_exists(path)) 
-						create_directory(path);
+                            status_bar.showMessage("New project/subproject operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
-					project = Project_shptr(new Project(width, height, path, layer_count));
-					project->set_name(project_name);
+                            return;
+                        }
+                        else
+                        {
+                            if(!file_exists(path))
+                                create_directory(path);
 
-					LayersEditDialog layers_edit_dialog(project, this);
-					layers_edit_dialog.exec();
+                            project = Project_shptr(new Project(width, height, path, layer_count));
+                            project->set_name(project_name);
 
-					on_menu_project_exporter();
-				}
-			}
+                            LayersEditDialog layers_edit_dialog(project, this);
+                            layers_edit_dialog.exec();
+
+                            on_menu_project_exporter();
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
 			else
-			{
-				std::cout << "Exception caught: " << ex.what() << std::endl;
-				status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-				project = NULL;
-				setWindowTitle("Degate");
+            {
+                project = imported_project;
+            }
+		}
+		catch (const std::exception& e)
+		{
+            std::cout << "Exception caught: " << e.what() << std::endl;
+            QMessageBox::warning(this, "Project/Subproject import failed", "The project/subproject cannot be imported (maybe corrupted).");
+            status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
-				throw ex;
-			}
+            return;
 		}
 
-		workspace->set_project(project);
+        workspace->set_project(project);
 
-		setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
-
-		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
-		
-		status_bar.showMessage("Project/Subproject imported.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+        setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
+        status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
+        status_bar.showMessage("Project/Subproject imported.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::change_status_bar_coords(int x, int y)
@@ -863,17 +908,20 @@ namespace degate
         if(project == NULL)
             return;
 
-        EMarker_shptr new_emarker(new EMarker(context_menu_mouse_position.x(), context_menu_mouse_position.y()));
+        EMarker_shptr new_emarker = std::make_shared<EMarker>(context_menu_mouse_position.x(), context_menu_mouse_position.y());
         new_emarker->set_fill_color(project->get_default_color(DEFAULT_COLOR_EMARKER));
 
+        EMarkerEditDialog dialog(new_emarker, this);
+        auto res = dialog.exec();
+
+        if(res == QDialog::Accepted)
         {
-            EMarkerEditDialog dialog(new_emarker, this);
-            dialog.exec();
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_emarker);
+
+            workspace->update_screen();
         }
-
-        project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_emarker);
-
-        workspace->update_screen();
+        else
+            new_emarker.reset();
     }
 
     void MainWindow::on_via_create()
@@ -881,16 +929,20 @@ namespace degate
         if(project == NULL)
             return;
 
-        Via_shptr new_via(new Via(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UNDEFINED));
+        Via_shptr new_via = std::make_shared<Via>(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UNDEFINED);
         new_via->set_diameter(4);
 
+        ViaEditDialog dialog(new_via, this);
+        auto res = dialog.exec();
+
+        if(res == QDialog::Accepted)
         {
-            ViaEditDialog dialog(new_via, this);
-            dialog.exec();
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(),
+                                                   new_via);
+
+            workspace->update_screen();
         }
-
-        project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_via);
-
-        workspace->update_screen();
+        else
+            new_via.reset();
     }
 }

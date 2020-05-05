@@ -31,7 +31,7 @@ namespace degate
 
 		setLayout(&layout);
 
-		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(close()));
+		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(accept()));
 	}
 
 	SelectGateTemplateDialog::~SelectGateTemplateDialog()

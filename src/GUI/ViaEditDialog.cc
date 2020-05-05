@@ -57,7 +57,7 @@ namespace degate
         layout.addWidget(&cancel_button, 3, 1);
 
         QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
-        QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
+        QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
 
         setLayout(&layout);
     }
@@ -79,6 +79,6 @@ namespace degate
         else
             via->set_direction(Via::DIRECTION_UNDEFINED);
 
-        close();
+        accept();
     }
 }

@@ -725,7 +725,7 @@ namespace degate
 		behaviour_tab.validate();
 		layout_tab.validate();
 
-		close();
+		accept();
 	}
 
 	GateInstanceEditDialog::GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project) : GateEditDialog(parent, gate->get_gate_template(), project), gate(gate)

@@ -40,7 +40,7 @@ namespace degate
 		setLayout(&layout);
 
 		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
-		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
+		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
 	}
 
 	LayersEditDialog::~LayersEditDialog()
@@ -52,6 +52,6 @@ namespace degate
 	{
 		layers.validate();
 
-		close();
+		accept();
 	}
 }

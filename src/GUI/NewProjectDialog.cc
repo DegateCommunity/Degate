@@ -51,7 +51,7 @@ namespace degate
 		main_layout.addWidget(&height);
 		main_layout.addWidget(&validate_button);
 
-		QObject::connect(&validate_button, SIGNAL(pressed()), this, SLOT(close()));
+		QObject::connect(&validate_button, SIGNAL(pressed()), this, SLOT(accept()));
 
 		setLayout(&main_layout);
 	}

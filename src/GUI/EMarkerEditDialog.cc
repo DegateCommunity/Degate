@@ -43,7 +43,7 @@ namespace degate
         layout.addWidget(&cancel_button, 3, 1);
 
         QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
-        QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
+        QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
 
         setLayout(&layout);
     }
@@ -58,7 +58,7 @@ namespace degate
         emarker->set_name(name.text().toStdString());
         emarker->set_fill_color(fill_color.get_color());
 
-        close();
+        accept();
     }
 }
 
