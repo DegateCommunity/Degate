@@ -168,7 +168,7 @@ namespace degate
 
 		status_bar.setStyleSheet("QStatusBar::item { border: none; } ""QStatusBar QLabel { border: 1px solid black; border-radius: 3px; }");
 		setStatusBar(&status_bar);
-		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION * 2));
+		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		status_bar.addPermanentWidget(&status_bar_layer);
 		status_bar_layer.setText("Layer : 0/0 (none)");
@@ -260,8 +260,6 @@ namespace degate
 
 	void MainWindow::on_menu_project_importer()
 	{
-        status_bar.showMessage("Opening project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-
 		QString dir = QFileDialog::getExistingDirectory(this, "Import project");
 
 		if(dir.isNull())
@@ -300,7 +298,7 @@ namespace degate
 		if(project == NULL)
 			return;
 
-		status_bar.showMessage("Save project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage("Saving project...");
 
 		ProjectExporter exporter;
 		exporter.export_all(project->get_project_directory(), project);
@@ -310,7 +308,7 @@ namespace degate
 
 	void MainWindow::on_menu_project_close()
 	{
-		status_bar.showMessage("Closing project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage("Closing project...");
 
 		if(project == NULL)
 			return;
@@ -354,7 +352,7 @@ namespace degate
 
 	void MainWindow::on_menu_project_new()
 	{
-		status_bar.showMessage("Creating a new project...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage("Creating a new project...");
 
 		QString dir = QFileDialog::getExistingDirectory(this, "Select the directory where the project will be created");
 
@@ -450,7 +448,7 @@ namespace degate
 			return;
 		}
 
-		status_bar.showMessage("Importing a new background image for the layer...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage("Importing a new background image for the layer...");
 
 		QString res = QFileDialog::getOpenFileName(this, "Select the new background image");
 		const std::string file_name = res.toStdString();
@@ -682,7 +680,7 @@ namespace degate
 
 	void MainWindow::open_project(std::string path)
 	{
-		status_bar.showMessage("Import project/subproject...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage("Importing project/subproject...");
 
 		ProjectImporter projectImporter;
 

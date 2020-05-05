@@ -48,7 +48,7 @@
  *
  * @see MainWindow
  */
-#define DEFAULT_STATUS_MESSAGE_DURATION 10
+#define DEFAULT_STATUS_MESSAGE_DURATION 30
 
 namespace degate
 {
