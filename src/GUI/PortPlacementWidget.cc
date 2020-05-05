@@ -232,7 +232,7 @@ namespace degate
 		ImageRenderer::wheelEvent(event);
 	}
 
-	void PortPlacementWidget::create_port_in_out(int x, int y, unsigned size, QVector3D color, float alpha)
+	void PortPlacementWidget::create_port_in_out(float x, float y, unsigned size, QVector3D color, float alpha)
 	{
 		PortVertex2D temp;
 
@@ -269,7 +269,7 @@ namespace degate
 		glBufferSubData(GL_ARRAY_BUFFER, 8 * sizeof(PortVertex2D), sizeof(PortVertex2D), &temp);
 	}
 
-	void PortPlacementWidget::create_port_in(int x, int y, unsigned size, QVector3D color, float alpha)
+	void PortPlacementWidget::create_port_in(float x, float y, unsigned size, QVector3D color, float alpha)
 	{
 		PortVertex2D temp;
 
@@ -306,7 +306,7 @@ namespace degate
 		glBufferSubData(GL_ARRAY_BUFFER, 8 * sizeof(PortVertex2D), sizeof(PortVertex2D), &temp);
 	}
 
-	void PortPlacementWidget::create_port_out(int x, int y, unsigned size, QVector3D color, float alpha)
+	void PortPlacementWidget::create_port_out(float x, float y, unsigned size, QVector3D color, float alpha)
 	{
 		PortVertex2D temp;
 

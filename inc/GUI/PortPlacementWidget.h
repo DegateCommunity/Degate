@@ -113,7 +113,7 @@ namespace degate
 		 * @param color : the color of the port.
 		 * @param alpha : the opacity of the port (between 0 and 1).
 		 */
-		void create_port_out(int x, int y, unsigned size, QVector3D color, float alpha);
+		void create_port_out(float x, float y, unsigned size, QVector3D color, float alpha);
 
 		/**
 		 * Create a in port.
@@ -124,7 +124,7 @@ namespace degate
 		 * @param color : the color of the port.
 		 * @param alpha : the opacity of the port (between 0 and 1).
 		 */
-		void create_port_in(int x, int y, unsigned size, QVector3D color, float alpha);
+		void create_port_in(float x, float y, unsigned size, QVector3D color, float alpha);
 
 		/**
 		 * Create a in/out port.
@@ -135,7 +135,7 @@ namespace degate
 		 * @param color : the color of the port.
 		 * @param alpha : the opacity of the port (between 0 and 1).
 		 */
-		void create_port_in_out(int x, int y, unsigned size, QVector3D color, float alpha);
+		void create_port_in_out(float x, float y, unsigned size, QVector3D color, float alpha);
 
 		GateTemplate_shptr gate;
 		Project_shptr project;
