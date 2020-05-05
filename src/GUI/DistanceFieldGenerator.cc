@@ -32,13 +32,13 @@ namespace degate
 
     }
 
-    QImage DistanceFieldGenerator::generate_distance_field(const QImage& input_image) const
+    std::shared_ptr<QImage> DistanceFieldGenerator::generate_distance_field(const QImage& input_image) const
     {
         int input_width = input_image.width();
         int input_height = input_image.height();
         int output_width = input_width / static_cast<int>(scale_factor);
         int output_height = input_height / static_cast<int>(scale_factor);
-        QImage outImage(output_width, output_height, QImage::Format_ARGB32);
+        std::shared_ptr<QImage> outImage = std::make_shared<QImage>(output_width, output_height, QImage::Format_ARGB32);
 
         // Create the input matrix.
         bool** input = new bool*[input_width];
@@ -62,7 +62,7 @@ namespace degate
         // Create the output.
         std::function<void(const unsigned int& y)> output_function = [this, &output_width, &outImage, &input, &input_width, &input_height](const unsigned int& y)
         {
-            auto pixels = (QRgb*)(outImage.scanLine(y));
+            auto pixels = (QRgb*)(outImage->scanLine(y));
             for (unsigned int x = 0; x < output_width; x++)
             {
                 int center_x = (x * scale_factor) + (scale_factor / 2);

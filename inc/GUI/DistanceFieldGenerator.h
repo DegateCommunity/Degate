@@ -24,6 +24,7 @@
 
 #include <QtGui/QImage>
 #include <QColor>
+#include <memory>
 
 namespace degate
 {
@@ -46,7 +47,7 @@ namespace degate
          *
          * @return Return the signed distance field image from the input image (with a scale_factor downscale).
          */
-        QImage generate_distance_field(const QImage& input_image) const;
+        std::shared_ptr<QImage> generate_distance_field(const QImage& input_image) const;
 
     private:
         unsigned int color = qRgba(255, 255, 255, 255);

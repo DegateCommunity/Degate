@@ -103,6 +103,7 @@ namespace degate
         std::vector<std::shared_ptr<QImage>> font_atlas;    /**< The font atlas. */
         std::vector<std::shared_ptr<GlyphData>> glyphs;     /**< The list of glyphs. */
         bool as_changed = true;                             /**< Tell if the font needs to be saved again (or not, if it didn't change) */
+        std::shared_ptr<QImage> last_generated_glyph_image; /**< Store the last generated glyph image (for gpu reload) */
     };
 
     /**
@@ -142,8 +143,9 @@ namespace degate
          * Synchronize the font atlas from memory with opengl texture array.
          *
          * @param font_context_data : the font context data to reload.
+         * @param full_reload : force a full reload of all atlas (it will destroy and then load all atlas for the font in the gpu).
          */
-        void reload_font_context(const std::shared_ptr<FontContextData>& font_context_data);
+        void reload_font_context(const std::shared_ptr<FontContextData>& font_context_data, const bool full_reload = false) const;
 
         // The vector that store fonts (described by his font size and font family name) and FontData with the corresponding OpenGL texture for this context.
         std::vector<std::shared_ptr<FontContextData>> fonts;

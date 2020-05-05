@@ -122,14 +122,45 @@ namespace degate
         // Insert the font context data in the fonts list for this context.
         fonts.push_back(font_context_data);
 
-        reload_font_context(font_context_data);
+        reload_font_context(font_context_data, true);
 
         return font_context_data;
     }
 
-    void FontContext::reload_font_context(const std::shared_ptr<FontContextData>& font_context_data)
+    void FontContext::reload_font_context(const std::shared_ptr<FontContextData>& font_context_data, const bool full_reload) const
     {
         assert(font_context_data != nullptr);
+
+        static unsigned int atlas_count = font_context_data->font_data->font_atlas.size();
+
+        // If there is no new atlas since last time just add the last glyph (last generated/loaded) to the texture array.
+        if(full_reload == false && atlas_count == font_context_data->font_data->font_atlas.size() && context->functions()->glIsTexture(font_context_data->font_atlas_texture_array) == GL_TRUE)
+        {
+            std::shared_ptr<GlyphData> glyph_data = font_context_data->font_data->glyphs.back();
+            auto atlas = font_context_data->font_data->font_atlas.back();
+
+            this->context->functions()->glBindTexture(GL_TEXTURE_2D_ARRAY, font_context_data->font_atlas_texture_array);
+            assert(this->context->functions()->glGetError() == GL_NO_ERROR);
+
+            this->context->extraFunctions()->glTexSubImage3D(GL_TEXTURE_2D_ARRAY,
+                                                             0,
+                                                             (glyph_data->atlas_position % font_context_data->font_data->atlas_glyph_per_line) * font_context_data->font_data->glyph_width,
+                                                             (glyph_data->atlas_position / font_context_data->font_data->atlas_glyph_per_line) * font_context_data->font_data->glyph_height,
+                                                             atlas_count - 1,
+                                                             font_context_data->font_data->last_generated_glyph_image->width(), font_context_data->font_data->last_generated_glyph_image->height(),
+                                                             1,
+                                                             GL_RGBA,
+                                                             GL_UNSIGNED_BYTE,
+                                                             font_context_data->font_data->last_generated_glyph_image->constBits());
+
+            assert(this->context->functions()->glGetError() == GL_NO_ERROR);
+
+            this->context->functions()->glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+
+            return;
+        }
+
+        atlas_count = font_context_data->font_data->font_atlas.size();
 
         if(context->functions()->glIsTexture(font_context_data->font_atlas_texture_array) == GL_TRUE)
             context->functions()->glDeleteTextures(1, &font_context_data->font_atlas_texture_array);
@@ -310,8 +341,10 @@ namespace degate
         // Glyph draw
         glyph_painter.drawText(QPointF(font_data->padding * font_data->scale, scaled_font_metric.ascent() + font_data->padding * font_data->scale), glyph);
 
+        font_data->last_generated_glyph_image = dfg.generate_distance_field(temp_glyph_image);
+
         // Distance field conversion
-        painter.drawImage(QPointF((glyph_data->atlas_position % font_data->atlas_glyph_per_line) * (font_data->glyph_width), (glyph_data->atlas_position / font_data->atlas_glyph_per_line) * (font_data->glyph_height)), dfg.generate_distance_field(temp_glyph_image));
+        painter.drawImage(QPointF((glyph_data->atlas_position % font_data->atlas_glyph_per_line) * (font_data->glyph_width), (glyph_data->atlas_position / font_data->atlas_glyph_per_line) * (font_data->glyph_height)), *font_data->last_generated_glyph_image);
 
         font_data->as_changed = true;
 
