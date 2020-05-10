@@ -30,7 +30,7 @@
 #include "PlacedLogicModelObject.h"
 
 #include "Image.h"
-#include "GUI/ScalingManager.h"
+#include "ScalingManager.h"
 
 #include <set>
 #include <stdexcept>
