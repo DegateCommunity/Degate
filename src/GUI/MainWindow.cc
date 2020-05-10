@@ -36,9 +36,6 @@ namespace degate
 		setWindowTitle("Degate");
 		setWindowIcon(QIcon(":/degate_logo.png"));
 
-		// Set the actual theme and icon theme from preferences
-		THEME_MANAGER.init(PREFERENCES_HANDLER.get_theme(), PREFERENCES_HANDLER.get_icon_theme());
-
 
 		// Workspace
 
@@ -50,116 +47,159 @@ namespace degate
 
 		setMenuBar(&menu_bar);
 
+		// Project menu
 		QMenu* project_menu = menu_bar.addMenu("Project");
-		QAction* project_new_action = project_menu->addAction("New");
-		project_new_action->setIcon(QIcon(GET_ICON_PATH("folder_new.png")));
+
+		project_new_action = project_menu->addAction("New");
 		QObject::connect(project_new_action, SIGNAL(triggered()), this, SLOT(on_menu_project_new()));
-		QAction* project_import_action = project_menu->addAction("Open");
-		project_import_action->setIcon(QIcon(GET_ICON_PATH("folder.png")));
+
+		project_import_action = project_menu->addAction("Open");
 		QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
-		QAction* project_export_action = project_menu->addAction("Save");
-		project_export_action->setIcon(QIcon(GET_ICON_PATH("save.png")));
+
+		project_export_action = project_menu->addAction("Save");
         project_export_action->setShortcut(Qt::CTRL + Qt::Key_S);
 		QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_exporter()));
-		QAction* project_close_action = project_menu->addAction("Close");
-		project_close_action->setIcon(QIcon(GET_ICON_PATH("close.png")));
+
+		project_close_action = project_menu->addAction("Close");
 		QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
+
 		project_menu->addSeparator();
-		QAction* project_create_subproject_action = project_menu->addAction("Create subproject from selection");
+		project_create_subproject_action = project_menu->addAction("Create subproject from selection");
 		QObject::connect(project_create_subproject_action, SIGNAL(triggered()), this, SLOT(on_menu_project_create_subproject()));
+
 		project_menu->addSeparator();
-		QAction* project_quit_action = project_menu->addAction("Quit");
-		project_quit_action->setIcon(QIcon(GET_ICON_PATH("quit.png")));
+		project_quit_action = project_menu->addAction("Quit");
 		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_project_quit()));
 
+
+		// Edit menu
 		QMenu* edit_menu = menu_bar.addMenu("Edit");
-		QAction* preferences_edit_action = edit_menu->addAction("Preferences");
+		preferences_edit_action = edit_menu->addAction("Preferences");
 		QObject::connect(preferences_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_edit_preferences()));
 
+
+		// View menu
 		QMenu* view_menu = menu_bar.addMenu("View");
-		QAction* show_gates_view_action = view_menu->addAction("Show gates");
+
+		show_gates_view_action = view_menu->addAction("Show gates");
 		show_gates_view_action->setCheckable(true);
 		show_gates_view_action->setChecked(true);
 		QObject::connect(show_gates_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates(bool)));
-		QAction* show_gates_name_view_action = view_menu->addAction("Show gates name");
+
+		show_gates_name_view_action = view_menu->addAction("Show gates name");
 		show_gates_name_view_action->setCheckable(true);
 		show_gates_name_view_action->setChecked(true);
 		QObject::connect(show_gates_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates_name(bool)));
-		QAction* show_ports_view_action = view_menu->addAction("Show ports");
+
+		show_ports_view_action = view_menu->addAction("Show ports");
 		show_ports_view_action->setCheckable(true);
 		show_ports_view_action->setChecked(true);
 		QObject::connect(show_ports_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports(bool)));
-		QAction* show_ports_name_view_action = view_menu->addAction("Show ports name");
+
+		show_ports_name_view_action = view_menu->addAction("Show ports name");
 		show_ports_name_view_action->setCheckable(true);
 		show_ports_name_view_action->setChecked(true);
 		QObject::connect(show_ports_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports_name(bool)));
-		QAction* show_annotations_view_action = view_menu->addAction("Show annotations");
+
+		show_annotations_view_action = view_menu->addAction("Show annotations");
 		show_annotations_view_action->setCheckable(true);
 		show_annotations_view_action->setChecked(true);
 		QObject::connect(show_annotations_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations(bool)));
-		QAction* show_annotations_name_view_action = view_menu->addAction("Show annotations name");
+
+		show_annotations_name_view_action = view_menu->addAction("Show annotations name");
 		show_annotations_name_view_action->setCheckable(true);
 		show_annotations_name_view_action->setChecked(true);
 		QObject::connect(show_annotations_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations_name(bool)));
-        QAction* show_emarkers_view_action = view_menu->addAction("Show emarkers");
+
+        show_emarkers_view_action = view_menu->addAction("Show emarkers");
         show_emarkers_view_action->setCheckable(true);
         show_emarkers_view_action->setChecked(true);
         QObject::connect(show_emarkers_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers(bool)));
-        QAction* show_emarkers_name_view_action = view_menu->addAction("Show emarkers name");
+
+        show_emarkers_name_view_action = view_menu->addAction("Show emarkers name");
         show_emarkers_name_view_action->setCheckable(true);
         show_emarkers_name_view_action->setChecked(true);
         QObject::connect(show_emarkers_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers_name(bool)));
-        QAction* show_vias_view_action = view_menu->addAction("Show vias");
+
+        show_vias_view_action = view_menu->addAction("Show vias");
         show_vias_view_action->setCheckable(true);
         show_vias_view_action->setChecked(true);
         QObject::connect(show_vias_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias(bool)));
-        QAction* show_vias_name_view_action = view_menu->addAction("Show vias name");
+
+        show_vias_name_view_action = view_menu->addAction("Show vias name");
         show_vias_name_view_action->setCheckable(true);
         show_vias_name_view_action->setChecked(true);
         QObject::connect(show_vias_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias_name(bool)));
-        QAction* show_wires_view_action = view_menu->addAction("Show wires");
+
+        show_wires_view_action = view_menu->addAction("Show wires");
         show_wires_view_action->setCheckable(true);
         show_wires_view_action->setChecked(true);
         QObject::connect(show_wires_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_wires(bool)));
 
+
+        // Layer menu
 		QMenu* layer_menu = menu_bar.addMenu("Layer");
-		QAction* layers_edit_action = layer_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit layers");
+
+		layers_edit_action = layer_menu->addAction("Edit layers");
 		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
-		QAction* background_import_action = layer_menu->addAction("Import background image");
+
+		background_import_action = layer_menu->addAction("Import background image");
 		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
 
+
+		// Gate menu
 		QMenu* gate_menu = menu_bar.addMenu("Gate");
-		QAction* edit_gate_action = gate_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
+
+		edit_gate_action = gate_menu->addAction("Edit selected");
 		QObject::connect(edit_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
-		QAction* new_gate_template_action = gate_menu->addAction("Create gate template from selection");
+
+		new_gate_template_action = gate_menu->addAction("Create gate template from selection");
 		QObject::connect(new_gate_template_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
-		QAction* new_gate_action = gate_menu->addAction("Create gate from selection");
+
+		new_gate_action = gate_menu->addAction("Create gate from selection");
 		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
+
 		gate_menu->addSeparator();
-		QAction* gate_library_action = gate_menu->addAction(QIcon(GET_ICON_PATH("book.png")), "Gate library");
+		gate_library_action = gate_menu->addAction("Gate library");
 		QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
+
+		// Annotation menu
 		QMenu* annotation_menu = menu_bar.addMenu("Annotation");
-		QAction* edit_annotation_action = annotation_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
+
+		edit_annotation_action = annotation_menu->addAction("Edit selected");
 		QObject::connect(edit_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
-		QAction* create_annotation_action = annotation_menu->addAction("Create from selection");
+
+		create_annotation_action = annotation_menu->addAction("Create from selection");
 		QObject::connect(create_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
 
+
+		// EMarker menu
         QMenu* emarker_menu = menu_bar.addMenu("EMarker");
-        QAction* edit_emarker_action = emarker_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
+
+        edit_emarker_action = emarker_menu->addAction("Edit selected");
         QObject::connect(edit_emarker_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
 
+
+        // Via menu
         QMenu* via_menu = menu_bar.addMenu("Via");
-        QAction* edit_via_action = via_menu->addAction(QIcon(GET_ICON_PATH("edit.png")), "Edit selected");
+
+        edit_via_action = via_menu->addAction("Edit selected");
         QObject::connect(edit_via_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
 
+
+        // Logic menu
 		QMenu* logic_menu = menu_bar.addMenu("Logic");
-		QAction* remove_object_action = logic_menu->addAction(QIcon(GET_ICON_PATH("remove.png")), "Remove selected object");
+
+		remove_object_action = logic_menu->addAction("Remove selected object");
         remove_object_action->setShortcut(Qt::Key_Delete);
 		QObject::connect(remove_object_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
 
+
+		// Help menu
 		QMenu* help_menu = menu_bar.addMenu("Help");
-		QAction* about_action = help_menu->addAction("About");
+
+		about_action = help_menu->addAction("About");
 		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
 
@@ -186,44 +226,45 @@ namespace degate
 		tool_bar->setFloatable(false);
 		setContextMenuPolicy(Qt::NoContextMenu);
 
-		QAction* tool_via_up_action = tool_bar->addAction(QIcon(GET_ICON_PATH("layer_up.png")), "Layer up");
+		tool_via_up_action = tool_bar->addAction("Layer up");
 		QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
 
-		QAction* tool_via_down_action = tool_bar->addAction(QIcon(GET_ICON_PATH("layer_down.png")), "Layer down");
+		tool_via_down_action = tool_bar->addAction("Layer down");
 		QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
 
 		tool_bar->addSeparator();
 
-		QAction* tool_zoom_in_action = tool_bar->addAction(QIcon(GET_ICON_PATH("plus.png")), "Zoom in");
+		tool_zoom_in_action = tool_bar->addAction("Zoom in");
 		QObject::connect(tool_zoom_in_action, SIGNAL(triggered()), workspace, SLOT(zoom_in()));
 
-		QAction* tool_zoom_out_action = tool_bar->addAction(QIcon(GET_ICON_PATH("minus.png")), "Zoom out");
+		tool_zoom_out_action = tool_bar->addAction("Zoom out");
 		QObject::connect(tool_zoom_out_action, SIGNAL(triggered()), workspace, SLOT(zoom_out()));
 
 		tool_bar->addSeparator();
 
-		QAction* tool_gate_library = tool_bar->addAction(QIcon(GET_ICON_PATH("book.png")), "Gate library");
+		tool_gate_library = tool_bar->addAction("Gate library");
 		QObject::connect(tool_gate_library, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
         tool_bar->addSeparator();
 
-
-        QAction* area_selection_tool = tools_group.addAction(QIcon(GET_ICON_PATH("area_selection_tool.png")), "Area");
+        area_selection_tool = tools_group.addAction("Area");
         QObject::connect(area_selection_tool, SIGNAL(triggered()), workspace, SLOT(use_area_selection_tool()));
         area_selection_tool->setCheckable(true);
         area_selection_tool->setChecked(true);
         workspace->use_area_selection_tool();
 
-        QAction* wire_tool = tools_group.addAction(QIcon(GET_ICON_PATH("wire_tool.png")), "Wire");
+        wire_tool = tools_group.addAction("Wire");
         QObject::connect(wire_tool, SIGNAL(triggered()), workspace, SLOT(use_wire_tool()));
         wire_tool->setCheckable(true);
 
         tool_bar->addActions(tools_group.actions());
 
-
 		// Other
 		QObject::connect(workspace, SIGNAL(project_changed(std::string)), this, SLOT(open_project(std::string)));
         QObject::connect(workspace, SIGNAL(right_mouse_button_released()), this, SLOT(show_context_menu()));
+
+        QObject::connect(&THEME_MANAGER, SIGNAL(icon_theme_changed()), this, SLOT(reload_icons()));
+        reload_icons();
 	}
 
 	MainWindow::~MainWindow()
@@ -233,6 +274,47 @@ namespace degate
 
 		Text::save_fonts_to_cache();
 	}
+
+    void MainWindow::reload_icons()
+    {
+	    /* Menus */
+
+	    // Project menu
+        project_new_action->setIcon(QIcon(GET_ICON_PATH("folder_new.png")));
+        project_import_action->setIcon(QIcon(GET_ICON_PATH("folder.png")));
+        project_export_action->setIcon(QIcon(GET_ICON_PATH("save.png")));
+        project_close_action->setIcon(QIcon(GET_ICON_PATH("close.png")));
+        project_quit_action->setIcon(QIcon(GET_ICON_PATH("quit.png")));
+
+        // Layer menu
+        layers_edit_action->setIcon(QIcon(GET_ICON_PATH("edit.png")));
+
+        // Gate menu
+        edit_gate_action->setIcon(QIcon(GET_ICON_PATH("edit.png")));
+        gate_library_action->setIcon(QIcon(GET_ICON_PATH("book.png")));
+
+        // Annotation menu
+        edit_annotation_action->setIcon(QIcon(GET_ICON_PATH("edit.png")));
+
+        // EMarker menu
+        edit_emarker_action->setIcon(QIcon(GET_ICON_PATH("edit.png")));
+
+        // Via menu
+        edit_via_action->setIcon(QIcon(GET_ICON_PATH("edit.png")));
+
+        // Logic menu
+        remove_object_action->setIcon(QIcon(GET_ICON_PATH("remove.png")));
+
+
+        /* Toolbar */
+        tool_via_up_action->setIcon(QIcon(GET_ICON_PATH("layer_up.png")));
+        tool_via_down_action->setIcon(QIcon(GET_ICON_PATH("layer_down.png")));
+        tool_zoom_in_action->setIcon(QIcon(GET_ICON_PATH("plus.png")));
+        tool_zoom_out_action->setIcon(QIcon(GET_ICON_PATH("minus.png")));
+        tool_gate_library->setIcon(QIcon(GET_ICON_PATH("book.png")));
+        area_selection_tool->setIcon(QIcon(GET_ICON_PATH("area_selection_tool.png")));
+        wire_tool->setIcon(QIcon(GET_ICON_PATH("wire_tool.png")));
+    }
 
 	void MainWindow::on_menu_help_about()
 	{
@@ -433,7 +515,7 @@ namespace degate
 
 	void MainWindow::on_menu_edit_preferences()
 	{
-		PreferencesDialog dialog(this);
+		PreferencesEditor dialog(this);
 		dialog.exec();
 	}
 

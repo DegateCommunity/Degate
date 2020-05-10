@@ -32,7 +32,7 @@
 #include "GUI/GateLibraryDialog.h"
 #include "GUI/ThemeManager.h"
 #include "GUI/PreferencesHandler.h"
-#include "GUI/PreferencesDialog.h"
+#include "GUI/PreferencesEditor.h"
 #include "GUI/AnnotationEditDialog.h"
 #include "GUI/EMarkerEditDialog.h"
 
@@ -77,6 +77,11 @@ namespace degate
 		~MainWindow();
 
 	public slots:
+
+	    /**
+	     * Load/Reload all icons of the main window.
+	     */
+	    void reload_icons();
 
 		/* Project menu */
 		
@@ -260,6 +265,70 @@ namespace degate
 		Project_shptr project;
 		WorkspaceRenderer* workspace = NULL;
 		QPointF context_menu_mouse_position;
+
+	private:
+
+	    /* Menus */
+
+	    // Project menu
+        QAction* project_new_action;
+        QAction* project_import_action;
+        QAction* project_export_action;
+        QAction* project_close_action;
+        QAction* project_create_subproject_action;
+        QAction* project_quit_action;
+
+        // Edit menu
+        QAction* preferences_edit_action;
+
+        // View menu
+        QAction* show_gates_view_action;
+        QAction* show_gates_name_view_action;
+        QAction* show_ports_view_action;
+        QAction* show_ports_name_view_action;
+        QAction* show_annotations_view_action;
+        QAction* show_annotations_name_view_action;
+        QAction* show_emarkers_view_action;
+        QAction* show_emarkers_name_view_action;
+        QAction* show_vias_view_action;
+        QAction* show_vias_name_view_action;
+        QAction* show_wires_view_action;
+
+        // Layer menu
+        QAction* layers_edit_action;
+        QAction* background_import_action;
+
+        // Gate menu
+        QAction* edit_gate_action;
+        QAction* new_gate_template_action;
+        QAction* new_gate_action;
+        QAction* gate_library_action;
+
+        // Annotation menu
+        QAction* edit_annotation_action;
+        QAction* create_annotation_action;
+
+        // EMarker menu
+        QAction* edit_emarker_action;
+
+        // Via menu
+        QAction* edit_via_action;
+
+        // Logic menu
+        QAction* remove_object_action;
+
+        // Help menu
+        QAction* about_action;
+
+
+        /* Toolbar */
+        QAction* tool_via_up_action;
+        QAction* tool_via_down_action;
+        QAction* tool_zoom_in_action;
+        QAction* tool_zoom_out_action;
+        QAction* tool_gate_library;
+        QAction* area_selection_tool;
+        QAction* wire_tool;
 	};
 }
 

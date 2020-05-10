@@ -25,6 +25,7 @@
 #include "Core/SingletonBase.h"
 
 #include <QIcon>
+#include <QObject>
 #include <QStyleFactory>
 #include <QApplication>
 #include <QMainWindow>
@@ -60,18 +61,14 @@ namespace degate
 
 	/**
 	 * @class ThemeManager
-	 * @brief Handle the current theme and icon theme.
-	 * 
-	 * Can't be changed after init, need restart for changes to take effect.
-	 *
-	 * The theme manager handle the current theme (active at runtime).
-	 * Theme and icon theme can be different in the theme manager and in the preferences handler.
-	 * The preferences handler handle the theme and icon theme that are actually in the preferences (states can be different between runtime and in the preferences).
+	 * @brief Handle the current active theme and icon theme.
 	 *
 	 * @see SingletonBase
 	 */
-	class ThemeManager : public SingletonBase<ThemeManager>
+	class ThemeManager : public QObject, public SingletonBase<ThemeManager>
 	{
+        Q_OBJECT
+
 	public:
 
 		/**
@@ -81,24 +78,29 @@ namespace degate
 		~ThemeManager();
 
 		/**
-		 * Set the theme and icon theme.
-		 *
-		 * @param theme : the desired theme.
-		 * @param icon_theme : the desired icon theme.
-		 */
-		void init(Theme theme, IconTheme icon_theme);
-
-		/**
 		 * Get the path of the icon following the theme used and his name.
 		 *
 		 * @param icon_name : the icon name.
 		 */
-		QString get_icon_path(QString icon_name);
+		QString get_icon_path(const QString& icon_name);
 
-	private:
-		Theme theme;
-		IconTheme icon_theme;
-		bool is_init = false;
+	public slots:
+	    /**
+	     * Update the icon theme.
+	     * Will emit icon_theme_changed().
+	     */
+        void update_icon_theme();
+
+		/**
+         * Apply the current theme.
+         */
+		void update_theme();
+
+    signals:
+        /**
+         * Emitted when the icon theme changed.
+         */
+        void icon_theme_changed();
 		
 	};
 
@@ -120,7 +122,7 @@ namespace degate
 	 *
 	 * @return Return the theme from the string.
 	 */
-	Theme string_to_theme(std::string theme);
+	Theme string_to_theme(const std::string& theme);
 
 	/**
 	 * Convert the icon theme to string.
@@ -140,7 +142,7 @@ namespace degate
 	 *
 	 * @return Return the icon theme from the string.
 	 */
-	IconTheme string_to_icon_theme(std::string theme);
+	IconTheme string_to_icon_theme(const std::string& theme);
 	
 }
 

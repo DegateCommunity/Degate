@@ -23,98 +23,52 @@
 
 namespace degate
 {
-	PreferencesHandler::PreferencesHandler()
+	PreferencesHandler::PreferencesHandler() : settings(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIGURATION_FILE_NAME)), QSettings::IniFormat)
 	{
-        CHECK_PATH(DEGATE_CONFIGURATION_PATH)
-
-		ret_t res = check_file(DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME));
-
-		if(res != RET_OK)
-			return;
-
-		QDomDocument parser;
-
-		QFile file(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME)));
-		if (!file.open(QIODevice::ReadOnly))
-		{
-			debug(TM, "Problem: can't open the file %s.", DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME));
-			return;
-		}
-
-		if (!parser.setContent(&file))
-		{
-			debug(TM, "Problem: can't parse the file %s.", DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME));
-			return;
-		}
-		file.close();
-
-		const QDomElement root_elem = parser.documentElement();
-		assert(!root_elem.isNull());
-
-		// Theme
-		QDomElement theme_element = get_dom_twig(root_elem, "theme");
-		QString theme = theme_element.attribute("theme");
-		this->theme = string_to_theme(theme.toStdString());
+	    // Theme
+		QString theme = settings.value("theme", "native").toString();
+        preferences.theme = string_to_theme(theme.toStdString());
 
 		// Icon Theme
-		QString icon_theme = theme_element.attribute("icon_theme");
-		this->icon_theme = string_to_icon_theme(icon_theme.toStdString());
+		QString icon_theme = settings.value("icon_theme", "dark").toString();
+        preferences.icon_theme = string_to_icon_theme(icon_theme.toStdString());
+
+        // Automatic icon theme
+        bool automatic_icon_theme = settings.value("automatic_icon_theme", true).toBool();
+        preferences.automatic_icon_theme = automatic_icon_theme;
 	}
 
 	PreferencesHandler::~PreferencesHandler()
 	{
-		//save();
+
 	}
 
 	void PreferencesHandler::save()
 	{
-		QDomDocument doc;
-
-		QDomElement root_elem = doc.createElement("config");
-		assert(!root_elem.isNull());
-
-		QDomElement theme_elem = doc.createElement("theme");
-		
-		// Theme
-		theme_elem.setAttribute("theme", QString::fromStdString(theme_to_string(this->theme)));
-
-		// Icon Theme
-		theme_elem.setAttribute("icon_theme", QString::fromStdString(icon_theme_to_string(this->icon_theme)));
-
-		root_elem.appendChild(theme_elem);
-		
-		doc.appendChild(root_elem);
-
-		QFile file(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIG_FILE_NAME)));
-		if (!file.open(QIODevice::WriteOnly))
-		{
-			throw InvalidPathException("Can't create export file.");
-		}
-
-		QTextStream stream(&file);
-        stream.setCodec("UTF-8");
-		stream << doc.toString();
-
-		file.close();
+        settings.setValue("theme", QString::fromStdString(theme_to_string(preferences.theme)));
+        settings.setValue("icon_theme", QString::fromStdString(icon_theme_to_string(preferences.icon_theme)));
+        settings.setValue("automatic_icon_theme", preferences.automatic_icon_theme);
 	}
 
-	Theme PreferencesHandler::get_theme()
-	{
-		return theme;
-	}
+    void PreferencesHandler::update(Preferences updated_preferences)
+    {
+	    if(preferences.theme != updated_preferences.theme)
+        {
+            preferences.theme = updated_preferences.theme;
+            emit theme_changed();
+        }
 
-	void PreferencesHandler::set_theme(Theme theme)
-	{
-		this->theme = theme;
-	}
+        if(preferences.icon_theme != updated_preferences.icon_theme)
+        {
+            preferences.icon_theme = updated_preferences.icon_theme;
+            emit icon_theme_changed();
+        }
 
-	IconTheme PreferencesHandler::get_icon_theme()
-	{
-		return this->icon_theme;
-	}
+        preferences.automatic_icon_theme = updated_preferences.automatic_icon_theme;
+    }
 
-	void PreferencesHandler::set_icon_theme(IconTheme theme)
-	{
-		this->icon_theme = theme;
-	}
+    const Preferences& PreferencesHandler::get_preferences()
+    {
+        return preferences;
+    }
 }

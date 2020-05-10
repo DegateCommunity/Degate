@@ -48,6 +48,11 @@
 #define CHECK_PATH(path) if(!QDir(QString::fromStdString(path)).exists()) QDir().mkdir(QString::fromStdString(path));
 
 /**
+ * Default degate configuration file name.
+ */
+#define DEGATE_CONFIGURATION_FILE_NAME "degate.ini"
+
+/**
  * Default degate configuration directory path.
  */
 #define DEGATE_CONFIGURATION_PATH ".degate/"

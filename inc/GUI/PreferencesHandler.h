@@ -23,31 +23,36 @@
 #define __PREFERENCESHANDLER_H__
 
 #include "Core/SingletonBase.h"
-#include "ThemeManager.h"
+#include "GUI/ThemeManager.h"
 #include "Core/XMLExporter.h"
 #include "Core/XMLImporter.h"
 
-#define DEGATE_CONFIG_FILE_NAME "degate.config"
+#include <QObject>
 
 namespace degate
 {
+    /**
+     * @struct Preferences
+     * @brief Stores all preference values.
+     */
+    struct Preferences
+    {
+        /* Theme */
+        Theme theme;
+        IconTheme icon_theme;
+        bool automatic_icon_theme;
+    };
 
 	/**
 	 * @class PreferencesHandler
-	 * @brief Handle all preferences and load/write them from/in a config file.
-	 *
-	 * The preferences handler handle only preferences, not necessarily the runtime used state (@see ThemeManager).
-	 * 
-	 * The theme manager handle the current theme (active at runtime).
-	 * Theme and icon theme can be different in the theme manager and in the preferences handler.
-	 * The preferences handler handle the theme and icon theme that are actually in the preferences (states can be different between runtime and in the preferences).
+	 * @brief Handle preferences and load/write them from/in a config file.
 	 *
 	 * @see SingletonBase
-	 * @see XMLImporter
-	 * @see XMLExporter
 	 */
-	class PreferencesHandler : public SingletonBase<PreferencesHandler>, public XMLImporter, public XMLExporter
+	class PreferencesHandler : public QObject, public SingletonBase<PreferencesHandler>
 	{
+        Q_OBJECT
+
 	public:
 
 		/**
@@ -57,48 +62,36 @@ namespace degate
 		~PreferencesHandler();
 
 		/**
-		 * Save all preferences in the config file.
+		 * Save preferences in the configuration file.
 		 */
 		void save();
 
 		/**
-		 * Get the theme from preferences (config file).
-		 *
-		 * @return Return the theme currently saved in the preferences.
+		 * Update preferences.
 		 */
-		Theme get_theme();
+		void update(Preferences updated_preferences);
 
 		/**
-		 * Set the theme, it will be saved in the config file (preferences).
-		 * The change will be applied after restart when the preferences will be loaded in the theme manager.
+		 * Get all stored preferences.
 		 *
-		 * @see ThemeManager
-		 *
-		 * @param theme : the new theme that will be saved in the preferences.
+		 * @return Return a const reference of all preferences.
 		 */
-		void set_theme(Theme theme);
+        const Preferences& get_preferences();
 
-		/**
-		 * Get the icon theme from preferences (config file).
-		 *
-		 * @return Return the icon theme currently saved in the preferences.
-		 */
-		IconTheme get_icon_theme();
+	signals:
+	    /**
+	     * Emitted when the icon theme changed.
+	     */
+	    void icon_theme_changed();
 
-		/**
-		 * Set the icon theme, it will be saved in the config file (preferences).
-		 * The change will be applied after restart when the preferences will be loaded in the theme manager.
-		 *
-		 * @see ThemeManager
-		 *
-		 * @param theme : the new icon theme that will be saved in the preferences.
-		 */
-		void set_icon_theme(IconTheme theme);
+	    /**
+	     * Emitted when the theme changed.
+	     */
+	    void theme_changed();
 
 	private:
-		Theme theme = LIGHT_THEME;
-		IconTheme icon_theme = DARK_ICON_THEME;
-		
+        QSettings settings;
+        Preferences preferences;
 	};
 }
 
