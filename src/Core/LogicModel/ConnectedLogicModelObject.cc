@@ -53,7 +53,7 @@ void ConnectedLogicModelObject::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t*
 
 void ConnectedLogicModelObject::set_net(Net_shptr net)
 {
-	if (this->net != NULL)
+	if (this->net != nullptr)
 	{
 		this->net->remove_object(get_object_id());
 	}
@@ -63,7 +63,7 @@ void ConnectedLogicModelObject::set_net(Net_shptr net)
 
 void ConnectedLogicModelObject::remove_net()
 {
-	if (net != NULL)
+	if (net != nullptr)
 	{
 		net->remove_object(get_object_id());
 		net.reset();
@@ -78,7 +78,7 @@ Net_shptr ConnectedLogicModelObject::get_net()
 
 bool ConnectedLogicModelObject::is_connected() const
 {
-	if (net == NULL) return false;
+	if (net == nullptr) return false;
 	if (net->size() >= 2) return true;
 	BOOST_FOREACH(object_id_t oid, *net)
 	{

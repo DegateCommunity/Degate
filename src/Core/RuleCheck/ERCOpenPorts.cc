@@ -22,6 +22,10 @@
 #include <Core/RuleCheck/RCBase.h>
 #include <Core/RuleCheck/ERCOpenPorts.h>
 
+
+#include <memory>
+
+
 using namespace degate;
 
 ERCOpenPorts::ERCOpenPorts() :
@@ -33,7 +37,7 @@ void ERCOpenPorts::run(LogicModel_shptr lmodel)
 {
 	clear_rc_violations();
 
-	if (lmodel == NULL) return;
+	if (lmodel == nullptr) return;
 
 	// iterate over Gates
 	debug(TM, "\tRC: iterate over gates.");
@@ -47,17 +51,17 @@ void ERCOpenPorts::run(LogicModel_shptr lmodel)
 		     p_iter != gate->ports_end(); ++p_iter)
 		{
 			GatePort_shptr port = *p_iter;
-			assert(port != NULL);
+			assert(port != nullptr);
 
 			Net_shptr net = port->get_net();
-			if (net == NULL || net->size() <= 1)
+			if (net == nullptr || net->size() <= 1)
 			{
 				boost::format f("Port %1% is unconnected.");
 				f % port->get_descriptive_identifier();
 
 				debug(TM, "\tRC: found a vioation.");
-				add_rc_violation(RCViolation_shptr(new RCViolation(port, f.str(),
-				                                                   get_rc_class_name())));
+				add_rc_violation(std::make_shared<RCViolation>(port, f.str(),
+				                                                   get_rc_class_name()));
 			}
 		}
 	}

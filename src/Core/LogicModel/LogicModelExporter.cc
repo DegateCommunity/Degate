@@ -38,7 +38,7 @@ using namespace degate;
 
 void LogicModelExporter::export_data(std::string const& filename, LogicModel_shptr lmodel)
 {
-	if (lmodel == NULL) throw InvalidPointerException("Logic model pointer is NULL.");
+	if (lmodel == nullptr) throw InvalidPointerException("Logic model pointer is NULL.");
 
 	try
 	{
@@ -71,7 +71,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
 		for (auto layer_iter = lmodel->layers_begin();
 		     layer_iter != lmodel->layers_end(); ++layer_iter)
 		{
-			if ((*layer_iter) == NULL || (*layer_iter)->is_empty())
+			if ((*layer_iter) == nullptr || (*layer_iter)->is_empty())
 				continue;
 
 			Layer_shptr layer = *layer_iter;
@@ -150,7 +150,7 @@ void LogicModelExporter::add_nets(QDomDocument& doc, QDomElement& nets_elem, Log
 		QDomElement net_elem = doc.createElement("net");
 
 		Net_shptr net = net_iter->second;
-		assert(net != NULL);
+		assert(net != nullptr);
 
 		object_id_t old_net_id = net->get_object_id();
 		assert(old_net_id != 0);

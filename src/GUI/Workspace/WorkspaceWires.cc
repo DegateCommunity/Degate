@@ -79,12 +79,12 @@ namespace degate
 
     void WorkspaceWires::update()
     {
-        if(project == NULL)
+        if(project == nullptr)
             return;
 
         Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
-        if(layer == NULL)
+        if(layer == nullptr)
             return;
 
         // Keep only wires of the active layer.
@@ -103,7 +103,7 @@ namespace degate
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        context->glBufferData(GL_ARRAY_BUFFER, wires_count * 6 * sizeof(WiresVertex2D), 0, GL_STATIC_DRAW);
+        context->glBufferData(GL_ARRAY_BUFFER, wires_count * 6 * sizeof(WiresVertex2D), nullptr, GL_STATIC_DRAW);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -118,7 +118,7 @@ namespace degate
 
     void WorkspaceWires::update(Wire_shptr &wire)
     {
-        if(wire == NULL)
+        if(wire == nullptr)
             return;
 
         create_wire(wire, wire->get_index());
@@ -126,7 +126,7 @@ namespace degate
 
     void WorkspaceWires::draw(const QMatrix4x4 &projection)
     {
-        if(project == NULL || wires_count == 0)
+        if(project == nullptr || wires_count == 0)
             return;
 
         program->bind();
@@ -153,7 +153,7 @@ namespace degate
 
     void WorkspaceWires::create_wire(Wire_shptr &wire, unsigned int index)
     {
-        if(wire == NULL)
+        if(wire == nullptr)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);

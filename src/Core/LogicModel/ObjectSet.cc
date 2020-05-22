@@ -31,12 +31,12 @@ using namespace degate;
 
 bool degate::is_removable(PlacedLogicModelObject_shptr o)
 {
-	return std::dynamic_pointer_cast<GatePort>(o) == NULL;
+	return std::dynamic_pointer_cast<GatePort>(o) == nullptr;
 }
 
 bool degate::is_interconnectable(PlacedLogicModelObject_shptr o)
 {
-	return std::dynamic_pointer_cast<ConnectedLogicModelObject>(o) != NULL;
+	return std::dynamic_pointer_cast<ConnectedLogicModelObject>(o) != nullptr;
 }
 
 

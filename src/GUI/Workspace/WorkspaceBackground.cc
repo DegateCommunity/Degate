@@ -80,23 +80,23 @@ namespace degate
 	{
 		free_textures();
 
-		if (project == NULL)
+		if (project == nullptr)
 			return;
 
 		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
 
-		if(smgr == NULL)
+		if(smgr == nullptr)
 			return;
 
 		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(1/*scale*/); //Todo: fix scaling manager
 
 		background_image = elem.second;
-		if (background_image == NULL)
+		if (background_image == nullptr)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(BackgroundVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(BackgroundVertex2D), nullptr, GL_STATIC_DRAW);
 
 		unsigned index = 0;
 		for (unsigned int x = 0; x < background_image->get_width(); x += background_image->get_tile_size())
@@ -114,7 +114,7 @@ namespace degate
 
 	void WorkspaceBackground::draw(const QMatrix4x4& projection)
 	{
-		if (project == NULL)
+		if (project == nullptr)
 			return;
 
 		program->bind();
@@ -159,8 +159,8 @@ namespace degate
 
 	GLuint WorkspaceBackground::create_background_tile(unsigned x, unsigned y, float pre_scaling, unsigned index)
 	{
-		assert(project != NULL);
-		assert(background_image != NULL);
+		assert(project != nullptr);
+		assert(background_image != nullptr);
 
 		const unsigned int tile_width = background_image->get_tile_size();
 
@@ -174,7 +174,7 @@ namespace degate
 		// Texture
 
 		auto data = new GLuint[tile_width * tile_width];
-		assert(data != NULL);
+		assert(data != nullptr);
 
 		memset(data, 0, tile_width * tile_width * sizeof(GLuint));
 		background_image->raw_copy(data, x, y);

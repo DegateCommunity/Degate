@@ -28,6 +28,8 @@
 //#include <unistd.h> : Linux only
 #include <cerrno>
 
+#include <memory>
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -87,7 +89,7 @@ GateLibrary_shptr GateLibraryImporter::parse_gate_library_element(QDomElement co
 {
 	// parse width and height
 	GateLibrary_shptr gate_lib(new GateLibrary());
-	assert(gate_lib != NULL);
+	assert(gate_lib != nullptr);
 
 	const QDomElement e = get_dom_twig(gt_elem, "gate-templates");
 	if (!e.isNull()) parse_gate_templates_element(e, gate_lib, directory);
@@ -99,7 +101,7 @@ void GateLibraryImporter::parse_gate_templates_element(QDomElement const gate_te
                                                        GateLibrary_shptr gate_lib,
                                                        std::string const& directory)
 {
-	if (gate_template_element.isNull() || gate_lib == NULL) throw(InvalidPointerException("Invalid pointer"));
+	if (gate_template_element.isNull() || gate_lib == nullptr) throw(InvalidPointerException("Invalid pointer"));
 
 	const QDomNodeList gate_list = gate_template_element.elementsByTagName("gate");
 
@@ -128,11 +130,11 @@ void GateLibraryImporter::parse_gate_templates_element(QDomElement const gate_te
 
 			if (min_x == 0 && min_y == 0 && max_x == 0 && max_y == 0)
 			{
-				gate_template = GateTemplate_shptr(new GateTemplate(width, height));
+				gate_template = std::make_shared<GateTemplate>(width, height);
 			}
 			else
 			{
-				gate_template = GateTemplate_shptr(new GateTemplate(min_x, max_x, min_y, max_y));
+				gate_template = std::make_shared<GateTemplate>(min_x, max_x, min_y, max_y);
 			}
 
 			gate_template->set_name(string(name.c_str()));
@@ -164,7 +166,7 @@ void GateLibraryImporter::parse_template_images_element(QDomElement const templa
                                                         std::string const& directory)
 {
 	if (template_images_element.isNull() ||
-		gate_tmpl == NULL)
+		gate_tmpl == nullptr)
 		throw InvalidPointerException("Invalid pointer");
 
 	const QDomNodeList image_list = template_images_element.elementsByTagName("image");
@@ -181,7 +183,7 @@ void GateLibraryImporter::parse_template_images_element(QDomElement const templa
 			Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
 			GateTemplateImage_shptr img = load_image<GateTemplateImage>(join_pathes(directory, image_file));
 
-			assert(img != NULL);
+			assert(img != nullptr);
 			gate_tmpl->set_image(layer_type, img);
 		}
 	}
@@ -192,7 +194,7 @@ void GateLibraryImporter::parse_template_implementations_element(QDomElement con
                                                                  std::string const& directory)
 {
 	if (implementations_element.isNull() ||
-		gate_tmpl == NULL)
+		gate_tmpl == nullptr)
 		throw InvalidPointerException("Invalid pointer");
 
 	const QDomNodeList impl_list = implementations_element.elementsByTagName("implementation");
@@ -253,7 +255,7 @@ void GateLibraryImporter::parse_template_ports_element(QDomElement const templat
                                                        GateLibrary_shptr gate_lib)
 {
 	if (template_ports_element.isNull() ||
-		gate_tmpl == NULL)
+		gate_tmpl == nullptr)
 		throw InvalidPointerException("Invalid pointer");
 
 	const QDomNodeList port_list = template_ports_element.elementsByTagName("port");
@@ -293,13 +295,13 @@ void GateLibraryImporter::parse_template_ports_element(QDomElement const templat
 				pos_x = parse_number<float>(port_elem, "x");
 				pos_y = parse_number<float>(port_elem, "y");
 
-				tmpl_port = GateTemplatePort_shptr(new GateTemplatePort(pos_x, pos_y, port_type));
+				tmpl_port = std::make_shared<GateTemplatePort>(pos_x, pos_y, port_type);
 			}
 			catch (XMLAttributeMissingException const& ex)
 			{
-				tmpl_port = GateTemplatePort_shptr(new GateTemplatePort(port_type));
+				tmpl_port = std::make_shared<GateTemplatePort>(port_type);
 			}
-			assert(tmpl_port != NULL);
+			assert(tmpl_port != nullptr);
 
 
 			tmpl_port->set_name(string(name.c_str()));

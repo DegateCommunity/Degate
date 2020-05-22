@@ -38,7 +38,7 @@
 
 static void get_clock(struct timespec* ts)
 {
-	assert(ts != NULL);
+	assert(ts != nullptr);
 
 	std::chrono::steady_clock::time_point tp = std::chrono::steady_clock::now();
 
@@ -104,7 +104,7 @@ namespace degate
 			struct timespec now;
 			GET_CLOCK(now);
 
-			TileCacheBase* oldest = NULL;
+			TileCacheBase* oldest = nullptr;
 
 			for (cache_t::iterator iter = cache.begin(); iter != cache.end(); ++iter)
 			{

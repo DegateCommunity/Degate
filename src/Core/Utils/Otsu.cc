@@ -70,11 +70,11 @@ void Otsu::run(TileImage_GS_DOUBLE_shptr gray)
 		wF = total - wB;
 		if (wF == 0)
 			break;
-		sumB += (double)(t * histData[t]);
+		sumB += static_cast<double>(t * histData[t]);
 
 		double mB = sumB / wB;
 		double mF = (sum - sumB) / wF;
-		double varBetween = (double)wB * (double)wF * (mB - mF) * (mB - mF);
+		double varBetween = static_cast<double>(wB) * static_cast<double>(wF) * (mB - mF) * (mB - mF);
 
 		if (varBetween > varMax)
 		{

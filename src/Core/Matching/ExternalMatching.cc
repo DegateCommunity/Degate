@@ -19,13 +19,15 @@
 
 */
 
+#include <Core/Image/ImageHelper.h>
 #include <Core/Matching/ExternalMatching.h>
 #include <Core/Primitive/BoundingBox.h>
-#include <Core/Image/ImageHelper.h>
 #include <Core/Utils/DegateHelper.h>
 #include <cstdlib>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <memory>
+
 
 using namespace degate;
 
@@ -38,21 +40,21 @@ void ExternalMatching::init(BoundingBox const& bounding_box, Project_shptr proje
 {
 	this->bounding_box = bounding_box;
 
-	if (project == NULL)
+	if (project == nullptr)
 		throw InvalidPointerException("Invalid pointer for parameter project.");
 
 	lmodel = project->get_logic_model();
-	assert(lmodel != NULL); // always has a logic model
+	assert(lmodel != nullptr); // always has a logic model
 
 	layer = lmodel->get_current_layer();
-	if (layer == NULL) throw DegateRuntimeException("No current layer in project.");
+	if (layer == nullptr) throw DegateRuntimeException("No current layer in project.");
 
 
 	ScalingManager_shptr sm = layer->get_scaling_manager();
-	assert(sm != NULL);
+	assert(sm != nullptr);
 
 	img = sm->get_image(1).second;
-	assert(img != NULL);
+	assert(img != nullptr);
 }
 
 
@@ -123,7 +125,7 @@ std::list<PlacedLogicModelObject_shptr> ExternalMatching::parse_file(std::string
 			getline(file, line);
 
 			PlacedLogicModelObject_shptr plo = parse_line(line);
-			if (plo != NULL) list.push_back(plo);
+			if (plo != nullptr) list.push_back(plo);
 		}
 		file.close();
 	}
@@ -149,7 +151,7 @@ PlacedLogicModelObject_shptr ExternalMatching::parse_line(std::string const& lin
 			y2 = boost::lexical_cast<int>(tokens[4]),
 			diameter = boost::lexical_cast<unsigned int>(tokens[5]);
 
-		return Wire_shptr(new Wire(x1, y1, x2, y2, diameter));
+		return std::make_shared<Wire>(x1, y1, x2, y2, diameter);
 	}
 	else if (tokens[0] == "via" &&
 		tokens.size() >= 6
@@ -162,7 +164,7 @@ PlacedLogicModelObject_shptr ExternalMatching::parse_line(std::string const& lin
 
 		Via::DIRECTION dir = tokens[4] == "up" ? Via::DIRECTION_UP : Via::DIRECTION_DOWN;
 
-		return Via_shptr(new Via(x, y, diameter, dir));
+		return std::make_shared<Via>(x, y, diameter, dir);
 	}
 
 	else

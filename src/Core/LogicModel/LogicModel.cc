@@ -27,16 +27,18 @@
 #include <Core/LogicModel/Gate/GateLibrary.h>
 #include <Core/LogicModel/LogicModel.h>
 
-#include <boost/foreach.hpp>
 #include <algorithm>
+#include <boost/foreach.hpp>
 #include <iterator>
+#include <memory>
+
 
 using namespace std;
 using namespace degate;
 
 std::shared_ptr<Layer> LogicModel::get_create_layer(layer_position_t pos)
 {
-	if (layers.size() <= pos || layers.at(pos) == NULL)
+	if (layers.size() <= pos || layers.at(pos) == nullptr)
 	{
 		add_layer(pos);
 	}
@@ -86,7 +88,7 @@ bool LogicModel::exists_layer_id(layer_collection const& layers, layer_id_t lid)
 {
 	BOOST_FOREACH(Layer_shptr l, layers)
 	{
-		if (l != NULL && l->has_valid_layer_id() && l->get_layer_id() == lid)
+		if (l != nullptr && l->has_valid_layer_id() && l->get_layer_id() == lid)
 			return true;
 	}
 	return false;
@@ -96,7 +98,7 @@ object_id_t LogicModel::get_new_object_id()
 {
 	object_id_t new_id = ++object_id_counter;
 	while (objects.find(new_id) != objects.end() ||
-		(gate_library != NULL && (gate_library->exists_template(new_id) || gate_library->exists_template_port(new_id)))
+		(gate_library != nullptr && (gate_library->exists_template(new_id) || gate_library->exists_template_port(new_id)))
 		||
 		nets.find(new_id) != nets.end() ||
 		exists_layer_id(layers, new_id))
@@ -112,7 +114,7 @@ LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int lay
 	main_module(new Module("main_module", "", true)),
 	object_id_counter(0)
 {
-	gate_library = GateLibrary_shptr(new GateLibrary());
+	gate_library = std::make_shared<GateLibrary>();
 
 	for (unsigned int i = 0; i < layers; i++)
 		get_create_layer(i);
@@ -234,45 +236,45 @@ PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id)
 
 void LogicModel::add_wire(int layer_pos, Wire_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	if (!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
 	wires[o->get_object_id()] = o;
 }
 
 void LogicModel::add_via(int layer_pos, Via_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException(); //
+	if (o == nullptr) throw InvalidPointerException(); //
 	if (!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
 	vias[o->get_object_id()] = o;
 }
 
 void LogicModel::add_emarker(int layer_pos, EMarker_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException(); //
+	if (o == nullptr) throw InvalidPointerException(); //
 	if (!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
 	emarkers[o->get_object_id()] = o;
 }
 
 void LogicModel::add_annotation(int layer_pos, Annotation_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	if (!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
 	annotations[o->get_object_id()] = o;
 }
 
 void LogicModel::add_gate(int layer_pos, Gate_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	if (!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
 	gates[o->get_object_id()] = o;
 
-	assert(main_module != NULL);
+	assert(main_module != nullptr);
 	main_module->add_gate(o);
 
 	// iterate over ports and add them into the lookup table
 	for (Gate::port_iterator iter = o->ports_begin(); iter != o->ports_end(); ++iter)
 	{
-		assert(*iter != NULL);
+		assert(*iter != nullptr);
 		assert((*iter)->has_valid_object_id() == true);
 
 		add_object(layer_pos, std::dynamic_pointer_cast<PlacedLogicModelObject>(*iter));
@@ -281,7 +283,7 @@ void LogicModel::add_gate(int layer_pos, Gate_shptr o)
 
 void LogicModel::remove_gate_ports(Gate_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	// iterate over ports and remove them from the lookup table
 	for (Gate::port_iterator iter = o->ports_begin(); iter != o->ports_end(); ++iter)
 	{
@@ -292,7 +294,7 @@ void LogicModel::remove_gate_ports(Gate_shptr o)
 
 void LogicModel::remove_gate(Gate_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	remove_gate_ports(o);
 	debug(TM, "remove gate");
 	gates.erase(o->get_object_id());
@@ -302,33 +304,33 @@ void LogicModel::remove_gate(Gate_shptr o)
 
 void LogicModel::remove_wire(Wire_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	wires.erase(o->get_object_id());
 }
 
 void LogicModel::remove_via(Via_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	vias.erase(o->get_object_id());
 	//removed_remote_oids.push_back(o->get_remote_object_id());
 }
 
 void LogicModel::remove_emarker(EMarker_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	emarkers.erase(o->get_object_id());
 }
 
 void LogicModel::remove_annotation(Annotation_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	annotations.erase(o->get_object_id());
 }
 
 
 void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	if (!o->has_valid_object_id()) o->set_object_id(get_new_object_id());
 	object_id_t object_id = o->get_object_id();
 
@@ -361,7 +363,7 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
 	{
 		objects[object_id] = o;
 		Layer_shptr layer = get_create_layer(layer_pos);
-		assert(layer != NULL);
+		assert(layer != nullptr);
 		o->set_layer(layer);
 		layer->add_object(o);
 	}
@@ -407,9 +409,9 @@ void LogicModel::remove_remote_object(object_id_t remote_id)
 
 void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remove_list)
 {
-	if (o == NULL) throw InvalidPointerException();
+	if (o == nullptr) throw InvalidPointerException();
 	Layer_shptr layer = o->get_layer();
-	if (layer == NULL)
+	if (layer == nullptr)
 	{
 		debug(TM, "warning: object has no layer");
 	}
@@ -420,7 +422,7 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o, bool add_to_remov
 		{
 			Net_shptr net = clmo->get_net();
 			clmo->remove_net();
-			if (net != NULL && net->size() == 0) remove_net(net);
+			if (net != nullptr && net->size() == 0) remove_net(net);
 		}
 
 		if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(o))
@@ -457,7 +459,7 @@ void LogicModel::remove_object(PlacedLogicModelObject_shptr o)
 
 void LogicModel::add_gate_template(GateTemplate_shptr tmpl)
 {
-	if (gate_library != NULL)
+	if (gate_library != nullptr)
 	{
 		if (!tmpl->has_valid_object_id()) tmpl->set_object_id(get_new_object_id());
 		gate_library->add_template(tmpl);
@@ -474,7 +476,7 @@ void LogicModel::add_gate_template(GateTemplate_shptr tmpl)
 
 void LogicModel::remove_gate_template(GateTemplate_shptr tmpl)
 {
-	if (gate_library == NULL)
+	if (gate_library == nullptr)
 		throw DegateLogicException("You can't remove a gate template, if there is no gate library.");
 	else
 	{
@@ -485,7 +487,7 @@ void LogicModel::remove_gate_template(GateTemplate_shptr tmpl)
 
 void LogicModel::remove_template_references(GateTemplate_shptr tmpl)
 {
-	if (gate_library == NULL)
+	if (gate_library == nullptr)
 		throw DegateLogicException("You can't remove a gate template, if there is no gate library.");
 	for (gate_collection::iterator iter = gates_begin();
 	     iter != gates.end(); ++iter)
@@ -502,7 +504,7 @@ void LogicModel::remove_template_references(GateTemplate_shptr tmpl)
 
 void LogicModel::remove_gates_by_template_type(GateTemplate_shptr tmpl)
 {
-	if (tmpl == NULL) throw InvalidPointerException("The gate template pointer is invalid.");
+	if (tmpl == nullptr) throw InvalidPointerException("The gate template pointer is invalid.");
 
 	std::list<Gate_shptr> gates_to_remove;
 
@@ -538,7 +540,7 @@ void LogicModel::remove_template_port_from_gate_template(GateTemplate_shptr gate
 
 void LogicModel::update_ports(Gate_shptr gate)
 {
-	if (gate == NULL)
+	if (gate == nullptr)
 		throw InvalidPointerException("Invalid parameter for update_ports()");
 
 	GateTemplate_shptr gate_template = gate->get_gate_template();
@@ -558,7 +560,7 @@ void LogicModel::update_ports(Gate_shptr gate)
 		     tmpl_port_iter != gate_template->ports_end(); ++tmpl_port_iter)
 		{
 			GateTemplatePort_shptr tmpl_port = *tmpl_port_iter;
-			assert(tmpl_port != NULL);
+			assert(tmpl_port != nullptr);
 
 			if (!gate->has_template_port(tmpl_port) && gate->has_orientation())
 			{
@@ -568,7 +570,7 @@ void LogicModel::update_ports(Gate_shptr gate)
 				new_gate_port->set_object_id(get_new_object_id());
 				gate->add_port(new_gate_port); // will set coordinates, too
 
-				assert(gate->get_layer() != NULL);
+				assert(gate->get_layer() != nullptr);
 				add_object(gate->get_layer()->get_layer_pos(), new_gate_port);
 			}
 		}
@@ -583,15 +585,15 @@ void LogicModel::update_ports(Gate_shptr gate)
 	{
 		//debug(TM, "iterating over ports");
 		GatePort_shptr gate_port = *port_iter;
-		assert(gate_port != NULL);
+		assert(gate_port != nullptr);
 
 		if (gate->has_template())
 		{
 			GateTemplate_shptr tmpl = gate->get_gate_template();
-			assert(tmpl != NULL);
+			assert(tmpl != nullptr);
 
 			GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-			assert(tmpl_port != NULL);
+			assert(tmpl_port != nullptr);
 
 			bool has_template_port = tmpl->has_template_port(tmpl_port->get_object_id());
 
@@ -637,7 +639,7 @@ void LogicModel::update_ports(Gate_shptr gate)
 
 void LogicModel::update_ports(GateTemplate_shptr gate_template)
 {
-	if (gate_template == NULL)
+	if (gate_template == nullptr)
 		throw InvalidPointerException("Invalid parameter for update_ports()");
 
 	// iterate over all gates ...
@@ -663,7 +665,7 @@ void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer)
 {
 	if (layers.size() <= pos) layers.resize(pos + 1);
 
-	if (layers[pos] != NULL)
+	if (layers[pos] != nullptr)
 		throw DegateLogicException("There is already a layer for this layer number.");
 	else
 	{
@@ -673,8 +675,8 @@ void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer)
 		new_layer->set_layer_pos(pos);
 	}
 
-	if (current_layer == NULL) current_layer = get_layer(0);
-	if (current_layer == NULL) current_layer = new_layer;
+	if (current_layer == nullptr) current_layer = get_layer(0);
+	if (current_layer == nullptr) current_layer = new_layer;
 }
 
 
@@ -773,7 +775,7 @@ GateLibrary_shptr LogicModel::get_gate_library()
 
 void LogicModel::set_gate_library(GateLibrary_shptr new_gate_lib)
 {
-	if (gate_library != NULL)
+	if (gate_library != nullptr)
 	{
 		// XXX
 	}
@@ -782,7 +784,7 @@ void LogicModel::set_gate_library(GateLibrary_shptr new_gate_lib)
 
 void LogicModel::add_net(Net_shptr net)
 {
-	if (net == NULL) throw InvalidPointerException();
+	if (net == nullptr) throw InvalidPointerException();
 
 	if (!net->has_valid_object_id()) net->set_object_id(get_new_object_id());
 	if (nets.find(net->get_object_id()) != nets.end())

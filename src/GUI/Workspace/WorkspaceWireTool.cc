@@ -39,10 +39,10 @@ namespace degate
 
     WorkspaceWireTool::~WorkspaceWireTool()
     {
-        if (program != NULL)
+        if (program != nullptr)
             delete program;
 
-        if(QOpenGLContext::currentContext() == NULL || context == NULL)
+        if(QOpenGLContext::currentContext() == nullptr || context == nullptr)
             return;
 
         if(context->glIsBuffer(vbo) == GL_TRUE)
@@ -90,14 +90,14 @@ namespace degate
         context->glGenBuffers(1, &vbo);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        context->glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(WireToolVertex2D), 0, GL_STATIC_DRAW);
+        context->glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(WireToolVertex2D), nullptr, GL_STATIC_DRAW);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     void WorkspaceWireTool::update(float x, float y)
     {
-        if(started == false || ended == true || project == NULL)
+        if(started == false || ended == true || project == nullptr)
             return;
 
         line.set_to_x(x);
@@ -150,7 +150,7 @@ namespace degate
 
     void WorkspaceWireTool::draw(const QMatrix4x4 &projection)
     {
-        if(started == false || project == NULL || (line.get_from_x() == line.get_to_x() && line.get_from_y() == line.get_to_y()))
+        if(started == false || project == nullptr || (line.get_from_x() == line.get_to_x() && line.get_from_y() == line.get_to_y()))
             return;
 
         program->bind();
@@ -177,7 +177,7 @@ namespace degate
 
     void WorkspaceWireTool::start_line_drawing(float x, float y)
     {
-        if(project == NULL)
+        if(project == nullptr)
             return;
 
         line.set_from_x(x);
@@ -191,7 +191,7 @@ namespace degate
 
     void WorkspaceWireTool::end_line_drawing()
     {
-        if(project == NULL)
+        if(project == nullptr)
             return;
 
         ended = true;
@@ -199,7 +199,7 @@ namespace degate
 
     void WorkspaceWireTool::reset_line_drawing()
     {
-        if(project == NULL)
+        if(project == nullptr)
             return;
 
         started = false;

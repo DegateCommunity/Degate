@@ -752,7 +752,7 @@ namespace degate
     void Text::update(unsigned int total_size)
     {
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        font_context->context->functions()->glBufferData(GL_ARRAY_BUFFER, total_size * 6 * sizeof(TextVertex2D), 0, GL_DYNAMIC_DRAW);
+        font_context->context->functions()->glBufferData(GL_ARRAY_BUFFER, total_size * 6 * sizeof(TextVertex2D), nullptr, GL_DYNAMIC_DRAW);
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         this->total_size = total_size;

@@ -43,7 +43,7 @@ using namespace degate;
 
 void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_shptr gate_lib)
 {
-	if (gate_lib == NULL) throw InvalidPointerException("Gate library pointer is NULL.");
+	if (gate_lib == nullptr) throw InvalidPointerException("Gate library pointer is NULL.");
 
 	std::string directory = get_basedir(filename);
 
@@ -135,7 +135,7 @@ void GateLibraryExporter::add_images(QDomDocument& doc,
 	{
 		Layer::LAYER_TYPE layer_type = (*img_iter).first;
 		GateTemplateImage_shptr img = (*img_iter).second;
-		assert(img != NULL);
+		assert(img != nullptr);
 
 		QDomElement img_elem = doc.createElement("image");
 		if (img_elem.isNull()) throw(std::runtime_error("Failed to create node."));

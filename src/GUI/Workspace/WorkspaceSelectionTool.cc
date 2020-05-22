@@ -37,10 +37,10 @@ namespace degate
 
 	WorkspaceSelectionTool::~WorkspaceSelectionTool()
 	{
-		if (program != NULL)
+		if (program != nullptr)
 			delete program;
 
-		if(QOpenGLContext::currentContext() == NULL || context == NULL)
+		if(QOpenGLContext::currentContext() == nullptr || context == nullptr)
 			return;
 
 		if(context->glIsBuffer(vbo) == GL_TRUE)
@@ -92,17 +92,17 @@ namespace degate
 		context->glGenBuffers(1, &line_vbo);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		context->glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(SelectionToolVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(SelectionToolVertex2D), nullptr, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
-		context->glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(SelectionToolVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(SelectionToolVertex2D), nullptr, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	void WorkspaceSelectionTool::update(float x, float y)
 	{
-		if(selection == false || project == NULL)
+		if(selection == false || project == nullptr)
 			return;
 
 		if (x < origin.x())
@@ -193,7 +193,7 @@ namespace degate
 
 	void WorkspaceSelectionTool::draw(const QMatrix4x4& projection)
 	{
-		if(selection == false || project == NULL)
+		if(selection == false || project == nullptr)
 			return;
 
 		program->bind();

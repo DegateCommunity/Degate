@@ -27,6 +27,8 @@
 
 #include <cerrno>
 #include <iostream>
+#include <memory>
+
 #include <stdexcept>
 #include <list>
 
@@ -56,7 +58,7 @@ Project_shptr ProjectImporter::import_all(std::string const& directory)
 
 		if (file_exists(gate_lib_file))
 			gate_lib = gl_importer.import(gate_lib_file);
-		else gate_lib = GateLibrary_shptr(new GateLibrary());
+		else gate_lib = std::make_shared<GateLibrary>();
 
 		LogicModelImporter lm_importer(prj->get_width(), prj->get_height(), gate_lib);
 
@@ -87,7 +89,7 @@ Project_shptr ProjectImporter::import_all(std::string const& directory)
 		{
 			debug(TM, "Will grab template image for gate template ID: %d", iter->first);
 			GateTemplate_shptr tmpl = iter->second;
-			assert(tmpl != NULL);
+			assert(tmpl != nullptr);
 
 			BoundingBox const& bbox = tmpl->get_bounding_box();
 			if (bbox.get_min_x() != 0 && bbox.get_min_y() != 0 &&
@@ -221,7 +223,7 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 				                                   prj->get_height(),
 				                                   image_path_to_load);
 
-			if (bg_image == NULL)
+			if (bg_image == nullptr)
 				throw DegateRuntimeException("Failed to load the background image");
 
 			debug(TM, "Loading done.");
@@ -260,7 +262,7 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 					                                        prj->get_height(),
 					                                        image_path_to_load);
 
-				if (new_bg_image == NULL)
+				if (new_bg_image == nullptr)
 					throw DegateRuntimeException("Failed to load the background image");
 
 				// convert image into new format
@@ -432,10 +434,10 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
 	parent_prj->set_name(project_elem.attribute("name").toStdString());
 	parent_prj->set_description(project_elem.attribute("description").toStdString());
 
-	if (project_elem.attribute("server-url") != 0)
+	if (project_elem.attribute("server-url") != nullptr)
 		parent_prj->set_server_url(project_elem.attribute("server-url").toStdString());
 
-	if (project_elem.attribute("last-pulled-transaction-id") != 0)
+	if (project_elem.attribute("last-pulled-transaction-id") != nullptr)
 		parent_prj->set_last_pulled_tid(parse_number<transaction_id_t>(project_elem,
 		                                                               "last-pulled-transaction-id"));
 

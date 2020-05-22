@@ -46,7 +46,7 @@ Gate::Gate(BoundingBox const& bounding_box,
 Gate::~Gate()
 {
 	//debug(TM, "destroy gate");
-	if (gate_template != NULL) remove_template();
+	if (gate_template != nullptr) remove_template();
 }
 
 DeepCopyable_shptr Gate::cloneShallow() const
@@ -63,7 +63,7 @@ void Gate::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 	PlacedLogicModelObject::cloneDeepInto(clone, oldnew);
 	Rectangle::cloneDeepInto(clone, oldnew);
 
-	if (gate_template.get() != 0)
+	if (gate_template.get() != nullptr)
 	{
 		clone->gate_template = std::dynamic_pointer_cast<GateTemplate>(gate_template->cloneDeep(oldnew));
 	}
@@ -149,8 +149,8 @@ void Gate::set_gate_template(std::shared_ptr<GateTemplate> gate_template)
 		set_frame_color(gate_template->get_frame_color());
 		this->gate_template->increment_reference_counter();
 
-		if ((unsigned int)get_width() != gate_template->get_width() ||
-			(unsigned int)get_height() != gate_template->get_height())
+		if (static_cast<unsigned int>(get_width()) != gate_template->get_width() ||
+			static_cast<unsigned int>(get_height()) != gate_template->get_height())
 		{
 			set_max_x(get_min_x() + gate_template->get_width());
 			set_max_y(get_min_y() + gate_template->get_height());
@@ -166,7 +166,7 @@ std::shared_ptr<GateTemplate> Gate::get_gate_template() const
 
 bool Gate::has_template() const
 {
-	return gate_template != NULL;
+	return gate_template != nullptr;
 }
 
 void Gate::remove_template()

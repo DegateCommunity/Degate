@@ -56,11 +56,11 @@ namespace degate
 		QModelIndexList index = select->selectedRows();
 		std::vector<GateTemplate_shptr> res;
 
-		for(auto sel = index.begin(); sel != index.end(); ++sel)
+		for(auto & sel : index)
 		{
-			if(sel->isValid())
+			if(sel.isValid())
 			{
-				res.push_back(project->get_logic_model()->get_gate_library()->get_template(item(sel->row(), 0)->text().toInt()));
+				res.push_back(project->get_logic_model()->get_gate_library()->get_template(item(sel.row(), 0)->text().toInt()));
 			}
 		}
 
@@ -72,14 +72,14 @@ namespace degate
 		QItemSelectionModel* select = selectionModel();
 
 		if(!select->hasSelection())
-			return NULL;
+			return nullptr;
 
 		QModelIndexList index = select->selectedRows();
 
 		auto sel = index.at(0);
 
 		if(!sel.isValid())
-			return NULL;
+			return nullptr;
 		else
 			return project->get_logic_model()->get_gate_library()->get_template(item(sel.row(), 0)->text().toInt());
 	}
@@ -91,7 +91,7 @@ namespace degate
 
 	void GateTemplateListWidget::update_list()
 	{
-		if (project == NULL)
+		if (project == nullptr)
 			return;
 
 		setRowCount(0);

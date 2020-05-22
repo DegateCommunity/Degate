@@ -46,7 +46,7 @@ namespace degate
 	{
 		makeCurrent();
 
-		if (project == NULL)
+		if (project == nullptr)
 			return;
 
 		background.update();
@@ -103,7 +103,7 @@ namespace degate
 
 	void WorkspaceRenderer::reset_selection()
 	{
-		if(selected_object == NULL)
+		if(selected_object == nullptr)
 			return;
 		
 		selected_object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
@@ -133,7 +133,7 @@ namespace degate
             wires.update(o);
         }
 
-		selected_object = NULL;
+		selected_object = nullptr;
 	}
 
     void WorkspaceRenderer::use_area_selection_tool()
@@ -158,7 +158,7 @@ namespace degate
 
 	bool WorkspaceRenderer::has_selection()
 	{
-		if(selected_object == NULL)
+		if(selected_object == nullptr)
 			return false;
 		else
 			return true;
@@ -166,8 +166,8 @@ namespace degate
 
 	PlacedLogicModelObject_shptr WorkspaceRenderer::pop_selected_object()
 	{
-		if(selected_object == NULL)
-			return NULL;
+		if(selected_object == nullptr)
+			return nullptr;
 		
 		selected_object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
 
@@ -197,7 +197,7 @@ namespace degate
         }
 
 		PlacedLogicModelObject_shptr temp = selected_object;
-		selected_object = NULL;
+		selected_object = nullptr;
 
 		return temp;
 	}
@@ -427,7 +427,7 @@ namespace degate
 		// Selection
 		if (event->button() == Qt::LeftButton && !mouse_moved)
 		{
-			if(project == NULL)
+			if(project == nullptr)
 				return;
 
 			QPointF pos = get_opengl_mouse_position();
@@ -462,20 +462,20 @@ namespace degate
 
 			bool was_selected = false;
 
-			if(selected_object != NULL)
+			if(selected_object != nullptr)
 			{
 				reset_selection();
 				was_selected = true;
 			}
 			
-			if(plo != NULL)
+			if(plo != nullptr)
 			{
 				selected_object = plo;
 
 				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
 			}
 
-			if(plo != NULL || was_selected)
+			if(plo != nullptr || was_selected)
 			{
 				if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
 				{
@@ -507,13 +507,13 @@ namespace degate
 		}
 
         // Selection imply no area selection
-        if (selected_object != NULL && current_tool == WorkspaceTool::AREA_SELECTION)
+        if (selected_object != nullptr && current_tool == WorkspaceTool::AREA_SELECTION)
         {
             reset_area_selection();
             update();
         }
 
-        if(event->button() == Qt::RightButton && current_tool == WorkspaceTool::WIRE && project != NULL)
+        if(event->button() == Qt::RightButton && current_tool == WorkspaceTool::WIRE && project != nullptr)
         {
             wire_tool.end_line_drawing();
 
@@ -570,7 +570,7 @@ namespace degate
 			selection_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
             // If an object is selected, reset selection
-			if(selected_object != NULL)
+			if(selected_object != nullptr)
 			    reset_selection();
 
 			update();
@@ -636,7 +636,7 @@ namespace degate
 
 		if (event->button() == Qt::LeftButton)
 		{
-			if(project == NULL)
+			if(project == nullptr)
 				return;
 
 			QPointF pos = get_opengl_mouse_position();
@@ -646,7 +646,7 @@ namespace degate
 			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
 
 			// Check if there is a gate or gate port on the logic layer
-			if(plo == NULL) 
+			if(plo == nullptr) 
 			{
 				try 
 				{
@@ -658,7 +658,7 @@ namespace degate
 				}
 			}
 
-			if(plo != NULL)
+			if(plo != nullptr)
 			{
 				if(SubProjectAnnotation_shptr sp = std::dynamic_pointer_cast<SubProjectAnnotation>(plo))
 				{

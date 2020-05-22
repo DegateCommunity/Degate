@@ -90,7 +90,7 @@ void LogicModelImporter::import_into(LogicModel_shptr lmodel,
 LogicModel_shptr LogicModelImporter::import(std::string const& filename)
 {
 	LogicModel_shptr lmodel(new LogicModel(width, height));
-	assert(lmodel != NULL);
+	assert(lmodel != nullptr);
 
 	import_into(lmodel, filename);
 
@@ -130,7 +130,7 @@ void LogicModelImporter::parse_logic_model_element(QDomElement const lm_elem,
 void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
                                             LogicModel_shptr lmodel)
 {
-	if (nets_element.isNull() || lmodel == NULL)
+	if (nets_element.isNull() || lmodel == nullptr)
 		throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_nets_element()");
 
 	const QDomNodeList net_list = nets_element.elementsByTagName("net");
@@ -158,7 +158,7 @@ void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
 					try
 					{
 						PlacedLogicModelObject_shptr placed_object = lmodel->get_object(object_id);
-						if (placed_object == NULL)
+						if (placed_object == nullptr)
 						{
 							debug(TM,
 							      "Failed to lookup logic model object %d. Can't connect it to net %d.",
@@ -168,7 +168,7 @@ void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
 						{
 							ConnectedLogicModelObject_shptr o =
 								std::dynamic_pointer_cast<ConnectedLogicModelObject>(placed_object);
-							if (o != NULL)
+							if (o != nullptr)
 							{
 								o->set_net(net);
 							}
@@ -206,7 +206,7 @@ void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
 void LogicModelImporter::parse_wires_element(QDomElement const wires_element,
                                              LogicModel_shptr lmodel)
 {
-	if (wires_element.isNull() || lmodel == NULL)
+	if (wires_element.isNull() || lmodel == nullptr)
 		throw InvalidPointerException("Null pointer in LogicModelImporter::parse_wires_element()");
 
 	const QDomNodeList wire_list = wires_element.elementsByTagName("wire");
@@ -248,7 +248,7 @@ void LogicModelImporter::parse_wires_element(QDomElement const wires_element,
 void LogicModelImporter::parse_vias_element(QDomElement const vias_element,
                                             LogicModel_shptr lmodel)
 {
-	if (vias_element.isNull() || lmodel == NULL) throw InvalidPointerException();
+	if (vias_element.isNull() || lmodel == nullptr) throw InvalidPointerException();
 
 	const QDomNodeList via_list = vias_element.elementsByTagName("via");
 	for (int i = 0; i < via_list.count(); i++)
@@ -300,7 +300,7 @@ void LogicModelImporter::parse_vias_element(QDomElement const vias_element,
 void LogicModelImporter::parse_emarkers_element(QDomElement const emarkers_element,
                                                 LogicModel_shptr lmodel)
 {
-	if (emarkers_element.isNull() || lmodel == NULL) throw InvalidPointerException();
+	if (emarkers_element.isNull() || lmodel == nullptr) throw InvalidPointerException();
 
 	const QDomNodeList emarker_list = emarkers_element.elementsByTagName("emarker");
 	for (int i = 0; i < emarker_list.count(); i++)
@@ -341,7 +341,7 @@ void LogicModelImporter::parse_emarkers_element(QDomElement const emarkers_eleme
 void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
                                              LogicModel_shptr lmodel)
 {
-	if (gates_element.isNull() || lmodel == NULL) throw InvalidPointerException();
+	if (gates_element.isNull() || lmodel == nullptr) throw InvalidPointerException();
 
 
 	const QDomNodeList gate_list = gates_element.elementsByTagName("gate");
@@ -384,10 +384,10 @@ void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
 			gate->set_fill_color(parse_color_string(fill_color_str));
 			gate->set_frame_color(parse_color_string(frame_color_str));
 
-			if (gate_library != NULL && gate_type_id != 0)
+			if (gate_library != nullptr && gate_type_id != 0)
 			{
 				GateTemplate_shptr tmpl = gate_library->get_template(gate_type_id);
-				assert(tmpl != NULL);
+				assert(tmpl != nullptr);
 				gate->set_gate_template(tmpl);
 			}
 
@@ -406,7 +406,7 @@ void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
 					gate_port->set_template_port_type_id(template_port_id);
 					gate_port->set_diameter(parse_number<diameter_t>(port_elem, "diameter", 5));
 
-					if (gate_library != NULL)
+					if (gate_library != nullptr)
 					{
 						GateTemplatePort_shptr tmpl_port = gate_library->get_template_port(template_port_id);
 						gate_port->set_template_port(tmpl_port);
@@ -433,7 +433,7 @@ void LogicModelImporter::parse_gates_element(QDomElement const gates_element,
 void LogicModelImporter::parse_annotations_element(QDomElement const annotations_element,
                                                    LogicModel_shptr lmodel)
 {
-	if (annotations_element.isNull() || lmodel == NULL) throw InvalidPointerException();
+	if (annotations_element.isNull() || lmodel == nullptr) throw InvalidPointerException();
 
 	const QDomNodeList annotation_list = annotations_element.elementsByTagName("annotation");
 	for (int i = 0; i < annotation_list.count(); i++)
@@ -481,7 +481,7 @@ void LogicModelImporter::parse_annotations_element(QDomElement const annotations
 std::list<Module_shptr> LogicModelImporter::parse_modules_element(QDomElement const modules_element,
                                                                   LogicModel_shptr lmodel)
 {
-	if (modules_element.isNull() || lmodel == NULL)
+	if (modules_element.isNull() || lmodel == nullptr)
 		throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_modules_element()");
 
 	std::list<Module_shptr> modules;

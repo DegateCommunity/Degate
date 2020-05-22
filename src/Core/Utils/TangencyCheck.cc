@@ -27,9 +27,9 @@
  */
 bool get_line_function_for_wire(degate::Line_shptr l, double* m, double* n)
 {
-	assert(l != NULL);
-	assert(m != NULL);
-	assert(n != NULL);
+	assert(l != nullptr);
+	assert(m != nullptr);
+	assert(n != nullptr);
 
 	int d_y = l->get_to_y() - l->get_from_y();
 	int d_x = l->get_to_x() - l->get_from_x();
@@ -208,7 +208,7 @@ bool degate::check_object_tangency(Line_shptr l,
 bool degate::check_object_tangency(PlacedLogicModelObject_shptr o1,
                                    PlacedLogicModelObject_shptr o2)
 {
-	if (o1 == NULL || o2 == NULL)
+	if (o1 == nullptr || o2 == nullptr)
 		throw InvalidPointerException("You passed an invalid shared pointer.");
 
 	if (!o1->get_bounding_box().intersects(o2->get_bounding_box()))

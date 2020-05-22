@@ -68,9 +68,9 @@ TileImage_GS_DOUBLE_shptr ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in,
                                                          std::string const& directory)
 {
 	set_directory(directory);
-	assert(img_in != NULL);
+	assert(img_in != nullptr);
 	TileImage_GS_DOUBLE_shptr zero_cross_img = run(img_in, probability_map);
-	assert(zero_cross_img != NULL);
+	assert(zero_cross_img != nullptr);
 
 	save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "03_edge_zero_cross.tif"),
 	                                           zero_cross_img);
@@ -94,8 +94,8 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
                                       double zero_threshold,
                                       unsigned int min_d, unsigned int max_d)
 {
-	if (start_x == NULL || start_y == NULL ||
-		stop_x == NULL || stop_y == NULL || mag == NULL)
+	if (start_x == nullptr || start_y == nullptr ||
+		stop_x == nullptr || stop_y == nullptr || mag == nullptr)
 		return false;
 
 	enum STATE { BEFORE, POS_EDGE, NEG_EDGE, END };
@@ -261,9 +261,9 @@ void ZeroCrossingEdgeDetection::overlay_result(TileImage_GS_DOUBLE_shptr zc,
                                                //TileImage_RGBA_shptr bg,
                                                std::string const& directory) const
 {
-	assert(bg != NULL && zc != NULL);
+	assert(bg != nullptr && zc != nullptr);
 
-	if (bg != NULL && zc != NULL)
+	if (bg != nullptr && zc != nullptr)
 	{
 		for (unsigned int y = 0; y < get_height(); y++)
 			for (unsigned int x = 0; x < get_width(); x++)

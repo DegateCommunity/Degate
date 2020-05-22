@@ -150,7 +150,7 @@ namespace degate
 
 	void GateEditEntityTab::validate()
 	{
-		if(gate == NULL)
+		if(gate == nullptr)
 			return;
 
 		gate->set_name(name.text().toStdString());
@@ -220,10 +220,10 @@ namespace degate
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto sel = index.begin(); sel != index.end(); ++sel)
+		for(auto & sel : index)
 		{
-			if(sel->isValid())
-				gate->remove_template_port(ports.item(sel->row(), 0)->text().toInt());
+			if(sel.isValid())
+				gate->remove_template_port(ports.item(sel.row(), 0)->text().toInt());
 		}
 
 		project->get_logic_model()->update_ports(gate);
@@ -291,11 +291,11 @@ namespace degate
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto sel = index.begin(); sel != index.end(); ++sel)
+		for(auto & sel : index)
 		{
-			if(sel->isValid())
+			if(sel.isValid())
 			{
-				PortPlacementDialog dialog(this, project, gate, gate->get_template_port(ports.item(sel->row(), 0)->text().toInt()));
+				PortPlacementDialog dialog(this, project, gate, gate->get_template_port(ports.item(sel.row(), 0)->text().toInt()));
 				dialog.exec();
 			}
 		}
@@ -674,13 +674,13 @@ namespace degate
 
 	GateEditLayoutTab::~GateEditLayoutTab()
 	{
-		if(transistor != NULL) 
+		if(transistor != nullptr) 
 			delete transistor;
 		
-		if(logic != NULL) 
+		if(logic != nullptr) 
 			delete logic;
 		
-		if(metal != NULL) 
+		if(metal != nullptr) 
 			delete metal;
 	}
 

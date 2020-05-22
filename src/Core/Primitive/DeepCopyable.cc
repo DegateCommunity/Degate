@@ -37,7 +37,7 @@ namespace degate
 	bool DeepCopyable::cloneOnce(const c_DeepCopyable_shptr& o,
 	                             std::map<c_DeepCopyable_shptr, DeepCopyable_shptr>* __oldnew)
 	{
-		assert(o.get() != 0);
+		assert(o.get() != nullptr);
 
 		std::map<c_DeepCopyable_shptr, DeepCopyable_shptr>& oldnew = *__oldnew;
 		if (oldnew.count(o) > 0)

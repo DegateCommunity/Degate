@@ -99,7 +99,7 @@ std::string Module::get_entity_name() const
 
 void Module::add_gate(Gate_shptr gate, bool detect_ports)
 {
-	if (gate == NULL)
+	if (gate == nullptr)
 		throw InvalidPointerException("Invalid pointer passed to add_gate().");
 
 	gates.insert(gate);
@@ -108,7 +108,7 @@ void Module::add_gate(Gate_shptr gate, bool detect_ports)
 
 bool Module::remove_gate(Gate_shptr gate)
 {
-	if (gate == NULL)
+	if (gate == nullptr)
 		throw InvalidPointerException("Invalid pointer passed to remove_gate().");
 
 
@@ -135,7 +135,7 @@ bool Module::remove_gate(Gate_shptr gate)
 
 void Module::add_module(Module_shptr module)
 {
-	if (module == NULL)
+	if (module == nullptr)
 		throw InvalidPointerException("Invalid pointer passed to add_modue().");
 
 	modules.insert(module);
@@ -144,7 +144,7 @@ void Module::add_module(Module_shptr module)
 
 bool Module::remove_module(Module_shptr module)
 {
-	if (module == NULL)
+	if (module == nullptr)
 		throw InvalidPointerException("Invalid pointer passed to remove_module().");
 
 	for (module_collection::iterator iter = modules.begin();
@@ -167,7 +167,7 @@ bool Module::remove_module(Module_shptr module)
 
 void Module::move_gates_recursive(Module* dst_mod)
 {
-	if (dst_mod == NULL)
+	if (dst_mod == nullptr)
 		throw InvalidPointerException("Invalid pointer passed to move_all_child_gates_into_current_module().");
 
 	for (gate_collection::iterator g_iter = gates_begin();
@@ -265,7 +265,7 @@ bool Module::net_completely_internal(Net_shptr net) const
 	{
 		object_id_t oid = *c_iter;
 		GatePort_shptr gport = lookup_gate_port_recursive(oid);
-		if (gport == NULL)
+		if (gport == nullptr)
 		{
 			// external entity
 			return false;
@@ -281,7 +281,7 @@ bool Module::net_feeded_internally(Net_shptr net) const
 		object_id_t oid = *c_iter;
 		GatePort_shptr gport = lookup_gate_port_recursive(oid);
 
-		if (gport != NULL)
+		if (gport != nullptr)
 		{
 			// internal entity
 			GateTemplatePort_shptr tmpl_port = gport->get_template_port();
@@ -317,18 +317,18 @@ void Module::determine_module_ports()
 	for (gate_collection::iterator g_iter = gates_begin(); g_iter != gates_end(); ++g_iter)
 	{
 		Gate_shptr gate = *g_iter;
-		assert(gate != NULL);
+		assert(gate != nullptr);
 
 		for (Gate::port_const_iterator p_iter = gate->ports_begin(); p_iter != gate->ports_end(); ++p_iter)
 		{
 			GatePort_shptr gate_port = *p_iter;
-			assert(gate_port != NULL);
+			assert(gate_port != nullptr);
 
 			Net_shptr net = gate_port->get_net();
 			std::cout << "Check net for object gate port " << gate_port->get_descriptive_identifier() << "?\n";
 
 			bool net_already_processed = known_net.find(net) != known_net.end();
-			if ((net != NULL) && !net_already_processed && !net_completely_internal(net))
+			if ((net != nullptr) && !net_already_processed && !net_completely_internal(net))
 			{
 				bool is_a_port = false;
 
@@ -349,7 +349,7 @@ void Module::determine_module_ports()
 						// port.
 
 						GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-						assert(tmpl_port != NULL); // if a gate has no standard cell type, the gate cannot have a port
+						assert(tmpl_port != nullptr); // if a gate has no standard cell type, the gate cannot have a port
 
 						if (net_feeded_internally(net) && tmpl_port->is_inport())
 						{
@@ -383,7 +383,7 @@ void Module::determine_module_ports()
 					}
 				}
 			}
-			else if (net == NULL)
+			else if (net == nullptr)
 			{
 				std::cout << "  Will not check net -- no net.\n";
 			}
@@ -406,7 +406,7 @@ void Module::determine_module_ports()
 
 			bool net_already_processed = known_net.find(net) != known_net.end();
 
-			if (net != NULL && !net_already_processed && !net_completely_internal(net))
+			if (net != nullptr && !net_already_processed && !net_completely_internal(net))
 			{
 				// outbound connection
 				new_ports[mod_port_name] = gate_port;
@@ -432,7 +432,7 @@ void Module::add_module_port(std::string const& module_port_name, GatePort_shptr
 
 bool Module::exists_gate_port_recursive(object_id_t oid) const
 {
-	return lookup_gate_port_recursive(oid) != NULL;
+	return lookup_gate_port_recursive(oid) != nullptr;
 }
 
 GatePort_shptr Module::lookup_gate_port_recursive(object_id_t oid) const
@@ -476,17 +476,17 @@ void degate::determine_module_ports_for_root(LogicModel_shptr lmodel)
 	     g_iter != main_module->gates_end(); ++g_iter)
 	{
 		Gate_shptr gate = *g_iter;
-		assert(gate != NULL);
+		assert(gate != nullptr);
 
 		for (Gate::port_const_iterator p_iter = gate->ports_begin(); p_iter != gate->ports_end(); ++p_iter)
 		{
 			GatePort_shptr gate_port = *p_iter;
-			assert(gate_port != NULL);
+			assert(gate_port != nullptr);
 
 			Net_shptr net = gate_port->get_net();
 			bool is_a_port = false;
 
-			if (net != NULL)
+			if (net != nullptr)
 			{
 				for (Net::connection_iterator c_iter = net->begin(); c_iter != net->end() && !is_a_port; ++c_iter)
 				{
@@ -501,7 +501,7 @@ void degate::determine_module_ports_for_root(LogicModel_shptr lmodel)
 						if (em->get_description() == "module-port")
 						{
 							GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-							assert(tmpl_port != NULL);
+							assert(tmpl_port != nullptr);
 							// if a gate has no standard cell type, the gate cannot have a port
 
 							main_module->ports[em->get_name()] = gate_port;

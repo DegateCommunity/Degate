@@ -24,6 +24,8 @@
 #include "Project.h"
 
 #include <algorithm>
+#include <memory>
+
 #include <string>
 #include <iostream>
 #include <ctime>
@@ -202,12 +204,12 @@ bool Project::is_changed() const
 
 time_t Project::get_time_since_last_save() const
 {
-	return time(NULL) - last_persistent_version;
+	return time(nullptr) - last_persistent_version;
 }
 
 void Project::reset_last_saved_counter()
 {
-	last_persistent_version = time(NULL);
+	last_persistent_version = time(nullptr);
 }
 
 RegularGrid_shptr Project::get_regular_horizontal_grid()
@@ -258,7 +260,7 @@ void Project::print(std::ostream& os)
 void Project::print_all(std::ostream& os)
 {
 	print(os);
-	if (logic_model == NULL)
+	if (logic_model == nullptr)
 	{
 		os << "+ The project has no logic model." << endl
 			<< endl;
@@ -296,17 +298,17 @@ void Project::init_default_values()
 
 	reset_last_saved_counter();
 
-	regular_horizontal_grid = RegularGrid_shptr(new RegularGrid(Grid::HORIZONTAL));
-	regular_vertical_grid = RegularGrid_shptr(new RegularGrid(Grid::VERTICAL));
-	irregular_horizontal_grid = IrregularGrid_shptr(new IrregularGrid(Grid::HORIZONTAL));
-	irregular_vertical_grid = IrregularGrid_shptr(new IrregularGrid(Grid::VERTICAL));
+	regular_horizontal_grid = std::make_shared<RegularGrid>(Grid::HORIZONTAL);
+	regular_vertical_grid = std::make_shared<RegularGrid>(Grid::VERTICAL);
+	irregular_horizontal_grid = std::make_shared<IrregularGrid>(Grid::HORIZONTAL);
+	irregular_vertical_grid = std::make_shared<IrregularGrid>(Grid::VERTICAL);
 
 	// Generate a server URL
 
-	srand(time(NULL));
+	srand(time(nullptr));
 	std::string channel_ident;
 	while (channel_ident.size() <= 20)
-		channel_ident += (char)('a' + (int)(26.0 * rand() / (RAND_MAX + 1.0)));
+		channel_ident += static_cast<char>('a' + static_cast<int>(26.0 * rand() / (RAND_MAX + 1.0)));
 
 
 	boost::format f(Configuration::get_instance().get_servers_uri_pattern());

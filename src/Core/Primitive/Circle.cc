@@ -55,7 +55,7 @@ bool Circle::in_shape(float x, float y, float max_distance) const
 {
 	int delta_x = this->x - x;
 	int delta_y = this->y - y;
-	return sqrt((double)(delta_x * delta_x + delta_y * delta_y)) <= diameter + max_distance;
+	return sqrt(static_cast<double>(delta_x * delta_x + delta_y * delta_y)) <= diameter + max_distance;
 }
 
 bool Circle::in_bounding_box(BoundingBox const& bbox) const

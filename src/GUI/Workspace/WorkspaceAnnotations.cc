@@ -86,12 +86,12 @@ namespace degate
 
 	void WorkspaceAnnotations::update()
 	{
-		if(project == NULL)
+		if(project == nullptr)
 			return;
 
 		Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
-		if(layer == NULL)
+		if(layer == nullptr)
 			return;
 
 		// Keep only annotations of the active layer.
@@ -110,11 +110,11 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, annotations_count * 6 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, annotations_count * 6 * sizeof(AnnotationsVertex2D), nullptr, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, annotations_count * 8 * sizeof(AnnotationsVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, annotations_count * 8 * sizeof(AnnotationsVertex2D), nullptr, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -146,7 +146,7 @@ namespace degate
 
 	void WorkspaceAnnotations::update(Annotation_shptr& annotation)
 	{
-		if(annotation == NULL)
+		if(annotation == nullptr)
 			return;
 
 		create_annotation(annotation, annotation->get_index());
@@ -154,7 +154,7 @@ namespace degate
 
 	void WorkspaceAnnotations::draw(const QMatrix4x4& projection)
 	{
-		if(project == NULL || annotations_count == 0)
+		if(project == nullptr || annotations_count == 0)
 			return;
 
 		program->bind();
@@ -194,7 +194,7 @@ namespace degate
 
 	void WorkspaceAnnotations::draw_name(const QMatrix4x4& projection)
 	{
-		if(project == NULL || annotations_count == 0)
+		if(project == nullptr || annotations_count == 0)
 			return;
 		
 		text.draw(projection);
@@ -202,7 +202,7 @@ namespace degate
 
 	void WorkspaceAnnotations::create_annotation(Annotation_shptr& annotation, unsigned index)
 	{
-		if(annotation == NULL)
+		if(annotation == nullptr)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);

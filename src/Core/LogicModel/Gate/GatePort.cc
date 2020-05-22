@@ -107,7 +107,7 @@ void GatePort::set_template_port(std::shared_ptr<GateTemplatePort>
 	 be ignored. But if the port already belongs to a gate and a a template is
 	 set afterwards, this calculation is used.
 	*/
-	assert(gate.lock() != NULL);
+	assert(gate.lock() != nullptr);
 	set_x(gate.lock()->get_min_x() +
 		gate.lock()->get_relative_x_position_within_gate(gate_template_port->get_x()));
 	set_y(gate.lock()->get_min_y() +
@@ -117,12 +117,12 @@ void GatePort::set_template_port(std::shared_ptr<GateTemplatePort>
 
 bool GatePort::has_template_port() const
 {
-	return gate_template_port != NULL;
+	return gate_template_port != nullptr;
 }
 
 bool GatePort::is_assigned_to_a_gate() const
 {
-	return gate.lock() != NULL;
+	return gate.lock() != nullptr;
 }
 
 

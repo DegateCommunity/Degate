@@ -92,16 +92,16 @@ namespace degate
 
 	void WorkspaceGates::update()
 	{
-		if(project == NULL || project->get_logic_model()->get_gates_count() == 0)
+		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 6 * sizeof(GatesVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 6 * sizeof(GatesVertex2D), nullptr, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, line_vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 8 * sizeof(GatesVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 8 * sizeof(GatesVertex2D), nullptr, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -131,7 +131,7 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
-		context->glBufferData(GL_ARRAY_BUFFER, ports_count * 9 * sizeof(GatesVertex2D), 0, GL_STATIC_DRAW);
+		context->glBufferData(GL_ARRAY_BUFFER, ports_count * 9 * sizeof(GatesVertex2D), nullptr, GL_STATIC_DRAW);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -158,7 +158,7 @@ namespace degate
 
 	void WorkspaceGates::update(Gate_shptr& gate)
 	{
-		if(gate == NULL)
+		if(gate == nullptr)
 			return;
 
 		create_gate(gate, gate->get_index());
@@ -166,7 +166,7 @@ namespace degate
 
 	void WorkspaceGates::draw(const QMatrix4x4& projection)
 	{
-		if(project == NULL || project->get_logic_model()->get_gates_count() == 0)
+		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 
 		program->bind();
@@ -206,7 +206,7 @@ namespace degate
 
 	void WorkspaceGates::draw_gates_name(const QMatrix4x4& projection)
 	{
-		if(project == NULL || project->get_logic_model()->get_gates_count() == 0)
+		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 		
 		text.draw(projection);
@@ -214,7 +214,7 @@ namespace degate
 
 	void WorkspaceGates::draw_ports(const QMatrix4x4& projection)
 	{
-		if(project == NULL || project->get_logic_model()->get_gates_count() == 0)
+		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 		
 		program->bind();
@@ -241,7 +241,7 @@ namespace degate
 
 	void WorkspaceGates::draw_ports_name(const QMatrix4x4& projection)
 	{
-		if(project == NULL || project->get_logic_model()->get_gates_count() == 0)
+		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 		
 		port_text.draw(projection);
@@ -249,7 +249,7 @@ namespace degate
 
 	void WorkspaceGates::create_gate(Gate_shptr& gate, unsigned index)
 	{
-		if(gate == NULL)
+		if(gate == nullptr)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -435,7 +435,7 @@ namespace degate
 
 	void WorkspaceGates::update(GatePort_shptr& port)
 	{
-		if(port == NULL)
+		if(port == nullptr)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);

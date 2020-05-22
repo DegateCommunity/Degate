@@ -118,7 +118,7 @@ bool EdgeDetection::has_directory() const
 void EdgeDetection::run_edge_detection(ImageBase_shptr in)
 {
 	ImageBase_shptr out = pipe.run(in);
-	assert(out != NULL);
+	assert(out != nullptr);
 
 	std::shared_ptr<SobelYOperator> SobelY(new SobelYOperator());
 	std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> edge_filter_x
@@ -130,7 +130,7 @@ void EdgeDetection::run_edge_detection(ImageBase_shptr in)
 
 	i1 = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(edge_filter_x->run(out));
 	i2 = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(edge_filter_y->run(out));
-	assert(i1 != NULL && i2 != NULL);
+	assert(i1 != nullptr && i2 != nullptr);
 
 	if (has_path) save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "01_sobelx.tif"), i1);
 	if (has_path) save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "02_sobely.tif"), i2);
@@ -149,7 +149,7 @@ TileImage_GS_DOUBLE_shptr EdgeDetection::get_vertical_edges()
 
 TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_magnitude_image(TileImage_GS_DOUBLE_shptr probability_map)
 {
-	if (i1 == NULL || i2 == NULL) return TileImage_GS_DOUBLE_shptr();
+	if (i1 == nullptr || i2 == nullptr) return TileImage_GS_DOUBLE_shptr();
 
 	TileImage_GS_DOUBLE_shptr edge_mag_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
 
@@ -160,7 +160,7 @@ TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_magnitude_image(TileImage_GS_D
 			double gx = i1->get_pixel(x, y);
 			double gy = i2->get_pixel(x, y);
 			double g = sqrt(pow(gx, 2) + pow(gy, 2));
-			if (probability_map != NULL)
+			if (probability_map != nullptr)
 			{
 				if (probability_map->get_pixel(x, y) > 0)
 					edge_mag_image->set_pixel(x, y, g);
@@ -180,7 +180,7 @@ TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_magnitude_image(TileImage_GS_D
 
 TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_image(TileImage_GS_DOUBLE_shptr probability_map)
 {
-	if (i1 == NULL || i2 == NULL) return TileImage_GS_DOUBLE_shptr();
+	if (i1 == nullptr || i2 == nullptr) return TileImage_GS_DOUBLE_shptr();
 
 	TileImage_GS_DOUBLE_shptr edge_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
 
@@ -191,7 +191,7 @@ TileImage_GS_DOUBLE_shptr EdgeDetection::get_edge_image(TileImage_GS_DOUBLE_shpt
 			double gx = i1->get_pixel(x, y);
 			double gy = i2->get_pixel(x, y);
 
-			if (probability_map != NULL)
+			if (probability_map != nullptr)
 			{
 				if (probability_map->get_pixel(x, y) > 0)
 					edge_image->set_pixel(x, y, gx + gy);

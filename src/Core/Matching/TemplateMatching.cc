@@ -29,6 +29,8 @@
 #include <Core/Image/Manipulation/MedianFilter.h>
 #include <Core/Utils/DegateHelper.h>
 
+#include <memory>
+
 #include <utility>
 #include <boost/foreach.hpp>
 #include <cmath>
@@ -92,16 +94,16 @@ void TemplateMatching::precalc_sum_tables(TileImage_GS_BYTE_shptr img,
 
 void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr project)
 {
-	assert(project != NULL);
+	assert(project != nullptr);
 
 	this->project = project;
 	this->bounding_box = bounding_box;
 
 	// limit bounding box
-	if (this->bounding_box.get_max_x() + 1 > (int)project->get_width())
+	if (this->bounding_box.get_max_x() + 1 > static_cast<int>(project->get_width()))
 		this->bounding_box.set_max_x(LENGTH_TO_MAX(project->get_width()));
 
-	if (this->bounding_box.get_max_y() + 1 > (int)project->get_height())
+	if (this->bounding_box.get_max_y() + 1 > static_cast<int>(project->get_height()))
 		this->bounding_box.set_max_y(LENGTH_TO_MAX(project->get_height()));
 
 	ScalingManager_shptr sm = layer_matching->get_scaling_manager();
@@ -135,8 +137,8 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 	const ScalingManager<BackgroundImage>::image_map_element i2 =
 		sm->get_image(scaling_factor);
 
-	assert(i1.second != NULL);
-	assert(i2.second != NULL);
+	assert(i1.second != nullptr);
+	assert(i2.second != nullptr);
 	assert(i2.first == get_scaling_factor());
 
 	BackgroundImage_shptr img_normal = i1.second;
@@ -148,8 +150,8 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 		get_scaled_bounding_box(bounding_box, scaling_factor);
 
 
-	gs_img_normal = TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
-	                                                              bounding_box.get_height()));
+	gs_img_normal = std::make_shared<TileImage_GS_BYTE>(bounding_box.get_width(),
+	                                                              bounding_box.get_height());
 
 #ifdef USE_FILTER
 
@@ -187,8 +189,8 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 		gs_img_scaled = gs_img_normal;
 	else
 	{
-		gs_img_scaled = TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(scaled_bounding_box.get_width(),
-		                                                              scaled_bounding_box.get_height()));
+		gs_img_scaled = std::make_shared<TileImage_GS_BYTE>(scaled_bounding_box.get_width(),
+		                                                              scaled_bounding_box.get_height());
 
 #ifdef USE_MEDIAN_FILTER
     tmp =  TileImage_GS_BYTE_shptr(new TileImage_GS_BYTE(bounding_box.get_width(),
@@ -216,10 +218,10 @@ void TemplateMatching::prepare_sum_tables(TileImage_GS_BYTE_shptr gs_img_normal,
 		w_s = gs_img_scaled->get_width(),
 		h_s = gs_img_scaled->get_height();
 
-	sum_table_single_normal = TileImage_GS_DOUBLE_shptr(new TileImage_GS_DOUBLE(w_n, h_n));
-	sum_table_squared_normal = TileImage_GS_DOUBLE_shptr(new TileImage_GS_DOUBLE(w_n, h_n));
-	sum_table_single_scaled = TileImage_GS_DOUBLE_shptr(new TileImage_GS_DOUBLE(w_s, h_s));
-	sum_table_squared_scaled = TileImage_GS_DOUBLE_shptr(new TileImage_GS_DOUBLE(w_s, h_s));
+	sum_table_single_normal = std::make_shared<TileImage_GS_DOUBLE>(w_n, h_n);
+	sum_table_squared_normal = std::make_shared<TileImage_GS_DOUBLE>(w_n, h_n);
+	sum_table_single_scaled = std::make_shared<TileImage_GS_DOUBLE>(w_s, h_s);
+	sum_table_squared_scaled = std::make_shared<TileImage_GS_DOUBLE>(w_s, h_s);
 
 	precalc_sum_tables(gs_img_normal, sum_table_single_normal, sum_table_squared_normal);
 	precalc_sum_tables(gs_img_scaled, sum_table_single_scaled, sum_table_squared_scaled);
@@ -382,22 +384,22 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
 	// create a scaled version of the template image
 
 	unsigned int
-		scaled_tmpl_width = (double)w / get_scaling_factor(),
-		scaled_tmpl_height = (double)h / get_scaling_factor();
+		scaled_tmpl_width = static_cast<double>(w) / get_scaling_factor(),
+		scaled_tmpl_height = static_cast<double>(h) / get_scaling_factor();
 
-	prep.tmpl_img_normal = TempImage_GS_BYTE_shptr(new TempImage_GS_BYTE(w, h));
+	prep.tmpl_img_normal = std::make_shared<TempImage_GS_BYTE>(w, h);
 	copy_image(prep.tmpl_img_normal, tmpl_img);
 
-	prep.tmpl_img_scaled = TempImage_GS_BYTE_shptr(new TempImage_GS_BYTE(scaled_tmpl_width,
-	                                                                     scaled_tmpl_height));
+	prep.tmpl_img_scaled = std::make_shared<TempImage_GS_BYTE>(scaled_tmpl_width,
+	                                                                     scaled_tmpl_height);
 
 	scale_down_by_power_of_2(prep.tmpl_img_scaled, tmpl_img);
 
 
 	// create zero-mean templates
-	prep.zero_mean_template_normal = TempImage_GS_DOUBLE_shptr(new TempImage_GS_DOUBLE(w, h));
-	prep.zero_mean_template_scaled = TempImage_GS_DOUBLE_shptr(new TempImage_GS_DOUBLE(scaled_tmpl_width,
-	                                                                                   scaled_tmpl_height));
+	prep.zero_mean_template_normal = std::make_shared<TempImage_GS_DOUBLE>(w, h);
+	prep.zero_mean_template_scaled = std::make_shared<TempImage_GS_DOUBLE>(scaled_tmpl_width,
+	                                                                                   scaled_tmpl_height);
 
 
 	// subtract mean
@@ -419,7 +421,7 @@ void TemplateMatching::adjust_step_size(struct search_state& state, double corr_
 {
 	if (corr_val > 0)
 	{
-		state.step_size_search = std::max(1.0, rint((1.0 - (double)get_max_step_size()) *
+		state.step_size_search = std::max(1.0, rint((1.0 - static_cast<double>(get_max_step_size())) *
 			                                  corr_val + get_max_step_size()));
 	}
 
@@ -493,8 +495,8 @@ TemplateMatching::match_single_template(struct prepared_template& tmpl,
 		                                    sum_table_squared_scaled,
 		                                    tmpl.zero_mean_template_scaled,
 		                                    tmpl.sum_over_zero_mean_template_scaled,
-		                                    lrint((double)state.x / get_scaling_factor()),
-		                                    lrint((double)state.y / get_scaling_factor()));
+		                                    lrint(static_cast<double>(state.x) / get_scaling_factor()),
+		                                    lrint(static_cast<double>(state.y) / get_scaling_factor()));
 
 		/*
 		debug(TM, "%d,%d  == %d,%d  -> %f", state.x, state.y,
@@ -749,7 +751,7 @@ bool TemplateMatchingAlongGrid::initialize_state_struct(struct search_state* sta
                                                         int offs_max,
                                                         bool is_horizontal_grid) const
 {
-	if (state->grid == NULL)
+	if (state->grid == nullptr)
 	{
 		const RegularGrid_shptr rg = is_horizontal_grid
 			                             ? project->get_regular_horizontal_grid()
@@ -761,7 +763,7 @@ bool TemplateMatchingAlongGrid::initialize_state_struct(struct search_state* sta
 		if (rg->is_enabled()) state->grid = rg;
 		else if (ig->is_enabled()) state->grid = ig;
 
-		if (state->grid != NULL)
+		if (state->grid != nullptr)
 		{
 			debug(TM, "check grid from %d to %d", offs_min, offs_max);
 
@@ -822,7 +824,7 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state* state,
 	unsigned int step = state->step_size_search;
 
 	// get grid and check if we are working on regular or irregular grid
-	if (state->grid == NULL &&
+	if (state->grid == nullptr &&
 		initialize_state_struct(state,
 		                        state->search_area.get_min_y(),
 		                        state->search_area.get_max_y() - tmpl_h,
@@ -897,7 +899,7 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state* state,
 	unsigned int step = state->step_size_search;
 
 	// get grid and check if we are working on regular or irregular grid
-	if (state->grid == NULL &&
+	if (state->grid == nullptr &&
 		initialize_state_struct(state,
 		                        state->search_area.get_min_x(),
 		                        state->search_area.get_max_x() - tmpl_w,

@@ -34,7 +34,7 @@ Layer_shptr degate::get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE l
 	if (layer_type == Layer::UNDEFINED)
 		throw DegateLogicException("Invalid layer type.");
 
-	if (lmodel == NULL)
+	if (lmodel == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to get_first_layer()");
 
 	for (LogicModel::layer_collection::iterator iter = lmodel->layers_begin();
@@ -53,7 +53,7 @@ Layer_shptr degate::get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE l
 
 Layer_shptr degate::get_first_logic_layer(LogicModel_shptr lmodel)
 {
-	if (lmodel == NULL)
+	if (lmodel == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to get_first_logic_layer()");
 	try
 	{
@@ -120,7 +120,7 @@ std::list<Layer_shptr> degate::get_available_standard_layers(LogicModel_shptr lm
 	try
 	{
 		l = get_first_layer(lmodel, Layer::TRANSISTOR);
-		if (l != NULL) layers.push_back(l);
+		if (l != nullptr) layers.push_back(l);
 	}
 	catch (CollectionLookupException const& ex)
 	{
@@ -130,7 +130,7 @@ std::list<Layer_shptr> degate::get_available_standard_layers(LogicModel_shptr lm
 	try
 	{
 		l = get_first_logic_layer(lmodel);
-		if (l != NULL) layers.push_back(l);
+		if (l != nullptr) layers.push_back(l);
 	}
 	catch (CollectionLookupException const& ex)
 	{
@@ -140,7 +140,7 @@ std::list<Layer_shptr> degate::get_available_standard_layers(LogicModel_shptr lm
 	try
 	{
 		l = get_first_layer(lmodel, Layer::METAL);
-		if (l != NULL) layers.push_back(l);
+		if (l != nullptr) layers.push_back(l);
 	}
 	catch (CollectionLookupException const& ex)
 	{
@@ -170,7 +170,7 @@ void degate::grab_template_images(LogicModel_shptr lmodel,
 
 		GateTemplateImage_shptr tmpl_img =
 			grab_image<GateTemplateImage>(lmodel, layer, bounding_box);
-		assert(tmpl_img != NULL);
+		assert(tmpl_img != nullptr);
 
 		// flip
 		switch (orientation)
@@ -200,7 +200,7 @@ void degate::load_background_image(Layer_shptr layer,
                                    std::string const& project_dir,
                                    std::string const& image_file)
 {
-	if (layer == NULL)
+	if (layer == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to load_background_image()");
 
 	boost::format fmter("layer_%1%.dimg");
@@ -227,7 +227,7 @@ void degate::load_background_image(Layer_shptr layer,
 
 void degate::clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer)
 {
-	if (lmodel == NULL || layer == NULL)
+	if (lmodel == nullptr || layer == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to clear_logc_model()");
 
 	// iterate over all objects that are placed on a specific layer and remove them
@@ -245,7 +245,7 @@ void degate::clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer)
 
 Layer_shptr degate::get_first_enabled_layer(LogicModel_shptr lmodel)
 {
-	if (lmodel == NULL)
+	if (lmodel == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to get_first_enabled_layer()");
 
 	for (LogicModel::layer_collection::iterator iter = lmodel->layers_begin();
@@ -260,11 +260,11 @@ Layer_shptr degate::get_first_enabled_layer(LogicModel_shptr lmodel)
 
 Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel)
 {
-	if (lmodel == NULL)
+	if (lmodel == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to get_next_enabled_layer()");
 
 	Layer_shptr curr_layer = lmodel->get_current_layer();
-	if (curr_layer == NULL)
+	if (curr_layer == nullptr)
 		throw DegateRuntimeException("Error: there is no current layer.");
 
 	for (unsigned int l_pos = curr_layer->get_layer_pos() + 1;
@@ -291,7 +291,7 @@ Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel)
 
 Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer)
 {
-	if (lmodel == NULL || layer == NULL)
+	if (lmodel == nullptr || layer == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to get_next_enabled_layer()");
 
 	for (unsigned int l_pos = layer->get_layer_pos() + 1;
@@ -306,11 +306,11 @@ Layer_shptr degate::get_next_enabled_layer(LogicModel_shptr lmodel, Layer_shptr 
 
 Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel)
 {
-	if (lmodel == NULL)
+	if (lmodel == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to get_prev_enabled_layer()");
 
 	Layer_shptr curr_layer = lmodel->get_current_layer();
-	if (curr_layer == NULL)
+	if (curr_layer == nullptr)
 		throw DegateRuntimeException("Error: there is no current layer.");
 
 
@@ -338,7 +338,7 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel)
 
 Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer)
 {
-	if (lmodel == NULL || layer == NULL)
+	if (lmodel == nullptr || layer == nullptr)
 		throw InvalidPointerException("Error: you passed an invalid pointer to get_prev_enabled_layer()");
 
 	for (unsigned int l_pos = layer->get_layer_pos(); l_pos > 0; l_pos--)
@@ -351,17 +351,17 @@ Layer_shptr degate::get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr 
 
 Layer_shptr degate::get_current_layer(Project_shptr project)
 {
-	if (project == NULL)
+	if (project == nullptr)
 		throw InvalidPointerException("Invalid parameter for get_curent_layer()");
 
 	LogicModel_shptr lmodel = project->get_logic_model();
-	assert(lmodel != NULL);
+	assert(lmodel != nullptr);
 	return lmodel->get_current_layer();
 }
 
 bool degate::is_logic_class(Gate_shptr gate, std::string const& logic_class)
 {
-	if (gate == NULL)
+	if (gate == nullptr)
 		throw InvalidPointerException("Invalid parameter for is_logic_class()");
 
 	if (gate->has_template())
@@ -381,7 +381,7 @@ bool degate::is_logic_class(Gate_shptr gate, std::string const& logic_class)
 
 GateTemplatePort::PORT_TYPE degate::get_port_type(GatePort_shptr gate_port)
 {
-	if (gate_port == NULL)
+	if (gate_port == nullptr)
 		throw InvalidPointerException("Invalid parameter for get_port_type()");
 
 	if (gate_port->has_template_port())
@@ -396,7 +396,7 @@ GateTemplatePort::PORT_TYPE degate::get_port_type(GatePort_shptr gate_port)
 
 std::string degate::get_template_port_name(GatePort_shptr gate_port)
 {
-	if (gate_port == NULL)
+	if (gate_port == nullptr)
 		throw InvalidPointerException("Invalid parameter for get_template_port_name()");
 
 	if (gate_port->has_template_port())
@@ -410,7 +410,7 @@ std::string degate::get_template_port_name(GatePort_shptr gate_port)
 
 void degate::apply_port_color_settings(LogicModel_shptr lmodel, PortColorManager_shptr pcm)
 {
-	if (lmodel == NULL || pcm == NULL)
+	if (lmodel == nullptr || pcm == nullptr)
 		throw InvalidPointerException("Invalid parameter for apply_port_color_settings()");
 
 	// iterate over gates
@@ -455,7 +455,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
 	{
 		GateTemplateImage_shptr tmpl_img =
 			grab_image<GateTemplateImage>(lmodel, layer, g->get_bounding_box());
-		assert(tmpl_img != NULL);
+		assert(tmpl_img != nullptr);
 
 		// flip
 		switch (g->get_orientation())
@@ -514,7 +514,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
 		for (gate_sets_type::iterator iter = gate_sets.begin(); iter != gate_sets.end(); ++iter)
 		{
 			Gate_shptr g = iter->second.front();
-			assert(g != NULL);
+			assert(g != nullptr);
 
 			merge_gate_images(lmodel, layer, g->get_gate_template(), iter->second);
 		}
@@ -527,7 +527,7 @@ void degate::remove_entire_net(LogicModel_shptr lmodel, Net_shptr net)
 	BOOST_FOREACH(object_id_t oid, *net)
 	{
 		PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
-		assert(plo != NULL);
+		assert(plo != nullptr);
 		if (ConnectedLogicModelObject_shptr clmo =
 			std::dynamic_pointer_cast<ConnectedLogicModelObject>(plo))
 			clmo->remove_net();
@@ -550,7 +550,7 @@ void degate::connect_objects(LogicModel_shptr lmodel,
 void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
                                  BoundingBox const& search_bbox)
 {
-	if (lmodel == NULL || layer == NULL)
+	if (lmodel == nullptr || layer == nullptr)
 		throw InvalidPointerException("You passed an invalid shared pointer.");
 
 	// iterate over connectable objects
@@ -559,7 +559,7 @@ void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
 	{
 		ConnectedLogicModelObject_shptr clmo1;
 
-		if ((clmo1 = std::dynamic_pointer_cast<ConnectedLogicModelObject>(*iter)) != NULL)
+		if ((clmo1 = std::dynamic_pointer_cast<ConnectedLogicModelObject>(*iter)) != nullptr)
 		{
 			BoundingBox const& bb = clmo1->get_bounding_box();
 
@@ -571,10 +571,10 @@ void degate::autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
 			{
 				ConnectedLogicModelObject_shptr clmo2;
 				if ((clmo2 =
-					std::dynamic_pointer_cast<ConnectedLogicModelObject>(*siter)) != NULL)
+					std::dynamic_pointer_cast<ConnectedLogicModelObject>(*siter)) != nullptr)
 				{
-					if ((clmo1->get_net() == NULL ||
-							clmo2->get_net() == NULL ||
+					if ((clmo1->get_net() == nullptr ||
+							clmo2->get_net() == nullptr ||
 							clmo1->get_net() != clmo2->get_net()) && // excludes identical objects, too
 						check_object_tangency(std::dynamic_pointer_cast<PlacedLogicModelObject>(clmo1),
 						                      std::dynamic_pointer_cast<PlacedLogicModelObject>(clmo2)))
@@ -598,9 +598,9 @@ void autoconnect_interlayer_objects_via_via(LogicModel_shptr lmodel,
 	for (Layer::qt_region_iterator siter = adjacent_layer->region_begin(search_bbox);
 	     siter != adjacent_layer->region_end(); ++siter)
 	{
-		if ((v2 = std::dynamic_pointer_cast<Via>(*siter)) != NULL)
+		if ((v2 = std::dynamic_pointer_cast<Via>(*siter)) != nullptr)
 		{
-			if ((v1->get_net() == NULL || v2->get_net() == NULL ||
+			if ((v1->get_net() == nullptr || v2->get_net() == nullptr ||
 					v1->get_net() != v2->get_net()) &&
 				v1->get_direction() == v1_dir_criteria &&
 				v2->get_direction() == v2_dir_criteria &&
@@ -624,9 +624,9 @@ void autoconnect_interlayer_objects_via_gport(LogicModel_shptr lmodel,
 	for (Layer::qt_region_iterator siter = adjacent_layer->region_begin(search_bbox);
 	     siter != adjacent_layer->region_end(); ++siter)
 	{
-		if ((v2 = std::dynamic_pointer_cast<GatePort>(*siter)) != NULL)
+		if ((v2 = std::dynamic_pointer_cast<GatePort>(*siter)) != nullptr)
 		{
-			if ((v1->get_net() == NULL || v2->get_net() == NULL ||
+			if ((v1->get_net() == nullptr || v2->get_net() == nullptr ||
 					v1->get_net() != v2->get_net()) &&
 				v1->get_direction() == v1_dir_criteria &&
 				check_object_tangency(std::dynamic_pointer_cast<Circle>(v1),
@@ -642,7 +642,7 @@ void degate::autoconnect_interlayer_objects(LogicModel_shptr lmodel,
                                             Layer_shptr layer,
                                             BoundingBox const& search_bbox)
 {
-	if (lmodel == NULL || layer == NULL)
+	if (lmodel == nullptr || layer == nullptr)
 		throw InvalidPointerException("You passed an invalid shared pointer.");
 
 	Layer_shptr
@@ -655,18 +655,18 @@ void degate::autoconnect_interlayer_objects(LogicModel_shptr lmodel,
 	for (Layer::qt_region_iterator iter = layer->region_begin(search_bbox);
 	     iter != layer->region_end(); ++iter)
 	{
-		if ((v1 = std::dynamic_pointer_cast<Via>(*iter)) != NULL)
+		if ((v1 = std::dynamic_pointer_cast<Via>(*iter)) != nullptr)
 		{
 			BoundingBox const& bb = v1->get_bounding_box();
 
 			/* Iterate over vias one layer above and one layer below
 		   in the region identified by bounding box bb. */
 
-			if (layer_above != NULL)
+			if (layer_above != nullptr)
 				autoconnect_interlayer_objects_via_via(lmodel, layer_above, bb, v1,
 				                                       Via::DIRECTION_UP, Via::DIRECTION_DOWN);
 
-			if (layer_below != NULL)
+			if (layer_below != nullptr)
 			{
 				autoconnect_interlayer_objects_via_via(lmodel, layer_below, bb, v1,
 				                                       Via::DIRECTION_DOWN, Via::DIRECTION_UP);
@@ -684,7 +684,7 @@ void degate::update_port_diameters(LogicModel_shptr lmodel, diameter_t new_size)
 	     iter != lmodel->gates_end(); ++iter)
 	{
 		Gate_shptr gate = (*iter).second;
-		assert(gate != NULL);
+		assert(gate != nullptr);
 
 		// iterate over gate ports
 		for (Gate::port_iterator iter = gate->ports_begin();

@@ -43,12 +43,12 @@ namespace degate
 	{
         makeCurrent();
 
-        if (program != NULL)
+        if (program != nullptr)
             delete program;
 
         Text::delete_context();
 
-        if(QOpenGLContext::currentContext() == NULL)
+        if(QOpenGLContext::currentContext() == nullptr)
             return;
 
         if(glIsBuffer(vbo) == GL_TRUE)
@@ -61,7 +61,7 @@ namespace degate
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(PortVertex2D), 0, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(PortVertex2D), nullptr, GL_STATIC_DRAW);
 
 		create_port(port);
 

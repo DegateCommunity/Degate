@@ -254,7 +254,7 @@ namespace degate
 
 	private:
 		QMenuBar menu_bar;
-		QToolBar* tool_bar = NULL;
+		QToolBar* tool_bar = nullptr;
 		QStatusBar status_bar;
 		QLabel status_bar_coords;
 		QLabel status_bar_layer;
@@ -262,7 +262,7 @@ namespace degate
 		QActionGroup tools_group;
 
 		Project_shptr project;
-		WorkspaceRenderer* workspace = NULL;
+		WorkspaceRenderer* workspace = nullptr;
 		QPointF context_menu_mouse_position;
 
 	private:

@@ -83,12 +83,12 @@ namespace degate
 
     void WorkspaceVias::update()
     {
-        if(project == NULL)
+        if(project == nullptr)
             return;
 
         Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
-        if(layer == NULL)
+        if(layer == nullptr)
             return;
 
         // Keep only emarkers of the active layer.
@@ -107,7 +107,7 @@ namespace degate
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        context->glBufferData(GL_ARRAY_BUFFER, vias_count * 24 * sizeof(ViasVertex2D), 0, GL_STATIC_DRAW);
+        context->glBufferData(GL_ARRAY_BUFFER, vias_count * 24 * sizeof(ViasVertex2D), nullptr, GL_STATIC_DRAW);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -139,7 +139,7 @@ namespace degate
 
     void WorkspaceVias::update(Via_shptr &via)
     {
-        if(via == NULL)
+        if(via == nullptr)
             return;
 
         create_via(via, via->get_index());
@@ -147,7 +147,7 @@ namespace degate
 
     void WorkspaceVias::draw(const QMatrix4x4& projection)
     {
-        if(project == NULL || vias_count == 0)
+        if(project == nullptr || vias_count == 0)
             return;
 
         program->bind();
@@ -174,7 +174,7 @@ namespace degate
 
     void WorkspaceVias::draw_name(const QMatrix4x4 &projection)
     {
-        if(project == NULL || vias_count == 0)
+        if(project == nullptr || vias_count == 0)
             return;
 
         text.draw(projection);
@@ -182,7 +182,7 @@ namespace degate
 
     void WorkspaceVias::create_via(Via_shptr &via, unsigned int index)
     {
-        if(via == NULL)
+        if(via == nullptr)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);

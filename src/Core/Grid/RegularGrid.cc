@@ -45,11 +45,11 @@ int RegularGrid::snap_to_grid(int pos) const
 	{
 		if (distance == 0) return pos;
 
-		unsigned int grid_coord_x_lo = (unsigned int)((pos - min) / distance);
+		unsigned int grid_coord_x_lo = static_cast<unsigned int>((pos - min) / distance);
 		unsigned int grid_coord_x_hi = grid_coord_x_lo + 1;
 
 		if ((grid_coord_x_hi * distance + min - pos) < (pos - (grid_coord_x_lo * distance + min)))
-			return (int)(grid_coord_x_hi * distance + min);
-		else return (int)(grid_coord_x_lo * distance + min);
+			return static_cast<int>(grid_coord_x_hi * distance + min);
+		else return static_cast<int>(grid_coord_x_lo * distance + min);
 	}
 }

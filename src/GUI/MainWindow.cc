@@ -21,6 +21,8 @@
 
 #include "GUI/MainWindow.h"
 #include <QDesktopWidget>
+#include <memory>
+
 
 #define SECOND(a) a * 1000
 
@@ -269,7 +271,7 @@ namespace degate
 
 	MainWindow::~MainWindow()
 	{
-		if (workspace != NULL)
+		if (workspace != nullptr)
 			delete workspace;
 
 		Text::save_fonts_to_cache();
@@ -353,7 +355,7 @@ namespace degate
 
 		setEnabled(false);
 
-		if(project != NULL)
+		if(project != nullptr)
 			project.reset();
 
 		try
@@ -377,7 +379,7 @@ namespace degate
 
 	void MainWindow::on_menu_project_exporter()
 	{
-		if(project == NULL)
+		if(project == nullptr)
 			return;
 
 		status_bar.showMessage("Saving project...");
@@ -392,7 +394,7 @@ namespace degate
 	{
 		status_bar.showMessage("Closing project...");
 
-		if(project == NULL)
+		if(project == nullptr)
 			return;
 
 		if(project->is_changed())
@@ -421,8 +423,8 @@ namespace degate
 		}
 
 		project.reset();
-		project = NULL;
-		workspace->set_project(NULL);
+		project = nullptr;
+		workspace->set_project(nullptr);
 		workspace->update_screen();
 
 		setWindowTitle("Degate");
@@ -470,7 +472,7 @@ namespace degate
                 if(!file_exists(project_dir))
                     create_directory(project_dir);
 
-                project = Project_shptr(new Project(width, height, project_dir, layer_count));
+                project = std::make_shared<Project>(width, height, project_dir, layer_count);
                 project->set_name(project_name);
 
                 workspace->set_project(project);
@@ -489,7 +491,7 @@ namespace degate
 
 	void MainWindow::on_menu_project_create_subproject()
 	{
-		if(project == NULL || !workspace->has_area_selection())
+		if(project == nullptr || !workspace->has_area_selection())
 			return;
 
 		boost::format f("subproject_%1%");
@@ -521,7 +523,7 @@ namespace degate
 
 	void MainWindow::on_menu_layer_edit()
 	{
-		if(project == NULL)
+		if(project == nullptr)
 			return;
 
 		LayersEditDialog layers_edit_dialog(project, this);
@@ -532,7 +534,7 @@ namespace degate
 
 	void MainWindow::on_menu_layer_import_background()
 	{
-		if(project == NULL)
+		if(project == nullptr)
 		{
 			status_bar.showMessage("Failed to import new background image : no project opened.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 			return;
@@ -558,7 +560,7 @@ namespace degate
 
 	void MainWindow::on_menu_gate_new_gate_template()
 	{
-		if(project == NULL || !workspace->has_area_selection())
+		if(project == nullptr || !workspace->has_area_selection())
 			return;
 
 		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
@@ -599,7 +601,7 @@ namespace degate
 
 	void MainWindow::on_menu_gate_new_gate()
 	{
-		if(project == NULL || !workspace->has_area_selection())
+		if(project == nullptr || !workspace->has_area_selection())
 			return;
 
 		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
@@ -642,7 +644,7 @@ namespace degate
 
 	void MainWindow::on_menu_gate_edit()
 	{
-		if(project == NULL || !workspace->has_selection())
+		if(project == nullptr || !workspace->has_selection())
 			return;
 
 		if(Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_object()))
@@ -658,7 +660,7 @@ namespace degate
 
 	void MainWindow::on_menu_gate_library()
 	{
-		if(project == NULL)
+		if(project == nullptr)
 			return;
 
 		GateLibraryDialog dialog(project, this);
@@ -669,7 +671,7 @@ namespace degate
 
     void MainWindow::on_menu_gate_port_edit()
     {
-        if(project == NULL || !workspace->has_selection())
+        if(project == nullptr || !workspace->has_selection())
             return;
 
         if(GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(workspace->get_selected_object()))
@@ -687,7 +689,7 @@ namespace degate
 
 	void MainWindow::on_menu_annotation_create()
 	{
-		if(project == NULL || !workspace->has_area_selection())
+		if(project == nullptr || !workspace->has_area_selection())
 			return;
 
 		Annotation_shptr new_annotation(new Annotation(workspace->get_area_selection()));
@@ -710,7 +712,7 @@ namespace degate
 
 	void MainWindow::on_menu_annotation_edit()
 	{
-		if(project == NULL || !workspace->has_selection())
+		if(project == nullptr || !workspace->has_selection())
 			return;
 
 		if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(workspace->get_selected_object()))
@@ -724,7 +726,7 @@ namespace degate
 
     void MainWindow::on_menu_emarker_edit()
     {
-        if(project == NULL || !workspace->has_selection())
+        if(project == nullptr || !workspace->has_selection())
             return;
 
         if(EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(workspace->get_selected_object()))
@@ -738,7 +740,7 @@ namespace degate
 
     void MainWindow::on_menu_via_edit()
     {
-        if(project == NULL || !workspace->has_selection())
+        if(project == nullptr || !workspace->has_selection())
             return;
 
         if(Via_shptr o = std::dynamic_pointer_cast<Via>(workspace->get_selected_object()))
@@ -752,7 +754,7 @@ namespace degate
 
 	void MainWindow::on_menu_logic_remove_selected_object()
 	{
-		if(project == NULL || !workspace->has_selection())
+		if(project == nullptr || !workspace->has_selection())
 			return;
 
 		project->get_logic_model()->remove_object(workspace->pop_selected_object());
@@ -766,7 +768,7 @@ namespace degate
 
 	void MainWindow::on_tool_via_up()
 	{
-		if(project == NULL)
+		if(project == nullptr)
 			return;
 
 		project->get_logic_model()->set_current_layer(get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
@@ -780,7 +782,7 @@ namespace degate
 
 	void MainWindow::on_tool_via_down()
 	{
-		if(project == NULL)
+		if(project == nullptr)
 			return;
 
 		project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
@@ -835,7 +837,7 @@ namespace degate
                             if(!file_exists(path))
                                 create_directory(path);
 
-                            project = Project_shptr(new Project(width, height, path, layer_count));
+                            project = std::make_shared<Project>(width, height, path, layer_count);
                             project->set_name(project_name);
 
                             LayersEditDialog layers_edit_dialog(project, this);
@@ -882,7 +884,7 @@ namespace degate
 
     void MainWindow::show_context_menu()
     {
-	    if(project == NULL)
+	    if(project == nullptr)
 	        return;
 
         QMenu contextMenu(("Context menu"), this);
@@ -987,7 +989,7 @@ namespace degate
 
     void MainWindow::on_emarker_create()
     {
-        if(project == NULL)
+        if(project == nullptr)
             return;
 
         EMarker_shptr new_emarker = std::make_shared<EMarker>(context_menu_mouse_position.x(), context_menu_mouse_position.y());
@@ -1008,7 +1010,7 @@ namespace degate
 
     void MainWindow::on_via_create()
     {
-        if(project == NULL)
+        if(project == nullptr)
             return;
 
         Via_shptr new_via = std::make_shared<Via>(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UNDEFINED);

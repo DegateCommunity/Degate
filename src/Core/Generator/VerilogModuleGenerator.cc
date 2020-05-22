@@ -40,7 +40,7 @@ VerilogModuleGenerator::VerilogModuleGenerator(Module_shptr module, bool do_not_
 		const std::string mod_port_name = iter->first;
 		const GatePort_shptr gp = iter->second;
 		const GateTemplatePort_shptr tmpl_port = gp->get_template_port();
-		assert(tmpl_port != NULL);
+		assert(tmpl_port != nullptr);
 		add_port(mod_port_name, tmpl_port->is_inport());
 	}
 }

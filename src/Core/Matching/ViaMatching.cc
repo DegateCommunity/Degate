@@ -19,12 +19,14 @@
 
 */
 
+#include <Core/Image/Manipulation/MedianFilter.h>
+#include <Core/LogicModel/LogicModelHelper.h>
+#include <Core/Matching/EdgeDetection.h>
 #include <Core/Matching/ViaMatching.h>
 #include <Core/Primitive/BoundingBox.h>
-#include <Core/Image/Manipulation/MedianFilter.h>
-#include <Core/Matching/EdgeDetection.h>
-#include <Core/LogicModel/LogicModelHelper.h>
 #include <boost/foreach.hpp>
+#include <memory>
+
 
 using namespace degate;
 
@@ -38,22 +40,22 @@ void ViaMatching::init(BoundingBox const& bounding_box, Project_shptr project)
 {
 	this->bounding_box = bounding_box;
 
-	if (project == NULL)
+	if (project == nullptr)
 		throw InvalidPointerException("Invalid pointer for parameter project.");
 
 	lmodel = project->get_logic_model();
-	assert(lmodel != NULL); // always has a logic model
+	assert(lmodel != nullptr); // always has a logic model
 
 	layer = lmodel->get_current_layer();
-	if (layer == NULL)
+	if (layer == nullptr)
 		throw DegateRuntimeException("No current layer in project.");
 
 
 	ScalingManager_shptr sm = layer->get_scaling_manager();
-	assert(sm != NULL);
+	assert(sm != nullptr);
 
 	img = sm->get_image(1).second;
-	assert(img != NULL);
+	assert(img != nullptr);
 
 	reset_progress();
 }
@@ -123,7 +125,7 @@ void ViaMatching::run()
 			{
 				// grab via's image
 				MemoryImage_shptr img = grab_image<MemoryImage>(lmodel, layer, bb);
-				assert(img != NULL);
+				assert(img != nullptr);
 
 				// insert image into one of the lists
 				if (via->get_direction() == Via::DIRECTION_UP &&
@@ -154,13 +156,13 @@ void ViaMatching::run()
 
 	if (via_up)
 	{
-		via_up_gs = MemoryImage_GS_BYTE_shptr(new MemoryImage_GS_BYTE(via_up->get_width(), via_up->get_height()));
+		via_up_gs = std::make_shared<MemoryImage_GS_BYTE>(via_up->get_width(), via_up->get_height());
 		copy_image(via_up_gs, via_up);
 	}
 
 	if (via_down)
 	{
-		via_down_gs = MemoryImage_GS_BYTE_shptr(new MemoryImage_GS_BYTE(via_down->get_width(), via_down->get_height()));
+		via_down_gs = std::make_shared<MemoryImage_GS_BYTE>(via_down->get_width(), via_down->get_height());
 		copy_image(via_down_gs, via_down);
 	}
 

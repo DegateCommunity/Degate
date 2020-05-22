@@ -31,7 +31,7 @@ namespace degate
 
 	ImageRenderer::ImageRenderer(MemoryImage_shptr image, QWidget* parent, bool update_on_gl_initialize) : QOpenGLWidget(parent), image(image), update_on_gl_initialize(update_on_gl_initialize)
 	{
-		assert(image != NULL);
+		assert(image != nullptr);
 
 		center_x = image->get_width() / 2.0;
 		center_y = image->get_height() / 2.0;
@@ -54,7 +54,7 @@ namespace degate
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(ImageVertex2D), 0, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(ImageVertex2D), nullptr, GL_STATIC_DRAW);
 
 		// Texture
 
@@ -151,7 +151,7 @@ namespace degate
 
         free_texture();
 
-        if (program != NULL)
+        if (program != nullptr)
             delete program;
 
         if(glIsBuffer(vbo) == GL_TRUE)

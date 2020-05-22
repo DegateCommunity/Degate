@@ -82,7 +82,7 @@ namespace degate
 	};
 
 	template <class T>
-	boost::scoped_ptr<T> SingletonBase<T>::t(0);
+	boost::scoped_ptr<T> SingletonBase<T>::t(nullptr);
 	template <class T>
 	boost::once_flag SingletonBase<T>::flag = BOOST_ONCE_INIT;
 }

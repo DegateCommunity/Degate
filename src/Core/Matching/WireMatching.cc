@@ -43,21 +43,21 @@ void WireMatching::init(BoundingBox const& bounding_box, Project_shptr project)
 {
 	this->bounding_box = bounding_box;
 
-	if (project == NULL)
+	if (project == nullptr)
 		throw InvalidPointerException("Invalid pointer for parameter project.");
 
 	lmodel = project->get_logic_model();
-	assert(lmodel != NULL); // always has a logic model
+	assert(lmodel != nullptr); // always has a logic model
 
 	layer = lmodel->get_current_layer();
-	if (layer == NULL) throw DegateRuntimeException("No current layer in project.");
+	if (layer == nullptr) throw DegateRuntimeException("No current layer in project.");
 
 
 	ScalingManager_shptr sm = layer->get_scaling_manager();
-	assert(sm != NULL);
+	assert(sm != nullptr);
 
 	img = sm->get_image(1).second;
-	assert(img != NULL);
+	assert(img != nullptr);
 }
 
 
@@ -92,15 +92,15 @@ void WireMatching::run()
 	                         sigma > 0 ? 10 : 0,
 	                         sigma);
 	TileImage_GS_DOUBLE_shptr i = test.run(img, TileImage_GS_DOUBLE_shptr(), "/tmp");
-	assert(i != NULL);
+	assert(i != nullptr);
 	save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(test.get_directory(), "line.tif"), i);
 
 	LineSegmentExtraction<TileImage_GS_DOUBLE> extraction(i, wire_diameter / 2, 2, test.get_border());
 	LineSegmentMap_shptr line_segments = extraction.run();
-	assert(line_segments != NULL);
+	assert(line_segments != nullptr);
 
-	assert(lmodel != NULL);
-	assert(layer != NULL);
+	assert(lmodel != nullptr);
+	assert(layer != nullptr);
 
 	BOOST_FOREACH(LineSegment_shptr ls, *line_segments)
 	{

@@ -76,7 +76,7 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
                                              LogicModel_shptr lmodel)
 {
 	Net_shptr net = o->get_net();
-	if (net == NULL) return;
+	if (net == nullptr) return;
 
 	// iterate over net
 	BOOST_FOREACH(object_id_t oid, *net)
@@ -84,7 +84,7 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
 		PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
 		ConnectedLogicModelObject_shptr clo =
 			std::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
-		assert(clo != NULL);
+		assert(clo != nullptr);
 		// remember connnected objects in list
 		if (o != clo)
 		{

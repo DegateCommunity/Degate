@@ -54,7 +54,7 @@ void GateLibrary::remove_template(GateTemplate_shptr gate_template)
 
 void GateLibrary::add_template(GateTemplate_shptr gate_template)
 {
-	if (gate_template == NULL) throw InvalidPointerException();
+	if (gate_template == nullptr) throw InvalidPointerException();
 	if (!gate_template->has_valid_object_id())
 		throw InvalidObjectIDException("Can't add a gate template to the gate library, "
 			"if the template has no valid object ID.");

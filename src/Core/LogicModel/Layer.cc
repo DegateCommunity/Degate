@@ -24,6 +24,10 @@
 #include <Core/LogicModel/Gate/Gate.h>
 #include <Core/LogicModel/Via/Via.h>
 
+
+#include <memory>
+
+
 using namespace degate;
 
 void Layer::add_object(std::shared_ptr<PlacedLogicModelObject> o)
@@ -209,15 +213,15 @@ Layer::qt_region_iterator Layer::region_end()
 void Layer::set_image(BackgroundImage_shptr img)
 {
 	scaling_manager =
-		std::shared_ptr<ScalingManager<BackgroundImage>>
-		(new ScalingManager<BackgroundImage>(img, img->get_directory()));
+		std::make_shared<ScalingManager<BackgroundImage>>
+		(img, img->get_directory());
 
 	scaling_manager->create_scalings();
 }
 
 BackgroundImage_shptr Layer::get_image()
 {
-	if (scaling_manager != NULL)
+	if (scaling_manager != nullptr)
 	{
 		ScalingManager<BackgroundImage>::image_map_element p = scaling_manager->get_image(1);
 		return p.second;
@@ -227,14 +231,14 @@ BackgroundImage_shptr Layer::get_image()
 
 std::string Layer::get_image_filename() const
 {
-	if (scaling_manager == NULL)
+	if (scaling_manager == nullptr)
 		throw DegateLogicException("There is no scaling manager.");
 	else
 	{
 		const ScalingManager<BackgroundImage>::image_map_element p =
 			scaling_manager->get_image(1);
 
-		if (p.second != NULL)
+		if (p.second != nullptr)
 			return p.second->get_directory();
 		else
 			throw DegateLogicException("The scaling manager failed to return an image pointer.");
@@ -243,7 +247,7 @@ std::string Layer::get_image_filename() const
 
 bool Layer::has_background_image() const
 {
-	return scaling_manager != NULL;
+	return scaling_manager != nullptr;
 }
 
 void Layer::unset_image()
@@ -251,7 +255,7 @@ void Layer::unset_image()
 	if(!has_background_image())
 		return;
 	
-	if (scaling_manager == NULL) throw DegateLogicException("There is no scaling manager.");
+	if (scaling_manager == nullptr) throw DegateLogicException("There is no scaling manager.");
 	std::string img_dir = get_image_filename();
 	scaling_manager.reset();
 	debug(TM, "remove directory: %s", img_dir.c_str());

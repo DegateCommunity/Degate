@@ -114,7 +114,7 @@ BoundingBox const& GateTemplate::get_bounding_box() const
 
 void GateTemplate::set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img)
 {
-	if (img == NULL) throw InvalidPointerException("Invalid pointer for image.");
+	if (img == nullptr) throw InvalidPointerException("Invalid pointer for image.");
 	debug(TM, "set image for template.");
 	images[layer_type] = img;
 }

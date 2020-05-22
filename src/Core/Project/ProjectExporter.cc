@@ -55,7 +55,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
 
 		LogicModel_shptr lmodel = prj->get_logic_model();
 
-		if (lmodel != NULL)
+		if (lmodel != nullptr)
 		{
 			LogicModelExporter lm_exporter(oid_rewriter);
 			string lm_filename(join_pathes(project_directory, lmodel_file));
@@ -66,7 +66,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
 			rcv_exporter.export_data(join_pathes(project_directory, rcbl_file), prj->get_rcv_blacklist());
 
 			GateLibrary_shptr glib = lmodel->get_gate_library();
-			if (glib != NULL)
+			if (glib != nullptr)
 			{
 				GateLibraryExporter gl_exporter(oid_rewriter);
 				gl_exporter.export_data(join_pathes(project_directory, gatelib_file), glib);
@@ -77,7 +77,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
 
 void ProjectExporter::export_data(std::string const& filename, Project_shptr prj)
 {
-	if (prj == NULL) throw InvalidPointerException("Project pointer is NULL.");
+	if (prj == nullptr) throw InvalidPointerException("Project pointer is NULL.");
 
 	try
 	{
@@ -213,7 +213,7 @@ void ProjectExporter::add_layers(QDomDocument& doc,
                                  LogicModel_shptr lmodel,
                                  std::string const& project_dir)
 {
-	if (lmodel == NULL) throw InvalidPointerException();
+	if (lmodel == nullptr) throw InvalidPointerException();
 
 	QDomElement layers_elem = doc.createElement("layers");
 	if (layers_elem.isNull()) throw(std::runtime_error("Failed to create node."));
@@ -250,7 +250,7 @@ void ProjectExporter::add_port_colors(QDomDocument& doc,
                                       QDomElement& prj_elem,
                                       PortColorManager_shptr port_color_manager)
 {
-	if (port_color_manager == NULL) throw InvalidPointerException();
+	if (port_color_manager == nullptr) throw InvalidPointerException();
 
 	QDomElement port_colors_elem = doc.createElement("port-colors");
 	if (port_colors_elem.isNull()) throw(std::runtime_error("Failed to create node."));
@@ -276,7 +276,7 @@ void ProjectExporter::add_port_colors(QDomDocument& doc,
 
 void ProjectExporter::add_colors(QDomDocument& doc, QDomElement& prj_elem, Project_shptr prj)
 {
-	if (prj == NULL) throw InvalidPointerException();
+	if (prj == nullptr) throw InvalidPointerException();
 
 	QDomElement colors_elem = doc.createElement("default-colors");
 	if (colors_elem.isNull()) throw(std::runtime_error("Failed to create node."));

@@ -30,10 +30,10 @@ namespace degate
 
 	WorkspaceElement::~WorkspaceElement()
 	{
-		if (program != NULL)
+		if (program != nullptr)
 			delete program;
 
-		if(QOpenGLContext::currentContext() == NULL || context == NULL)
+		if(QOpenGLContext::currentContext() == nullptr || context == nullptr)
 			return;
 
         if(context->glIsBuffer(vbo) == GL_TRUE)

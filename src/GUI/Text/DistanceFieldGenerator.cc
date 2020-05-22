@@ -62,7 +62,7 @@ namespace degate
         // Create the output.
         std::function<void(const unsigned int& y)> output_function = [this, &output_width, &outImage, &input, &input_width, &input_height](const unsigned int& y)
         {
-            auto pixels = (QRgb*)(outImage->scanLine(y));
+            auto pixels = reinterpret_cast<QRgb*>(outImage->scanLine(y));
             for (unsigned int x = 0; x < output_width; x++)
             {
                 int center_x = (x * scale_factor) + (scale_factor / 2);

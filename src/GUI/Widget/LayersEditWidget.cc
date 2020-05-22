@@ -20,6 +20,10 @@
 */
 
 #include "LayersEditWidget.h"
+
+
+#include <memory>
+
 #include "Core/Image/ImageHelper.h"
 #include "Core/LogicModel/LogicModelHelper.h"
 
@@ -27,7 +31,7 @@ namespace degate
 {
 	LayerBackgroundSelectionButton::LayerBackgroundSelectionButton(Layer_shptr layer, QWidget* parent) : QPushButton(parent)
 	{
-		if(layer == NULL)
+		if(layer == nullptr)
 			change_button_color(false);
 		else
 			change_button_color(layer->has_background_image());
@@ -204,7 +208,7 @@ namespace degate
 		{
 			Layer_shptr layer = *iter;
 
-			if(layer == NULL)
+			if(layer == nullptr)
 				continue;
 
 			layers.insertRow(layers.rowCount());
@@ -266,7 +270,7 @@ namespace degate
 		layers.setCellWidget(layers.rowCount() - 1, 3, cb);
 
 		// Background
-		LayerBackgroundSelectionButton* bb = new LayerBackgroundSelectionButton(NULL, this);
+		LayerBackgroundSelectionButton* bb = new LayerBackgroundSelectionButton(nullptr, this);
 		layers.setCellWidget(layers.rowCount() - 1, 4, bb);
 
 		layers.selectRow(layers.rowCount() - 1);
@@ -281,10 +285,10 @@ namespace degate
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto sel = index.begin(); sel != index.end(); ++sel)
+		for(auto & sel : index)
 		{
-			if(sel->isValid())
-				layers.removeRow(sel->row());
+			if(sel.isValid())
+				layers.removeRow(sel.row());
 		}
 	}
 
@@ -301,7 +305,7 @@ namespace degate
 			if(text_id == '?')
 			{
 				// New layer
-				layer = Layer_shptr(new Layer(BoundingBox(project->get_logic_model()->get_width(), project->get_logic_model()->get_height())));
+				layer = std::make_shared<Layer>(BoundingBox(project->get_logic_model()->get_width(), project->get_logic_model()->get_height()));
 				layer->set_layer_id(project->get_logic_model()->get_new_layer_id());
 			}
 			else
@@ -343,9 +347,9 @@ namespace degate
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto sel = index.begin(); sel != index.end(); ++sel)
+		for(auto & sel : index)
 		{
-			move_row(sel->row(), UP);
+			move_row(sel.row(), UP);
 		}
 	}
 
@@ -358,9 +362,9 @@ namespace degate
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto sel = index.begin(); sel != index.end(); ++sel)
+		for(auto & sel : index)
 		{
-			move_row(sel->row(), DOWN);
+			move_row(sel.row(), DOWN);
 		}
 	}
 

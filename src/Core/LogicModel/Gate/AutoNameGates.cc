@@ -102,7 +102,7 @@ void AutoNameGates::fill_histogram(LogicModel_shptr lmodel,
 	     iter != lmodel->gates_end(); ++iter)
 	{
 		Gate_shptr gate = (*iter).second;
-		assert(gate != NULL);
+		assert(gate != nullptr);
 
 		if (_orientation == ALONG_COLS)
 			for (x = gate->get_min_x(); x < gate->get_max_x(); x++)
