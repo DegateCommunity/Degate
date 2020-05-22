@@ -239,8 +239,8 @@ namespace degate
 		virtual ~LogicModel();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr cloneShallow() const override;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 		//@}
 
 		/**

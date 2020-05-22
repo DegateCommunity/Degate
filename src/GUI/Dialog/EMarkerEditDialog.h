@@ -54,7 +54,7 @@ namespace degate
 		 * @see QDialog
 		 */
         EMarkerEditDialog(EMarker_shptr& emarker, QWidget* parent);
-        ~EMarkerEditDialog();
+        ~EMarkerEditDialog() override;
 
     public slots:
 

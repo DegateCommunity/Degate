@@ -44,7 +44,7 @@ namespace degate
 		/**
 		 * The dtor.
 		 */
-		virtual ~XMLExporter()
+		~XMLExporter() override
 		{
 		};
 	};

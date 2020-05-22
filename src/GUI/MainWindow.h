@@ -73,7 +73,7 @@ namespace degate
 		 * @param height : the desired window height.
 		 */
 		MainWindow(int width = 0, int height = 0);
-		~MainWindow();
+		~MainWindow() override;
 
 	public slots:
 

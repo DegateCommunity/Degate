@@ -83,9 +83,9 @@ namespace degate
 		 * The destructor.
 		 */
 
-		virtual ~PlacedLogicModelObject();
+		~PlacedLogicModelObject() override;
 
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 
 		/**
 		 * A placed object is highlightable. You can ask for its

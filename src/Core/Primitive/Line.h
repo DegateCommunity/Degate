@@ -61,11 +61,11 @@ namespace degate
 		{
 		}
 
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 
-		virtual bool in_shape(float x, float y, float max_distance = 0) const;
-		virtual bool in_bounding_box(BoundingBox const& bbox) const;
-		virtual BoundingBox const& get_bounding_box() const;
+		bool in_shape(float x, float y, float max_distance = 0) const override;
+		bool in_bounding_box(BoundingBox const& bbox) const override;
+		BoundingBox const& get_bounding_box() const override;
 
 
 		virtual float get_from_x() const;
@@ -78,8 +78,8 @@ namespace degate
 		virtual void set_to_x(float max_x);
 		virtual void set_to_y(float max_y);
 
-		virtual void shift_x(float delta_x);
-		virtual void shift_y(float delta_y);
+		void shift_x(float delta_x) override;
+		void shift_y(float delta_y) override;
 
 		virtual unsigned int get_diameter() const;
 		virtual void set_diameter(unsigned int diameter);

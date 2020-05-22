@@ -110,11 +110,11 @@ namespace degate
 		 * Destroy a net.
 		 * @see LogicModel::remove_net()
 		 */
-		virtual ~Net();
+		~Net() override;
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr cloneShallow() const override;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 		//@}
 
 		/**
@@ -138,7 +138,7 @@ namespace degate
 		/**
 		 * Get a human readable description for the object.
 		 */
-		const std::string get_descriptive_identifier() const;
+		const std::string get_descriptive_identifier() const override;
 	};
 }
 

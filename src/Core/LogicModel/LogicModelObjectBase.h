@@ -71,7 +71,7 @@ namespace degate
 
 		virtual ~LogicModelObjectBase();
 
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 
 		/**
 		 * Set the name for a logic model object. It is up to the user

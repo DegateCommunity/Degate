@@ -317,7 +317,7 @@ namespace degate
 			}
 		}
 
-		void print() const
+		void print() const override
 		{
 			for (typename cache_type::const_iterator iter = cache.begin();
 			     iter != cache.end(); ++iter)
@@ -386,7 +386,7 @@ namespace degate
 		/**
 		 * Remove the oldest entry from the cache.
 		 */
-		void cleanup_cache()
+		void cleanup_cache() override
 		{
 			if (cache.size() == 0) return;
 
