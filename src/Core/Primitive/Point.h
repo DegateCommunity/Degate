@@ -19,27 +19,45 @@
 
 */
 
-#include <Core/Configuration.h>
-#include <Core/Utils/FileSystem.h>
+#ifndef __POINT_H__
+#define __POINT_H__
 
-#include <boost/lexical_cast.hpp>
+#include <string>
 
-using namespace degate;
-
-Configuration::Configuration()
+namespace degate
 {
+	class Point
+	{
+	private:
+		float x, y;
+
+	public:
+
+		Point();
+		Point(float x, float y);
+
+		bool operator==(const Point& other) const;
+		bool operator!=(const Point& other) const;
+
+        float get_x() const;
+        float get_y() const;
+
+		void set_x(float x);
+		void set_y(float y);
+
+		void shift_x(float delta_x);
+		void shift_y(float delta_y);
+
+		/**
+		 * Calculate the distance to another point.
+		 */
+		unsigned int get_distance(Point const& p) const;
+
+
+		std::string to_string() const;
+	};
+
+	typedef std::shared_ptr<Point> Point_shptr;
 }
 
-size_t Configuration::get_max_tile_cache_size() const
-{
-	char* cs = getenv("DEGATE_CACHE_SIZE");
-	if (cs == NULL) return 256;
-	return boost::lexical_cast<size_t>(cs);
-}
-
-std::string Configuration::get_servers_uri_pattern() const
-{
-	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-	return uri_pattern;
-}
+#endif

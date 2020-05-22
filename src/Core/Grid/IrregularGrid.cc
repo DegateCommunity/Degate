@@ -1,4 +1,4 @@
-/* -*-c++-*-
+/*
 
  This file is part of the IC reverse engineering tool degate.
 
@@ -17,29 +17,35 @@
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
-#include <Core/Configuration.h>
-#include <Core/Utils/FileSystem.h>
+#include "IrregularGrid.h"
 
-#include <boost/lexical_cast.hpp>
+#include <cassert>
+#include <cstdlib>
 
 using namespace degate;
 
-Configuration::Configuration()
+int IrregularGrid::snap_to_grid(int pos) const
 {
-}
+	if (pos <= grid_offsets.front()) return grid_offsets.front();
+	else if (pos >= grid_offsets.back()) return grid_offsets.back();
+	else
+	{
+		int last = grid_offsets.front();
+		for (grid_iter it = grid_offsets.begin(); it != grid_offsets.end(); ++it)
+		{
+			int current = *it;
+			if (current < pos) last = current;
+			else if (current >= pos)
+			{
+				int d1 = abs(pos - last);
+				int d2 = abs(current - pos);
+				return d1 < d2 ? last : current;
+			}
+		}
 
-size_t Configuration::get_max_tile_cache_size() const
-{
-	char* cs = getenv("DEGATE_CACHE_SIZE");
-	if (cs == NULL) return 256;
-	return boost::lexical_cast<size_t>(cs);
-}
-
-std::string Configuration::get_servers_uri_pattern() const
-{
-	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-	return uri_pattern;
+		// should not reach this line
+		assert(1 == 0);
+	}
 }

@@ -17,29 +17,47 @@
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
-#include <Core/Configuration.h>
-#include <Core/Utils/FileSystem.h>
+#include <Core/LogicModel/ObjectSet.h>
+#include <Core/LogicModel/Gate/GatePort.h>
 
-#include <boost/lexical_cast.hpp>
+#include <algorithm>
+#include <memory>
 
+using namespace std;
 using namespace degate;
 
-Configuration::Configuration()
+
+bool degate::is_removable(PlacedLogicModelObject_shptr o)
 {
+	return std::dynamic_pointer_cast<GatePort>(o) == NULL;
 }
 
-size_t Configuration::get_max_tile_cache_size() const
+bool degate::is_interconnectable(PlacedLogicModelObject_shptr o)
 {
-	char* cs = getenv("DEGATE_CACHE_SIZE");
-	if (cs == NULL) return 256;
-	return boost::lexical_cast<size_t>(cs);
+	return std::dynamic_pointer_cast<ConnectedLogicModelObject>(o) != NULL;
 }
 
-std::string Configuration::get_servers_uri_pattern() const
+
+void ObjectSet::clear()
 {
-	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-	return uri_pattern;
+	objects.clear();
+}
+
+
+void ObjectSet::add(PlacedLogicModelObject_shptr object)
+{
+	objects.insert(object);
+}
+
+
+void ObjectSet::remove(PlacedLogicModelObject_shptr object)
+{
+	object_set_type::iterator it = find(objects.begin(), objects.end(), object);
+
+	if (it != objects.end())
+	{
+		objects.erase(it);
+	}
 }

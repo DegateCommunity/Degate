@@ -17,29 +17,40 @@
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
-#include <Core/Configuration.h>
-#include <Core/Utils/FileSystem.h>
+#ifndef __RCVBLACKLISTIMPORTER_H__
+#define __RCVBLACKLISTIMPORTER_H__
 
-#include <boost/lexical_cast.hpp>
+#include "Globals.h"
+#include "RCViolation.h"
+#include "Core/XML/XMLImporter.h"
 
-using namespace degate;
+#include <stdexcept>
 
-Configuration::Configuration()
+namespace degate
 {
-}
+	/**
+	 * The RCVBlacklistImporter imports a list of RC violations, which should be ignored.
+	 */
 
-size_t Configuration::get_max_tile_cache_size() const
-{
-	char* cs = getenv("DEGATE_CACHE_SIZE");
-	if (cs == NULL) return 256;
-	return boost::lexical_cast<size_t>(cs);
-}
+	class RCVBlacklistImporter : public XMLImporter
+	{
+	private:
 
-std::string Configuration::get_servers_uri_pattern() const
-{
-	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-	return uri_pattern;
+		void parse_list(QDomElement const element, RCBase::container_type& blacklist);
+		LogicModel_shptr _lmodel;
+
+	public:
+		RCVBlacklistImporter(LogicModel_shptr lmodel) : _lmodel(lmodel)
+		{
+		}
+
+		~RCVBlacklistImporter()
+		{
+		}
+
+		void import_into(std::string const& filename, RCBase::container_type& blacklist);
+	};
 }
+#endif

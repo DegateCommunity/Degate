@@ -19,27 +19,35 @@
 
 */
 
-#include <Core/Configuration.h>
-#include <Core/Utils/FileSystem.h>
+#ifndef __XMLEXPORTER_H__
+#define __XMLEXPORTER_H__
 
-#include <boost/lexical_cast.hpp>
+#include "Globals.h"
+#include "Core/Utils/Exporter.h"
+#include <QtXml/QtXml>
 
-using namespace degate;
-
-Configuration::Configuration()
+namespace degate
 {
+	/**
+	 * A base class for XML exporter.
+	 */
+	class XMLExporter : public Exporter
+	{
+	public:
+		/**
+		 * The ctor.
+		 */
+		XMLExporter()
+		{
+		};
+
+		/**
+		 * The dtor.
+		 */
+		virtual ~XMLExporter()
+		{
+		};
+	};
 }
 
-size_t Configuration::get_max_tile_cache_size() const
-{
-	char* cs = getenv("DEGATE_CACHE_SIZE");
-	if (cs == NULL) return 256;
-	return boost::lexical_cast<size_t>(cs);
-}
-
-std::string Configuration::get_servers_uri_pattern() const
-{
-	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-	return uri_pattern;
-}
+#endif

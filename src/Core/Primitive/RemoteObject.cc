@@ -19,27 +19,7 @@
 
 */
 
-#include <Core/Configuration.h>
-#include <Core/Utils/FileSystem.h>
 
-#include <boost/lexical_cast.hpp>
+#include <Core/Primitive/RemoteObject.h>
 
 using namespace degate;
-
-Configuration::Configuration()
-{
-}
-
-size_t Configuration::get_max_tile_cache_size() const
-{
-	char* cs = getenv("DEGATE_CACHE_SIZE");
-	if (cs == NULL) return 256;
-	return boost::lexical_cast<size_t>(cs);
-}
-
-std::string Configuration::get_servers_uri_pattern() const
-{
-	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-	return uri_pattern;
-}

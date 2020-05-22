@@ -2,7 +2,7 @@
 
  This file is part of the IC reverse engineering tool degate.
 
- Copyright 2008, 2009, 2010 by Martin Schobert
+ Copyright 2013 by Taekgwan Kim 
 
  Degate is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,27 +19,32 @@
 
 */
 
-#include <Core/Configuration.h>
-#include <Core/Utils/FileSystem.h>
+#ifndef __OTSU_H__
+#define __OTSU_H__
 
-#include <boost/lexical_cast.hpp>
+#include <Core/Image/Image.h>
 
-using namespace degate;
-
-Configuration::Configuration()
+namespace degate
 {
+	/**
+	   Otsu's algorithm for calculating a threshold for image binarysation:
+	   https://en.wikipedia.org/wiki/Otsu's_method
+	 */
+	class Otsu
+	{
+	private:
+
+		double otsu_threshold;
+
+	public:
+
+		Otsu();
+		~Otsu();
+
+		double get_otsu_threshold();
+
+		void run(TileImage_GS_DOUBLE_shptr gray);
+	};
 }
 
-size_t Configuration::get_max_tile_cache_size() const
-{
-	char* cs = getenv("DEGATE_CACHE_SIZE");
-	if (cs == NULL) return 256;
-	return boost::lexical_cast<size_t>(cs);
-}
-
-std::string Configuration::get_servers_uri_pattern() const
-{
-	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-	return uri_pattern;
-}
+#endif

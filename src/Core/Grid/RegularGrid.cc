@@ -1,4 +1,4 @@
-/* -*-c++-*-
+/*
 
  This file is part of the IC reverse engineering tool degate.
 
@@ -17,29 +17,39 @@
  You should have received a copy of the GNU General Public License
  along with degate. If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
-#include <Core/Configuration.h>
-#include <Core/Utils/FileSystem.h>
-
-#include <boost/lexical_cast.hpp>
+#include "RegularGrid.h"
+#include <cmath>
 
 using namespace degate;
 
-Configuration::Configuration()
+void RegularGrid::precalc_steps()
 {
+	grid_offsets.clear();
+	if (distance > 0)
+	{
+		for (double i = min; i < max; i += distance)
+		{
+			grid_offsets.push_back(lround(i));
+		}
+		grid_offsets.sort();
+	}
 }
 
-size_t Configuration::get_max_tile_cache_size() const
+int RegularGrid::snap_to_grid(int pos) const
 {
-	char* cs = getenv("DEGATE_CACHE_SIZE");
-	if (cs == NULL) return 256;
-	return boost::lexical_cast<size_t>(cs);
-}
+	if (pos <= min) return min;
+	else if (pos >= max) return max;
+	else
+	{
+		if (distance == 0) return pos;
 
-std::string Configuration::get_servers_uri_pattern() const
-{
-	char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-	if (uri_pattern == NULL) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-	return uri_pattern;
+		unsigned int grid_coord_x_lo = (unsigned int)((pos - min) / distance);
+		unsigned int grid_coord_x_hi = grid_coord_x_lo + 1;
+
+		if ((grid_coord_x_hi * distance + min - pos) < (pos - (grid_coord_x_lo * distance + min)))
+			return (int)(grid_coord_x_hi * distance + min);
+		else return (int)(grid_coord_x_lo * distance + min);
+	}
 }
