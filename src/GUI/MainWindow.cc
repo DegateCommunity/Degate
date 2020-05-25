@@ -931,6 +931,9 @@ namespace degate
         // Reset area
         QAction reset_selection_area_action("Reset selection area", this);
 
+        // Reset wire tool
+        QAction reset_wire_tool_action("Reset wire tool", this);
+
         // Get current opengl mouse position
         context_menu_mouse_position = workspace->get_opengl_mouse_position();
 
@@ -1001,6 +1004,14 @@ namespace degate
 
             connect(&via_create_action, SIGNAL(triggered()), this, SLOT(on_via_create()));
             contextMenu.addAction(&via_create_action);
+
+            if(workspace->get_current_tool() == WIRE)
+            {
+                contextMenu.addSeparator();
+
+                connect(&reset_wire_tool_action, SIGNAL(triggered()), workspace, SLOT(reset_wire_tool()));
+                contextMenu.addAction(&reset_wire_tool_action);
+            }
         }
 
         contextMenu.exec(QCursor::pos());

@@ -156,6 +156,13 @@ namespace degate
          */
         QPointF get_opengl_mouse_position() const;
 
+        /**
+         * Get the currently used tool.
+         *
+         * @return Return the current tool.
+         */
+        WorkspaceTool get_current_tool() const;
+
 	protected:
 		/**
 		 * Destroy all OpenGL textures.
@@ -287,6 +294,11 @@ namespace degate
 		 * No more selection.
 		 */
         void reset_selection();
+
+        /**
+         * Restart line drawing of the wire tool.
+         */
+        void reset_wire_tool();
 
         /**
          * Switch the current used tool to the area selection tool.

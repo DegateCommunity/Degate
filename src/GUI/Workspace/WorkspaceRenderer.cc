@@ -136,6 +136,13 @@ namespace degate
 		selected_object = nullptr;
 	}
 
+    void WorkspaceRenderer::reset_wire_tool()
+    {
+        wire_tool.reset_line_drawing();
+
+        update();
+    }
+
     void WorkspaceRenderer::use_area_selection_tool()
     {
         reset_selection();
@@ -386,6 +393,11 @@ namespace degate
 		return QPointF(viewport_min_x + widget_mouse_position.x() * scale,
 		              viewport_min_y + widget_mouse_position.y() * scale);
 	}
+
+    WorkspaceTool WorkspaceRenderer::get_current_tool() const
+    {
+	    return current_tool;
+    }
 
 	void WorkspaceRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
 	{
