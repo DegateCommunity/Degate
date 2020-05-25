@@ -110,8 +110,8 @@ namespace degate
 		void on_port_place();
 
 	private:
-		GateTemplate_shptr gate = NULL;
-		Project_shptr project = NULL;
+		GateTemplate_shptr gate = nullptr;
+		Project_shptr project = nullptr;
 		QGridLayout layout;
 
 		// Name
@@ -203,8 +203,8 @@ namespace degate
 		void on_language_selector_changed(int index);
 
 	private:
-		GateTemplate_shptr gate = NULL;
-		Project_shptr project = NULL;
+		GateTemplate_shptr gate = nullptr;
+		Project_shptr project = nullptr;
         GateEditEntityTab& entity_tab;
 
         // Layouts
@@ -259,25 +259,25 @@ namespace degate
 		void validate();
 
 	private:
-		GateTemplate_shptr gate = NULL;
-		Project_shptr project = NULL;
+		GateTemplate_shptr gate = nullptr;
+		Project_shptr project = nullptr;
 
 		QVBoxLayout layout;
 
 		// Metal layer
 		QHBoxLayout metal_layout;
 		QLabel metal_label;
-		ImageRenderer* metal = NULL;
+		ImageRenderer* metal = nullptr;
 
 		// Logic layer
 		QHBoxLayout logic_layout;
 		QLabel logic_label;
-		ImageRenderer* logic = NULL;
+		ImageRenderer* logic = nullptr;
 
 		// Transistor layer
 		QHBoxLayout transistor_layout;
 		QLabel transistor_label;
-		ImageRenderer* transistor = NULL;
+		ImageRenderer* transistor = nullptr;
 
 	};
 
@@ -316,10 +316,10 @@ namespace degate
 	protected:
 		QDialogButtonBox button_box;
 		QVBoxLayout layout;
-		Project_shptr project = NULL;
+		Project_shptr project = nullptr;
 
 	private:
-		GateTemplate_shptr gate = NULL;
+		GateTemplate_shptr gate = nullptr;
 
 		QTabWidget tab;
 
@@ -362,7 +362,7 @@ namespace degate
 		void validate();
 
 	private:
-		Gate_shptr gate = NULL;
+		Gate_shptr gate = nullptr;
 
 		// Orientation
 		QHBoxLayout orientation_layout;

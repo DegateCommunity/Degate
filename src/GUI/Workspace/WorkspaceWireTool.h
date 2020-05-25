@@ -122,11 +122,11 @@ namespace degate
         void set_project(const Project_shptr& new_project);
 
     private:
-        Project_shptr project = NULL;
-        QWidget* parent;
-        QOpenGLShaderProgram* program = NULL;
+        Project_shptr project = nullptr;
+        QWidget* parent = nullptr;
+        QOpenGLShaderProgram* program = nullptr;
         GLuint vbo = 0;
-        QOpenGLFunctions* context = NULL;
+        QOpenGLFunctions* context = nullptr;
         bool started = false;
         bool ended = false;
         Line line;
