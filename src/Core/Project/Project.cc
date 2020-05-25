@@ -119,7 +119,7 @@ void Project::set_logic_model(LogicModel_shptr _logic_model)
 }
 
 
-void Project::set_name(std::string _name)
+void Project::set_name(const std::string& _name)
 {
 	name = _name;
 }
@@ -159,14 +159,14 @@ length_t Project::get_lambda() const
 	return lambda;
 }
 
-void Project::set_default_pin_diameter(diameter_t pin_diameter)
+void Project::set_default_via_diameter(diameter_t via_diameter)
 {
-	default_pin_diameter = pin_diameter;
+    default_via_diameter = via_diameter;
 }
 
-diameter_t Project::get_default_pin_diameter() const
+diameter_t Project::get_default_via_diameter() const
 {
-	return default_pin_diameter;
+	return default_via_diameter;
 }
 
 void Project::set_default_wire_diameter(diameter_t wire_diameter)
@@ -241,17 +241,17 @@ void Project::print(std::ostream& os)
 {
 	os
 		<< endl
-		<< "================================[ "
-		<< (name.empty() ? "Unnamed project" : name)
-		<< " ]=================================" << endl
-		<< "+ Project description: " << description << endl
-		<< "+ Degate version: " << degate_version << endl
-		<< "+ Directory: " << directory << endl
-		<< "+" << endl
-		<< "+ Changed: " << (changed ? "true" : "false") << endl
-		<< "+" << endl
-		<< "+ Default wire diameter: " << default_wire_diameter << endl
-		<< "+ Default pin diameter: " << default_pin_diameter << endl
+        << "================================[ "
+        << (name.empty() ? "Unnamed project" : name)
+        << " ]=================================" << endl
+        << "+ Project description: " << description << endl
+        << "+ Degate version: " << degate_version << endl
+        << "+ Directory: " << directory << endl
+        << "+" << endl
+        << "+ Changed: " << (changed ? "true" : "false") << endl
+        << "+" << endl
+        << "+ Default wire diameter: " << default_wire_diameter << endl
+        << "+ Default pin diameter: " << default_via_diameter << endl
 		<< "+ Default port diameter: " << default_port_diameter << endl
 		<< "+ Min distance between electrically isolated objects in pixel (lambda value): " << lambda << endl
 		<< endl;
@@ -271,7 +271,7 @@ void Project::print_all(std::ostream& os)
 
 void Project::init_default_values()
 {
-	default_pin_diameter = 5;
+    default_via_diameter = 5;
 	default_wire_diameter = 5;
 	default_port_diameter = 5;
 	template_dimension = 40;

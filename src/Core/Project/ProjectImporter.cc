@@ -442,7 +442,7 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
 		                                                               "last-pulled-transaction-id"));
 
 	parent_prj->set_lambda(parse_number<length_t>(project_elem, "lambda"));
-	parent_prj->set_default_pin_diameter(parse_number<diameter_t>(project_elem, "pin-diameter"));
+    parent_prj->set_default_via_diameter(parse_number<diameter_t>(project_elem, "pin-diameter"));
 	parent_prj->set_default_wire_diameter(parse_number<diameter_t>(project_elem, "wire-diameter"));
 	parent_prj->set_default_port_diameter(parse_number<diameter_t>(project_elem, "port-diameter", 5));
 

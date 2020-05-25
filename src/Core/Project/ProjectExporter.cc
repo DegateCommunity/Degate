@@ -191,7 +191,7 @@ void ProjectExporter::set_project_node_attributes(QDomDocument& doc,
 
 	prj_elem.setAttribute("lambda", QString::fromStdString(number_to_string<length_t>(prj->get_lambda())));
 	prj_elem.setAttribute("pin-diameter",
-	                      QString::fromStdString(number_to_string<length_t>(prj->get_default_pin_diameter())));
+	                      QString::fromStdString(number_to_string<length_t>(prj->get_default_via_diameter())));
 	prj_elem.setAttribute("wire-diameter",
 	                      QString::fromStdString(number_to_string<length_t>(prj->get_default_wire_diameter())));
 	prj_elem.setAttribute("port-diameter",

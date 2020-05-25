@@ -75,7 +75,7 @@ namespace degate
 
 		std::string name;
 		std::string description;
-		std::string degate_version;
+		std::string degate_version = DEGATE_VERSION;
 		std::string directory;
 		std::string server_url;
 
@@ -87,7 +87,7 @@ namespace degate
 		bool changed;
 		time_t last_persistent_version;
 
-		diameter_t default_pin_diameter;
+		diameter_t default_via_diameter;
 		diameter_t default_wire_diameter;
 		diameter_t default_port_diameter;
 		length_t lambda;
@@ -182,7 +182,7 @@ namespace degate
 		void set_logic_model(LogicModel_shptr _logic_model);
 
 
-		void set_name(std::string _name);
+		void set_name(const std::string& _name);
 		std::string const& get_name() const;
 
 		void set_description(std::string _description);
@@ -194,8 +194,8 @@ namespace degate
 		void set_lambda(length_t l);
 		length_t get_lambda() const;
 
-		void set_default_pin_diameter(diameter_t pin_diameter);
-		diameter_t get_default_pin_diameter() const;
+		void set_default_via_diameter(diameter_t via_diameter);
+		diameter_t get_default_via_diameter() const;
 
 		void set_default_wire_diameter(diameter_t wire_diameter);
 		diameter_t get_default_wire_diameter() const;
