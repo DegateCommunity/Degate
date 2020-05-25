@@ -518,6 +518,8 @@ namespace degate
             wire_tool.end_line_drawing();
 
             Wire_shptr new_wire(new Wire(wire_tool.get_line()));
+            new_wire->set_fill_color(project->get_default_color(DEFAULT_COLOR_WIRE));
+            new_wire->set_diameter(project->get_default_wire_diameter());
 
             project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_wire);
 
@@ -709,7 +711,7 @@ namespace degate
                 }
                 else if (Via_shptr o = std::dynamic_pointer_cast<Via>(get_selected_object()))
                 {
-                    ViaEditDialog dialog(o, this);
+                    ViaEditDialog dialog(o, this, project);
                     dialog.exec();
 
                     vias.update();

@@ -21,8 +21,6 @@
 
 #include "WorkspaceWireTool.h"
 
-#define LINE_DIAMETER 2
-
 namespace degate
 {
     struct WireToolVertex2D
@@ -34,7 +32,7 @@ namespace degate
 
     WorkspaceWireTool::WorkspaceWireTool(QWidget *parent) : parent(parent)
     {
-        line.set_diameter(LINE_DIAMETER); // TODO: in project settings
+
     }
 
     WorkspaceWireTool::~WorkspaceWireTool()
@@ -102,6 +100,7 @@ namespace degate
 
         line.set_to_x(x);
         line.set_to_y(y);
+        line.set_diameter(project->get_default_wire_diameter());
 
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -111,7 +110,7 @@ namespace degate
 
         WireToolVertex2D temp;
 
-        color_t color = project->get_default_color(DEFAULT_COLOR_EMARKER);
+        color_t color = project->get_default_color(DEFAULT_COLOR_WIRE);
 
         temp.color = QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0);
         temp.alpha = MASK_A(color) / 255.0;

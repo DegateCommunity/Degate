@@ -113,7 +113,7 @@ namespace degate
 	     * @param parent : the widget parent.
 	     * @param text : the button text (default none).
 	     */
-		ColorSelectionButton(QWidget* parent, const QString& text = QString());
+		ColorSelectionButton(QWidget* parent = nullptr, const QString& text = QString());
 		~ColorSelectionButton();
 
 		/**

@@ -24,40 +24,44 @@
 namespace degate
 {
 
-    ViaEditDialog::ViaEditDialog(Via_shptr &via, QWidget *parent): via(via), QDialog(parent), fill_color(parent)
+    ViaEditDialog::ViaEditDialog(Via_shptr& via, QWidget *parent, Project_shptr& project): via(via), QDialog(parent), fill_color_edit(parent), project(project)
     {
         name_label.setText("Name :");
-        name.setText(QString::fromStdString(via->get_name()));
+        name_edit.setText(QString::fromStdString(via->get_name()));
 
         fill_color_label.setText("Fill color :");
-        fill_color.set_color(via->get_fill_color());
+        fill_color_edit.set_color(via->get_fill_color());
 
         direction_label.setText("Via direction :");
-        direction.addItem("Undefined");
-        direction.addItem("Up");
-        direction.addItem("Down");
+        direction_edit.addItem("Undefined");
+        direction_edit.addItem("Up");
+        direction_edit.addItem("Down");
 
         if(via->get_direction() == Via::DIRECTION_UP)
-            direction.setCurrentText("Up");
+            direction_edit.setCurrentText("Up");
         else if(via->get_direction() == Via::DIRECTION_DOWN)
-            direction.setCurrentText("Down");
+            direction_edit.setCurrentText("Down");
         else
-            direction.setCurrentText("Undefined");
+            direction_edit.setCurrentText("Undefined");
 
         validate_button.setText("Ok");
         cancel_button.setText("Cancel");
+        buttons_layout.addStretch(1);
+
+        buttons_layout.addWidget(&validate_button);
+        buttons_layout.addWidget(&cancel_button);
 
         layout.addWidget(&name_label, 0, 0);
-        layout.addWidget(&name, 0, 1);
+        layout.addWidget(&name_edit, 0, 1);
         layout.addWidget(&fill_color_label, 1, 0);
-        layout.addWidget(&fill_color, 1, 1);
+        layout.addWidget(&fill_color_edit, 1, 1);
         layout.addWidget(&direction_label, 2, 0);
-        layout.addWidget(&direction, 2, 1);
-        layout.addWidget(&validate_button, 3, 0);
-        layout.addWidget(&cancel_button, 3, 1);
+        layout.addWidget(&direction_edit, 2, 1);
+        layout.addLayout(&buttons_layout, 3, 0);
 
         QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
         QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
+        QObject::connect(&direction_edit, SIGNAL(currentTextChanged(const QString&)), this, SLOT(direction_changed(void)));
 
         setLayout(&layout);
     }
@@ -69,16 +73,24 @@ namespace degate
 
     void ViaEditDialog::validate()
     {
-        via->set_name(name.text().toStdString());
-        via->set_fill_color(fill_color.get_color());
+        via->set_name(name_edit.text().toStdString());
+        via->set_fill_color(fill_color_edit.get_color());
 
-        if(direction.currentText() == "Up")
+        if(direction_edit.currentText() == "Up")
             via->set_direction(Via::DIRECTION_UP);
-        else if(direction.currentText() == "Down")
+        else if(direction_edit.currentText() == "Down")
             via->set_direction(Via::DIRECTION_DOWN);
         else
             via->set_direction(Via::DIRECTION_UNDEFINED);
 
         accept();
+    }
+
+    void ViaEditDialog::direction_changed()
+    {
+        if(direction_edit.currentText() == "Up")
+            fill_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_UP));
+        else if(direction_edit.currentText() == "Down")
+            fill_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_DOWN));
     }
 }

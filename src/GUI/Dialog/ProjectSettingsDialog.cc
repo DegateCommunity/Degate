@@ -1,0 +1,168 @@
+/* -*-c++-*-
+
+  This file is part of the IC reverse engineering tool degate.
+
+  Copyright 2008, 2009, 2010 by Martin Schobert
+
+  Degate is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  any later version.
+
+  Degate is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with degate. If not, see <http://www.gnu.org/licenses/>.
+
+*/
+#include "ProjectSettingsDialog.h"
+
+#include <utility>
+
+namespace degate
+{
+
+    ProjectSettingsGeneralTab::ProjectSettingsGeneralTab(QWidget* parent, const Project_shptr& project)
+            : QWidget(parent), project(project)
+    {
+        project_name_label.setText("Project name :");
+        project_name_edit.setText(QString::fromStdString(project->get_name()));
+        layout.addWidget(&project_name_label, 0, 0);
+        layout.addWidget(&project_name_edit, 0, 1);
+
+        project_description_label.setText("Project description :");
+        project_description_edit.setText(QString::fromStdString(project->get_description()));
+        layout.addWidget(&project_description_label, 1, 0);
+        layout.addWidget(&project_description_edit, 1, 1);
+
+        wire_diameter_label.setText("Default wire diameter :");
+        wire_diameter_edit.setValue(project->get_default_wire_diameter());
+        wire_diameter_edit.setMinimum(1);
+        layout.addWidget(&wire_diameter_label, 2, 0);
+        layout.addWidget(&wire_diameter_edit, 2, 1);
+
+        via_diameter_label.setText("Default via diameter :");
+        via_diameter_edit.setValue(project->get_default_via_diameter());
+        via_diameter_edit.setMinimum(1);
+        layout.addWidget(&via_diameter_label, 3, 0);
+        layout.addWidget(&via_diameter_edit, 3, 1);
+
+        port_diameter_label.setText("Default port diameter :");
+        port_diameter_edit.setValue(project->get_default_port_diameter());
+        port_diameter_edit.setMinimum(1);
+        layout.addWidget(&port_diameter_label, 4, 0);
+        layout.addWidget(&port_diameter_edit, 4, 1);
+
+        setLayout(&layout);
+    }
+
+    void ProjectSettingsGeneralTab::validate()
+    {
+        project->set_name(project_name_edit.text().toStdString());
+        project->set_description(project_description_edit.text().toStdString());
+        project->set_default_wire_diameter(wire_diameter_edit.value());
+        project->set_default_via_diameter(via_diameter_edit.value());
+        project->set_default_port_diameter(port_diameter_edit.value());
+
+        project->get_logic_model()->set_default_gate_port_diameter(port_diameter_edit.value());
+    }
+
+    ProjectSettingsColorsTab::ProjectSettingsColorsTab(QWidget* parent, const Project_shptr& project)
+            : QWidget(parent), project(project)
+    {
+        wire_color_label.setText("Wire default color :");
+        wire_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_WIRE));
+        layout.addWidget(&wire_color_label, 0, 0);
+        layout.addWidget(&wire_color_edit, 0, 1);
+
+        via_up_color_label.setText("Via up default color :");
+        via_up_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_UP));
+        layout.addWidget(&via_up_color_label, 1, 0);
+        layout.addWidget(&via_up_color_edit, 1, 1);
+
+        via_down_color_label.setText("Via down default color :");
+        via_down_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_DOWN));
+        layout.addWidget(&via_down_color_label, 2, 0);
+        layout.addWidget(&via_down_color_edit, 2, 1);
+
+        annotation_color_label.setText("Annotation default color :");
+        annotation_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
+        layout.addWidget(&annotation_color_label, 3, 0);
+        layout.addWidget(&annotation_color_edit, 3, 1);
+
+        annotation_frame_color_label.setText("Annotation frame default color :");
+        annotation_frame_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
+        layout.addWidget(&annotation_frame_color_label, 4, 0);
+        layout.addWidget(&annotation_frame_color_edit, 4, 1);
+
+        gate_color_label.setText("Gate default color :");
+        gate_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_GATE));
+        layout.addWidget(&gate_color_label, 5, 0);
+        layout.addWidget(&gate_color_edit, 5, 1);
+
+        gate_frame_color_label.setText("Gate frame default color :");
+        gate_frame_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
+        layout.addWidget(&gate_frame_color_label, 6, 0);
+        layout.addWidget(&gate_frame_color_edit, 6, 1);
+
+        gate_port_color_label.setText("Gate port default color :");
+        gate_port_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_GATE_PORT));
+        layout.addWidget(&gate_port_color_label, 7, 0);
+        layout.addWidget(&gate_port_color_edit, 7, 1);
+
+        emarker_color_label.setText("EMarker default color :");
+        emarker_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_EMARKER));
+        layout.addWidget(&emarker_color_label, 8, 0);
+        layout.addWidget(&emarker_color_edit, 8, 1);
+
+        setLayout(&layout);
+    }
+
+    void ProjectSettingsColorsTab::validate()
+    {
+        project->set_default_color(DEFAULT_COLOR_WIRE, wire_color_edit.get_color());
+        project->set_default_color(DEFAULT_COLOR_VIA_UP, via_up_color_edit.get_color());
+        project->set_default_color(DEFAULT_COLOR_VIA_DOWN, via_down_color_edit.get_color());
+        project->set_default_color(DEFAULT_COLOR_ANNOTATION, annotation_color_edit.get_color());
+        project->set_default_color(DEFAULT_COLOR_ANNOTATION_FRAME, annotation_frame_color_edit.get_color());
+        project->set_default_color(DEFAULT_COLOR_GATE, gate_color_edit.get_color());
+        project->set_default_color(DEFAULT_COLOR_GATE_FRAME, gate_frame_color_edit.get_color());
+        project->set_default_color(DEFAULT_COLOR_GATE_PORT, gate_port_color_edit.get_color());
+        project->set_default_color(DEFAULT_COLOR_EMARKER, emarker_color_edit.get_color());
+    }
+
+    ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent, const Project_shptr& project)
+        : QDialog(parent), general_tab(this, project), colors_tab(this, project)
+    {
+        introduction_label.setText("Change here all project settings like project name or colors.\n"
+                                   "Those settings are independent (per project).");
+
+        tab.addTab(&general_tab, "General");
+        tab.addTab(&colors_tab, "Colors");
+
+        apply_button.setText("Apply");
+        close_button.setText("Close");
+        buttons_layout.addStretch(1);
+        buttons_layout.addWidget(&apply_button);
+        buttons_layout.addWidget(&close_button);
+
+        layout.addWidget(&introduction_label);
+        layout.addSpacing(5);
+        layout.addWidget(&tab);
+        layout.addLayout(&buttons_layout);
+
+        QObject::connect(&apply_button, SIGNAL(clicked()), this, SLOT(validate()));
+        QObject::connect(&close_button, SIGNAL(clicked()), this, SLOT(accept()));
+
+        setLayout(&layout);
+    }
+
+    void ProjectSettingsDialog::validate()
+    {
+        general_tab.validate();
+        colors_tab.validate();
+    }
+}

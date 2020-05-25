@@ -70,6 +70,10 @@ namespace degate
 		QObject::connect(project_create_subproject_action, SIGNAL(triggered()), this, SLOT(on_menu_project_create_subproject()));
 
 		project_menu->addSeparator();
+        project_settings_action = project_menu->addAction("Project settings");
+        QObject::connect(project_settings_action, SIGNAL(triggered()), this, SLOT(on_menu_project_settings()));
+
+		project_menu->addSeparator();
 		project_quit_action = project_menu->addAction("Quit");
 		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_project_quit()));
 
@@ -569,11 +573,13 @@ namespace degate
 			return;
 		}
 
-		GateTemplate_shptr new_gate_template(new GateTemplate(workspace->get_area_selection().get_width(), workspace->get_area_selection().get_height()));
+		auto new_gate_template = std::make_shared<GateTemplate>(workspace->get_area_selection().get_width(),workspace->get_area_selection().get_height());
 		grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_area_selection());
 		new_gate_template->set_object_id(project->get_logic_model()->get_new_object_id());
+        new_gate_template->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
+        new_gate_template->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
 
-		Gate_shptr new_gate(new Gate(workspace->get_area_selection()));
+		auto new_gate = std::make_shared<Gate>(workspace->get_area_selection());
 		new_gate->set_gate_template(new_gate_template);
 		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
 		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
@@ -745,7 +751,7 @@ namespace degate
 
         if(Via_shptr o = std::dynamic_pointer_cast<Via>(workspace->get_selected_object()))
         {
-            ViaEditDialog dialog(o, this);
+            ViaEditDialog dialog(o, this, project);
             dialog.exec();
 
             workspace->update_screen();
@@ -754,12 +760,25 @@ namespace degate
 
 	void MainWindow::on_menu_logic_remove_selected_object()
 	{
-		if(project == nullptr || !workspace->has_selection())
-			return;
+        if(project == nullptr || !workspace->has_selection())
+            return;
 
-		project->get_logic_model()->remove_object(workspace->pop_selected_object());
-		workspace->update_screen();
+        project->get_logic_model()->remove_object(workspace->pop_selected_object());
+        workspace->update_screen();
 	}
+
+    void MainWindow::on_menu_project_settings()
+    {
+        if(project == nullptr)
+            return;
+
+        ProjectSettingsDialog dialog(this, project);
+        dialog.exec();
+
+        setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
+
+        workspace->update_screen();
+    }
 
 	void MainWindow::on_menu_project_quit()
 	{
@@ -1014,9 +1033,9 @@ namespace degate
             return;
 
         Via_shptr new_via = std::make_shared<Via>(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UNDEFINED);
-        new_via->set_diameter(4);
+        new_via->set_diameter(project->get_default_via_diameter());
 
-        ViaEditDialog dialog(new_via, this);
+        ViaEditDialog dialog(new_via, this, project);
         auto res = dialog.exec();
 
         if(res == QDialog::Accepted)

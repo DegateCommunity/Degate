@@ -22,14 +22,15 @@
 #ifndef __VIAEDITDIALOG_H__
 #define __VIAEDITDIALOG_H__
 
+#include <GUI/Dialog/ColorPickerDialog.h>
+#include <Core/LogicModel/Via/Via.h>
+#include <Core/Project/Project.h>
+
 #include <QDialog>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QComboBox>
-
-#include <GUI/Dialog/ColorPickerDialog.h>
-#include <Core/LogicModel/Via/Via.h>
 
 namespace degate
 {
@@ -53,7 +54,7 @@ namespace degate
 		 *
 		 * @see QDialog
 		 */
-        ViaEditDialog(Via_shptr& via, QWidget* parent);
+        ViaEditDialog(Via_shptr& via, QWidget* parent, Project_shptr& project);
         ~ViaEditDialog();
 
     public slots:
@@ -63,18 +64,30 @@ namespace degate
          */
         void validate();
 
+        /**
+         * Called when the direction changed.
+         */
+        void direction_changed();
+
     private:
+        Project_shptr project = nullptr;
         QGridLayout layout;
         Via_shptr via;
 
-        QLabel name_label;
-        QLineEdit name;
-        QLabel fill_color_label;
-        ColorSelectionButton fill_color;
-        QLabel direction_label;
-        QComboBox direction;
+        // Buttons
+        QHBoxLayout buttons_layout;
         QPushButton validate_button;
         QPushButton cancel_button;
+
+        // Elements
+        QLabel name_label;
+        QLineEdit name_edit;
+
+        QLabel fill_color_label;
+        ColorSelectionButton fill_color_edit;
+
+        QLabel direction_label;
+        QComboBox direction_edit;
     };
 }
 

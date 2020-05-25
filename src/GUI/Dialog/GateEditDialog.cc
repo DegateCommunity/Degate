@@ -201,6 +201,7 @@ namespace degate
 		validate();
 
 		GateTemplatePort_shptr new_port(new GateTemplatePort());
+        new_port->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE_PORT));
 		new_port->set_object_id(project->get_logic_model()->get_new_object_id());
 		gate->add_template_port(new_port);
 

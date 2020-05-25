@@ -22,19 +22,20 @@
 #ifndef __MAINWINDOW_H__
 #define __MAINWINDOW_H__
 
-#include "Core/Project/ProjectImporter.h"
-#include "GUI/Workspace/WorkspaceRenderer.h"
-#include "Core/Project/ProjectExporter.h"
-#include "GUI/Dialog/NewProjectDialog.h"
-#include "GUI/Dialog/GateEditDialog.h"
-#include "GUI/Dialog/LayersEditDialog.h"
-#include "GUI/Dialog/SelectGateTemplateDialog.h"
-#include "GUI/Dialog/GateLibraryDialog.h"
-#include "GUI/Preferences/ThemeManager.h"
-#include "GUI/Preferences/PreferencesHandler.h"
-#include "GUI/Preferences/PreferencesEditor.h"
-#include "GUI/Dialog/AnnotationEditDialog.h"
-#include "GUI/Dialog/EMarkerEditDialog.h"
+#include <Core/Project/ProjectImporter.h>
+#include <GUI/Workspace/WorkspaceRenderer.h>
+#include <Core/Project/ProjectExporter.h>
+#include <GUI/Dialog/NewProjectDialog.h>
+#include <GUI/Dialog/GateEditDialog.h>
+#include <GUI/Dialog/LayersEditDialog.h>
+#include <GUI/Dialog/SelectGateTemplateDialog.h>
+#include <GUI/Dialog/GateLibraryDialog.h>
+#include <GUI/Preferences/ThemeManager.h>
+#include <GUI/Preferences/PreferencesHandler.h>
+#include <GUI/Preferences/PreferencesEditor.h>
+#include <GUI/Dialog/AnnotationEditDialog.h>
+#include <GUI/Dialog/EMarkerEditDialog.h>
+#include <GUI/Dialog/ProjectSettingsDialog.h>
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -113,6 +114,11 @@ namespace degate
 		 * Create a subproject from selection.
 		 */
 		void on_menu_project_create_subproject();
+
+		/**
+		 * Open the project settings dialog.
+		 */
+		void on_menu_project_settings();
 
 		/**
 		 * Quit the application without saving.
@@ -275,6 +281,7 @@ namespace degate
         QAction* project_export_action;
         QAction* project_close_action;
         QAction* project_create_subproject_action;
+        QAction* project_settings_action;
         QAction* project_quit_action;
 
         // Edit menu
