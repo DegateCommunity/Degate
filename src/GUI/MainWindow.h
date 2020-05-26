@@ -231,7 +231,7 @@ namespace degate
 		 *
 		 * @see WorkspaceRenderer::project_changed
 		 */
-		void open_project(std::string path);
+		void open_project(const std::string& path);
 
 		/**
 		 * Update the mouse coordinates on the status bar.

@@ -124,23 +124,16 @@ namespace degate
 		BoundingBox get_area_selection();
 		
 		/**
-		 * Get the selected object.
+		 * Get the vector of selected objects.
 		 *
-		 * @return Return the selected object.
+		 * @return Return all selected objects.
 		 */
-		PlacedLogicModelObject_shptr get_selected_object();
+		std::vector<PlacedLogicModelObject_shptr> get_selected_objects();
 
 		/**
 		 * Get the selection state, if true there is a selection otherwise not.
 		 */
 		bool has_selection();
-
-		/**
-		 * Return the selected object and reset the selection (no more selected object).
-		 *
-		 * @return Return the selected object.
-		 */
-		PlacedLogicModelObject_shptr pop_selected_object();
 
         /**
          * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
@@ -196,6 +189,11 @@ namespace degate
 		 * @param new_center_y : y value of the new center.
 		 */
 		void set_projection(float scale_factor, float new_center_x, float new_center_y);
+
+		/**
+		 * Update an object of the workspace.
+		 */
+		void update_object(PlacedLogicModelObject_shptr& object);
 
 	public slots:
 		/**
@@ -291,7 +289,7 @@ namespace degate
         void reset_area_selection();
 
         /**
-		 * No more selection.
+		 * No more selection (clear the selected objects vector).
 		 */
         void reset_selection();
 
@@ -334,14 +332,19 @@ namespace degate
 	private:
 		// General
 		Project_shptr project = NULL;
+
+		// View
 		QMatrix4x4 projection;
 		float scale = 1;
 		float center_x = 0, center_y = 0;
 		float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
+
+		// Mouse
 		QPointF mouse_last_pos;
 		bool mouse_moved = false;
-		PlacedLogicModelObject_shptr selected_object = NULL;
-		QPointF area_selection_origin;
+
+		// Selection
+		std::vector<PlacedLogicModelObject_shptr> selected_objects;
 
 		// Background
 		WorkspaceBackground background;

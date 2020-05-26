@@ -19,10 +19,8 @@
 
 */
 
-#include "GUI/MainWindow.h"
-#include <QDesktopWidget>
+#include <GUI/MainWindow.h>
 #include <memory>
-
 
 #define SECOND(a) a * 1000
 
@@ -275,7 +273,7 @@ namespace degate
 
 	MainWindow::~MainWindow()
 	{
-		if (workspace != nullptr)
+		if(workspace != nullptr)
 			delete workspace;
 
 		Text::save_fonts_to_cache();
@@ -410,20 +408,21 @@ namespace degate
 			msgBox.setDefaultButton(QMessageBox::Save);
 			int ret = msgBox.exec();
 
-			switch (ret)
-			{
-			 case QMessageBox::Save:
-			      on_menu_project_exporter();
-			      break;
-			 case QMessageBox::Discard:
-			      break;
-			 case QMessageBox::Cancel:
-			      return;
-			      break;
-			 default:
-			      return;
-			      break;
-			}
+            switch (ret)
+            {
+                case QMessageBox::Save:
+                    on_menu_project_exporter();
+                    break;
+                case QMessageBox::Discard:
+                    return;
+                    break;
+                case QMessageBox::Cancel:
+                    return;
+                    break;
+                default:
+                    return;
+                    break;
+            }
 		}
 
 		project.reset();
@@ -489,7 +488,7 @@ namespace degate
 
             status_bar.showMessage("Created a new project.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
         }
-		else
+        else
             status_bar.showMessage("New project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
@@ -653,7 +652,7 @@ namespace degate
 		if(project == nullptr || !workspace->has_selection())
 			return;
 
-		if(Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_object()))
+		if(Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_objects().back()))
 		{
 			GateInstanceEditDialog dialog(this, o, project);
 			dialog.exec();
@@ -680,7 +679,7 @@ namespace degate
         if(project == nullptr || !workspace->has_selection())
             return;
 
-        if(GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(workspace->get_selected_object()))
+        if(GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(workspace->get_selected_objects().back()))
         {
             {
                 PortPlacementDialog dialog(this, project, o->get_gate()->get_gate_template(), o->get_template_port());
@@ -721,7 +720,7 @@ namespace degate
 		if(project == nullptr || !workspace->has_selection())
 			return;
 
-		if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(workspace->get_selected_object()))
+		if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(workspace->get_selected_objects().back()))
 		{
 			AnnotationEditDialog dialog(o, this);
 			dialog.exec();
@@ -735,7 +734,7 @@ namespace degate
         if(project == nullptr || !workspace->has_selection())
             return;
 
-        if(EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(workspace->get_selected_object()))
+        if(EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(workspace->get_selected_objects().back()))
         {
             EMarkerEditDialog dialog(o, this);
             dialog.exec();
@@ -749,7 +748,7 @@ namespace degate
         if(project == nullptr || !workspace->has_selection())
             return;
 
-        if(Via_shptr o = std::dynamic_pointer_cast<Via>(workspace->get_selected_object()))
+        if(Via_shptr o = std::dynamic_pointer_cast<Via>(workspace->get_selected_objects().back()))
         {
             ViaEditDialog dialog(o, this, project);
             dialog.exec();
@@ -763,7 +762,12 @@ namespace degate
         if(project == nullptr || !workspace->has_selection())
             return;
 
-        project->get_logic_model()->remove_object(workspace->pop_selected_object());
+        auto objects = workspace->get_selected_objects();
+        workspace->reset_selection();
+
+        for (auto& object : objects)
+            project->get_logic_model()->remove_object(object);
+
         workspace->update_screen();
 	}
 
@@ -813,7 +817,7 @@ namespace degate
 		workspace->update_screen();
 	}
 
-	void MainWindow::open_project(std::string path)
+	void MainWindow::open_project(const std::string& path)
 	{
 		status_bar.showMessage("Importing project/subproject...");
 
@@ -955,31 +959,31 @@ namespace degate
         }
         else if(workspace->has_selection())
         {
-            PlacedLogicModelObject_shptr object = workspace->get_selected_object();
+            PlacedLogicModelObject_shptr object = workspace->get_selected_objects().back();
 
-            if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(object))
+            if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
             {
                 connect(&annotation_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
                 contextMenu.addAction(&annotation_edit_action);
             }
-            else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(object))
+            else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
             {
                 connect(&gate_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
                 contextMenu.addAction(&gate_edit_action);
             }
-            else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(object))
+            else if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(object))
             {
                 connect(&gate_port_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_port_edit()));
                 contextMenu.addAction(&gate_port_edit_action);
             }
-            else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(object))
+            else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(object))
             {
                 connect(&emarker_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
                 contextMenu.addAction(&emarker_edit_action);
             }
-            else if (Via_shptr o = std::dynamic_pointer_cast<Via>(object))
+            else if (Via_shptr via = std::dynamic_pointer_cast<Via>(object))
             {
-                if(o->get_direction() == Via::DIRECTION_UP)
+                if(via->get_direction() == Via::DIRECTION_UP)
                 {
                     connect(&via_follow_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
                     contextMenu.addAction(&via_follow_action);

@@ -90,9 +90,9 @@ namespace degate
 		return selection_tool.get_selection_box();
 	}
 
-	PlacedLogicModelObject_shptr WorkspaceRenderer::get_selected_object()
+    std::vector<PlacedLogicModelObject_shptr> WorkspaceRenderer::get_selected_objects()
 	{
-		return selected_object;
+		return selected_objects;
 	}
 
 	void WorkspaceRenderer::reset_area_selection()
@@ -103,37 +103,17 @@ namespace degate
 
 	void WorkspaceRenderer::reset_selection()
 	{
-		if(selected_object == nullptr)
+		if(selected_objects.empty())
 			return;
-		
-		selected_object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
 
-		if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
-		{
-			annotations.update(o);
-		}
-		else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(selected_object))
-		{
-			gates.update(o);
-		}
-		else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(selected_object))
-		{
-			gates.update(o);
-		}
-		else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(selected_object))
+        for (auto& object : selected_objects)
         {
-            emarkers.update(o);
-        }
-        else if (Via_shptr o = std::dynamic_pointer_cast<Via>(selected_object))
-        {
-            vias.update(o);
-        }
-        else if (Wire_shptr o = std::dynamic_pointer_cast<Wire>(selected_object))
-        {
-            wires.update(o);
+            object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+
+            update_object(object);
         }
 
-		selected_object = nullptr;
+        selected_objects.clear();
 	}
 
     void WorkspaceRenderer::reset_wire_tool()
@@ -165,48 +145,10 @@ namespace degate
 
 	bool WorkspaceRenderer::has_selection()
 	{
-		if(selected_object == nullptr)
+		if(selected_objects.empty())
 			return false;
 		else
 			return true;
-	}
-
-	PlacedLogicModelObject_shptr WorkspaceRenderer::pop_selected_object()
-	{
-		if(selected_object == nullptr)
-			return nullptr;
-		
-		selected_object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
-
-		if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
-		{
-			annotations.update(o);
-		}
-		else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(selected_object))
-		{
-			gates.update(o);
-		}
-		else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(selected_object))
-		{
-			gates.update(o);
-		}
-        else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(selected_object))
-        {
-            emarkers.update(o);
-        }
-        else if (Via_shptr o = std::dynamic_pointer_cast<Via>(selected_object))
-        {
-            vias.update(o);
-        }
-        else if (Wire_shptr o = std::dynamic_pointer_cast<Wire>(selected_object))
-        {
-            wires.update(o);
-        }
-
-		PlacedLogicModelObject_shptr temp = selected_object;
-		selected_object = nullptr;
-
-		return temp;
 	}
 
 	void WorkspaceRenderer::show_gates(bool value)
@@ -415,6 +357,39 @@ namespace degate
 		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
 	}
 
+    void WorkspaceRenderer::update_object(PlacedLogicModelObject_shptr& object)
+    {
+        if(object == nullptr)
+            return;
+
+        if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
+        {
+            annotations.update(annotation);
+        }
+        else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
+        {
+            gates.update(gate);
+        }
+        else if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(object))
+        {
+            gates.update(gate_port);
+        }
+        else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(object))
+        {
+            emarkers.update(emarker);
+        }
+        else if (Via_shptr via = std::dynamic_pointer_cast<Via>(object))
+        {
+            vias.update(via);
+        }
+        else if (Wire_shptr wire = std::dynamic_pointer_cast<Wire>(object))
+        {
+            wires.update(wire);
+        }
+
+        update();
+    }
+
 	void WorkspaceRenderer::mousePressEvent(QMouseEvent* event)
 	{
         makeCurrent();
@@ -472,59 +447,27 @@ namespace degate
             {
             }
 
-			bool was_selected = false;
-
-			if(selected_object != nullptr)
-			{
+			if(!selected_objects.empty() && !QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
 				reset_selection();
-				was_selected = true;
-			}
 			
 			if(plo != nullptr)
 			{
-				selected_object = plo;
+			    selected_objects.push_back(plo);
 
 				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
-			}
 
-			if(plo != nullptr || was_selected)
-			{
-				if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(selected_object))
-				{
-					annotations.update(o);
-				}
-				else if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(selected_object))
-				{
-					gates.update(o);
-				}
-				else if (GatePort_shptr o = std::dynamic_pointer_cast<GatePort>(selected_object))
-				{
-					gates.update(o);
-				}
-                else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(selected_object))
-                {
-                    emarkers.update(o);
-                }
-                else if (Via_shptr o = std::dynamic_pointer_cast<Via>(selected_object))
-                {
-                    vias.update(o);
-                }
-                else if (Wire_shptr o = std::dynamic_pointer_cast<Wire>(selected_object))
-                {
-                    wires.update(o);
-                }
-
-				update();
+                update_object(plo);
 			}
 		}
 
         // Selection imply no area selection
-        if (selected_object != nullptr && current_tool == WorkspaceTool::AREA_SELECTION)
+        if (!selected_objects.empty() && current_tool == WorkspaceTool::AREA_SELECTION)
         {
             reset_area_selection();
             update();
         }
 
+        // Wire tool
         if(event->button() == Qt::RightButton && current_tool == WorkspaceTool::WIRE && project != nullptr)
         {
             wire_tool.end_line_drawing();
@@ -584,7 +527,7 @@ namespace degate
 			selection_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
             // If an object is selected, reset selection
-			if(selected_object != nullptr)
+			if(!selected_objects.empty())
 			    reset_selection();
 
 			update();
@@ -681,49 +624,49 @@ namespace degate
 
 					emit project_changed(dir);
 				}
-				else if(Gate_shptr sp = std::dynamic_pointer_cast<Gate>(plo))
+				else if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo))
 				{
-					GateInstanceEditDialog dialog(this, sp, project);
+					GateInstanceEditDialog dialog(this, gate, project);
 					dialog.exec();
 
-                    project->get_logic_model()->update_ports(sp);
+                    project->get_logic_model()->update_ports(gate);
 
 					makeCurrent();
 					gates.update();
 					update();
 				}
-				else if(GatePort_shptr sp = std::dynamic_pointer_cast<GatePort>(plo))
+				else if(GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
 				{
 					{
-						PortPlacementDialog dialog(this, project, sp->get_gate()->get_gate_template(), sp->get_template_port());
+						PortPlacementDialog dialog(this, project, gate_port->get_gate()->get_gate_template(), gate_port->get_template_port());
 						dialog.exec();
 					}
 
-					project->get_logic_model()->update_ports(sp->get_gate());
+					project->get_logic_model()->update_ports(gate_port->get_gate());
 
 					makeCurrent();
 					gates.update();
 					update();
 				}
-				else if(Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(get_selected_object()))
+				else if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(plo))
 				{
-					AnnotationEditDialog dialog(o, this);
+					AnnotationEditDialog dialog(annotation, this);
 					dialog.exec();
 
 					annotations.update();
 					update();
 				}
-                else if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(get_selected_object()))
+                else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(plo))
                 {
-                    EMarkerEditDialog dialog(o, this);
+                    EMarkerEditDialog dialog(emarker, this);
                     dialog.exec();
 
                     emarkers.update();
                     update();
                 }
-                else if (Via_shptr o = std::dynamic_pointer_cast<Via>(get_selected_object()))
+                else if (Via_shptr via = std::dynamic_pointer_cast<Via>(plo))
                 {
-                    ViaEditDialog dialog(o, this, project);
+                    ViaEditDialog dialog(via, this, project);
                     dialog.exec();
 
                     vias.update();
@@ -749,4 +692,4 @@ namespace degate
 		update();
 	}
 }
-          
+     
