@@ -95,6 +95,13 @@ namespace degate
 		return selected_objects;
 	}
 
+    void WorkspaceRenderer::add_object_to_selection(PlacedLogicModelObject_shptr& object)
+    {
+        selected_objects.push_back(object);
+        object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
+        update_object(object);
+    }
+
 	void WorkspaceRenderer::reset_area_selection()
 	{
 		selection_tool.set_selection(false);
@@ -447,17 +454,12 @@ namespace degate
             {
             }
 
+            // If no CTRL reset selection (single selection)
 			if(!selected_objects.empty() && !QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
 				reset_selection();
 			
 			if(plo != nullptr)
-			{
-			    selected_objects.push_back(plo);
-
-				plo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
-
-                update_object(plo);
-			}
+			    add_object_to_selection(plo);
 		}
 
         // Selection imply no area selection

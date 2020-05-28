@@ -131,6 +131,13 @@ namespace degate
 		std::vector<PlacedLogicModelObject_shptr> get_selected_objects();
 
 		/**
+		 * Add an object to the selection list.
+		 *
+		 * @param object : the object to add.
+		 */
+		void add_object_to_selection(PlacedLogicModelObject_shptr& object);
+
+		/**
 		 * Get the selection state, if true there is a selection otherwise not.
 		 */
 		bool has_selection();

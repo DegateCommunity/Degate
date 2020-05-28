@@ -766,7 +766,10 @@ namespace degate
         workspace->reset_selection();
 
         for (auto& object : objects)
-            project->get_logic_model()->remove_object(object);
+        {
+            if(object != nullptr && !std::dynamic_pointer_cast<GatePort>(object))
+                project->get_logic_model()->remove_object(object);
+        }
 
         workspace->update_screen();
 	}
