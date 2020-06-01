@@ -195,9 +195,13 @@ namespace degate
         // Logic menu
 		QMenu* logic_menu = menu_bar.addMenu("Logic");
 
-		remove_object_action = logic_menu->addAction("Remove selected object");
-        remove_object_action->setShortcut(Qt::Key_Delete);
-		QObject::connect(remove_object_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
+        remove_objects_action = logic_menu->addAction("Remove selected objects");
+        remove_objects_action->setShortcut(Qt::Key_Delete);
+		QObject::connect(remove_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
+
+        interconnect_objects_action = logic_menu->addAction("Interconnect selected objects");
+        interconnect_objects_action->setShortcut(Qt::CTRL + Qt::Key_C);
+        QObject::connect(interconnect_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
 
 
 		// Help menu
@@ -307,7 +311,7 @@ namespace degate
         edit_via_action->setIcon(QIcon(GET_ICON_PATH("edit.png")));
 
         // Logic menu
-        remove_object_action->setIcon(QIcon(GET_ICON_PATH("remove.png")));
+        remove_objects_action->setIcon(QIcon(GET_ICON_PATH("remove.png")));
 
 
         /* Toolbar */
@@ -757,7 +761,7 @@ namespace degate
         }
     }
 
-	void MainWindow::on_menu_logic_remove_selected_object()
+	void MainWindow::on_menu_logic_remove_selected_objects()
 	{
         if(project == nullptr || !workspace->has_selection())
             return;
@@ -773,6 +777,24 @@ namespace degate
 
         workspace->update_screen();
 	}
+
+	void MainWindow::on_menu_logic_interconnect_selected_objects()
+    {
+        if(project == nullptr || !workspace->has_selection() || workspace->get_selected_objects().size() < 2)
+            return;
+
+        auto objects = workspace->get_selected_objects();
+
+        if(!objects.check_for_all(&is_interconnectable))
+        {
+            QMessageBox::warning(this, "Error during interconnect", "One of the objects you selected can not have connections at all.");
+            return;
+        }
+
+        connect_objects(project->get_logic_model(), objects.begin(), objects.end());
+
+        workspace->update_screen();
+    }
 
     void MainWindow::on_menu_project_settings()
     {
@@ -1001,7 +1023,7 @@ namespace degate
                 contextMenu.addAction(&via_edit_action);
             }
 
-            connect(&delete_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_object()));
+            connect(&delete_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
             contextMenu.addAction(&delete_action);
         }
         else

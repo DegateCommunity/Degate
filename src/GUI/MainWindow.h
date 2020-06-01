@@ -207,9 +207,14 @@ namespace degate
 		/* Logic menu */
 		
 		/**
-		 * Remove the selected object from the logic model.
+		 * Remove all selected objects from the logic model.
 		 */
-		void on_menu_logic_remove_selected_object();
+		void on_menu_logic_remove_selected_objects();
+
+		/**
+		 * Connect all selected objects together.
+		 */
+		void on_menu_logic_interconnect_selected_objects();
 
 
 		/* Other */
@@ -321,7 +326,8 @@ namespace degate
         QAction* edit_via_action;
 
         // Logic menu
-        QAction* remove_object_action;
+        QAction* remove_objects_action;
+        QAction* interconnect_objects_action;
 
         // Help menu
         QAction* about_action;
