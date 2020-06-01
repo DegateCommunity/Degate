@@ -19,9 +19,9 @@
 
 */
 
-#include "WorkspaceRenderer.h"
-#include "GUI/Dialog/GateEditDialog.h"
-#include "GUI/Dialog/AnnotationEditDialog.h"
+#include <GUI/Workspace/WorkspaceRenderer.h>
+#include <GUI/Dialog/GateEditDialog.h>
+#include <GUI/Dialog/AnnotationEditDialog.h>
 
 namespace degate
 {
@@ -63,6 +63,7 @@ namespace degate
 	{
 	    reset_area_selection();
 	    reset_selection();
+	    reset_wire_tool();
 
 		project = new_project;
 
@@ -90,14 +91,14 @@ namespace degate
 		return selection_tool.get_selection_box();
 	}
 
-    std::vector<PlacedLogicModelObject_shptr> WorkspaceRenderer::get_selected_objects()
+    ObjectSet& WorkspaceRenderer::get_selected_objects()
 	{
 		return selected_objects;
 	}
 
     void WorkspaceRenderer::add_object_to_selection(PlacedLogicModelObject_shptr& object)
     {
-        selected_objects.push_back(object);
+        selected_objects.add(object);
         object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
         update_object(object);
     }
@@ -364,7 +365,7 @@ namespace degate
 		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
 	}
 
-    void WorkspaceRenderer::update_object(PlacedLogicModelObject_shptr& object)
+    void WorkspaceRenderer::update_object(PlacedLogicModelObject_shptr object)
     {
         if(object == nullptr)
             return;
@@ -694,4 +695,3 @@ namespace degate
 		update();
 	}
 }
-     

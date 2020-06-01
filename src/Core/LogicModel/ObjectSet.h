@@ -77,6 +77,8 @@ namespace degate
 
 		bool contains(PlacedLogicModelObject_shptr o) const { return objects.find(o) != objects.end(); }
 
+        PlacedLogicModelObject_shptr back() { return *objects.rbegin(); }
+
 		/**
 		 * Check if all objects evaluate to true for a check.
 		 * If there are no objects, false is returned.

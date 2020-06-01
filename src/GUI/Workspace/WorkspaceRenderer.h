@@ -23,6 +23,7 @@
 #define __WORKSPACERENDERER_H__
 
 #include <Core/Project/Project.h>
+#include <Core/LogicModel/ObjectSet.h>
 #include <GUI/Workspace/WorkspaceBackground.h>
 #include <GUI/Workspace/WorkspaceGates.h>
 #include <GUI/Text/Text.h>
@@ -94,8 +95,8 @@ namespace degate
 		 *
 		 * @param parent : the parent widget pointer (usually the main window).
 		 */
-		WorkspaceRenderer(QWidget* parent = NULL);
-		~WorkspaceRenderer();
+		WorkspaceRenderer(QWidget* parent = nullptr);
+		~WorkspaceRenderer() override;
 
 		/**
 	     * Update the screen (call all update_XXX functions).
@@ -128,7 +129,7 @@ namespace degate
 		 *
 		 * @return Return all selected objects.
 		 */
-		std::vector<PlacedLogicModelObject_shptr> get_selected_objects();
+        ObjectSet& get_selected_objects();
 
 		/**
 		 * Add an object to the selection list.
@@ -200,7 +201,7 @@ namespace degate
 		/**
 		 * Update an object of the workspace.
 		 */
-		void update_object(PlacedLogicModelObject_shptr& object);
+		void update_object(PlacedLogicModelObject_shptr object);
 
 	public slots:
 		/**
@@ -351,7 +352,7 @@ namespace degate
 		bool mouse_moved = false;
 
 		// Selection
-		std::vector<PlacedLogicModelObject_shptr> selected_objects;
+        ObjectSet selected_objects;
 
 		// Background
 		WorkspaceBackground background;
