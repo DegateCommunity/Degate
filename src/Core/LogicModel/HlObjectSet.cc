@@ -30,15 +30,18 @@ using namespace std;
 using namespace degate;
 
 
+void HlObjectSet::set_object_update_function(std::function<void(PlacedLogicModelObject_shptr)> object_update_function)
+{
+    this->object_update_function = object_update_function;
+}
+
 void HlObjectSet::clear()
 {
 	highlight(PlacedLogicModelObject::HLIGHTSTATE_NOT);
 
-
-	for (adjacent_objects_t::iterator iter = adjacent_objects.begin();
-	     iter != adjacent_objects.end(); ++iter)
+	for(auto & adjacent_object : adjacent_objects)
 	{
-		unhighlight_adjacent_objects(iter->second);
+		unhighlight_adjacent_objects(adjacent_object.second);
 	}
 
 	adjacent_objects.clear();
@@ -47,8 +50,13 @@ void HlObjectSet::clear()
 
 void HlObjectSet::highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state)
 {
-	for (iterator it = begin(); it != end(); ++it)
-		(*it)->set_highlighted(state);
+	for (auto& e : *this)
+    {
+        e->set_highlighted(state);
+
+        if(object_update_function)
+            object_update_function(e);
+    }
 }
 
 
@@ -56,6 +64,9 @@ void HlObjectSet::add(std::shared_ptr<PlacedLogicModelObject> object)
 {
 	ObjectSet::add(object);
 	object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_DIRECT);
+
+    if(object_update_function)
+        object_update_function(object);
 }
 
 void HlObjectSet::add(std::shared_ptr<PlacedLogicModelObject> object,
@@ -79,16 +90,21 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
 	if (net == nullptr) return;
 
 	// iterate over net
-	BOOST_FOREACH(object_id_t oid, *net)
+	for(auto& oid : *net)
 	{
 		PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
 		ConnectedLogicModelObject_shptr clo =
 			std::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
+
 		assert(clo != nullptr);
+
 		// remember connnected objects in list
 		if (o != clo)
 		{
 			clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
+
+            if(object_update_function)
+                object_update_function(clo);
 
 			adjacent_objects[o].push_back(clo);
 		}
@@ -98,11 +114,16 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
 void HlObjectSet::unhighlight_adjacent_objects(adjacent_objects_t::mapped_type& list)
 {
 	// iterate over list
-	BOOST_FOREACH(ConnectedLogicModelObject_shptr clo, list)
+	for(auto& clo : list)
 	{
-		adjacent_objects_t::iterator iter = adjacent_objects.find(clo);
+		auto iter = adjacent_objects.find(clo);
 		if (iter == adjacent_objects.end())
-			clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+        {
+            clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+
+            if(object_update_function)
+                object_update_function(clo);
+        }
 	}
 	list.clear();
 }
@@ -114,7 +135,7 @@ void HlObjectSet::remove(std::shared_ptr<PlacedLogicModelObject> object)
 	if (ConnectedLogicModelObject_shptr o =
 		std::dynamic_pointer_cast<ConnectedLogicModelObject>(object))
 	{
-		adjacent_objects_t::iterator iter = adjacent_objects.find(o);
+		auto iter = adjacent_objects.find(o);
 		if (iter != adjacent_objects.end())
 		{
 			unhighlight_adjacent_objects((*iter).second);
@@ -123,4 +144,7 @@ void HlObjectSet::remove(std::shared_ptr<PlacedLogicModelObject> object)
 	}
 
 	object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
+
+    if(object_update_function)
+        object_update_function(object);
 }

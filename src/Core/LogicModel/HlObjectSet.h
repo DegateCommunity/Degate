@@ -26,6 +26,7 @@
 #include <list>
 #include <map>
 #include <memory>
+
 #include <Core/LogicModel/ObjectSet.h>
 
 namespace degate
@@ -38,7 +39,10 @@ namespace degate
 	private:
 		typedef std::map<ConnectedLogicModelObject_shptr,
 		                 std::list<ConnectedLogicModelObject_shptr>> adjacent_objects_t;
+
 		adjacent_objects_t adjacent_objects;
+
+        std::function<void(PlacedLogicModelObject_shptr)> object_update_function;
 
 	private:
 		void highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
@@ -49,6 +53,14 @@ namespace degate
 		void highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state);
 
 	public:
+
+	    /**
+	     * Set a function that will be called every time an object state changed (like the highlight state).
+	     *
+	     * @param object_update_function : the function to call.
+	     */
+	    void set_object_update_function(std::function<void(PlacedLogicModelObject_shptr)> object_update_function);
+
 		void clear();
 		void add(degate::PlacedLogicModelObject_shptr object);
 		void add(degate::PlacedLogicModelObject_shptr object,

@@ -26,11 +26,22 @@
 namespace degate
 {
 
-	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent) : QOpenGLWidget(parent), background(this), gates(this), annotations(this), emarkers(this), vias(this), wires(this), selection_tool(this), wire_tool(this)
-	{
+	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent)
+            : QOpenGLWidget(parent),
+              background(this),
+              gates(this),
+              annotations(this),
+              emarkers(this),
+              vias(this),
+              wires(this),
+              selection_tool(this),
+              wire_tool(this)
+    {
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
 		setMouseTracking(true);
+
+		selected_objects.set_object_update_function(std::bind(&WorkspaceRenderer::update_object, this, std::placeholders::_1));
 	}
 
 	WorkspaceRenderer::~WorkspaceRenderer()
@@ -98,9 +109,7 @@ namespace degate
 
     void WorkspaceRenderer::add_object_to_selection(PlacedLogicModelObject_shptr& object)
     {
-        selected_objects.add(object);
-        object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
-        update_object(object);
+        selected_objects.add(object, project->get_logic_model());
     }
 
 	void WorkspaceRenderer::reset_area_selection()
@@ -113,13 +122,6 @@ namespace degate
 	{
 		if(selected_objects.empty())
 			return;
-
-        for (auto& object : selected_objects)
-        {
-            object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
-
-            update_object(object);
-        }
 
         selected_objects.clear();
 	}
@@ -349,22 +351,6 @@ namespace degate
 	    return current_tool;
     }
 
-	void WorkspaceRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
-	{
-		scale *= scale_factor;
-
-		center_x = new_center_x;
-		center_y = new_center_y;
-
-		viewport_min_x = center_x - (static_cast<float>(width()) * scale) / 2.0;
-		viewport_min_y = center_y - (static_cast<float>(height()) * scale) / 2.0;
-		viewport_max_x = center_x + (static_cast<float>(width()) * scale) / 2.0;
-		viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
-
-		projection.setToIdentity();
-		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
-	}
-
     void WorkspaceRenderer::update_object(PlacedLogicModelObject_shptr object)
     {
         if(object == nullptr)
@@ -397,6 +383,22 @@ namespace degate
 
         update();
     }
+
+	void WorkspaceRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
+	{
+		scale *= scale_factor;
+
+		center_x = new_center_x;
+		center_y = new_center_y;
+
+		viewport_min_x = center_x - (static_cast<float>(width()) * scale) / 2.0;
+		viewport_min_y = center_y - (static_cast<float>(height()) * scale) / 2.0;
+		viewport_max_x = center_x + (static_cast<float>(width()) * scale) / 2.0;
+		viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
+
+		projection.setToIdentity();
+		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
+	}
 
 	void WorkspaceRenderer::mousePressEvent(QMouseEvent* event)
 	{

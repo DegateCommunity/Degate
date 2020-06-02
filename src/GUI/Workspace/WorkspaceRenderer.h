@@ -23,7 +23,7 @@
 #define __WORKSPACERENDERER_H__
 
 #include <Core/Project/Project.h>
-#include <Core/LogicModel/ObjectSet.h>
+#include <Core/LogicModel/HlObjectSet.h>
 #include <GUI/Workspace/WorkspaceBackground.h>
 #include <GUI/Workspace/WorkspaceGates.h>
 #include <GUI/Text/Text.h>
@@ -164,6 +164,11 @@ namespace degate
          */
         WorkspaceTool get_current_tool() const;
 
+        /**
+		 * Update an object of the workspace.
+		 */
+        void update_object(PlacedLogicModelObject_shptr object);
+
 	protected:
 		/**
 		 * Destroy all OpenGL textures.
@@ -197,11 +202,6 @@ namespace degate
 		 * @param new_center_y : y value of the new center.
 		 */
 		void set_projection(float scale_factor, float new_center_x, float new_center_y);
-
-		/**
-		 * Update an object of the workspace.
-		 */
-		void update_object(PlacedLogicModelObject_shptr object);
 
 	public slots:
 		/**
@@ -352,7 +352,7 @@ namespace degate
 		bool mouse_moved = false;
 
 		// Selection
-        ObjectSet selected_objects;
+        HlObjectSet selected_objects;
 
 		// Background
 		WorkspaceBackground background;
