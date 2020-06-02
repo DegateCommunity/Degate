@@ -356,11 +356,7 @@ namespace degate
         if(object == nullptr)
             return;
 
-        if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
-        {
-            annotations.update(annotation);
-        }
-        else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
+        if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
         {
             gates.update(gate);
         }
@@ -368,17 +364,25 @@ namespace degate
         {
             gates.update(gate_port);
         }
-        else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(object))
+
+        if(object->get_layer() == project->get_logic_model()->get_current_layer())
         {
-            emarkers.update(emarker);
-        }
-        else if (Via_shptr via = std::dynamic_pointer_cast<Via>(object))
-        {
-            vias.update(via);
-        }
-        else if (Wire_shptr wire = std::dynamic_pointer_cast<Wire>(object))
-        {
-            wires.update(wire);
+            if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
+            {
+                annotations.update(annotation);
+            }
+            else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(object))
+            {
+                emarkers.update(emarker);
+            }
+            else if (Via_shptr via = std::dynamic_pointer_cast<Via>(object))
+            {
+                vias.update(via);
+            }
+            else if (Wire_shptr wire = std::dynamic_pointer_cast<Wire>(object))
+            {
+                wires.update(wire);
+            }
         }
 
         update();

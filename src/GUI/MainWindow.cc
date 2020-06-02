@@ -823,8 +823,6 @@ namespace degate
 
 		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
 
-        workspace->reset_selection();
-
 		workspace->update_screen();
 	}
 
@@ -836,8 +834,6 @@ namespace degate
 		project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
 
 		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
-
-        workspace->reset_selection();
 
 		workspace->update_screen();
 	}
