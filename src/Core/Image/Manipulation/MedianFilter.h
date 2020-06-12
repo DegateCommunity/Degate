@@ -23,6 +23,7 @@
 #define __MEDIANFILTER_H__
 
 #include <Core/Image/PixelPolicies.h>
+#include <Core/Image/Image.h>
 
 #include <memory>
 
