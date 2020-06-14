@@ -22,11 +22,11 @@
 #ifndef __MEMORYMAP_H__
 #define __MEMORYMAP_H__
 
-#include "Prerequisites.h"
-#include "Globals.h"
+#include <Prerequisites.h>
+#include <Globals.h>
+#include <Core/Utils/FileSystem.h>
 
 #include <string>
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstdint>
@@ -93,6 +93,7 @@ namespace degate
 	private:
 		ret_t alloc_memory();
 		ret_t map_file(std::string const& filename);
+        void unmap();
 
 		void* get_void_ptr(unsigned int x, unsigned int y) const;
 
@@ -241,48 +242,53 @@ namespace degate
 			break;
 		case MAP_STORAGE_TYPE_PERSISTENT_FILE:
 
+            unmap();
+
 			break;
 		case MAP_STORAGE_TYPE_TEMP_FILE:
 
-			if (mem_view)
-			{
-#ifdef SYS_WINDOWS
-				UnmapViewOfFile(mem_view);
-#else
-					msync(mem_view, filesize, MS_SYNC);
-					munmap(mem_view, filesize);
-#endif
-				mem_view = NULL;
-			}
+            unmap();
 
-#ifdef SYS_WINDOWS
-			if (mem_file)
-			{
-				CloseHandle(mem_file);
-				mem_file = NULL;
-			}
-#endif
-
-			if (file)
-			{
-#ifdef SYS_WINDOWS
-				CloseHandle(file);
-#else
-					close(file);
-#endif
-				file = 0;
-			}
-
-			filesize = 0;
-
-			if (remove(filename.c_str()) != 0) // For Linux can be unlink
-			{
-				debug(TM, "can't delete file: %s", filename.c_str());
-			}
+            remove_file(filename);
 
 			break;
 		}
 	}
+
+    template <typename T>
+    void MemoryMap<T>::unmap()
+    {
+        if (mem_view)
+        {
+#ifdef SYS_WINDOWS
+            UnmapViewOfFile(mem_view);
+#else
+            msync(mem_view, filesize, MS_SYNC);
+                munmap(mem_view, filesize);
+#endif
+            mem_view = NULL;
+        }
+
+#ifdef SYS_WINDOWS
+        if (mem_file)
+        {
+            CloseHandle(mem_file);
+            mem_file = NULL;
+        }
+#endif
+
+        if (file)
+        {
+#ifdef SYS_WINDOWS
+            CloseHandle(file);
+#else
+            close(file);
+#endif
+            file = 0;
+        }
+
+        filesize = 0;
+    }
 
 	template <typename T>
 	ret_t MemoryMap<T>::alloc_memory()
