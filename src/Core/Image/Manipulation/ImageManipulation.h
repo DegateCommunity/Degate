@@ -264,10 +264,10 @@ namespace degate
 	                           BoundingBox const& bounding_box)
 	{
 		extract_partial_image<ImageTypeDst, ImageTypeSrc>(dst, src,
-		                                                  bounding_box.get_min_x(),
-		                                                  bounding_box.get_max_x(),
-		                                                  bounding_box.get_min_y(),
-		                                                  bounding_box.get_max_y());
+		                                                  std::floor(bounding_box.get_min_x()),
+                                                          std::ceil(bounding_box.get_max_x()),
+                                                          std::floor(bounding_box.get_min_y()),
+                                                          std::ceil(bounding_box.get_max_y()));
 	}
 
 
@@ -392,7 +392,7 @@ namespace degate
 	{
 		if (dst->get_width() == 0) throw DegateRuntimeException("Invalid image dimension for destination image.");
 
-		unsigned int scaling = lrint((double)src->get_width() / (double)dst->get_width());
+		unsigned int scaling = std::ceil(static_cast<double>(src->get_width()) / static_cast<double>(dst->get_width()));
 
 		if (scaling == 1)
 			copy_image<ImageTypeDst, ImageTypeSrc>(dst, src);
@@ -400,15 +400,26 @@ namespace degate
 			scale_down_by_2<ImageTypeDst, ImageTypeSrc>(dst, src);
 		else
 		{
-			std::shared_ptr<ImageTypeDst> tmp(new ImageTypeDst(src->get_width(), src->get_height()));
-			copy_image<ImageTypeDst, ImageTypeSrc>(tmp, src);
+			auto tmp_src = std::make_shared<ImageTypeDst>(src->get_width(), src->get_height());
+			copy_image<ImageTypeDst, ImageTypeSrc>(tmp_src, src);
 
-			scaling >>= 1;
-			for (unsigned int i = 0; i < scaling - 1; i *= 2)
+            auto tmp_dst = std::make_shared<ImageTypeDst>(std::floor(static_cast<double>(tmp_src->get_width()) / 2.0),
+                                                          std::floor(static_cast<double>(tmp_src->get_height()) / 2.0));
+
+			for (unsigned int i = 2; i < scaling - 1; i *= 2)
 			{
-				scale_down_by_2<ImageTypeDst, ImageTypeDst>(tmp, tmp);
+				scale_down_by_2<ImageTypeDst, ImageTypeDst>(tmp_dst, tmp_src);
+
+                tmp_src.reset();
+                tmp_src = std::make_shared<ImageTypeDst>(tmp_dst->get_width(), tmp_dst->get_height());
+                copy_image<ImageTypeDst, ImageTypeDst>(tmp_src, tmp_dst);
+
+                tmp_dst.reset();
+                tmp_dst = std::make_shared<ImageTypeDst>(std::floor(static_cast<double>(tmp_src->get_width()) / 2.0),
+                                                         std::floor(static_cast<double>(tmp_src->get_height()) / 2.0));
 			}
-			scale_down_by_2<ImageTypeDst, ImageTypeDst>(dst, tmp);
+
+			scale_down_by_2<ImageTypeDst, ImageTypeDst>(dst, tmp_src);
 		}
 	}
 
