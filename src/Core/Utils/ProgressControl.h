@@ -66,7 +66,7 @@ namespace degate
 					valid_values++;
 				}
 
-			return valid_values > 0 ? sum / valid_values : get_time_left_averaged();
+			return valid_values > 0 ? sum / valid_values : get_time_left();
 		}
 
 	protected:
