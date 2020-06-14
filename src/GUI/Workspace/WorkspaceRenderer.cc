@@ -102,6 +102,11 @@ namespace degate
 		return selection_tool.get_selection_box();
 	}
 
+    BoundingBox WorkspaceRenderer::get_safe_area_selection()
+    {
+	    return get_safe_bounding_box(get_area_selection());
+    }
+
     ObjectSet& WorkspaceRenderer::get_selected_objects()
 	{
 		return selected_objects;
@@ -342,9 +347,14 @@ namespace degate
 	QPointF WorkspaceRenderer::get_opengl_mouse_position() const
 	{
 		const QPointF widget_mouse_position = get_widget_mouse_position();
-		return QPointF(viewport_min_x + widget_mouse_position.x() * scale,
-		              viewport_min_y + widget_mouse_position.y() * scale);
+        return QPointF(viewport_min_x + widget_mouse_position.x() * scale,
+                       viewport_min_y + widget_mouse_position.y() * scale);
 	}
+
+    QPointF WorkspaceRenderer::get_safe_opengl_mouse_position() const
+    {
+	    return get_safe_position(get_opengl_mouse_position());
+    }
 
     WorkspaceTool WorkspaceRenderer::get_current_tool() const
     {
@@ -700,4 +710,60 @@ namespace degate
 
 		update();
 	}
+
+    QPointF WorkspaceRenderer::get_safe_position(QPointF position) const
+    {
+        if(project == nullptr)
+            return position;
+
+        QPointF res(position);
+
+        if(position.x() < 0)
+            res.setX(0);
+
+        if(position.y() < 0)
+            res.setY(0);
+
+        if(position.x() > project->get_bounding_box().get_max_x())
+            res.setX(project->get_bounding_box().get_max_x());
+
+        if(position.y() > project->get_bounding_box().get_max_y())
+            res.setY(project->get_bounding_box().get_max_y());
+
+        return res;
+    }
+
+    BoundingBox WorkspaceRenderer::get_safe_bounding_box(BoundingBox bounding_box) const
+    {
+        if(project == nullptr)
+            return bounding_box;
+
+        BoundingBox res(bounding_box);
+
+        if(bounding_box.get_min_x() < 0)
+            res.set_min_x(0);
+
+        if(bounding_box.get_min_y() < 0)
+            res.set_min_y(0);
+
+        if(bounding_box.get_max_x() < 0)
+            res.set_max_x(0);
+
+        if(bounding_box.get_max_y() < 0)
+            res.set_max_y(0);
+
+        if(bounding_box.get_min_x() > project->get_bounding_box().get_max_x())
+            res.set_min_x(project->get_bounding_box().get_max_x());
+
+        if(bounding_box.get_min_y() > project->get_bounding_box().get_max_y())
+            res.set_min_y(project->get_bounding_box().get_max_y());
+
+        if(bounding_box.get_max_x() > project->get_bounding_box().get_max_x())
+            res.set_max_x(project->get_bounding_box().get_max_x());
+
+        if(bounding_box.get_max_y() > project->get_bounding_box().get_max_y())
+            res.set_max_y(project->get_bounding_box().get_max_y());
+
+        return res;
+    }
 }

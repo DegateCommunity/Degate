@@ -123,6 +123,14 @@ namespace degate
 		 * @return Return the bounding box of the area selection.
 		 */
 		BoundingBox get_area_selection();
+
+        /**
+         * Get a safe area selection regarding project size (0 <= position <= max project size).
+         * If values are out of bound it will set them to 0 or max project size.
+         *
+         * @return Return the safe bounding box of the area selection.
+         */
+        BoundingBox get_safe_area_selection();
 		
 		/**
 		 * Get the vector of selected objects.
@@ -156,6 +164,14 @@ namespace degate
          * @return Return the OpenGL relative mouse position.
          */
         QPointF get_opengl_mouse_position() const;
+
+        /**
+         * Get a safe mouse position regarding project size (0 <= position <= max project size).
+         * If values are out of bound it will set them to 0 or max project size.
+         *
+         * @return Return the OpenGL relative safe mouse position.
+         */
+        QPointF get_safe_opengl_mouse_position() const;
 
         /**
          * Get the currently used tool.
@@ -336,6 +352,27 @@ namespace degate
          * Signal emitted when the right mouse button is pressed.
          */
         void right_mouse_button_released();
+
+	protected:
+        /**
+         * Get a safe position regarding project size (0 <= position <= max project size).
+         * If values are out of bound it will set them to 0 or max project size.
+         *
+         * @param position : the position to be secured.
+         *
+         * @return Return a safe position.
+         */
+        QPointF get_safe_position(QPointF position) const;
+
+        /**
+         * Get a safe bounding box regarding project size (0 <= position <= max project size).
+	     * If values are out of bound it will set them to 0 or max project size.
+         *
+         * @param bounding_box : the bounding box to be secured.
+         *
+         * @return Return a safe bounding box.
+         */
+        BoundingBox get_safe_bounding_box(BoundingBox bounding_box) const;
 
 	private:
 		// General
