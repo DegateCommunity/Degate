@@ -21,10 +21,13 @@
 
 #include "SelectGateTemplateDialog.h"
 
+#include <utility>
+
 namespace degate
 {
-	SelectGateTemplateDialog::SelectGateTemplateDialog(Project_shptr project, QWidget* parent) : QDialog(parent), list(project, this)
-	{
+    SelectGateTemplateDialog::SelectGateTemplateDialog(Project_shptr project, QWidget* parent, bool unique_selection)
+            : QDialog(parent), list(std::move(project), this, unique_selection)
+    {
 		validate_button.setText("Ok");
 		layout.addWidget(&list);
 		layout.addWidget(&validate_button);
@@ -42,4 +45,9 @@ namespace degate
 	{
 		return list.get_selected_gate();
 	}
+
+    std::vector<GateTemplate_shptr> SelectGateTemplateDialog::get_selected_gates()
+    {
+        return list.get_selected_gates();
+    }
 }

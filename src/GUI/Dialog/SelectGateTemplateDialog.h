@@ -48,8 +48,9 @@ namespace degate
 		 *
 		 * @param project : the current active project.
 		 * @param parent : the parent of the dialog.
+		 * @param unique_selection : if true allow only one selection at a time.
 		 */
-		SelectGateTemplateDialog(Project_shptr project, QWidget* parent);
+		SelectGateTemplateDialog(Project_shptr project, QWidget* parent, bool unique_selection);
 		~SelectGateTemplateDialog();
 
 		/**
@@ -58,6 +59,13 @@ namespace degate
 		 * @return Return the selected gate template.
 		 */
 		GateTemplate_shptr get_selected_gate();
+
+        /**
+         * Get a vector of the selected gates template.
+         *
+         * @return Return a vector of selected gates template (can return an empty vector).
+         */
+        std::vector<GateTemplate_shptr> get_selected_gates();
 		
 	private:
 		GateTemplateListWidget list;

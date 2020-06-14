@@ -23,7 +23,8 @@
 
 namespace degate
 {
-	GateTemplateListWidget::GateTemplateListWidget(Project_shptr project, QWidget* parent, bool unique_selection) : QTableWidget(parent), project(project)
+	GateTemplateListWidget::GateTemplateListWidget(Project_shptr project, QWidget* parent, bool unique_selection)
+            : QTableWidget(parent), project(project)
 	{
 		setColumnCount(3);
 		QStringList list;
@@ -37,6 +38,8 @@ namespace degate
 
 		if(unique_selection)
 		    setSelectionMode(SelectionMode::SingleSelection);
+		else
+            setSelectionMode(SelectionMode::MultiSelection);
 
 		update_list();
 	}
