@@ -36,6 +36,7 @@
 #include <GUI/Dialog/AnnotationEditDialog.h>
 #include <GUI/Dialog/EMarkerEditDialog.h>
 #include <GUI/Dialog/ProjectSettingsDialog.h>
+#include <GUI/Dialog/TemplateMatchingDialog.h>
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -217,6 +218,10 @@ namespace degate
 		void on_menu_logic_interconnect_selected_objects();
 
 
+		/* Matching menu */
+		void on_menu_matching_template_matching();
+
+
 		/* Other */
 		
 		/**
@@ -328,6 +333,9 @@ namespace degate
         // Logic menu
         QAction* remove_objects_action;
         QAction* interconnect_objects_action;
+
+        // Template matching menu
+        QAction* template_matching_action;
 
         // Help menu
         QAction* about_action;

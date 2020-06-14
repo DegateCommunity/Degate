@@ -20,6 +20,8 @@
 */
 
 #include <GUI/MainWindow.h>
+#include <GUI/Dialog/ProgressDialog.h>
+
 #include <memory>
 
 #define SECOND(a) a * 1000
@@ -204,6 +206,13 @@ namespace degate
         QObject::connect(interconnect_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
 
 
+        // Matching menu
+        QMenu* matching_menu = menu_bar.addMenu("Matching");
+
+        template_matching_action = matching_menu->addAction("Template matching");
+        QObject::connect(template_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_template_matching()));
+
+
 		// Help menu
 		QMenu* help_menu = menu_bar.addMenu("Help");
 
@@ -359,25 +368,22 @@ namespace degate
             return;
         }
 
-		setEnabled(false);
-
 		if(project != nullptr)
 			project.reset();
 
-		try
-		{
-			open_project(dir.toStdString());
-		}
-		catch (const std::exception& ex)
-		{
-			setEnabled(true);
+        try
+        {
+            open_project(dir.toStdString());
+        }
+        catch (const std::exception& ex)
+        {
+            return;
+        }
 
-			return;
-		}
+        if(project == nullptr)
+            return;
 
 		QString project_name = QString::fromStdString(project->get_name());
-
-		setEnabled(true);
 
 		QString message = "The project <i>" + project_name + "</i> was successfully loaded.";
 		QMessageBox::information(this, "Import project", message);
@@ -504,7 +510,7 @@ namespace degate
 		boost::format f("subproject_%1%");
 		f % project->get_logic_model()->get_new_object_id();
 
-		SubProjectAnnotation_shptr new_annotation(new SubProjectAnnotation(workspace->get_area_selection(), f.str()));
+		SubProjectAnnotation_shptr new_annotation(new SubProjectAnnotation(workspace->get_safe_area_selection(), f.str()));
 		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
 		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
@@ -576,8 +582,13 @@ namespace degate
 			return;
 		}
 
-		auto new_gate_template = std::make_shared<GateTemplate>(workspace->get_area_selection().get_width(),workspace->get_area_selection().get_height());
-		grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_area_selection());
+        auto new_gate_template = std::make_shared<GateTemplate>(workspace->get_safe_area_selection()
+                                                                         .get_width(),
+                                                                workspace->get_safe_area_selection()
+                                                                         .get_height());
+        grab_template_images(project->get_logic_model(),
+                             new_gate_template,
+                             workspace->get_safe_area_selection());
 		new_gate_template->set_object_id(project->get_logic_model()->get_new_object_id());
         new_gate_template->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
         new_gate_template->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
@@ -619,7 +630,7 @@ namespace degate
 			return;
 		}
 
-		SelectGateTemplateDialog select_dialog(project, this);
+		SelectGateTemplateDialog select_dialog(project, this, true);
 		auto res = select_dialog.exec();
 
         if(res == QDialog::Rejected)
@@ -630,7 +641,7 @@ namespace degate
 		if(gate_template == nullptr)
 		    return;
 
-		Gate_shptr new_gate(new Gate(workspace->get_area_selection()));
+		Gate_shptr new_gate(new Gate(workspace->get_safe_area_selection()));
 		new_gate->set_gate_template(gate_template);
 
         GateInstanceEditDialog dialog(this, new_gate, project);
@@ -701,7 +712,7 @@ namespace degate
 		if(project == nullptr || !workspace->has_area_selection())
 			return;
 
-		Annotation_shptr new_annotation(new Annotation(workspace->get_area_selection()));
+		Annotation_shptr new_annotation(new Annotation(workspace->get_safe_area_selection()));
 		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
 		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
@@ -796,6 +807,35 @@ namespace degate
         workspace->update_screen();
     }
 
+    void MainWindow::on_menu_matching_template_matching()
+    {
+        if(project == nullptr)
+            return;
+
+        SelectGateTemplateDialog select_dialog(project, this, false);
+        auto res = select_dialog.exec();
+
+        if(res == QDialog::Rejected)
+            return;
+
+        auto gate_template = select_dialog.get_selected_gates();
+
+        if(gate_template.empty())
+            return;
+
+        BoundingBox bounding_box;
+
+        if(workspace->has_area_selection())
+            bounding_box = workspace->get_safe_area_selection();
+        else
+            bounding_box = project->get_bounding_box();
+
+        TemplateMatchingDialog template_matching_dialog(this, bounding_box, project, gate_template);
+        template_matching_dialog.exec();
+
+        workspace->update_screen();
+    }
+
     void MainWindow::on_menu_project_settings()
     {
         if(project == nullptr)
@@ -847,47 +887,56 @@ namespace degate
 		if(project != nullptr)
 		    on_menu_project_exporter();
 
-		try
-		{
-			std::shared_ptr<Project> imported_project = projectImporter.import_all(path);
+        ProgressDialog progress_dialog("Opening project", nullptr, this);
 
-			if(imported_project == nullptr)
+        progress_dialog.set_job([&]
+        {
+            try
             {
-                QMessageBox::StandardButton reply;
-                reply = QMessageBox::question(this, "Subproject", "The project/subproject do not exist, do you want to create it ?", QMessageBox::Yes | QMessageBox::No);
+                std::shared_ptr<Project> imported_project = projectImporter.import_all(path);
 
-                if(reply == QMessageBox::Yes)
+                if(imported_project == nullptr)
                 {
-                    NewProjectDialog dialog(this);
-                    auto res = dialog.exec();
+                    QMessageBox::StandardButton reply;
+                    reply = QMessageBox::question(this, "Subproject", "The project/subproject do not exist, do you want to create it ?", QMessageBox::Yes | QMessageBox::No);
 
-                    if(res == QDialog::Accepted)
+                    if(reply == QMessageBox::Yes)
                     {
-                        std::string project_name = dialog.get_project_name();
-                        unsigned layer_count = dialog.get_layer_count();
-                        unsigned width = dialog.get_width();
-                        unsigned height = dialog.get_height();
+                        NewProjectDialog dialog(this);
+                        auto res = dialog.exec();
 
-                        if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
+                        if(res == QDialog::Accepted)
                         {
-                            QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
+                            std::string project_name = dialog.get_project_name();
+                            unsigned layer_count = dialog.get_layer_count();
+                            unsigned width = dialog.get_width();
+                            unsigned height = dialog.get_height();
 
-                            status_bar.showMessage("New project/subproject operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+                            if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
+                            {
+                                QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
 
-                            return;
+                                status_bar.showMessage("New project/subproject operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+
+                                return;
+                            }
+                            else
+                            {
+                                if(!file_exists(path))
+                                    create_directory(path);
+
+                                project = std::make_shared<Project>(width, height, path, layer_count);
+                                project->set_name(project_name);
+
+                                LayersEditDialog layers_edit_dialog(project, this);
+                                layers_edit_dialog.exec();
+
+                                on_menu_project_exporter();
+                            }
                         }
                         else
                         {
-                            if(!file_exists(path))
-                                create_directory(path);
-
-                            project = std::make_shared<Project>(width, height, path, layer_count);
-                            project->set_name(project_name);
-
-                            LayersEditDialog layers_edit_dialog(project, this);
-                            layers_edit_dialog.exec();
-
-                            on_menu_project_exporter();
+                            return;
                         }
                     }
                     else
@@ -897,22 +946,20 @@ namespace degate
                 }
                 else
                 {
-                    return;
+                    project = imported_project;
                 }
             }
-			else
+            catch (const std::exception& e)
             {
-                project = imported_project;
-            }
-		}
-		catch (const std::exception& e)
-		{
-            std::cout << "Exception caught: " << e.what() << std::endl;
-            QMessageBox::warning(this, "Project/Subproject import failed", "The project/subproject cannot be imported (maybe corrupted).");
-            status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+                std::cout << "Exception caught: " << e.what() << std::endl;
+                QMessageBox::warning(this, "Project/Subproject import failed", "The project/subproject cannot be imported (maybe corrupted).");
+                status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
-            return;
-		}
+                return;
+            }
+        });
+
+        progress_dialog.exec();
 
         workspace->set_project(project);
 
@@ -960,7 +1007,7 @@ namespace degate
         QAction reset_wire_tool_action("Reset wire tool", this);
 
         // Get current opengl mouse position
-        context_menu_mouse_position = workspace->get_opengl_mouse_position();
+        context_menu_mouse_position = workspace->get_safe_opengl_mouse_position();
 
         if(workspace->has_area_selection())
         {
