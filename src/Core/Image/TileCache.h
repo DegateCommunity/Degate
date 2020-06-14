@@ -310,12 +310,19 @@ namespace degate
 
 		~TileCache()
 		{
-			if (cache.size() > 0)
-			{
-				GlobalTileCache& gtc = GlobalTileCache::get_instance();
-				gtc.release_cache_memory(this, cache.size() * get_image_size());
-			}
+            release_memory();
 		}
+
+		void release_memory()
+        {
+            if (cache.size() > 0)
+            {
+                GlobalTileCache& gtc = GlobalTileCache::get_instance();
+                gtc.release_cache_memory(this, cache.size() * get_image_size());
+                current_tile.reset();
+                cache.clear();
+            }
+        }
 
 		void print() const override
 		{

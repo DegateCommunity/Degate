@@ -122,6 +122,7 @@ namespace degate
 		 */
 		virtual ~StoragePolicy_Tile()
 		{
+            tile_cache.release_memory();
 			if (persistent == false) remove_directory(directory);
 		}
 
