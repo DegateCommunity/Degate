@@ -112,8 +112,6 @@ void TemplateMatching::init(BoundingBox const& bounding_box, Project_shptr proje
 	prepare_background_images(sm, bounding_box, get_scaling_factor());
 	debug(TM, "Prepare sum tabes.");
 	prepare_sum_tables(gs_img_normal, gs_img_scaled);
-
-	reset_progress();
 }
 
 
@@ -257,6 +255,9 @@ void TemplateMatching::set_orientations(std::list<Gate::ORIENTATION> tmpl_orient
 
 void TemplateMatching::run()
 {
+    if(is_canceled())
+        return;
+
 	debug(TM, "run template matching");
 	std::list<match_found> matches;
 
@@ -384,8 +385,8 @@ TemplateMatching::prepared_template TemplateMatching::prepare_template(GateTempl
 	// create a scaled version of the template image
 
 	unsigned int
-		scaled_tmpl_width = static_cast<double>(w) / get_scaling_factor(),
-		scaled_tmpl_height = static_cast<double>(h) / get_scaling_factor();
+		scaled_tmpl_width = std::floor(static_cast<double>(w) / get_scaling_factor()),
+		scaled_tmpl_height = std::floor(static_cast<double>(h) / get_scaling_factor());
 
 	prep.tmpl_img_normal = std::make_shared<TempImage_GS_BYTE>(w, h);
 	copy_image(prep.tmpl_img_normal, tmpl_img);
