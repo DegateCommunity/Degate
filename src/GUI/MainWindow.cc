@@ -889,54 +889,70 @@ namespace degate
 
         ProgressDialog progress_dialog("Opening project", nullptr, this);
 
-        progress_dialog.set_job([&]
+        std::string error_message;
+        bool error = false;
+
+        try
         {
-            try
+            std::shared_ptr<Project> imported_project = nullptr;
+            progress_dialog.set_job([&]
             {
-                std::shared_ptr<Project> imported_project = projectImporter.import_all(path);
-
-                if(imported_project == nullptr)
+                try
                 {
-                    QMessageBox::StandardButton reply;
-                    reply = QMessageBox::question(this, "Subproject", "The project/subproject do not exist, do you want to create it ?", QMessageBox::Yes | QMessageBox::No);
+                    imported_project = projectImporter.import_all(path);
+                }
+                catch (const std::exception& e)
+                {
+                    error_message = e.what();
+                    error = true;
 
-                    if(reply == QMessageBox::Yes)
+                    return;
+                }
+            });
+            progress_dialog.exec();
+
+            if(error)
+            {
+                throw std::exception(error_message.c_str());
+            }
+
+            if(imported_project == nullptr)
+            {
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(this, "Subproject", "The project/subproject do not exist, do you want to create it ?", QMessageBox::Yes | QMessageBox::No);
+
+                if(reply == QMessageBox::Yes)
+                {
+                    NewProjectDialog dialog(this);
+                    auto res = dialog.exec();
+
+                    if(res == QDialog::Accepted)
                     {
-                        NewProjectDialog dialog(this);
-                        auto res = dialog.exec();
+                        std::string project_name = dialog.get_project_name();
+                        unsigned layer_count = dialog.get_layer_count();
+                        unsigned width = dialog.get_width();
+                        unsigned height = dialog.get_height();
 
-                        if(res == QDialog::Accepted)
+                        if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
                         {
-                            std::string project_name = dialog.get_project_name();
-                            unsigned layer_count = dialog.get_layer_count();
-                            unsigned width = dialog.get_width();
-                            unsigned height = dialog.get_height();
+                            QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
 
-                            if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
-                            {
-                                QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
+                            status_bar.showMessage("New project/subproject operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
-                                status_bar.showMessage("New project/subproject operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-
-                                return;
-                            }
-                            else
-                            {
-                                if(!file_exists(path))
-                                    create_directory(path);
-
-                                project = std::make_shared<Project>(width, height, path, layer_count);
-                                project->set_name(project_name);
-
-                                LayersEditDialog layers_edit_dialog(project, this);
-                                layers_edit_dialog.exec();
-
-                                on_menu_project_exporter();
-                            }
+                            return;
                         }
                         else
                         {
-                            return;
+                            if(!file_exists(path))
+                                create_directory(path);
+
+                            project = std::make_shared<Project>(width, height, path, layer_count);
+                            project->set_name(project_name);
+
+                            LayersEditDialog layers_edit_dialog(project, this);
+                            layers_edit_dialog.exec();
+
+                            on_menu_project_exporter();
                         }
                     }
                     else
@@ -946,20 +962,24 @@ namespace degate
                 }
                 else
                 {
-                    project = imported_project;
+                    return;
                 }
             }
-            catch (const std::exception& e)
+            else
             {
-                std::cout << "Exception caught: " << e.what() << std::endl;
-                QMessageBox::warning(this, "Project/Subproject import failed", "The project/subproject cannot be imported (maybe corrupted).");
-                status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-
-                return;
+                project = imported_project;
             }
-        });
+        }
+        catch (const std::exception& e)
+        {
+            QMessageBox::warning(this,
+                                 "Project/Subproject import failed",
+                                 "The project/subproject cannot be imported (maybe corrupted).\n\n"
+                                 "Error: " + QString::fromStdString(error_message));
+            status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
-        progress_dialog.exec();
+            return;
+        }
 
         workspace->set_project(project);
 
