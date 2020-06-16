@@ -136,7 +136,11 @@ namespace degate
 		SelectionToolVertex2D temp;
 
 		temp.color = QVector3D(33, 76, 117) / 255.0;
-		temp.alpha = 0.6;
+
+		if(object_selection_mode)
+            temp.alpha = 0;
+		else
+		    temp.alpha = 0.6;
 
 		temp.pos = QVector2D(selection_box.get_min_x(), selection_box.get_min_y());
 		context->glBufferSubData(GL_ARRAY_BUFFER, 0 * sizeof(SelectionToolVertex2D), sizeof(SelectionToolVertex2D), &temp);
@@ -236,10 +240,20 @@ namespace degate
 		return selection;
 	}
 
-	void WorkspaceSelectionTool::set_selection(bool value)
+	void WorkspaceSelectionTool::set_selection_state(bool value)
 	{
 		selection = value;
 	}
+
+    bool WorkspaceSelectionTool::is_object_selection_mode_active()
+    {
+        return object_selection_mode;
+    }
+
+    void WorkspaceSelectionTool::set_object_selection_mode_state(bool value)
+    {
+        object_selection_mode = value;
+    }
 
 	BoundingBox WorkspaceSelectionTool::get_selection_box()
 	{

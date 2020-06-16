@@ -119,7 +119,7 @@ namespace degate
 
 	void WorkspaceRenderer::reset_area_selection()
 	{
-		selection_tool.set_selection(false);
+        selection_tool.set_selection_state(false);
 		update();
 	}
 
@@ -424,6 +424,14 @@ namespace degate
 
 		if (event->button() == Qt::LeftButton)
 			setCursor(Qt::ClosedHandCursor);
+
+        // Area selection + CTRL
+        if (event->button() == Qt::RightButton &&
+            current_tool == WorkspaceTool::AREA_SELECTION &&
+            QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
+        {
+            reset_area_selection();
+        }
 	}
 
 	void WorkspaceRenderer::mouseReleaseEvent(QMouseEvent* event)
@@ -438,23 +446,39 @@ namespace degate
 		// Selection
 		if (event->button() == Qt::LeftButton && !mouse_moved)
 		{
-			if(project == nullptr)
+			if (project == nullptr)
 				return;
 
 			QPointF pos = get_opengl_mouse_position();
 
 			LogicModel_shptr lmodel = project->get_logic_model();
 			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
+            PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(),
+                                                                             pos.y(),
+                                                                             0,
+                                                                             !draw_annotations,
+                                                                             !draw_gates,
+                                                                             !draw_ports,
+                                                                             !draw_emarkers,
+                                                                             !draw_vias,
+                                                                             !draw_wires);
 
 			// Check if there is a gate or gate port on the logic layer
             try
             {
                 PlacedLogicModelObject_shptr logic_plo;
                 layer = get_first_logic_layer(lmodel);
-                logic_plo = layer->get_object_at_position(pos.x(), pos.y(), 0, true, !draw_gates, !draw_ports, true, true, true);
+                logic_plo = layer->get_object_at_position(pos.x(),
+                                                          pos.y(),
+                                                          0,
+                                                          true,
+                                                          !draw_gates,
+                                                          !draw_ports,
+                                                          true,
+                                                          true,
+                                                          true);
 
-                if(plo == nullptr)
+                if (plo == nullptr)
                 {
                     plo = logic_plo;
                 }
@@ -462,17 +486,19 @@ namespace degate
                 {
                     plo = logic_plo;
                 }
-                else if (std::dynamic_pointer_cast<Via>(plo) == nullptr && std::dynamic_pointer_cast<EMarker>(plo) == nullptr && std::dynamic_pointer_cast<Gate>(logic_plo) != nullptr)
+                else if (std::dynamic_pointer_cast<Via>(plo) == nullptr &&
+                         std::dynamic_pointer_cast<EMarker>(plo) == nullptr &&
+                         std::dynamic_pointer_cast<Gate>(logic_plo) != nullptr)
                 {
                     plo = logic_plo;
                 }
             }
-            catch(CollectionLookupException const& ex)
+            catch (CollectionLookupException const& ex)
             {
             }
 
             // If no CTRL reset selection (single selection)
-			if(!selected_objects.empty() && !QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
+			if (!selected_objects.empty() && !QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
 				reset_selection();
 			
 			if(plo != nullptr)
@@ -480,14 +506,14 @@ namespace degate
 		}
 
         // Selection imply no area selection
-        if (!selected_objects.empty() && current_tool == WorkspaceTool::AREA_SELECTION)
+        if (!mouse_moved && !selected_objects.empty() && current_tool == WorkspaceTool::AREA_SELECTION)
         {
             reset_area_selection();
             update();
         }
 
         // Wire tool
-        if(event->button() == Qt::RightButton && current_tool == WorkspaceTool::WIRE && project != nullptr)
+        if (event->button() == Qt::RightButton && current_tool == WorkspaceTool::WIRE && project != nullptr)
         {
             wire_tool.end_line_drawing();
 
@@ -502,8 +528,48 @@ namespace degate
             update_screen();
         }
 
+        // Area selection + CTRL
+        if (event->button() == Qt::RightButton &&
+            current_tool == WorkspaceTool::AREA_SELECTION &&
+                selection_tool.is_object_selection_mode_active())
+        {
+            BoundingBox bb = get_safe_area_selection();
+            reset_area_selection();
+
+            Layer_shptr layer = project->get_logic_model()->get_current_layer();
+
+            // Current layer
+            for(Layer::qt_region_iterator iter = layer->region_begin(bb); iter != layer->region_end(); ++iter)
+            {
+                PlacedLogicModelObject_shptr plo = *iter;
+                assert(plo != nullptr);
+
+                selected_objects.add(plo);
+            }
+
+            layer = get_first_logic_layer(project->get_logic_model());
+
+            if(project->get_logic_model()->get_current_layer() == layer)
+                return;
+
+            // Logic layer (gates and gate ports)
+            for (Layer::qt_region_iterator iter = layer->region_begin(bb); iter != layer->region_end(); ++iter)
+            {
+                PlacedLogicModelObject_shptr plo = *iter;
+                assert(plo != nullptr);
+
+                if (std::dynamic_pointer_cast<GatePort>(plo) != nullptr ||
+                    std::dynamic_pointer_cast<Gate>(plo) != nullptr)
+                {
+                    selected_objects.add(plo);
+                }
+            }
+
+            selection_tool.set_object_selection_mode_state(false);
+        }
+
         // Emit signal (for mouse context menu)
-		if(event->button() == Qt::RightButton && !mouse_moved)
+		if (event->button() == Qt::RightButton && !mouse_moved)
 		    emit right_mouse_button_released();
 
 		mouse_moved = false;
@@ -530,7 +596,7 @@ namespace degate
 			update();
 		}
 
-		// Selection
+		// Area selection
 		if(event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::AREA_SELECTION)
 		{
             mouse_moved = true;
@@ -538,8 +604,12 @@ namespace degate
             // If there is no area selection, start new one and set new origin
             if(!selection_tool.has_selection())
             {
-                selection_tool.set_selection(true);
+                selection_tool.set_selection_state(true);
                 selection_tool.set_origin(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
+
+                // Area selection + CTRL
+                if (QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
+                    selection_tool.set_object_selection_mode_state(true);
             }
 
             // Update other area extremity on mouse position

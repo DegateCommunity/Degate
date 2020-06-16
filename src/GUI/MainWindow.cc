@@ -1018,7 +1018,7 @@ namespace degate
         QAction via_follow_action("Follow via", this);
 
         // Delete
-        QAction delete_action("Remove selected object", this);
+        QAction delete_action("Remove selected object(s)", this);
 
         // Reset area
         QAction reset_selection_area_action("Reset selection area", this);

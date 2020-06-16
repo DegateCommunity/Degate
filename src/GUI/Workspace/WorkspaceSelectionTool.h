@@ -87,7 +87,23 @@ namespace degate
 		 *
 		 * @param value : the new selection state.
 		 */
-		void set_selection(bool value);
+		void set_selection_state(bool value);
+
+        /**
+         * Know if the object selection mode is active.
+         * It is just a graphic effect that will hide the frame.
+         *
+         * @return Return true if the object selection mode is active, otherwise not.
+         */
+        bool is_object_selection_mode_active();
+
+        /**
+         * Set the state of the object selection mode, if true this will activate the object selection mode otherwise not.
+         * It is just a graphic effect that will hide the frame.
+         *
+         * @param value : the new object selection mode state.
+         */
+        void set_object_selection_mode_state(bool value);
 
 		/**
 		 * Get selection bounding box.
@@ -112,15 +128,23 @@ namespace degate
         void set_project(const Project_shptr& new_project);
 
 	private:
-        Project_shptr project = NULL;
 		QWidget* parent;
-		QOpenGLShaderProgram* program = NULL;
+
+		QOpenGLShaderProgram* program = nullptr;
+        QOpenGLFunctions* context = nullptr;
+        Project_shptr project = nullptr;
+
 		GLuint vbo = 0;
 		GLuint line_vbo = 0;
-		QOpenGLFunctions* context = NULL;
-		bool selection = false;
+
 		BoundingBox selection_box;
 		QPointF origin;
+
+		// Is there an area selection active
+        bool selection = false;
+
+        // Is the object selection mode active (CTRL + drag)
+        bool object_selection_mode = false;
 	};
 }
 
