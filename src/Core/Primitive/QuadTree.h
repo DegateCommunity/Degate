@@ -101,6 +101,14 @@ namespace degate
 		ret_t split();
 		ret_t reinsert_objects();
 
+        /**
+         * Reinsert all objects, subtree children included (recursively).
+         * This will delete old subtrees and recreate them if needed.
+         *
+         * @param tree : the concerned tree.
+         */
+        ret_t reinsert_all_objects(QuadTree<T>* tree);
+
 		bool is_splitable() const;
 
 	public:
@@ -348,6 +356,28 @@ namespace degate
 		return RET_OK;
 	}
 
+    template <typename T>
+    ret_t QuadTree<T>::reinsert_all_objects(QuadTree<T>* tree)
+    {
+        if(tree == nullptr)
+            return RET_INV_PTR;
+
+        // Get all objects
+        std::vector<T> objects;
+        tree->get_all_elements(objects);
+
+        // Clear all subtrees
+        tree->subtree_nodes.clear();
+
+        // Reinsert all objects
+        for (auto& e : objects)
+        {
+            tree->insert(e);
+        }
+
+        return RET_OK;
+    }
+
 	template <typename T>
 	ret_t QuadTree<T>::insert(T object)
 	{
@@ -401,7 +431,7 @@ namespace degate
 				found->subtree_nodes[SW].children.size() == 0 &&
 				found->subtree_nodes[SE].children.size() == 0)
 			{
-				found->subtree_nodes.clear();
+                reinsert_all_objects(found);
 			}
 
 			return RET_OK;
