@@ -39,6 +39,8 @@ namespace degate
               project(project),
               gate_templates(gate_templates)
     {
+        setWindowTitle(tr("Template matching"));
+
         // Threshold to start hill climbing
         hill_climbing_threshold_label.setText(tr("Threshold to start hill climbing:"));
         hill_climbing_threshold_edit.set_minimum(0);

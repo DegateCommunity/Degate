@@ -37,6 +37,7 @@
 #include <GUI/Dialog/EMarkerEditDialog.h>
 #include <GUI/Dialog/ProjectSettingsDialog.h>
 #include <GUI/Dialog/TemplateMatchingDialog.h>
+#include <GUI/Dialog/ViaMatchingDialog.h>
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -219,7 +220,16 @@ namespace degate
 
 
 		/* Matching menu */
+
+		/**
+		 * Start a template matching process.
+		 */
 		void on_menu_matching_template_matching();
+
+        /**
+         * Start a via matching process.
+         */
+        void on_menu_matching_via_matching();
 
 
 		/* Other */
@@ -336,6 +346,7 @@ namespace degate
 
         // Template matching menu
         QAction* template_matching_action;
+        QAction* via_matching_action;
 
         // Help menu
         QAction* about_action;

@@ -105,7 +105,7 @@ namespace degate
 
         // Base objects for template matching
         BoundingBox                     bounding_box;
-        Project_shptr                   project;
+        Project_shptr                   project = nullptr;
         std::vector<GateTemplate_shptr> gate_templates;
 
     };

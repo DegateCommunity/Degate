@@ -50,173 +50,176 @@ namespace degate
 		setMenuBar(&menu_bar);
 
 		// Project menu
-		QMenu* project_menu = menu_bar.addMenu("Project");
+		QMenu* project_menu = menu_bar.addMenu(tr("Project"));
 
-		project_new_action = project_menu->addAction("New");
+		project_new_action = project_menu->addAction(tr("New"));
 		QObject::connect(project_new_action, SIGNAL(triggered()), this, SLOT(on_menu_project_new()));
 
-		project_import_action = project_menu->addAction("Open");
+		project_import_action = project_menu->addAction(tr("Open"));
 		QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
 
-		project_export_action = project_menu->addAction("Save");
+		project_export_action = project_menu->addAction(tr("Save"));
         project_export_action->setShortcut(Qt::CTRL + Qt::Key_S);
 		QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_exporter()));
 
-		project_close_action = project_menu->addAction("Close");
+		project_close_action = project_menu->addAction(tr("Close"));
 		QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
 
 		project_menu->addSeparator();
-		project_create_subproject_action = project_menu->addAction("Create subproject from selection");
+		project_create_subproject_action = project_menu->addAction(tr("Create subproject from selection"));
 		QObject::connect(project_create_subproject_action, SIGNAL(triggered()), this, SLOT(on_menu_project_create_subproject()));
 
 		project_menu->addSeparator();
-        project_settings_action = project_menu->addAction("Project settings");
+        project_settings_action = project_menu->addAction(tr("Project settings"));
         QObject::connect(project_settings_action, SIGNAL(triggered()), this, SLOT(on_menu_project_settings()));
 
 		project_menu->addSeparator();
-		project_quit_action = project_menu->addAction("Quit");
+		project_quit_action = project_menu->addAction(tr("Quit"));
 		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_project_quit()));
 
 
 		// Edit menu
-		QMenu* edit_menu = menu_bar.addMenu("Edit");
-		preferences_edit_action = edit_menu->addAction("Preferences");
+		QMenu* edit_menu = menu_bar.addMenu(tr("Edit"));
+		preferences_edit_action = edit_menu->addAction(tr("Preferences"));
 		QObject::connect(preferences_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_edit_preferences()));
 
 
 		// View menu
-		QMenu* view_menu = menu_bar.addMenu("View");
+		QMenu* view_menu = menu_bar.addMenu(tr("View"));
 
-		show_gates_view_action = view_menu->addAction("Show gates");
+		show_gates_view_action = view_menu->addAction(tr("Show gates"));
 		show_gates_view_action->setCheckable(true);
 		show_gates_view_action->setChecked(true);
 		QObject::connect(show_gates_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates(bool)));
 
-		show_gates_name_view_action = view_menu->addAction("Show gates name");
+		show_gates_name_view_action = view_menu->addAction(tr("Show gates name"));
 		show_gates_name_view_action->setCheckable(true);
 		show_gates_name_view_action->setChecked(true);
 		QObject::connect(show_gates_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates_name(bool)));
 
-		show_ports_view_action = view_menu->addAction("Show ports");
+		show_ports_view_action = view_menu->addAction(tr("Show ports"));
 		show_ports_view_action->setCheckable(true);
 		show_ports_view_action->setChecked(true);
 		QObject::connect(show_ports_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports(bool)));
 
-		show_ports_name_view_action = view_menu->addAction("Show ports name");
+		show_ports_name_view_action = view_menu->addAction(tr("Show ports name"));
 		show_ports_name_view_action->setCheckable(true);
 		show_ports_name_view_action->setChecked(true);
 		QObject::connect(show_ports_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports_name(bool)));
 
-		show_annotations_view_action = view_menu->addAction("Show annotations");
+		show_annotations_view_action = view_menu->addAction(tr("Show annotations"));
 		show_annotations_view_action->setCheckable(true);
 		show_annotations_view_action->setChecked(true);
 		QObject::connect(show_annotations_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations(bool)));
 
-		show_annotations_name_view_action = view_menu->addAction("Show annotations name");
+		show_annotations_name_view_action = view_menu->addAction(tr("Show annotations name"));
 		show_annotations_name_view_action->setCheckable(true);
 		show_annotations_name_view_action->setChecked(true);
 		QObject::connect(show_annotations_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations_name(bool)));
 
-        show_emarkers_view_action = view_menu->addAction("Show emarkers");
+        show_emarkers_view_action = view_menu->addAction(tr("Show emarkers"));
         show_emarkers_view_action->setCheckable(true);
         show_emarkers_view_action->setChecked(true);
         QObject::connect(show_emarkers_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers(bool)));
 
-        show_emarkers_name_view_action = view_menu->addAction("Show emarkers name");
+        show_emarkers_name_view_action = view_menu->addAction(tr("Show emarkers name"));
         show_emarkers_name_view_action->setCheckable(true);
         show_emarkers_name_view_action->setChecked(true);
         QObject::connect(show_emarkers_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers_name(bool)));
 
-        show_vias_view_action = view_menu->addAction("Show vias");
+        show_vias_view_action = view_menu->addAction(tr("Show vias"));
         show_vias_view_action->setCheckable(true);
         show_vias_view_action->setChecked(true);
         QObject::connect(show_vias_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias(bool)));
 
-        show_vias_name_view_action = view_menu->addAction("Show vias name");
+        show_vias_name_view_action = view_menu->addAction(tr("Show vias name"));
         show_vias_name_view_action->setCheckable(true);
         show_vias_name_view_action->setChecked(true);
         QObject::connect(show_vias_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias_name(bool)));
 
-        show_wires_view_action = view_menu->addAction("Show wires");
+        show_wires_view_action = view_menu->addAction(tr("Show wires"));
         show_wires_view_action->setCheckable(true);
         show_wires_view_action->setChecked(true);
         QObject::connect(show_wires_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_wires(bool)));
 
 
         // Layer menu
-		QMenu* layer_menu = menu_bar.addMenu("Layer");
+		QMenu* layer_menu = menu_bar.addMenu(tr("Layer"));
 
-		layers_edit_action = layer_menu->addAction("Edit layers");
+		layers_edit_action = layer_menu->addAction(tr("Edit layers"));
 		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
 
-		background_import_action = layer_menu->addAction("Import background image");
+		background_import_action = layer_menu->addAction(tr("Import background image"));
 		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
 
 
 		// Gate menu
-		QMenu* gate_menu = menu_bar.addMenu("Gate");
+		QMenu* gate_menu = menu_bar.addMenu(tr("Gate"));
 
-		edit_gate_action = gate_menu->addAction("Edit selected");
+		edit_gate_action = gate_menu->addAction(tr("Edit selected"));
 		QObject::connect(edit_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
 
-		new_gate_template_action = gate_menu->addAction("Create gate template from selection");
+		new_gate_template_action = gate_menu->addAction(tr("Create gate template from selection"));
 		QObject::connect(new_gate_template_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
 
-		new_gate_action = gate_menu->addAction("Create gate from selection");
+		new_gate_action = gate_menu->addAction(tr("Create gate from selection"));
 		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
 
 		gate_menu->addSeparator();
-		gate_library_action = gate_menu->addAction("Gate library");
+		gate_library_action = gate_menu->addAction(tr("Gate library"));
 		QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
 
 		// Annotation menu
-		QMenu* annotation_menu = menu_bar.addMenu("Annotation");
+		QMenu* annotation_menu = menu_bar.addMenu(tr("Annotation"));
 
-		edit_annotation_action = annotation_menu->addAction("Edit selected");
+		edit_annotation_action = annotation_menu->addAction(tr("Edit selected"));
 		QObject::connect(edit_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
 
-		create_annotation_action = annotation_menu->addAction("Create from selection");
+		create_annotation_action = annotation_menu->addAction(tr("Create from selection"));
 		QObject::connect(create_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
 
 
 		// EMarker menu
-        QMenu* emarker_menu = menu_bar.addMenu("EMarker");
+        QMenu* emarker_menu = menu_bar.addMenu(tr("EMarker"));
 
-        edit_emarker_action = emarker_menu->addAction("Edit selected");
+        edit_emarker_action = emarker_menu->addAction(tr("Edit selected"));
         QObject::connect(edit_emarker_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
 
 
         // Via menu
-        QMenu* via_menu = menu_bar.addMenu("Via");
+        QMenu* via_menu = menu_bar.addMenu(tr("Via"));
 
-        edit_via_action = via_menu->addAction("Edit selected");
+        edit_via_action = via_menu->addAction(tr("Edit selected"));
         QObject::connect(edit_via_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
 
 
         // Logic menu
-		QMenu* logic_menu = menu_bar.addMenu("Logic");
+		QMenu* logic_menu = menu_bar.addMenu(tr("Logic"));
 
-        remove_objects_action = logic_menu->addAction("Remove selected objects");
+        remove_objects_action = logic_menu->addAction(tr("Remove selected objects"));
         remove_objects_action->setShortcut(Qt::Key_Delete);
 		QObject::connect(remove_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
 
-        interconnect_objects_action = logic_menu->addAction("Interconnect selected objects");
+        interconnect_objects_action = logic_menu->addAction(tr("Interconnect selected objects"));
         interconnect_objects_action->setShortcut(Qt::CTRL + Qt::Key_C);
         QObject::connect(interconnect_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
 
 
         // Matching menu
-        QMenu* matching_menu = menu_bar.addMenu("Matching");
+        QMenu* matching_menu = menu_bar.addMenu(tr("Matching"));
 
-        template_matching_action = matching_menu->addAction("Template matching");
+        template_matching_action = matching_menu->addAction(tr("Template matching"));
         QObject::connect(template_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_template_matching()));
+
+        via_matching_action = matching_menu->addAction(tr("Via matching"));
+        QObject::connect(via_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_via_matching()));
 
 
 		// Help menu
-		QMenu* help_menu = menu_bar.addMenu("Help");
+		QMenu* help_menu = menu_bar.addMenu(tr("Help"));
 
-		about_action = help_menu->addAction("About");
+		about_action = help_menu->addAction(tr("About"));
 		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
 
@@ -832,6 +835,24 @@ namespace degate
 
         TemplateMatchingDialog template_matching_dialog(this, bounding_box, project, gate_template);
         template_matching_dialog.exec();
+
+        workspace->update_screen();
+    }
+
+    void MainWindow::on_menu_matching_via_matching()
+    {
+        if(project == nullptr)
+            return;
+
+        BoundingBox bounding_box;
+
+        if(workspace->has_area_selection())
+            bounding_box = workspace->get_safe_area_selection();
+        else
+            bounding_box = project->get_bounding_box();
+
+        ViaMatchingDialog via_matching_dialog(this, bounding_box, project);
+        via_matching_dialog.exec();
 
         workspace->update_screen();
     }

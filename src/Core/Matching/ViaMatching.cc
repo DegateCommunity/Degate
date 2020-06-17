@@ -148,8 +148,8 @@ void ViaMatching::run()
 	MemoryImage_shptr via_down = merge_images(vias_down);
 
 	// save images for debugging
-	if (via_up) save_image(join_pathes("/tmp", "01_via_up_merged.tif"), via_up);
-	if (via_down) save_image(join_pathes("/tmp", "01_via_down_merged.tif"), via_down);
+	//if (via_up) save_image(join_pathes("/tmp", "01_via_up_merged.tif"), via_up);
+	//if (via_down) save_image(join_pathes("/tmp", "01_via_down_merged.tif"), via_down);
 
 	// convert to greyscale
 	MemoryImage_GS_BYTE_shptr via_up_gs, via_down_gs;
@@ -167,8 +167,8 @@ void ViaMatching::run()
 	}
 
 	// save images for debugging
-	if (via_up_gs) save_image(join_pathes("/tmp", "02_via_up_gs.tif"), via_up_gs);
-	if (via_down_gs) save_image(join_pathes("/tmp", "02_via_down_gs.tif"), via_down_gs);
+	//if (via_up_gs) save_image(join_pathes("/tmp", "02_via_up_gs.tif"), via_up_gs);
+	//if (via_down_gs) save_image(join_pathes("/tmp", "02_via_down_gs.tif"), via_down_gs);
 
 	// set progress step size
 	int substeps = 0;
