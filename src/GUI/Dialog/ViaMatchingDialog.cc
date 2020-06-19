@@ -50,7 +50,7 @@ namespace degate
         content_layout.addWidget(&via_diameter_label, 1, 0);
         content_layout.addWidget(&via_diameter_edit, 1, 1);
 
-        // Via diameter
+        // Via count
         vias_count_label.setText(tr("Max vias to match (0 = all):"));
         vias_count_edit.setMinimum(0);
         vias_count_edit.setValue(0);
@@ -85,7 +85,7 @@ namespace degate
                                        via_matching,
                                        this->parentWidget());
 
-        // Set the job to start the template matching (will run in another thread)
+        // Set the job to start the via matching (will run in another thread)
         progress_dialog.set_job([via_matching, this]()
                                 {
                                     via_matching->init(bounding_box, project);
