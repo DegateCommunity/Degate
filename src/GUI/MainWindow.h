@@ -38,6 +38,7 @@
 #include <GUI/Dialog/ProjectSettingsDialog.h>
 #include <GUI/Dialog/TemplateMatchingDialog.h>
 #include <GUI/Dialog/ViaMatchingDialog.h>
+#include <GUI/Dialog/WireMatchingDialog.h>
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -231,6 +232,11 @@ namespace degate
          */
         void on_menu_matching_via_matching();
 
+        /**
+         * Start a wire matching process.
+         */
+        void on_menu_matching_wire_matching();
+
 
 		/* Other */
 		
@@ -347,6 +353,7 @@ namespace degate
         // Template matching menu
         QAction* template_matching_action;
         QAction* via_matching_action;
+        QAction* wire_matching_action;
 
         // Help menu
         QAction* about_action;

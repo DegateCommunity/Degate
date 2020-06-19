@@ -215,6 +215,9 @@ namespace degate
         via_matching_action = matching_menu->addAction(tr("Via matching"));
         QObject::connect(via_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_via_matching()));
 
+        wire_matching_action = matching_menu->addAction(tr("Wire matching"));
+        QObject::connect(wire_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_wire_matching()));
+
 
 		// Help menu
 		QMenu* help_menu = menu_bar.addMenu(tr("Help"));
@@ -853,6 +856,24 @@ namespace degate
 
         ViaMatchingDialog via_matching_dialog(this, bounding_box, project);
         via_matching_dialog.exec();
+
+        workspace->update_screen();
+    }
+
+    void MainWindow::on_menu_matching_wire_matching()
+    {
+        if(project == nullptr)
+            return;
+
+        BoundingBox bounding_box;
+
+        if(workspace->has_area_selection())
+            bounding_box = workspace->get_safe_area_selection();
+        else
+            bounding_box = project->get_bounding_box();
+
+        WireMatchingDialog wire_matching_dialog(this, bounding_box, project);
+        wire_matching_dialog.exec();
 
         workspace->update_screen();
     }
