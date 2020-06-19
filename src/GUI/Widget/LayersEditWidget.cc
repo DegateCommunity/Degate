@@ -23,6 +23,7 @@
 
 
 #include <memory>
+#include <QtWidgets/QMessageBox>
 
 #include "Core/Image/ImageHelper.h"
 #include "Core/LogicModel/LogicModelHelper.h"
@@ -326,8 +327,22 @@ namespace degate
 
 			// Image
 			LayerBackgroundSelectionButton* background = static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(i, 4));
-			if(background->has_new_image())
-				load_background_image(layer, project->get_project_directory(), background->get_image_path());
+
+			try
+			{
+                if(background->has_new_image())
+                    load_background_image(layer, project->get_project_directory(), background->get_image_path());
+			}
+			catch(std::exception& e)
+            {
+                QMessageBox::critical(this,
+                                      tr("Error"),
+                                      tr("Can't import the background image.") + "\n" + tr("Error: ") +
+                                      QString::fromStdString(e.what()));
+
+                return;
+            }
+
 
 			// Position
 			layer->set_layer_pos(i);
