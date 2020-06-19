@@ -235,7 +235,8 @@ namespace degate
 			--iter_regionLine;
 			if (iter_regionLine->y == Y)
 			{
-				--iter_regionLine;
+			    if(iter_regionLine != y_list.begin())
+				    --iter_regionLine;
 			}
 
 			if (iter_regionLine->y != Y - 1)
