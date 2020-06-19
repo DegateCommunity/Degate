@@ -610,6 +610,8 @@ namespace degate
                 // Area selection + CTRL
                 if (QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
                     selection_tool.set_object_selection_mode_state(true);
+                else
+                    selection_tool.set_object_selection_mode_state(false);
             }
 
             // Update other area extremity on mouse position
