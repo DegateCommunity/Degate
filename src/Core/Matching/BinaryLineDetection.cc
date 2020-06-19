@@ -65,39 +65,36 @@ TileImage_GS_DOUBLE_shptr BinaryLineDetection::run(ImageBase_shptr img_in,
 {
 	set_directory(directory);
 	grayImage = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(pipe.run(img_in));
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gray.tif", grayImage);
+	//save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gray.tif", grayImage);
 
-	TileImage_GS_DOUBLE_shptr binOtsu, binMean1_0, binMean1_1, binMean1_2;
+	TileImage_GS_DOUBLE_shptr binOtsu; //, binMean1_0, binMean1_1, binMean1_2;
 	binOtsu = gs_to_binary(grayImage);
-	binMean1_0 = gs_by_mean(grayImage, 1.0);
-	binMean1_1 = gs_by_mean(grayImage, 1.1);
-	binMean1_2 = gs_by_mean(grayImage, 1.2);
+	//binMean1_0 = gs_by_mean(grayImage, 1.0);
+	//binMean1_1 = gs_by_mean(grayImage, 1.1);
+	//binMean1_2 = gs_by_mean(grayImage, 1.2);
 	//save_normalized_image<TileImage_GS_DOUBLE>("/tmp/mean.tif", meanImage);
 
-	RegionList RL_Otsu, RL_Mean1_0, RL_Mean1_1, RL_Mean1_2;
+	RegionList RL_Otsu; //, RL_Mean1_0, RL_Mean1_1, RL_Mean1_2;
 	RL_Otsu = binary_to_region(binOtsu);
-	RL_Mean1_0 = binary_to_region(binMean1_0);
-	RL_Mean1_1 = binary_to_region(binMean1_1);
-	RL_Mean1_2 = binary_to_region(binMean1_2);
+	//RL_Mean1_0 = binary_to_region(binMean1_0);
+	//RL_Mean1_1 = binary_to_region(binMean1_1);
+	//RL_Mean1_2 = binary_to_region(binMean1_2);
 
 	// XXX better use a real temp dir as this allows race conditions
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridOtsu.tif", RL_Otsu.get_unfixed_grid_binary(wire_diameter));
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.0.tif",
-	                                           RL_Mean1_0.get_unfixed_grid_binary(wire_diameter));
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.1.tif",
-	                                           RL_Mean1_1.get_unfixed_grid_binary(wire_diameter));
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.2.tif",
-	                                           RL_Mean1_2.get_unfixed_grid_binary(wire_diameter));
+    //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridOtsu.tif", RL_Otsu.get_unfixed_grid_binary(wire_diameter));
+    //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.0.tif", RL_Mean1_0.get_unfixed_grid_binary(wire_diameter));
+    //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.1.tif", RL_Mean1_1.get_unfixed_grid_binary(wire_diameter));
+    //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/gridMean1.2.tif", RL_Mean1_2.get_unfixed_grid_binary(wire_diameter));
 
 	RL_Otsu.application_grid(wire_diameter);
-	RL_Mean1_0.application_grid(wire_diameter);
-	RL_Mean1_1.application_grid(wire_diameter);
-	RL_Mean1_2.application_grid(wire_diameter);
+    //RL_Mean1_0.application_grid(wire_diameter);
+    //RL_Mean1_1.application_grid(wire_diameter);
+    //RL_Mean1_2.application_grid(wire_diameter);
 
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedOtsu.tif", RL_Otsu.get_binary());
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.0.tif", RL_Mean1_0.get_binary());
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.1.tif", RL_Mean1_1.get_binary());
-	save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.2.tif", RL_Mean1_2.get_binary());
+    //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedOtsu.tif", RL_Otsu.get_binary());
+    //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.0.tif", RL_Mean1_0.get_binary());
+    //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.1.tif", RL_Mean1_1.get_binary());
+    //save_normalized_image<TileImage_GS_DOUBLE>("/tmp/reducedMean1.2.tif", RL_Mean1_2.get_binary());
 
 	//save_normalized_image<TileImage_GS_DOUBLE>("/tmp/bin.tif", binImage);
 	//binImage = region.get_binary();

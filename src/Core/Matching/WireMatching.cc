@@ -93,7 +93,7 @@ void WireMatching::run()
 	                         sigma);
 	TileImage_GS_DOUBLE_shptr i = test.run(img, TileImage_GS_DOUBLE_shptr(), "/tmp");
 	assert(i != nullptr);
-	save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(test.get_directory(), "line.tif"), i);
+	//save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(test.get_directory(), "line.tif"), i);
 
 	LineSegmentExtraction<TileImage_GS_DOUBLE> extraction(i, wire_diameter / 2, 2, test.get_border());
 	LineSegmentMap_shptr line_segments = extraction.run();
