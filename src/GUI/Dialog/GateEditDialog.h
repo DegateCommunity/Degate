@@ -363,11 +363,21 @@ namespace degate
 
 	private:
 		Gate_shptr gate = nullptr;
+        QGridLayout instance_layout;
+
+        QLabel instance_label;
 
 		// Orientation
-		QHBoxLayout orientation_layout;
 		QLabel orientation_label;
 		QComboBox orientation;
+
+		// Name
+		QLabel name_label;
+        QLineEdit name_edit;
+
+		// Description
+        QLabel description_label;
+        QLineEdit description_edit;
 
 		// Other
 		QLabel gate_template_label;

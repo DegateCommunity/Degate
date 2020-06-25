@@ -701,7 +701,6 @@ namespace degate
 																											  project(project)
 	{
 		setWindowTitle("Edit gate");
-		resize(500, 400);
         setWindowFlags(windowFlags() | Qt::WindowMaximizeButtonHint);
 
 		tab.addTab(&entity_tab, "Entity");
@@ -732,24 +731,40 @@ namespace degate
 	GateInstanceEditDialog::GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project) : GateEditDialog(parent, gate->get_gate_template(), project), gate(gate)
 	{
 		setWindowTitle("Edit gate instance");
-		resize(500, 400);
-		
-		orientation_label.setText("Gate instance orientation :");
-		orientation.addItem("undefined");
-		orientation.addItem("normal");
-		orientation.addItem("flipped-up-down");
-		orientation.addItem("flipped-left-right");
-		orientation.addItem("flipped-both");
+
+        instance_label.setText(tr("Gate instance edition :"));
+
+        // Orientation
+		orientation_label.setText(tr("Orientation:"));
+		orientation.addItem(tr("undefined"), 0);
+		orientation.addItem(tr("normal"), 1);
+		orientation.addItem(tr("flipped-up-down"), 2);
+		orientation.addItem(tr("flipped-left-right"), 3);
+		orientation.addItem(tr("flipped-both"), 4);
 		orientation.setCurrentText(QString::fromStdString(gate->get_orienation_type_as_string()));
 
-		orientation_layout.addWidget(&orientation_label);
-		orientation_layout.addWidget(&orientation);
+		// Name
+        name_label.setText(tr("Name :"));
+        name_edit.setText(QString::fromStdString(gate->get_name()));
 
-        gate_template_label.setText("Gate template edition :");
+        // Description
+        description_label.setText(tr("Description :"));
+        description_edit.setText(QString::fromStdString(gate->get_description()));
 
-		layout.insertLayout(0, &orientation_layout);
-		layout.insertSpacing(1, 10);
-        layout.insertWidget(2, &gate_template_label);
+        instance_layout.addWidget(&orientation_label, 0, 0);
+        instance_layout.addWidget(&orientation, 0, 1);
+        instance_layout.addWidget(&name_label, 1, 0);
+        instance_layout.addWidget(&name_edit, 1, 1);
+        instance_layout.addWidget(&description_label, 2, 0);
+        instance_layout.addWidget(&description_edit, 2, 1);
+
+        gate_template_label.setText(tr("Gate template edition :"));
+
+        layout.insertWidget(0, &instance_label);
+        layout.insertSpacing(1, 10);
+        layout.insertLayout(2, &instance_layout);
+		layout.insertSpacing(3, 20);
+        layout.insertWidget(4, &gate_template_label);
 	}
 
 	GateInstanceEditDialog::~GateInstanceEditDialog()
@@ -758,18 +773,21 @@ namespace degate
 
 	void GateInstanceEditDialog::validate()
 	{
-		if(orientation.currentText() == "undefined")
+		if(orientation.currentData() == 0)
 			gate->set_orientation(Gate::ORIENTATION_UNDEFINED);
-		else if(orientation.currentText() == "normal")
+		else if(orientation.currentData() == 1)
 			gate->set_orientation(Gate::ORIENTATION_NORMAL);
-		else if(orientation.currentText() == "flipped-up-down")
+		else if(orientation.currentData() == 2)
 			gate->set_orientation(Gate::ORIENTATION_FLIPPED_UP_DOWN);
-		else if(orientation.currentText() == "flipped-left-right")
+		else if(orientation.currentData() == 3)
 			gate->set_orientation(Gate::ORIENTATION_FLIPPED_LEFT_RIGHT);
-		else if(orientation.currentText() == "flipped-both")
+		else if(orientation.currentData() == 4)
 			gate->set_orientation(Gate::ORIENTATION_FLIPPED_BOTH);
 		else
 			gate->set_orientation(Gate::ORIENTATION_UNDEFINED);
+
+		gate->set_name(name_edit.text().toStdString());
+        gate->set_description(description_edit.text().toStdString());
 		
 		GateEditDialog::validate();
 	}
