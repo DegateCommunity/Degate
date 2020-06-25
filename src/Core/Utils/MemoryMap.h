@@ -215,7 +215,7 @@ namespace degate
 		if (mode == MAP_STORAGE_TYPE_TEMP_FILE)
 		{
 			// Random filename
-			std::string fn = std::string(std::tmpnam(nullptr));
+			std::string fn = get_temp_file_path();
 			ret = map_file(fn);
 			if (RET_IS_NOT_OK(ret)) debug(TM, "Can't open a temp file with pattern %s", fn.c_str());
 			assert(RET_IS_OK(ret));
