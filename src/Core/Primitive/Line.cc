@@ -67,13 +67,62 @@ void Line::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 
 float Line::distance_to_line(Point const& p) const
 {
-    return fabs((to_y - from_y) * p.get_x() - (to_x - from_x) * p.get_y() + to_x * from_y - to_y * from_x) /
-           sqrt(pow(to_y - from_y, 2) + pow(to_x - from_x, 2));
+    /**
+     *         C
+     *       / |
+     *    /    |
+     *   ----------------
+     *   A     H        B
+     *
+     *  AB.AC = |AB|*|AH|
+     *
+     *  Pythagore :
+     *  AC^2 = AH^2 + HC^2 <=> HC = sqrt(AC^2-AH^2)
+     *
+     */
+
+    Point A(from_x, from_y);
+    Point B(to_x, to_y);
+
+    if (from_x == to_x && from_y == to_y)
+    {
+        return A.get_distance(p);
+    }
+
+    // Vector AB.
+    Point AB(to_x - from_x, to_y - from_y);
+
+    // Vector AC.
+    Point AC(p.get_x() - from_x, p.get_y() - from_y);
+
+    // Scalar AB.AC
+    float AB_dot_AC = AB.get_x() * AC.get_x() + AB.get_y() * AC.get_y();
+
+    // If AB.AC is negative then the point C is behind the start point A.
+    if (AB_dot_AC < 0)
+    {
+        return A.get_distance(p);
+    }
+
+    // The squared length of AB.
+    float AB_squared = AB.get_x() * AB.get_x() + AB.get_y() * AB.get_y();
+
+    // The squared length of AC.
+    float AC_squared = AC.get_x() * AC.get_x() + AC.get_y() * AC.get_y();
+
+    // If AB.AC is superior than AB^2 then the point C is after the end point B.
+    if (AB_dot_AC > AB_squared)
+    {
+        return B.get_distance(p);
+    }
+
+    // AB.AC = |AB|*|AH| => AB.AC * AB.AC / |AB|^2 = |AB|*|AH| * |AB|*|AH| / |AB|^2 = |AH|^2
+    float AH_squared = AB_dot_AC * AB_dot_AC / AB_squared;
+    return sqrt(AC_squared - AH_squared);
 }
 
 bool Line::in_shape(float x, float y, float max_distance) const
 {
-
     if (is_vertical() || is_horizontal())
     {
         return bounding_box.in_shape(x, y, max_distance);
