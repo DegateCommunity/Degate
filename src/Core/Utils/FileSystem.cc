@@ -21,31 +21,17 @@
 
 #include <Core/Utils/FileSystem.h>
 #include <Core/Configuration.h>
-#include <Core/Utils/DegateExceptions.h>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-//#include <unistd.h> : Linux only
-#include <cerrno>
-#include <cstdlib>
-//#include <dirent.h> : Linux only
 #include <cstring>
 #include <climits>
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/format.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
 #include <string>
 
 using namespace degate;
 using namespace boost::filesystem;
-
-/** @todo Instead of writing own wrapper functions, it would be better to
-    use the boost filesystem abstraction.
-*/
 
 bool degate::is_directory(std::string const& path)
 {
@@ -122,12 +108,10 @@ std::string degate::get_basedir(std::string const& path)
 	}
 }
 
-
 std::string degate::get_realpath(std::string const& path)
 {
 	return boost::filesystem::canonical(path).make_preferred().string();
 }
-
 
 std::string degate::get_file_suffix(std::string const& path)
 {
@@ -139,16 +123,16 @@ std::string degate::get_file_suffix(std::string const& path)
 	else return std::string();
 }
 
-
-void degate::remove_file(std::string const& path)
+bool degate::remove_file(std::string const& path)
 {
 	try
 	{
-		boost::filesystem::remove(path);
+		return boost::filesystem::remove(path);
 	}
 	catch (filesystem_error const& e)
 	{
 		debug(TM, e.what());
+		return false;
 	}
 }
 
@@ -181,13 +165,21 @@ std::string degate::create_temp_directory()
 	return t.string();
 }
 
+std::string degate::get_temp_file_path()
+{
+    return boost::filesystem::unique_path(generate_temp_file_pattern()).make_preferred().string();
+}
+
+std::string degate::get_temp_directory_path()
+{
+    return boost::filesystem::temp_directory_path().make_preferred().string();
+}
 
 std::string degate::generate_temp_file_pattern()
 {
-	boost::filesystem::path p(boost::filesystem::temp_directory_path() / boost::filesystem::path("temp.XXXXXXXX"));
+	boost::filesystem::path p(boost::filesystem::temp_directory_path() / boost::filesystem::path("degate_temp.%%%%%%%%"));
 	return p.make_preferred().string();
 }
-
 
 std::list<std::string> degate::read_directory(std::string const& path, bool prefix_path)
 {
@@ -200,7 +192,7 @@ std::list<std::string> degate::read_directory(std::string const& path, bool pref
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
 	{
 		std::string file_name = itr->path().filename().string();
-		if (!strcmp(file_name.c_str(), ".") && !strcmp(file_name.c_str(), ".."))
+		if (file_name != "." && file_name != "..")
 		{
 			retlist.push_back(prefix_path ? join_pathes(path, file_name) : file_name);
 		}
@@ -209,13 +201,11 @@ std::list<std::string> degate::read_directory(std::string const& path, bool pref
 	return retlist;
 }
 
-
 std::string degate::join_pathes(std::string const& base_path, std::string const& extension_path)
 {
 	boost::filesystem::path p(base_path / extension_path);
 	return p.make_preferred().string();
 }
-
 
 std::string degate::get_filename_from_path(std::string const& path)
 {

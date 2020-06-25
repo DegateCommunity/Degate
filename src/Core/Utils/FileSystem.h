@@ -41,7 +41,6 @@ namespace degate
 	 * @return Returns true, if the path is a dirctory.
 	 * It returns false, if not or if the path doesn't exists.
 	 */
-
 	bool is_directory(std::string const& path);
 
 	/**
@@ -49,7 +48,6 @@ namespace degate
 	 * @return Returns true, if the path is a regular file.
 	 *   It returns false, if not or if the path doesn't exist.
 	 */
-
 	bool is_file(std::string const& path);
 
 	/**
@@ -57,16 +55,13 @@ namespace degate
 	 * @return Returns true, if the path is a symlink.
 	 *   It returns false, if not or if the path doesn't exist.
 	 */
-
 	bool is_symlink(std::string const& path);
 
 	/**
 	 * Check if a file or directory exists.
 	 * @returns Returns true, if the file or directory exist.
 	 */
-
 	bool file_exists(std::string const& path);
-
 
 	/**
 	 * Get the base directory for file or directory.
@@ -80,18 +75,14 @@ namespace degate
 	 * @exception Throws an InvalidPathException if the path does not exists.
 	 * @see get_realpath()
 	 */
-
 	std::string get_basedir(std::string const& path);
-
 
 	/**
 	 * Get the canonicalized absolute pathname.
 	 * @return Returns the resolved path as an absolut path name.
 	 * @exception Throws an InvalidPathException if the path does not exists.
 	 */
-
 	std::string get_realpath(std::string const& path);
-
 
 	/**
 	 * Get a file suffix without the dot, e.g. "xml" from a file named "foobar.xml".
@@ -99,15 +90,12 @@ namespace degate
 	 * empty string is returned. The suffix is returned as it is. There is no
 	 * lowercase conversion or somthing like that.
 	 */
-
 	std::string get_file_suffix(std::string const& path);
-
 
 	/**
 	 * Get filename part of a path.
 	 */
 	std::string get_filename_from_path(std::string const& path);
-
 
 	/**
 	 * Get the basename of a file. That is the substring without the directory
@@ -118,8 +106,10 @@ namespace degate
 
 	/**
 	 * Unlink a file.
+	 *
+	 * @return Returns false if the file did not exist in the first place, otherwise true.
 	 */
-	void remove_file(std::string const& filename);
+	bool remove_file(std::string const& filename);
 
 	/**
 	 * Unlink a directory with all files in it.
@@ -132,11 +122,9 @@ namespace degate
 	 */
 	void move_file(std::string const& old_path, std::string const& new_path);
 
-
 	/**
 	 * Create a directory.
 	 */
-
 	void create_directory(std::string const& directory);
 
 	/**
@@ -145,13 +133,25 @@ namespace degate
 	 */
 	std::string create_temp_directory();
 
+	/**
+	 * Get a new temporary file path.
+	 *
+	 * @return Returns a path to a new temporary file.
+	 */
+	std::string get_temp_file_path();
+
+	/**
+	 * Get the path of a directory that is suitable for temporary files.
+	 *
+	 * @return Returns a suitable directory path for temporary files.
+	 */
+	std::string get_temp_directory_path();
 
 	/**
 	 * Generate a pattern within a basedir for temp files.
 	 * The pattern is in the form of e.g. "/tmp/temp.%%%%%%" that can be passed
 	 * to boost::filesystem::unique_path. Only the pattern is generated.
 	 */
-
 	std::string generate_temp_file_pattern();
 
 	/**
@@ -164,9 +164,7 @@ namespace degate
 	 *    The special directory entires ".." and "." are not in the list.
 	 * @see get_realpath()
 	 */
-
 	std::list<std::string> read_directory(std::string const& path, bool prefix_path = false);
-
 
 	/**
 	 * Join path specifications.
@@ -175,17 +173,14 @@ namespace degate
 	 * "/etc/hosts". You don't have to deal with path seperator in the first
 	 * or second parameter.
 	 */
-
 	std::string join_pathes(std::string const& base_path, std::string const& extension_path);
 
 	/**
 	 * Make a path specification relative to another.
 	 *
 	 */
-
 	std::string get_relative_path(std::string const& path,
 	                              std::string const& relative_to);
-
 
 	/**
 	 * Strip the leading directory part from a path.
