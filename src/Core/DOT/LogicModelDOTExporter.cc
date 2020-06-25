@@ -234,6 +234,9 @@ void LogicModelDOTExporter::add_connection(Net_shptr net,
                                            std::string const& src_name,
                                            std::string const& edge_name)
 {
+    if(net == nullptr)
+        return;
+
 	string net_name(oid_to_str("N", net->get_object_id()));
 
 	DOTAttributes edge_attrs;
