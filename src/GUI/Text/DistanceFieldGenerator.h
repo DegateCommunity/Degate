@@ -45,7 +45,7 @@ namespace degate
          *
          * @param input_image : The input image.
          *
-         * @return Return the signed distance field image from the input image (with a scale_factor downscale).
+         * @return Returns the signed distance field image from the input image (with a scale_factor downscale).
          */
         std::shared_ptr<QImage> generate_distance_field(const QImage& input_image) const;
 

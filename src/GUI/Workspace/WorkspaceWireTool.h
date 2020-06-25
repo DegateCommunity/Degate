@@ -96,21 +96,21 @@ namespace degate
         /**
          * Know if the line drawing started.
          *
-         * @return Return true if the line drawing started.
+         * @return Returns true if the line drawing started.
          */
         bool has_started();
 
         /**
          * Know if the line drawing ended.
          *
-         * @return Return true if the line drawing ended.
+         * @return Returns true if the line drawing ended.
          */
         bool has_ended();
 
         /**
          * Get the drew line.
          *
-         * @return Return the drew line.
+         * @return Returns the drew line.
          */
         Line get_line();
 

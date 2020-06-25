@@ -68,7 +68,7 @@ namespace degate
 		/**
 		 * Was the button clicked and a new image selected.
 		 *
-		 * @return Return true if a new image had been selected.
+		 * @return Returns true if a new image had been selected.
 		 */
 		bool has_new_image();
 
@@ -76,14 +76,14 @@ namespace degate
 		 * Get the image path, empty if no new image selected.
 		 * @see has_new_image()
 		 *
-		 * @return Return the new image path (can be empty if no new image).
+		 * @return Returns the new image path (can be empty if no new image).
 		 */
 		std::string get_image_path();
 
 		/**
 		 * Get the state of the button.
 		 *
-		 * @return Return true if green (image set), false if red (not image set).
+		 * @return Returns true if green (image set), false if red (not image set).
 		 */
 		bool get_state();
 
@@ -140,7 +140,7 @@ namespace degate
 		/**
 		 * Get the layer type.
 		 *
-		 * @return Return the layer type of the attached layer.
+		 * @return Returns the layer type of the attached layer.
 		 */
 		Layer::LAYER_TYPE get_layer_type();
 
@@ -157,7 +157,7 @@ namespace degate
 		 *
 		 * @param type : the type of the layer to convert.
 		 *
-		 * @return Return the converted layer type.
+		 * @return Returns the converted layer type.
 		 */
 		QString from_type(Layer::LAYER_TYPE type);
 
@@ -166,7 +166,7 @@ namespace degate
 		 *
 		 * @param type : the type of the layer to convert.
 		 *
-		 * @return Return the converted layer type.
+		 * @return Returns the converted layer type.
 		 */
 		Layer::LAYER_TYPE to_type(QString type);
 		

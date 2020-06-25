@@ -58,7 +58,7 @@ namespace degate
         /**
          * Get the picked color (call it after the dialog closed).
          *
-         * @return Return the picked color.
+         * @return Returns the picked color.
          */
         color_t get_color();
 
@@ -126,7 +126,7 @@ namespace degate
 	    /**
 	     * Get the selected color.
 	     *
-	     * @return Return the selected color.
+	     * @return Returns the selected color.
 	     */
 	    color_t get_color();
 

@@ -55,7 +55,7 @@ namespace degate
         /**
          * Get current available outputs (that are shown).
          *
-         * @return Return actual available outputs.
+         * @return Returns actual available outputs.
          */
         std::string get_output();
 
@@ -110,7 +110,7 @@ namespace degate
         /**
          * Get current available outputs (that are shown).
          *
-         * @return Return actual available outputs.
+         * @return Returns actual available outputs.
          */
         std::string get_output();
 

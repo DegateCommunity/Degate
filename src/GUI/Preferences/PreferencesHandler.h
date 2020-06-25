@@ -74,7 +74,7 @@ namespace degate
 		/**
 		 * Get all stored preferences.
 		 *
-		 * @return Return a const reference of all preferences.
+		 * @return Returns a const reference of all preferences.
 		 */
         const Preferences& get_preferences();
 

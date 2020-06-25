@@ -124,14 +124,14 @@ namespace degate
 		/**
 		 * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
 		 *
-		 * @return Return the widget relative mouse position.
+		 * @return Returns the widget relative mouse position.
 		 */
 		QPointF get_widget_mouse_position() const;
 
 		/**
 		 * Get the mouse position relative to the OpenGL world (with 0,0 on the lower left corner).
 		 *
-		 * @return Return the OpenGL relative mouse position.
+		 * @return Returns the OpenGL relative mouse position.
 		 */
 		QPointF get_opengl_mouse_position() const;
 

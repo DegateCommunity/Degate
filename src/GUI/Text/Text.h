@@ -135,7 +135,7 @@ namespace degate
          *
          * @param font: the font.
          *
-         * @return Return the FontData associated to the font and the corresponding OpenGL texture.
+         * @return Returns the FontData associated to the font and the corresponding OpenGL texture.
          */
         std::shared_ptr<FontContextData> get_font(const Font& font);
 
@@ -181,7 +181,7 @@ namespace degate
          *
          * @param font : the font.
          *
-         * @return Return the associated FontData.
+         * @return Returns the associated FontData.
          */
         static std::shared_ptr<FontData> search_font(const Font& font);
 
@@ -247,7 +247,7 @@ namespace degate
          *
          * @param context : the (opengl) context.
          *
-         * @return Return the shared pointer to the font context.
+         * @return Returns the shared pointer to the font context.
          */
         static std::shared_ptr<FontContext> get_font_context(QOpenGLContext* context = QOpenGLContext::currentContext());
 
@@ -257,7 +257,7 @@ namespace degate
          * @param font : the font.
          * @param glyph : the glyph.
          *
-         * @return Return the new generated glyph data.
+         * @return Returns the new generated glyph data.
          */
         static std::shared_ptr<GlyphData> generate_glyph(const std::shared_ptr<FontData>& font_data, const Glyph& glyph);
 
@@ -266,7 +266,7 @@ namespace degate
          *
          * @param font : the font.
          *
-         * @return Return the loaded font.
+         * @return Returns the loaded font.
          */
         static std::shared_ptr<FontData> load_font(const Font& font);
 
@@ -282,7 +282,7 @@ namespace degate
          *
          * @param glyph : the glyph.
          *
-         * @return Return the new generated glyph data.
+         * @return Returns the new generated glyph data.
          */
         std::shared_ptr<GlyphData> get_glyph(const Glyph& glyph);
 

@@ -56,7 +56,7 @@ namespace degate
         /**
          * Get the single step of the slider (the step between values), inferior or equal 1.
          *
-         * @return Return the precision value.
+         * @return Returns the precision value.
          */
         double get_single_step();
 
@@ -70,7 +70,7 @@ namespace degate
         /**
          * Get the minimum possible value for the slider.
          *
-         * @return Return the minimum value.
+         * @return Returns the minimum value.
          */
         double get_minimum();
 
@@ -84,7 +84,7 @@ namespace degate
         /**
          * Get the maximum possible value for the slider.
          *
-         * @return Return the maximum value.
+         * @return Returns the maximum value.
          */
         double get_maximum();
 
@@ -98,7 +98,7 @@ namespace degate
         /**
          * Get the current value of the slider, it will be between the minimum and the maximum.
          *
-         * @return Return the current value of the slider.
+         * @return Returns the current value of the slider.
          */
         double get_value();
 
@@ -116,7 +116,7 @@ namespace degate
          * The default value will be calculated using the single_step value (but will not be optimal in certain
          * conditions). This default value is different from the value returned here and is used when this value is -1.
          *
-         * @return Return the number of decimals shown on the spin box.
+         * @return Returns the number of decimals shown on the spin box.
          */
         int get_decimals();
 

@@ -77,7 +77,7 @@ namespace degate
 		 * @param pre_scaling : scaling of the image.
 		 * @param index : index of the tile.
 		 *
-		 * @return Return the OpenGL texture ID of the tile.
+		 * @return Returns the OpenGL texture ID of the tile.
 		 */
 		GLuint create_background_tile(unsigned int x, unsigned int y, float pre_scaling, unsigned index);
 

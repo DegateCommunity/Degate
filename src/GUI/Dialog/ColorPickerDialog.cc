@@ -28,7 +28,7 @@ namespace degate
      * Convert Qt QColor to degate color_t.
      *
      * @param color : the Qt QColor to convert.
-     * @return Return the corresponding degate color.
+     * @return Returns the corresponding degate color.
      */
     color_t to_degate_color(const QColor& color)
     {
@@ -43,7 +43,7 @@ namespace degate
      * Convert degate color_t to Qt QColor.
      *
      * @param color : the degate color to convert.
-     * @return Return the corresponding QColor.
+     * @return Returns the corresponding QColor.
      */
     QColor to_qt_color(const color_t& color)
     {

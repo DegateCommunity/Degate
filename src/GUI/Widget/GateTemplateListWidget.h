@@ -54,21 +54,21 @@ namespace degate
 		/**
 		 * Get a vector of the selected gates template.
 		 *
-		 * @return Return a vector of selected gates template (can return an empty vector).
+		 * @return Returns a vector of selected gates template (can return an empty vector).
 		 */
 		std::vector<GateTemplate_shptr> get_selected_gates();
 
 		/**
 		 * Get the first selected gate template.
 		 *
-		 * @return Return the first selected gate template.
+		 * @return Returns the first selected gate template.
 		 */
 		GateTemplate_shptr get_selected_gate();
 
 		/**
 		 * Know if there an active selection.
 		 *
-		 * @return Return true if at least one gate is selected.
+		 * @return Returns true if at least one gate is selected.
 		 */
 		bool has_selection();
 

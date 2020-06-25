@@ -56,14 +56,14 @@ namespace degate
 		/**
 		 * Get the selected gate template.
 		 *
-		 * @return Return the selected gate template.
+		 * @return Returns the selected gate template.
 		 */
 		GateTemplate_shptr get_selected_gate();
 
         /**
          * Get a vector of the selected gates template.
          *
-         * @return Return a vector of selected gates template (can return an empty vector).
+         * @return Returns a vector of selected gates template (can return an empty vector).
          */
         std::vector<GateTemplate_shptr> get_selected_gates();
 		

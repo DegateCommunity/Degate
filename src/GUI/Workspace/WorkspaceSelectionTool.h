@@ -78,7 +78,7 @@ namespace degate
 		/**
 		 * Get the selection state, if true there is a selection otherwise not.
 		 *
-		 * @return Return true if there is a selection, otherwise not.
+		 * @return Returns true if there is a selection, otherwise not.
 		 */
 		bool has_selection();
 
@@ -93,7 +93,7 @@ namespace degate
          * Know if the object selection mode is active.
          * It is just a graphic effect that will hide the frame.
          *
-         * @return Return true if the object selection mode is active, otherwise not.
+         * @return Returns true if the object selection mode is active, otherwise not.
          */
         bool is_object_selection_mode_active();
 
@@ -108,7 +108,7 @@ namespace degate
 		/**
 		 * Get selection bounding box.
 		 *
-		 * @return Return the selection bounding box.
+		 * @return Returns the selection bounding box.
 		 */
 		BoundingBox get_selection_box();
 

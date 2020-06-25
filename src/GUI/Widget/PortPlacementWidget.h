@@ -69,7 +69,7 @@ namespace degate
 		/**
 		 * Get the new port template position.
 		 *
-		 * @return Return the new port template position.
+		 * @return Returns the new port template position.
 		 */
 		Point get_new_port_position();
 

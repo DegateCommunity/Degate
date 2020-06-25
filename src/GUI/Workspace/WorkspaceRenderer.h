@@ -113,14 +113,14 @@ namespace degate
 		/**
 		 * Get the area selection state, if true there is a selection area otherwise not.
 		 *
-		 * @return Return true if there is a area selection.
+		 * @return Returns true if there is a area selection.
 		 */
 		bool has_area_selection();
 
 		/**
 		 * Get the area selection bounding box.
 		 *
-		 * @return Return the bounding box of the area selection.
+		 * @return Returns the bounding box of the area selection.
 		 */
 		BoundingBox get_area_selection();
 
@@ -128,14 +128,14 @@ namespace degate
          * Get a safe area selection regarding project size (0 <= position <= max project size).
          * If values are out of bound it will set them to 0 or max project size.
          *
-         * @return Return the safe bounding box of the area selection.
+         * @return Returns the safe bounding box of the area selection.
          */
         BoundingBox get_safe_area_selection();
 		
 		/**
 		 * Get the vector of selected objects.
 		 *
-		 * @return Return all selected objects.
+		 * @return Returns all selected objects.
 		 */
         ObjectSet& get_selected_objects();
 
@@ -154,14 +154,14 @@ namespace degate
         /**
          * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
          *
-         * @return Return the widget relative mouse position.
+         * @return Returns the widget relative mouse position.
          */
         QPointF get_widget_mouse_position() const;
 
         /**
          * Get the mouse position relative to the OpenGL world (with 0,0 on the lower left corner).
          *
-         * @return Return the OpenGL relative mouse position.
+         * @return Returns the OpenGL relative mouse position.
          */
         QPointF get_opengl_mouse_position() const;
 
@@ -169,14 +169,14 @@ namespace degate
          * Get a safe mouse position regarding project size (0 <= position <= max project size).
          * If values are out of bound it will set them to 0 or max project size.
          *
-         * @return Return the OpenGL relative safe mouse position.
+         * @return Returns the OpenGL relative safe mouse position.
          */
         QPointF get_safe_opengl_mouse_position() const;
 
         /**
          * Get the currently used tool.
          *
-         * @return Return the current tool.
+         * @return Returns the current tool.
          */
         WorkspaceTool get_current_tool() const;
 
@@ -360,7 +360,7 @@ namespace degate
          *
          * @param position : the position to be secured.
          *
-         * @return Return a safe position.
+         * @return Returns a safe position.
          */
         QPointF get_safe_position(QPointF position) const;
 
@@ -370,7 +370,7 @@ namespace degate
          *
          * @param bounding_box : the bounding box to be secured.
          *
-         * @return Return a safe bounding box.
+         * @return Returns a safe bounding box.
          */
         BoundingBox get_safe_bounding_box(BoundingBox bounding_box) const;
 

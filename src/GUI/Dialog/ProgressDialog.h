@@ -81,14 +81,14 @@ namespace degate
         /**
          * Know if the job was canceled (only relevant when a progress control is set).
          *
-         * @return Return true if the job was canceled, false otherwise.
+         * @return Returns true if the job was canceled, false otherwise.
          */
         bool was_canceled();
 
         /**
          * Know if the job is finished or not.
          *
-         * @return Return true if the job is finished, false otherwise.
+         * @return Returns true if the job is finished, false otherwise.
          */
         bool is_finished();
 
@@ -97,7 +97,7 @@ namespace degate
          * Show the dialog and give him total control of the main thread.
          * It will also start the job in another thread if a job was set.
          *
-         * @return Return a status code.
+         * @return Returns a status code.
          *
          * @see QDialog
          */

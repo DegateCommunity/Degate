@@ -54,7 +54,7 @@ namespace degate
          *
          * @param name : the name of the category.
          *
-         * @return Return the new category layout (to use with add_widget function for example).
+         * @return Returns the new category layout (to use with add_widget function for example).
          */
         QGridLayout* add_category(const QString& name);
 

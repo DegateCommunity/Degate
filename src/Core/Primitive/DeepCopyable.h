@@ -60,12 +60,12 @@ namespace degate
 	{
 	public:
 		/**
-		 * @brief Return a copy of this object, but with all references to other DeepCopyables cleared (e.g. set to 0-pointer).
+		 * @brief Returns a copy of this object, but with all references to other DeepCopyables cleared (e.g. set to 0-pointer).
 		 */
 		virtual DeepCopyable_shptr cloneShallow() const = 0;
 
 		/**
-		 * @brief Return a deep-copy of this object, i.e. with all DeepCopyable members deep-copied themselves.
+		 * @brief Returns a deep-copy of this object, i.e. with all DeepCopyable members deep-copied themselves.
 		 * 
 		 * Use \a oldnew to avoid cloning objects multiple times.
 		 */

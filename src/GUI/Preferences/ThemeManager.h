@@ -110,7 +110,7 @@ namespace degate
 	 *
 	 * @param theme : the theme to convert into string.
 	 *
-	 * @return Return the theme converted into string.
+	 * @return Returns the theme converted into string.
 	 */
 	std::string theme_to_string(Theme theme);
 
@@ -120,7 +120,7 @@ namespace degate
 	 *
 	 * @param theme : the string that handle the theme.
 	 *
-	 * @return Return the theme from the string.
+	 * @return Returns the theme from the string.
 	 */
 	Theme string_to_theme(const std::string& theme);
 
@@ -130,7 +130,7 @@ namespace degate
 	 *
 	 * @param theme : the icon theme to convert into string.
 	 *
-	 * @return Return the icon theme converted into string.
+	 * @return Returns the icon theme converted into string.
 	 */
 	std::string icon_theme_to_string(IconTheme theme);
 
@@ -140,7 +140,7 @@ namespace degate
 	 *
 	 * @param theme : the string that handle the icon theme.
 	 *
-	 * @return Return the icon theme from the string.
+	 * @return Returns the icon theme from the string.
 	 */
 	IconTheme string_to_icon_theme(const std::string& theme);
 	
