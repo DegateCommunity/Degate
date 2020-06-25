@@ -955,7 +955,7 @@ namespace degate
 
             if(error)
             {
-                throw std::exception(error_message.c_str());
+                throw std::runtime_error(error_message.c_str());
             }
 
             if(imported_project == nullptr)
