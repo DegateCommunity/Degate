@@ -20,9 +20,10 @@
  */
 
 #include "Globals.h"
-
 #include "Point.h"
+
 #include <boost/format.hpp>
+#include <cmath>
 
 using namespace degate;
 
@@ -79,9 +80,9 @@ void Point::shift_x(float delta_x)
 }
 
 
-unsigned int Point::get_distance(Point const& p) const
+float Point::get_distance(Point const& p) const
 {
-	return ((labs(x - p.get_x()) << 1) + (labs(y - p.get_y()) << 1)) >> 1;
+	return sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y));
 }
 
 std::string Point::to_string() const

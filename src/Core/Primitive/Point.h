@@ -51,7 +51,7 @@ namespace degate
 		/**
 		 * Calculate the distance to another point.
 		 */
-		unsigned int get_distance(Point const& p) const;
+		float get_distance(Point const& p) const;
 
 
 		std::string to_string() const;
