@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gate-library>
+ <gate-templates>
+  <gate type-id="1" width="112.266" description="" frame-color="#D9B032A0" fill-color="#303030A0" logic-class="undefined" name="test_gate_1" height="46.656">
+   <images>
+    <image layer-type="logic" image="1_logic.tif"/>
+   </images>
+   <ports>
+    <port description="" x="45" id="2" fill-color="#FF0000FF" y="21" name="y" type="out"/>
+    <port description="" x="99" id="3" fill-color="#FF0000FF" y="19" name="a" type="in"/>
+   </ports>
+   <implementations/>
+  </gate>
+ </gate-templates>
+</gate-library>

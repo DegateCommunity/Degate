@@ -1,0 +1,10 @@
+# 
+# This is a logic model export.
+# 
+# You can generate an image of this graph with:
+# time neato -v -Tsvg -o logic_model_graph.svg logic_model_graph.dot
+# 
+graph LogicModel {
+	
+	G1[label="G1",pos="71,37",shape="component"];
+}

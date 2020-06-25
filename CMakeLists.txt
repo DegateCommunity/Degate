@@ -26,6 +26,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+#
+# Group Qt files
+#
+source_group("qt" REGULAR_EXPRESSION "(resources.qrc|moc.*.cpp|qrc_resources.cpp)")
+set_property(GLOBAL PROPERTY AUTOGEN_TARGETS_FOLDER "Moc")
+set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "qt")
+
 ############# Boost
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
@@ -50,7 +57,7 @@ file(GLOB_RECURSE SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIRECTOR
 )
 
 #
-# Include directorie
+# Include directories
 #
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -58,13 +65,23 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 # Defines groups (to respect folders hierarchy)
 #
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX "src" FILES ${SRC_FILES})
-source_group("qt" REGULAR_EXPRESSION "(resources.qrc|mocs_compilation.cpp|qrc_resources.cpp)")
 
 #
-# Link
+# Remove Main.cpp file
 #
-add_executable(Degate ${SRC_FILES} res/resources.qrc)
-target_link_libraries(Degate ${LIBS})
+list(REMOVE_ITEM SRC_FILES "src/Main.cc")
+
+#
+# Link DegateCore
+#
+add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc)
+target_link_libraries(DegateCore ${LIBS})
+
+#
+# Link main (Degate)
+#
+add_executable(Degate "src/Main.cc" res/resources.qrc)
+target_link_libraries(Degate ${LIBS} DegateCore)
 
 #
 # Installation specifications
@@ -81,12 +98,25 @@ set_target_properties(Degate
     RUNTIME_OUTPUT_DIRECTORY "out/bin"
 )
 
+set_target_properties(DegateCore
+	PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY "out/lib"
+	LIBRARY_OUTPUT_DIRECTORY "out/lib"
+	RUNTIME_OUTPUT_DIRECTORY "out/bin"
+)
+
 #
 # No console on Windows when release.
 #
 if(MSVC) # If using the VS compiler...
     set_target_properties(Degate PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Degate)
 endif()
+
+#
+# Tests
+#
+add_subdirectory(tests)
 
 ############################################################################
 #

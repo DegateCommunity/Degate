@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<logic-model>
+ <gates>
+  <gate type-id="1" layer="0" orientation="normal" description="" id="1" max-x="127.126" min-y="13.392" name="test_gate_1" min-x="14.86" max-y="60.048">
+   <port type-id="3" id="2" diameter="5" name="a"/>
+   <port type-id="2" id="4" diameter="5" name="y"/>
+  </gate>
+ </gates>
+ <vias/>
+ <emarkers/>
+ <wires/>
+ <annotations/>
+ <nets/>
+ <modules>
+  <module id="5" name="main_module" entity="">
+   <modules/>
+   <cells>
+    <cell object-id="1"/>
+   </cells>
+   <module-ports/>
+  </module>
+ </modules>
+</logic-model>

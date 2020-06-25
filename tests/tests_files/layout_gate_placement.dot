@@ -1,0 +1,10 @@
+# 
+# This is a logic model export.
+# 
+# You can generate an image of this graph with:
+# time neato -v -Tsvg -o layout_gate_placement.svg layout_gate_placement.dot
+# 
+graph LogicModel {
+	
+	G1[fixedsize="true",height="47",label="G1\ntest_gate_1",pos="71,37!",shape="component",width="112"];
+}

@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project width="500" lambda="5" server-url="http://localhost/cgi-bin/test.pl?channel=vevrfwchpyigtjuqdshat" description="" pixel-per-um="0" wire-diameter="5" pin-diameter="5" name="test_project" port-diameter="5" degate-version="2.0.0-alpha" height="500" template-dimension="40" font-size="12" last-pulled-transaction-id="0">
+ <layers>
+  <layer description="" position="0" id="1" enabled="true" type="logic" image-filename="layer_1.dimg"/>
+  <layer description="" position="1" id="2" enabled="true" type="undefined"/>
+ </layers>
+ <grids>
+  <regular-grid orientation="horizontal" offset="0" enabled="false" distance="0"/>
+  <regular-grid orientation="vertical" offset="0" enabled="false" distance="0"/>
+  <irregular-grid orientation="horizontal" enabled="false">
+   <offsets/>
+  </irregular-grid>
+  <irregular-grid orientation="vertical" enabled="false">
+   <offsets/>
+  </irregular-grid>
+ </grids>
+ <default-colors>
+  <color object="wire" color="#FBA300FF"/>
+  <color object="via-up" color="#0089FFFF"/>
+  <color object="via-down" color="#FF2300FF"/>
+  <color object="grid" color="#0012FFFF"/>
+  <color object="annotation" color="#303030A0"/>
+  <color object="annotation-frame" color="#32D932A0"/>
+  <color object="gate" color="#303030A0"/>
+  <color object="gate-frame" color="#D9B032A0"/>
+  <color object="gate-port" color="#FF0000FF"/>
+  <color object="text" color="#FFFFFFFF"/>
+  <color object="emarker" color="#FFA0A0FF"/>
+ </default-colors>
+ <port-colors/>
+</project>
