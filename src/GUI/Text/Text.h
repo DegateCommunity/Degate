@@ -231,8 +231,10 @@ namespace degate
          * @param center_x : if true, the text will be centered on the x axis.
          * @param center_y : if true, the text will be centered on the y axis.
          * @param max_width : downscale the text until the text width is less than max width.
+         *
+         * @return Returns the text size (width and height).
          */
-        void add_sub_text(unsigned offset, float x, float y, const std::string& text, unsigned int text_size, const QVector3D& color = QVector3D(255, 255, 255), float alpha = 1, bool center_x = false, bool center_y = false, float max_width = 0);
+        QSizeF add_sub_text(unsigned offset, float x, float y, const std::string& text, unsigned int text_size, const QVector3D& color = QVector3D(255, 255, 255), float alpha = 1, bool center_x = false, bool center_y = false, float max_width = 0);
 
         /**
          * Draw all text in the vbo.

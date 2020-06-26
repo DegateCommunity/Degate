@@ -32,7 +32,10 @@ namespace degate
 		float alpha;
 	};
 
-	WorkspaceGates::WorkspaceGates(QWidget* parent) : WorkspaceElement(parent), text(parent), port_text(parent)
+    WorkspaceGates::WorkspaceGates(QWidget* parent)
+            : WorkspaceElement(parent),
+              gate_template_name_text(parent),
+              port_name_text(parent)
 	{
 	}
 
@@ -49,8 +52,8 @@ namespace degate
 	{
 		WorkspaceElement::init();
 
-		text.init();
-		port_text.init();
+        gate_template_name_text.init();
+        port_name_text.init();
 
 		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
 		const char* vsrc =
@@ -105,8 +108,8 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		unsigned text_size = 0;
-		unsigned port_text_size = 0;
+		unsigned gate_template_name_text_size = 0;
+		unsigned port_name_text_size = 0;
         ports_count = 0;
 
 		unsigned index = 0;
@@ -115,19 +118,23 @@ namespace degate
 			create_gate(iter->second, index);
 			iter->second->set_index(index);
 
-			text_size += iter->second->get_gate_template()->get_name().length();
+            gate_template_name_text_size += iter->second->get_gate_template()->get_name().length();
+
+            if(!iter->second->get_name().empty())
+                gate_template_name_text_size += iter->second->get_name().length() + 3;
+
             ports_count += iter->second->get_ports_number();
 
 			for(Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
 			{
-				port_text_size += (*port_iter)->get_name().length();
+                port_name_text_size += (*port_iter)->get_name().length();
 			}
 			
 			index++;
 		}
 
-		text.update(text_size);
-		port_text.update(port_text_size);
+        gate_template_name_text.update(gate_template_name_text_size);
+        port_name_text.update(port_name_text_size);
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
@@ -135,23 +142,52 @@ namespace degate
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		unsigned text_offset = 0;
-		unsigned port_text_offset = 0;
+		unsigned gate_template_name_text_offset = 0;
+		unsigned port_name_text_offset = 0;
 		unsigned ports_index = 0;
+
 		for(auto iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
-			text.add_sub_text(text_offset, iter->second->get_min_x() + TEXT_PADDING, iter->second->get_min_y() + TEXT_PADDING, iter->second->get_gate_template()->get_name().c_str(), 10, QVector3D(255, 255, 255), 1, false, false, iter->second->get_max_x() - iter->second->get_min_x() - TEXT_PADDING * 2);
+		    std::string text = iter->second->get_gate_template()->get_name();
+
+            if(!iter->second->get_name().empty())
+                text += " [" + iter->second->get_name() + "]";
+
+            gate_template_name_text.add_sub_text(gate_template_name_text_offset,
+                                                 iter->second->get_min_x() + TEXT_PADDING,
+                                                 iter->second->get_min_y() + TEXT_PADDING,
+                                                 text.c_str(),
+                                                 10,
+                                                 QVector3D(255, 255, 255),
+                                                 1,
+                                                 false,
+                                                 false,
+                                                 iter->second->get_max_x() - iter->second->get_min_x() - TEXT_PADDING * 2);
+
 			create_ports(iter->second, ports_index);
 
-			text_offset += iter->second->get_gate_template()->get_name().length();
+            gate_template_name_text_offset += iter->second->get_gate_template()->get_name().length();
+
+            if(!iter->second->get_name().empty())
+                gate_template_name_text_offset += iter->second->get_name().length() + 3;
+
 			ports_index += iter->second->get_ports_number();
 
 			for(auto port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
 			{
 				unsigned x = (*port_iter)->get_x();
 				unsigned y = (*port_iter)->get_y() + (*port_iter)->get_diameter() / 2.0 + TEXT_PADDING;
-				port_text.add_sub_text(port_text_offset, x, y, (*port_iter)->get_name(), 5, QVector3D(255, 255, 255), 1, true, false);
-				port_text_offset += (*port_iter)->get_name().length();
+                port_name_text.add_sub_text(port_name_text_offset,
+                                            x,
+                                            y,
+                                            (*port_iter)->get_name(),
+                                            5,
+                                            QVector3D(255, 255, 255),
+                                            1,
+                                            true,
+                                            false);
+
+                port_name_text_offset += (*port_iter)->get_name().length();
 			}
 		}
 	}
@@ -208,8 +244,8 @@ namespace degate
 	{
 		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
-		
-		text.draw(projection);
+
+        gate_template_name_text.draw(projection);
 	}
 
 	void WorkspaceGates::draw_ports(const QMatrix4x4& projection)
@@ -243,8 +279,8 @@ namespace degate
 	{
 		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
-		
-		port_text.draw(projection);
+
+        port_name_text.draw(projection);
 	}
 
 	void WorkspaceGates::create_gate(Gate_shptr& gate, unsigned index)

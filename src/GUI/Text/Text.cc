@@ -758,7 +758,7 @@ namespace degate
         this->total_size = total_size;
     }
 
-    void Text::add_sub_text(unsigned int offset, float x, float y, const std::string& text, const unsigned int text_size, const QVector3D &color, const float alpha, const bool center_x, const bool center_y, float max_width)
+    QSizeF Text::add_sub_text(unsigned int offset, float x, float y, const std::string& text, const unsigned int text_size, const QVector3D &color, const float alpha, const bool center_x, const bool center_y, float max_width)
     {
         QString string = QString::fromUtf8(text.data(), text.size());
         std::shared_ptr<GlyphData> glyph;
@@ -862,6 +862,8 @@ namespace degate
         }
 
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        return {pixel_size, font_context_data.lock()->font_data->glyph_height * size_factor};
     }
 
     void Text::draw(const QMatrix4x4 &projection)

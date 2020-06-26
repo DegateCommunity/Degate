@@ -121,8 +121,8 @@ namespace degate
 		 */
 		void create_ports(Gate_shptr& gate, unsigned index);
 
-		Text text;
-		Text port_text;
+		Text gate_template_name_text;
+		Text port_name_text;
 		GLuint line_vbo = 0;
 		GLuint port_vbo = 0;
 		unsigned ports_count = 0;
