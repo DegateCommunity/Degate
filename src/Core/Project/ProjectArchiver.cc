@@ -42,7 +42,7 @@ void ProjectArchiver::add_single_file(struct zip* zip_archive,
                                       path const& file,
                                       path const& prepend_dir) const
 {
-	assert(zip_archive != NULL);
+	assert(zip_archive != nullptr);
 	struct zip_source* source;
 
 	path stripped = prepend_dir / strip_path(file, base_dir_path);
@@ -51,7 +51,7 @@ void ProjectArchiver::add_single_file(struct zip* zip_archive,
 	      file.string().c_str(), stripped.string().c_str());
 
 	if ((source = zip_source_file(zip_archive,
-	                              file.string().c_str(), 0, 0)) == NULL)
+	                              file.string().c_str(), 0, 0)) == nullptr)
 	{
 		boost::format f("Cannot add file %1% to zip archive %2%: %3%");
 		f % file % archive_file % zip_strerror(zip_archive);
@@ -120,7 +120,7 @@ void ProjectArchiver::export_data(path const& project_dir,
 	struct zip* zip_archive;
 	int err;
 
-	if ((zip_archive = zip_open(archive_file.string().c_str(), ZIP_CREATE, &err)) == NULL)
+	if ((zip_archive = zip_open(archive_file.string().c_str(), ZIP_CREATE, &err)) == nullptr)
 	{
 		char errstr[1024];
 		zip_error_to_str(errstr, sizeof(errstr), err, errno);
@@ -141,11 +141,11 @@ void ProjectArchiver::export_data(path const& project_dir,
 	catch (ZipException const& ex)
 	{
 		// rethrow exception, but free zip_archive resource first
-		if (zip_archive != NULL) zip_close(zip_archive);
+		if (zip_archive != nullptr) zip_close(zip_archive);
 		throw;
 	}
 
-	if (zip_archive != NULL && zip_close(zip_archive) < 0)
+	if (zip_archive != nullptr && zip_close(zip_archive) < 0)
 	{
 		boost::format f("Cannot write zip archive %1%: %2%");
 		f % archive_file % zip_strerror(zip_archive);

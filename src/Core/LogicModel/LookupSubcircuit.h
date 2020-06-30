@@ -48,7 +48,7 @@ namespace degate
 			     iter != lmodel->gates_end(); ++iter)
 			{
 				Gate_shptr gate = iter->second;
-				assert(gate != NULL);
+				assert(gate != nullptr);
 
 				if (is_logic_class(gate, "flipflop") ||
 					is_logic_class(gate, "xor") ||
@@ -147,14 +147,14 @@ namespace degate
 				if (get_port_type(gport) == src_port_type)
 				{
 					Net_shptr net = gport->get_net();
-					if (net != NULL)
+					if (net != nullptr)
 					{
 						BOOST_FOREACH(object_id_t oid, *net)
 						{
 							if (oid != gport->get_object_id())
 							{
 								PlacedLogicModelObject_shptr plmo = lmodel->get_object(oid);
-								assert(plmo != NULL);
+								assert(plmo != nullptr);
 								if (GatePort_shptr other_port = std::dynamic_pointer_cast<GatePort>(plmo))
 								{
 									Gate_shptr other_gate = other_port->get_gate();

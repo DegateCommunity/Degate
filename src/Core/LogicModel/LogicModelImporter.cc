@@ -131,7 +131,7 @@ void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
                                             LogicModel_shptr lmodel)
 {
 	if (nets_element.isNull() || lmodel == nullptr)
-		throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_nets_element()");
+		throw InvalidPointerException("Got a nullptr pointer in  LogicModelImporter::parse_nets_element()");
 
 	const QDomNodeList net_list = nets_element.elementsByTagName("net");
 	for (int i = 0; i < net_list.count(); i++)
@@ -482,7 +482,7 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(QDomElement co
                                                                   LogicModel_shptr lmodel)
 {
 	if (modules_element.isNull() || lmodel == nullptr)
-		throw InvalidPointerException("Got a NULL pointer in  LogicModelImporter::parse_modules_element()");
+		throw InvalidPointerException("Got a nullptr pointer in  LogicModelImporter::parse_modules_element()");
 
 	std::list<Module_shptr> modules;
 

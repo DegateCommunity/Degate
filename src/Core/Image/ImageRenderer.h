@@ -144,7 +144,7 @@ namespace degate
 		QPointF mouse_last_pos;
 		GLuint vbo = 0;
 		GLuint texture = 0;
-		QOpenGLShaderProgram* program = NULL;
+		QOpenGLShaderProgram* program = nullptr;
 		bool update_on_gl_initialize;
 
 		MemoryImage_shptr image;

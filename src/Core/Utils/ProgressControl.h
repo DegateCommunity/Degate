@@ -104,7 +104,7 @@ namespace degate
 		virtual void reset_progress()
 		{
 			boost::recursive_mutex::scoped_lock (mtx);
-			time_started = time(NULL);
+			time_started = time(nullptr);
 			canceled = false;
 			progress = 0;
 
@@ -170,7 +170,7 @@ namespace degate
 		virtual time_t get_time_passed() const
 		{
 			boost::mutex::scoped_lock (m_mutex);
-			return time(NULL) - time_started;
+			return time(nullptr) - time_started;
 		}
 
 		/**

@@ -58,16 +58,16 @@ namespace degate
 
 
 	template <typename T>
-	down_iterator<T>::down_iterator() : node(NULL), done(true)
+	down_iterator<T>::down_iterator() : node(nullptr), done(true)
 	{
 	}
 
 	template <typename T>
 	down_iterator<T>::down_iterator(QuadTree<T>* _node) :
-		node(NULL),
+		node(nullptr),
 		done(false)
 	{
-		assert(_node != NULL);
+		assert(_node != nullptr);
 
 		open_list.push_back(_node);
 		next_node();
@@ -76,7 +76,7 @@ namespace degate
 	template <typename T>
 	void down_iterator<T>::next_node()
 	{
-		if (node == NULL)
+		if (node == nullptr)
 		{
 			if (open_list.size() > 0)
 			{
@@ -115,7 +115,7 @@ namespace degate
 
 		if (!done && children_iter == children_iter_end)
 		{
-			node = NULL;
+			node = nullptr;
 			next_node();
 		}
 

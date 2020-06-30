@@ -43,7 +43,7 @@ using namespace degate;
 
 void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_shptr gate_lib)
 {
-	if (gate_lib == nullptr) throw InvalidPointerException("Gate library pointer is NULL.");
+	if (gate_lib == nullptr) throw InvalidPointerException("Gate library pointer is nullptr.");
 
 	std::string directory = get_basedir(filename);
 

@@ -76,7 +76,7 @@ namespace degate
 		void set_region(Region_shptr region)
 		{
 			Region_shptr_list::iterator iter_Region_shptr, iter_merged;
-			Region_shptr tmpRegion = NULL;
+			Region_shptr tmpRegion = nullptr;
 			unsigned int region_gap;
 			unsigned int tmpY, tmpX_start, tmpX_end;
 			unsigned int cnt = 0;
@@ -112,7 +112,7 @@ namespace degate
 						if ((*iter_Region_shptr)->isOverlap(tmpY, tmpX_start, tmpX_end))
 						{
 							//if there are more overlapping regions, save current region to merge them 
-							if (tmpRegion == NULL)
+							if (tmpRegion == nullptr)
 							{
 								//debug(TM, "line added first detected region");
 								tmpRegion = *iter_Region_shptr;
@@ -146,7 +146,7 @@ namespace degate
 				}
 				//debug(TM, "number of checked regions : %u", cnt);
 				//check all region, but there is no matching region. create new region
-				if (tmpRegion == NULL)
+				if (tmpRegion == nullptr)
 				{
 					//debug(TM, "Region's first line");
 					mainList.push_back(region);

@@ -156,7 +156,7 @@ object_id_t Via::push_object_to_server(std::string const& server_url)
 		params.add(xmlrpc_c::value_string("via"));
 
 		Layer_shptr layer = get_layer();
-		assert(layer != NULL);
+		assert(layer != nullptr);
 		params.add(xmlrpc_c::value_int(layer->get_layer_id()));
 
 		params.add(xmlrpc_c::value_int(get_x()));

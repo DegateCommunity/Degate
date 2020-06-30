@@ -246,7 +246,7 @@ namespace degate
 	{
 		this->box = box;
 		this->max_entries = max_entries;
-		parent = NULL;
+		parent = nullptr;
 		node_name = "/";
 	}
 
@@ -386,9 +386,9 @@ namespace degate
 			get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(object);
 
 		QuadTree<T>* found = traverse_downto_bounding_box(bbox);
-		assert(found != NULL);
+		assert(found != nullptr);
 
-		if (found != NULL)
+		if (found != nullptr)
 		{
 			if ((found->children.size() >= max_entries) && found->is_splitable())
 			{
@@ -420,8 +420,8 @@ namespace degate
 			get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(object);
 
 		QuadTree<T>* found = traverse_downto_bounding_box(bbox);
-		assert(found != NULL);
-		if (found != NULL)
+		assert(found != nullptr);
+		if (found != nullptr)
 		{
 			found->children.remove(object);
 
@@ -562,7 +562,7 @@ namespace degate
 			<< gen_tabs(tabs) << "Preferred max num of elements : " << max_entries << std::endl
 			<< std::endl;
 
-		if (parent == NULL /* || children.size() < 5 */)
+		if (parent == nullptr /* || children.size() < 5 */)
 		{
 			for (typename std::list<T>::iterator c_iter = children.begin();
 			     c_iter != children.end(); ++c_iter)

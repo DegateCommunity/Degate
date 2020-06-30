@@ -353,7 +353,7 @@ namespace degate
 			unsigned int tile_num_x = x >> tile_width_exp;
 			unsigned int tile_num_y = y >> tile_width_exp;
 
-			if (!(current_tile != NULL &&
+			if (!(current_tile != nullptr &&
 				tile_num_x == curr_tile_num_x &&
 				tile_num_y == curr_tile_num_y))
 			{

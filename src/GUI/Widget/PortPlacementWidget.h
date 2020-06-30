@@ -142,7 +142,7 @@ namespace degate
 		GateTemplatePort_shptr port;
 		unsigned int layer;
 		GLuint vbo;
-		QOpenGLShaderProgram* program = NULL;
+		QOpenGLShaderProgram* program = nullptr;
 		Text port_name_text;
 
 		Point pos;

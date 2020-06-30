@@ -94,7 +94,7 @@ namespace degate
 		 */
 		ImageBase_shptr run(ImageBase_shptr img_in)
 		{
-			assert(img_in != NULL);
+			assert(img_in != nullptr);
 
 			ImageBase_shptr last_img = img_in;
 
@@ -104,9 +104,9 @@ namespace degate
 			{
 				ImageProcessorBase_shptr ip = *iter;
 
-				assert(last_img != NULL);
+				assert(last_img != nullptr);
 				last_img = ip->run(last_img);
-				assert(last_img != NULL);
+				assert(last_img != nullptr);
 			}
 
 			return last_img;

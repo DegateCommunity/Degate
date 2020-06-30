@@ -82,11 +82,11 @@ namespace degate
 		virtual void draw(const QMatrix4x4& projection) = 0;
 
 	protected:
-		QWidget* parent = NULL;
-		Project_shptr project = NULL;
-		QOpenGLShaderProgram* program = NULL;
+		QWidget* parent = nullptr;
+		Project_shptr project = nullptr;
+		QOpenGLShaderProgram* program = nullptr;
 		GLuint vbo = 0;
-		QOpenGLFunctions* context = NULL;
+		QOpenGLFunctions* context = nullptr;
 	};
 }
 

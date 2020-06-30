@@ -66,7 +66,7 @@ namespace degate
 	private:
 
 		/**
-		 * @throw InvalidPointerException This exception is thrown if the parameter is a NULL pointer.
+		 * @throw InvalidPointerException This exception is thrown if the parameter is a nullptr pointer.
 		 */
 		void move_gates_recursive(Module* dst_mod);
 
@@ -137,7 +137,7 @@ namespace degate
 		 * Add a gate to a module.
 		 * @param gate The gate to add.
 		 * @param detect_ports Switch for enabling or disabling automatic module port detection.
-		 * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
+		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
 
 		void add_gate(Gate_shptr gate, bool detect_ports = true);
@@ -152,7 +152,7 @@ namespace degate
 		 * to call method add_gate() on your own.
 		 * @return Returns true if a module was removed, else false.
 		 * @see add_gate()
-		 * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
+		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
 
 		bool remove_gate(Gate_shptr gate);
@@ -160,7 +160,7 @@ namespace degate
 
 		/**
 		 * Add a sub-module to a module.
-		 * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
+		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
 
 		void add_module(Module_shptr module);
@@ -170,7 +170,7 @@ namespace degate
 		 * This method even works if the submodule is not a direct child. If you remove
 		 * a child module that contains gates, the gates are moved one layer above.
 		 * @return Returns true if a module was removed, else false.
-		 * @exception InvalidPointerException This exception is thrown, if \p gate is a NULL pointer.
+		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
 
 		bool remove_module(Module_shptr module);
@@ -207,7 +207,7 @@ namespace degate
 		 * @param module_path Path to the module, e.g. :
 		 *   an absolute path "main_module/crypto/lfsr_a"
 		 *   an relative path "crypto/lfsr_a"
-		 * @return Returns the module. In case of lookup failure a NULL pointer is returned.
+		 * @return Returns the module. In case of lookup failure a nullptr pointer is returned.
 		 */
 
 		Module_shptr lookup_module(std::string const& module_path) const;

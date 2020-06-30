@@ -44,7 +44,7 @@ namespace degate
 	template <typename Type>
 	bool is_of_object_type(PlacedLogicModelObject_shptr o)
 	{
-		return std::dynamic_pointer_cast<Type>(o) != NULL;
+		return std::dynamic_pointer_cast<Type>(o) != nullptr;
 	}
 
 	class ObjectSet

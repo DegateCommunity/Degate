@@ -64,7 +64,7 @@ namespace degate
 
 		virtual ImageBase_shptr run(ImageBase_shptr _in)
 		{
-			assert(_in != NULL);
+			assert(_in != nullptr);
 
 			std::shared_ptr<ImageType> img_in =
 				std::dynamic_pointer_cast<ImageType>(_in);
@@ -73,8 +73,8 @@ namespace degate
 			std::shared_ptr<ImageType>
 				img_out(new ImageType(_in->get_width(), _in->get_height()));
 
-			assert(img_in != NULL);
-			assert(img_out != NULL);
+			assert(img_in != nullptr);
+			assert(img_out != nullptr);
 
 			std::cout << "writing file: " << filename << std::endl;
 

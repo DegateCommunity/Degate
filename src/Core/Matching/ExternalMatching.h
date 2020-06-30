@@ -74,7 +74,7 @@ namespace degate
 		 * @exception DegateRuntimeExcpetion This expetion is thrown
 		 *   if a line cannot be parsed.
 		 * @return Returns a shared pointer to an object, that can be added
-		 *   to the logic model. It returns a NULL pointer equivalent, if the
+		 *   to the logic model. It returns a nullptr pointer equivalent, if the
 		 *   line does not represent a command.
 		 */
 

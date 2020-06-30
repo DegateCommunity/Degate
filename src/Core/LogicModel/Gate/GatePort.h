@@ -138,7 +138,7 @@ namespace degate
 		/**
 		 * Get the gate, this gate port belongs to.
 		 * @return Returns a shared pointer to a gate. A pointer value
-		 *   of NULL indicates, that the gate port is not assigned to a gate.
+		 *   of nullptr indicates, that the gate port is not assigned to a gate.
 		 * @see has_gate()
 		 */
 

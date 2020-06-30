@@ -169,7 +169,7 @@ namespace degate
 
 		/**
 		 * Get the logic model. The logic model should be present all time. This means
-		 * that you can call this method and should not receive a NULL pointer.
+		 * that you can call this method and should not receive a nullptr pointer.
 		 */
 
 		LogicModel_shptr get_logic_model();

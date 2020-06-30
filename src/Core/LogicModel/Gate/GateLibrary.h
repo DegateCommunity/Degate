@@ -94,7 +94,7 @@ namespace degate
 		 * @exception InvalidObjectIDException This exception is thrown if the
 		 *   object ID is invalid.
 		 * @return Returns a shared pointer to the template. The
-		 *   pointer value is NULL, if a template with the \p id
+		 *   pointer value is nullptr, if a template with the \p id
 		 *   was not found.
 		 */
 

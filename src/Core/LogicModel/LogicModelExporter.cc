@@ -38,7 +38,7 @@ using namespace degate;
 
 void LogicModelExporter::export_data(std::string const& filename, LogicModel_shptr lmodel)
 {
-	if (lmodel == nullptr) throw InvalidPointerException("Logic model pointer is NULL.");
+	if (lmodel == nullptr) throw InvalidPointerException("Logic model pointer is nullptr.");
 
 	try
 	{

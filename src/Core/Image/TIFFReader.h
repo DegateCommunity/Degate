@@ -42,7 +42,7 @@ namespace degate
 	{
 	private:
 
-		QImage* image = NULL;
+		QImage* image = nullptr;
 
 
 	public:
@@ -55,13 +55,13 @@ namespace degate
 
 		TIFFReader(std::string const& filename) :
 			ImageReaderBase<ImageType>(filename),
-			image(NULL)
+			image(nullptr)
 		{
 		}
 
 		~TIFFReader()
 		{
-			if (image != NULL) delete image;
+			if (image != nullptr) delete image;
 		}
 
 		bool read();
@@ -103,8 +103,8 @@ namespace degate
 	template <class ImageType>
 	bool TIFFReader<ImageType>::get_image(std::shared_ptr<ImageType> img)
 	{
-		if (image == NULL) return false;
-		if (img == NULL) return false;
+		if (image == nullptr) return false;
+		if (img == nullptr) return false;
 
 		for (unsigned int y = 0; y < get_height(); y++)
 		{

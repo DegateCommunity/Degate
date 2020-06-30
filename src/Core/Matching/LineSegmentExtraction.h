@@ -236,7 +236,7 @@ namespace degate
 				lines.pop_front();
 
 				LineSegment_shptr ls2 = find_adjacent(ls, distance, search_radius_across);
-				if (ls2 != NULL)
+				if (ls2 != nullptr)
 				{
 					running = true;
 					// We could check here if line segments differ in their angles
@@ -337,7 +337,7 @@ namespace degate
 					if (processed->get_pixel(x, y) > 0)
 					{
 						LinearPrimitive_shptr lp = trace_line_primitive(processed, x, y);
-						if (lp != NULL)
+						if (lp != nullptr)
 						{
 							LineSegment_shptr segment(new LineSegment(lp));
 							//segment->print();

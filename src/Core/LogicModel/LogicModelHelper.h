@@ -61,7 +61,7 @@ namespace degate
 	 * The name should be unique. If there is more then one gate with that name,
 	 * the first one is returned.
 	 * @return Returns a shared pointer to the gate. This pointer can represent
-	 *  a NULL pointer, if no gate was found.
+	 *  a nullptr pointer, if no gate was found.
 	 */
 	Gate_shptr get_gate_by_name(LogicModel_shptr lmodel, std::string const& gate_name);
 
@@ -94,7 +94,7 @@ namespace degate
 		                                                 bounding_box.get_height()));
 
 		BackgroundImage_shptr bg_image = layer->get_image();
-		if (bg_image == NULL) throw DegateLogicException("The layer has no background image");
+		if (bg_image == nullptr) throw DegateLogicException("The layer has no background image");
 
 		extract_partial_image<ImageType, BackgroundImage>(new_img, bg_image, bounding_box);
 
@@ -150,7 +150,7 @@ namespace degate
 			ConnectedLogicModelObject_shptr clo =
 				std::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
 
-			if (clo == NULL)
+			if (clo == nullptr)
 			{
 				throw DegateRuntimeException("Error in collect_nets(). One of the objects "
 					"cannot be connected with anything.");
@@ -158,7 +158,7 @@ namespace degate
 			else
 			{
 				Net_shptr net = clo->get_net();
-				if (net != NULL) nets.insert(net);
+				if (net != nullptr) nets.insert(net);
 			}
 		}
 		return nets;
@@ -180,7 +180,7 @@ namespace degate
 	template <class InputIterator>
 	void isolate_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last)
 	{
-		if (lmodel == NULL)
+		if (lmodel == nullptr)
 			throw InvalidPointerException("You passed an invalid shared pointer for lmodel");
 
 		// collect nets
@@ -200,7 +200,7 @@ namespace degate
 			ConnectedLogicModelObject_shptr clo =
 				std::dynamic_pointer_cast<ConnectedLogicModelObject>(*it);
 
-			if (clo == NULL)
+			if (clo == nullptr)
 			{
 				throw DegateRuntimeException("Error in isolate_objecs(). One of the object "
 					"cannot be connected with anything");
@@ -245,7 +245,7 @@ namespace degate
 	template <class InputIterator>
 	void connect_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last)
 	{
-		if (lmodel == NULL)
+		if (lmodel == nullptr)
 			throw InvalidPointerException("You passed an invalid shared pointer for lmodel");
 
 
@@ -279,7 +279,7 @@ namespace degate
 				ConnectedLogicModelObject_shptr clo =
 					std::dynamic_pointer_cast<ConnectedLogicModelObject>(plo);
 
-				assert(clo != NULL);
+				assert(clo != nullptr);
 				objects.insert(clo);
 			}
 		}
@@ -375,7 +375,7 @@ namespace degate
 	/**
 	 * Get the next enabled layer, that is above \p layer. The method will not
 	 * turn around in the layer stack.
-	 * @return Returns the next layer. If there is no next layer, a NULL pointer
+	 * @return Returns the next layer. If there is no next layer, a nullptr pointer
 	 *   is returned.
 	 * @exception InvalidPointerException If you pass an invalid shared pointer,
 	 *   then this exception is raised.
@@ -398,7 +398,7 @@ namespace degate
 	/**
 	 * Get the previous enabled layer, that is below \p layer. The method will not
 	 * turn around in the layer stack.
-	 * @return Returns the previous layer. If there is no previous layer, a NULL pointer
+	 * @return Returns the previous layer. If there is no previous layer, a nullptr pointer
 	 *   is returned.
 	 * @exception InvalidPointerException If you pass an invalid shared pointer,
 	 *   then this exception is raised.

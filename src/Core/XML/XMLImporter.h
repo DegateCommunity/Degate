@@ -37,7 +37,7 @@ namespace degate
 
 		/**
 		 * Parse a string and convert it to a number (e.g. double, long, unsigned int, ...).
-		 * @exception InvalidPointerException is thrown, if you node is a NULL pointer.
+		 * @exception InvalidPointerException is thrown, if you node is a nullptr pointer.
 		 * @exception XMLAttributeMissingException The XML attribute is not present.
 		 * @return Returns the number in type T.
 		 */
@@ -58,7 +58,7 @@ namespace degate
 
 		/**
 		 * Parse a string and convert it to a number (e.g. double, long, unsigned int, ...).
-		 * @exception InvalidPointerException is thrown, if you node is a NULL pointer.
+		 * @exception InvalidPointerException is thrown, if you node is a nullptr pointer.
 		 * @return Returns the number in type T. If the XML attribute is not present, the default value is returned.
 		 */
 

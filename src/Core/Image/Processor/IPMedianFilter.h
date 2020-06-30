@@ -58,7 +58,7 @@ namespace degate
 
 		virtual ImageBase_shptr run(ImageBase_shptr _in)
 		{
-			assert(_in != NULL);
+			assert(_in != nullptr);
 
 			std::shared_ptr<ImageTypeIn> img_in =
 				std::dynamic_pointer_cast<ImageTypeIn>(_in);
@@ -66,8 +66,8 @@ namespace degate
 			std::shared_ptr<ImageTypeOut>
 				img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
 
-			assert(img_in != NULL);
-			assert(img_out != NULL);
+			assert(img_in != nullptr);
+			assert(img_out != nullptr);
 
 			median_filter<ImageTypeOut, ImageTypeIn>(img_out, img_in, median_filter_width);
 

@@ -89,7 +89,7 @@ namespace degate
 		               std::string const& base_directory,
 		               int min_size = 1024)
 		{
-			assert(img != NULL);
+			assert(img != nullptr);
 			this->base_directory = base_directory;
 			images[1] = img;
 			this->min_size = min_size;

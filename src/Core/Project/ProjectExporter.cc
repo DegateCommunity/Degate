@@ -77,7 +77,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
 
 void ProjectExporter::export_data(std::string const& filename, Project_shptr prj)
 {
-	if (prj == nullptr) throw InvalidPointerException("Project pointer is NULL.");
+	if (prj == nullptr) throw InvalidPointerException("Project pointer is nullptr.");
 
 	try
 	{

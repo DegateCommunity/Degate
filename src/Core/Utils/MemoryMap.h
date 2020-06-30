@@ -182,9 +182,9 @@ namespace degate
 		mem_size(_width * _height * sizeof(T)),
 		file(0),
 #ifdef SYS_WINDOWS
-		mem_file(NULL),
+		mem_file(nullptr),
 #endif
-		mem_view(NULL)
+		mem_view(nullptr)
 	{
 		assert(width > 0 && height > 0);
 
@@ -202,9 +202,9 @@ namespace degate
 		filesize(0),
 		mem_size(_width * _height * sizeof(T)),
 #ifdef SYS_WINDOWS
-		mem_file(NULL),
+		mem_file(nullptr),
 #endif
-		mem_view(NULL)
+		mem_view(nullptr)
 	{
 		assert(mode == MAP_STORAGE_TYPE_PERSISTENT_FILE || mode == MAP_STORAGE_TYPE_TEMP_FILE);
 
@@ -236,8 +236,8 @@ namespace degate
 		{
 		case MAP_STORAGE_TYPE_MEM:
 
-			if (mem_view != NULL) free(mem_view);
-			mem_view = NULL;
+			if (mem_view != nullptr) free(mem_view);
+			mem_view = nullptr;
 
 			break;
 		case MAP_STORAGE_TYPE_PERSISTENT_FILE:
@@ -266,14 +266,14 @@ namespace degate
             msync(mem_view, filesize, MS_SYNC);
                 munmap(mem_view, filesize);
 #endif
-            mem_view = NULL;
+            mem_view = nullptr;
         }
 
 #ifdef SYS_WINDOWS
         if (mem_file)
         {
             CloseHandle(mem_file);
-            mem_file = NULL;
+            mem_file = nullptr;
         }
 #endif
 
@@ -295,13 +295,13 @@ namespace degate
 	{
 		/* If it is not null, it would indicates,
 		   that there is already any allocation. */
-		assert(mem_view == NULL);
+		assert(mem_view == nullptr);
 
 		assert(is_mem());
 
 		mem_view = (T*)malloc(width * height * sizeof(T));
-		assert(mem_view != NULL);
-		if (mem_view == NULL) return RET_MALLOC_FAILED;
+		assert(mem_view != nullptr);
+		if (mem_view == nullptr) return RET_MALLOC_FAILED;
 
 		memset(mem_view, 0, width * height * sizeof(T));
 
@@ -315,8 +315,8 @@ namespace degate
 	template <typename T>
 	void MemoryMap<T>::clear()
 	{
-		assert(mem_view != NULL);
-		if (mem_view != NULL) memset(mem_view, 0, width * height * sizeof(T));
+		assert(mem_view != nullptr);
+		if (mem_view != nullptr) memset(mem_view, 0, width * height * sizeof(T));
 	}
 
 
@@ -327,9 +327,9 @@ namespace degate
 	void MemoryMap<T>::clear_area(unsigned int min_x, unsigned int min_y,
 	                              unsigned int width, unsigned int height)
 	{
-		assert(mem_view != NULL);
+		assert(mem_view != nullptr);
 
-		if (mem_view != NULL)
+		if (mem_view != nullptr)
 		{
 			unsigned int x, y;
 			for (y = min_y; y < min_y + height; y++)
@@ -350,8 +350,8 @@ namespace degate
 
 #ifdef SYS_WINDOWS
 
-		file = CreateFileA(filename.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
-		                   OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		file = CreateFileA(filename.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+		                   OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (!file)
 		{
 			debug(TM, "can't open file: %s", filename.c_str());
@@ -370,7 +370,7 @@ namespace degate
 		{
 			filesize = mem_size;
 
-			DWORD res = SetFilePointer(file, filesize - 1, NULL, FILE_BEGIN);
+			DWORD res = SetFilePointer(file, filesize - 1, nullptr, FILE_BEGIN);
 			if (res == INVALID_SET_FILE_POINTER || res == ERROR_NEGATIVE_SEEK)
 			{
 				debug(TM, "can't set file pointer of file: %s", filename.c_str());
@@ -380,7 +380,7 @@ namespace degate
 			DWORD dwBytesWritten = 0;
 			char str[] = " ";
 
-			bool write_res = WriteFile(file, str, strlen(str), &dwBytesWritten, NULL);
+			bool write_res = WriteFile(file, str, strlen(str), &dwBytesWritten, nullptr);
 			if (!write_res)
 			{
 				debug(TM, "can't write to file: %s", filename.c_str());
@@ -388,7 +388,7 @@ namespace degate
 			}
 		}
 
-		mem_file = CreateFileMapping(file, NULL, PAGE_READWRITE, 0, 0, NULL);
+		mem_file = CreateFileMapping(file, nullptr, PAGE_READWRITE, 0, 0, nullptr);
 		if (!mem_file)
 		{
 			debug(TM, "can't map file: %s", filename.c_str());
@@ -440,7 +440,7 @@ namespace degate
 
 #else
 
-			mem_view = (T*)mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, file, 0);
+			mem_view = (T*)mmap(nullptr, filesize, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, file, 0);
 
 			if(mem_view == (void*)(-1))
 			{
@@ -457,7 +457,7 @@ namespace degate
 	template <typename T>
 	void MemoryMap<T>::raw_copy(void* buf) const
 	{
-		assert(mem_view != NULL);
+		assert(mem_view != nullptr);
 		memcpy(buf, mem_view, width * height * sizeof(T));
 	}
 
@@ -471,7 +471,7 @@ namespace degate
 		{
 			debug(TM, "error: out of bounds x=%d, y=%d", x, y);
 			assert(1 == 0);
-			return NULL;
+			return nullptr;
 		}
 	}
 

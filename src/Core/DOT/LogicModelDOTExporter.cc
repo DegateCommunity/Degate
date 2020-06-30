@@ -42,7 +42,7 @@ using namespace degate;
 
 void LogicModelDOTExporter::export_data(std::string const& filename, LogicModel_shptr lmodel)
 {
-	if (lmodel == nullptr) throw InvalidPointerException("Logic model pointer is NULL.");
+	if (lmodel == nullptr) throw InvalidPointerException("Logic model pointer is nullptr.");
 
 	/* Calculate a scaling, so that we can use pixel coordinates from the logic model
 	   as dot coordinates.

@@ -40,7 +40,7 @@ namespace degate
 	{
 	private:
 
-		QImage* image = NULL;
+		QImage* image = nullptr;
 		int depth;
 
 	public:
@@ -53,13 +53,13 @@ namespace degate
 
 		JPEGReader(std::string const& filename) :
 			ImageReaderBase<ImageType>(filename),
-			image(NULL)
+			image(nullptr)
 		{
 		}
 
 		~JPEGReader()
 		{
-			if (image != NULL) delete image;
+			if (image != nullptr) delete image;
 		}
 
 		bool read();
@@ -102,8 +102,8 @@ namespace degate
 	template <class ImageType>
 	bool JPEGReader<ImageType>::get_image(std::shared_ptr<ImageType> img)
 	{
-		if (img == NULL) return false;
-		if (image == NULL) return false;
+		if (img == nullptr) return false;
+		if (image == nullptr) return false;
 
 		for (unsigned int y = 0; y < get_height(); y++)
 		{

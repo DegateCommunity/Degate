@@ -69,17 +69,17 @@ namespace degate
 	 */
 	template <typename T>
 	region_iterator<T>::region_iterator() :
-		node(NULL), done(true)
+		node(nullptr), done(true)
 	{
 	}
 
 	template <typename T>
 	region_iterator<T>::region_iterator(QuadTree<T>* _node, BoundingBox const& bbox) :
-		node(NULL),
+		node(nullptr),
 		done(false),
 		search_bb(bbox)
 	{
-		assert(_node != NULL);
+		assert(_node != nullptr);
 
 		open_list.push_back(_node);
 		next_node();
@@ -90,7 +90,7 @@ namespace degate
 	template <typename T>
 	void region_iterator<T>::next_node()
 	{
-		assert(node == NULL);
+		assert(node == nullptr);
 
 
 		if (open_list.empty())
@@ -136,7 +136,7 @@ namespace degate
 				open_list.empty())
 			{
 				done = true;
-				node = NULL;
+				node = nullptr;
 			}
 		}
 	}
@@ -146,7 +146,7 @@ namespace degate
 	{
 		while (!done && children_iter == children_iter_end)
 		{
-			node = NULL;
+			node = nullptr;
 			next_node();
 		}
 	}

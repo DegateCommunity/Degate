@@ -87,7 +87,7 @@ namespace degate
 	template <typename ImageType>
 	void load_image(std::string const& path, std::shared_ptr<ImageType> img)
 	{
-		if (img == NULL) throw InvalidPointerException("invalid image pointer");
+		if (img == nullptr) throw InvalidPointerException("invalid image pointer");
 		std::shared_ptr<ImageType> i = load_image<ImageType>(path);
 		copy_image<ImageType, ImageType>(img, i);
 	}
@@ -104,7 +104,7 @@ namespace degate
 	template <typename ImageType>
 	void save_image(std::string const& path, std::shared_ptr<ImageType> img)
 	{
-		if (img == NULL) throw InvalidPointerException("invalid image pointer");
+		if (img == nullptr) throw InvalidPointerException("invalid image pointer");
 		TIFFWriter<ImageType> tiff_writer(img->get_width(),
 		                                  img->get_height(), path);
 		if (tiff_writer.write_image(img) != true)
@@ -124,7 +124,7 @@ namespace degate
 	                        std::shared_ptr<ImageType> img,
 	                        BoundingBox const& bounding_box)
 	{
-		if (img == NULL) throw InvalidPointerException("invalid image pointer");
+		if (img == nullptr) throw InvalidPointerException("invalid image pointer");
 		std::shared_ptr<ImageType> part(new ImageType(bounding_box.get_width(),
 		                                              bounding_box.get_height()));
 
@@ -141,7 +141,7 @@ namespace degate
 	template <typename ImageType>
 	void save_normalized_image(std::string const& path, std::shared_ptr<ImageType> img)
 	{
-		if (img == NULL) throw InvalidPointerException("invalid image pointer");
+		if (img == nullptr) throw InvalidPointerException("invalid image pointer");
 		std::shared_ptr<ImageType> normalized_img(new ImageType(img->get_width(),
 		                                                        img->get_height()));
 
@@ -155,7 +155,7 @@ namespace degate
 	 * Merge a set of images by averaging them.
 	 * @exception DegateRuntimeException This exception is thrown, if images differ in size.
 	 * @return If image collection \p images contains elements, this function returns a
-	 *   valid merged image. If the collection is empty, a NULL pointer is returned.
+	 *   valid merged image. If the collection is empty, a nullptr pointer is returned.
 	 */
 	template <typename ImageType>
 	std::shared_ptr<ImageType> merge_images(std::list<std::shared_ptr<ImageType>> const& images)
@@ -189,7 +189,7 @@ namespace degate
 		const double elems = images.size();
 
 		new_img = std::shared_ptr<ImageType>(new GateTemplateImage(w, h));
-		assert(new_img != NULL);
+		assert(new_img != nullptr);
 
 		for (unsigned int y = 0; y < h; y++)
 			for (unsigned int x = 0; x < w; x++)

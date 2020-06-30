@@ -82,7 +82,7 @@ namespace degate
 		GLuint create_background_tile(unsigned int x, unsigned int y, float pre_scaling, unsigned index);
 
 		std::vector<GLuint> background_textures;
-		BackgroundImage_shptr background_image = NULL;
+		BackgroundImage_shptr background_image = nullptr;
 	};
 }
 

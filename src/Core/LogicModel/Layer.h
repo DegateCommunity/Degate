@@ -276,7 +276,7 @@ namespace degate
 		 * chip surface depicting image, you have to ask for the ScalingMananger.
 		 * From the scaling mananger you will get the image.
 		 * @return Returns a shared pointer to the  scaling manager object.
-		 *   The pointer can be a NULL pointer. This is the case if you did not
+		 *   The pointer can be a nullptr pointer. This is the case if you did not
 		 *   initialized it via set_image()
 		 * @see set_image()
 		 */
@@ -318,7 +318,7 @@ namespace degate
 		 * @param ignore_vias If true no vias will be considered.
 		 * @param ignore_wires If true no wires will be considered.
 		 * @return If there is an object at the position, a shared pointer to
-		 *   it is returned. If there is no object, then a NULL pointer representation
+		 *   it is returned. If there is no object, then a nullptr pointer representation
 		 *   is returned.
 		 */
 
@@ -337,7 +337,7 @@ namespace degate
 			for (Layer::qt_region_iterator iter = quadtree.region_iter_begin(min_x, max_x, min_y, max_y);
 			     iter != quadtree.region_iter_end(); ++iter)
 			{
-				if (std::dynamic_pointer_cast<LogicModelObjectType>(*iter) != NULL)
+				if (std::dynamic_pointer_cast<LogicModelObjectType>(*iter) != nullptr)
 				{
 					return true;
 				}

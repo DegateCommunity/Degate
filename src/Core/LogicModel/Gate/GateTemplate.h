@@ -169,7 +169,7 @@ namespace degate
 		 *
 		 * @todo: Here we might need a hook for storing different image types,
 		 *   e.g. a template image that is an average image or sth. like that.
-		 * @exception InvalidPointerException Throws this excpetion, if \p img is NULL.
+		 * @exception InvalidPointerException Throws this excpetion, if \p img is nullptr.
 		 */
 
 		virtual void set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img);
