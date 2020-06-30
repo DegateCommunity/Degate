@@ -58,7 +58,7 @@ namespace degate
         content_layout.addWidget(&vias_count_edit, 2, 1);
 
         // Button
-        run_button.setText("Run");
+        run_button.setText(tr("Run"));
         QObject::connect(&run_button, SIGNAL(clicked()), this, SLOT(run()));
 
         // Layouts

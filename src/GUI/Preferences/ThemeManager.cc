@@ -96,12 +96,13 @@ namespace degate
                 theme_palette.setColor(QPalette::HighlightedText, Qt::black);
                 theme_palette.setColor(QPalette::Disabled, QPalette::Button, Qt::black);
                 qApp->setPalette(theme_palette);
-                qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #191919; border: 1px solid white; } QToolBar { border: none; }");
 
                 break;
             default:
                 break;
         }
+
+        qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #191919; border: 1px solid white; } QToolBar { border: none; }");
     }
 
 	std::string theme_to_string(Theme theme)

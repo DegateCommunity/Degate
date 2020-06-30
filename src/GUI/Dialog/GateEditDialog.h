@@ -26,6 +26,7 @@
 #include "ColorPickerDialog.h"
 #include "PortPlacementDialog.h"
 
+#include <map>
 #include <QDialog>
 #include <QWidget>
 #include <QTabWidget>
@@ -146,6 +147,8 @@ namespace degate
 		QHBoxLayout frame_color_layout;
 		QPushButton frame_color_reset_button;
 
+		std::map<std::string, QString> logic_classes;
+
 	};
 
 	/**
@@ -202,6 +205,32 @@ namespace degate
 		 */
 		void on_language_selector_changed(int index);
 
+	protected:
+	    /**
+	     * Show warning for missing iverilog.
+	     */
+	    void show_iverilog_warning();
+
+        /**
+         * Show warning for missing iverilog and/or gtkwave.
+         */
+        void show_iverilog_gtkwave_warning();
+
+        /**
+         * Show warning for missing verilog code.
+         */
+        void show_missing_verilog_warning();
+
+        /**
+         * Show warning for missing code before compiling.
+         */
+        void show_missing_code_warning();
+
+        /**
+         * Show warning for trying to run/compile VHDL.
+         */
+        void show_vhdl_warning();
+
 	private:
 		GateTemplate_shptr gate = nullptr;
 		Project_shptr project = nullptr;
@@ -225,6 +254,8 @@ namespace degate
 
         // Old index on change, actual index after change.
         int old_index;
+
+        std::map<QString, GateTemplate::IMPLEMENTATION_TYPE> languages;
 	};
 
 
@@ -369,7 +400,7 @@ namespace degate
 
 		// Orientation
 		QLabel orientation_label;
-		QComboBox orientation;
+		QComboBox orientation_edit;
 
 		// Name
 		QLabel name_label;
@@ -381,6 +412,8 @@ namespace degate
 
 		// Other
 		QLabel gate_template_label;
+
+		std::map<Gate::ORIENTATION, QString> orientations;
 	};
 }
 

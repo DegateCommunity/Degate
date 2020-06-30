@@ -37,6 +37,8 @@ namespace degate
      */
     class PreferencesPage : public QWidget
     {
+        Q_OBJECT
+
     public:
 
         explicit PreferencesPage(QWidget* parent);

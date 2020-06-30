@@ -19,7 +19,7 @@
 
 */
 
-#include "GUI/Dialog/ColorPickerDialog.h"
+#include "ColorPickerDialog.h"
 #include "Core/Image/Image.h"
 
 namespace degate
@@ -61,7 +61,7 @@ namespace degate
     ColorPickerDialog::ColorPickerDialog(QWidget *parent, color_t color) : QDialog(parent), color_dialog(parent), color(color), button_box(QDialogButtonBox::Ok)
     {
         // Alpha label
-        aplha_label.setText("Transparency :");
+        aplha_label.setText(tr("Transparency:"));
 
         // Alpha slider
         alpha_slider.setMaximum(255);

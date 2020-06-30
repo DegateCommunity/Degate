@@ -41,7 +41,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 set(LIBS ${Boost_LIBRARIES})
 
 ############# Qt
-find_package(Qt5 COMPONENTS Core Widgets Gui Xml OpenGL Concurrent REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets Gui Xml OpenGL Concurrent LinguistTools REQUIRED)
 set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml Qt5::OpenGL Qt5::Concurrent)
 
 ############################################################################
@@ -55,6 +55,23 @@ file(GLOB_RECURSE SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIRECTOR
 	"src/*.h"
 	"src/*.hpp"
 )
+
+#
+# Translation
+#
+SET(TRANSLATION_FILES
+		degate_en.ts
+		degate_fr.ts
+)
+
+list(TRANSFORM TRANSLATION_FILES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/res/languages/)
+
+# Redefine "qt5_create_translation" function because of a bug (it originally parse all boost files, and make the build VERY slow)
+include(${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake/Qt5LinguistToolsMacros.cmake)
+
+qt5_create_translation(QM_FILES ${SRC_FILES} ${TRANSLATION_FILES} OPTIONS -no-obsolete)
+
+configure_file(res/languages/translations.qrc ${CMAKE_BINARY_DIR} COPYONLY)
 
 #
 # Include directories
@@ -74,13 +91,13 @@ list(REMOVE_ITEM SRC_FILES "src/Main.cc")
 #
 # Link DegateCore
 #
-add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc)
+add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${QM_FILES})
 target_link_libraries(DegateCore ${LIBS})
 
 #
 # Link main (Degate)
 #
-add_executable(Degate "src/Main.cc" res/resources.qrc)
+add_executable(Degate "src/Main.cc" res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${QM_FILES})
 target_link_libraries(Degate ${LIBS} DegateCore)
 
 #

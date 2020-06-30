@@ -24,6 +24,7 @@
 
 #include "GUI/Preferences/PreferencesPage/PreferencesPage.h"
 #include "GUI/Preferences/PreferencesPage/AppearancePreferencesPage.h"
+#include "GUI/Preferences/PreferencesPage/GeneralPreferencesPage.h"
 #include "PreferencesHandler.h"
 
 #include <QDialog>
@@ -67,6 +68,30 @@ namespace degate
 		 */
         void change_page(QListWidgetItem* current, QListWidgetItem* previous);
 
+        /**
+         * Reload the preferences editor.
+         */
+        void reload_editor();
+
+	protected slots:
+	    /**
+	     * Insert a new page.
+	     *
+	     * @param name : the name of the page.
+	     * @param page : the associated PreferencesPage valid pointer.
+	     */
+        void insert_page(const QString& name, PreferencesPage* page);
+
+	    /**
+	     * Create the list of pages.
+	     */
+	    void create_pages();
+
+	    /**
+	     * Insert pages into the editor.
+	     */
+	    void insert_pages();
+
 	private:
 		QVBoxLayout layout;
 		Preferences preferences;
@@ -84,7 +109,7 @@ namespace degate
 		QPushButton cancel_button;
 		
 		// Pages
-		std::map<QString, PreferencesPage*> pages;
+		std::vector<std::pair<QString, PreferencesPage*>> pages;
 	};
 }
 

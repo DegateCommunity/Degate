@@ -31,6 +31,7 @@
 
 namespace degate
 {
+
     /**
      * @struct Preferences
      * @brief Stores all preference values.
@@ -41,6 +42,9 @@ namespace degate
         Theme theme;
         IconTheme icon_theme;
         bool automatic_icon_theme;
+
+        /* Language */
+        QString language;
     };
 
 	/**
@@ -72,6 +76,11 @@ namespace degate
 		void update(Preferences updated_preferences);
 
 		/**
+		 * Update language regarding the language in the preferences.
+		 */
+		void update_language();
+
+		/**
 		 * Get all stored preferences.
 		 *
 		 * @return Returns a const reference of all preferences.
@@ -89,9 +98,15 @@ namespace degate
 	     */
 	    void theme_changed();
 
+        /**
+         * Emitted when the language changed.
+         */
+        void language_changed();
+
 	private:
         QSettings settings;
         Preferences preferences;
+        std::shared_ptr<QTranslator> translator = nullptr;
 	};
 }
 

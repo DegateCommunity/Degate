@@ -28,9 +28,9 @@ namespace degate
 	{
 		setColumnCount(3);
 		QStringList list;
-		list.append("ID");
-		list.append("Name");
-		list.append("Description");
+		list.append(tr("ID"));
+		list.append(tr("Name"));
+		list.append(tr("Description"));
 		setHorizontalHeaderLabels(list);
 		resizeColumnsToContents();
 		resizeRowsToContents();

@@ -19,7 +19,7 @@
 
 */
 
-#include <GUI/Preferences/PreferencesPage/AppearancePreferencesPage.h>
+#include "AppearancePreferencesPage.h"
 
 namespace degate
 {
@@ -29,22 +29,30 @@ namespace degate
 	    // Widgets creation
 	    //////////
 
-        auto introduction_label = new QLabel("You can change appearance preferences here, like theme and icon theme.");
+        introduction_label.setText(tr("You can change appearance preferences here, like theme and icon theme."));
 
         // Theme
-		QStringList theme_list;
-		theme_list.append("native");
-		theme_list.append("light");
-		theme_list.append("dark");
+        themes[NATIVE_THEME] = tr("Native");
+        themes[LIGHT_THEME] = tr("Light");
+        themes[DARK_THEME] = tr("Dark");
+
+        QStringList theme_list;
+        for(auto& e : themes)
+            theme_list.append(e.second);
+
 		theme_box.addItems(theme_list);
-		theme_box.setCurrentText(QString::fromStdString(theme_to_string(PREFERENCES_HANDLER.get_preferences().theme)));
+		theme_box.setCurrentText(themes[PREFERENCES_HANDLER.get_preferences().theme]);
 
 		// Icon theme
+        icon_themes[LIGHT_ICON_THEME] = tr("Light");
+        icon_themes[DARK_ICON_THEME] = tr("Dark");
+
 		QStringList icon_theme_list;
-		icon_theme_list.append("light");
-		icon_theme_list.append("dark");
+        for(auto& e : icon_themes)
+            icon_theme_list.append(e.second);
+
 		icon_theme_box.addItems(icon_theme_list);
-		icon_theme_box.setCurrentText(QString::fromStdString(icon_theme_to_string(PREFERENCES_HANDLER.get_preferences().icon_theme)));
+		icon_theme_box.setCurrentText(icon_themes[PREFERENCES_HANDLER.get_preferences().icon_theme]);
         icon_theme_box.setDisabled(PREFERENCES_HANDLER.get_preferences().automatic_icon_theme);
 
 		// Automatic icon theme
@@ -57,19 +65,19 @@ namespace degate
         //////////
 
         // Introduction label
-        layout.addWidget(introduction_label);
+        layout.addWidget(&introduction_label);
 
         // Theme category
-        auto theme_layout = PreferencesPage::add_category("Theme");
+        auto theme_layout = PreferencesPage::add_category(tr("Theme"));
 
         // Theme
-        PreferencesPage::add_widget(theme_layout, "Theme :", &theme_box);
+        PreferencesPage::add_widget(theme_layout, tr("Theme:"), &theme_box);
 
         // Automatic icon theme checkbox
-        PreferencesPage::add_widget(theme_layout, "Automatic icon theme :", &automatic_check_box);
+        PreferencesPage::add_widget(theme_layout, tr("Automatic icon theme:"), &automatic_check_box);
 
         // Icon theme
-        PreferencesPage::add_widget(theme_layout, "Icon theme :", &icon_theme_box);
+        PreferencesPage::add_widget(theme_layout, tr("Icon theme:"), &icon_theme_box);
 	}
 
 	AppearancePreferencesPage::~AppearancePreferencesPage()
@@ -80,29 +88,39 @@ namespace degate
     void AppearancePreferencesPage::apply(Preferences& preferences)
     {
 	    // Theme
-        preferences.theme = string_to_theme(theme_box.currentText().toStdString());
+	    for(auto& e : themes)
+        {
+	        if(e.second == theme_box.currentText())
+                preferences.theme = e.first;
+        }
 
         // Icon theme
         if(automatic_check_box.isChecked())
         {
-            if(theme_box.currentText().toStdString() == "native")
+            if(preferences.theme == NATIVE_THEME)
             {
-                icon_theme_box.setCurrentText(QString::fromStdString(icon_theme_to_string(DARK_ICON_THEME)));
+                icon_theme_box.setCurrentText(icon_themes[DARK_ICON_THEME]);
                 preferences.icon_theme = DARK_ICON_THEME;
             }
-            else if (theme_box.currentText().toStdString() == "light")
+            else if (preferences.theme == LIGHT_THEME)
             {
-                icon_theme_box.setCurrentText(QString::fromStdString(icon_theme_to_string(DARK_ICON_THEME)));
-                preferences.icon_theme =  DARK_ICON_THEME;
+                icon_theme_box.setCurrentText(icon_themes[DARK_ICON_THEME]);
+                preferences.icon_theme = DARK_ICON_THEME;
             }
             else
             {
-                icon_theme_box.setCurrentText(QString::fromStdString(icon_theme_to_string(LIGHT_ICON_THEME)));
-                preferences.icon_theme =  LIGHT_ICON_THEME;
+                icon_theme_box.setCurrentText(icon_themes[LIGHT_ICON_THEME]);
+                preferences.icon_theme = LIGHT_ICON_THEME;
             }
         }
         else
-            preferences.icon_theme =  string_to_icon_theme(icon_theme_box.currentText().toStdString());
+        {
+            for(auto& e : icon_themes)
+            {
+                if(e.second == icon_theme_box.currentText())
+                    preferences.icon_theme = e.first;
+            }
+        }
 
         // Automatic icon theme
         preferences.automatic_icon_theme = automatic_check_box.isChecked();

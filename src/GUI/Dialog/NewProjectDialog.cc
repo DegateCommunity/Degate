@@ -25,10 +25,10 @@ namespace degate
 {
 	NewProjectDialog::NewProjectDialog(QWidget* parent) : QDialog(parent)
 	{
-		project_label.setText("Project name :");
-		layer_label.setText("Layer count :");
-		width_label.setText("Project width :");
-		height_label.setText("Project height :");
+		project_label.setText(tr("Project name:"));
+		layer_label.setText(tr("Layer count:"));
+		width_label.setText(tr("Project width:"));
+		height_label.setText(tr("Project height:"));
 
 		layer_count.setMinimum(0);
 		layer_count.setMaximum(50);
@@ -39,7 +39,7 @@ namespace degate
 		height.setMinimum(0);
 		height.setMaximum(1000000);
 
-		validate_button.setText("Validate");
+		validate_button.setText(tr("Ok"));
 
 		main_layout.addWidget(&project_label);
 		main_layout.addWidget(&project_name);

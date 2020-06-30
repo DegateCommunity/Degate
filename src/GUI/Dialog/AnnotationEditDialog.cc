@@ -25,17 +25,17 @@ namespace degate
 {
 	AnnotationEditDialog::AnnotationEditDialog(Annotation_shptr annotation, QWidget* parent) : QDialog(parent), fill_color(parent), frame_color(parent), annotation(annotation)
 	{
-		text_label.setText("Text :");
+		text_label.setText(tr("Text:"));
 		text.setText(QString::fromStdString(annotation->get_name()));
 		
-		fill_color_label.setText("Fill color :");
+		fill_color_label.setText(tr("Fill color:"));
 		fill_color.set_color(annotation->get_fill_color());
 		
-		frame_color_label.setText("Frame color :");
+		frame_color_label.setText(tr("Frame color:"));
 		frame_color.set_color(annotation->get_frame_color());
 
-		validate_button.setText("Ok");
-		cancel_button.setText("Cancel");
+		validate_button.setText(tr("Ok"));
+		cancel_button.setText(tr("Cancel"));
 
 		layout.addWidget(&text_label, 0, 0);
 		layout.addWidget(&text, 0, 1);

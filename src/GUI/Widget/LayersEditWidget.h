@@ -25,6 +25,7 @@
 #include "Core/Project/Project.h"
 #include "Core/LogicModel/Layer.h"
 
+#include <map>
 #include <QWidget>
 #include <QLabel>
 #include <QTableWidget>
@@ -152,25 +153,10 @@ namespace degate
 		void set_layer_type(Layer::LAYER_TYPE type);
 		
 	private:
-		/**
-		 * Convert a layer type enum to a QString.
-		 *
-		 * @param type : the type of the layer to convert.
-		 *
-		 * @return Returns the converted layer type.
-		 */
-		QString from_type(Layer::LAYER_TYPE type);
-
-		/**
-		 * Convert a layer type string to the enum type.
-		 *
-		 * @param type : the type of the layer to convert.
-		 *
-		 * @return Returns the converted layer type.
-		 */
-		Layer::LAYER_TYPE to_type(QString type);
 		
 		Layer::LAYER_TYPE type;
+
+		std::map<Layer::LAYER_TYPE, QString> types;
 		
 	};
 

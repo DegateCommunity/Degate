@@ -25,19 +25,12 @@ namespace degate
 {
 	PreferencesEditor::PreferencesEditor(QWidget* parent) : QDialog(parent)
 	{
-        //////////
-        // List of pages
-        //////////
-        pages["Appearance"] = new AppearancePreferencesPage(this);
-
-
-        //////////
-        // Other
-        //////////
+        // Create pages (go to the end of the file to add new ones).
+        create_pages();
 
         // Base settings
-        setWindowTitle("Preferences");
-	    setBaseSize(parent->size() * 0.5);
+        setWindowTitle(tr("Preferences"));
+	    //setBaseSize(parent->size() * 0.5);
 
 	    // Get preferences
         preferences = PREFERENCES_HANDLER.get_preferences();
@@ -48,25 +41,20 @@ namespace degate
         pages_list.setMaximumWidth(128);
 
         // Insert pages
-        for(auto& e : pages)
-        {
-            pages_list.addItem(e.first);
-            preferences_pages.addWidget(e.second);
-        }
+        insert_pages();
 
 		// Save
-		save_button.setText("Apply");
+		save_button.setText(tr("Apply"));
 		QObject::connect(&save_button, SIGNAL(clicked()), this, SLOT(validate()));
 
 		// Cancel
-		cancel_button.setText("Close");
+		cancel_button.setText(tr("Close"));
 		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
 
         pages_list.setCurrentItem(pages_list.item(0));
 
         // Pages layout
         preferences_pages_layout.addWidget(&preferences_pages);
-        preferences_pages_layout.addStretch(1);
 
         // Content widget
         auto area_content = new QWidget;
@@ -74,7 +62,7 @@ namespace degate
 
         // Scroll area setup
         scroll_area.setWidget(area_content);
-        scroll_area.setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        scroll_area.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         scroll_area.setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         scroll_area.setWidgetResizable(true);
 
@@ -94,6 +82,9 @@ namespace degate
 		setLayout(&layout);
 
         QObject::connect(&pages_list, &QListWidget::currentItemChanged, this, &PreferencesEditor::change_page);
+        QObject::connect(&PREFERENCES_HANDLER, &PreferencesHandler::language_changed, this, &PreferencesEditor::reload_editor);
+
+        scroll_area.setMinimumWidth(area_content->minimumSizeHint().width());
 	}
 
 	PreferencesEditor::~PreferencesEditor()
@@ -123,5 +114,65 @@ namespace degate
             current = previous;
 
         preferences_pages.setCurrentIndex(pages_list.row(current));
+    }
+
+    void PreferencesEditor::reload_editor()
+    {
+	    int current_index = pages_list.currentRow();
+
+        save_button.setText(tr("Apply"));
+        cancel_button.setText(tr("Close"));
+
+        // Delete pages
+        pages_list.clear();
+
+        for(int i = preferences_pages.count(); i >= 0; i--)
+        {
+            QWidget* widget = preferences_pages.widget(i);
+            preferences_pages.removeWidget(widget);
+        }
+
+        for(auto& e : pages)
+            delete e.second;
+
+        pages.clear();
+
+        // Create pages
+        create_pages();
+
+        // Insert pages
+        insert_pages();
+
+        pages_list.setCurrentRow(current_index);
+        preferences_pages.setCurrentIndex(current_index);
+
+        adjustSize();
+    }
+
+    void PreferencesEditor::insert_page(const QString& name, PreferencesPage* page)
+    {
+        pages.push_back(std::pair<QString, PreferencesPage*>(name, page));
+    }
+
+    void PreferencesEditor::create_pages()
+    {
+        //////////
+        // List of pages.
+        //////////
+
+        insert_page(tr("General"), new GeneralPreferencesPage(this));
+        insert_page(tr("Appearance"), new AppearancePreferencesPage(this));
+    }
+
+    void PreferencesEditor::insert_pages()
+    {
+	    int index = 0;
+        for(auto& e : pages)
+        {
+            pages_list.insertItem(index, e.first);
+            preferences_pages.insertWidget(index, e.second);
+
+            index++;
+        }
     }
 }

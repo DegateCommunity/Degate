@@ -19,37 +19,34 @@
 
 */
 
-#ifndef __APPEARANCEPREFERENCESPAGE_H__
-#define __APPEARANCEPREFERENCESPAGE_H__
+#ifndef __GENERALPREFERENCESPAGE_H__
+#define __GENERALPREFERENCESPAGE_H__
 
-#include "GUI/Preferences/ThemeManager.h"
 #include "GUI/Preferences/PreferencesPage/PreferencesPage.h"
 
 #include <map>
 #include <QComboBox>
-#include <QCheckBox>
 
 namespace degate
 {
-
-	/**
-	 * @class AppearancePreferencesPage
-	 * @brief Widget to change appearance preferences (like theme and icon theme).
+    /**
+	 * @class GeneralPreferencesPage
+	 * @brief Widget to change general preferences (like language).
 	 *
 	 * @see PreferencesDialog
 	 */
-	class AppearancePreferencesPage : public PreferencesPage
-	{
-		Q_OBJECT
-		
-	public:
-		/**
-		 * Create the appearance preferences page widget.
+    class GeneralPreferencesPage : public PreferencesPage
+    {
+    Q_OBJECT
+
+    public:
+        /**
+		 * Create the general preferences page widget.
 		 *
 		 * @param parent : the parent of the widget.
 		 */
-		AppearancePreferencesPage(QWidget* parent);
-		~AppearancePreferencesPage();
+        GeneralPreferencesPage(QWidget* parent);
+        ~GeneralPreferencesPage() = default;
 
         /**
          * Update preferences, the preferences editor will call this function to apply changes for every page.
@@ -57,17 +54,14 @@ namespace degate
          * @param preferences : the updated preferences to apply changes to.
          */
         void apply(Preferences& preferences) override;
-		
-	private:
 
-		QComboBox theme_box;
-		QComboBox icon_theme_box;
-        QCheckBox automatic_check_box;
-        QLabel introduction_label;
+    private:
 
-        std::map<IconTheme, QString> icon_themes;
-        std::map<Theme, QString> themes;
-	};
+        QComboBox language_edit;
+
+        std::map<QString, QString> languages;
+
+    };
 }
 
-#endif
+#endif //__GENERALPREFERENCESPAGE_H__

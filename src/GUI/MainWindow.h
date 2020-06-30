@@ -86,6 +86,11 @@ namespace degate
 	     */
 	    void reload_icons();
 
+	    /**
+	     * Load/Reload all texts of the main window (useful when language changed).
+	     */
+	    void reload_texts();
+
 		/* Project menu */
 		
 		/**
@@ -239,6 +244,16 @@ namespace degate
 
 
 		/* Other */
+
+		/**
+		 * Update the window title.
+		 */
+		void update_window_title();
+
+		/**
+		 * Update the status bar layer info.
+		 */
+		void update_status_bar_layer_info();
 		
 		/**
 		 * Change the current layer to the next (up) layer.
@@ -302,6 +317,7 @@ namespace degate
 	    /* Menus */
 
 	    // Project menu
+        QMenu* project_menu;
         QAction* project_new_action;
         QAction* project_import_action;
         QAction* project_export_action;
@@ -311,9 +327,11 @@ namespace degate
         QAction* project_quit_action;
 
         // Edit menu
+        QMenu* edit_menu;
         QAction* preferences_edit_action;
 
         // View menu
+        QMenu* view_menu;
         QAction* show_gates_view_action;
         QAction* show_gates_name_view_action;
         QAction* show_ports_view_action;
@@ -327,35 +345,43 @@ namespace degate
         QAction* show_wires_view_action;
 
         // Layer menu
+        QMenu* layer_menu;
         QAction* layers_edit_action;
         QAction* background_import_action;
 
         // Gate menu
+        QMenu* gate_menu;
         QAction* edit_gate_action;
         QAction* new_gate_template_action;
         QAction* new_gate_action;
         QAction* gate_library_action;
 
         // Annotation menu
+        QMenu* annotation_menu;
         QAction* edit_annotation_action;
         QAction* create_annotation_action;
 
         // EMarker menu
+        QMenu* emarker_menu;
         QAction* edit_emarker_action;
 
         // Via menu
+        QMenu* via_menu;
         QAction* edit_via_action;
 
         // Logic menu
+        QMenu* logic_menu;
         QAction* remove_objects_action;
         QAction* interconnect_objects_action;
 
         // Template matching menu
+        QMenu* matching_menu;
         QAction* template_matching_action;
         QAction* via_matching_action;
         QAction* wire_matching_action;
 
         // Help menu
+        QMenu* help_menu;
         QAction* about_action;
 
 

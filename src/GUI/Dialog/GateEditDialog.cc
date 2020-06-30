@@ -32,65 +32,70 @@ namespace degate
 {
 	// Entity tab
 
-	GateEditEntityTab::GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent), 
-																													gate(gate), 
-																													fill_color(parent), 
-																													frame_color(parent), 
+	GateEditEntityTab::GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent),
+																													gate(gate),
+																													fill_color(parent),
+																													frame_color(parent),
 																													project(project)
 	{
 		// Name
-		name_label.setText("Name :");
+		name_label.setText(tr("Name:"));
 		name.setText(QString::fromStdString(gate->get_name()));
 
 		// Description
-		description_label.setText("Description :");
+		description_label.setText(tr("Description:"));
 		description.setText(QString::fromStdString(gate->get_description()));
 
 		// Logic class
-		logic_class_label.setText("Logic Class :");
-		logic_class.addItem("undefined");
-		logic_class.addItem("inverter");
-		logic_class.addItem("tristate-inverter");
-		logic_class.addItem("tristate-inverter-lo-active");
-		logic_class.addItem("tristate-inverter-hi-active");
-		logic_class.addItem("nand");
-		logic_class.addItem("nor");
-		logic_class.addItem("and");
-		logic_class.addItem("or");
-		logic_class.addItem("xor");
-		logic_class.addItem("xnor");
-		logic_class.addItem("buffer");
-		logic_class.addItem("buffer-tristate-lo-active", "Tristate buffer (low active)");
-		logic_class.addItem("buffer-tristate-hi-active", "Tristate buffer (high active)");
-		logic_class.addItem("latch-generic", "latch (generic, transparent)");
-		logic_class.addItem("latch-sync-enable", "latch (generic, with synchronous enable)");
-		logic_class.addItem("latch-async-enable", "latch (generic, with asynchronous enable)");
-		logic_class.addItem("flipflop", "flipflop (generic)");
-		logic_class.addItem("flipflop-sync-rst", "flipflop (synchronous reset, edge-triggert)");
-		logic_class.addItem("flipflop-async-rst", "flipflop (asynchronous reset, edge-triggert)");
-		logic_class.addItem("generic-combinational-logic", "generic combinational logic");
-		logic_class.addItem("ao", "and-or");
-		logic_class.addItem("aoi", "and-or-inverter");
-		logic_class.addItem("oa", "or-and");
-		logic_class.addItem("oai", "or-and-inverter");
-		logic_class.addItem("isolation");
-		logic_class.addItem("half-adder");
-		logic_class.addItem("full-adder");
-		logic_class.addItem("mux");
-		logic_class.addItem("demux");
-		logic_class.setCurrentText(QString::fromStdString(gate->get_logic_class()));
+        logic_classes["undefined"] = tr("Undefined");
+        logic_classes["inverter"] = tr("Inverter");
+        logic_classes["tristate-inverter"] = tr("Tristate inverter");
+        logic_classes["tristate-inverter-lo-active"] = tr("Tristate inverter (low active)");
+        logic_classes["tristate-inverter-hi-active"] = tr("Tristate inverter (hight active)");
+        logic_classes["nand"] = tr("NAND");
+        logic_classes["nor"] = tr("NOR");
+        logic_classes["and"] = tr("AND");
+        logic_classes["or"] = tr("OR");
+        logic_classes["xor"] = tr("XOR");
+        logic_classes["xnor"] = tr("XNOR");
+        logic_classes["buffer"] = tr("Buffer");
+        logic_classes["buffer-tristate-lo-active"] = tr("Tristate buffer (low active)");
+        logic_classes["buffer-tristate-hi-active"] = tr("Tristate buffer (high active)");
+        logic_classes["latch-generic"] = tr("Latch (generic, transparent)");
+        logic_classes["latch-sync-enable"] = tr("Latch (generic, with synchronous enable)");
+        logic_classes["latch-async-enable"] = tr("Latch (generic, with asynchronous enable)");
+        logic_classes["flipflop"] = tr("Flipflop (generic)");
+        logic_classes["flipflop-sync-rst"] = tr("Flipflop (synchronous reset, edge-triggert)");
+        logic_classes["flipflop-async-rst"] = tr("Flipflop (asynchronous reset, edge-triggert)");
+        logic_classes["generic-combinational-logic"] = tr("Generic combinational logic");
+        logic_classes["ao"] = tr("AND-OR");
+        logic_classes["aoi"] = tr("AND-OR-Inverter");
+        logic_classes["oa"] = tr("OR-AND");
+        logic_classes["oai"] = tr("OR-AND-Inverter");
+        logic_classes["isolation"] = tr("Isolation");
+        logic_classes["half-adder"] = tr("Half adder");
+        logic_classes["full-adder"] = tr("Full adder");
+        logic_classes["mux"] = tr("Multiplexer");
+        logic_classes["demux"] = tr("Demultiplexer");
+
+		logic_class_label.setText(tr("Logic Class:"));
+
+		for(auto& e : logic_classes)
+            logic_class.addItem(e.second);
+
+		logic_class.setCurrentText(logic_classes[gate->get_logic_class()]);
 
 		// Ports list
-		ports_label.setText("Ports :");
+		ports_label.setText(tr("Ports:"));
 		ports.setColumnCount(6);
         ports.setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
 		QStringList list;
-		list.append("ID");
-		list.append("Name");
-		list.append("Description");
-		list.append("Color");
-		list.append("In");
-		list.append("Out");
+		list.append(tr("ID"));
+		list.append(tr("Name"));
+		list.append(tr("Description"));
+		list.append(tr("Color"));
+		list.append(tr("In"));
+		list.append(tr("Out"));
 		ports.setHorizontalHeaderLabels(list);
 		ports.resizeColumnsToContents();
 		ports.resizeRowsToContents();
@@ -101,23 +106,23 @@ namespace degate
 		ports_buttons_layout.addWidget(&ports_place);
 		ports_buttons_layout.addWidget(&ports_add_button);
 		ports_buttons_layout.addWidget(&ports_remove_button);
-		ports_place.setText("Place");
-		ports_add_button.setText("Add");
-		ports_remove_button.setText("Remove");
+		ports_place.setText(tr("Place"));
+		ports_add_button.setText(tr("Add"));
+		ports_remove_button.setText(tr("Remove"));
 
 		// Fill color
-		fill_color_label.setText("Fill color :");
+		fill_color_label.setText(tr("Fill color:"));
 		fill_color_layout.addWidget(&fill_color);
 		fill_color_layout.addWidget(&fill_color_reset_button);
 		fill_color.set_color(gate->get_fill_color());
-		fill_color_reset_button.setText("Reset Color");
+		fill_color_reset_button.setText(tr("Reset Color"));
 
 		// Frame color
-		frame_color_label.setText("Frame color :");
+		frame_color_label.setText(tr("Frame color:"));
 		frame_color_layout.addWidget(&frame_color);
 		frame_color_layout.addWidget(&frame_color_reset_button);
 		frame_color.set_color(gate->get_frame_color());
-		frame_color_reset_button.setText("Reset Color");
+		frame_color_reset_button.setText(tr("Reset Color"));
 
 		// Layout
 		layout.addWidget(&name_label, 0, 0);
@@ -133,7 +138,7 @@ namespace degate
 		layout.addLayout(&fill_color_layout, 5, 1);
 		layout.addWidget(&frame_color_label, 6, 0);
 		layout.addLayout(&frame_color_layout, 6, 1);
-		
+
 		setLayout(&layout);
 
 		QObject::connect(&ports_place, SIGNAL(clicked()), this, SLOT(on_port_place()));
@@ -191,7 +196,12 @@ namespace degate
 			index++;
 		}
 
-		gate->set_logic_class(logic_class.currentText().toStdString());
+        for(auto& e : logic_classes)
+        {
+            if(e.second == logic_class.currentText())
+                gate->set_logic_class(e.first);
+        }
+
 		gate->set_fill_color(fill_color.get_color());
 		gate->set_frame_color(frame_color.get_color());
 	}
@@ -206,7 +216,7 @@ namespace degate
 		gate->add_template_port(new_port);
 
 		project->get_logic_model()->update_ports(gate);
-		
+
 		update_ports_list();
 	}
 
@@ -309,21 +319,27 @@ namespace degate
 
 	GateEditBehaviourTab::GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project, GateEditEntityTab& entity_tab) : QWidget(parent), gate(gate), project(project), entity_tab(entity_tab)
 	{
-        language_label.setText("Language :");
-        language_selector.addItem("Free text");
-        language_selector.addItem("VHDL");
-        language_selector.addItem("VHDL/Testbench");
-        language_selector.addItem("Verilog");
-        language_selector.addItem("Verilog/Testbench");
+	    // Languages
+        languages[tr("Free text")] = GateTemplate::TEXT;
+        languages[tr("VHDL")] = GateTemplate::VHDL;
+        languages[tr("VHDL/Testbench")] = GateTemplate::VHDL_TESTBENCH;
+        languages[tr("Verilog")] = GateTemplate::VERILOG;
+        languages[tr("Verilog/Testbench")] = GateTemplate::VERILOG_TESTBENCH;
+
+        language_label.setText(tr("Language:"));
+
+        for(auto& e : languages)
+            language_selector.addItem(e.first);
+
         QObject::connect(&language_selector, SIGNAL(currentIndexChanged(int)), this, SLOT(on_language_selector_changed(int)));
 
-        generate_button.setText("Generate code template");
+        generate_button.setText(tr("Generate code template"));
         QObject::connect(&generate_button, SIGNAL(clicked()), this, SLOT(generate()));
 
-        compile_button.setText("Compile");
+        compile_button.setText(tr("Compile"));
         QObject::connect(&compile_button, SIGNAL(clicked()), this, SLOT(compile()));
 
-        compile_save_button.setText("Compile and Save");
+        compile_save_button.setText(tr("Compile and Save"));
         QObject::connect(&compile_save_button, SIGNAL(clicked()), this, SLOT(compile_save()));
 
         buttons_layout.addWidget(&language_label);
@@ -355,7 +371,7 @@ namespace degate
 
 	void GateEditBehaviourTab::validate()
 	{
-        code_text[language_selector.currentIndex() + 1] = text_area.toPlainText().toStdString();
+        code_text[languages[language_selector.currentText()]] = text_area.toPlainText().toStdString();
 
         BOOST_FOREACH(code_text_map_type::value_type &p, code_text)
             gate->set_implementation(static_cast<GateTemplate::IMPLEMENTATION_TYPE>(p.first), p.second);
@@ -365,16 +381,19 @@ namespace degate
     {
         CodeTemplateGenerator_shptr generator;
 
-        if(code_text[language_selector.currentIndex() + 1].length() != 0)
+        if(code_text[languages[language_selector.currentText()]].length() != 0)
         {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(this, "Warning", "Are you sure you want to replace the code?", QMessageBox::Yes|QMessageBox::No);
+            reply = QMessageBox::question(this,
+                                          tr("Warning"),
+                                          tr("Are you sure you want to replace the code?"),
+                                          QMessageBox::Yes | QMessageBox::No);
 
             if (reply == QMessageBox::No)
                 return;
         }
 
-        int index = language_selector.currentIndex() + 1;
+        auto index = languages[language_selector.currentText()];
 
         if(index == GateTemplate::VHDL)
         {
@@ -407,35 +426,36 @@ namespace degate
 
         for(unsigned int i = 0; i < entity_tab.ports.rowCount(); i++)
         {
-            generator->add_port(entity_tab.ports.item(i, 1)->text().toStdString(), entity_tab.ports.item(i, 4)->checkState() == Qt::CheckState::Checked ? true : false);
+            generator->add_port(entity_tab.ports.item(i, 1)->text().toStdString(),
+                                entity_tab.ports.item(i, 4)->checkState() == Qt::CheckState::Checked ? true : false);
         }
 
         try
         {
             std::string c = generator->generate();
             text_area.setText(QString::fromStdString(c));
-            code_text[language_selector.currentIndex() + 1] = c;
+            code_text[languages[language_selector.currentText()]] = c;
         }
         catch(std::exception const& e)
         {
-            QMessageBox::critical(this, "Error", "Failed to create a code template: " + QString(e.what()));
+            QMessageBox::critical(this, tr("Error"), tr("Failed to create a code template: %1").arg(e.what()));
         }
     }
 
     void GateEditBehaviourTab::compile()
     {
-        int index = language_selector.currentIndex() + 1;
+        auto index = languages[language_selector.currentText()];
 
         if(index == GateTemplate::VHDL || index == GateTemplate::VHDL_TESTBENCH)
         {
-            QMessageBox::warning(this, "Warning", "You can't compile or run VHDL code within Degate, use Verilog language instead.");
+            show_vhdl_warning();
 
             return;
         }
 
         if(text_area.toPlainText().length() == 0)
         {
-            QMessageBox::warning(this, "Warning", "You need to add code before compiling.");
+            show_missing_code_warning();
 
             return;
         }
@@ -445,12 +465,7 @@ namespace degate
             int result = std::system("iverilog -V");
             if(result != 0)
             {
-                const QString message = "<html><center>"
-                                        "You must install <strong> iverilog </strong> to compile. <br>"
-                                        "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> <br>"
-                                        "Windows: <a href='https://bleyer.org/icarus/'>icarus</a> <br>"
-                                        "</center></html>";
-                QMessageBox::warning(this, "Warning", message);
+                show_iverilog_warning();
 
                 return;
             }
@@ -474,7 +489,8 @@ namespace degate
         {
 	        if(code_text[GateTemplate::VERILOG].size() == 0)
             {
-                QMessageBox::warning(this, "Warning", "You must write the Verilog code for the standard cell's behaviour first.");
+                show_missing_verilog_warning();
+
                 return;
             }
 
@@ -482,12 +498,7 @@ namespace degate
             int gtkwave_result = std::system("gtkwave -V");
             if(iverilog_result != 0 || gtkwave_result != 0)
             {
-                const QString message = "<html><center>"
-                                        "You must install <strong> iverilog </strong> and <strong> gtkwave </strong> to compile and run. <br>"
-                                        "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> and <a href='https://sourceforge.net/projects/gtkwave/files/'>gtkwave</a> <br>"
-                                        "Windows: <a href='https://bleyer.org/icarus/'>icarus and gtkwave</a> <br>"
-                                        "</center></html>";
-                QMessageBox::warning(this, "Warning", message);
+                show_iverilog_gtkwave_warning();
 
                 return;
             }
@@ -520,18 +531,18 @@ namespace degate
 
     void GateEditBehaviourTab::compile_save()
     {
-        int index = language_selector.currentIndex() + 1;
+        auto index = languages[language_selector.currentText()];
 
         if(index == GateTemplate::VHDL || index == GateTemplate::VHDL_TESTBENCH)
         {
-            QMessageBox::warning(this, "Warning", "You can't compile or run VHDL code within Degate, use Verilog language instead.");
+            show_vhdl_warning();
 
             return;
         }
 
         if(text_area.toPlainText().length() == 0)
         {
-            QMessageBox::warning(this, "Warning", "You need to add code before compiling.");
+            show_missing_code_warning();
 
             return;
         }
@@ -541,17 +552,12 @@ namespace degate
             int result = std::system("iverilog -V");
             if(result != 0)
             {
-                const QString message = "<html><center>"
-                                        "You must install <strong> iverilog </strong> to compile. <br>"
-                                        "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> <br>"
-                                        "Windows: <a href='https://bleyer.org/icarus/'>icarus</a> <br>"
-                                        "</center></html>";
-                QMessageBox::warning(this, "Warning", message);
+                show_iverilog_warning();
 
                 return;
             }
 
-            QString dir = QFileDialog::getExistingDirectory(this, "Select folder to save in");
+            QString dir = QFileDialog::getExistingDirectory(this, tr("Select folder to save in"));
 
             if(dir.isNull())
                 return;
@@ -572,7 +578,8 @@ namespace degate
         {
             if(code_text[GateTemplate::VERILOG].size() == 0)
             {
-                QMessageBox::warning(this, "Warning", "You must write the Verilog code for the standard cell's behaviour first.");
+                show_missing_verilog_warning();
+
                 return;
             }
 
@@ -580,17 +587,12 @@ namespace degate
             int gtkwave_result = std::system("gtkwave -V");
             if(iverilog_result != 0 || gtkwave_result != 0)
             {
-                const QString message = "<html><center>"
-                                        "You must install <strong> iverilog </strong> and <strong> gtkwave </strong> to compile and run. <br>"
-                                        "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> and <a href='https://sourceforge.net/projects/gtkwave/files/'>gtkwave</a> <br>"
-                                        "Windows: <a href='https://bleyer.org/icarus/'>icarus and gtkwave</a> <br>"
-                                        "</center></html>";
-                QMessageBox::warning(this, "Warning", message);
+                show_iverilog_gtkwave_warning();
 
                 return;
             }
 
-            QString dir = QFileDialog::getExistingDirectory(this, "Select folder to save in");
+            QString dir = QFileDialog::getExistingDirectory(this, tr("Select folder to save in"));
 
             if(dir.isNull())
                 return;
@@ -623,10 +625,10 @@ namespace degate
     {
         code_text[old_index] = text_area.toPlainText().toStdString();
 
-        text_area.setText(QString::fromStdString(code_text[index + 1]));
-        old_index = index + 1;
+        text_area.setText(QString::fromStdString(code_text[languages[language_selector.currentText()]]));
+        old_index = languages[language_selector.currentText()];
 
-        if(index + 1 == GateTemplate::TEXT)
+        if(languages[language_selector.currentText()] == GateTemplate::TEXT)
         {
             compile_button.setEnabled(false);
             compile_save_button.setEnabled(false);
@@ -638,6 +640,45 @@ namespace degate
         }
     }
 
+    void GateEditBehaviourTab::show_iverilog_warning()
+    {
+        const QString message = "<html><center>" +
+                                tr("You must install %1 to compile.") + "<br>"
+                                "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> <br>"
+                                "Windows: <a href='https://bleyer.org/icarus/'>icarus</a> <br>"
+                                "</center></html>";
+        QMessageBox::warning(this, tr("Warning"), message.arg("<strong> iverilog </strong>"));
+    }
+
+    void GateEditBehaviourTab::show_iverilog_gtkwave_warning()
+    {
+        const QString message = "<html><center>" +
+                                tr("You must install %1 and %2 to compile and run.") + "<br>"
+                                "Linux: <a href='http://iverilog.icarus.com/'>icarus</a> " + tr("and") + " <a href='https://sourceforge.net/projects/gtkwave/files/'>gtkwave</a> <br>"
+                                "Windows: <a href='https://bleyer.org/icarus/'>icarus " + tr("and") + " gtkwave</a> <br>"
+                                "</center></html>";
+        QMessageBox::warning(this, tr("Warning"), message.arg("<strong> iverilog </strong>").arg("<strong> gtkwave </strong>"));
+    }
+
+    void GateEditBehaviourTab::show_missing_verilog_warning()
+    {
+        QMessageBox::warning(this,
+                             tr("Warning"),
+                             tr("You must write the Verilog code for the standard cell's behaviour first."));
+    }
+
+    void GateEditBehaviourTab::show_missing_code_warning()
+    {
+        QMessageBox::warning(this, tr("Warning"), tr("You need to add code before compiling."));
+    }
+
+    void GateEditBehaviourTab::show_vhdl_warning()
+    {
+        QMessageBox::warning(this,
+                             tr("Warning"),
+                             tr("You can't compile or run VHDL code within Degate, use Verilog language instead."));
+    }
+
 
     // Layout tab
 
@@ -645,7 +686,7 @@ namespace degate
 	{
 		if(gate->has_image(Layer::METAL))
 		{
-			metal_label.setText("Metal :");
+			metal_label.setText(tr("Metal:"));
 			metal = new ImageRenderer(gate->get_image(Layer::METAL), this);
 			metal_layout.addWidget(&metal_label);
 			metal_layout.addWidget(metal);
@@ -654,7 +695,7 @@ namespace degate
 
 		if(gate->has_image(Layer::LOGIC))
 		{
-			logic_label.setText("Logic :");
+			logic_label.setText(tr("Logic:"));
 			logic = new ImageRenderer(gate->get_image(Layer::LOGIC), this);
 			logic_layout.addWidget(&logic_label);
 			logic_layout.addWidget(logic);
@@ -663,7 +704,7 @@ namespace degate
 
 		if(gate->has_image(Layer::TRANSISTOR))
 		{
-			transistor_label.setText("Transistor :");
+			transistor_label.setText(tr("Transistor:"));
 			transistor = new ImageRenderer(gate->get_image(Layer::TRANSISTOR), this);
 			transistor_layout.addWidget(&transistor_label);
 			transistor_layout.addWidget(transistor);
@@ -675,13 +716,13 @@ namespace degate
 
 	GateEditLayoutTab::~GateEditLayoutTab()
 	{
-		if(transistor != nullptr) 
+		if(transistor != nullptr)
 			delete transistor;
-		
-		if(logic != nullptr) 
+
+		if(logic != nullptr)
 			delete logic;
-		
-		if(metal != nullptr) 
+
+		if(metal != nullptr)
 			delete metal;
 	}
 
@@ -692,20 +733,20 @@ namespace degate
 
 	// Main dialog
 
-	GateEditDialog::GateEditDialog(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QDialog(parent), 
-																											  gate(gate), 
-																											  button_box(QDialogButtonBox::Ok), 
-																											  entity_tab(parent, gate, project), 
+	GateEditDialog::GateEditDialog(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QDialog(parent),
+																											  gate(gate),
+																											  button_box(QDialogButtonBox::Ok),
+																											  entity_tab(parent, gate, project),
 																											  behaviour_tab(parent, gate, project, entity_tab),
 																											  layout_tab(parent, gate, project),
 																											  project(project)
 	{
-		setWindowTitle("Edit gate");
+		setWindowTitle(tr("Edit gate"));
         setWindowFlags(windowFlags() | Qt::WindowMaximizeButtonHint);
 
-		tab.addTab(&entity_tab, "Entity");
-		tab.addTab(&behaviour_tab, "Behaviour");
-		tab.addTab(&layout_tab, "Layout");
+		tab.addTab(&entity_tab, tr("Entity"));
+		tab.addTab(&behaviour_tab, tr("Behaviour"));
+		tab.addTab(&layout_tab, tr("Layout"));
 
 		layout.addWidget(&tab);
 		layout.addWidget(&button_box);
@@ -730,35 +771,40 @@ namespace degate
 
 	GateInstanceEditDialog::GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project) : GateEditDialog(parent, gate->get_gate_template(), project), gate(gate)
 	{
-		setWindowTitle("Edit gate instance");
+		setWindowTitle(tr("Edit gate instance"));
 
-        instance_label.setText(tr("Gate instance edition :"));
+        instance_label.setText(tr("Gate instance edition:"));
 
         // Orientation
+        orientations[Gate::ORIENTATION_UNDEFINED] = tr("Undefined");
+        orientations[Gate::ORIENTATION_NORMAL] = tr("Normal");
+        orientations[Gate::ORIENTATION_FLIPPED_UP_DOWN] = tr("Flipped up and down");
+        orientations[Gate::ORIENTATION_FLIPPED_LEFT_RIGHT] = tr("Flipped left and right");
+        orientations[Gate::ORIENTATION_FLIPPED_BOTH] = tr("Flipped both");
+
 		orientation_label.setText(tr("Orientation:"));
-		orientation.addItem(tr("undefined"), 0);
-		orientation.addItem(tr("normal"), 1);
-		orientation.addItem(tr("flipped-up-down"), 2);
-		orientation.addItem(tr("flipped-left-right"), 3);
-		orientation.addItem(tr("flipped-both"), 4);
-		orientation.setCurrentText(QString::fromStdString(gate->get_orienation_type_as_string()));
+
+		for(auto& e : orientations)
+            orientation_edit.addItem(e.second);
+
+        orientation_edit.setCurrentText(orientations[gate->get_orientation()]);
 
 		// Name
-        name_label.setText(tr("Name :"));
+        name_label.setText(tr("Name:"));
         name_edit.setText(QString::fromStdString(gate->get_name()));
 
         // Description
-        description_label.setText(tr("Description :"));
+        description_label.setText(tr("Description:"));
         description_edit.setText(QString::fromStdString(gate->get_description()));
 
         instance_layout.addWidget(&orientation_label, 0, 0);
-        instance_layout.addWidget(&orientation, 0, 1);
+        instance_layout.addWidget(&orientation_edit, 0, 1);
         instance_layout.addWidget(&name_label, 1, 0);
         instance_layout.addWidget(&name_edit, 1, 1);
         instance_layout.addWidget(&description_label, 2, 0);
         instance_layout.addWidget(&description_edit, 2, 1);
 
-        gate_template_label.setText(tr("Gate template edition :"));
+        gate_template_label.setText(tr("Gate template edition:"));
 
         layout.insertWidget(0, &instance_label);
         layout.insertSpacing(1, 10);
@@ -773,22 +819,15 @@ namespace degate
 
 	void GateInstanceEditDialog::validate()
 	{
-		if(orientation.currentData() == 0)
-			gate->set_orientation(Gate::ORIENTATION_UNDEFINED);
-		else if(orientation.currentData() == 1)
-			gate->set_orientation(Gate::ORIENTATION_NORMAL);
-		else if(orientation.currentData() == 2)
-			gate->set_orientation(Gate::ORIENTATION_FLIPPED_UP_DOWN);
-		else if(orientation.currentData() == 3)
-			gate->set_orientation(Gate::ORIENTATION_FLIPPED_LEFT_RIGHT);
-		else if(orientation.currentData() == 4)
-			gate->set_orientation(Gate::ORIENTATION_FLIPPED_BOTH);
-		else
-			gate->set_orientation(Gate::ORIENTATION_UNDEFINED);
+	    for(auto& e : orientations)
+        {
+	        if(e.second == orientation_edit.currentText())
+                gate->set_orientation(e.first);
+        }
 
 		gate->set_name(name_edit.text().toStdString());
         gate->set_description(description_edit.text().toStdString());
-		
+
 		GateEditDialog::validate();
 	}
 }

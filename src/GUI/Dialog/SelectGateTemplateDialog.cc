@@ -28,7 +28,7 @@ namespace degate
     SelectGateTemplateDialog::SelectGateTemplateDialog(Project_shptr project, QWidget* parent, bool unique_selection)
             : QDialog(parent), list(std::move(project), this, unique_selection)
     {
-		validate_button.setText("Ok");
+		validate_button.setText(tr("Ok"));
 		layout.addWidget(&list);
 		layout.addWidget(&validate_button);
 

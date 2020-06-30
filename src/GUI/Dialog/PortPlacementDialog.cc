@@ -31,10 +31,10 @@ namespace degate
 	{
 		resize(gate->get_width() + 300, gate->get_height() + 300);
 		placement.resize(gate->get_width(), gate->get_height());
-		next_layer_button.setText("Next layer");
-		previous_layer_button.setText("Previous layer");
-		validate_button.setText("Ok");
-		cancel_button.setText("Cancel");
+		next_layer_button.setText(tr("Next layer"));
+		previous_layer_button.setText(tr("Previous layer"));
+		validate_button.setText(tr("Ok"));
+		cancel_button.setText(tr("Cancel"));
 
 		layers_buttons_layout.addWidget(&next_layer_button);
 		layers_buttons_layout.addWidget(&previous_layer_button);

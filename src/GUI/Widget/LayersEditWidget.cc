@@ -21,12 +21,12 @@
 
 #include "LayersEditWidget.h"
 
+#include <Core/Image/ImageHelper.h>
+#include <Core/LogicModel/LogicModelHelper.h>
 
 #include <memory>
 #include <QtWidgets/QMessageBox>
-
-#include "Core/Image/ImageHelper.h"
-#include "Core/LogicModel/LogicModelHelper.h"
+#include <QHeaderView>
 
 namespace degate
 {
@@ -76,7 +76,7 @@ namespace degate
 
 	void LayerBackgroundSelectionButton::on_button_clicked()
 	{
-		QString res = QFileDialog::getOpenFileName(this, "Select the background image");
+		QString res = QFileDialog::getOpenFileName(this, tr("Select the background image"));
 		image_path = res.toStdString();
 
 		change_button_color(true);
@@ -95,24 +95,28 @@ namespace degate
 
 	LayerTypeSelectionBox::LayerTypeSelectionBox(Layer::LAYER_TYPE type, QWidget* parent) : type(type), QComboBox(parent)
 	{
-		setSizeAdjustPolicy(AdjustToContents);
-		
-		addItem("undefined");
-		addItem("transistor");
-		addItem("logic");
-		addItem("metal");
-		setCurrentText(from_type(type));
+        types[Layer::UNDEFINED]  = tr("Undefined");
+        types[Layer::TRANSISTOR] = tr("Transistor");
+        types[Layer::LOGIC]      = tr("Logic");
+        types[Layer::METAL]      = tr("Metal");
+
+        for(auto& e : types)
+            addItem(e.second);
+
+        setCurrentText(types[type]);
 	}
 
 	LayerTypeSelectionBox::LayerTypeSelectionBox(LayerTypeSelectionBox& copy) : QComboBox(copy.parentWidget())
 	{
-		setSizeAdjustPolicy(AdjustToContents);
-		
-		addItem("undefined");
-		addItem("transistor");
-		addItem("logic");
-		addItem("metal");
-		setCurrentText(from_type(copy.get_layer_type()));
+        types[Layer::UNDEFINED]  = tr("Undefined");
+        types[Layer::TRANSISTOR] = tr("Transistor");
+        types[Layer::LOGIC]      = tr("Logic");
+        types[Layer::METAL]      = tr("Metal");
+
+        for(auto& e : types)
+            addItem(e.second);
+
+        setCurrentText(types[copy.get_layer_type()]);
 
 		type = copy.get_layer_type();
 	}
@@ -123,84 +127,56 @@ namespace degate
 
 	Layer::LAYER_TYPE LayerTypeSelectionBox::get_layer_type()
 	{
-		type = to_type(currentText());
+        for(auto& e : types)
+        {
+            if(e.second == currentText())
+                type = e.first;
+        }
+
 		return type;
 	}
 
 	void LayerTypeSelectionBox::set_layer_type(Layer::LAYER_TYPE type)
 	{
 		this->type = type;
-		setCurrentText(from_type(type));
-	}
 
-	QString LayerTypeSelectionBox::from_type(Layer::LAYER_TYPE type)
-	{
-		switch(type)
-		{
-		case Layer::METAL:
-			return "metal";
-			break;
-		case Layer::TRANSISTOR:
-			return "transistor";
-			break;
-		case Layer::LOGIC:
-			return "logic";
-			break;
-		case Layer::UNDEFINED:
-			return "undefined";
-			break;
-		default:
-			return "undefined";
-			break;
-		}
-	}
-
-	Layer::LAYER_TYPE LayerTypeSelectionBox::to_type(QString type)
-	{
-		if(type == "metal")
-			return Layer::METAL;
-		else if(type == "transistor")
-			return Layer::TRANSISTOR;
-		else if(type == "logic")
-			return Layer::LOGIC;
-		else if(type == "undefined")
-			return Layer::UNDEFINED;
-		else
-			return Layer::UNDEFINED;
+        setCurrentText(types[type]);
 	}
 
 	LayersEditWidget::LayersEditWidget(Project_shptr project, QWidget* parent) : QWidget(parent), project(project)
 	{
 		// Label
-		layers_label.setText("Layer config :");
+		layers_label.setText(tr("Layer config:"));
 
 		// List
 		layers.setColumnCount(5);
 		QStringList list;
-		list.append("ID");
-		list.append("Enable");
-		list.append("Description");
-		list.append("Type");
-		list.append("Background");
+		list.append(tr("ID"));
+		list.append(tr("Enable"));
+		list.append(tr("Description"));
+		list.append(tr("Type"));
+		list.append(tr("Background"));
 		layers.setHorizontalHeaderLabels(list);
+        layers.setSelectionBehavior(QTableView::SelectRows);
+        layers.setSelectionMode(QTableView::SingleSelection);
 
 		// Add/remove Buttons
-		layers_add_button.setText("Add");
-		layers_remove_button.setText("Remove");
+		layers_add_button.setText(tr("Add"));
+		layers_remove_button.setText(tr("Remove"));
 		layers_add_remove_buttons_layout.addWidget(&layers_add_button);
 		layers_add_remove_buttons_layout.addWidget(&layers_remove_button);
 
 		// Up/Down buttons
-		layers_up_buttons.setText("Up");
-		layers_down_buttons.setText("Down");
+		layers_up_buttons.setText(tr("Up"));
+		layers_down_buttons.setText(tr("Down"));
 		layers_move_buttons_layout.addWidget(&layers_up_buttons);
 		layers_move_buttons_layout.addWidget(&layers_down_buttons);
 
 		// Layout
 		layout.addWidget(&layers_label, 0, 0);
-		layout.addWidget(&layers, 0, 1);
-		layout.addLayout(&layers_add_remove_buttons_layout, 1, 1);
-		layout.addLayout(&layers_move_buttons_layout, 2, 1);
+		layout.addWidget(&layers, 1, 0);
+		layout.addLayout(&layers_add_remove_buttons_layout, 2, 0);
+		layout.addLayout(&layers_move_buttons_layout, 3, 0);
 
 		setLayout(&layout);
 
@@ -235,6 +211,9 @@ namespace degate
 			LayerBackgroundSelectionButton* bb = new LayerBackgroundSelectionButton(layer, this);
 			layers.setCellWidget(layers.rowCount() - 1, 4, bb);
 		}
+
+        QHeaderView* header_view = static_cast<QHeaderView*>(layers.horizontalHeader());
+        header_view->setSectionResizeMode(QHeaderView::Stretch);
 
 		layers.resizeColumnsToContents();
 		layers.resizeRowsToContents();
@@ -337,7 +316,7 @@ namespace degate
             {
                 QMessageBox::critical(this,
                                       tr("Error"),
-                                      tr("Can't import the background image.") + "\n" + tr("Error: ") +
+                                      tr("Can't import the background image.") + "\n" + tr("Error:") + " " +
                                       QString::fromStdString(e.what()));
 
                 return;

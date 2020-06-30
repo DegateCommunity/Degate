@@ -26,6 +26,7 @@
 #include <Core/LogicModel/Via/Via.h>
 #include <Core/Project/Project.h>
 
+#include <map>
 #include <QDialog>
 #include <QGridLayout>
 #include <QLabel>
@@ -88,6 +89,8 @@ namespace degate
 
         QLabel direction_label;
         QComboBox direction_edit;
+
+        std::map<Via::DIRECTION, QString> directions;
     };
 }
 

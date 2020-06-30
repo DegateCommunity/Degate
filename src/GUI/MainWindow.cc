@@ -19,7 +19,7 @@
 
 */
 
-#include <GUI/MainWindow.h>
+#include "MainWindow.h"
 #include <GUI/Dialog/ProgressDialog.h>
 
 #include <memory>
@@ -50,179 +50,179 @@ namespace degate
 		setMenuBar(&menu_bar);
 
 		// Project menu
-		QMenu* project_menu = menu_bar.addMenu(tr("Project"));
+		project_menu = menu_bar.addMenu("");
 
-		project_new_action = project_menu->addAction(tr("New"));
+		project_new_action = project_menu->addAction("");
 		QObject::connect(project_new_action, SIGNAL(triggered()), this, SLOT(on_menu_project_new()));
 
-		project_import_action = project_menu->addAction(tr("Open"));
+		project_import_action = project_menu->addAction("");
 		QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
 
-		project_export_action = project_menu->addAction(tr("Save"));
+		project_export_action = project_menu->addAction("");
         project_export_action->setShortcut(Qt::CTRL + Qt::Key_S);
 		QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_exporter()));
 
-		project_close_action = project_menu->addAction(tr("Close"));
+		project_close_action = project_menu->addAction("");
 		QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
 
 		project_menu->addSeparator();
-		project_create_subproject_action = project_menu->addAction(tr("Create subproject from selection"));
+		project_create_subproject_action = project_menu->addAction("");
 		QObject::connect(project_create_subproject_action, SIGNAL(triggered()), this, SLOT(on_menu_project_create_subproject()));
 
 		project_menu->addSeparator();
-        project_settings_action = project_menu->addAction(tr("Project settings"));
+        project_settings_action = project_menu->addAction("");
         QObject::connect(project_settings_action, SIGNAL(triggered()), this, SLOT(on_menu_project_settings()));
 
 		project_menu->addSeparator();
-		project_quit_action = project_menu->addAction(tr("Quit"));
+		project_quit_action = project_menu->addAction("");
 		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_project_quit()));
 
 
 		// Edit menu
-		QMenu* edit_menu = menu_bar.addMenu(tr("Edit"));
-		preferences_edit_action = edit_menu->addAction(tr("Preferences"));
+		edit_menu = menu_bar.addMenu("");
+		preferences_edit_action = edit_menu->addAction("");
 		QObject::connect(preferences_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_edit_preferences()));
 
 
 		// View menu
-		QMenu* view_menu = menu_bar.addMenu(tr("View"));
+		view_menu = menu_bar.addMenu("");
 
-		show_gates_view_action = view_menu->addAction(tr("Show gates"));
+		show_gates_view_action = view_menu->addAction("");
 		show_gates_view_action->setCheckable(true);
 		show_gates_view_action->setChecked(true);
 		QObject::connect(show_gates_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates(bool)));
 
-		show_gates_name_view_action = view_menu->addAction(tr("Show gates name"));
+		show_gates_name_view_action = view_menu->addAction("");
 		show_gates_name_view_action->setCheckable(true);
 		show_gates_name_view_action->setChecked(true);
 		QObject::connect(show_gates_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates_name(bool)));
 
-		show_ports_view_action = view_menu->addAction(tr("Show ports"));
+		show_ports_view_action = view_menu->addAction("");
 		show_ports_view_action->setCheckable(true);
 		show_ports_view_action->setChecked(true);
 		QObject::connect(show_ports_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports(bool)));
 
-		show_ports_name_view_action = view_menu->addAction(tr("Show ports name"));
+		show_ports_name_view_action = view_menu->addAction("");
 		show_ports_name_view_action->setCheckable(true);
 		show_ports_name_view_action->setChecked(true);
 		QObject::connect(show_ports_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports_name(bool)));
 
-		show_annotations_view_action = view_menu->addAction(tr("Show annotations"));
+		show_annotations_view_action = view_menu->addAction("");
 		show_annotations_view_action->setCheckable(true);
 		show_annotations_view_action->setChecked(true);
 		QObject::connect(show_annotations_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations(bool)));
 
-		show_annotations_name_view_action = view_menu->addAction(tr("Show annotations name"));
+		show_annotations_name_view_action = view_menu->addAction("");
 		show_annotations_name_view_action->setCheckable(true);
 		show_annotations_name_view_action->setChecked(true);
 		QObject::connect(show_annotations_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations_name(bool)));
 
-        show_emarkers_view_action = view_menu->addAction(tr("Show emarkers"));
+        show_emarkers_view_action = view_menu->addAction("");
         show_emarkers_view_action->setCheckable(true);
         show_emarkers_view_action->setChecked(true);
         QObject::connect(show_emarkers_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers(bool)));
 
-        show_emarkers_name_view_action = view_menu->addAction(tr("Show emarkers name"));
+        show_emarkers_name_view_action = view_menu->addAction("");
         show_emarkers_name_view_action->setCheckable(true);
         show_emarkers_name_view_action->setChecked(true);
         QObject::connect(show_emarkers_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers_name(bool)));
 
-        show_vias_view_action = view_menu->addAction(tr("Show vias"));
+        show_vias_view_action = view_menu->addAction("");
         show_vias_view_action->setCheckable(true);
         show_vias_view_action->setChecked(true);
         QObject::connect(show_vias_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias(bool)));
 
-        show_vias_name_view_action = view_menu->addAction(tr("Show vias name"));
+        show_vias_name_view_action = view_menu->addAction("");
         show_vias_name_view_action->setCheckable(true);
         show_vias_name_view_action->setChecked(true);
         QObject::connect(show_vias_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_vias_name(bool)));
 
-        show_wires_view_action = view_menu->addAction(tr("Show wires"));
+        show_wires_view_action = view_menu->addAction("");
         show_wires_view_action->setCheckable(true);
         show_wires_view_action->setChecked(true);
         QObject::connect(show_wires_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_wires(bool)));
 
 
         // Layer menu
-		QMenu* layer_menu = menu_bar.addMenu(tr("Layer"));
+		layer_menu = menu_bar.addMenu("");
 
-		layers_edit_action = layer_menu->addAction(tr("Edit layers"));
+		layers_edit_action = layer_menu->addAction("");
 		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
 
-		background_import_action = layer_menu->addAction(tr("Import background image"));
+		background_import_action = layer_menu->addAction("");
 		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
 
 
 		// Gate menu
-		QMenu* gate_menu = menu_bar.addMenu(tr("Gate"));
+		gate_menu = menu_bar.addMenu("");
 
-		edit_gate_action = gate_menu->addAction(tr("Edit selected"));
+		edit_gate_action = gate_menu->addAction("");
 		QObject::connect(edit_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
 
-		new_gate_template_action = gate_menu->addAction(tr("Create gate template from selection"));
+		new_gate_template_action = gate_menu->addAction("");
 		QObject::connect(new_gate_template_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
 
-		new_gate_action = gate_menu->addAction(tr("Create gate from selection"));
+		new_gate_action = gate_menu->addAction("");
 		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
 
 		gate_menu->addSeparator();
-		gate_library_action = gate_menu->addAction(tr("Gate library"));
+		gate_library_action = gate_menu->addAction("");
 		QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
 
 		// Annotation menu
-		QMenu* annotation_menu = menu_bar.addMenu(tr("Annotation"));
+		annotation_menu = menu_bar.addMenu("");
 
-		edit_annotation_action = annotation_menu->addAction(tr("Edit selected"));
+		edit_annotation_action = annotation_menu->addAction("");
 		QObject::connect(edit_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
 
-		create_annotation_action = annotation_menu->addAction(tr("Create from selection"));
+		create_annotation_action = annotation_menu->addAction("");
 		QObject::connect(create_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
 
 
 		// EMarker menu
-        QMenu* emarker_menu = menu_bar.addMenu(tr("EMarker"));
+        emarker_menu = menu_bar.addMenu("");
 
-        edit_emarker_action = emarker_menu->addAction(tr("Edit selected"));
+        edit_emarker_action = emarker_menu->addAction("");
         QObject::connect(edit_emarker_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
 
 
         // Via menu
-        QMenu* via_menu = menu_bar.addMenu(tr("Via"));
+        via_menu = menu_bar.addMenu("");
 
-        edit_via_action = via_menu->addAction(tr("Edit selected"));
+        edit_via_action = via_menu->addAction("");
         QObject::connect(edit_via_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
 
 
         // Logic menu
-		QMenu* logic_menu = menu_bar.addMenu(tr("Logic"));
+		logic_menu = menu_bar.addMenu("");
 
-        remove_objects_action = logic_menu->addAction(tr("Remove selected objects"));
+        remove_objects_action = logic_menu->addAction("");
         remove_objects_action->setShortcut(Qt::Key_Delete);
 		QObject::connect(remove_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
 
-        interconnect_objects_action = logic_menu->addAction(tr("Interconnect selected objects"));
+        interconnect_objects_action = logic_menu->addAction("");
         interconnect_objects_action->setShortcut(Qt::CTRL + Qt::Key_C);
         QObject::connect(interconnect_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
 
 
         // Matching menu
-        QMenu* matching_menu = menu_bar.addMenu(tr("Matching"));
+        matching_menu = menu_bar.addMenu("");
 
-        template_matching_action = matching_menu->addAction(tr("Template matching"));
+        template_matching_action = matching_menu->addAction("");
         QObject::connect(template_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_template_matching()));
 
-        via_matching_action = matching_menu->addAction(tr("Via matching"));
+        via_matching_action = matching_menu->addAction("");
         QObject::connect(via_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_via_matching()));
 
-        wire_matching_action = matching_menu->addAction(tr("Wire matching"));
+        wire_matching_action = matching_menu->addAction("");
         QObject::connect(wire_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_wire_matching()));
 
 
 		// Help menu
-		QMenu* help_menu = menu_bar.addMenu(tr("Help"));
+		help_menu = menu_bar.addMenu("");
 
-		about_action = help_menu->addAction(tr("About"));
+		about_action = help_menu->addAction("");
 		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
 
@@ -231,14 +231,15 @@ namespace degate
 
 		status_bar.setStyleSheet("QStatusBar::item { border: none; } ""QStatusBar QLabel { border: 1px solid black; border-radius: 3px; }");
 		setStatusBar(&status_bar);
-		status_bar.showMessage("Initialization...", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage(tr("Initialization..."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
 		status_bar.addPermanentWidget(&status_bar_layer);
-		status_bar_layer.setText("Layer : 0/0 (none)");
+        update_status_bar_layer_info();
 
 		status_bar.addPermanentWidget(&status_bar_coords);
-		status_bar_coords.setText("Coordinates : 0,0");
 		QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
+
+        update_status_bar_layer_info();
 
 
 		// Tool bar
@@ -249,34 +250,34 @@ namespace degate
 		tool_bar->setFloatable(false);
 		setContextMenuPolicy(Qt::NoContextMenu);
 
-		tool_via_up_action = tool_bar->addAction("Layer up");
+		tool_via_up_action = tool_bar->addAction("");
 		QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
 
-		tool_via_down_action = tool_bar->addAction("Layer down");
+		tool_via_down_action = tool_bar->addAction("");
 		QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
 
 		tool_bar->addSeparator();
 
-		tool_zoom_in_action = tool_bar->addAction("Zoom in");
+		tool_zoom_in_action = tool_bar->addAction("");
 		QObject::connect(tool_zoom_in_action, SIGNAL(triggered()), workspace, SLOT(zoom_in()));
 
-		tool_zoom_out_action = tool_bar->addAction("Zoom out");
+		tool_zoom_out_action = tool_bar->addAction("");
 		QObject::connect(tool_zoom_out_action, SIGNAL(triggered()), workspace, SLOT(zoom_out()));
 
 		tool_bar->addSeparator();
 
-		tool_gate_library = tool_bar->addAction("Gate library");
+		tool_gate_library = tool_bar->addAction("");
 		QObject::connect(tool_gate_library, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
         tool_bar->addSeparator();
 
-        area_selection_tool = tools_group.addAction("Area");
+        area_selection_tool = tools_group.addAction("");
         QObject::connect(area_selection_tool, SIGNAL(triggered()), workspace, SLOT(use_area_selection_tool()));
         area_selection_tool->setCheckable(true);
         area_selection_tool->setChecked(true);
         workspace->use_area_selection_tool();
 
-        wire_tool = tools_group.addAction("Wire");
+        wire_tool = tools_group.addAction("");
         QObject::connect(wire_tool, SIGNAL(triggered()), workspace, SLOT(use_wire_tool()));
         wire_tool->setCheckable(true);
 
@@ -288,12 +289,15 @@ namespace degate
 
         QObject::connect(&THEME_MANAGER, SIGNAL(icon_theme_changed()), this, SLOT(reload_icons()));
         reload_icons();
+
+        QObject::connect(&PREFERENCES_HANDLER, SIGNAL(language_changed()), this, SLOT(reload_texts()));
+
+        reload_texts();
 	}
 
 	MainWindow::~MainWindow()
 	{
-		if(workspace != nullptr)
-			delete workspace;
+	    delete workspace;
 
 		Text::save_fonts_to_cache();
 	}
@@ -339,19 +343,105 @@ namespace degate
         wire_tool->setIcon(QIcon(GET_ICON_PATH("wire_tool.png")));
     }
 
+    void MainWindow::reload_texts()
+    {
+	    // Project menu
+        project_menu->setTitle(tr("Project"));
+        project_new_action->setText(tr("New"));
+        project_import_action->setText(tr("Open"));
+        project_export_action->setText(tr("Save"));
+        project_close_action->setText(tr("Close"));
+        project_create_subproject_action->setText(tr("Create subproject from selection"));
+        project_settings_action->setText(tr("Project settings"));
+        project_quit_action->setText(tr("Quit"));
+
+        // Edit menu
+        edit_menu->setTitle(tr("Edit"));
+        preferences_edit_action->setText(tr("Preferences"));
+
+        // View menu
+        view_menu->setTitle(tr("View"));
+        show_gates_view_action->setText(tr("Show gates"));
+        show_gates_name_view_action->setText(tr("Show gates name"));
+        show_ports_view_action->setText(tr("Show ports"));
+        show_ports_name_view_action->setText(tr("Show ports name"));
+        show_annotations_view_action->setText(tr("Show annotations"));
+        show_annotations_name_view_action->setText(tr("Show annotations name"));
+        show_emarkers_view_action->setText(tr("Show emarkers"));
+        show_emarkers_name_view_action->setText(tr("Show emarkers name"));
+        show_vias_view_action->setText(tr("Show vias"));
+        show_vias_name_view_action->setText(tr("Show vias name"));
+        show_wires_view_action->setText(tr("Show wires"));
+
+        // Layer menu
+        layer_menu->setTitle(tr("Layer"));
+        layers_edit_action->setText(tr("Edit layers"));
+        background_import_action->setText(tr("Import background image"));
+
+        // Gate menu
+        gate_menu->setTitle(tr("Gate"));
+        edit_gate_action->setText(tr("Edit selected"));
+        new_gate_template_action->setText(tr("Create gate template from selection"));
+        new_gate_action->setText(tr("Create gate from selection"));
+        gate_library_action->setText(tr("Gate library"));
+
+        // Annotation menu
+        annotation_menu->setTitle(tr("Annotation"));
+        edit_annotation_action->setText(tr("Edit selected"));
+        create_annotation_action->setText(tr("Create from selection"));
+
+        // EMarker menu
+        emarker_menu->setTitle(tr("EMarker"));
+        edit_emarker_action->setText(tr("Edit selected"));
+
+        // Via menu
+        via_menu->setTitle(tr("Via"));
+        edit_via_action->setText(tr("Edit selected"));
+
+        // Logic menu
+        logic_menu->setTitle(tr("Logic"));
+        remove_objects_action->setText(tr("Remove selected objects"));
+        interconnect_objects_action->setText(tr("Interconnect selected objects"));
+
+        // Matching menu
+        matching_menu->setTitle(tr("Matching"));
+        template_matching_action->setText(tr("Template matching"));
+        via_matching_action->setText(tr("Via matching"));
+        wire_matching_action->setText(tr("Wire matching"));
+
+        // Help menu
+        help_menu->setTitle(tr("Help"));
+        about_action->setText(tr("About"));
+
+        // Status bar
+        update_status_bar_layer_info();
+
+        // Window title
+        update_window_title();
+
+        // Tool bar
+        tool_via_up_action->setText(tr("Layer up"));
+        tool_via_down_action->setText(tr("Layer down"));
+        tool_zoom_in_action->setText(tr("Zoom in"));
+        tool_zoom_out_action->setText(tr("Zoom out"));
+        tool_gate_library->setText(tr("Gate library"));
+        area_selection_tool->setText(tr("Area selection tool"));
+        wire_tool->setText(tr("Wire tool"));
+    }
+
 	void MainWindow::on_menu_help_about()
 	{
 		const QString about_message = "<html><center>"
 			"<img src=':/degate_logo.png' alt='' width='100' height='87'> <br>"
-            "<strong>Version : " DEGATE_VERSION "</strong><br><br>"
-			"<strong> This is a forked version of Degate </strong> <br>"
-			"Degate is originally developed by Martin Schobert (martin@weltregierung.de). <br>"
-			"This software is released under the GNU General Public License Version 3. <br>"
+            "<strong>" + tr("Version") + " : " DEGATE_VERSION "</strong><br><br>"
+            "<strong>" + tr("This is a forked version of Degate") + "</strong> <br>"
+			+ tr("Degate is originally developed by Martin Schobert (martin@weltregierung.de).") + " <br>"
+			+ tr("This software is released under the GNU General Public License Version 3.") + " <br>"
 			"<a href='https://github.com/DorianBDev/degate'>Github</a> <br>"
-			"<a href='http://www.degate.org/'>Original website</a>"
+            "<a href='http://www.degate.org/'>" + tr("Original website") + "</a>"
 			"</center></html>";
 
-		QMessageBox about("About degate",
+		QMessageBox about(tr("About degate"),
 		                  about_message,
 		                  QMessageBox::Icon::NoIcon,
 		                  QMessageBox::Button::Ok,
@@ -360,16 +450,21 @@ namespace degate
 		                  this
 		);
 
+        auto* about_layout = about.findChild<QGridLayout*>();
+        QMargins about_margins = about_layout->contentsMargins();
+        about_margins.setRight(40);
+        about_layout->setContentsMargins(about_margins);
+
 		about.exec();
 	}
 
 	void MainWindow::on_menu_project_importer()
 	{
-		QString dir = QFileDialog::getExistingDirectory(this, "Import project");
+		QString dir = QFileDialog::getExistingDirectory(this, tr("Import project"));
 
 		if(dir.isNull())
         {
-            status_bar.showMessage("Project opening operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("Project opening operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
             return;
         }
@@ -391,8 +486,8 @@ namespace degate
 
 		QString project_name = QString::fromStdString(project->get_name());
 
-		QString message = "The project <i>" + project_name + "</i> was successfully loaded.";
-		QMessageBox::information(this, "Import project", message);
+		QString message = tr("The project") + " <i>" + project_name + "</i> " + tr("was successfully loaded.");
+		QMessageBox::information(this, tr("Import project"), message);
 	}
 
 	void MainWindow::on_menu_project_exporter()
@@ -400,17 +495,17 @@ namespace degate
 		if(project == nullptr)
 			return;
 
-		status_bar.showMessage("Saving project...");
+		status_bar.showMessage(tr("Saving project..."));
 
 		ProjectExporter exporter;
 		exporter.export_all(project->get_project_directory(), project);
 
-		status_bar.showMessage("Project saved.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage(tr("Project saved."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::on_menu_project_close()
 	{
-		status_bar.showMessage("Closing project...");
+		status_bar.showMessage(tr("Closing project..."));
 
 		if(project == nullptr)
 			return;
@@ -418,8 +513,8 @@ namespace degate
 		if(project->is_changed())
 		{
 			QMessageBox msgBox;
-			msgBox.setText("The project has been modified.");
-			msgBox.setInformativeText("Do you want to save your changes ?");
+			msgBox.setText(tr("The project has been modified."));
+			msgBox.setInformativeText(tr("Do you want to save your changes ?"));
 			msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 			msgBox.setDefaultButton(QMessageBox::Save);
 			int ret = msgBox.exec();
@@ -446,22 +541,22 @@ namespace degate
 		workspace->set_project(nullptr);
 		workspace->update_screen();
 
-		setWindowTitle("Degate");
+        update_window_title();
 
-		status_bar_layer.setText("Layer : 0/0 (none)");
+        update_status_bar_layer_info();
 
-		status_bar.showMessage("Project closed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage(tr("Project closed."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::on_menu_project_new()
 	{
-		status_bar.showMessage("Creating a new project...");
+		status_bar.showMessage(tr("Creating a new project..."));
 
-		QString dir = QFileDialog::getExistingDirectory(this, "Select the directory where the project will be created");
+		QString dir = QFileDialog::getExistingDirectory(this, tr("Select the directory where the project will be created"));
 
         if(dir.isNull())
         {
-            status_bar.showMessage("New project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("New project creation operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
             return;
         }
@@ -478,9 +573,9 @@ namespace degate
 
             if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
             {
-                QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
+                QMessageBox::warning(this, tr("Invalid values"), tr("The values you entered are invalid. Operation cancelled."));
 
-                status_bar.showMessage("New project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+                status_bar.showMessage(tr("New project creation operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
                 return;
             }
@@ -502,10 +597,10 @@ namespace degate
                 on_menu_project_exporter();
             }
 
-            status_bar.showMessage("Created a new project.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("Created a new project."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
         }
         else
-            status_bar.showMessage("New project creation operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("New project creation operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::on_menu_project_create_subproject()
@@ -548,6 +643,8 @@ namespace degate
 		LayersEditDialog layers_edit_dialog(project, this);
 		layers_edit_dialog.exec();
 
+        update_status_bar_layer_info();
+
 		workspace->update_screen();
 	}
 
@@ -555,18 +652,18 @@ namespace degate
 	{
 		if(project == nullptr)
 		{
-			status_bar.showMessage("Failed to import new background image : no project opened.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+			status_bar.showMessage(tr("Failed to import new background image : no project opened."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 			return;
 		}
 
-		status_bar.showMessage("Importing a new background image for the layer...");
+		status_bar.showMessage(tr("Importing a new background image for the layer..."));
 
-		QString res = QFileDialog::getOpenFileName(this, "Select the new background image");
+		QString res = QFileDialog::getOpenFileName(this, tr("Select the new background image"));
 		const std::string file_name = res.toStdString();
 
 		if(res.isNull())
         {
-            status_bar.showMessage("New background image import cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("New background image import cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
             return;
         }
 
@@ -574,7 +671,7 @@ namespace degate
 
 		workspace->update_screen();
 
-		status_bar.showMessage("Imported a new background image for the layer.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+		status_bar.showMessage(tr("Imported a new background image for the layer."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::on_menu_gate_new_gate_template()
@@ -584,7 +681,7 @@ namespace degate
 
 		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
 		{
-			QMessageBox::warning(this, "Warning", "You can create a new gate only on a logic layer.");
+			QMessageBox::warning(this, tr("Warning"), tr("You can create a new gate only on a logic layer."));
 			return;
 		}
 
@@ -632,7 +729,7 @@ namespace degate
 
 		if(project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
 		{
-			QMessageBox::warning(this, "Warning", "You can create a new gate only on a logic layer.");
+			QMessageBox::warning(this, tr("Warning"), tr("You can create a new gate only on a logic layer."));
 			return;
 		}
 
@@ -804,7 +901,7 @@ namespace degate
 
         if(!objects.check_for_all(&is_interconnectable))
         {
-            QMessageBox::warning(this, "Error during interconnect", "One of the objects you selected can not have connections at all.");
+            QMessageBox::warning(this, tr("Error during interconnect"), tr("One of the objects you selected cannot have connections at all."));
             return;
         }
 
@@ -886,7 +983,7 @@ namespace degate
         ProjectSettingsDialog dialog(this, project);
         dialog.exec();
 
-        setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
+        update_window_title();
 
         workspace->update_screen();
     }
@@ -896,6 +993,41 @@ namespace degate
 		close();
 	}
 
+    void MainWindow::update_window_title()
+    {
+	    if(project != nullptr)
+        {
+            QString window_title = tr("Degate : %1 project");
+            setWindowTitle(window_title.arg(QString::fromStdString(project->get_name())));
+        }
+	    else
+            setWindowTitle("Degate");
+    }
+
+    void MainWindow::update_status_bar_layer_info()
+    {
+        static std::map<Layer::LAYER_TYPE, QString> types = {
+                {Layer::UNDEFINED,  tr("Undefined")},
+                {Layer::TRANSISTOR, tr("Transistor")},
+                {Layer::LOGIC,      tr("Logic")},
+                {Layer::METAL,      tr("Metal")}
+        };
+
+        if(project != nullptr)
+        {
+            QString status_bar_message = tr("Layer: %1/%2 (%3)");
+
+            status_bar_layer.setText(status_bar_message
+                    .arg(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1)
+                    .arg(project->get_logic_model()->get_num_layers())
+                    .arg(types[project->get_logic_model()->get_current_layer()->get_layer_type()]));
+        }
+        else
+        {
+            status_bar_layer.setText(tr("Layer:") + " 0/0 (" + tr("none") + ")");
+        }
+    }
+
 	void MainWindow::on_tool_via_up()
 	{
 		if(project == nullptr)
@@ -903,7 +1035,7 @@ namespace degate
 
 		project->get_logic_model()->set_current_layer(get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
 
-		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
+        update_status_bar_layer_info();
 
 		workspace->update_screen();
 	}
@@ -915,21 +1047,21 @@ namespace degate
 
 		project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
 
-		status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
+        update_status_bar_layer_info();
 
 		workspace->update_screen();
 	}
 
 	void MainWindow::open_project(const std::string& path)
 	{
-		status_bar.showMessage("Importing project/subproject...");
+		status_bar.showMessage(tr("Importing project/subproject..."));
 
 		ProjectImporter projectImporter;
 
 		if(project != nullptr)
 		    on_menu_project_exporter();
 
-        ProgressDialog progress_dialog("Opening project", nullptr, this);
+        ProgressDialog progress_dialog(tr("Opening project"), nullptr, this);
 
         std::string error_message;
         bool error = false;
@@ -961,7 +1093,9 @@ namespace degate
             if(imported_project == nullptr)
             {
                 QMessageBox::StandardButton reply;
-                reply = QMessageBox::question(this, "Subproject", "The project/subproject do not exist, do you want to create it ?", QMessageBox::Yes | QMessageBox::No);
+                reply = QMessageBox::question(this, tr("Subproject"),
+                                              tr("The project/subproject do not exist, do you want to create it?"),
+                                              QMessageBox::Yes | QMessageBox::No);
 
                 if(reply == QMessageBox::Yes)
                 {
@@ -977,9 +1111,9 @@ namespace degate
 
                         if(layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
                         {
-                            QMessageBox::warning(this, "Invalid values", "The values you entered are invalid. Operation cancelled");
+                            QMessageBox::warning(this, tr("Invalid values"), tr("The values you entered are invalid. Operation cancelled"));
 
-                            status_bar.showMessage("New project/subproject operation cancelled.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+                            status_bar.showMessage(tr("New project/subproject operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
                             return;
                         }
@@ -1015,24 +1149,25 @@ namespace degate
         catch (const std::exception& e)
         {
             QMessageBox::warning(this,
-                                 "Project/Subproject import failed",
-                                 "The project/subproject cannot be imported (maybe corrupted).\n\n"
-                                 "Error: " + QString::fromStdString(error_message));
-            status_bar.showMessage("Project/Subproject import failed.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+                                 tr("Project/Subproject import failed"),
+                                 tr("The project/subproject cannot be imported (maybe corrupted).") + "\n\n"
+                                 + tr("Error") + ": " + QString::fromStdString(error_message));
+            status_bar.showMessage(tr("Project/Subproject import failed."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
             return;
         }
 
         workspace->set_project(project);
 
-        setWindowTitle("Degate : " + QString::fromStdString(project->get_name()) + " project");
-        status_bar_layer.setText("Layer : " + QString::number(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1) + "/" + QString::number(project->get_logic_model()->get_num_layers()) + " (" + QString::fromStdString(project->get_logic_model()->get_current_layer()->get_layer_type_as_string()) + ")");
-        status_bar.showMessage("Project/Subproject imported.", SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+        update_window_title();
+        update_status_bar_layer_info();
+
+        status_bar.showMessage(tr("Project/Subproject imported."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 	}
 
 	void MainWindow::change_status_bar_coords(int x, int y)
 	{
-		status_bar_coords.setText("Coordinates : " + QString::number(x) + "," + QString::number(y));
+		status_bar_coords.setText(tr("Coordinates") + " : " + QString::number(x) + "," + QString::number(y));
 	}
 
     void MainWindow::show_context_menu()
@@ -1040,33 +1175,33 @@ namespace degate
 	    if(project == nullptr)
 	        return;
 
-        QMenu contextMenu(("Context menu"), this);
+        QMenu contextMenu(tr("Context menu"), this);
 
         // New
-        QAction annotation_create_action("Create new annotation", this);
-        QAction gate_template_create_action("Create new gate template", this);
-        QAction gate_create_action("Create new gate", this);
-        QAction emarker_create_action("Create new EMarker", this);
-        QAction via_create_action("Create new via", this);
+        QAction annotation_create_action(tr("Create new annotation"), this);
+        QAction gate_template_create_action(tr("Create new gate template"), this);
+        QAction gate_create_action(tr("Create new gate"), this);
+        QAction emarker_create_action(tr("Create new EMarker"), this);
+        QAction via_create_action(tr("Create new via"), this);
 
         // Edit
-        QAction annotation_edit_action("Edit selected annotation", this);
-        QAction gate_edit_action("Edit selected gate", this);
-        QAction gate_port_edit_action("Move selected port", this);
-        QAction emarker_edit_action("Edit selected EMarker", this);
-        QAction via_edit_action("Edit selected via", this);
+        QAction annotation_edit_action(tr("Edit selected annotation"), this);
+        QAction gate_edit_action(tr("Edit selected gate"), this);
+        QAction gate_port_edit_action(tr("Move selected port"), this);
+        QAction emarker_edit_action(tr("Edit selected EMarker"), this);
+        QAction via_edit_action(tr("Edit selected via"), this);
 
         // Via
-        QAction via_follow_action("Follow via", this);
+        QAction via_follow_action(tr("Follow via"), this);
 
         // Delete
-        QAction delete_action("Remove selected object(s)", this);
+        QAction delete_action(tr("Remove selected object(s)"), this);
 
         // Reset area
-        QAction reset_selection_area_action("Reset selection area", this);
+        QAction reset_selection_area_action(tr("Reset selection area"), this);
 
         // Reset wire tool
-        QAction reset_wire_tool_action("Reset wire tool", this);
+        QAction reset_wire_tool_action(tr("Reset wire tool"), this);
 
         // Get current opengl mouse position
         context_menu_mouse_position = workspace->get_safe_opengl_mouse_position();

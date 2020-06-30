@@ -25,13 +25,13 @@ namespace degate
 {
 	GateLibraryDialog::GateLibraryDialog(Project_shptr project, QWidget* parent) : QDialog(parent), list(project, parent, false), project(project)
 	{
-		setWindowTitle("Gate library");
+		setWindowTitle(tr("Gate library"));
 		resize(300, 400);
 
 		// Buttons text
-		edit_gate_button.setText("Edit");
-        remove_gate_button.setText("Remove");
-		validate_button.setText("Ok");
+		edit_gate_button.setText(tr("Edit"));
+        remove_gate_button.setText(tr("Remove"));
+		validate_button.setText(tr("Ok"));
 
 		// Layout
 		buttons_layout.addWidget(&edit_gate_button);
@@ -80,7 +80,11 @@ namespace degate
         {
             // Ask for confirmation
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(this, "Remove gate template", "Are you sure you want to delete the '" + QString::fromStdString(e->get_name()) + "' gate template and all linked gate instances ?", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(this,
+                                          tr("Remove gate template"),
+                                          tr("Are you sure you want to delete the '%1' gate template and all linked gate instances ?")
+                                          .arg(QString::fromStdString(e->get_name())),
+                                          QMessageBox::Yes | QMessageBox::No);
 
             if(reply != QMessageBox::Yes)
                 continue;

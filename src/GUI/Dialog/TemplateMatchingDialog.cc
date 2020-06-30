@@ -240,6 +240,6 @@ namespace degate
         // If the template matching succeeded, show statistics (number of hits)
         QMessageBox::information(this->parentWidget(),
                                  tr("Template matching results"),
-                                 tr("Found") + " " + QString::number(matching->get_number_of_hits()));
+                                 tr("Found %1 match(es).").arg(matching->get_number_of_hits()));
     }
 }

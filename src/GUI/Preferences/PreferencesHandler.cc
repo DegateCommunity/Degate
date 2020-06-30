@@ -36,6 +36,9 @@ namespace degate
         // Automatic icon theme
         bool automatic_icon_theme = settings.value("automatic_icon_theme", true).toBool();
         preferences.automatic_icon_theme = automatic_icon_theme;
+
+        // Language
+        preferences.language = settings.value("language", "").toString();
 	}
 
 	PreferencesHandler::~PreferencesHandler()
@@ -48,23 +51,47 @@ namespace degate
         settings.setValue("theme", QString::fromStdString(theme_to_string(preferences.theme)));
         settings.setValue("icon_theme", QString::fromStdString(icon_theme_to_string(preferences.icon_theme)));
         settings.setValue("automatic_icon_theme", preferences.automatic_icon_theme);
+        settings.setValue("language", preferences.language);
 	}
 
     void PreferencesHandler::update(Preferences updated_preferences)
     {
-	    if(preferences.theme != updated_preferences.theme)
+	    if (preferences.theme != updated_preferences.theme)
         {
             preferences.theme = updated_preferences.theme;
             emit theme_changed();
         }
 
-        if(preferences.icon_theme != updated_preferences.icon_theme)
+        if (preferences.icon_theme != updated_preferences.icon_theme)
         {
             preferences.icon_theme = updated_preferences.icon_theme;
             emit icon_theme_changed();
         }
 
         preferences.automatic_icon_theme = updated_preferences.automatic_icon_theme;
+
+        if (preferences.language != updated_preferences.language)
+        {
+            preferences.language = updated_preferences.language;
+
+            update_language();
+
+            emit language_changed();
+        }
+    }
+
+    void PreferencesHandler::update_language()
+    {
+	    if (translator != nullptr)
+            QApplication::removeTranslator(translator.get());
+
+        QString locale = preferences.language;
+        if (locale == "")
+            locale = QLocale::system().name().section('_', 0, 0);
+
+        translator = std::make_shared<QTranslator>();
+        translator->load(QString(":/languages/degate_") + locale);
+        QApplication::installTranslator(translator.get());
     }
 
     const Preferences& PreferencesHandler::get_preferences()

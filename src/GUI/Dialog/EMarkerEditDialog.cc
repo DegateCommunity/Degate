@@ -26,14 +26,14 @@ namespace degate
 
     EMarkerEditDialog::EMarkerEditDialog(EMarker_shptr &emarker, QWidget *parent) : emarker(emarker), QDialog(parent), fill_color(parent)
     {
-        name_label.setText("Name :");
+        name_label.setText(tr("Name:"));
         name.setText(QString::fromStdString(emarker->get_name()));
 
-        fill_color_label.setText("Fill color :");
+        fill_color_label.setText(tr("Fill color:"));
         fill_color.set_color(emarker->get_fill_color());
 
-        validate_button.setText("Ok");
-        cancel_button.setText("Cancel");
+        validate_button.setText(tr("Ok"));
+        cancel_button.setText(tr("Cancel"));
 
         layout.addWidget(&name_label, 0, 0);
         layout.addWidget(&name, 0, 1);

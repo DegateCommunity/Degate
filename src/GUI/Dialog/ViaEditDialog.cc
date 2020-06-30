@@ -26,26 +26,25 @@ namespace degate
 
     ViaEditDialog::ViaEditDialog(Via_shptr& via, QWidget *parent, Project_shptr& project): via(via), QDialog(parent), fill_color_edit(parent), project(project)
     {
-        name_label.setText("Name :");
+        name_label.setText(tr("Name:"));
         name_edit.setText(QString::fromStdString(via->get_name()));
 
-        fill_color_label.setText("Fill color :");
+        fill_color_label.setText(tr("Fill color:"));
         fill_color_edit.set_color(via->get_fill_color());
 
-        direction_label.setText("Via direction :");
-        direction_edit.addItem("Undefined");
-        direction_edit.addItem("Up");
-        direction_edit.addItem("Down");
+        directions[Via::DIRECTION_UP] = tr("Up");
+        directions[Via::DIRECTION_DOWN] = tr("Down");
+        directions[Via::DIRECTION_UNDEFINED] = tr("Undefined");
 
-        if(via->get_direction() == Via::DIRECTION_UP)
-            direction_edit.setCurrentText("Up");
-        else if(via->get_direction() == Via::DIRECTION_DOWN)
-            direction_edit.setCurrentText("Down");
-        else
-            direction_edit.setCurrentText("Undefined");
+        direction_label.setText(tr("Via direction:"));
 
-        validate_button.setText("Ok");
-        cancel_button.setText("Cancel");
+        for(auto& e : directions)
+            direction_edit.addItem(e.second);
+
+        direction_edit.setCurrentText(directions[via->get_direction()]);
+
+        validate_button.setText(tr("Ok"));
+        cancel_button.setText(tr("Cancel"));
         buttons_layout.addStretch(1);
 
         buttons_layout.addWidget(&validate_button);
@@ -76,21 +75,20 @@ namespace degate
         via->set_name(name_edit.text().toStdString());
         via->set_fill_color(fill_color_edit.get_color());
 
-        if(direction_edit.currentText() == "Up")
-            via->set_direction(Via::DIRECTION_UP);
-        else if(direction_edit.currentText() == "Down")
-            via->set_direction(Via::DIRECTION_DOWN);
-        else
-            via->set_direction(Via::DIRECTION_UNDEFINED);
+        for (auto& e : directions)
+        {
+            if (e.second == direction_edit.currentText())
+                via->set_direction(e.first);
+        }
 
         accept();
     }
 
     void ViaEditDialog::direction_changed()
     {
-        if(direction_edit.currentText() == "Up")
+        if(direction_edit.currentText() == directions[Via::DIRECTION_UP])
             fill_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_UP));
-        else if(direction_edit.currentText() == "Down")
+        else if(direction_edit.currentText() == directions[Via::DIRECTION_DOWN])
             fill_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_DOWN));
     }
 }

@@ -31,7 +31,7 @@ namespace degate
     WireMatchingDialog::WireMatchingDialog(QWidget* parent, BoundingBox& bounding_box, Project_shptr& project)
             : QDialog(parent), bounding_box(bounding_box), project(project)
     {
-        setWindowTitle(tr("Via matching"));
+        setWindowTitle(tr("Wire matching"));
 
         // Via diameter
         wire_diameter_label.setText(tr("Wire diameter:"));
@@ -92,7 +92,7 @@ namespace degate
         wire_matching->set_min_edge_magnitude(min_edge_magnitude_edit.get_value());
 
         // Start progress dialog
-        ProgressDialog progress_dialog(tr("Via matching"),
+        ProgressDialog progress_dialog(tr("Wire matching"),
                                        wire_matching,
                                        this->parentWidget());
 

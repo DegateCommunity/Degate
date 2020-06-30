@@ -41,6 +41,7 @@ namespace degate
 
         // Create the new category layout
         auto category_layout = new QGridLayout();
+        //category_layout->setColumnStretch(1, 1);
         category_group_layout->setLayout(category_layout);
 
         return category_layout;

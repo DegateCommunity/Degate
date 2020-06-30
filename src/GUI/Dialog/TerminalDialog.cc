@@ -20,7 +20,7 @@
 */
 
 
-#include <GUI/Dialog/TerminalDialog.h>
+#include "TerminalDialog.h"
 
 namespace degate
 {
@@ -81,7 +81,7 @@ namespace degate
 
     TerminalDialog::TerminalDialog(QWidget *parent, std::vector<std::string> &commands) : terminal(parent, commands), button_box(QDialogButtonBox::Ok)
     {
-        setWindowTitle("Degate terminal");
+        setWindowTitle(tr("Degate terminal"));
         resize(500, 400);
 
         layout.addWidget(&terminal);

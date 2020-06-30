@@ -28,29 +28,29 @@ namespace degate
     ProjectSettingsGeneralTab::ProjectSettingsGeneralTab(QWidget* parent, const Project_shptr& project)
             : QWidget(parent), project(project)
     {
-        project_name_label.setText("Project name :");
+        project_name_label.setText(tr("Project name:"));
         project_name_edit.setText(QString::fromStdString(project->get_name()));
         layout.addWidget(&project_name_label, 0, 0);
         layout.addWidget(&project_name_edit, 0, 1);
 
-        project_description_label.setText("Project description :");
+        project_description_label.setText(tr("Project description:"));
         project_description_edit.setText(QString::fromStdString(project->get_description()));
         layout.addWidget(&project_description_label, 1, 0);
         layout.addWidget(&project_description_edit, 1, 1);
 
-        wire_diameter_label.setText("Default wire diameter :");
+        wire_diameter_label.setText(tr("Default wire diameter:"));
         wire_diameter_edit.setValue(project->get_default_wire_diameter());
         wire_diameter_edit.setMinimum(1);
         layout.addWidget(&wire_diameter_label, 2, 0);
         layout.addWidget(&wire_diameter_edit, 2, 1);
 
-        via_diameter_label.setText("Default via diameter :");
+        via_diameter_label.setText(tr("Default via diameter:"));
         via_diameter_edit.setValue(project->get_default_via_diameter());
         via_diameter_edit.setMinimum(1);
         layout.addWidget(&via_diameter_label, 3, 0);
         layout.addWidget(&via_diameter_edit, 3, 1);
 
-        port_diameter_label.setText("Default port diameter :");
+        port_diameter_label.setText(tr("Default port diameter:"));
         port_diameter_edit.setValue(project->get_default_port_diameter());
         port_diameter_edit.setMinimum(1);
         layout.addWidget(&port_diameter_label, 4, 0);
@@ -73,47 +73,47 @@ namespace degate
     ProjectSettingsColorsTab::ProjectSettingsColorsTab(QWidget* parent, const Project_shptr& project)
             : QWidget(parent), project(project)
     {
-        wire_color_label.setText("Wire default color :");
+        wire_color_label.setText(tr("Wire default color:"));
         wire_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_WIRE));
         layout.addWidget(&wire_color_label, 0, 0);
         layout.addWidget(&wire_color_edit, 0, 1);
 
-        via_up_color_label.setText("Via up default color :");
+        via_up_color_label.setText(tr("Via up default color:"));
         via_up_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_UP));
         layout.addWidget(&via_up_color_label, 1, 0);
         layout.addWidget(&via_up_color_edit, 1, 1);
 
-        via_down_color_label.setText("Via down default color :");
+        via_down_color_label.setText(tr("Via down default color:"));
         via_down_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_DOWN));
         layout.addWidget(&via_down_color_label, 2, 0);
         layout.addWidget(&via_down_color_edit, 2, 1);
 
-        annotation_color_label.setText("Annotation default color :");
+        annotation_color_label.setText(tr("Annotation default color:"));
         annotation_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
         layout.addWidget(&annotation_color_label, 3, 0);
         layout.addWidget(&annotation_color_edit, 3, 1);
 
-        annotation_frame_color_label.setText("Annotation frame default color :");
+        annotation_frame_color_label.setText(tr("Annotation frame default color:"));
         annotation_frame_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
         layout.addWidget(&annotation_frame_color_label, 4, 0);
         layout.addWidget(&annotation_frame_color_edit, 4, 1);
 
-        gate_color_label.setText("Gate default color :");
+        gate_color_label.setText(tr("Gate default color:"));
         gate_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_GATE));
         layout.addWidget(&gate_color_label, 5, 0);
         layout.addWidget(&gate_color_edit, 5, 1);
 
-        gate_frame_color_label.setText("Gate frame default color :");
+        gate_frame_color_label.setText(tr("Gate frame default color:"));
         gate_frame_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
         layout.addWidget(&gate_frame_color_label, 6, 0);
         layout.addWidget(&gate_frame_color_edit, 6, 1);
 
-        gate_port_color_label.setText("Gate port default color :");
+        gate_port_color_label.setText(tr("Gate port default color:"));
         gate_port_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_GATE_PORT));
         layout.addWidget(&gate_port_color_label, 7, 0);
         layout.addWidget(&gate_port_color_edit, 7, 1);
 
-        emarker_color_label.setText("EMarker default color :");
+        emarker_color_label.setText(tr("EMarker default color:"));
         emarker_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_EMARKER));
         layout.addWidget(&emarker_color_label, 8, 0);
         layout.addWidget(&emarker_color_edit, 8, 1);
@@ -137,14 +137,14 @@ namespace degate
     ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent, const Project_shptr& project)
         : QDialog(parent), general_tab(this, project), colors_tab(this, project)
     {
-        introduction_label.setText("Change here all project settings like project name or colors.\n"
-                                   "Those settings are independent (per project).");
+        introduction_label.setText(tr("Change here all project settings like project name or colors.\n"
+                                      "Those settings are independent (per project)."));
 
-        tab.addTab(&general_tab, "General");
-        tab.addTab(&colors_tab, "Colors");
+        tab.addTab(&general_tab, tr("General"));
+        tab.addTab(&colors_tab, tr("Colors"));
 
-        apply_button.setText("Apply");
-        close_button.setText("Close");
+        apply_button.setText(tr("Apply"));
+        close_button.setText(tr("Close"));
         buttons_layout.addStretch(1);
         buttons_layout.addWidget(&apply_button);
         buttons_layout.addWidget(&close_button);

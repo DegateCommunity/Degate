@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="languages/">
+        <file>degate_en.qm</file>
+        <file>degate_fr.qm</file>
+    </qresource>
+</RCC>

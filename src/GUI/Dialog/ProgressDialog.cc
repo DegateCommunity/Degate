@@ -101,7 +101,7 @@ namespace degate
                 if(progress_control->has_log_message())
                     text = QString::fromStdString(progress_control->get_log_message());
                 text += "\n";
-                text += tr("Time left")+ ": " + QString::fromStdString(progress_control->get_time_left_as_string());
+                text += tr("Time left:") + " " + QString::fromStdString(progress_control->get_time_left_as_string());
 
                 setLabelText(text);
             }
