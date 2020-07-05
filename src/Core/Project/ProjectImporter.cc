@@ -373,8 +373,13 @@ void ProjectImporter::parse_grids_element(QDomElement const grids_elem, Project_
 				                             ? prj->get_regular_horizontal_grid()
 				                             : prj->get_regular_vertical_grid();
 
-			reg_grid->set_distance(parse_number<unsigned int>(regular_grid_elem, "distance", 0));
+			reg_grid->set_distance(parse_number<unsigned int>(regular_grid_elem, "distance", 50));
 			reg_grid->set_enabled(parse_bool(regular_grid_elem.attribute("enabled").toStdString()));
+
+            if (orientation == "horizontal")
+                reg_grid->set_range(parse_number<unsigned int>(regular_grid_elem, "offset", 0), prj->get_width());
+            else
+                reg_grid->set_range(parse_number<unsigned int>(regular_grid_elem, "offset", 0), prj->get_height());
 		}
 	}
 

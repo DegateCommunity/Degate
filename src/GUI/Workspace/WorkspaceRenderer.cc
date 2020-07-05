@@ -22,6 +22,7 @@
 #include <GUI/Workspace/WorkspaceRenderer.h>
 #include <GUI/Dialog/GateEditDialog.h>
 #include <GUI/Dialog/AnnotationEditDialog.h>
+#include <GUI/Preferences/PreferencesHandler.h>
 
 namespace degate
 {
@@ -35,7 +36,8 @@ namespace degate
               vias(this),
               wires(this),
               selection_tool(this),
-              wire_tool(this)
+              wire_tool(this),
+              regular_grid(this)
     {
 		setFocusPolicy(Qt::StrongFocus);
 		setCursor(Qt::CrossCursor);
@@ -51,6 +53,10 @@ namespace degate
         // Use cleanup function for opengl objects destruction
 
 		doneCurrent();
+
+		auto updated_preferences = PREFERENCES_HANDLER.get_preferences();
+        updated_preferences.show_grid = draw_grid;
+        PREFERENCES_HANDLER.update(updated_preferences);
 	}
 
 	void WorkspaceRenderer::update_screen()
@@ -86,6 +92,10 @@ namespace degate
         wires.set_project(new_project);
         selection_tool.set_project(new_project);
         wire_tool.set_project(new_project);
+        regular_grid.set_project(new_project);
+
+        regular_grid.viewport_update(BoundingBox(viewport_min_x, viewport_max_x, viewport_min_y, viewport_max_y));
+        regular_grid.update();
 
 		set_projection(1, width() / 2.0, height() / 2.0);
 
@@ -243,6 +253,26 @@ namespace degate
         update();
     }
 
+    void WorkspaceRenderer::show_grid(bool value)
+    {
+        draw_grid = value;
+
+        if (draw_grid == true)
+        {
+            regular_grid.update();
+            update();
+        }
+    }
+
+    void WorkspaceRenderer::update_grid()
+    {
+        if (draw_grid == true)
+        {
+            regular_grid.update();
+            update();
+        }
+    }
+
 	void WorkspaceRenderer::free_textures()
 	{
 		background.free_textures();
@@ -264,6 +294,9 @@ namespace degate
 
 		Text::init_context();
 
+        //QColor color = QApplication::palette().color(QWidget::backgroundRole());
+        //glClearColor(color.red() / 255.0, color.green() / 255.0, color.blue() / 255.0, 1.0);
+
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glEnable(GL_BLEND);
         glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
@@ -277,6 +310,7 @@ namespace degate
 		selection_tool.init();
 		wires.init();
         wire_tool.init();
+        regular_grid.init();
 
         connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &WorkspaceRenderer::cleanup);
 	}
@@ -327,6 +361,9 @@ namespace degate
 
         if(current_tool == WorkspaceTool::WIRE)
             wire_tool.draw(projection);
+
+        if(draw_grid)
+            regular_grid.draw(projection);
 	}
 
 	void WorkspaceRenderer::resizeGL(int w, int h)
@@ -409,6 +446,11 @@ namespace degate
 		viewport_min_y = center_y - (static_cast<float>(height()) * scale) / 2.0;
 		viewport_max_x = center_x + (static_cast<float>(width()) * scale) / 2.0;
 		viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
+
+        regular_grid.viewport_update(BoundingBox(viewport_min_x, viewport_max_x, viewport_min_y, viewport_max_y));
+
+        if (draw_grid)
+            regular_grid.update();
 
 		projection.setToIdentity();
 		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);

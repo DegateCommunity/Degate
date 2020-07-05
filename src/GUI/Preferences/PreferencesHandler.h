@@ -38,13 +38,29 @@ namespace degate
      */
     struct Preferences
     {
-        /* Theme */
-        Theme theme;
-        IconTheme icon_theme;
-        bool automatic_icon_theme;
+        ///////////
+        // Appearance
+        ///////////
 
-        /* Language */
+        Theme     theme;
+        IconTheme icon_theme;
+        bool      automatic_icon_theme;
+
+
+        ///////////
+        // General
+        ///////////
+
         QString language;
+
+
+        ///////////
+        // Grid
+        ///////////
+
+        color_t  grid_color;
+        unsigned max_grid_lines_count;
+        bool     show_grid;
     };
 
 	/**

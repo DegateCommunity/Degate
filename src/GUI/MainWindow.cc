@@ -142,12 +142,24 @@ namespace degate
         show_wires_view_action->setChecked(true);
         QObject::connect(show_wires_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_wires(bool)));
 
+        view_menu->addSeparator();
+
+        view_grid_configuration_action = view_menu->addAction("");
+        QObject::connect(view_grid_configuration_action, SIGNAL(triggered()), this, SLOT(on_grid_configuration()));
+
+        show_grid_view_action = view_menu->addAction("");
+        show_grid_view_action->setCheckable(true);
+        bool show_grid = PREFERENCES_HANDLER.get_preferences().show_grid;
+        show_grid_view_action->setChecked(show_grid);
+        workspace->show_grid(show_grid);
+        QObject::connect(show_grid_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_grid(bool)));
+
 
         // Layer menu
 		layer_menu = menu_bar.addMenu("");
 
 		layers_edit_action = layer_menu->addAction("");
-		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
+		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_grid_configuration()));
 
 		background_import_action = layer_menu->addAction("");
 		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
@@ -372,6 +384,8 @@ namespace degate
         show_vias_view_action->setText(tr("Show vias"));
         show_vias_name_view_action->setText(tr("Show vias name"));
         show_wires_view_action->setText(tr("Show wires"));
+        view_grid_configuration_action->setText(tr("Grid configuration"));
+        show_grid_view_action->setText(tr("Show grid"));
 
         // Layer menu
         layer_menu->setTitle(tr("Layer"));
@@ -633,6 +647,8 @@ namespace degate
 	{
 		PreferencesEditor dialog(this);
 		dialog.exec();
+
+		workspace->update_grid();
 	}
 
 	void MainWindow::on_menu_layer_edit()
@@ -1327,5 +1343,16 @@ namespace degate
         }
         else
             new_via.reset();
+    }
+
+    void MainWindow::on_grid_configuration()
+    {
+        if(project == nullptr)
+            return;
+
+        RegularGridConfigurationDialog dialog(this, project);
+        dialog.exec();
+
+        workspace->update_grid();
     }
 }

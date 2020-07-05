@@ -37,6 +37,7 @@
 #include <GUI/Dialog/ViaEditDialog.h>
 #include <GUI/Workspace/WorkspaceWires.h>
 #include <GUI/Workspace/WorkspaceWireTool.h>
+#include <GUI/Workspace/WorkspaceRegularGrid.h>
 
 #include <QtOpenGL/QtOpenGL>
 #include <list>
@@ -308,6 +309,18 @@ namespace degate
         void show_wires(bool value);
 
         /**
+         * Show the grid or not.
+         *
+         * @param value : if true then the grid will be drawn, not otherwise.
+         */
+        void show_grid(bool value);
+
+        /**
+         * Force grid update.
+         */
+        void update_grid();
+
+        /**
          * No more area selection.
          */
         void reset_area_selection();
@@ -414,6 +427,10 @@ namespace degate
 
 		// Wire tool
         WorkspaceWireTool wire_tool;
+
+        // Regular grid
+        WorkspaceRegularGrid regular_grid;
+        bool draw_grid = false;
 
 		// View parameters
 		bool draw_gates            = true;

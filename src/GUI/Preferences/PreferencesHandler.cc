@@ -25,6 +25,10 @@ namespace degate
 {
 	PreferencesHandler::PreferencesHandler() : settings(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIGURATION_FILE_NAME)), QSettings::IniFormat)
 	{
+	    ///////////
+	    // Appearance
+	    ///////////
+
 	    // Theme
 		QString theme = settings.value("theme", "native").toString();
         preferences.theme = string_to_theme(theme.toStdString());
@@ -37,21 +41,59 @@ namespace degate
         bool automatic_icon_theme = settings.value("automatic_icon_theme", true).toBool();
         preferences.automatic_icon_theme = automatic_icon_theme;
 
+
+        ///////////
+        // General
+        ///////////
+
         // Language
         preferences.language = settings.value("language", "").toString();
+
+
+        ///////////
+        // Grid
+        ///////////
+
+        // Grid color
+        preferences.grid_color = settings.value("grid_color", 0x55FFFFFF).toUInt();
+
+        // Max grid lines count (optimisation)
+        preferences.max_grid_lines_count = settings.value("max_grid_lines_count", 200).toUInt();
+
+        // Show grid
+        preferences.show_grid = settings.value("show_grid", false).toBool();
 	}
 
 	PreferencesHandler::~PreferencesHandler()
 	{
-
+        save();
 	}
 
 	void PreferencesHandler::save()
 	{
+        ///////////
+        // Appearance
+        ///////////
+
         settings.setValue("theme", QString::fromStdString(theme_to_string(preferences.theme)));
         settings.setValue("icon_theme", QString::fromStdString(icon_theme_to_string(preferences.icon_theme)));
         settings.setValue("automatic_icon_theme", preferences.automatic_icon_theme);
+
+
+        ///////////
+        // General
+        ///////////
+
         settings.setValue("language", preferences.language);
+
+
+        ///////////
+        // Grid
+        ///////////
+
+        settings.setValue("grid_color", preferences.grid_color);
+        settings.setValue("max_grid_lines_count", preferences.max_grid_lines_count);
+        settings.setValue("show_grid", preferences.show_grid);
 	}
 
     void PreferencesHandler::update(Preferences updated_preferences)
@@ -78,6 +120,10 @@ namespace degate
 
             emit language_changed();
         }
+
+        preferences.max_grid_lines_count = updated_preferences.max_grid_lines_count;
+        preferences.grid_color           = updated_preferences.grid_color;
+        preferences.show_grid            = updated_preferences.show_grid;
     }
 
     void PreferencesHandler::update_language()

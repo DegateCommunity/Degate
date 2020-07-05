@@ -39,6 +39,7 @@
 #include <GUI/Dialog/TemplateMatchingDialog.h>
 #include <GUI/Dialog/ViaMatchingDialog.h>
 #include <GUI/Dialog/WireMatchingDialog.h>
+#include <GUI/Dialog/RegularGridConfigurationDialog.h>
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -299,6 +300,11 @@ namespace degate
          */
         void on_via_create();
 
+        /**
+         * Show the grid configuration dialog.
+         */
+        void on_grid_configuration();
+
 	private:
 		QMenuBar menu_bar;
 		QToolBar* tool_bar = nullptr;
@@ -343,6 +349,8 @@ namespace degate
         QAction* show_vias_view_action;
         QAction* show_vias_name_view_action;
         QAction* show_wires_view_action;
+        QAction* view_grid_configuration_action;
+        QAction* show_grid_view_action;
 
         // Layer menu
         QMenu* layer_menu;

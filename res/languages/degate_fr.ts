@@ -618,6 +618,24 @@
     </message>
 </context>
 <context>
+    <name>degate::GridPreferencesPage</name>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/GridPreferencesPage.cc" line="30"/>
+        <source>Grid</source>
+        <translation>Grille</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/GridPreferencesPage.cc" line="33"/>
+        <source>Grid color:</source>
+        <translation>Couleur de la grille :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/GridPreferencesPage.cc" line="38"/>
+        <source>Max grid lines count:</source>
+        <translation>Nombre maximum de lignes (composant la grille) :</translation>
+    </message>
+</context>
+<context>
     <name>degate::LayerBackgroundSelectionButton</name>
     <message>
         <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="79"/>
@@ -741,588 +759,598 @@
 <context>
     <name>degate::MainWindow</name>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="349"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="361"/>
         <source>Project</source>
         <translation>Projet</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="350"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="362"/>
         <source>New</source>
         <translation>Nouveau</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="351"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="363"/>
         <source>Open</source>
         <translation>Ouvrir</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="352"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="364"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="353"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="365"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="354"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="366"/>
         <source>Create subproject from selection</source>
         <translation>Créer un sous-projet depuis la sélection</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="355"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="367"/>
         <source>Project settings</source>
         <translation>Paramètres du projet</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="356"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="368"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="359"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="371"/>
         <source>Edit</source>
         <translation>Editer</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="360"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="372"/>
         <source>Preferences</source>
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="363"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="375"/>
         <source>View</source>
         <translation>Vue</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="364"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="376"/>
         <source>Show gates</source>
         <translation>Afficher les portes</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="365"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="377"/>
         <source>Show gates name</source>
         <translation>Afficher le nom des portes</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="366"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="378"/>
         <source>Show ports</source>
         <translation>Afficher les ports</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="367"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="379"/>
         <source>Show ports name</source>
         <translation>Afficher le nom des ports</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="368"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="380"/>
         <source>Show annotations</source>
         <translation>Afficher les annotations</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="369"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="381"/>
         <source>Show annotations name</source>
         <translation>Afficher le nom des annotations</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="370"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="382"/>
         <source>Show emarkers</source>
         <translation>Afficher les marqueurs électriques</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="371"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="383"/>
         <source>Show emarkers name</source>
         <translation>Afficher le nom des marqueurs électriques</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="372"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="384"/>
         <source>Show vias</source>
         <translation>Afficher les via</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="373"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="385"/>
         <source>Show vias name</source>
         <translation>Afficher le nom des via</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="374"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="386"/>
         <source>Show wires</source>
         <translation>Afficher les fils</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="377"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="391"/>
         <source>Layer</source>
         <translation>Couches</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="378"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="392"/>
         <source>Edit layers</source>
         <translation>Modifier les couches</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="379"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="393"/>
         <source>Import background image</source>
         <translation>Importer une image d&apos;arrière-plan</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="382"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="396"/>
         <source>Gate</source>
         <translation>Porte</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="383"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="390"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="395"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="399"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="397"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="404"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="409"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="413"/>
         <source>Edit selected</source>
         <translation>Éditer l&apos;élément sélectionné</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="384"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="398"/>
         <source>Create gate template from selection</source>
         <translation>Créer un modèle de porte à partir de la sélection</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="385"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="399"/>
         <source>Create gate from selection</source>
         <translation>Créer une porte à partir de la sélection</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="386"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="427"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="400"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="441"/>
         <source>Gate library</source>
         <translation>Bibliothèque de portes</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="389"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="403"/>
         <source>Annotation</source>
         <translation>Annotation</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="391"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="405"/>
         <source>Create from selection</source>
         <translation>Créer depuis la sélection</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="394"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="408"/>
         <source>EMarker</source>
         <translation>Marqueur électrique</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="398"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="412"/>
         <source>Via</source>
         <translation>Via</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="402"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="1012"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="416"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1028"/>
         <source>Logic</source>
         <translation>Logique</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="403"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="417"/>
         <source>Remove selected objects</source>
         <translation>Supprimer les objets sélectionnés</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="404"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="418"/>
         <source>Interconnect selected objects</source>
         <translation>Interconnecter les objets sélectionnés</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="407"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="421"/>
         <source>Matching</source>
         <translation>Reconnaissance</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="408"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="422"/>
         <source>Template matching</source>
         <translation>Reconnaissance de modèles de porte</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="409"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="423"/>
         <source>Via matching</source>
         <translation>Reconnaissance de via</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="410"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="424"/>
         <source>Wire matching</source>
         <translation>Reconnaissance de fils</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="413"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="427"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="414"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="428"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="234"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="246"/>
         <source>Initialization...</source>
         <translation>Initialisation...</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="428"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="442"/>
         <source>Area selection tool</source>
         <translation>Outil de sélection de zones</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="429"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="443"/>
         <source>Wire tool</source>
         <translation>Outil fil</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="904"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="920"/>
         <source>One of the objects you selected cannot have connections at all.</source>
         <translation>Un des objets sélectionnés ne peut pas avoir de connexions.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1097"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1113"/>
         <source>The project/subproject do not exist, do you want to create it?</source>
         <translation>Le projet/sous-projet n&apos;existe pas, voulez-vous le créer ?</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1170"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1186"/>
         <source>Coordinates</source>
         <translation>Coordonnées</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="423"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="437"/>
         <source>Layer up</source>
         <translation>Couche supérieure</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="424"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="387"/>
+        <source>Grid configuration</source>
+        <translation>Configuration de la grille</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="388"/>
+        <source>Show grid</source>
+        <translation>Afficher la grille</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="438"/>
         <source>Layer down</source>
         <translation>Couche inférieure</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="425"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="439"/>
         <source>Zoom in</source>
         <translation>Agrandir</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="426"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="440"/>
         <source>Zoom out</source>
         <translation>Rétrécir</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="436"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="450"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="437"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="451"/>
         <source>This is a forked version of Degate</source>
         <translation>Ce logiciel est un fork de Degate</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="438"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="452"/>
         <source>Degate is originally developed by Martin Schobert (martin@weltregierung.de).</source>
         <translation>Degate est originellement développé par Martin Schobert (martin@weltregierung.de).</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="439"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="453"/>
         <source>This software is released under the GNU General Public License Version 3.</source>
         <translation>Ce logiciel est distribué sous la licence GNU General Public License version 3.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="441"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="455"/>
         <source>Original website</source>
         <translation>Site web original</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="444"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="458"/>
         <source>About degate</source>
         <translation>À propos de Degate</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="463"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="490"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="477"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="504"/>
         <source>Import project</source>
         <translation>Importer un projet</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="467"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="481"/>
         <source>Project opening operation cancelled.</source>
         <translation>L&apos;opération d&apos;ouverture du projet a été annulée.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="489"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="503"/>
         <source>The project</source>
         <translation>Le projet</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="489"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="503"/>
         <source>was successfully loaded.</source>
         <translation>a été chargé avec succès.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="498"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="512"/>
         <source>Saving project...</source>
         <translation>Enregistrement du projet...</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="503"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="517"/>
         <source>Project saved.</source>
         <translation>Le projet a été sauvegardé.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="508"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="522"/>
         <source>Closing project...</source>
         <translation>Fermeture du projet...</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="516"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="530"/>
         <source>The project has been modified.</source>
         <translation>Le projet a été modifié.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="517"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="531"/>
         <source>Do you want to save your changes ?</source>
         <translation>Voulez-vous sauvegarder les changements ?</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="548"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="562"/>
         <source>Project closed.</source>
         <translation>Le projet a été fermé.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="553"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="567"/>
         <source>Creating a new project...</source>
         <translation>Création d&apos;un nouveau projet...</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="555"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="569"/>
         <source>Select the directory where the project will be created</source>
         <translation>Sélectionner le dossier où le projet sera créé</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="559"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="578"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="603"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="573"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="592"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="617"/>
         <source>New project creation operation cancelled.</source>
         <translation>L&apos;opération de création d&apos;un nouveau projet a été annulée.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="576"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="1114"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="590"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1130"/>
         <source>Invalid values</source>
         <translation>Valeurs invalides</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="576"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="590"/>
         <source>The values you entered are invalid. Operation cancelled.</source>
         <translation>Les valeurs que vous avez rentrées sont invalides. L&apos;opération a été annulée.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="600"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="614"/>
         <source>Created a new project.</source>
         <translation>Création d&apos;un nouveau projet.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="655"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="671"/>
         <source>Failed to import new background image : no project opened.</source>
         <translation>L&apos;importation de l&apos;image d&apos;arrière-plan a échoué : aucun projet ouvert.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="659"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="675"/>
         <source>Importing a new background image for the layer...</source>
         <translation>Importation d&apos;une nouvelle image d&apos;arrière-plan pour la couche...</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="661"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="677"/>
         <source>Select the new background image</source>
         <translation>Sélection de la nouvelle image d&apos;arrière-plan</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="666"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="682"/>
         <source>New background image import cancelled.</source>
         <translation>L&apos;importation de la nouvelle image d&apos;arrière-plan a été annulée.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="674"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="690"/>
         <source>Imported a new background image for the layer.</source>
         <translation>Une nouvelle image d&apos;arrière-plan a été importée pour la couche.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="684"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="732"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="700"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="748"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="684"/>
-        <location filename="../../src/GUI/MainWindow.cc" line="732"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="700"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="748"/>
         <source>You can create a new gate only on a logic layer.</source>
         <translation>Vous ne pouvez créer une nouvelle porte que sur une couche logique.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="904"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="920"/>
         <source>Error during interconnect</source>
         <translation>Erreur durant la tentative d&apos;interconnections</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1000"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1016"/>
         <source>Degate : %1 project</source>
         <translation>Degate : projet %1</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1010"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1026"/>
         <source>Undefined</source>
         <translation>Indéfinie</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1011"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1027"/>
         <source>Transistor</source>
         <translation>Transistor</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1013"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1029"/>
         <source>Metal</source>
         <translation>Métal</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1018"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1034"/>
         <source>Layer: %1/%2 (%3)</source>
         <translation>Couche : %1/%2 (%3)</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1027"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1043"/>
         <source>Layer:</source>
         <translation>Couche :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1027"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1043"/>
         <source>none</source>
         <translation>aucune</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1057"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1073"/>
         <source>Importing project/subproject...</source>
         <translation>Importation d&apos;un projet/sous-projet...</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1064"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1080"/>
         <source>Opening project</source>
         <translation>Ouverture d&apos;un projet</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1096"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1112"/>
         <source>Subproject</source>
         <translation>Sous-projet</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1114"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1130"/>
         <source>The values you entered are invalid. Operation cancelled</source>
         <translation>Les valeurs que vous avez entrées sont invalides. L&apos;opération a été annulée</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1116"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1132"/>
         <source>New project/subproject operation cancelled.</source>
         <translation>L&apos;opération de création d&apos;un nouveau projet/sous-projet a été annulée.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1152"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1168"/>
         <source>Project/Subproject import failed</source>
         <translation>L&apos;importation du projet/sous-projet a échoué</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1153"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1169"/>
         <source>The project/subproject cannot be imported (maybe corrupted).</source>
         <translation>Le projet/sous-projet ne peut pas être importé (il est peut-être corrompu).</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1154"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1170"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1155"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1171"/>
         <source>Project/Subproject import failed.</source>
         <translation>L&apos;importation du projet/sous-projet a échoué.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1165"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1181"/>
         <source>Project/Subproject imported.</source>
         <translation>Le projet/sous-projet a été importé.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1178"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1194"/>
         <source>Context menu</source>
         <translation>Menu contextuel</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1181"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1197"/>
         <source>Create new annotation</source>
         <translation>Nouvelle annotation</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1182"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1198"/>
         <source>Create new gate template</source>
         <translation>Nouveau modèle de porte</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1183"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1199"/>
         <source>Create new gate</source>
         <translation>Nouvelle porte</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1184"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1200"/>
         <source>Create new EMarker</source>
         <translation>Nouveau marqueur électrique</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1185"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1201"/>
         <source>Create new via</source>
         <translation>Nouveau via</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1188"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1204"/>
         <source>Edit selected annotation</source>
         <translation>Éditer l&apos;annotation sélectionnée</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1189"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1205"/>
         <source>Edit selected gate</source>
         <translation>Éditer la porte sélectionnée</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1190"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1206"/>
         <source>Move selected port</source>
         <translation>Déplacer le port sélectionné</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1191"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1207"/>
         <source>Edit selected EMarker</source>
         <translation>Éditer le marqueur électrique sélectionné</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1192"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1208"/>
         <source>Edit selected via</source>
         <translation>Editer le via</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1195"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1211"/>
         <source>Follow via</source>
         <translation>Suivre le via</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1198"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1214"/>
         <source>Remove selected object(s)</source>
         <translation>Supprimer l&apos;objet sélectionné</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1201"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1217"/>
         <source>Reset selection area</source>
         <translation>Réinitialiser la zone de sélection</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1204"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1220"/>
         <source>Reset wire tool</source>
         <translation>Réinitialiser l&apos;outil fil</translation>
     </message>
@@ -1406,6 +1434,11 @@
         <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="124"/>
         <source>Close</source>
         <translation>Fermer</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="165"/>
+        <source>Grid</source>
+        <translation>Grille</translation>
     </message>
 </context>
 <context>
@@ -1524,6 +1557,34 @@ Those settings are independent (per project).</source>
         <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="53"/>
         <source>Default port diameter:</source>
         <translation>Diamètre par défaut des ports :</translation>
+    </message>
+</context>
+<context>
+    <name>degate::RegularGridConfigurationDialog</name>
+    <message>
+        <location filename="../../src/GUI/Dialog/RegularGridConfigurationDialog.cc" line="29"/>
+        <source>Grid configuration</source>
+        <translation>Configuration de la grille</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/RegularGridConfigurationDialog.cc" line="31"/>
+        <source>All settings are project relative.</source>
+        <translation>Tous les paramètres sont relatifs au projet actif.</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/RegularGridConfigurationDialog.cc" line="46"/>
+        <source>Distance (space between each grid line in px, 0 to disable):</source>
+        <translation>Distance (espace entre chaque ligne en pixel, 0 pour désactiver) :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/RegularGridConfigurationDialog.cc" line="57"/>
+        <source>Offset:</source>
+        <translation>Décalage :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/RegularGridConfigurationDialog.cc" line="67"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
     </message>
 </context>
 <context>
