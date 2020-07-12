@@ -1022,7 +1022,7 @@ namespace degate
 
     void MainWindow::update_status_bar_layer_info()
     {
-        static std::map<Layer::LAYER_TYPE, QString> types = {
+        std::map<Layer::LAYER_TYPE, QString> types = {
                 {Layer::UNDEFINED,  tr("Undefined")},
                 {Layer::TRANSISTOR, tr("Transistor")},
                 {Layer::LOGIC,      tr("Logic")},
