@@ -1386,22 +1386,27 @@
 <context>
     <name>degate::PortPlacementDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="34"/>
+        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="32"/>
+        <source>Place/move the port</source>
+        <translation>Placer/déplacer le port</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="36"/>
         <source>Next layer</source>
         <translation>Couche suivante</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="35"/>
+        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="37"/>
         <source>Previous layer</source>
         <translation>Couche précédente</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="36"/>
+        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="38"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="37"/>
+        <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="39"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>

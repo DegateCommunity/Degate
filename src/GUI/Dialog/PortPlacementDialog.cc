@@ -29,6 +29,8 @@ namespace degate
 																																			 project(project), 
 																																			 placement(project, gate, port, this)
 	{
+	    setWindowTitle(tr("Place/move the port"));
+
 		resize(gate->get_width() + 300, gate->get_height() + 300);
 		placement.resize(gate->get_width(), gate->get_height());
 		next_layer_button.setText(tr("Next layer"));

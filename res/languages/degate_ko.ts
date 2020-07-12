@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.1" language="ko_KR">
 <context>
     <name>degate::AnnotationEditDialog</name>
     <message>
@@ -759,6 +759,11 @@
 <context>
     <name>degate::MainWindow</name>
     <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="246"/>
+        <source>Initialization...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../src/GUI/MainWindow.cc" line="361"/>
         <source>Project</source>
         <translation type="unfinished"></translation>
@@ -866,6 +871,16 @@
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="386"/>
         <source>Show wires</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="387"/>
+        <source>Grid configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="388"/>
+        <source>Show grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -979,38 +994,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="246"/>
-        <source>Initialization...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="920"/>
-        <source>One of the objects you selected cannot have connections at all.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1113"/>
-        <source>The project/subproject do not exist, do you want to create it?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1186"/>
-        <source>Coordinates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../src/GUI/MainWindow.cc" line="437"/>
         <source>Layer up</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="387"/>
-        <source>Grid configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="388"/>
-        <source>Show grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1195,6 +1180,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="920"/>
+        <source>One of the objects you selected cannot have connections at all.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../src/GUI/MainWindow.cc" line="1016"/>
         <source>Degate : %1 project</source>
         <translation type="unfinished"></translation>
@@ -1245,6 +1235,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1113"/>
+        <source>The project/subproject do not exist, do you want to create it?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../src/GUI/MainWindow.cc" line="1130"/>
         <source>The values you entered are invalid. Operation cancelled</source>
         <translation type="unfinished"></translation>
@@ -1277,6 +1272,11 @@
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="1181"/>
         <source>Project/Subproject imported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1186"/>
+        <source>Coordinates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1414,16 +1414,6 @@
 <context>
     <name>degate::PreferencesEditor</name>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="163"/>
-        <source>General</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="164"/>
-        <source>Appearance</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="32"/>
         <source>Preferences</source>
         <translation type="unfinished"></translation>
@@ -1438,6 +1428,16 @@
         <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="51"/>
         <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="124"/>
         <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="163"/>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="164"/>
+        <source>Appearance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1798,14 +1798,14 @@ Those settings are independent (per project).</source>
 <context>
     <name>degate::WireMatchingDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/WireMatchingDialog.cc" line="37"/>
-        <source>Wire diameter:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../src/GUI/Dialog/WireMatchingDialog.cc" line="34"/>
         <location filename="../../src/GUI/Dialog/WireMatchingDialog.cc" line="95"/>
         <source>Wire matching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/WireMatchingDialog.cc" line="37"/>
+        <source>Wire diameter:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

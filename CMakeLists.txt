@@ -62,6 +62,11 @@ file(GLOB_RECURSE SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIRECTOR
 SET(TRANSLATION_FILES
 		degate_en.ts
 		degate_fr.ts
+		degate_de.ts
+		degate_ru.ts
+		degate_es.ts
+		degate_it.ts
+		degate_ko.ts
 )
 
 list(TRANSFORM TRANSLATION_FILES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/res/languages/)

@@ -2,5 +2,10 @@
     <qresource prefix="languages/">
         <file>degate_en.qm</file>
         <file>degate_fr.qm</file>
+        <file>degate_de.qm</file>
+        <file>degate_ru.qm</file>
+        <file>degate_es.qm</file>
+        <file>degate_it.qm</file>
+        <file>degate_ko.qm</file>
     </qresource>
 </RCC>
