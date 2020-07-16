@@ -51,7 +51,9 @@ namespace degate
         // General
         ///////////
 
-        QString language;
+        QString      language;
+        bool         auto_save_status;
+        unsigned int auto_save_interval;
 
 
         ///////////
@@ -103,6 +105,13 @@ namespace degate
 		 */
         const Preferences& get_preferences();
 
+        /**
+         * Get the associated QSettings. You should avoid using this.
+         *
+         * @return Returns the QSettings of the application.
+         */
+        QSettings& get_settings();
+
 	signals:
 	    /**
 	     * Emitted when the icon theme changed.
@@ -123,6 +132,7 @@ namespace degate
         QSettings settings;
         Preferences preferences;
         std::shared_ptr<QTranslator> translator = nullptr;
+        std::shared_ptr<QTranslator> base_translator = nullptr;
 	};
 }
 

@@ -567,6 +567,8 @@ namespace degate
 
             wire_tool.start_line_drawing(wire_tool.get_line().get_to_x(), wire_tool.get_line().get_to_y());
 
+            emit project_changed();
+
             update_screen();
         }
 
@@ -767,6 +769,8 @@ namespace degate
 					makeCurrent();
 					gates.update();
 					update();
+
+                    emit project_changed();
 				}
 				else if(GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
 				{
@@ -780,6 +784,8 @@ namespace degate
 					makeCurrent();
 					gates.update();
 					update();
+
+                    emit project_changed();
 				}
 				else if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(plo))
 				{
@@ -788,6 +794,8 @@ namespace degate
 
 					annotations.update();
 					update();
+
+                    emit project_changed();
 				}
                 else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(plo))
                 {
@@ -796,6 +804,8 @@ namespace degate
 
                     emarkers.update();
                     update();
+
+                    emit project_changed();
                 }
                 else if (Via_shptr via = std::dynamic_pointer_cast<Via>(plo))
                 {
@@ -804,6 +814,8 @@ namespace degate
 
                     vias.update();
                     update();
+
+                    emit project_changed();
                 }
 			}
 		}

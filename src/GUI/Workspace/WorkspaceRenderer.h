@@ -366,6 +366,11 @@ namespace degate
          */
         void right_mouse_button_released();
 
+        /**
+         * Signal emitted when the project changed.
+         */
+        void project_changed();
+
 	protected:
         /**
          * Get a safe position regarding project size (0 <= position <= max project size).

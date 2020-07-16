@@ -60,7 +60,7 @@ namespace degate
 
 		project_export_action = project_menu->addAction("");
         project_export_action->setShortcut(Qt::CTRL + Qt::Key_S);
-		QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_exporter()));
+		QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_save()));
 
 		project_close_action = project_menu->addAction("");
 		QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
@@ -234,6 +234,9 @@ namespace degate
 		// Help menu
 		help_menu = menu_bar.addMenu("");
 
+        help_action = help_menu->addAction("");
+        QObject::connect(help_action, SIGNAL(triggered()), this, SLOT(on_menu_help_open_help()));
+
 		about_action = help_menu->addAction("");
 		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
@@ -305,10 +308,25 @@ namespace degate
         QObject::connect(&PREFERENCES_HANDLER, SIGNAL(language_changed()), this, SLOT(reload_texts()));
 
         reload_texts();
+
+        if (PREFERENCES_HANDLER.get_settings().value("first_launch", true).toBool())
+        {
+            on_menu_help_about();
+            PREFERENCES_HANDLER.get_settings().setValue("first_launch", false);
+        }
+
+        QObject::connect(workspace, SIGNAL(project_changed()), this, SLOT(project_changed()));
+
+        auto_save_timer.setInterval(PREFERENCES_HANDLER.get_preferences().auto_save_interval * 60000);
+        auto_save_timer.start();
+
+        QObject::connect(&auto_save_timer, SIGNAL(timeout()), this, SLOT(auto_save()));
 	}
 
 	MainWindow::~MainWindow()
 	{
+        on_menu_project_close();
+
 	    delete workspace;
 
 		Text::save_fonts_to_cache();
@@ -425,6 +443,7 @@ namespace degate
 
         // Help menu
         help_menu->setTitle(tr("Help"));
+        help_action->setText(tr("Help"));
         about_action->setText(tr("About"));
 
         // Status bar
@@ -445,18 +464,23 @@ namespace degate
 
 	void MainWindow::on_menu_help_about()
 	{
-		const QString about_message = "<html><center>"
-			"<img src=':/degate_logo.png' alt='' width='100' height='87'> <br>"
-            "<strong>" + tr("Version") + " : " DEGATE_VERSION "</strong><br><br>"
-            "<strong>" + tr("This is a forked version of Degate") + "</strong> <br>"
-			+ tr("Degate is originally developed by Martin Schobert (martin@weltregierung.de).") + " <br>"
-			+ tr("This software is released under the GNU General Public License Version 3.") + " <br>"
-			"<a href='https://github.com/DorianBDev/degate'>Github</a> <br>"
-            "<a href='http://www.degate.org/'>" + tr("Original website") + "</a>"
-			"</center></html>";
+		const QString about_message =
+		        "<html><center>"
+                "<img src=':/degate_logo.png' alt='' width='100' height='87'> <br><br>"
+                "<strong>" + tr("Welcome to Degate version %1") + "</strong><br><br>"
+                "<strong>" + tr("This is a forked version of Degate.") + "</strong><br><br>" +
+                tr("This Degate version is still under development, if you find a bug you can report it on Github. "
+                   "You can also help us by adding new languages, see the Localization section of the README.md file, still on Github.")
+                + "<br><br>" +
+                  tr("To obtain the latest update of Degate go to the 'releases' section of the Github repository.")
+                + "<br><br>" +
+                tr("This software is released under the GNU General Public License Version 3.") + "<br><br>"
+                "<a href='https://github.com/DorianBDev/degate'>Github</a> <br>"
+                "<a href='http://www.degate.org/'>" + tr("Original website") + "</a>"
+                "</center></html>";
 
-		QMessageBox about(tr("About degate"),
-		                  about_message,
+		QMessageBox about(tr("About Degate"),
+		                  about_message.arg(DEGATE_VERSION),
 		                  QMessageBox::Icon::NoIcon,
 		                  QMessageBox::Button::Ok,
 		                  QMessageBox::Button::NoButton,
@@ -471,6 +495,43 @@ namespace degate
 
 		about.exec();
 	}
+
+	void MainWindow::on_menu_help_open_help()
+    {
+	    static auto add_shortcut = [](const QString& shortcut, const QString& text){
+            return "<tr><td><strong>" + shortcut + "</strong></td><td>" + text + "</td></tr>";
+	    };
+
+        const QString help_message =
+                              "<html><center><strong>" +
+                              tr("Shortcuts:") + "</strong><br><table cellpadding=\"5\">" +
+
+                              add_shortcut(tr("LEFT click:"), tr("Object selection")) +
+                              add_shortcut(tr("RIGHT click:"), tr("Context menu")) +
+                              add_shortcut(tr("Hold LEFT click:"), tr("Move")) +
+                              add_shortcut(tr("Hold RIGHT click:"), tr("Area selection OR wire tool")) +
+                              add_shortcut(tr("CTRL + LEFT click:"), tr("Multiple object selection")) +
+                              add_shortcut(tr("CTRL + hold RIGHT click:"), tr("Selection of all objects in the area")) +
+                              add_shortcut(tr("DEL:"), tr("Delete selected objects")) +
+
+                              "</table></center></html>";
+
+        QMessageBox help(tr("Degate help"),
+                             help_message,
+                             QMessageBox::Icon::NoIcon,
+                             QMessageBox::Button::Ok,
+                             QMessageBox::Button::NoButton,
+                             QMessageBox::Button::NoButton,
+                             this
+        );
+
+        auto* about_layout = help.findChild<QGridLayout*>();
+        QMargins about_margins = about_layout->contentsMargins();
+        about_margins.setRight(40);
+        about_layout->setContentsMargins(about_margins);
+
+        help.exec();
+    }
 
 	void MainWindow::on_menu_project_importer()
 	{
@@ -504,7 +565,7 @@ namespace degate
 		QMessageBox::information(this, tr("Import project"), message);
 	}
 
-	void MainWindow::on_menu_project_exporter()
+	void MainWindow::on_menu_project_save()
 	{
 		if(project == nullptr)
 			return;
@@ -515,6 +576,9 @@ namespace degate
 		exporter.export_all(project->get_project_directory(), project);
 
 		status_bar.showMessage(tr("Project saved."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+
+        project->set_changed(false);
+        update_window_title();
 	}
 
 	void MainWindow::on_menu_project_close()
@@ -526,20 +590,19 @@ namespace degate
 
 		if(project->is_changed())
 		{
-			QMessageBox msgBox;
+			QMessageBox msgBox(this);
 			msgBox.setText(tr("The project has been modified."));
 			msgBox.setInformativeText(tr("Do you want to save your changes ?"));
-			msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+            msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 			msgBox.setDefaultButton(QMessageBox::Save);
 			int ret = msgBox.exec();
 
             switch (ret)
             {
                 case QMessageBox::Save:
-                    on_menu_project_exporter();
+                    on_menu_project_save();
                     break;
                 case QMessageBox::Discard:
-                    return;
                     break;
                 case QMessageBox::Cancel:
                     return;
@@ -608,7 +671,7 @@ namespace degate
                 LayersEditDialog layers_edit_dialog(project, this);
                 layers_edit_dialog.exec();
 
-                on_menu_project_exporter();
+                on_menu_project_save();
             }
 
             status_bar.showMessage(tr("Created a new project."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
@@ -638,6 +701,8 @@ namespace degate
 
             workspace->reset_area_selection();
             workspace->update_screen();
+
+            project_changed();
         }
         else
             new_annotation.reset();
@@ -662,6 +727,8 @@ namespace degate
         update_status_bar_layer_info();
 
 		workspace->update_screen();
+
+        project_changed();
 	}
 
 	void MainWindow::on_menu_layer_import_background()
@@ -688,6 +755,8 @@ namespace degate
 		workspace->update_screen();
 
 		status_bar.showMessage(tr("Imported a new background image for the layer."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+
+        project_changed();
 	}
 
 	void MainWindow::on_menu_gate_new_gate_template()
@@ -730,6 +799,8 @@ namespace degate
 
             workspace->reset_area_selection();
             workspace->update_screen();
+
+            project_changed();
         }
         else
         {
@@ -774,6 +845,8 @@ namespace degate
 
             workspace->reset_area_selection();
             workspace->update_screen();
+
+            project_changed();
         }
         else
         {
@@ -795,6 +868,8 @@ namespace degate
 		}
 
 		workspace->update_screen();
+
+        project_changed();
 	}
 
 	void MainWindow::on_menu_gate_library()
@@ -824,6 +899,8 @@ namespace degate
         }
 
         workspace->update_screen();
+
+        project_changed();
     }
 
 	void MainWindow::on_menu_annotation_create()
@@ -844,6 +921,8 @@ namespace degate
 
             workspace->reset_area_selection();
             workspace->update_screen();
+
+            project_changed();
         }
         else
             new_annotation.reset();
@@ -860,6 +939,8 @@ namespace degate
 			dialog.exec();
 
 			workspace->update_screen();
+
+            project_changed();
 		}
 	}
 
@@ -874,6 +955,8 @@ namespace degate
             dialog.exec();
 
             workspace->update_screen();
+
+            project_changed();
         }
     }
 
@@ -888,6 +971,8 @@ namespace degate
             dialog.exec();
 
             workspace->update_screen();
+
+            project_changed();
         }
     }
 
@@ -906,6 +991,8 @@ namespace degate
         }
 
         workspace->update_screen();
+
+        project_changed();
 	}
 
 	void MainWindow::on_menu_logic_interconnect_selected_objects()
@@ -924,6 +1011,8 @@ namespace degate
         connect_objects(project->get_logic_model(), objects.begin(), objects.end());
 
         workspace->update_screen();
+
+        project_changed();
     }
 
     void MainWindow::on_menu_matching_template_matching()
@@ -953,6 +1042,8 @@ namespace degate
         template_matching_dialog.exec();
 
         workspace->update_screen();
+
+        project_changed();
     }
 
     void MainWindow::on_menu_matching_via_matching()
@@ -971,6 +1062,8 @@ namespace degate
         via_matching_dialog.exec();
 
         workspace->update_screen();
+
+        project_changed();
     }
 
     void MainWindow::on_menu_matching_wire_matching()
@@ -989,6 +1082,8 @@ namespace degate
         wire_matching_dialog.exec();
 
         workspace->update_screen();
+
+        project_changed();
     }
 
     void MainWindow::on_menu_project_settings()
@@ -1002,6 +1097,8 @@ namespace degate
         update_window_title();
 
         workspace->update_screen();
+
+        project_changed();
     }
 
 	void MainWindow::on_menu_project_quit()
@@ -1013,8 +1110,9 @@ namespace degate
     {
 	    if(project != nullptr)
         {
-            QString window_title = tr("Degate : %1 project");
+            QString window_title = tr("Degate : %1 project") + " [[*]]";
             setWindowTitle(window_title.arg(QString::fromStdString(project->get_name())));
+            setWindowModified(project->is_changed());
         }
 	    else
             setWindowTitle("Degate");
@@ -1074,9 +1172,6 @@ namespace degate
 
 		ProjectImporter projectImporter;
 
-		if(project != nullptr)
-		    on_menu_project_exporter();
-
         ProgressDialog progress_dialog(tr("Opening project"), nullptr, this);
 
         std::string error_message;
@@ -1115,6 +1210,9 @@ namespace degate
 
                 if(reply == QMessageBox::Yes)
                 {
+                    if(project != nullptr)
+                        on_menu_project_close();
+
                     NewProjectDialog dialog(this);
                     auto res = dialog.exec();
 
@@ -1144,7 +1242,7 @@ namespace degate
                             LayersEditDialog layers_edit_dialog(project, this);
                             layers_edit_dialog.exec();
 
-                            on_menu_project_exporter();
+                            on_menu_project_save();
                         }
                     }
                     else
@@ -1159,6 +1257,9 @@ namespace degate
             }
             else
             {
+                if(project != nullptr)
+                    on_menu_project_close();
+
                 project = imported_project;
             }
         }
@@ -1318,6 +1419,8 @@ namespace degate
             project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_emarker);
 
             workspace->update_screen();
+
+            project_changed();
         }
         else
             new_emarker.reset();
@@ -1340,6 +1443,8 @@ namespace degate
                                                    new_via);
 
             workspace->update_screen();
+
+            project_changed();
         }
         else
             new_via.reset();
@@ -1354,5 +1459,27 @@ namespace degate
         dialog.exec();
 
         workspace->update_grid();
+    }
+
+    void MainWindow::project_changed()
+    {
+        if(project == nullptr)
+            return;
+
+        project->set_changed();
+        update_window_title();
+    }
+
+    void MainWindow::auto_save()
+    {
+        if (project == nullptr)
+            return;
+
+        if (PREFERENCES_HANDLER.get_preferences().auto_save_status)
+        {
+            auto_save_timer.setInterval(PREFERENCES_HANDLER.get_preferences().auto_save_interval * 60000);
+
+            on_menu_project_save();
+        }
     }
 }

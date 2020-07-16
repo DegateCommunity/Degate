@@ -23,7 +23,22 @@
 #ifndef __GLOBALS_H__
 #define __GLOBALS_H__
 
-#define DEGATE_VERSION "2.0.0-alpha"
+//////////////
+// Version
+//////////////
+
+#define DEGATE_VERSION_MAJOR         "2"
+#define DEGATE_VERSION_MINOR         "0"
+#define DEGATE_VERSION_PATCH         "0"
+#define DEGATE_VERSION_STAGE         "alpha"
+#define DEGATE_VERSION_STAGE_VERSION "1"
+
+#define DEGATE_VERSION DEGATE_VERSION_MAJOR "." DEGATE_VERSION_MINOR "." DEGATE_VERSION_PATCH "-" DEGATE_VERSION_STAGE "." DEGATE_VERSION_STAGE_VERSION
+
+
+//////////////
+// Other
+//////////////
 
 #include <cstdio>
 #include <cstdint>

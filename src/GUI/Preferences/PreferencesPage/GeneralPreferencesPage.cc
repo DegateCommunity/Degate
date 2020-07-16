@@ -41,15 +41,29 @@ namespace degate
         language_edit.addItems(language_list);
         language_edit.setCurrentText(languages[PREFERENCES_HANDLER.get_preferences().language]);
 
+        auto_save_status_edit.setChecked(PREFERENCES_HANDLER.get_preferences().auto_save_status);
+
+        auto_save_interval_edit.setMinimum(1);
+        auto_save_interval_edit.setMaximum(1000);
+        auto_save_interval_edit.setValue(PREFERENCES_HANDLER.get_preferences().auto_save_interval);
+        auto_save_interval_edit.setEnabled(auto_save_status_edit.isChecked());
+        QObject::connect(&auto_save_status_edit, SIGNAL(toggled(bool)), &auto_save_interval_edit, SLOT(setEnabled(bool)));
+
         //////////
         // Layout creation
         //////////
 
-        // Theme category
+        // Language category
         auto language_layout = PreferencesPage::add_category(tr("Language"));
 
-        // Theme
+        // Language
         PreferencesPage::add_widget(language_layout, tr("Language:"), &language_edit);
+
+        // Auto save category
+        auto auto_save_layout = PreferencesPage::add_category(tr("Auto save"));
+
+        PreferencesPage::add_widget(auto_save_layout, tr("Auto save status:"), &auto_save_status_edit);
+        PreferencesPage::add_widget(auto_save_layout, tr("Auto save interval (in minutes):"), &auto_save_interval_edit);
     }
 
     void GeneralPreferencesPage::apply(Preferences& preferences)
@@ -60,5 +74,8 @@ namespace degate
             if(e.second == language_edit.currentText())
                 preferences.language = e.first;
         }
+
+        preferences.auto_save_status = auto_save_status_edit.isChecked();
+        preferences.auto_save_interval = auto_save_interval_edit.value();
     }
 }

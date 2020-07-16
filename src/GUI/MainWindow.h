@@ -100,14 +100,19 @@ namespace degate
 		void on_menu_help_about();
 
 		/**
+		 * Create and open the help window.
+		 */
+		void on_menu_help_open_help();
+
+		/**
 		 * Import a new project, it will force the user to find the project folder.
 		 */
 		void on_menu_project_importer();
 
 		/**
-		 * Export (save) the current project at the same place he where loaded.
+		 * Save (export) the current project at the same place he where loaded.
 		 */
-		void on_menu_project_exporter();
+		void on_menu_project_save();
 
 		/**
 		 * Close the current project (if one is opened).
@@ -305,6 +310,16 @@ namespace degate
          */
         void on_grid_configuration();
 
+        /**
+         * Call this when the project change (saved version != current version).
+         */
+        void project_changed();
+
+        /**
+         * Called when it's time to auto save (linked to the auto_save_timer).
+         */
+        void auto_save();
+
 	private:
 		QMenuBar menu_bar;
 		QToolBar* tool_bar = nullptr;
@@ -390,6 +405,7 @@ namespace degate
 
         // Help menu
         QMenu* help_menu;
+        QAction* help_action;
         QAction* about_action;
 
 
@@ -401,6 +417,9 @@ namespace degate
         QAction* tool_gate_library;
         QAction* area_selection_tool;
         QAction* wire_tool;
+
+        // QTimer for auto save
+        QTimer auto_save_timer;
 	};
 }
 

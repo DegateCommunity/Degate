@@ -49,6 +49,10 @@ namespace degate
         // Language
         preferences.language = settings.value("language", "").toString();
 
+        // Auto save
+        preferences.auto_save_status = settings.value("auto_save_status", false).toBool();
+        preferences.auto_save_interval = settings.value("auto_save_interval", 5).toUInt();
+
 
         ///////////
         // Grid
@@ -85,6 +89,8 @@ namespace degate
         ///////////
 
         settings.setValue("language", preferences.language);
+        settings.setValue("auto_save_status", preferences.auto_save_status);
+        settings.setValue("auto_save_interval", preferences.auto_save_interval);
 
 
         ///////////
@@ -121,6 +127,9 @@ namespace degate
             emit language_changed();
         }
 
+        preferences.auto_save_status   = updated_preferences.auto_save_status;
+        preferences.auto_save_interval = updated_preferences.auto_save_interval;
+
         preferences.max_grid_lines_count = updated_preferences.max_grid_lines_count;
         preferences.grid_color           = updated_preferences.grid_color;
         preferences.show_grid            = updated_preferences.show_grid;
@@ -131,6 +140,9 @@ namespace degate
 	    if (translator != nullptr)
             QApplication::removeTranslator(translator.get());
 
+        if (base_translator != nullptr)
+            QApplication::removeTranslator(base_translator.get());
+
         QString locale = preferences.language;
         if (locale == "")
             locale = QLocale::system().name().section('_', 0, 0);
@@ -138,10 +150,19 @@ namespace degate
         translator = std::make_shared<QTranslator>();
         translator->load(QString(":/languages/degate_") + locale);
         QApplication::installTranslator(translator.get());
+
+        base_translator = std::make_shared<QTranslator>();
+        base_translator->load("qtbase_" + locale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+        QApplication::installTranslator(base_translator.get());
     }
 
     const Preferences& PreferencesHandler::get_preferences()
     {
         return preferences;
+    }
+
+    QSettings& PreferencesHandler::get_settings()
+    {
+	    return settings;
     }
 }

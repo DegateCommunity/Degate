@@ -26,6 +26,8 @@
 
 #include <map>
 #include <QComboBox>
+#include <QCheckBox>
+#include <QSpinBox>
 
 namespace degate
 {
@@ -58,6 +60,9 @@ namespace degate
     private:
 
         QComboBox language_edit;
+
+        QCheckBox auto_save_status_edit;
+        QSpinBox auto_save_interval_edit;
 
         std::map<QString, QString> languages;
 
