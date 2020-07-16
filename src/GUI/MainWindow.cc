@@ -475,7 +475,7 @@ namespace degate
                   tr("To obtain the latest update of Degate go to the 'releases' section of the Github repository.")
                 + "<br><br>" +
                 tr("This software is released under the GNU General Public License Version 3.") + "<br><br>"
-                "<a href='https://github.com/DorianBDev/degate'>Github</a> <br>"
+                "<a href='https://github.com/DegateCommunity/Degate'>Github</a> <br>"
                 "<a href='http://www.degate.org/'>" + tr("Original website") + "</a>"
                 "</center></html>";
 
