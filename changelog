@@ -1,3 +1,22 @@
+degate (2.0.0-alpha.1) unstable; urgency=low
+
+	* Moved to OpenGL 3
+	* Moved to Qt5
+	* Added multi-platform support (tested on Linux and Windows)
+	* Added multi-language support (for now only English and French are implemented)
+	* Added UTF-8 support for the workspace
+	* Reworked project configuration
+	* Reworked layers configuration
+	* Reworked the whole workspace area
+	* Reworked the text system
+	* Reworked all primitive elements (gate, annotation...)
+	* Added light and dark theme support
+	* Many improvements and bugfixes
+	* Moved unit tests to Catch2
+	* And much more...
+	
+ -- Dorian Bachelot <dorianb.dev@netc.fr>  Tue, 21 Jul 2020 18:00:00 +0200
+
 degate (0.1.3) unstable; urgency=low
 
 	* Several improvements and bugfixes
