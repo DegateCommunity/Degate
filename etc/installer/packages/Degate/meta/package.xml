@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Degate</DisplayName>
+    <Description>Degate : open-source software for chips reverse engineering.</Description>
+    <Version>2.0.0-alpha.1</Version>
+    <ReleaseDate>2020-07-17</ReleaseDate>
+	<Licenses>
+        <License name="GNU General Public License Version 3" file="LICENSE.TXT" />
+    </Licenses>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+	<Translations>
+        <Translation>en.qm</Translation>
+        <Translation>fr.qm</Translation>
+		<Translation>de.qm</Translation>
+		<Translation>es.qm</Translation>
+		<Translation>ru.qm</Translation>
+		<Translation>it.qm</Translation>
+		<Translation>ko.qm</Translation>
+    </Translations>
+    <UserInterfaces>
+        <UserInterface>ReadMeCheckBoxForm.ui</UserInterface>
+		<UserInterface>DesktopShortcutCheckBoxForm.ui</UserInterface>
+		<UserInterface>StartMenuShortcutCheckBoxForm.ui</UserInterface>
+    </UserInterfaces>
+</Package>

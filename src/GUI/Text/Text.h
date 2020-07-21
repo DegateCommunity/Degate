@@ -24,6 +24,7 @@
 
 #include <QtOpenGL/QtOpenGL>
 #include <map>
+#include <memory>
 
 #define FONT_DFG_SPREAD 4.0
 #define FONT_DFG_SCALE 8.0

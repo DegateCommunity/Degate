@@ -1,3 +1,7 @@
 build/*
 !build/.keepme
 .idea/
+
+etc/installer/packages/Degate/data/*
+!etc/installer/packages/Degate/data/.keepme
+etc/installer/Degate installer.exe

@@ -81,7 +81,7 @@ Future functionalities remaining to implement (not limited) :
 For now only English and French are supported, but if you wish you can help easily. Degate use Qt Linguist for translation, you can learn more here : https://doc.qt.io/qt-5/linguist-translators.html.
 You can find .ts files (to use with Qt Linguist) in 'res/languages'.
 
-Localization :
+Languages :
 - English (100%),
 - French (100%).
 - German (0%),
@@ -96,19 +96,33 @@ To add a new language opens a new issue.
 
 ## Dependencies
 
-Only 2 dependencies : Boost and Qt5.
+Degate has only 2 dependencies : Boost and Qt5.
 
-For Boost, you can specify to CMake a custom path with : -DBOOST_ROOT="custom_path_to_boost". Prebuilt versions for windows are available here : https://sourceforge.net/projects/boost/files/boost-binaries/.
+For Boost, you can specify to CMake a custom path with : -DBOOST_ROOT="custom_path_to_boost". Prebuilt versions for Windows are available here : https://sourceforge.net/projects/boost/files/boost-binaries/.
 
-For Qt5, you can specify to CMake a custom path with : -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example, on windows : Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here : https://www.qt.io/download.
+For Qt5, you can specify to CMake a custom path with : -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example, on Windows : Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here : https://www.qt.io/download.
 
-For linux, don't forget to install the Qt5 add-on module : ImageFormats (you just need to have the package installed, it will be embedded in the Qt5::Core module after). See https://doc.qt.io/qt-5/qtimageformats-index.html. For example, on debian, the package is : qt5-image-formats-plugins. Same problem with linguist tools, for example for debian you need the package : qttools5-dev.
+For Linux, don't forget to install the Qt5 add-on module : ImageFormats (you just need to have the package installed, it will be embedded in the Qt5::Core module after). See https://doc.qt.io/qt-5/qtimageformats-index.html. For example, on debian, the package is : qt5-image-formats-plugins. Same problem with linguist tools, for example for debian you need the package : qttools5-dev.
 
-Keep your CMake installation up to date.
+For example, on debian like Linux distribution, you can install all dependencies with this command : 
+
+```console
+> sudo apt-get install cmake g++ qt5-default qt5-image-formats-plugins qttools5-dev libboost-all-dev
+```
+
+## Dependencies version
+
+- CMake 3.12.0 or newer,
+- Boost 1.70.0 or newer,
+- Qt 5.12.0 or newer.
 
 ## Build
 
-After installing Boost and Qt5, build Degate with cmake : cmake [path_to_source] [optional:] -DBOOST_ROOT="custom_path_to_boost" [optional:] -DCMAKE_PREFIX_PATH="custom_path_to_qt"
+After installing Boost and Qt5, use cmake : 
+
+```console
+> cmake [path_to_source] [optional:] -DBOOST_ROOT="custom_path_to_boost" [optional:] -DCMAKE_PREFIX_PATH="custom_path_to_qt"
+```
 
 # Test projects
 

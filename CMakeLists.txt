@@ -102,7 +102,7 @@ target_link_libraries(DegateCore ${LIBS})
 #
 # Link main (Degate)
 #
-add_executable(Degate "src/Main.cc" res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${QM_FILES})
+add_executable(Degate "src/Main.cc" res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${QM_FILES} "res/resource.rc")
 target_link_libraries(Degate ${LIBS} DegateCore)
 
 #
