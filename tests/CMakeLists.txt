@@ -39,3 +39,8 @@ set_target_properties(DegateTests
 )
 
 add_test(Run DegateTests)
+
+#
+# Copy test files
+#
+file(COPY "tests_files" DESTINATION "${CMAKE_BINARY_DIR}/tests/out/bin")
