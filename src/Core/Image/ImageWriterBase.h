@@ -37,7 +37,6 @@ namespace degate
 	/**
 	 * The base class for image readers.
 	 */
-
 	template <class ImageType>
 	class ImageWriterBase
 	{
@@ -69,7 +68,6 @@ namespace degate
 		/**
 		 * Constructor.
 		 */
-
 		ImageWriterBase(unsigned int width,
 		                unsigned int height,
 		                std::string const& filename) :
@@ -82,7 +80,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~ImageWriterBase()
 		{
 		}
@@ -90,28 +87,24 @@ namespace degate
 		/**
 		 * Get the filename.
 		 */
-
 		std::string get_filename() const { return filename; }
 
 		/**
 		 * Get the image width.
 		 * You have to call read() before.
 		 */
-
 		unsigned int get_width() const { return width; }
 
 		/**
 		 * Get the image height.
 		 * You have to call read() before.
 		 */
-
 		unsigned int get_height() const { return height; }
 
 
 		/**
 		 * Writer the image into a file.
 		 */
-
 		virtual bool write_image(std::shared_ptr<ImageType> img) = 0;
 	};
 }

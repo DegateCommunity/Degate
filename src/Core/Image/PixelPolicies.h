@@ -53,7 +53,6 @@ namespace degate
 	/*
 	 * Image policy for RGBA images. Each channel is a 8 bit value.
 	 */
-
 	class PixelPolicy_RGBA : public PixelPolicy_Base
 	{
 	protected:
@@ -67,7 +66,6 @@ namespace degate
 	/**
 	 * Represents a greyscale image pixel policy. Each pixel value is a double.
 	 */
-
 	class PixelPolicy_GS_DOUBLE : public PixelPolicy_Base
 	{
 	protected:
@@ -80,7 +78,6 @@ namespace degate
 	/**
 	 * Represents a greyscale image pixel policy. Each pixel value is a 8 bit value.
 	 */
-
 	class PixelPolicy_GS_BYTE : public PixelPolicy_Base
 	{
 	protected:

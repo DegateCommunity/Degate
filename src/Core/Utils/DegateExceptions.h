@@ -31,7 +31,6 @@ namespace degate
 	 * @todo Check for std::runtime_error exceptions in the
 	 *   code and replace it with a DegateRuntimeException.
 	 */
-
 	class DegateRuntimeException : public std::runtime_error
 	{
 	public:
@@ -48,7 +47,6 @@ namespace degate
 	/**
 	 * Represents a runtime exception, that reflects an inconsistency in the logic model or gate library.
 	 */
-
 	class DegateInconsistencyException : public DegateRuntimeException
 	{
 	public:
@@ -73,7 +71,6 @@ namespace degate
 	 * @todo Check for std::logic_error exceptions in the
 	 *   code and replace it with a GenericDegateException.
 	 */
-
 	class DegateLogicException : public std::logic_error
 	{
 	public:
@@ -93,7 +90,6 @@ namespace degate
 	 * This exception is raised if a code fragment receives a null pointer
 	 * where this should not happen.
 	 */
-
 	class InvalidPointerException : public DegateLogicException
 	{
 	public:
@@ -112,7 +108,6 @@ namespace degate
 	 * Object IDs are managed by the logic model. Probably the object was
 	 * not inserted into the logic model.
 	 */
-
 	class InvalidObjectIDException : public DegateLogicException
 	{
 	public:
@@ -130,7 +125,6 @@ namespace degate
 	/**
 	 * Indicates a runtime exception from the XML parser.
 	 */
-
 	class InvalidXMLException : public DegateRuntimeException
 	{
 	public:
@@ -147,7 +141,6 @@ namespace degate
 	 * This exception is thrown if a XML importer failed to parse a
 	 * value of an XML attribute.
 	 */
-
 	class XMLAttributeParseException : public DegateRuntimeException
 	{
 	public:
@@ -164,7 +157,6 @@ namespace degate
 	 * This exception is thrown if a XML importer detects a missing XML attribute
 	 * and this XML attribute must be present.
 	 */
-
 	class XMLAttributeMissingException : public DegateRuntimeException
 	{
 	public:
@@ -181,7 +173,6 @@ namespace degate
 	 * This exception is thrown if a method failed to lookup an object
 	 * in a collection type, such as in a std::map or list.
 	 */
-
 	class CollectionLookupException : public DegateRuntimeException
 	{
 	public:
@@ -197,7 +188,6 @@ namespace degate
 	/**
 	 * This exception indicates, that a system operation failed.
 	 */
-
 	class SystemException : public DegateRuntimeException
 	{
 	public:
@@ -213,7 +203,6 @@ namespace degate
 	/**
 	 * This exception indicates, that a file system operation failed.
 	 */
-
 	class FileSystemException : public DegateRuntimeException
 	{
 	public:
@@ -262,7 +251,6 @@ namespace degate
 	/**
 	 * This exception is thrown if a ZIP archive cannot be exported.
 	 */
-
 	class ZipException : public DegateRuntimeException
 	{
 	public:
@@ -278,7 +266,6 @@ namespace degate
 	/**
 	 * Indicates a runtime exception from the XML parser.
 	 */
-
 	class XMLRPCException : public DegateRuntimeException
 	{
 	public:

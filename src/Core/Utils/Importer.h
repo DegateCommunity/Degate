@@ -33,7 +33,6 @@ namespace degate
 	/**
 	 * The base class for importers that can parse text files.
 	 */
-
 	class Importer
 	{
 	protected:

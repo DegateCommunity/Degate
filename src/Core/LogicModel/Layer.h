@@ -49,7 +49,6 @@ namespace degate
 		/**
 		 * Enums to declare the type of a layer.
 		 */
-
 		enum LAYER_TYPE
 		{
 			UNDEFINED = 0,
@@ -90,7 +89,6 @@ namespace degate
 		 *   cannot be inserted into the quadtree.
 		 * @throw DegateLogicException
 		 */
-
 		void add_object(std::shared_ptr<PlacedLogicModelObject> o);
 
 
@@ -99,7 +97,6 @@ namespace degate
 		 * @throw DegateRuntimeException Is thrown if the object
 		 *   cannot be removed from the quadtree.
 		 */
-
 		void remove_object(std::shared_ptr<PlacedLogicModelObject> o);
 
 	public:
@@ -108,20 +105,17 @@ namespace degate
 		/**
 		 * Create a new logic model layer.
 		 */
-
 		Layer(BoundingBox const& bbox, LAYER_TYPE layer_type = Layer::UNDEFINED);
 
 		/**
 		 * Create a new logic model layer.
 		 */
-
 		Layer(BoundingBox const& bbox, LAYER_TYPE layer_type,
 		      BackgroundImage_shptr img);
 
 		/**
 		 * Destruct a layer.
 		 */
-
 		virtual ~Layer();
 
 		//@{
@@ -132,13 +126,11 @@ namespace degate
 		/**
 		 * Get the width of a layer.
 		 */
-
 		unsigned int get_width() const;
 
 		/**
 		 * Get the height of a layer.
 		 */
-
 		unsigned int get_height() const;
 
 		/**
@@ -150,7 +142,6 @@ namespace degate
 		 * Get layer type of this layer as human readable string, e.g. the string
 		 * "metal" for a layer of type Layer::METAL .
 		 */
-
 		const std::string get_layer_type_as_string() const;
 
 		/**
@@ -169,58 +160,49 @@ namespace degate
 		/**
 		 * Get layer type.
 		 */
-
 		LAYER_TYPE get_layer_type() const;
 
 		/**
 		 * Set layer type.
 		 */
-
 		void set_layer_type(LAYER_TYPE layer_type);
 
 
 		/**
 		 * Check if a layer has logic model objects or not.
 		 */
-
 		bool is_empty() const;
 
 
 		/**
 		 * Get the position of the layer within the layer stack.
 		 */
-
 		layer_position_t get_layer_pos() const;
 
 
 		/**
 		 * Get an iterator to iterate over all placed objects.
 		 */
-
 		object_iterator objects_begin();
 
 		/**
 		 * Get an end iterator.
 		 */
-
 		object_iterator objects_end();
 
 		/**
 		 * Get an iterator to iterate over a region.
 		 */
-
 		qt_region_iterator region_begin(int min_x, int max_x, int min_y, int max_y);
 
 		/**
 		 * Get an iterator to iterate over a region.
 		 */
-
 		qt_region_iterator region_begin(BoundingBox const& bbox);
 
 		/**
 		 * Get an end marker for region iteration.
 		 */
-
 		qt_region_iterator region_end();
 
 
@@ -231,7 +213,6 @@ namespace degate
 		 * The ScalingManager will write the prescaled images into subdirectories
 		 * of the the background image.
 		 */
-
 		void set_image(BackgroundImage_shptr img);
 
 
@@ -242,7 +223,6 @@ namespace degate
 		 *   exception is thrown.
 		 * @see set_image()
 		 */
-
 		BackgroundImage_shptr get_image();
 
 		/**
@@ -251,13 +231,11 @@ namespace degate
 		 * @exception DegateLogicException If you did not set the background image, then this
 		 *   exception is thrown.
 		 */
-
 		std::string get_image_filename() const;
 
 		/**
 		 * Check if the layer has a background image.
 		 */
-
 		bool has_background_image() const;
 
 
@@ -267,7 +245,6 @@ namespace degate
 		 * the data from the project dir.
 		 * @exception DegateLogicException This excpetion is thrown if there is no background image.
 		 */
-
 		void unset_image();
 
 		/**
@@ -280,7 +257,6 @@ namespace degate
 		 *   initialized it via set_image()
 		 * @see set_image()
 		 */
-
 		ScalingManager_shptr get_scaling_manager();
 
 		/**
@@ -296,7 +272,6 @@ namespace degate
 		 * @exception InvalidObjectIDException Is raised, if \p object_id
 		 *    has an invalid ID.
 		 */
-
 		void notify_shape_change(object_id_t object_id);
 
 		/**
@@ -321,7 +296,6 @@ namespace degate
 		 *   it is returned. If there is no object, then a nullptr pointer representation
 		 *   is returned.
 		 */
-
 		PlacedLogicModelObject_shptr get_object_at_position(float x, float y, float max_distance = 0, bool ignore_annotations = false, bool ignore_gates = false, bool ignore_ports = false, bool ignore_emarkers = false, bool ignore_vias = false, bool ignore_wires = false);
 
 		/**
@@ -329,7 +303,6 @@ namespace degate
 		 * @return Returns true, if there is a an object of the specified type in the region.
 		 *   Else it returns false.
 		 */
-
 		template <typename LogicModelObjectType>
 		bool exists_type_in_region(unsigned int min_x, unsigned int max_x,
 		                           unsigned int min_y, unsigned int max_y)
@@ -353,7 +326,6 @@ namespace degate
 		 *   from \p y to the bottom boundary depending on \p query_horizontal_distance.
 		 *   If there is no gate, this method returns 0.
 		 */
-
 		unsigned int get_distance_to_gate_boundary(unsigned int x, unsigned int y,
 		                                           bool query_horizontal_distance = true,
 		                                           unsigned int width = 0,
@@ -363,28 +335,24 @@ namespace degate
 		/**
 		 * Enable a layer.
 		 */
-
 		void set_enabled(bool state = true);
 
 		/**
 		 * Check if a layer is enabled.
 		 * Enabled means, that the layer is visible to the user.
 		 */
-
 		bool is_enabled() const;
 
 
 		/**
 		 * Get layer description.
 		 */
-
 		std::string get_description() const;
 
 
 		/**
 		 * Set layer description.
 		 */
-
 		void set_description(std::string const& description);
 
 
@@ -397,19 +365,16 @@ namespace degate
 		 * Set the layer ID. The layer ID is not an object ID. The only requirement is
 		 * that each layer has a unique and position-independend ID.
 		 */
-
 		virtual void set_layer_id(layer_id_t lid) { layer_id = lid; }
 
 		/**
 		 * Get the layer ID.
 		 */
-
 		virtual layer_id_t get_layer_id() const { return layer_id; }
 
 		/**
 		 * Check if the layer has a valid layer ID.
 		 */
-
 		virtual bool has_valid_layer_id() const { return layer_id != 0; }
 	};
 }

@@ -31,7 +31,6 @@ namespace degate
 	/**
 	 * A dummy method to get rid of compiler warnings.
 	 */
-
 	template <class T>
 	inline void ignore_unused_variable_warning(T const&)
 	{
@@ -40,7 +39,6 @@ namespace degate
 	/**
 	 * Compile time check for single channel image types.
 	 */
-
 	template <class ImageType>
 	struct assert_is_single_channel_image
 	{
@@ -60,7 +58,6 @@ namespace degate
 	/**
 	 * Compile time check for multi channel image types.
 	 */
-
 	template <class ImageType>
 	struct assert_is_multi_channel_image
 	{

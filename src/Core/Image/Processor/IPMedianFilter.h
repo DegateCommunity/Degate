@@ -31,7 +31,6 @@ namespace degate
 	/**
 	 * Processor: Median filter a single channel image.
 	 */
-
 	template <typename ImageTypeIn, typename ImageTypeOut>
 	class IPMedianFilter : public ImageProcessorBase
 	{
@@ -44,7 +43,6 @@ namespace degate
 		/**
 		 * The constructor.
 		 */
-
 		IPMedianFilter(unsigned int median_filter_width = 3) :
 			ImageProcessorBase("IPNormalize",
 			                   "Normalize an image.",

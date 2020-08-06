@@ -60,7 +60,6 @@ namespace degate
 	/**
 	 * Filter an image with an erosion filter.
 	 */
-
 	template <typename ImageTypeDst, typename ImageTypeSrc>
 	void erode_image(std::shared_ptr<ImageTypeDst> dst,
 	                 std::shared_ptr<ImageTypeSrc> src,
@@ -108,7 +107,6 @@ namespace degate
 	/**
 	 * Filter an image with an erosion filter.
 	 */
-
 	template <typename ImageTypeDst, typename ImageTypeSrc>
 	void dilate_image(std::shared_ptr<ImageTypeDst> dst,
 	                  std::shared_ptr<ImageTypeSrc> src,

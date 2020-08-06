@@ -34,7 +34,6 @@ namespace degate
 	 * The GateLibraryImporter imports a gate library. That is the file
 	 * gate_library.xml from your degate project.
 	 */
-
 	class GateLibraryImporter : public XMLImporter
 	{
 	private:

@@ -31,7 +31,6 @@ namespace degate
 	/**
 	 * Processor: Normalize a single channel image.
 	 */
-
 	template <typename ImageTypeIn, typename ImageTypeOut>
 	class IPNormalize : public ImageProcessorBase
 	{
@@ -44,7 +43,6 @@ namespace degate
 		/**
 		 * The constructor.
 		 */
-
 		IPNormalize(double lower_bound = 0, double upper_bound = 1) :
 			ImageProcessorBase("IPNormalize",
 			                   "Normalize an image.",
@@ -59,7 +57,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~IPNormalize()
 		{
 		}

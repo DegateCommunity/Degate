@@ -34,7 +34,6 @@ namespace degate
 	/**
 	 * The JPEGReader parses jpeg images.
 	 */
-
 	template <class ImageType>
 	class JPEGReader : public ImageReaderBase<ImageType>
 	{

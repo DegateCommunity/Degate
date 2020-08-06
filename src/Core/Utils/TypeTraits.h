@@ -30,7 +30,6 @@ namespace degate
 	 * A pointer trait for the generic type T.
 	 * @todo use boost version instead.
 	 */
-
 	template <typename T>
 	struct is_pointer
 	{
@@ -41,7 +40,6 @@ namespace degate
 	 * A pointer trait for the generic type T *.
 	 * @todo use boost version instead.
 	 */
-
 	template <typename T>
 	struct is_pointer<T*>
 	{
@@ -52,7 +50,6 @@ namespace degate
 	 * A pointer trait for the special shared pointer of type T.
 	 * @todo use boost version instead.
 	 */
-
 	template <typename T>
 	struct is_pointer<std::shared_ptr<T>>
 	{
@@ -63,7 +60,6 @@ namespace degate
 	/**
 	 * Method parameter type trait for pointer and shared pointer.
 	 */
-
 	template <typename T, bool b>
 	struct call_trait
 	{
@@ -73,7 +69,6 @@ namespace degate
 	/**
 	 * Method parameter type trait for normal object that should be passed via reference.
 	 */
-
 	template <typename T>
 	struct call_trait<T, false>
 	{
@@ -84,7 +79,6 @@ namespace degate
 	/**
 	 * Type trait for multi channel images.
 	 */
-
 	template <class PixelType>
 	struct is_single_channel_image
 	{
@@ -94,7 +88,6 @@ namespace degate
 	/**
 	 * Type trait for single channel images.
 	 */
-
 	template <>
 	struct is_single_channel_image<rgba_pixel_t>
 	{

@@ -38,7 +38,6 @@ namespace degate
 	 * reorganize the object IDs. The ObjectIDRewriter is used therefore.
 	 *
 	 */
-
 	class ObjectIDRewriter
 	{
 	private:
@@ -63,7 +62,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~ObjectIDRewriter()
 		{
 		};

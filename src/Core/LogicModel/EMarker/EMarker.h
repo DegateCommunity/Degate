@@ -51,13 +51,11 @@ namespace degate
 		/**
 		 * Constructor for a via object.
 		 */
-
 		EMarker(float x, float y, diameter_t diameter = 5);
 
 		/**
 		 * Destructor for a via object.
 		 */
-
 		virtual ~EMarker();
 
 		//@{
@@ -71,20 +69,17 @@ namespace degate
 		 * to let the user identify the concrete object. But that
 		 * is not a must.
 		 */
-
 		virtual const std::string get_descriptive_identifier() const;
 
 		/**
 		 * Get a human readable string that names the object type.
 		 * Here it is "EMarker".
 		 */
-
 		virtual const std::string get_object_type_name() const;
 
 		/**
 		 * Print the object.
 		 */
-
 		void print(std::ostream& os, int n_tabs) const;
 
 

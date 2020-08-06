@@ -30,7 +30,6 @@ namespace degate
 	/**
 	 * Processor: Copy an image with auto conversion.
 	 */
-
 	template <typename ImageTypeIn, typename ImageTypeOut>
 	class IPCopy : public ImageProcessorBase
 	{
@@ -44,7 +43,6 @@ namespace degate
 		/**
 		 * The constructor for processing the whole image.
 		 */
-
 		IPCopy() :
 			ImageProcessorBase("IPCopy",
 			                   "Copy an image with pixel type auto conversion",
@@ -58,7 +56,6 @@ namespace degate
 		/**
 		 * The constructor for working on an image region.
 		 */
-
 		IPCopy(unsigned int min_x, unsigned int max_x, unsigned int min_y, unsigned int max_y) :
 			ImageProcessorBase("IPCopy",
 			                   "Copy an image with pixel type auto conversion",
@@ -76,7 +73,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~IPCopy()
 		{
 		}

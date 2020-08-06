@@ -33,7 +33,6 @@ namespace degate
 	 * Represents a logic model object, that can be electrically connected to other
 	 * logic model objects.
 	 */
-
 	class ConnectedLogicModelObject : public PlacedLogicModelObject
 	{
 	private:
@@ -45,7 +44,6 @@ namespace degate
 		/**
 		 * Construct an object.
 		 */
-
 		ConnectedLogicModelObject();
 
 
@@ -53,7 +51,6 @@ namespace degate
 		 * Destroy object. It will deregister this object from the net.
 		 * @see remove_net()
 		 */
-
 		virtual ~ConnectedLogicModelObject();
 
 		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;

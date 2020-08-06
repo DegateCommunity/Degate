@@ -36,9 +36,7 @@ namespace degate
 	 * In degate you can define colors, which are used for the rendering. To
 	 * make gate ports of the same type drawn in the same color, you can store a
 	 * color specification in the PortColorManager.
-  
 	 */
-
 	class PortColorManager
 	{
 	public:

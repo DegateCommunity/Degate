@@ -37,7 +37,6 @@ namespace degate
 	/**
 	 * An annotation for subprojects.
 	 */
-
 	class SubProjectAnnotation : public Annotation
 	{
 	public:
@@ -45,7 +44,6 @@ namespace degate
 		/**
 		 * Create a new annotation.
 		 */
-
 		SubProjectAnnotation(int min_x, int max_x, int min_y, int max_y,
 		                     std::string const& subproject_path);
 
@@ -53,7 +51,6 @@ namespace degate
 		/**
 		 * Create a new annotation.
 		 */
-
 		SubProjectAnnotation(BoundingBox const& bbox, std::string const& subproject_path);
 
 		void set_path(std::string const& subproject_path);

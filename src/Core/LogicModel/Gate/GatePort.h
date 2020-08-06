@@ -79,7 +79,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~GatePort()
 		{
 		}
@@ -92,45 +91,38 @@ namespace degate
 		/**
 		 * Set the ID of the template port.
 		 */
-
 		virtual void set_template_port_type_id(object_id_t template_port_id);
 
 		/**
 		 * Get the ID of the template port.
 		 */
-
 		virtual object_id_t get_template_port_type_id() const;
 
 		/**
 		 * Get the template port.
 		 */
-
 		virtual GateTemplatePort_shptr get_template_port();
 
 		/**
 		 * Get the template port.
 		 */
-
 		virtual const GateTemplatePort_shptr get_template_port() const;
 
 		/**
 		 * Set the template port.
 		 */
-
 		virtual void set_template_port(std::shared_ptr<GateTemplatePort> gate_template_port);
 
 
 		/**
 		 * Check if there is a template port defined.
 		 */
-
 		virtual bool has_template_port() const;
 
 		/**
 		 * Check if a gate port already belongs to a gate.
 		 * Normally a gate port belongs to a gate.
 		 */
-
 		virtual bool is_assigned_to_a_gate() const;
 
 
@@ -140,7 +132,6 @@ namespace degate
 		 *   of nullptr indicates, that the gate port is not assigned to a gate.
 		 * @see has_gate()
 		 */
-
 		std::shared_ptr<Gate> get_gate();
 
 
@@ -150,34 +141,29 @@ namespace degate
 		 * to let the user identify the concrete object. But that
 		 * is not a must.
 		 */
-
 		virtual const std::string get_descriptive_identifier() const;
 
 		/**
 		 * Get a human readable string that names the object type.
 		 * Here it is "Gate port".
 		 */
-
 		virtual const std::string get_object_type_name() const;
 
 
 		/**
 		 * Print gate port.
 		 */
-
 		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
 
 
 		/**
 		 * Set the absolute position of a port.
 		 */
-
 		void set_x(float x);
 
 		/**
 		 * Set the absolute position of a port.
 		 */
-
 		void set_y(float y);
 
 

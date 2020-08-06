@@ -35,7 +35,6 @@ namespace degate
 	/**
 	 * Implements a container to build up higher level entities.
 	 */
-
 	class Module : public LogicModelObjectBase, public DeepCopyable
 	{
 		friend void determine_module_ports_for_root(LogicModel_shptr lmodel);
@@ -90,7 +89,6 @@ namespace degate
 		/**
 		 * Construct a new module.
 		 */
-
 		Module(std::string const& module_name = "",
 		       std::string const& entity_name = "",
 		       bool is_root = false);
@@ -98,7 +96,6 @@ namespace degate
 		/**
 		 * Destroy the module.
 		 */
-
 		virtual ~Module();
 
 		//@{
@@ -109,7 +106,6 @@ namespace degate
 		/**
 		 * Check if module is the main module.
 		 */
-
 		bool is_main_module() const;
 
 		/**
@@ -122,14 +118,12 @@ namespace degate
 		/**
 		 * Set an identifier for the module type.
 		 */
-
 		void set_entity_name(std::string const& name);
 
 
 		/**
 		 * Get name of the entity type.
 		 */
-
 		std::string get_entity_name() const;
 
 
@@ -139,7 +133,6 @@ namespace degate
 		 * @param detect_ports Switch for enabling or disabling automatic module port detection.
 		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
-
 		void add_gate(Gate_shptr gate, bool detect_ports = true);
 
 
@@ -154,7 +147,6 @@ namespace degate
 		 * @see add_gate()
 		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
-
 		bool remove_gate(Gate_shptr gate);
 
 
@@ -162,7 +154,6 @@ namespace degate
 		 * Add a sub-module to a module.
 		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
-
 		void add_module(Module_shptr module);
 
 		/**
@@ -172,7 +163,6 @@ namespace degate
 		 * @return Returns true if a module was removed, else false.
 		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
-
 		bool remove_module(Module_shptr module);
 
 
@@ -209,7 +199,6 @@ namespace degate
 		 *   an relative path "crypto/lfsr_a"
 		 * @return Returns the module. In case of lookup failure a nullptr pointer is returned.
 		 */
-
 		Module_shptr lookup_module(std::string const& module_path) const;
 
 		/**
@@ -227,7 +216,6 @@ namespace degate
 		 * Lookup the module port name.
 		 * @return Returns the module port name.
 		 */
-
 		boost::optional<std::string> lookup_module_port_name(GatePort_shptr gate_port);
 
 	private:

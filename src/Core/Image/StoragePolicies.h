@@ -116,7 +116,6 @@ namespace degate
 	/**
 	 * Storage policy for image objects that are stored in a file.
 	 */
-
 	template <class PixelPolicy>
 	class StoragePolicy_File : public StoragePolicy_Base<PixelPolicy>
 	{

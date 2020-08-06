@@ -14,9 +14,8 @@ namespace degate
 	// ----------------------------------------------------------------------------------
 
 	/**
-	 * Lineare primitive
+	 * Linear primitive
 	 */
-
 	class LinearPrimitive : public Line
 	{
 	public:
@@ -52,7 +51,6 @@ namespace degate
 	/**
 	 * Line segment
 	 */
-
 	class LineSegment : public LinearPrimitive
 	{
 	private:

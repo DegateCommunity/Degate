@@ -107,7 +107,6 @@ namespace degate
 	/**
 	 * Convert an RGBA pixel to a saturation value.
 	 */
-
 	inline double rgba_to_saturation(rgba_pixel_t p)
 	{
 		int red = MASK_R(p);
@@ -124,7 +123,6 @@ namespace degate
 	/**
 	 * Convert an RGBA pixel to a lightness value.
 	 */
-
 	inline double rgba_to_lightness(rgba_pixel_t p)
 	{
 		int red = MASK_R(p);
@@ -185,7 +183,7 @@ namespace degate
 	}
 
 
-	/*
+	/**
 	 * Get pixel value as ...
 	 */
 	template <typename PixelTypeDst, typename ImageTypeSrc>
@@ -195,7 +193,7 @@ namespace degate
 		return convert_pixel<PixelTypeDst, typename ImageTypeSrc::pixel_type>(img->get_pixel(x, y));
 	}
 
-	/*
+	/**
 	 * Set a pixel value as ...
 	 */
 	template <typename PixelTypeSrc, typename ImageTypeDst>
@@ -302,7 +300,6 @@ namespace degate
 	 * In place conversion to a greyscale image.
 	 * @see convert_to_greyscale(std::shared_ptr<ImageTypeDst>, std::shared_ptr<ImageTypeSrc>)
 	 */
-
 	template <typename ImageType>
 	void convert_to_greyscale(std::shared_ptr<ImageType> img)
 	{
@@ -442,7 +439,6 @@ namespace degate
 	 * @exception InvalidPathException This exception is thrown, if
 	 *   the \p path doen't exists.
 	 */
-
 	template <typename ImageType>
 	std::shared_ptr<ImageType> load_degate_image(unsigned int width, unsigned int height,
 	                                             std::string const& path)
@@ -612,7 +608,6 @@ namespace degate
 	 *   your images are to small for the kernel or if the width of the kernel is
 	 *   to small.
 	 */
-
 	template <typename ImageTypeDst, typename ImageTypeSrc, typename FunctionPolicy>
 	void filter_image(std::shared_ptr<ImageTypeDst> dst,
 	                  std::shared_ptr<ImageTypeSrc> src,

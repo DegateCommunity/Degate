@@ -22,7 +22,7 @@
 #ifndef __IMAGERENDERER_H__
 #define __IMAGERENDERER_H__
 
-#include "Image.h"
+#include "Core/Image/Image.h"
 #include "Core/Project/Project.h"
 
 #include <QtOpenGL>

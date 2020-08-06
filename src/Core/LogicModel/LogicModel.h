@@ -128,7 +128,6 @@ namespace degate
 		 * @param layer_pos The layer position (starting at 0).
 		 * @param o A shared pointer to the object.
 		 */
-
 		void add_wire(int layer_pos, Wire_shptr o);
 
 		/**
@@ -137,7 +136,6 @@ namespace degate
 		 * @param layer_pos The layer position (starting at 0).
 		 * @param o A shared pointer to the object.
 		 */
-
 		void add_via(int layer_pos, Via_shptr o);
 
 		/**
@@ -146,7 +144,6 @@ namespace degate
 		 * @param layer_pos The layer position (starting at 0).
 		 * @param o A shared pointer to the object.
 		 */
-
 		void add_emarker(int layer_pos, EMarker_shptr o);
 
 		/**
@@ -155,7 +152,6 @@ namespace degate
 		 * @param layer_pos The layer position (starting at 0).
 		 * @param o A shared pointer to the object.
 		 */
-
 		void add_annotation(int layer_pos, Annotation_shptr o);
 
 
@@ -167,7 +163,6 @@ namespace degate
 		 * @param layer_pos The layer position (starting at 0).
 		 * @param o A shared pointer to the object.
 		 */
-
 		void add_gate(int layer_pos, Gate_shptr o);
 
 
@@ -175,7 +170,6 @@ namespace degate
 		 * Remove all ports from the logic model for a given gate.
 		 * @param o A shared pointer to the object.
 		 */
-
 		void remove_gate_ports(Gate_shptr o);
 
 		/**
@@ -183,35 +177,30 @@ namespace degate
 		 * This effects the module hierarchy, too.
 		 * @param o A shared pointer to the object.
 		 */
-
 		void remove_gate(Gate_shptr o);
 
 		/**
 		 * Remove a wire from the logic model.
 		 * @param o A shared pointer to the object.
 		 */
-
 		void remove_wire(Wire_shptr o);
 
 		/**
 		 * Remove a via from the logic model.
 		 * @param o A shared pointer to the object.
 		 */
-
 		void remove_via(Via_shptr o);
 
 		/**
 		 * Remove an emarker from the logic model.
 		 * @param o A shared pointer to the object.
 		 */
-
 		void remove_emarker(EMarker_shptr o);
 
 		/**
 		 * Remove an annotation from the logic model.
 		 * @param o A shared pointer to the object.
 		 */
-
 		void remove_annotation(Annotation_shptr o);
 
 
@@ -228,14 +217,12 @@ namespace degate
 		/**
 		 * The constructor for the logic model.
 		 */
-
 		LogicModel(unsigned int width, unsigned int height, unsigned int layers = 0);
 
 
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~LogicModel();
 
 		//@{
@@ -246,20 +233,17 @@ namespace degate
 		/**
 		 * Get the width of logic model.
 		 */
-
 		unsigned int get_width() const;
 
 		/**
 		 * Get the height of logic model.
 		 */
-
 		unsigned int get_height() const;
 
 
 		/**
 		 * Get a new unique logic model object ID.
 		 */
-
 		object_id_t get_new_object_id();
 
 
@@ -269,7 +253,6 @@ namespace degate
 		 *   no logic model object with that object ID.
 		 * @return Returns a shared pointer to the logic model.
 		 */
-
 		PlacedLogicModelObject_shptr get_object(object_id_t object_id);
 
 
@@ -287,7 +270,6 @@ namespace degate
 		 * @exception DegateLogicException This exception is thrown, if an object with the
 		 *            same object ID is already in the logic model.
 		 */
-
 		void add_object(int layer_pos, PlacedLogicModelObject_shptr o);
 
 		void add_object(Layer_shptr layer, PlacedLogicModelObject_shptr o)
@@ -301,14 +283,12 @@ namespace degate
 		 * @param o A shared pointer to the object.
 		 * @todo fix it
 		 */
-
 		void remove_object(PlacedLogicModelObject_shptr o);
 
 		/**
 		 * Remove a remote object.
 		 * @exception InvalidObjectIDException This exception is thrown, if remote_id is invalid.
 		 */
-
 		void remove_remote_object(object_id_t remote_id);
 
 
@@ -322,7 +302,6 @@ namespace degate
 		 * @todo Implement update.
 		 * @todo should call add_object() for the port
 		 */
-
 		void add_gate_template(GateTemplate_shptr tmpl);
 
 		/**
@@ -338,7 +317,6 @@ namespace degate
 		 *     The method should be named remove_template_and_gates() and remove_gate_template()
 		 *     should only unreference and destroy the template.
 		 */
-
 		void remove_gate_template(GateTemplate_shptr tmpl);
 
 		/**
@@ -348,7 +326,6 @@ namespace degate
 		 * @see Gate::remove_template()
 		 * @todo should call remove_object() for the port
 		 */
-
 		void remove_template_references(GateTemplate_shptr tmpl);
 
 
@@ -356,7 +333,6 @@ namespace degate
 		 * Remove all gates, that reference a template. The template is preserved.
 		 * It will remove the gate ports as well.
 		 */
-
 		void remove_gates_by_template_type(GateTemplate_shptr tmpl);
 
 		/**
@@ -365,7 +341,6 @@ namespace degate
 		 * The corresponding ports must be added to or removed from the "real" gates.
 		 * @todo should call add_object() for the port
 		 */
-
 		void add_template_port_to_gate_template(GateTemplate_shptr gate_template,
 		                                        GateTemplatePort_shptr template_port);
 
@@ -378,7 +353,6 @@ namespace degate
 		 * "real" gates. This method does this.
 		 * @todo should call add_object() for the port.
 		 */
-
 		void remove_template_port_from_gate_template(GateTemplate_shptr gate_template,
 		                                             GateTemplatePort_shptr template_port);
 
@@ -390,20 +364,17 @@ namespace degate
 		 *            If the layer that should be added already contains logic model objects, this
 		 *            exception is thrown, too.
 		 */
-
 		void add_layer(layer_position_t pos, Layer_shptr new_layer);
 
 		/**
 		 * Add an empty layer.
 		 * @see add_layer()
 		 */
-
 		void add_layer(layer_position_t pos);
 
 		/**
 		 * Get a layer by its position index.
 		 */
-
 		Layer_shptr get_layer(layer_position_t pos);
 
 		/**
@@ -422,13 +393,11 @@ namespace degate
 		 * Remove a layer.
 		 * @see remove_layer()
 		 */
-
 		void remove_layer(layer_position_t pos);
 
 		/**
 		 * Set layers.
 		 */
-
 		void set_layers(layer_collection layers);
 
 		/**
@@ -437,33 +406,28 @@ namespace degate
 		 * of the logic model. References in other parts must be cleaned as well.
 		 * @todo Implement this.
 		 */
-
 		void remove_layer(Layer_shptr layer);
 
 		/**
 		 * Set the current layer you are working on.
 		 */
-
 		void set_current_layer(layer_position_t pos);
 
 		/**
 		 * Get the current layer.
 		 */
-
 		Layer_shptr get_current_layer();
 
 
 		/**
 		 * Get the current gate library for this logic model.
 		 */
-
 		GateLibrary_shptr get_gate_library();
 
 		/**
 		 * Set the gate library.
 		 * @todo: Implement updates on the logic model.
 		 */
-
 		void set_gate_library(GateLibrary_shptr new_gate_lib);
 
 
@@ -473,7 +437,6 @@ namespace degate
 		 * @exception InvalidPointerException Is thrown, if an invalid pointer was
 		 *   passed as argument.
 		 */
-
 		void add_net(Net_shptr net);
 
 
@@ -482,7 +445,6 @@ namespace degate
 		 * @exception CollectionLookupException Is thrown if there is
 		 *   no logic model object with that object ID.     
 		 */
-
 		Net_shptr get_net(object_id_t net_id);
 
 		/**
@@ -492,28 +454,24 @@ namespace degate
 		 * @exception CollectionLookupException Is thrown if there is
 		 *   no logic model object with that object ID.
 		 */
-
 		void remove_net(Net_shptr net);
 
 
 		/**
 		 * Get a iterator to iterate over all placeable objects.
 		 */
-
 		object_collection::iterator objects_begin();
 
 
 		/**
 		 * Get an end iterator for the iteration over all placeable objects.
 		 */
-
 		object_collection::iterator objects_end();
 
 
 		/**
 		 * Get the number of gates.
 		 */
-
 		inline unsigned get_gates_count()
 		{
 			return gates.size();
@@ -522,20 +480,17 @@ namespace degate
 		/**
 		 * Get a iterator to iterate over all gates.
 		 */
-
 		gate_collection::iterator gates_begin();
 
 
 		/**
 		 * Get an end iterator for the iteration over all gates.
 		 */
-
 		gate_collection::iterator gates_end();
 
 		/**
 		 * Get the number of vias.
 		 */
-
 		inline unsigned get_vias_count()
 		{
 			return vias.size();
@@ -544,46 +499,39 @@ namespace degate
 		/**
 		 * Get a iterator to iterate over all vias.
 		 */
-
 		via_collection::iterator vias_begin();
 
 		/**
 		 * Get an end iterator for the iteration over all vias.
 		 */
-
 		via_collection::iterator vias_end();
 
 		/**
 		 * Get a iterator to iterate over all placeable objects.
 		 */
-
 		layer_collection::iterator layers_begin();
 
 		/**
 		 * Get an end iterator for the iteration over all placeable objects.
 		 */
-
 		layer_collection::iterator layers_end();
 
 
 		/**
 		 * Get a iterator to iterate over all nets.
 		 */
-
 		net_collection::iterator nets_begin();
 
 
 		/**
 		 * Get an end iterator for the iteration over all nets.
 		 */
-
 		net_collection::iterator nets_end();
 
 
 		/**
 		 * Get the number of annotations.
 		 */
-
 		inline unsigned get_annotations_count()
 		{
 			return annotations.size();
@@ -592,14 +540,12 @@ namespace degate
 		/**
 		 * Get a iterator to iterate over all annotations.
 		 */
-
 		annotation_collection::iterator annotations_begin();
 
 
 		/**
 		 * Get an end iterator for the iteration over all annotations.
 		 */
-
 		annotation_collection::iterator annotations_end();
 
 
@@ -619,21 +565,18 @@ namespace degate
 		 * Compare ports of a gate with template ports of its associated
 		 * template and update them.
 		 */
-
 		void update_ports(Gate_shptr gate);
 
 		/**
 		 * Compare ports of all gates that reference a given template
 		 * and update them.
 		 */
-
 		void update_ports(GateTemplate_shptr gate_template);
 
 
 		/**
 		 * Get the main module.
 		 */
-
 		Module_shptr get_main_module() const;
 
 		/**

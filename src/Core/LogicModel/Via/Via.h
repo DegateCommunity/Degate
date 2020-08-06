@@ -52,7 +52,6 @@ namespace degate
 		 * from the current layer to a layer that is above, then the
 		 * direction is up.
 		 */
-
 		enum DIRECTION
 		{
 			DIRECTION_UNDEFINED = 0,
@@ -73,13 +72,11 @@ namespace degate
 		/**
 		 * Constructor for a via object.
 		 */
-
 		Via(float x, float y, diameter_t diameter, DIRECTION direction = DIRECTION_UNDEFINED);
 
 		/**
 		 * Destructor for a via object.
 		 */
-
 		virtual ~Via();
 
 		//@{
@@ -90,19 +87,16 @@ namespace degate
 		/**
 		 * Get direction.
 		 */
-
 		virtual DIRECTION get_direction() const;
 
 		/**
 		 * Set direction.
 		 */
-
 		virtual void set_direction(DIRECTION dir);
 
 		/**
 		 * Get the direction as a human readable string.
 		 */
-
 		virtual const std::string get_direction_as_string() const;
 
 
@@ -117,20 +111,17 @@ namespace degate
 		 * to let the user identify the concrete object. But that
 		 * is not a must.
 		 */
-
 		virtual const std::string get_descriptive_identifier() const;
 
 		/**
 		 * Get a human readable string that names the object type.
 		 * Here it is "Via".
 		 */
-
 		virtual const std::string get_object_type_name() const;
 
 		/**
 		 * Print the object.
 		 */
-
 		void print(std::ostream& os, int n_tabs) const;
 
 

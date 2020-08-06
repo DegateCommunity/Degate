@@ -35,7 +35,6 @@ namespace degate
 	 * The GateLibraryExporter exports a gate library. That is the file
 	 * gate_library.xml from your degate project.
 	 */
-
 	class GateLibraryExporter : public XMLExporter
 	{
 	private:

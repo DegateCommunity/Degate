@@ -61,7 +61,6 @@ namespace degate
 		 * @exception InvalidPointerException is thrown, if you node is a nullptr pointer.
 		 * @return Returns the number in type T. If the XML attribute is not present, the default value is returned.
 		 */
-
 		template <typename T>
 		T parse_number(QDomElement const node, std::string const& attribute_str, T default_value)
 		{

@@ -41,7 +41,6 @@ namespace degate
 	/**
 	 * The TIFFWriter parses tiff images.
 	 */
-
 	template <class ImageType>
 	class TIFFWriter : public ImageWriterBase<ImageType>
 	{

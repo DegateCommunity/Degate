@@ -77,7 +77,6 @@ namespace degate
 		 *   to the logic model. It returns a nullptr pointer equivalent, if the
 		 *   line does not represent a command.
 		 */
-
 		PlacedLogicModelObject_shptr parse_line(std::string const& line) const;
 
 

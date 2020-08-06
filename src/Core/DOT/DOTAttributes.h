@@ -71,9 +71,7 @@ namespace degate
 		 * @param attribute_name The attribute name as a string.
 		 * @param value The string value. You don't have to add opening and closing quotation marks.
 		 */
-
 		void add(std::string const& attribute_name, std::string const& value);
-
 
 		/**
 		 * Add a key/value attribute.
@@ -92,7 +90,6 @@ namespace degate
 			attributes[attribute_name] = stm.str();
 		}
 
-
 		/**
 		 * Add a position attertribute.
 		 *
@@ -108,9 +105,7 @@ namespace degate
 		 *       with a '!' flag.
 		 * @see http://www.graphviz.org/doc/info/attrs.html#d:pos
 		 */
-
-		void add_position(long center_x, long center_y,
-		                  bool preserve_position = true);
+        void add_position(long center_x, long center_y, bool preserve_position = true);
 
 
 		/**
@@ -120,7 +115,6 @@ namespace degate
 		 *        The string is of format [color="red",label="N3018",shape="box"], including the
 		 *        squared brackets.
 		 */
-
 		std::string get_string() const;
 	};
 }

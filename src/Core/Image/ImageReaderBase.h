@@ -36,7 +36,6 @@ namespace degate
 	/**
 	 * The base class for image readers.
 	 */
-
 	template <class ImageType>
 	class ImageReaderBase
 	{
@@ -68,7 +67,6 @@ namespace degate
 		/**
 		 * Constructor.
 		 */
-
 		ImageReaderBase(std::string const& filename) :
 			filename(filename),
 			width(0),
@@ -79,7 +77,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~ImageReaderBase()
 		{
 		}
@@ -87,7 +84,6 @@ namespace degate
 		/**
 		 * Get the filename.
 		 */
-
 		std::string get_filename() const { return filename; }
 
 		/**
@@ -100,7 +96,6 @@ namespace degate
 		 * @return The function returns true, if the image file was read. Else false
 		 *      is returned. If read() was successful you can
 		 */
-
 		virtual bool read() = 0;
 
 		/**
@@ -108,7 +103,6 @@ namespace degate
 		 * You have to call read() before.
 		 * @see read()
 		 */
-
 		unsigned int get_width() const { return width; }
 
 		/**
@@ -116,13 +110,11 @@ namespace degate
 		 * You have to call read() before.
 		 * @see read()
 		 */
-
 		unsigned int get_height() const { return height; }
 
 		/**
 		 * Read the file content into image.
 		 */
-
 		virtual bool get_image(std::shared_ptr<ImageType> img) = 0;
 	};
 }

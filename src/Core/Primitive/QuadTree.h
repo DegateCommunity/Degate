@@ -122,13 +122,11 @@ namespace degate
 		 *    the node is splitted. This value is not a hard limit. The quadtree can ignore this
 		 *    parameter, if it has no choice.
 		 */
-
 		QuadTree(BoundingBox const& box, int max_entries = 50);
 
 		/**
 		 * Destruct a quadtree.
 		 */
-
 		~QuadTree();
 
 		void get_all_elements(std::vector<T>& vec) const;
@@ -136,19 +134,16 @@ namespace degate
 		/**
 		 * Check if the quadtree or a quadtree node is a leaf node.
 		 */
-
 		bool is_leave() const;
 
 		/**
 		 * Insert an object into the quadtree.
 		 */
-
 		ret_t insert(T object);
 
 		/**
 		 * Remove an object from the quadtree.
 		 */
-
 		ret_t remove(T object);
 
 
@@ -156,76 +151,63 @@ namespace degate
 		 * Notify that the bounding box of an object changed.
 		 * It might be neccessary to adjust the objects position in the quadtree.
 		 */
-
 		void notify_shape_change(T object);
 
 		/**
 		 * Get the number of objects that are stored in a quadtree node and in all child nodes.
 		 */
-
 		unsigned int total_size() const;
 
 		/**
 		 * Get the number of layers, that quadtree has.
 		 */
-
 		unsigned int depth() const;
 
 		/*
 		 * Check if there are objects stored in the quadtree.
 		 */
-
 		bool is_empty() const { return total_size() == 0; }
 
 		/**
 		 * Get the dimension of the quadtree.
 		 */
-
 		unsigned int get_width() const;
 
 		/**
 		 * Get the dimension of the quadtree.
 		 */
-
 		unsigned int get_height() const;
 
 
 		/**
 		 * Get an interator to iterate over quadtree nodes down to the leafes.
 		 */
-
 		//    DownIterator<T> down_iter_begin();
 
 		/**
 		 * Get an end marker for the iteration
 		 * @see down_iter_begin()
 		 */
-
 		//    DownIterator<T> down_iter_end();
 
 		/**
 		 * Get a region iterator to iterate over quatree objects.
 		 */
-
-
 		RegionIterator<T> region_iter_begin(int min_x, int max_x, int min_y, int max_y);
 
 		/**
 		 * Get a region iterator to iterate over quatree objects.
 		 */
-
 		RegionIterator<T> region_iter_begin(BoundingBox const& bbox);
 
 		/**
 		 * Get a region iterator to iterate over the complete quatree.
 		 */
-
 		RegionIterator<T> region_iter_begin();
 
 		/**
 		 * Get an end marker for the region iteration.
 		 */
-
 		RegionIterator<T> region_iter_end();
 
 

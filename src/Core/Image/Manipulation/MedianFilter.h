@@ -74,7 +74,6 @@ namespace degate
 		/**
 		 * Calculate the median for an RGBA image region.
 		 */
-
 		static inline rgba_pixel_t calculate(std::shared_ptr<ImageType> src,
 		                                     unsigned int x, unsigned int y,
 		                                     unsigned int min_x,
@@ -115,7 +114,6 @@ namespace degate
 	/**
 	 * Filter an image with a median filter.
 	 */
-
 	template <typename ImageTypeDst, typename ImageTypeSrc>
 	void median_filter(std::shared_ptr<ImageTypeDst> dst,
 	                   std::shared_ptr<ImageTypeSrc> src,

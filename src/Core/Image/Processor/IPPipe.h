@@ -31,8 +31,6 @@ namespace degate
 	/**
 	 * Represents an image processing pipe for multiple image processors.
 	 */
-
-
 	class IPPipe : public ProgressControl
 	{
 	private:
@@ -45,7 +43,6 @@ namespace degate
 		/**
 		 * The constructor for a processing pipe.
 		 */
-
 		IPPipe()
 		{
 		}
@@ -53,7 +50,6 @@ namespace degate
 		/**
 		 * The destructor for a plugin.
 		 */
-
 		virtual ~IPPipe()
 		{
 		}
@@ -62,7 +58,6 @@ namespace degate
 		/**
 		 * Add a processor.
 		 */
-
 		void add(std::shared_ptr<ImageProcessorBase> processor)
 		{
 			processor_list.push_back(processor);
@@ -72,7 +67,6 @@ namespace degate
 		 * Check if the pipe is empty
 		 * @see size()
 		 */
-
 		bool is_empty() const
 		{
 			return processor_list.empty();
@@ -82,7 +76,6 @@ namespace degate
 		 * Get the number of processing elements in the pipe.
 		 * @see empty()
 		 */
-
 		size_t size() const
 		{
 			return processor_list.size();

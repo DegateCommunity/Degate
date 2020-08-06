@@ -32,9 +32,8 @@
 namespace degate
 {
 	/**
-	 * The class FilterKernel implemements a container for 2D filter kernel data.
+	 * The class FilterKernel implements a container for 2D filter kernel data.
 	 */
-
 	class FilterKernel
 	{
 	private:

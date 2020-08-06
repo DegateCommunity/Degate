@@ -31,7 +31,6 @@ namespace degate
 	 * Electrical Rule Checks that detects open ports, that means if
 	 * a port is electrically unconnected.
 	 */
-
 	class ERCOpenPorts : public RCBase
 	{
 	public:

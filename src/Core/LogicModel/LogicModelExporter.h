@@ -36,7 +36,6 @@ namespace degate
 	 * The LogicModelExporter exports a logic model. That is the file lmodel.xml from your degate project.
 	 *
 	 */
-
 	class LogicModelExporter : public XMLExporter
 	{
 	private:

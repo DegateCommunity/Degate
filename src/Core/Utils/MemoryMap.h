@@ -64,7 +64,7 @@ namespace degate
 	};
 
 
-	/*
+	/**
 	 * Storage for data objects, that is mapped from files into memory.
 	 *
 	 * You should not use this class directly.
@@ -311,7 +311,6 @@ namespace degate
 	/**
 	 * Clear map data.
 	 */
-
 	template <typename T>
 	void MemoryMap<T>::clear()
 	{

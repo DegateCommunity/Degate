@@ -28,9 +28,6 @@
 
 namespace degate
 {
-	/**
-	 */
-
 	class ProgressControl
 	{
 	private:
@@ -118,7 +115,6 @@ namespace degate
 		/**
 		 * The constructor
 		 */
-
 		ProgressControl() : log_message_set(false)
 		{
 			reset_progress();
@@ -127,7 +123,6 @@ namespace degate
 		/**
 		 * The destructor for a plugin.
 		 */
-
 		virtual ~ProgressControl()
 		{
 		}
@@ -135,7 +130,6 @@ namespace degate
 		/**
 		 * Check if the process is canceled.
 		 */
-
 		virtual bool is_canceled() const
 		{
 			boost::recursive_mutex::scoped_lock (mtx);
@@ -145,7 +139,6 @@ namespace degate
 		/**
 		 * Stop the processing.
 		 */
-
 		virtual void cancel()
 		{
 			boost::recursive_mutex::scoped_lock (mtx);
@@ -157,7 +150,6 @@ namespace degate
 		 * Get progress.
 		 * @return Returns a value between 0 and 100 percent.
 		 */
-
 		virtual double get_progress() const
 		{
 			boost::recursive_mutex::scoped_lock (mtx);

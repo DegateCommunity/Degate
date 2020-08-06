@@ -33,7 +33,6 @@ namespace degate
 	/**
 	 * A code template generator for Verilog.
 	 */
-
 	class VerilogCodeTemplateGenerator : public CodeTemplateGenerator
 	{
 	public:

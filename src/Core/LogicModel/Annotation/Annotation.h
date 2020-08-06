@@ -58,7 +58,6 @@ namespace degate
 	 * @see set_name()
 	 * @see set_description()
 	 */
-
 	class Annotation : public Rectangle, public PlacedLogicModelObject
 	{
 	public:
@@ -68,7 +67,6 @@ namespace degate
 		/**
 		 * Enums to declare the type of annotation.
 		 */
-
 		enum ANNOTATION_TYPE
 		{
 			UNDEFINED = 0,
@@ -89,7 +87,6 @@ namespace degate
 		/**
 		 * Set a parameter.
 		 */
-
 		void set_parameter(std::string const& parameter_name,
 		                   std::string const& parameter_value)
 		{
@@ -105,14 +102,12 @@ namespace degate
 		/**
 		 * Create a new annotation.
 		 */
-
 		Annotation(float min_x, float max_x, float min_y, float max_y,
                    class_id_t class_id = UNDEFINED);
 
 		/**
 		 * Create a new annotation.
 		 */
-
 		Annotation(BoundingBox const& bbox,
 		           class_id_t class_id = UNDEFINED);
 
@@ -120,7 +115,6 @@ namespace degate
 		/**
 		 * The destructor for an annotaion.
 		 */
-
 		virtual ~Annotation();
 
 		//@{
@@ -131,13 +125,11 @@ namespace degate
 		/**
 		 * Get the class ID for an annotation.
 		 */
-
 		virtual class_id_t get_class_id() const;
 
 		/**
 		 * Set the class ID for an annotation.
 		 */
-
 		virtual void set_class_id(class_id_t class_id);
 
 		/**
@@ -146,14 +138,12 @@ namespace degate
 		 * to let the user identify the concrete object. But that
 		 * is not a must.
 		 */
-
 		virtual const std::string get_descriptive_identifier() const;
 
 		/**
 		 * Get a human readable string that names the object type.
 		 * Here it is "Annotation".
 		 */
-
 		virtual const std::string get_object_type_name() const;
 
 		/**
@@ -198,7 +188,6 @@ namespace degate
 		 * @exception CollectionLookupException This exception is thrown if the parameter is
 		 *   not stored in the lookup table.
 		 */
-
 		template <typename NewType>
 		NewType get_parameter(std::string parameter_name) const
 		{

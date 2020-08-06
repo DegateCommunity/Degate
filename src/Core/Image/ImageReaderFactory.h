@@ -41,7 +41,6 @@ namespace degate
 	/**
 	 * A factory for creating image reader objects.
 	 */
-
 	template <class ImageType>
 	class ImageReaderFactory
 	{
@@ -86,7 +85,6 @@ namespace degate
 		 * @exception InvalidFileFormatException This exception is thrown if the there is no
 		 *   reader that can read the file.
 		 */
-
 		std::shared_ptr<class ImageReaderBase<ImageType>>
 		get_reader(std::string const& filename)
 		{

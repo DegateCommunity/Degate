@@ -30,7 +30,6 @@ namespace degate
 	/**
 	 * Represents an object that has a frame and a fill color.
 	 */
-
 	class ColoredObject : public DeepCopyableBase
 	{
 	private:
@@ -78,7 +77,6 @@ namespace degate
 		/**
 		 * Set the frame color.
 		 */
-
 		virtual void set_frame_color(color_t c) { frame_color = c; }
 
 		/**

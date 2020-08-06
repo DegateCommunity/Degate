@@ -30,7 +30,6 @@ namespace degate
 	/**
 	 * Base class for grid types.
 	 */
-
 	class Grid
 	{
 	public:
@@ -38,7 +37,6 @@ namespace degate
 		/**
 		 * Enum to declare the type of a grid.
 		 */
-
 		enum ORIENTATION
 		{
 			UNDEFINED = 0,
@@ -62,7 +60,6 @@ namespace degate
 		 * @param enabled You can enable/disable grids. With this parameter you can
 		 *   control whether the grid is enabled od disabled.
 		 */
-
 		Grid(ORIENTATION orientation, bool enabled = false) :
 			orientation(orientation),
 			enabled(enabled)
@@ -72,7 +69,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~Grid()
 		{
 		}
@@ -80,55 +76,46 @@ namespace degate
 		/**
 		 * Get an iterator to iterate over grid offsets.
 		 */
-
 		virtual grid_iter begin() const = 0;
 
 		/**
 		 * Get an end marker for ther iteration.
 		 */
-
 		virtual grid_iter end() const = 0;
 
 		/**
 		 * Clear the grid.
 		 */
-
 		virtual void clear() = 0;
 
 		/**
 		 * Set the state, whether a grid is enabled or not.
 		 */
-
 		virtual void set_enabled(bool state = true) { enabled = state; }
 
 		/**
 		 * Check the state, whether a grid is enabled or not.
 		 */
-
 		virtual bool is_enabled() const { return enabled; }
 
 		/**
 		 * Get the nearest offset, that is on grid.
 		 */
-
 		virtual int snap_to_grid(int pos) const = 0;
 
 		/**
 		 * Get the grid orientation.
 		 */
-
 		virtual ORIENTATION get_orientation() const { return orientation; }
 
 		/**
 		 * Check grid orientation: this is if the spacing is horizontal (vertical lines).
 		 */
-
 		virtual bool is_horizontal() const { return orientation == HORIZONTAL; }
 
 		/**
 		 * Check grid orientation: this is if the spacing is vertical (horizontal lines.)
 		 */
-
 		virtual bool is_vertical() const { return orientation == VERTICAL; }
 	};
 

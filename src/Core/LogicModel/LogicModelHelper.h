@@ -40,7 +40,6 @@ namespace degate
 	 * @exception CollectionLookupException Is thrown if there is no
 	 *   layer of the requested type.
 	 */
-
 	Layer_shptr get_first_layer(LogicModel_shptr lmodel, Layer::LAYER_TYPE layer_type);
 
 	/**
@@ -52,7 +51,6 @@ namespace degate
 	 * @exception CollectionLookupException Is thrown if there is no
 	 *   logc layer.
 	 */
-
 	Layer_shptr get_first_logic_layer(LogicModel_shptr lmodel);
 
 
@@ -139,7 +137,6 @@ namespace degate
 	 *   is not of type ConnectedLogicModelObject. This means that the object cannot be
 	 *   connected with anything.
 	 */
-
 	template <class InputIterator>
 	std::set<Net_shptr> collect_nets(InputIterator first, InputIterator last)
 	{
@@ -176,7 +173,6 @@ namespace degate
 	 * @exception InvalidPointerException If you pass an invalid shared pointer for the
 	 *   logic model, then this exception is raised.
 	 */
-
 	template <class InputIterator>
 	void isolate_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last)
 	{
@@ -241,7 +237,6 @@ namespace degate
 	 * @see connect_objects()
 	 * @see autoconnect_objects()
 	 */
-
 	template <class InputIterator>
 	void connect_objects(LogicModel_shptr lmodel, InputIterator first, InputIterator last)
 	{
@@ -314,7 +309,6 @@ namespace degate
 	 *   logic model, then this exception is raised.
 	 * @see connnect_objects()
 	 */
-
 	void autoconnect_objects(LogicModel_shptr lmodel, Layer_shptr layer,
 	                         BoundingBox const& search_bbox);
 
@@ -346,7 +340,6 @@ namespace degate
 	 * @exception InvalidPointerException If you pass an invalid shared pointer for
 	 *   \p lmodel or \p layer, then this exception is raised.
 	 */
-
 	void clear_logic_model(LogicModel_shptr lmodel, Layer_shptr layer);
 
 
@@ -356,7 +349,6 @@ namespace degate
 	 *   \p layer, then this exception is raised.
 	 * @exception CollectionLookupException Is thrown, if all layers are disabled.
 	 */
-
 	Layer_shptr get_first_enabled_layer(LogicModel_shptr lmodel);
 
 	/**
@@ -368,7 +360,6 @@ namespace degate
 	 * @exception CollectionLookupException Is thrown, if all layers are disabled.
 	 * @exception DegateRuntimeException Is thrown, if there is no current layer.
 	 */
-
 	Layer_shptr get_next_enabled_layer(LogicModel_shptr lmodel);
 
 
@@ -391,7 +382,6 @@ namespace degate
 	 * @exception CollectionLookupException Is thrown, if all layers are disabled.
 	 * @exception DegateRuntimeException Is thrown, if there is no current layer.
 	 */
-
 	Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel);
 
 
@@ -403,20 +393,17 @@ namespace degate
 	 * @exception InvalidPointerException If you pass an invalid shared pointer,
 	 *   then this exception is raised.
 	 */
-
 	Layer_shptr get_prev_enabled_layer(LogicModel_shptr lmodel, Layer_shptr layer);
 
 	/**
 	 * Get the current layer.
 	 */
-
 	Layer_shptr get_current_layer(Project_shptr project);
 
 
 	/**
 	 * Check if a gate is of a specific logic class.
 	 */
-
 	bool is_logic_class(Gate_shptr gate, std::string const& logic_class);
 
 
@@ -425,7 +412,6 @@ namespace degate
 	 * @return Returns the port type or GateTemplatePort::PORT_TYPE_UNDEFINED if the port type
 	 *   cannot be determined.
 	 */
-
 	GateTemplatePort::PORT_TYPE get_port_type(GatePort_shptr gate_port);
 
 	/**
@@ -433,7 +419,6 @@ namespace degate
 	 * @return Returns the name of the corresponding template name. If there is no name
 	 *   an empty string is returned.
 	 */
-
 	std::string get_template_port_name(GatePort_shptr gate_port);
 
 

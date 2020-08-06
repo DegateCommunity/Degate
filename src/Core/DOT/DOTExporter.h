@@ -61,7 +61,6 @@ namespace degate
 		 *     hash mark in front of the string. If you pass a multi line string,
 		 *     the hash marks for the additional lines are not added automatically.
 		 */
-
 		void add_header_line(std::string header_line);
 
 		/**
@@ -72,13 +71,11 @@ namespace degate
 		/**
 		 * Add a node into the graph.
 		 */
-
 		void add_node(std::string node_id, std::string node_params);
 
 		/**
 		 * Add an edge into the graph.
 		 */
-
 		void add_edge(std::string from_node_id,
 		              std::string to_node_id,
 		              std::string edge_params);
@@ -87,13 +84,11 @@ namespace degate
 		 * Dump the content as a string into a file.
 		 * If the file already exists, it will be overwritten.
 		 */
-
 		void dump_to_file(std::string const& filename) const;
 
 		/**
 		 * Clear any internally stored data.
 		 */
-
 		void clear();
 
 	public:

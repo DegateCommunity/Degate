@@ -36,7 +36,6 @@ namespace degate
 	/**
 	 * The TIFFReader parses tiff images.
 	 */
-
 	template <class ImageType>
 	class TIFFReader : public ImageReaderBase<ImageType>
 	{

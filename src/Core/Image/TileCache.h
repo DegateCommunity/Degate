@@ -261,7 +261,6 @@ namespace degate
 	 * \p _min_cache_tiles*sizeof(PixelPolicy::pixel_type)*(2^_tile_width_exp)^2 ,
 	 * where \p sizeof(PixelPolicy::pixel_type) is the size of a pixel.
 	 */
-
 	template <class PixelPolicy>
 	class TileCache : public TileCacheBase
 	{
@@ -293,7 +292,6 @@ namespace degate
 		 * @param tile_width_exp
 		 * @param persistent
 		 */
-
 		TileCache(std::string const& directory,
 		          unsigned int tile_width_exp,
 		          bool persistent,
@@ -307,7 +305,6 @@ namespace degate
 		/**
 		 * Destroy a TileCache object.
 		 */
-
 		~TileCache()
 		{
             release_memory();
@@ -346,7 +343,6 @@ namespace degate
 		 * @param y Absolut pixel coordinate.
 		 * @return Returns a shared pointer to a MemoryMap object.
 		 */
-
 		std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>
 		inline get_tile(unsigned int x, unsigned int y)
 		{

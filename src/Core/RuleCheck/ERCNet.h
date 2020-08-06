@@ -46,7 +46,6 @@ namespace degate
 	 * checked multiple times.
 	 *
 	 */
-
 	class ERCNet : public RCBase
 	{
 	public:

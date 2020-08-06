@@ -31,9 +31,7 @@ namespace degate
 {
 	/**
 	 * The ProjectExporter exports a degate project.
-	 *
 	 */
-
 	class ProjectExporter : public XMLExporter
 	{
 	private:
@@ -69,7 +67,6 @@ namespace degate
 		 * @exception InvalidPointerException
 		 * @exception std::runtime_error
 		 */
-
 		void export_data(std::string const& filename, Project_shptr prj);
 
 		/**
@@ -77,7 +74,6 @@ namespace degate
 		 * @exception InvalidPointerException
 		 * @exception std::runtime_error
 		 */
-
 		void export_all(std::string const& project_directory, Project_shptr prj,
 		                bool enable_oid_rewrite = true,
 		                std::string const& project_file = "project.xml",

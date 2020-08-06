@@ -58,13 +58,11 @@ namespace degate
 		/**
 		 * Constructor for the gate library.
 		 */
-
 		GateLibrary();
 
 		/**
 		 * The dtor.
 		 */
-
 		virtual ~GateLibrary();
 
 		//@{
@@ -75,7 +73,6 @@ namespace degate
 		/**
 		 * Remove a template from the gate library.
 		 */
-
 		void remove_template(GateTemplate_shptr gate_template);
 
 		/**
@@ -84,7 +81,6 @@ namespace degate
 		 *   template has no object ID.
 		 * @exception InvalidPointerException
 		 */
-
 		void add_template(GateTemplate_shptr gate_template);
 
 		/**
@@ -97,7 +93,6 @@ namespace degate
 		 *   pointer value is nullptr, if a template with the \p id
 		 *   was not found.
 		 */
-
 		GateTemplate_shptr get_template(object_id_t id);
 
 
@@ -110,52 +105,44 @@ namespace degate
 		 * Check for a name in the gate library.
 		 * @return Returns true, if a template name is already used for a template.
 		 */
-
 		bool is_name_in_use(std::string const& name) const;
 
 
 		/**
 		 * Check if there is a template port in the gate library with the specified object ID.
 		 */
-
 		bool exists_template_port(object_id_t port_id);
 
 		/**
 		 * Lookup a template port in the gate library.
 		 * @throws CollectionLookupException Throws this exception, if the port was nout found.
 		 */
-
 		GateTemplatePort_shptr get_template_port(object_id_t port_id);
 
 
 		/**
 		 * Get an iterator in order to iterate over gate templates.
 		 */
-
 		template_iterator begin();
 
 		/**
 		 * Get the end marker for the iteration.
 		 */
-
 		template_iterator end();
 
 		/**
 		 * Get an iterator in order to iterate over gate templates.
 		 */
-
 		const_template_iterator begin() const;
 
 		/**
 		 * Get the end marker for the iteration.
 		 */
-
 		const_template_iterator end() const;
 
 		/**
 		 * print the gate library.
 		 */
-
 		void print(std::ostream& os);
 	};
 }

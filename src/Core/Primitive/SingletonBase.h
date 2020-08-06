@@ -33,7 +33,6 @@ namespace degate
 	/**
 	 * This is a base class for singletons.
 	 */
-
 	template <class T>
 	class SingletonBase : private boost::noncopyable
 	{
@@ -46,7 +45,6 @@ namespace degate
 		/**
 		 * Constructor.
 		 */
-
 		SingletonBase()
 		{
 		}
@@ -54,7 +52,6 @@ namespace degate
 		/**
 		 * Destructor.
 		 */
-
 		virtual ~SingletonBase()
 		{
 		}
@@ -64,7 +61,6 @@ namespace degate
 		/**
 		 * Get a reference to the singleton.
 		 */
-
 		static T& get_instance()
 		{
 			boost::call_once(init, flag);
@@ -74,7 +70,6 @@ namespace degate
 		/**
 		 * Initialize the singleton.
 		 */
-
 		static void init()
 		{
 			t.reset(new T());

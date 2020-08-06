@@ -31,7 +31,6 @@ namespace degate
 	/**
 	 * Processor: Create a binary image from a single channel image.
 	 */
-
 	template <typename ImageTypeIn, typename ImageTypeOut>
 	class IPThresholding : public ImageProcessorBase
 	{
@@ -43,7 +42,6 @@ namespace degate
 		/**
 		 * The constructor.
 		 */
-
 		IPThresholding(double threshold = 0.5) :
 			ImageProcessorBase("IPThresholding",
 			                   "Binarize an image.",
@@ -57,7 +55,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~IPThresholding()
 		{
 		}

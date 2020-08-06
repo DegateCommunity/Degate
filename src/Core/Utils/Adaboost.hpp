@@ -20,18 +20,27 @@ template <class T>
 class Classifier
 {
 public:
-	// This function performs the actual recognition
-	// MUST be implemented by the weak classifier, usually T is the feature vector
+
+    /**
+	 * This function performs the actual recognition
+	 * MUST be implemented by the weak classifier, usually T is the feature vector
+	 */
 	virtual int recognize(T&) = 0;
-	// MUST be implemented by the weak classifier, simply return the name of the weak classifier itself
-	// It is recommended to use this function to keep track of the weak classifiers.
-	// You will find this useful if more than 30 weak classifiers are trained
+
+	/**
+	 * MUST be implemented by the weak classifier, simply return the name of the weak classifier itself
+	 * It is recommended to use this function to keep track of the weak classifiers.
+	 * You will find this useful if more than 30 weak classifiers are trained
+     */
 	virtual string get_name() const = 0;
-	// the ada-boost algorithm that trains the strong classifier from weak classifiers
-	// data and label defines the training set
-	// clsfrs is a collection of weak classifiers
-	// this ada-boost implementation will first run the weak classifiers against all the training samples
-	// and therefore the acutal trainning will be very fast 
+
+	/**
+	 * the ada-boost algorithm that trains the strong classifier from weak classifiers
+	 * data and label defines the training set
+	 * clsfrs is a collection of weak classifiers
+	 * this ada-boost implementation will first run the weak classifiers against all the training samples
+	 * and therefore the acutal trainning will be very fast
+	 */
 	static vector<float> adaboost(vector<Classifier<T>*> clsfrs, vector<T*> data, vector<int> label,
 	                              const int maxround = 80)
 	{
@@ -98,8 +107,9 @@ public:
 	}
 };
 
-//The linear combination of weak classifiers i.e. the strong classifier
-
+/**
+ * The linear combination of weak classifiers i.e. the strong classifier
+ */
 template <class T>
 class MultiClassifier : public Classifier<T>
 {
@@ -130,8 +140,9 @@ public:
 	}
 };
 
-// the utility function that tests a (strong) classifier over all the test data
-
+/**
+ * the utility function that tests a (strong) classifier over all the test data
+ */
 template <class T>
 void test_classifier(Classifier<T>* cls, vector<T*> data, vector<int> label, float& fpos, float& fneg)
 {

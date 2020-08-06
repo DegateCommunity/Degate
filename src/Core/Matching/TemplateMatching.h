@@ -32,7 +32,6 @@ namespace degate
 	/**
 	 * Helper structure for the collection of statistical values.
 	 */
-
 	struct TemplateMatchingStatistics
 	{
 		/** Number of template matches. */
@@ -63,7 +62,6 @@ namespace degate
 	 * This class implements the matching of gate representing images on
 	 * a background image.
 	 */
-
 	class TemplateMatching : public Matching
 	{
 	protected:
@@ -229,7 +227,6 @@ namespace degate
 		 * Calculate the next position for a template to background matching.
 		 * @return Returns false if there is no further position.
 		 */
-
 		virtual bool get_next_pos(struct search_state* state,
 		                          struct prepared_template const& tmpl) const = 0;
 
@@ -243,13 +240,11 @@ namespace degate
 		/**
 		 * Get the correlation threshold for the hill climbing start phase.
 		 */
-
 		double get_threshold_hc() const { return threshold_hc; }
 
 		/**
 		 * Set the correlation threshold for the hill climbing.
 		 */
-
 		void set_threshold_hc(double t) { threshold_hc = t; }
 
 		/**
@@ -260,7 +255,6 @@ namespace degate
 		/**
 		 * Set the correlation threshold for acepting gate recognitions.
 		 */
-
 		void set_threshold_detection(double t) { threshold_detection = t; }
 
 		/**
@@ -275,60 +269,51 @@ namespace degate
 		 * The image might be scaled before. This step size limit is in the
 		 * scale of the background image after(!) scaling.
 		 */
-
 		unsigned int get_max_step_size() const { return max_step_size_search; }
 
 		/**
 		 * Set the pixel step size.
 		 */
-
 		void set_max_step_size(unsigned int s) { max_step_size_search = s; }
 
 		/**
 		 * Get the scaling factor.
 		 * @return Returns a value >= 1 that is the factor for the down scaling.
 		 */
-
 		unsigned int get_scaling_factor() const { return scale_down; }
 
 		/**
 		 * Set the scaling factor.
 		 */
-
 		void set_scaling_factor(unsigned int factor) { scale_down = factor; }
 
 
 		/**
 		 * Run the template matching.
 		 */
-
 		virtual void init(BoundingBox const& bounding_box, Project_shptr project);
 
 		/**
 		 * Run the template matching.
 		 */
-
 		virtual void run();
 
 		/**
 		 * Set templates that should be matched.
 		 * Templates become sorted, so that larger templates are matched first.
 		 */
-
 		void set_templates(std::list<GateTemplate_shptr> tmpl_set);
 
 
 		/**
 		 * Set orientations that should be tested.
 		 */
-
 		void set_orientations(std::list<Gate::ORIENTATION> tmpl_orientations);
 
 		/**
 		 * Set the layers.
 		 *
 		 */
-
 		void set_layers(Layer_shptr layer_matching, Layer_shptr layer_insert)
 		{
 			this->layer_matching = layer_matching;
@@ -370,7 +355,6 @@ namespace degate
 	/**
 	 * This class is the base class for template matching along a grid.
 	 */
-
 	class TemplateMatchingAlongGrid : public TemplateMatching
 	{
 	protected:

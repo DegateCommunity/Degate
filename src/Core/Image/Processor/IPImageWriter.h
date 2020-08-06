@@ -31,7 +31,6 @@ namespace degate
 	/**
 	 * Processor: Write an image to file.
 	 */
-
 	template <typename ImageType>
 	class IPImageWriter : public ImageProcessorBase
 	{
@@ -43,7 +42,6 @@ namespace degate
 		/**
 		 * The constructor.
 		 */
-
 		IPImageWriter(std::string filename) :
 			ImageProcessorBase("IPImageWriter",
 			                   "Write an image.",
@@ -57,7 +55,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~IPImageWriter()
 		{
 		}

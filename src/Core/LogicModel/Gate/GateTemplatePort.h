@@ -60,7 +60,6 @@ namespace degate
 		/**
 		 * Create a template port.
 		 */
-
 		GateTemplatePort(float x, float y, PORT_TYPE port_type = PORT_TYPE_UNDEFINED) :
                 point(x, y), port_type(port_type), position_defined(true)
 		{
@@ -69,7 +68,6 @@ namespace degate
 		/**
 		 * Create a template port.
 		 */
-
 		GateTemplatePort(PORT_TYPE port_type = PORT_TYPE_UNDEFINED) :
                 point(0, 0), port_type(port_type), position_defined(false)
 		{
@@ -101,7 +99,6 @@ namespace degate
 		/**
 		 * Check if a position is defined for the port.
 		 */
-
 		virtual bool is_position_defined() const { return position_defined; }
 
 
@@ -110,7 +107,6 @@ namespace degate
 		 * The position is in relative coordinates
 		 *   related to the left upper corner of the gate template.
 		 */
-
 		virtual void set_point(Point p)
 		{
 			position_defined = true;
@@ -120,44 +116,37 @@ namespace degate
 		/**
 		 * Check if a port is of type input port or an in-out-port.
 		 */
-
 		virtual bool is_inport() const { return port_type == PORT_TYPE_IN || is_inoutport(); }
 
 		/**
 		 * Check if a port is of type output port or an in-out-port.
 		 */
-
 		virtual bool is_outport() const { return port_type == PORT_TYPE_OUT || is_inoutport(); }
 
 		/**
 		 * Check if a port is of type tristate.
 		 */
-
 		virtual bool is_inoutport() const { return port_type == PORT_TYPE_INOUT; }
 
 		/**
 		 * Check if a port is of type is undefined.
 		 */
-
 		virtual bool has_undefined_port_type() const { return port_type == PORT_TYPE_UNDEFINED; }
 
 		/**
 		 * Set the port type.
 		 */
-
 		virtual void set_port_type(PORT_TYPE port_type) { this->port_type = port_type; }
 
 		/**
 		 * Get the port type.
 		 */
-
 		virtual PORT_TYPE get_port_type() const { return port_type; }
 
 		/**
 		 * Get a human readable string, that describes the port type.
 		 * That is "in", "out" or "tristate".
 		 */
-
 		virtual const std::string get_port_type_as_string() const
 		{
 			switch (port_type)
@@ -176,7 +165,6 @@ namespace degate
 		 * @return Returns the position in relative coordinates
 		 *   related to the left upper corner of the gate template.
 		 */
-
 		virtual Point const& get_point() const { return point; }
 
 		/**
@@ -184,7 +172,6 @@ namespace degate
 		 * @return Returns the postion relative to the left upper corner of
 		 *   the gate template.
 		 */
-
 		virtual float get_x() const { return point.get_x(); }
 
 		/**
@@ -192,7 +179,6 @@ namespace degate
 		 * @return Returns the postion relative to the left upper corner of
 		 *   the gate template.
 		 */
-
 		virtual float get_y() const { return point.get_y(); }
 
 
@@ -201,7 +187,6 @@ namespace degate
 		 * @exception DegateRuntimeException This exception is thrown if the string
 		 *   cannot be parsed.
 		 */
-
 		static PORT_TYPE get_port_type_from_string(std::string const& port_type_str)
 		{
 			if (port_type_str == "undefined") return GateTemplatePort::PORT_TYPE_UNDEFINED;

@@ -35,7 +35,6 @@ namespace degate
 	 *
 	 * This implementation uses a TileCache.
 	 */
-
 	template <class PixelPolicy>
 	class StoragePolicy_Tile : public StoragePolicy_Base<PixelPolicy>
 	{
@@ -134,7 +133,6 @@ namespace degate
 		/**
 		 * Get the width / height of a single tile. The size is a power of two.
 		 */
-
 		inline unsigned int get_tile_size() const
 		{
 			return (1 << tile_width_exp);

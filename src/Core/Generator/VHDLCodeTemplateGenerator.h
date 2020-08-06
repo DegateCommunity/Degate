@@ -33,7 +33,6 @@ namespace degate
 	/**
 	 * A code template generator for VHDL.
 	 */
-
 	class VHDLCodeTemplateGenerator : public CodeTemplateGenerator
 	{
 	public:

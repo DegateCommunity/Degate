@@ -65,7 +65,6 @@ namespace degate
 	 * The project class is a container for project related data.
 	 *
 	 */
-
 	class Project : public DeepCopyable
 	{
 	private:
@@ -116,21 +115,18 @@ namespace degate
 		 * Create a new and empty project.
 		 * It will create an empty logic model as well.
 		 */
-
 		Project(length_t width, length_t height);
 
 		/**
 		 * Create a new and empty project.
 		 * It will create an empty logic model as well.
 		 */
-
 		Project(length_t width, length_t height, std::string const& directory, unsigned int layers = 0);
 
 
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~Project();
 
 		//@{
@@ -146,39 +142,33 @@ namespace degate
 		/**
 		 * Get the project directory.
 		 */
-
 		std::string const& get_project_directory();
 
 		/**
 		 * Get the bounding box that represents the covered area for this project.
 		 */
-
 		BoundingBox const& get_bounding_box() const;
 
 		/**
 		 * Get the width of the project.
 		 */
-
 		unsigned int get_width() const;
 
 		/**
 		 * get the height of a project.
 		 */
-
 		unsigned int get_height() const;
 
 		/**
 		 * Get the logic model. The logic model should be present all time. This means
 		 * that you can call this method and should not receive a nullptr pointer.
 		 */
-
 		LogicModel_shptr get_logic_model();
 
 		/**
 		 * Set the logic model for a project.
 		 * If you reset the logic model, the old logic model will be destroyed.
 		 */
-
 		void set_logic_model(LogicModel_shptr logic_model);
 
 
@@ -229,13 +219,11 @@ namespace degate
 		 * saving is implemented in ProjectExporter, but because the ProjectExporter might be used
 		 * for different purposes, this method must be called from the GUI code.
 		 */
-
 		void set_changed(bool state = true);
 
 		/**
 		 * Check if the project was changed.
 		 */
-
 		bool is_changed() const;
 
 		/**
@@ -243,13 +231,11 @@ namespace degate
 		 * @return Returns the time in seconds since the project change state was set to false.
 		 * @see set_changed()
 		 */
-
 		time_t get_time_since_last_save() const;
 
 		/**
 		 * Reset last save counter.
 		 */
-
 		void reset_last_saved_counter();
 
 
@@ -263,38 +249,32 @@ namespace degate
 		/**
 		 * Dump basic meta data for the project as human readable text into an ostream.
 		 */
-
 		void print(std::ostream&);
 
 		/**
 		 * Dump most meta data for the project as human readable text into an ostream.
 		 */
-
 		void print_all(std::ostream&);
 
 		/**
 		 * Set server url.
 		 */
-
 		void set_server_url(std::string const& server_url);
 
 		/**
 		 * Get server url.
 		 */
-
 		std::string get_server_url() const;
 
 
 		/**
 		 * Get the last pulled transaction ID.
 		 */
-
 		transaction_id_t get_last_pulled_tid() const;
 
 		/**
 		 * Set last pulled transaction ID.
 		 */
-
 		void set_last_pulled_tid(transaction_id_t tid);
 
 

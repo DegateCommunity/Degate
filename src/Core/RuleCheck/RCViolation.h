@@ -50,7 +50,6 @@ namespace degate
 		 * @param severity Indicates the type of problem, actually
 		 *   if a rc violation is just a warning or a real error.
 		 */
-
 		RCViolation(PlacedLogicModelObject_shptr obj,
 		            std::string const& problem_description,
 		            std::string const& rc_violation_class,

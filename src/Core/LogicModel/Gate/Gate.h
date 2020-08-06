@@ -42,7 +42,6 @@ namespace degate
 	 *  same thing with template ports. Maybe removing this is an option, because there are
 	 *  easier ways to reload the gate library.
 	 */
-
 	class Gate : public Rectangle, public PlacedLogicModelObject
 	{
 	public:
@@ -81,7 +80,6 @@ namespace degate
 		/**
 		 * Create a gate.
 		 */
-
 		Gate(BoundingBox const& bounding_box,
 		     ORIENTATION orientation = ORIENTATION_UNDEFINED);
 
@@ -89,7 +87,6 @@ namespace degate
 		/**
 		 * Destroy a gate.
 		 */
-
 		virtual ~Gate();
 
 		//@{
@@ -109,7 +106,6 @@ namespace degate
 		 *   orientation.
 		 * @see LogicModel::update_ports()
 		 */
-
 		virtual void add_port(GatePort_shptr gate_port);
 
 		/**
@@ -117,13 +113,11 @@ namespace degate
 		 * @se add_port()
 		 * @see LogicModel::update_ports()
 		 */
-
 		virtual void remove_port(GatePort_shptr gate_port);
 
 		/**
 		 * Get a gate port by a template port.
 		 */
-
 		virtual GatePort_shptr get_port_by_template_port(GateTemplatePort_shptr template_port);
 
 
@@ -145,14 +139,12 @@ namespace degate
 		 *      gate.
 		 * @see set_gate_template()
 		 */
-
 		virtual void set_template_type_id(object_id_t template_type_id);
 
 		/**
 		 * Get the ID of the corresponding template.
 		 * @see set_template_type_id()
 		 */
-
 		virtual object_id_t get_template_type_id() const;
 
 
@@ -166,14 +158,12 @@ namespace degate
 		 * This method updates the template type ID as well.
 		 * @see set_template_type_id()
 		 */
-
 		virtual void set_gate_template(std::shared_ptr<GateTemplate> gate_template);
 
 		/**
 		 * Get the gate template.
 		 * @see set_gate_template()
 		 */
-
 		virtual std::shared_ptr<GateTemplate> get_gate_template() const;
 
 		/**
@@ -184,21 +174,18 @@ namespace degate
 		 *    Just having a template ID is not sufficient. If there is no
 		 *    shared pointer to the template, false is returned.
 		 */
-
 		virtual bool has_template() const;
 
 
 		/**
 		 * Remove template from gate. This will destroy all gate ports, too.
 		 */
-
 		virtual void remove_template();
 
 		/**
 		 * Check if a gate object has a port, that references a given template port.
 		 * This method bases on shared pointers not on simple port IDs.
 		 */
-
 		virtual bool has_template_port(GateTemplatePort_shptr template_port) const;
 
 		/**
@@ -208,33 +195,28 @@ namespace degate
 		 * the template image, you need to set the image orientation in
 		 * relation to the master image.
 		 */
-
 		virtual void set_orientation(ORIENTATION orientation);
 
 		/**
 		 * Get the orientation relative to the master image.
 		 */
-
 		virtual ORIENTATION get_orientation() const;
 
 
 		/**
 		 * Check if the gate has a valid orientation.
 		 */
-
 		bool has_orientation() const;
 
 		/**
 		* Get the orientation as a human readable string.
 		*/
-
 		virtual std::string get_orienation_type_as_string() const;
 
 
 		/**
 		 * Get the number of ports for this gate.
 		 */
-
 		inline virtual unsigned get_ports_number()
 		{
 			return gate_ports.size();
@@ -243,27 +225,23 @@ namespace degate
 		/**
 		 * Get an iterator to iterated over ports.
 		 */
-
 		virtual port_iterator ports_begin();
 
 		/**
 		 * Get an iterator to iterated over ports.
 		 */
-
 		virtual port_const_iterator ports_begin() const;
 
 		/**
 		 * Get an end iterator.
 		 * @see ports_begin()
 		 */
-
 		virtual port_iterator ports_end();
 
 		/**
 		 * Get an end iterator.
 		 * @see ports_begin()
 		 */
-
 		virtual port_const_iterator ports_end() const;
 
 		/**
@@ -273,7 +251,6 @@ namespace degate
 		 *   undefined gate orientation.
 		 * @see has_orientation()
 		 */
-
 		virtual unsigned int get_relative_x_position_within_gate(float rel_x) const;
 
 		/**
@@ -283,7 +260,6 @@ namespace degate
 		 *   undefined gate orientation.
 		 * @see has_orientation()
 		 */
-
 		virtual unsigned int get_relative_y_position_within_gate(float rel_y) const;
 
 		/**
@@ -292,20 +268,17 @@ namespace degate
 		 * to let the user identify the concrete object. But that
 		 * is not a must.
 		 */
-
 		virtual const std::string get_descriptive_identifier() const;
 
 		/**
 		 * Get a human readable string that names the object type.
 		 * Here it is "Gate".
 		 */
-
 		virtual const std::string get_object_type_name() const;
 
 		/**
 		 * Print gate.
 		 */
-
 		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
 
 

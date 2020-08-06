@@ -44,7 +44,6 @@ namespace degate
 	/**
 	 * Base class for Rule Checks.
 	 */
-
 	class RCBase
 	{
 	public:
@@ -94,7 +93,6 @@ namespace degate
 		/**
 		 * Get the list of RC violations.
 		 */
-
 		container_type get_rc_violations() const
 		{
 			return rc_violations;

@@ -22,7 +22,7 @@
 #ifndef __PORTPLACEMENTWIDGET_H__
 #define __PORTPLACEMENTWIDGET_H__
 
-#include <Core/Image/ImageRenderer.h>
+#include <GUI/Utils/ImageRenderer.h>
 #include <Core/LogicModel/Gate/GateTemplate.h>
 #include <Core/LogicModel/Gate/GateTemplatePort.h>
 #include <Core/Project/Project.h>

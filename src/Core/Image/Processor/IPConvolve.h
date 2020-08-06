@@ -31,7 +31,6 @@ namespace degate
 	/**
 	 * Processor: Convolve an image.
 	 */
-
 	template <typename ImageTypeIn, typename ImageTypeOut>
 	class IPConvolve : public ImageProcessorBase
 	{
@@ -43,7 +42,6 @@ namespace degate
 		/**
 		 * The constructor.
 		 */
-
 		IPConvolve(FilterKernel_shptr kernel) :
 			ImageProcessorBase("IPConvolve",
 			                   "Convolve an image.",
@@ -57,7 +55,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~IPConvolve()
 		{
 		}

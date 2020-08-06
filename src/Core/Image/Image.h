@@ -75,7 +75,6 @@ namespace degate
 		/**
 		 * Get the width of an image.
 		 */
-
 		inline unsigned int get_width() const
 		{
 			return bounding_box.get_width();
@@ -84,7 +83,6 @@ namespace degate
 		/**
 		 * Get the height of an image.
 		 */
-
 		inline unsigned int get_height() const
 		{
 			return bounding_box.get_height();
@@ -115,7 +113,6 @@ namespace degate
 	 * degate's temp directory. The constructor should only get
 	 * the width and height of an image.
 	 */
-
 	template <class PixelPolicy,
 	          template <class _PixelPolicy> class StoragePolicy>
 	class Image : public ImageBase,
@@ -126,7 +123,6 @@ namespace degate
 		/**
 		 * The constructor.
 		 */
-
 		Image(unsigned int width, unsigned int height) :
 			ImageBase(width, height),
 			StoragePolicy<PixelPolicy>(width, height)
@@ -166,7 +162,6 @@ namespace degate
 	/**
 	 * Partial template specialization for the storage policy StoragePolicy_PersistentFile.
 	 */
-
 	template <class PixelPolicy>
 	class Image<PixelPolicy, StoragePolicy_PersistentFile> :
 		public ImageBase,
@@ -216,7 +211,6 @@ namespace degate
 	/**
 	 * Partial template specialization for the storage policy StoragePolicy_Tile.
 	 */
-
 	template <class PixelPolicy>
 	class Image<PixelPolicy, StoragePolicy_Tile> :
 		public ImageBase,
@@ -227,7 +221,6 @@ namespace degate
 		/**
 		 * Constructor for temporary virtual images.
 		 */
-
 		Image(unsigned int width,
 		      unsigned int height,
 		      unsigned int tile_width_exp = 10) :
@@ -242,7 +235,6 @@ namespace degate
 		/**
 		 * Constructor for persistent virtual images.
 		 */
-
 		Image(unsigned int width,
 		      unsigned int height,
 		      std::string const& directory,
@@ -259,7 +251,6 @@ namespace degate
 		/**
 		 * The dtor.
 		 */
-
 		virtual ~Image()
 		{
 		}
@@ -288,7 +279,6 @@ namespace degate
 	/**
 	 * Typedefs for common types of virtual images.
 	 */
-
 
 	typedef Image<PixelPolicy_RGBA, StoragePolicy_Tile> TileImage_RGBA;
 	typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_Tile> TileImage_GS_DOUBLE;

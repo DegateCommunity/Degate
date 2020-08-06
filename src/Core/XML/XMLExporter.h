@@ -34,6 +34,7 @@ namespace degate
 	class XMLExporter : public Exporter
 	{
 	public:
+
 		/**
 		 * The ctor.
 		 */

@@ -47,20 +47,17 @@ namespace degate
 		/**
 		 * Create a new object.
 		 */
-
 		LogicModelObjectBase(object_id_t oid = 0);
 
 		/**
 		 * The constructor.
 		 */
-
 		LogicModelObjectBase(std::string const& object_name,
 		                     std::string const& object_description);
 
 		/**
 		 * The constructor.
 		 */
-
 		LogicModelObjectBase(object_id_t oid,
 		                     std::string const& object_name,
 		                     std::string const& object_description);
@@ -68,7 +65,6 @@ namespace degate
 		/**
 		 * The dtor.
 		 */
-
 		virtual ~LogicModelObjectBase();
 
 		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
@@ -77,56 +73,47 @@ namespace degate
 		 * Set the name for a logic model object. It is up to the user
 		 * how the object is named. But it should be identifying.
 		 */
-
 		virtual void set_name(std::string const& name);
 
 		/**
 		 * Set the description for a logic model object. It is up to the user
 		 * how the object is described.
 		 */
-
 		virtual void set_description(std::string const& description);
 
 		/**
 		 * Get the name for a logic model object.
 		 */
-
 		virtual std::string const& get_name() const;
 
 		/**
 		 * Get the description for a logic model object.
 		 */
-
 		virtual std::string const& get_description() const;
 
 		/**
 		 * Check if a logic model object has a name.
 		 */
-
 		virtual bool has_name() const;
 
 		/**
 		 * Check if a logic model object has a description.
 		 */
-
 		virtual bool has_description() const;
 
 		/**
 		 * Set the object ID for a logic model object.
 		 */
-
 		virtual void set_object_id(object_id_t oid);
 
 		/**
 		 * Get the object ID for a logic model object.
 		 */
-
 		virtual object_id_t get_object_id() const;
 
 		/**
 		 * Check if the logic model object has a valid object ID.
 		 */
-
 		virtual bool has_valid_object_id() const;
 
 
@@ -136,14 +123,12 @@ namespace degate
 		 * to let the user identify the concrete object. But that
 		 * is not a must.
 		 */
-
 		virtual const std::string get_descriptive_identifier() const;
 
 		/**
 		 * Get a human readable string that names the object type,
 		 * e.g. "Wire" or "Gate port".
 		 */
-
 		virtual const std::string get_object_type_name() const;
 	};
 

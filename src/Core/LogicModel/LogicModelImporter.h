@@ -74,7 +74,6 @@ namespace degate
 		 * @param gate_library The gate library to resolve references to gate templates.
 		 *              The gate library is stored into the logic model. You should not set it by yourself.
 		 */
-
 		LogicModelImporter(unsigned int width, unsigned int height, GateLibrary_shptr gate_library) :
 			width(width),
 			height(height),
@@ -88,7 +87,6 @@ namespace degate
 		 * @param width The geometrical width of the logic model.
 		 * @param height The geometrical height of the logic model.
 		 */
-
 		LogicModelImporter(unsigned int width, unsigned int height) :
 			width(width),
 			height(height)
@@ -99,7 +97,6 @@ namespace degate
 		/**
 		 * The destructor.
 		 */
-
 		~LogicModelImporter()
 		{
 		}

@@ -41,7 +41,6 @@ namespace degate
 	 * @exception DegateRuntimeException This exception is thrown, if there is
 	 *   no matching image importer or if the import failed.
 	 */
-
 	template <typename ImageType>
 	std::shared_ptr<ImageType> load_image(std::string const& path)
 	{
@@ -83,7 +82,6 @@ namespace degate
 	 * Load an image in a common image format, such as tiff, into an existing degate image.
 	 * @exception InvalidPointerException This exception is thrown, if parameter \p img represents an invalid pointer.
 	 */
-
 	template <typename ImageType>
 	void load_image(std::string const& path, std::shared_ptr<ImageType> img)
 	{
@@ -100,7 +98,6 @@ namespace degate
 	 * @exception DegateRuntimeException This exception is thrown, if the writer failed to save the image.
 	 * @exception InvalidPointerException This exception is thrown, if parameter \p img represents an invalid pointer.
 	 */
-
 	template <typename ImageType>
 	void save_image(std::string const& path, std::shared_ptr<ImageType> img)
 	{
@@ -137,7 +134,6 @@ namespace degate
 	 * Only the tiff file format is supported.
 	 * @exception InvalidPointerException This exception is thrown, if parameter \p img represents an invalid pointer.
 	 */
-
 	template <typename ImageType>
 	void save_normalized_image(std::string const& path, std::shared_ptr<ImageType> img)
 	{

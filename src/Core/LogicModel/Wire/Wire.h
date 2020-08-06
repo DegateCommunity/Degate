@@ -64,14 +64,12 @@ namespace degate
 		 * to let the user identify the concrete object. But that
 		 * is not a must.
 		 */
-
 		virtual const std::string get_descriptive_identifier() const;
 
 		/**
 		 * Get a human readable string that names the object type.
 		 * Here it is "Wire".
 		 */
-
 		virtual const std::string get_object_type_name() const;
 
 		/**

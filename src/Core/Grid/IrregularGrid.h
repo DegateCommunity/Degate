@@ -31,7 +31,6 @@ namespace degate
 	/**
 	 * This class represents a grid type with non equidistant spacing between grid lines.
 	 */
-
 	class IrregularGrid : public Grid
 	{
 	private:

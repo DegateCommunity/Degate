@@ -30,8 +30,6 @@ namespace degate
 	/**
 	 * Abstract base class for an image processor.
 	 */
-
-
 	class ImageProcessorBase : public ProgressControl
 	{
 		friend class IPPipe;
@@ -66,7 +64,6 @@ namespace degate
 		 * The constructor for a plugin
 		 * @param name The name of the plugin.
 		 */
-
 		ImageProcessorBase(std::string const& name,
 		                   std::string const& description,
 		                   bool has_properties,
@@ -83,7 +80,6 @@ namespace degate
 		/**
 		 * The destructor for a plugin.
 		 */
-
 		virtual ~ImageProcessorBase()
 		{
 		}
@@ -92,7 +88,6 @@ namespace degate
 		/**
 		 * Get the processor's name.
 		 */
-
 		std::string const& get_name() const
 		{
 			return name;
@@ -101,7 +96,6 @@ namespace degate
 		/**
 		 * Get the processor's description.
 		 */
-
 		std::string const& get_description() const
 		{
 			return description;

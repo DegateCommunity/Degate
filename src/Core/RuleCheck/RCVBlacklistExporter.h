@@ -35,7 +35,6 @@ namespace degate
 	/**
 	 * The RCVBlacklistExporter exports a set of RC Violations, which should be ignored.
 	 */
-
 	class RCVBlacklistExporter : public XMLExporter
 	{
 	private:

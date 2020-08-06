@@ -66,7 +66,6 @@ namespace degate
 		 * @exception InvalidObjectIDException This exception is thrown
 		 *  if the object has an invalid object ID.
 		 */
-
 		virtual void add_object(ConnectedLogicModelObject_shptr o);
 
 
@@ -84,14 +83,12 @@ namespace degate
 		 * @exception InvalidObjectIDException As in add_object().
 		 * @see add_object()
 		 */
-
 		virtual void remove_object(ConnectedLogicModelObject_shptr o);
 
 		/**
 		 * Remove object.
 		 * @see remove_object()
 		 */
-
 		virtual void remove_object(object_id_t o);
 
 
@@ -132,7 +129,6 @@ namespace degate
 		/**
 		 * Get  the number of objects that are connected with this net.
 		 */
-
 		virtual unsigned int size() const;
 
 		/**

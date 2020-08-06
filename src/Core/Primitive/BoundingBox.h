@@ -48,7 +48,6 @@ namespace degate
 		/**
 		 * Check if this bounding box is completly within the bounding box given as parameter.
 		 */
-
 		bool in_bounding_box(BoundingBox const& bbox) const;
 		bool operator==(const BoundingBox& other) const;
 		bool operator!=(const BoundingBox& other) const;

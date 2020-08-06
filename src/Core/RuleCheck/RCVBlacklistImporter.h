@@ -33,7 +33,6 @@ namespace degate
 	/**
 	 * The RCVBlacklistImporter imports a list of RC violations, which should be ignored.
 	 */
-
 	class RCVBlacklistImporter : public XMLImporter
 	{
 	private:

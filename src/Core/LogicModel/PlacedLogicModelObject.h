@@ -42,7 +42,6 @@ namespace degate
 	 * existent physical structures on the chip surface
 	 * (e.g. wire, vias, ...) as well as logical objects (e.g. annotations).
 	 */
-
 	class PlacedLogicModelObject : public AbstractShape,
 	                               public LogicModelObjectBase,
 	                               public ColoredObject,
@@ -68,7 +67,6 @@ namespace degate
 		/**
 		 * Ajust the position in the quadtree.
 		 */
-
 		void notify_shape_change();
 
 	public:
@@ -76,13 +74,11 @@ namespace degate
 		/**
 		 * The constructor.
 		 */
-
 		PlacedLogicModelObject();
 
 		/**
 		 * The destructor.
 		 */
-
 		~PlacedLogicModelObject() override;
 
 		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
@@ -91,7 +87,6 @@ namespace degate
 		 * A placed object is highlightable. You can ask for its
 		 * state with this method.
 		 */
-
 		virtual HIGHLIGHTING_STATE get_highlighted() const;
 
 		/**
@@ -102,33 +97,28 @@ namespace degate
 		/**
 		 * Set the selection state.
 		 */
-
 		virtual void set_highlighted(HIGHLIGHTING_STATE state);
 
 		/**
 		 * Set the layer on which the object is placed.
 		 */
-
 		virtual void set_layer(std::shared_ptr<Layer> layer);
 
 		/**
 		 * Get the layer on which the object is placed.
 		 */
-
 		virtual std::shared_ptr<Layer> get_layer();
 
 
 		/**
 		 * Print the object.
 		 */
-
 		virtual void print(std::ostream& os = std::cout, int n_tabs = 0) const = 0;
 
 
 		/**
 		 * Set the index of the object.
 		 */
-
 		inline void set_index(unsigned value)
 		{
 			index = value;
@@ -137,7 +127,6 @@ namespace degate
 		/**
 		 * Get the index of the object.
 		 */
-
 		inline unsigned get_index()
 		{
 			return index;

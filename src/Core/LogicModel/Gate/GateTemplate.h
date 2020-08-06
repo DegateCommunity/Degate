@@ -36,7 +36,6 @@ namespace degate
 	/**
 	 * A gate template is a container for common properties, that physically placed gates of that type share.
 	 */
-
 	class GateTemplate : public LogicModelObjectBase, public ColoredObject, public DeepCopyable
 	{
 		friend class Gate;
@@ -79,13 +78,11 @@ namespace degate
 		/**
 		 * Increment the reference counter.
 		 */
-
 		virtual void increment_reference_counter();
 
 		/**
 		 * Decrement the reference counter.
 		 */
-
 		virtual void decrement_reference_counter();
 
 
@@ -98,7 +95,6 @@ namespace degate
 		 * @deprecated A gate template should not rely on positions. Instead it should
 		 *   have a the region as a copy.
 		 */
-
 		GateTemplate(float width, float height);
 
 
@@ -107,19 +103,16 @@ namespace degate
 		 * @deprecated A gate template should not rely on positions. Instead it should
 		 *   have a the region as a copy.
 		 */
-
 		GateTemplate(float min_x, float max_x, float min_y, float max_y);
 
 		/**
 		 * Default constructor.
 		 */
-
 		GateTemplate();
 
 		/**
 		 * The destructor.
 		 */
-
 		virtual ~GateTemplate();
 
 		//@{
@@ -130,13 +123,11 @@ namespace degate
 		/**
 		 * Get the width of a gate template.
 		 */
-
 		virtual float get_width() const;
 
 		/**
 		 * Get the height of a gate template.
 		 */
-
 		virtual float get_height() const;
 
 
@@ -144,21 +135,18 @@ namespace degate
 		 * Set the width of a gate template.
 		 * It does not adjust dimensions of gates that reference this template.
 		 */
-
 		virtual void set_width(float width);
 
 		/**
 		 * Set the height of a gate template.
 		 * It does not adjust dimensions of gates that reference this template.
 		 */
-
 		virtual void set_height(float height);
 
 		/**
 		 * Get the bounding box of the template.
 		 * @deprecated
 		 */
-
 		virtual BoundingBox const& get_bounding_box() const;
 
 		/**
@@ -171,7 +159,6 @@ namespace degate
 		 *   e.g. a template image that is an average image or sth. like that.
 		 * @exception InvalidPointerException Throws this excpetion, if \p img is nullptr.
 		 */
-
 		virtual void set_image(Layer::LAYER_TYPE layer_type, GateTemplateImage_shptr img);
 
 		/**
@@ -179,14 +166,12 @@ namespace degate
 		 * @see set_image()
 		 * @exception CollectionLookupException Throws this exception, if there is no image.
 		 */
-
 		virtual GateTemplateImage_shptr get_image(Layer::LAYER_TYPE layer_type);
 
 
 		/**
 		 * Check if there is a reference image for a layer type.
 		 */
-
 		virtual bool has_image(Layer::LAYER_TYPE layer_type) const;
 
 		/**
@@ -200,7 +185,6 @@ namespace degate
 		 * @todo In order to make the API hard to misuse, this method might be made private.
 		 * @see LogicModel::add_template_port
 		 */
-
 		virtual void add_template_port(GateTemplatePort_shptr template_port);
 
 		/**
@@ -212,7 +196,6 @@ namespace degate
 		 * @todo In order to make the API hard to misuse, this method might be made private.
 		 * @see LogicModel::remove_template_port
 		 */
-
 		virtual bool remove_template_port(GateTemplatePort_shptr template_port);
 
 		/**
@@ -221,7 +204,6 @@ namespace degate
 		 *   has no valid object ID.
 		 * @see remove_template_port(GateTemplatePort_shptr template_port)
 		 */
-
 		virtual bool remove_template_port(object_id_t object_id);
 
 		/**
@@ -231,7 +213,6 @@ namespace degate
 		 * @exception CollectionLookupException This exception is thrown if a
 		 *   template port with object ID \p object_id was not found.
 		 */
-
 		virtual GateTemplatePort_shptr get_template_port(object_id_t object_id);
 
 
@@ -240,53 +221,45 @@ namespace degate
 		 * @exception InvalidObjectIDException This exception is thrown if the
 		 *   object ID is invalid.
 		 */
-
 		virtual bool has_template_port(object_id_t object_id) const;
 
 		/**
 		 * Get an iterator.
 		 */
-
 		virtual port_iterator ports_begin();
 
 
 		/**
 		 * Get end marker for the iteration over ports.
 		 */
-
 		virtual port_iterator ports_end();
 
 
 		/**
 		 * Get an iterator to iterate over images.
 		 */
-
 		virtual image_iterator images_begin();
 
 		/**
 		 * Get end marker for the iteration over images.
 		 */
-
 		virtual image_iterator images_end();
 
 		/**
 		 * Get the reference counter.
 		 * @return Returns how many gates reference this gate template.
 		 */
-
 		virtual unsigned int get_reference_counter() const;
 
 
 		/**
 		 * Get an iterator to iterate over implementations.
 		 */
-
 		virtual implementation_iter implementations_begin();
 
 		/**
 		 * Get an end marker for the iteration.
 		 */
-
 		virtual implementation_iter implementations_end();
 
 
@@ -295,27 +268,23 @@ namespace degate
 		 * @param impl_type Set VHDL or Verilog.
 		 * @param code The implementation.
 		 */
-
 		virtual void set_implementation(IMPLEMENTATION_TYPE impl_type, std::string const& code);
 
 		/**
 		 * Get code for an implementation type.
 		 * @exception CollectionLookupException Throws an exception, if there is no code for the requested type.
 		 */
-
 		std::string get_implementation(IMPLEMENTATION_TYPE impl_type) const;
 
 		/**
 		 * Print gate template's meta information to an output stream.
 		 */
-
 		virtual void print(std::ostream& os);
 
 
 		/**
 		 * Get number of defined ports.
 		 */
-
 		virtual unsigned int get_number_of_ports() const;
 
 
@@ -330,13 +299,11 @@ namespace degate
 		 * a set of connected flipflops with some xor gates between them,
 		 * independend of the gate's naming.
 		 */
-
 		virtual void set_logic_class(std::string const& logic_class);
 
 		/**
 		 * Get logic class for a standard cell.
 		 */
-
 		virtual std::string get_logic_class() const;
 
 
