@@ -77,11 +77,11 @@ namespace degate
 
 	public:
 
-		ImageHistogram(double _from, double _to, double _class_width) :
+		ImageHistogram(double from, double to, double class_width) :
 			counts(0),
-			from(_from),
-			to(_to),
-			class_width(_class_width)
+			from(from),
+			to(to),
+			class_width(class_width)
 		{
 		}
 

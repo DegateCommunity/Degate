@@ -40,10 +40,10 @@ namespace degate
 		unsigned int width;
 
 	public:
-		SubImageAnalyzer(std::shared_ptr<ImageType> _img,
-		                 unsigned int _width) :
-			img(_img),
-			width(_width)
+		SubImageAnalyzer(std::shared_ptr<ImageType> img,
+		                 unsigned int width) :
+			img(img),
+			width(width)
 		{
 			assert_is_multi_channel_image<ImageType>();
 		}

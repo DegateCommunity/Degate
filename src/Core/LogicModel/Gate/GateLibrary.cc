@@ -33,17 +33,17 @@ GateLibrary::~GateLibrary()
 {
 }
 
-DeepCopyable_shptr GateLibrary::cloneShallow() const
+DeepCopyable_shptr GateLibrary::clone_shallow() const
 {
 	return std::make_shared<GateLibrary>();
 }
 
-void GateLibrary::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void GateLibrary::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<GateLibrary>(dest);
 	std::for_each(templates.begin(), templates.end(), [&](const gate_lib_collection_t::value_type& v)
 	{
-		clone->templates[v.first] = std::dynamic_pointer_cast<GateTemplate>(v.second->cloneDeep(oldnew));
+		clone->templates[v.first] = std::dynamic_pointer_cast<GateTemplate>(v.second->clone_deep(oldnew));
 	});
 }
 

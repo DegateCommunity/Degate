@@ -26,19 +26,19 @@
 
 using namespace degate;
 
-Gate::Gate(float _min_x, float _max_x, float _min_y, float _max_y,
-           ORIENTATION _orientation) :
-	Rectangle(_min_x, _max_x, _min_y, _max_y),
-	orientation(_orientation),
+Gate::Gate(float min_x, float max_x, float min_y, float max_y,
+           ORIENTATION orientation) :
+	Rectangle(min_x, max_x, min_y, max_y),
+	orientation(orientation),
 	template_type_id(0)
 {
 }
 
 Gate::Gate(BoundingBox const& bounding_box,
-           ORIENTATION _orientation):
+           ORIENTATION orientation):
 	Rectangle(bounding_box.get_min_x(), bounding_box.get_max_x(),
 	          bounding_box.get_min_y(), bounding_box.get_max_y()),
-	orientation(_orientation),
+	orientation(orientation),
 	template_type_id(0)
 {
 }
@@ -49,27 +49,27 @@ Gate::~Gate()
 	if (gate_template != nullptr) remove_template();
 }
 
-DeepCopyable_shptr Gate::cloneShallow() const
+DeepCopyable_shptr Gate::clone_shallow() const
 {
 	auto clone = std::make_shared<Gate>(get_bounding_box(), orientation);
 	clone->template_type_id = template_type_id;
 	return clone;
 }
 
-void Gate::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Gate::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Gate>(dest);
 
-	PlacedLogicModelObject::cloneDeepInto(clone, oldnew);
-	Rectangle::cloneDeepInto(clone, oldnew);
+    PlacedLogicModelObject::clone_deep_into(clone, oldnew);
+    Rectangle::clone_deep_into(clone, oldnew);
 
 	if (gate_template.get() != nullptr)
 	{
-		clone->gate_template = std::dynamic_pointer_cast<GateTemplate>(gate_template->cloneDeep(oldnew));
+		clone->gate_template = std::dynamic_pointer_cast<GateTemplate>(gate_template->clone_deep(oldnew));
 	}
 	std::for_each(gate_ports.begin(), gate_ports.end(), [&](const GatePort_shptr& d)
 	{
-		clone->gate_ports.insert(std::dynamic_pointer_cast<GatePort>(d->cloneDeep(oldnew)));
+		clone->gate_ports.insert(std::dynamic_pointer_cast<GatePort>(d->clone_deep(oldnew)));
 	});
 }
 
@@ -210,9 +210,9 @@ bool Gate::has_template_port(GateTemplatePort_shptr template_port) const
 }
 
 
-void Gate::set_orientation(ORIENTATION _orientation)
+void Gate::set_orientation(ORIENTATION orientation)
 {
-	orientation = _orientation;
+	this->orientation = orientation;
 }
 
 Gate::ORIENTATION Gate::get_orientation() const

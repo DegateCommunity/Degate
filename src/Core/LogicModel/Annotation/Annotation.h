@@ -106,15 +106,15 @@ namespace degate
 		 * Create a new annotation.
 		 */
 
-		Annotation(float _min_x, float _max_x, float _min_y, float _max_y,
-		           class_id_t _class_id = UNDEFINED);
+		Annotation(float min_x, float max_x, float min_y, float max_y,
+                   class_id_t class_id = UNDEFINED);
 
 		/**
 		 * Create a new annotation.
 		 */
 
 		Annotation(BoundingBox const& bbox,
-		           class_id_t _class_id = UNDEFINED);
+		           class_id_t class_id = UNDEFINED);
 
 
 		/**
@@ -124,8 +124,8 @@ namespace degate
 		virtual ~Annotation();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**
@@ -138,7 +138,7 @@ namespace degate
 		 * Set the class ID for an annotation.
 		 */
 
-		virtual void set_class_id(class_id_t _class_id);
+		virtual void set_class_id(class_id_t class_id);
 
 		/**
 		 * Get a human readable string that describes the whole

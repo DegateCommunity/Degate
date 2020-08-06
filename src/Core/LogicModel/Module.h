@@ -92,7 +92,7 @@ namespace degate
 		 */
 
 		Module(std::string const& module_name = "",
-		       std::string const& _entity_name = "",
+		       std::string const& entity_name = "",
 		       bool is_root = false);
 
 		/**
@@ -102,8 +102,8 @@ namespace degate
 		virtual ~Module();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**

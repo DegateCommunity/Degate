@@ -72,8 +72,8 @@ namespace degate
 	template <typename T>
 	class QuadTree
 	{
-		friend class region_iterator<T>;
-		//    friend class down_iterator<T>;
+		friend class RegionIterator<T>;
+		//    friend class DownIterator<T>;
 
 	private:
 
@@ -194,39 +194,39 @@ namespace degate
 		 * Get an interator to iterate over quadtree nodes down to the leafes.
 		 */
 
-		//    down_iterator<T> down_iter_begin();
+		//    DownIterator<T> down_iter_begin();
 
 		/**
 		 * Get an end marker for the iteration
 		 * @see down_iter_begin()
 		 */
 
-		//    down_iterator<T> down_iter_end();
+		//    DownIterator<T> down_iter_end();
 
 		/**
 		 * Get a region iterator to iterate over quatree objects.
 		 */
 
 
-		region_iterator<T> region_iter_begin(int min_x, int max_x, int min_y, int max_y);
+		RegionIterator<T> region_iter_begin(int min_x, int max_x, int min_y, int max_y);
 
 		/**
 		 * Get a region iterator to iterate over quatree objects.
 		 */
 
-		region_iterator<T> region_iter_begin(BoundingBox const& bbox);
+		RegionIterator<T> region_iter_begin(BoundingBox const& bbox);
 
 		/**
 		 * Get a region iterator to iterate over the complete quatree.
 		 */
 
-		region_iterator<T> region_iter_begin();
+		RegionIterator<T> region_iter_begin();
 
 		/**
 		 * Get an end marker for the region iteration.
 		 */
 
-		region_iterator<T> region_iter_end();
+		RegionIterator<T> region_iter_end();
 
 
 		/**
@@ -251,13 +251,13 @@ namespace degate
 	}
 
 	template <typename T>
-	QuadTree<T>::QuadTree(BoundingBox const& box, QuadTree* parent, std::string _node_name, int max_entries)
+	QuadTree<T>::QuadTree(BoundingBox const& box, QuadTree* parent, std::string node_name, int max_entries)
 	{
 		this->box = box;
 		this->max_entries = max_entries;
 		this->parent = parent;
 
-		node_name = parent->node_name + std::string("/") + _node_name;
+		this->node_name = parent->node_name + std::string("/") + node_name;
 	}
 
 	template <typename T>
@@ -505,39 +505,39 @@ namespace degate
 
 	/*
 	template <typename T>
-	down_iterator<T> QuadTree<T>::down_iter_begin() {
-	  return down_iterator<T>(this);
+	DownIterator<T> QuadTree<T>::down_iter_begin() {
+	  return DownIterator<T>(this);
 	}
   
 	template <typename T>
-	down_iterator<T> QuadTree<T>::down_iter_end() {
-	  return down_iterator<T>();
+	DownIterator<T> QuadTree<T>::down_iter_end() {
+	  return DownIterator<T>();
 	}
 	*/
 
 	template <typename T>
-	region_iterator<T> QuadTree<T>::region_iter_begin(int min_x, int max_x, int min_y, int max_y)
+	RegionIterator<T> QuadTree<T>::region_iter_begin(int min_x, int max_x, int min_y, int max_y)
 	{
 		BoundingBox bbox(min_x, max_x, min_y, max_y);
 		return region_iter_begin(bbox);
 	}
 
 	template <typename T>
-	region_iterator<T> QuadTree<T>::region_iter_begin(BoundingBox const& bbox)
+	RegionIterator<T> QuadTree<T>::region_iter_begin(BoundingBox const& bbox)
 	{
-		return region_iterator<T>(this, bbox);
+		return RegionIterator<T>(this, bbox);
 	}
 
 	template <typename T>
-	region_iterator<T> QuadTree<T>::region_iter_begin()
+	RegionIterator<T> QuadTree<T>::region_iter_begin()
 	{
-		return region_iterator<T>(this, box);
+		return RegionIterator<T>(this, box);
 	}
 
 	template <typename T>
-	region_iterator<T> QuadTree<T>::region_iter_end()
+	RegionIterator<T> QuadTree<T>::region_iter_end()
 	{
-		return region_iterator<T>();
+		return RegionIterator<T>();
 	}
 
 

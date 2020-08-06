@@ -19,8 +19,8 @@
 
 */
 
-#ifndef ___WORKSPACEWIRES_H__
-#define ___WORKSPACEWIRES_H__
+#ifndef __WORKSPACEWIRES_H__
+#define __WORKSPACEWIRES_H__
 
 #include <GUI/Workspace/WorkspaceElement.h>
 #include <Core/LogicModel/Wire/Wire.h>
@@ -91,4 +91,4 @@ namespace degate
     };
 }
 
-#endif //___WORKSPACEWIRES_H__
+#endif //__WORKSPACEWIRES_H__

@@ -32,10 +32,10 @@ namespace degate
 	{
 	private:
 
-		unsigned int width;
-		unsigned int height;
-		unsigned int count;
-		Region_shptr_list mainList;
+		unsigned int      width;
+		unsigned int      height;
+		unsigned int      count;
+		Region_shptr_list main_list;
 
 	public:
 
@@ -49,9 +49,9 @@ namespace degate
 			return height;
 		}
 
-		bool isEmpty()
+		bool is_empty()
 		{
-			if (mainList.empty())
+			if (main_list.empty())
 				return true;
 			else
 				return false;
@@ -59,97 +59,97 @@ namespace degate
 
 		void free_all_region()
 		{
-			Region_shptr_list::iterator iter_Region_shptr;
-			unsigned int cnt;
+			Region_shptr_list::iterator iter_region_shptr;
+			unsigned int                cnt;
 
 			debug(TM, "free all region start");
-			for (iter_Region_shptr = mainList.begin(); iter_Region_shptr != mainList.end(); ++iter_Region_shptr)
+			for (iter_region_shptr = main_list.begin(); iter_region_shptr != main_list.end(); ++iter_region_shptr)
 			{
 				++cnt;
-				(*iter_Region_shptr)->free_region();
+				(*iter_region_shptr)->free_region();
 			}
 
-			mainList.erase(mainList.begin(), mainList.end());
+			main_list.erase(main_list.begin(), main_list.end());
 			print_region();
 		}
 
 		void set_region(Region_shptr region)
 		{
-			Region_shptr_list::iterator iter_Region_shptr, iter_merged;
-			Region_shptr tmpRegion = nullptr;
-			unsigned int region_gap;
-			unsigned int tmpY, tmpX_start, tmpX_end;
-			unsigned int cnt = 0;
+			Region_shptr_list::iterator iter_region_shptr, iter_merged;
+			Region_shptr                tmp_region = nullptr;
+			unsigned int                region_gap;
+			unsigned int                tmp_y, tmp_x_start, tmp_x_end;
+			unsigned int                cnt        = 0;
 
-			if (isEmpty())
+			if (is_empty())
 			{
-				tmpY = region->get_y_min();
-				tmpX_start = ((((region->get_y_list()).begin())->x_list).begin())->x_start;
-				tmpX_end = ((((region->get_y_list()).begin())->x_list).begin())->x_end;
-				mainList.push_back(region);
-				debug(TM, "create list: y = %u, x1 = %u, x2 = %u", tmpY, tmpX_start, tmpX_end);
+                tmp_y       = region->get_y_min();
+                tmp_x_start = ((((region->get_y_list()).begin())->x_list).begin())->x_start;
+                tmp_x_end   = ((((region->get_y_list()).begin())->x_list).begin())->x_end;
+				main_list.push_back(region);
+				debug(TM, "create list: y = %u, x1 = %u, x2 = %u", tmp_y, tmp_x_start, tmp_x_end);
 				return;
 			}
 
 			//made of one line region
 			if (region->get_y_min() == region->get_y_max())
 			{
-				tmpY = region->get_y_min();
-				tmpX_start = ((((region->get_y_list()).begin())->x_list).begin())->x_start;
-				tmpX_end = ((((region->get_y_list()).begin())->x_list).begin())->x_end;
-				//debug(TM, "y = %u, x1 = %u, x2 = %u", tmpY, tmpX_start, tmpX_end);
+                tmp_y                  = region->get_y_min();
+                tmp_x_start            = ((((region->get_y_list()).begin())->x_list).begin())->x_start;
+                tmp_x_end              = ((((region->get_y_list()).begin())->x_list).begin())->x_end;
+				//debug(TM, "y = %u, x1 = %u, x2 = %u", tmp_y, tmp_x_start, tmp_x_end);
 				//to check all region object
-				for (iter_Region_shptr = mainList.begin();
-				     iter_Region_shptr != mainList.end();)
+				for (iter_region_shptr = main_list.begin();
+                     iter_region_shptr != main_list.end();)
 				{
 					++cnt;
-					region_gap = region->get_y_min() - (*iter_Region_shptr)->get_y_max();
+					region_gap = region->get_y_min() - (*iter_region_shptr)->get_y_max();
 					//debug(TM, "region_gap : %u", region_gap);
 					//between region's y_bottom and line gap is 0 or 1
 					if (region_gap == 0 || region_gap == 1)
 					{
 						//determine whether the region can includes line or not  
-						if ((*iter_Region_shptr)->isOverlap(tmpY, tmpX_start, tmpX_end))
+						if ((*iter_region_shptr)->is_overlap(tmp_y, tmp_x_start, tmp_x_end))
 						{
 							//if there are more overlapping regions, save current region to merge them 
-							if (tmpRegion == nullptr)
+							if (tmp_region == nullptr)
 							{
 								//debug(TM, "line added first detected region");
-								tmpRegion = *iter_Region_shptr;
-								tmpRegion->add_line(tmpY, tmpX_start, tmpX_end);
-								++iter_Region_shptr;
+								tmp_region = *iter_region_shptr;
+								tmp_region->add_line(tmp_y, tmp_x_start, tmp_x_end);
+								++iter_region_shptr;
 							}
 							else
 							{
 								//one line involve two region, should merge them
 								//debug(TM, "region merged");
-								tmpRegion->merge(*iter_Region_shptr);
-								(*iter_Region_shptr)->free_region();
-								iter_merged = iter_Region_shptr;
-								++iter_Region_shptr;
-								mainList.erase(iter_merged);
-								//tmpRegion->add_line(tmpY, tmpX_start, tmpX_end);
+								tmp_region->merge(*iter_region_shptr);
+								(*iter_region_shptr)->free_region();
+								iter_merged = iter_region_shptr;
+								++iter_region_shptr;
+								main_list.erase(iter_merged);
+								//tmp_region->add_line(tmp_y, tmp_x_start, tmp_x_end);
 							}
 						}
 						else
 						{
 							//nothing to do. return to loop
 							//debug(TM, "not overlap region");
-							++iter_Region_shptr;
+							++iter_region_shptr;
 						}
 					}
 					else
 					{
 						//nothing to do. return to loop
-						++iter_Region_shptr;
+						++iter_region_shptr;
 					}
 				}
 				//debug(TM, "number of checked regions : %u", cnt);
 				//check all region, but there is no matching region. create new region
-				if (tmpRegion == nullptr)
+				if (tmp_region == nullptr)
 				{
 					//debug(TM, "Region's first line");
-					mainList.push_back(region);
+					main_list.push_back(region);
 				}
 				//set region that is made of 2 or more lines.
 			}
@@ -163,9 +163,9 @@ namespace degate
 
 		void set_region(unsigned int Y, unsigned int Xs, unsigned int Xe)
 		{
-			Region_shptr tmpRegion(new Region(Y, Xs, Xe));
+			Region_shptr tmp_region(new Region(Y, Xs, Xe));
 
-			set_region(tmpRegion);
+			set_region(tmp_region);
 		}
 
 		void print_region()
@@ -173,8 +173,8 @@ namespace degate
 			Region_shptr_list::iterator iter_region_shptr;
 			unsigned int cnt = 0;
 
-			for (iter_region_shptr = mainList.begin();
-			     iter_region_shptr != mainList.end();
+			for (iter_region_shptr = main_list.begin();
+                 iter_region_shptr != main_list.end();
 			     ++iter_region_shptr)
 			{
 				++cnt;
@@ -190,10 +190,10 @@ namespace degate
 
 		unsigned int get_count()
 		{
-			Region_shptr_list::iterator iter_Region_shptr;
-			unsigned int cnt = 0;
+			Region_shptr_list::iterator iter_region_shptr;
+			unsigned int                cnt = 0;
 
-			for (iter_Region_shptr = mainList.begin(); iter_Region_shptr != mainList.end(); ++iter_Region_shptr)
+			for (iter_region_shptr = main_list.begin(); iter_region_shptr != main_list.end(); ++iter_region_shptr)
 			{
 				++cnt;
 			}
@@ -203,9 +203,9 @@ namespace degate
 
 		void save_region()
 		{
-			Region_shptr_list::iterator iter_Region_shptr;
-			unsigned int chk = count;
-			unsigned int i = 0, k = 0;
+			Region_shptr_list::iterator iter_region_shptr;
+			unsigned int                chk = count;
+			unsigned int                i   = 0, k = 0;
 
 			do
 			{
@@ -213,49 +213,49 @@ namespace degate
 				++i;
 			}
 			while (chk > 9);
-			for (iter_Region_shptr = mainList.begin(); iter_Region_shptr != mainList.end(); ++iter_Region_shptr)
+			for (iter_region_shptr          = main_list.begin(); iter_region_shptr != main_list.end(); ++iter_region_shptr)
 			{
 				TileImage_GS_DOUBLE_shptr j(new TileImage_GS_DOUBLE(width, height));
 				char* buf = new char[i];
 				sprintf(buf, "%d", k);
-				(*iter_Region_shptr)->draw_region(join_pathes("/tmp", buf), j);
+				(*iter_region_shptr)->draw_region(join_pathes("/tmp", buf), j);
 				k++;
 			}
 		}
 
 		void application_grid(unsigned int diameter)
 		{
-			Region_shptr_list::iterator iter_Region_shptr, iter_erase;
-			unsigned int cnt = 0;
+			Region_shptr_list::iterator iter_region_shptr, iter_erase;
+			unsigned int                cnt = 0;
 
-			for (iter_Region_shptr = mainList.begin(); iter_Region_shptr != mainList.end();)
+			for (iter_region_shptr = main_list.begin(); iter_region_shptr != main_list.end();)
 			{
 				debug(TM, "%d", cnt++);
-				if (!(*iter_Region_shptr)->isWire(diameter))
+				if (!(*iter_region_shptr)->is_wire(diameter))
 				{
-					(*iter_Region_shptr)->free_region();
-					iter_erase = iter_Region_shptr;
-					++iter_Region_shptr;
-					mainList.erase(iter_erase);
+					(*iter_region_shptr)->free_region();
+					iter_erase = iter_region_shptr;
+					++iter_region_shptr;
+					main_list.erase(iter_erase);
 				}
 				else
 				{
-					++iter_Region_shptr;
+					++iter_region_shptr;
 				}
 			}
 		}
 
 		TileImage_GS_DOUBLE_shptr get_binary()
 		{
-			Region_shptr_list::iterator iter_Region_shptr;
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
-			TileImage_GS_DOUBLE_shptr binary(new TileImage_GS_DOUBLE(get_width(), get_height()));
+			Region_shptr_list::iterator iter_region_shptr;
+			region_line_list::iterator  iter_region_line;
+			end_point_list::iterator    iter_end_point;
+			TileImage_GS_DOUBLE_shptr   binary(new TileImage_GS_DOUBLE(get_width(), get_height()));
 
-			for (iter_Region_shptr = mainList.begin(); iter_Region_shptr != mainList.end(); ++iter_Region_shptr)
+			for (iter_region_shptr = main_list.begin(); iter_region_shptr != main_list.end(); ++iter_region_shptr)
 			{
-				//debug(TM, "top = %d, bot = %d", (*iter_Region_shptr)->get_y_min(), (*iter_Region_shptr)->get_y_max());
-				(*iter_Region_shptr)->draw_region(binary);
+				//debug(TM, "top = %d, bot = %d", (*iter_region_shptr)->get_y_min(), (*iter_region_shptr)->get_y_max());
+				(*iter_region_shptr)->draw_region(binary);
 			}
 
 			return binary;
@@ -263,23 +263,23 @@ namespace degate
 
 		TileImage_GS_DOUBLE_shptr get_unfixed_grid_binary(unsigned int diameter)
 		{
-			Region_shptr_list::iterator iter_Region_shptr;
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
-			TileImage_GS_DOUBLE_shptr binary(new TileImage_GS_DOUBLE(get_width(), get_height()));
+			Region_shptr_list::iterator iter_region_shptr;
+			region_line_list::iterator  iter_region_line;
+			end_point_list::iterator    iter_end_point;
+			TileImage_GS_DOUBLE_shptr   binary(new TileImage_GS_DOUBLE(get_width(), get_height()));
 
-			for (iter_Region_shptr = mainList.begin(); iter_Region_shptr != mainList.end(); ++iter_Region_shptr)
+			for (iter_region_shptr = main_list.begin(); iter_region_shptr != main_list.end(); ++iter_region_shptr)
 			{
-				(*iter_Region_shptr)->draw_unfixed_grid_region(binary, diameter);
+				(*iter_region_shptr)->draw_unfixed_grid_region(binary, diameter);
 			}
 
 			return binary;
 		}
 
-		RegionList(unsigned int _width, unsigned int _height)
+		RegionList(unsigned int width, unsigned int height)
 		{
-			width = _width;
-			height = _height;
+			this->width = width;
+			this->height = height;
 			count = 0;
 			debug(TM, "object constructor");
 		}

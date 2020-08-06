@@ -35,8 +35,8 @@ void GateTemplate::decrement_reference_counter()
 }
 
 
-GateTemplate::GateTemplate(float _min_x, float _max_x, float _min_y, float _max_y) :
-	bounding_box(_min_x, _max_x, _min_y, _max_y), reference_counter(0)
+GateTemplate::GateTemplate(float min_x, float max_x, float min_y, float max_y) :
+        bounding_box(min_x, max_x, min_y, max_y), reference_counter(0)
 {
 }
 
@@ -55,7 +55,7 @@ GateTemplate::~GateTemplate()
 {
 }
 
-DeepCopyable_shptr GateTemplate::cloneShallow() const
+DeepCopyable_shptr GateTemplate::clone_shallow() const
 {
 	auto clone = std::make_shared<GateTemplate>();
 	clone->bounding_box = bounding_box;
@@ -68,7 +68,7 @@ DeepCopyable_shptr GateTemplate::cloneShallow() const
 /**
  * @todo Determine whether 'images' must be deep-cloned. (For now, it is \em not deep-cloned.)
  */
-void GateTemplate::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void GateTemplate::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<GateTemplate>(dest);
 
@@ -76,14 +76,14 @@ void GateTemplate::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) cons
 	std::transform(ports.begin(), ports.end(), std::inserter(clone->ports, clone->ports.begin()),
 	               [&](const GateTemplatePort_shptr& v)
 	               {
-		               return std::dynamic_pointer_cast<GateTemplatePort>(v->cloneDeep(oldnew));
+		               return std::dynamic_pointer_cast<GateTemplatePort>(v->clone_deep(oldnew));
 	               });
 
 	// images
 	clone->images = images;
 
-	ColoredObject::cloneDeepInto(dest, oldnew);
-	LogicModelObjectBase::cloneDeepInto(dest, oldnew);
+    ColoredObject::clone_deep_into(dest, oldnew);
+    LogicModelObjectBase::clone_deep_into(dest, oldnew);
 }
 
 float GateTemplate::get_width() const

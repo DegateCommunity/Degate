@@ -64,7 +64,7 @@ namespace degate
 		 * Construct a new net.
 		 */
 
-		LookupSubcircuit(LogicModel_shptr _lmodel) : lmodel(_lmodel)
+		LookupSubcircuit(LogicModel_shptr lmodel) : lmodel(lmodel)
 		{
 		}
 

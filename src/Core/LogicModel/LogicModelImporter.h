@@ -69,29 +69,29 @@ namespace degate
 
 		/**
 		 * Create a logic model importer.
-		 * @param _width The geometrical width of the logic model.
-		 * @param _height The geometrical height of the logic model.
-		 * @param _gate_library The gate library to resolve references to gate templates.
+		 * @param width The geometrical width of the logic model.
+		 * @param height The geometrical height of the logic model.
+		 * @param gate_library The gate library to resolve references to gate templates.
 		 *              The gate library is stored into the logic model. You should not set it by yourself.
 		 */
 
-		LogicModelImporter(unsigned int _width, unsigned int _height, GateLibrary_shptr _gate_library) :
-			width(_width),
-			height(_height),
-			gate_library(_gate_library)
+		LogicModelImporter(unsigned int width, unsigned int height, GateLibrary_shptr gate_library) :
+			width(width),
+			height(height),
+			gate_library(gate_library)
 		{
 		}
 
 
 		/**
 		 * Create a logic model importer. The gate library is not used to resolve references.
-		 * @param _width The geometrical width of the logic model.
-		 * @param _height The geometrical height of the logic model.
+		 * @param width The geometrical width of the logic model.
+		 * @param height The geometrical height of the logic model.
 		 */
 
-		LogicModelImporter(unsigned int _width, unsigned int _height) :
-			width(_width),
-			height(_height)
+		LogicModelImporter(unsigned int width, unsigned int height) :
+			width(width),
+			height(height)
 		{
 		}
 

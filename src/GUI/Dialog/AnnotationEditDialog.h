@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __ANNOTATIONEDITDIALOG__
-#define __ANNOTATIONEDITDIALOG__
+#ifndef __ANNOTATIONEDITDIALOG_H__
+#define __ANNOTATIONEDITDIALOG_H__
 
 #include "Core/Project/Project.h"
 #include "ColorPickerDialog.h"

@@ -44,13 +44,13 @@ namespace degate
 		 * The constructor.
 		 */
 
-		IPThresholding(double _threshold = 0.5) :
+		IPThresholding(double threshold = 0.5) :
 			ImageProcessorBase("IPThresholding",
 			                   "Binarize an image.",
 			                   false,
 			                   typeid(typename ImageTypeIn::pixel_type),
 			                   typeid(typename ImageTypeOut::pixel_type)),
-			threshold(_threshold)
+			threshold(threshold)
 		{
 		}
 
@@ -63,15 +63,13 @@ namespace degate
 		}
 
 
-		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		virtual ImageBase_shptr run(ImageBase_shptr in)
 		{
-			assert(_in != nullptr);
+			assert(in != nullptr);
 
-			std::shared_ptr<ImageTypeIn> img_in =
-				std::dynamic_pointer_cast<ImageTypeIn>(_in);
+			std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
 
-			std::shared_ptr<ImageTypeOut>
-				img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
+			std::shared_ptr<ImageTypeOut> img_out(new ImageTypeOut(in->get_width(), in->get_height()));
 
 			assert(img_in != nullptr);
 			assert(img_out != nullptr);

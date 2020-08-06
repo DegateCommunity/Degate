@@ -174,17 +174,17 @@ namespace degate
 	};
 
 	template <typename T>
-	MemoryMap<T>::MemoryMap(unsigned int _width, unsigned int _height) :
-		width(_width), height(_height),
-		storage_type(MAP_STORAGE_TYPE_MEM),
-		filename(),
-		filesize(0),
-		mem_size(_width * _height * sizeof(T)),
-		file(0),
+	MemoryMap<T>::MemoryMap(unsigned int width, unsigned int height) :
+		width(width), height(height),
+        storage_type(MAP_STORAGE_TYPE_MEM),
+        filename(),
+        filesize(0),
+        mem_size(width * height * sizeof(T)),
+        file(0),
 #ifdef SYS_WINDOWS
 		mem_file(nullptr),
 #endif
-		mem_view(nullptr)
+        mem_view(nullptr)
 	{
 		assert(width > 0 && height > 0);
 
@@ -193,18 +193,18 @@ namespace degate
 	}
 
 	template <typename T>
-	MemoryMap<T>::MemoryMap(unsigned int _width, unsigned int _height,
-	                        MAP_STORAGE_TYPE mode, std::string const& file_to_map) :
-		width(_width), height(_height),
-		storage_type(mode),
-		filename(file_to_map),
-		file(0),
-		filesize(0),
-		mem_size(_width * _height * sizeof(T)),
+	MemoryMap<T>::MemoryMap(unsigned int width, unsigned int height,
+                            MAP_STORAGE_TYPE mode, std::string const& file_to_map) :
+		width(width), height(height),
+        storage_type(mode),
+        filename(file_to_map),
+        file(0),
+        filesize(0),
+        mem_size(width * height * sizeof(T)),
 #ifdef SYS_WINDOWS
 		mem_file(nullptr),
 #endif
-		mem_view(nullptr)
+        mem_view(nullptr)
 	{
 		assert(mode == MAP_STORAGE_TYPE_PERSISTENT_FILE || mode == MAP_STORAGE_TYPE_TEMP_FILE);
 

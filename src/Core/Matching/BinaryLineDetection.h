@@ -43,11 +43,11 @@ namespace degate
 		double sigma;
 		bool has_path;
 
-		TileImage_GS_DOUBLE_shptr grayImage;
-		TileImage_GS_DOUBLE_shptr binImage;
-		TileImage_GS_DOUBLE_shptr meanImage;
-		TileImage_GS_DOUBLE_shptr regionImage;
-		RegionList region;
+		TileImage_GS_DOUBLE_shptr gray_image;
+		TileImage_GS_DOUBLE_shptr bin_image;
+		TileImage_GS_DOUBLE_shptr mean_image;
+		TileImage_GS_DOUBLE_shptr region_image;
+		RegionList                region;
 
 		std::string directory; // path for storing debug images
 

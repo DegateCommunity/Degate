@@ -6,8 +6,8 @@
 
  */
 
-#ifndef ADABOOST_HPP
-#define ADABOOST_HPP
+#ifndef __ADABOOST_HPP__
+#define __ADABOOST_HPP__
 
 #include <vector>
 #include <string>
@@ -133,7 +133,7 @@ public:
 // the utility function that tests a (strong) classifier over all the test data
 
 template <class T>
-void testClassifier(Classifier<T>* cls, vector<T*> data, vector<int> label, float& fpos, float& fneg)
+void test_classifier(Classifier<T>* cls, vector<T*> data, vector<int> label, float& fpos, float& fneg)
 {
 	int pos = 0, neg = 0;
 	fpos = fneg = 0;

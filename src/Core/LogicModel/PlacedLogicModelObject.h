@@ -85,7 +85,7 @@ namespace degate
 
 		~PlacedLogicModelObject() override;
 
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 
 		/**
 		 * A placed object is highlightable. You can ask for its

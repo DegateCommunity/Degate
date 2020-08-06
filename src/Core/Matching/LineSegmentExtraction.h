@@ -304,18 +304,18 @@ namespace degate
 		unsigned int border;
 
 	public:
-		LineSegmentExtraction(std::shared_ptr<ImageType> _img,
-		                      unsigned int _search_radius_along,
-		                      unsigned int _search_radius_across,
-		                      unsigned int _border) :
-			width(_img->get_width()),
-			height(_img->get_height()),
-			img(_img),
+		LineSegmentExtraction(std::shared_ptr<ImageType> img,
+		                      unsigned int search_radius_along,
+		                      unsigned int search_radius_across,
+		                      unsigned int border) :
+			width(img->get_width()),
+			height(img->get_height()),
+			img(img),
 			processed(new ImageType(width, height)),
 			line_segments(new LineSegmentMap()),
-			search_radius_along(_search_radius_along),
-			search_radius_across(_search_radius_across),
-			border(_border)
+			search_radius_along(search_radius_along),
+			search_radius_across(search_radius_across),
+			border(border)
 		{
 			copy_image<ImageType, ImageType>(processed, img);
 		}

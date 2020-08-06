@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __WORKSPACEEMARKER_H__
-#define __WORKSPACEEMARKER_H__
+#ifndef __WORKSPACEEMARKERS_H__
+#define __WORKSPACEEMARKERS_H__
 
 #include <GUI/Workspace/WorkspaceElement.h>
 #include <Core/LogicModel/EMarker/EMarker.h>
@@ -98,4 +98,4 @@ namespace degate
     };
 }
 
-#endif //__WORKSPACEEMARKER_H__
+#endif //__WORKSPACEEMARKERS_H__

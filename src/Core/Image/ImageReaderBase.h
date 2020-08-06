@@ -52,7 +52,7 @@ namespace degate
 		 * This method should be called by derived image readers to set
 		 * the image size.
 		 */
-		void set_width(unsigned int _width) { width = _width; }
+		void set_width(unsigned int width) { this->width = width; }
 
 
 		/**
@@ -60,7 +60,7 @@ namespace degate
 		 * This method should be called by derived image readers to set
 		 * the image size.
 		 */
-		void set_height(unsigned int _height) { height = _height; }
+		void set_height(unsigned int height) { this->height = height; }
 
 
 	public:
@@ -69,8 +69,8 @@ namespace degate
 		 * Constructor.
 		 */
 
-		ImageReaderBase(std::string const& _filename) :
-			filename(_filename),
+		ImageReaderBase(std::string const& filename) :
+			filename(filename),
 			width(0),
 			height(0)
 		{

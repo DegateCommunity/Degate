@@ -29,7 +29,7 @@
 namespace degate
 {
 	template <typename T>
-	class region_iterator : public std::iterator<std::forward_iterator_tag, T>
+	class RegionIterator : public std::iterator<std::forward_iterator_tag, T>
 	{
 	private:
 		QuadTree<T>* node;
@@ -48,17 +48,17 @@ namespace degate
 		void skip_non_matching_children();
 
 	public:
-		region_iterator();
-		region_iterator(QuadTree<T>* node, BoundingBox const& bbox);
+		RegionIterator();
+		RegionIterator(QuadTree<T>* node, BoundingBox const& bbox);
 
-		virtual ~region_iterator()
+		virtual ~RegionIterator()
 		{
 		}
 
-		virtual region_iterator& operator=(const region_iterator& other);
-		virtual region_iterator& operator++();
-		virtual bool operator==(const region_iterator& other) const;
-		virtual bool operator!=(const region_iterator& other) const;
+		virtual RegionIterator& operator=(const RegionIterator& other);
+		virtual RegionIterator& operator++();
+		virtual bool operator==(const RegionIterator& other) const;
+		virtual bool operator!=(const RegionIterator& other) const;
 		virtual T* operator->() const;
 		virtual T operator*() const;
 	};
@@ -68,27 +68,27 @@ namespace degate
 	 * Construct an iterator end.
 	 */
 	template <typename T>
-	region_iterator<T>::region_iterator() :
+	RegionIterator<T>::RegionIterator() :
 		node(nullptr), done(true)
 	{
 	}
 
 	template <typename T>
-	region_iterator<T>::region_iterator(QuadTree<T>* _node, BoundingBox const& bbox) :
+	RegionIterator<T>::RegionIterator(QuadTree<T>* node, BoundingBox const& bbox) :
 		node(nullptr),
 		done(false),
 		search_bb(bbox)
 	{
-		assert(_node != nullptr);
+		assert(node != nullptr);
 
-		open_list.push_back(_node);
+		open_list.push_back(node);
 		next_node();
 		check_next_node();
 		skip_non_matching_children();
 	}
 
 	template <typename T>
-	void region_iterator<T>::next_node()
+	void RegionIterator<T>::next_node()
 	{
 		assert(node == nullptr);
 
@@ -142,7 +142,7 @@ namespace degate
 	}
 
 	template <typename T>
-	void region_iterator<T>::check_next_node()
+	void RegionIterator<T>::check_next_node()
 	{
 		while (!done && children_iter == children_iter_end)
 		{
@@ -152,7 +152,7 @@ namespace degate
 	}
 
 	template <typename T>
-	void region_iterator<T>::next_child()
+	void RegionIterator<T>::next_child()
 	{
 		if (!done)
 		{
@@ -164,7 +164,7 @@ namespace degate
 
 	// if the precond is stay on a bounding-box matching child, then postcond is stay on it, too
 	template <typename T>
-	void region_iterator<T>::skip_non_matching_children()
+	void RegionIterator<T>::skip_non_matching_children()
 	{
 #ifdef DEBUG_SHOW_ITER
     debug(TM, "in increment() done = %d, node = %p", done ? 1 : 0, node);
@@ -185,7 +185,7 @@ namespace degate
 
 
 	template <typename T>
-	region_iterator<T>& region_iterator<T>::operator++()
+	RegionIterator<T>& RegionIterator<T>::operator++()
 	{
 #ifdef DEBUG_SHOW_ITER
     debug(TM, "++ called");
@@ -196,7 +196,7 @@ namespace degate
 	}
 
 	template <typename T>
-	region_iterator<T>& region_iterator<T>::operator=(const region_iterator& other)
+	RegionIterator<T>& RegionIterator<T>::operator=(const RegionIterator& other)
 	{
 		node = other.node;
 		done = other.done;
@@ -207,7 +207,7 @@ namespace degate
 	}
 
 	template <typename T>
-	bool region_iterator<T>::operator==(const region_iterator& other) const
+	bool RegionIterator<T>::operator==(const RegionIterator& other) const
 	{
 		if (done == true && other.done == true)
 			return true;
@@ -220,19 +220,19 @@ namespace degate
 
 
 	template <typename T>
-	bool region_iterator<T>::operator!=(const region_iterator& other) const
+	bool RegionIterator<T>::operator!=(const RegionIterator& other) const
 	{
 		return !(*this == other);
 	}
 
 	template <typename T>
-	T* region_iterator<T>::operator->() const
+	T* RegionIterator<T>::operator->() const
 	{
 		return &*children_iter;
 	}
 
 	template <typename T>
-	T region_iterator<T>::operator*() const
+	T RegionIterator<T>::operator*() const
 	{
 		return *children_iter;
 	}

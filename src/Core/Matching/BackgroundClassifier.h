@@ -72,14 +72,14 @@ namespace degate
 	public:
 
 
-		BackgroundClassifier(std::shared_ptr<ImageType> _img,
-		                     unsigned int _width,
-		                     unsigned int _threshold,
-		                     std::string const& _name) :
-			img(_img),
-			width(_width),
-			threshold(_threshold),
-			cl_name(_name)
+		BackgroundClassifier(std::shared_ptr<ImageType> img,
+		                     unsigned int width,
+		                     unsigned int threshold,
+		                     std::string const& name) :
+			img(img),
+			width(width),
+			threshold(threshold),
+			cl_name(name)
 		{
 		}
 

@@ -54,9 +54,9 @@ namespace degate
 
 	private:
 
-		std::string _class_name;
-		std::string _description;
-		RC_SEVERITY _severity;
+		std::string class_name;
+		std::string description;
+		RC_SEVERITY severity;
 
 		container_type rc_violations;
 
@@ -72,9 +72,9 @@ namespace degate
 		RCBase(std::string const& class_name,
 		       std::string const& description,
 		       RC_SEVERITY severity = RC_ERROR) :
-			_class_name(class_name),
-			_description(description),
-			_severity(severity)
+                class_name(class_name),
+                description(description),
+                severity(severity)
 		{
 		}
 
@@ -106,12 +106,12 @@ namespace degate
 		 */
 		std::string get_rc_class_name() const
 		{
-			return _class_name;
+			return class_name;
 		}
 
 		RC_SEVERITY get_severity() const
 		{
-			return _severity;
+			return severity;
 		}
 
 	protected:

@@ -78,8 +78,8 @@ namespace degate
 		                   unsigned int median_filter_width = 3,
 		                   unsigned int blur_kernel_size = 10,
 		                   double sigma = 0.5,
-		                   double _hysteresis_min = 0.28,
-		                   double _hysteresis_max = 0.40);
+		                   double hysteresis_min = 0.28,
+		                   double hysteresis_max = 0.40);
 
 		~CannyEdgeDetection();
 

@@ -61,7 +61,7 @@ namespace degate
 		{
 		}
 
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 
 		bool in_shape(float x, float y, float max_distance = 0) const override;
 		bool in_bounding_box(BoundingBox const& bbox) const override;

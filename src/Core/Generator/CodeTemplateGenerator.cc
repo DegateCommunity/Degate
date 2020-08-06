@@ -27,12 +27,12 @@
 using namespace degate;
 using namespace boost;
 
-CodeTemplateGenerator::CodeTemplateGenerator(std::string const& _entity_name,
-                                             std::string const& _description,
-                                             std::string const& _logic_class) :
-	entity_name(_entity_name),
-	description(_description),
-	logic_class(_logic_class)
+CodeTemplateGenerator::CodeTemplateGenerator(std::string const& entity_name,
+                                             std::string const& description,
+                                             std::string const& logic_class) :
+	entity_name(entity_name),
+	description(description),
+	logic_class(logic_class)
 {
 }
 

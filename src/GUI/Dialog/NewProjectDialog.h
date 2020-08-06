@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __NEWPROJECTWINDOW_H__
-#define __NEWPROJECTWINDOW_H__
+#ifndef __NEWPROJECTDIALOG_H__
+#define __NEWPROJECTDIALOG_H__
 
 #include <QDialog>
 #include <QSpinBox>

@@ -58,7 +58,7 @@ Rectangle::~Rectangle()
 {
 }
 
-void Rectangle::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Rectangle::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Rectangle>(dest);
 	clone->bounding_box = bounding_box;

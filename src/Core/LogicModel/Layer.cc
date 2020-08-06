@@ -59,19 +59,19 @@ void Layer::remove_object(std::shared_ptr<PlacedLogicModelObject> o)
 	objects.erase(o->get_object_id());
 }
 
-Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE _layer_type) :
+Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE layer_type) :
 	quadtree(bbox, 100),
-	layer_type(_layer_type),
+	layer_type(layer_type),
 	layer_pos(0),
 	enabled(true),
 	layer_id(0)
 {
 }
 
-Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE _layer_type,
+Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE layer_type,
              BackgroundImage_shptr img) :
 	quadtree(bbox, 100),
-	layer_type(_layer_type),
+	layer_type(layer_type),
 	layer_pos(0),
 	enabled(true),
 	layer_id(0)
@@ -87,7 +87,7 @@ Layer::~Layer()
 /**
  * @todo Check whether scaling_manager can really be reused by clones without trouble.
  */
-DeepCopyable_shptr Layer::cloneShallow() const
+DeepCopyable_shptr Layer::clone_shallow() const
 {
 	auto clone = std::make_shared<Layer>(quadtree.get_bounding_box(), layer_type);
 	clone->layer_pos = layer_pos;
@@ -98,7 +98,7 @@ DeepCopyable_shptr Layer::cloneShallow() const
 	return clone;
 }
 
-void Layer::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Layer::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Layer>(dest);
 
@@ -107,13 +107,13 @@ void Layer::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 	quadtree.get_all_elements(quadtree_elems);
 	std::for_each(quadtree_elems.begin(), quadtree_elems.end(), [=,&clone](const quadtree_element_type& t)
 	{
-		clone->quadtree.insert(std::dynamic_pointer_cast<PlacedLogicModelObject>(t->cloneDeep(oldnew)));
+		clone->quadtree.insert(std::dynamic_pointer_cast<PlacedLogicModelObject>(t->clone_deep(oldnew)));
 	});
 
 	// objects
 	std::for_each(objects.begin(), objects.end(), [&](object_collection::value_type v)
 	{
-		clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->cloneDeep(oldnew));
+		clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->clone_deep(oldnew));
 	});
 }
 
@@ -138,9 +138,9 @@ const std::string Layer::get_layer_type_as_string() const
 	return get_layer_type_as_string(layer_type);
 }
 
-const std::string Layer::get_layer_type_as_string(LAYER_TYPE _layer_type)
+const std::string Layer::get_layer_type_as_string(LAYER_TYPE layer_type)
 {
-	switch (_layer_type)
+	switch (layer_type)
 	{
 	case METAL:
 		return std::string("metal");
@@ -169,9 +169,9 @@ Layer::LAYER_TYPE Layer::get_layer_type() const
 	return layer_type;
 }
 
-void Layer::set_layer_type(LAYER_TYPE _layer_type)
+void Layer::set_layer_type(LAYER_TYPE layer_type)
 {
-	layer_type = _layer_type;
+	this->layer_type = layer_type;
 }
 
 

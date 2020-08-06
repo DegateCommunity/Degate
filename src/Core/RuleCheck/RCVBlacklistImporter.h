@@ -39,10 +39,10 @@ namespace degate
 	private:
 
 		void parse_list(QDomElement const element, RCBase::container_type& blacklist);
-		LogicModel_shptr _lmodel;
+		LogicModel_shptr lmodel;
 
 	public:
-		RCVBlacklistImporter(LogicModel_shptr lmodel) : _lmodel(lmodel)
+		RCVBlacklistImporter(LogicModel_shptr lmodel) : lmodel(lmodel)
 		{
 		}
 

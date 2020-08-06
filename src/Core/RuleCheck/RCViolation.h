@@ -34,10 +34,10 @@ namespace degate
 	{
 	private:
 
-		PlacedLogicModelObject_shptr _obj;
-		std::string _problem_description;
-		std::string _rc_violation_class;
-		RC_SEVERITY _severity;
+		PlacedLogicModelObject_shptr obj;
+		std::string                  problem_description;
+		std::string                  rc_violation_class;
+		RC_SEVERITY                  severity;
 
 	public:
 
@@ -55,31 +55,31 @@ namespace degate
 		            std::string const& problem_description,
 		            std::string const& rc_violation_class,
 		            RC_SEVERITY severity = RC_ERROR) :
-			_obj(obj),
-			_problem_description(problem_description),
-			_rc_violation_class(rc_violation_class),
-			_severity(severity)
+                obj(obj),
+                problem_description(problem_description),
+                rc_violation_class(rc_violation_class),
+                severity(severity)
 		{
 		}
 
 		std::string get_problem_description() const
 		{
-			return _problem_description;
+			return problem_description;
 		}
 
 		std::string get_rc_violation_class() const
 		{
-			return _rc_violation_class;
+			return rc_violation_class;
 		}
 
 		RC_SEVERITY get_severity() const
 		{
-			return _severity;
+			return severity;
 		}
 
 		std::string get_severity_as_string() const
 		{
-			switch (_severity)
+			switch (severity)
 			{
 			case RC_ERROR: return "error";
 				break;
@@ -108,7 +108,7 @@ namespace degate
 
 		PlacedLogicModelObject_shptr get_object() const
 		{
-			return _obj;
+			return obj;
 		}
 
 		/**
@@ -117,10 +117,10 @@ namespace degate
 		bool equals(RCViolation_shptr rcv) const
 		{
 			return
-				_obj == rcv->_obj &&
-				_problem_description == rcv->_problem_description &&
-				_rc_violation_class == rcv->_rc_violation_class &&
-				_severity == rcv->_severity;
+                    obj == rcv->obj &&
+                    problem_description == rcv->problem_description &&
+                    rc_violation_class == rcv->rc_violation_class &&
+                    severity == rcv->severity;
 		}
 	};
 }

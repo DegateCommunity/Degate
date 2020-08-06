@@ -48,7 +48,7 @@ namespace degate
 		{
 		}
 
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
 		virtual bool in_shape(float x, float y, float max_distance = 0) const;
 

@@ -54,7 +54,7 @@ namespace degate
 		ObjectIDRewriter_shptr oid_rewriter;
 
 	public:
-		GateLibraryExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter)
+		GateLibraryExporter(ObjectIDRewriter_shptr oid_rewriter) : oid_rewriter(oid_rewriter)
 		{
 		}
 

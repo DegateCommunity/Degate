@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __LAYEREDITDIALOG_H__
-#define __LAYEREDITDIALOG_H__
+#ifndef __LAYERSEDITDIALOG_H__
+#define __LAYERSEDITDIALOG_H__
 
 #include "GUI/Widget/LayersEditWidget.h"
 

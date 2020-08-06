@@ -89,32 +89,32 @@ namespace degate
 		 * Because the image is splitted into equisized tiles the constructed
 		 * image might be larger than the requested size.
 		 *
-		 * @param _width The minimum width of the image.
-		 * @param _height The minimum height of the image.
-		 * @param _directory A tile based image is stored in multiple
+		 * @param width The minimum width of the image.
+		 * @param height The minimum height of the image.
+		 * @param directory A tile based image is stored in multiple
 		 *      files. This directory specifies the place where
 		 *      the files are stored. If the directory doen't exits, it is created.
-		 * @param _persistent This boolean value indicates whether the image files
+		 * @param persistent This boolean value indicates whether the image files
 		 *      are removed on object destruction.
-		 * @param _tile_width_exp The width (and height) for image tiles. This
+		 * @param tile_width_exp The width (and height) for image tiles. This
 		 *      value is specified as an exponent to the base 2. This means for
 		 *      example that if you want to use a width of 1024 pixel, you have
 		 *      to give a value of 10, because 2^10 is 1024.
 		 */
-		StoragePolicy_Tile(unsigned int _width, unsigned int _height,
-		                   std::string const& _directory,
-		                   bool _persistent = false,
-		                   unsigned int _tile_width_exp = 10) :
-			persistent(_persistent),
-			tile_width_exp(_tile_width_exp),
-			offset_bitmask((1 << _tile_width_exp) - 1),
-			directory(_directory),
-			tile_cache(_directory, _tile_width_exp, _persistent)
+		StoragePolicy_Tile(unsigned int width, unsigned int height,
+                           std::string const& directory,
+                           bool persistent = false,
+                           unsigned int tile_width_exp = 10) :
+			persistent(persistent),
+			tile_width_exp(tile_width_exp),
+			offset_bitmask((1 << tile_width_exp) - 1),
+			directory(directory),
+			tile_cache(directory, tile_width_exp, persistent)
 		{
-			if (!file_exists(_directory)) create_directory(_directory);
+			if (!file_exists(directory)) create_directory(directory);
 
-			double temp_tile_size = 1 << _tile_width_exp;
-			tiles_number = static_cast<unsigned>(ceil(static_cast<double>(_width) / temp_tile_size)) * static_cast<unsigned>(ceil(static_cast<double>(_height) / temp_tile_size));
+			double temp_tile_size = 1 << tile_width_exp;
+			tiles_number = static_cast<unsigned>(ceil(static_cast<double>(width) / temp_tile_size)) * static_cast<unsigned>(ceil(static_cast<double>(height) / temp_tile_size));
 		}
 
 		/**

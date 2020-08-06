@@ -22,17 +22,17 @@ std::vector<std::string> degate::tokenize(std::string const& str)
 	{
 		if (item[0] == '"')
 		{
-			int lastItemPosition = item.length() - 1;
-			if (item[lastItemPosition] != '"')
+			int last_item_position = item.length() - 1;
+			if (item[last_item_position] != '"')
 			{
 				// read the rest of the double-quoted item
-				string restOfItem;
-				getline(ss, restOfItem, '"');
-				item += restOfItem;
+				string rest_of_item;
+				getline(ss, rest_of_item, '"');
+				item += rest_of_item;
 			}
 			// otherwise, we had a single word that was quoted. In any case, we now
 			// have the item in quotes; remove them
-			item = item.substr(1, lastItemPosition - 1);
+			item = item.substr(1, last_item_position - 1);
 		}
 		// item is "fully cooked" now
 		result.push_back(item);

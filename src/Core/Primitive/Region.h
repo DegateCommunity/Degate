@@ -27,31 +27,31 @@
 
 namespace degate
 {
-	typedef struct _endPoint
+	struct end_point
 	{
 		unsigned int x_start;
 		unsigned int x_end;
-	} endPoint;
+	};
 
-	typedef std::list<endPoint> endPoint_list;
+	typedef std::list<end_point> end_point_list;
 
-	typedef struct _regionLine
+	struct region_line
 	{
-		unsigned int y;
-		endPoint_list x_list;
-	} regionLine;
+		unsigned int   y;
+		end_point_list x_list;
+	};
 
-	typedef std::list<regionLine> regionLine_list;
+	typedef std::list<region_line> region_line_list;
 
 	class Region
 	{
 	private:
 
-		unsigned int y_min;
-		unsigned int y_max;
-		unsigned int x_min;
-		unsigned int x_max;
-		regionLine_list y_list;
+		unsigned int     y_min;
+		unsigned int     y_max;
+		unsigned int     x_min;
+		unsigned int     x_max;
+		region_line_list y_list;
 
 	private:
 
@@ -77,7 +77,7 @@ namespace degate
 			return y_max;
 		}
 
-		regionLine_list get_y_list()
+		region_line_list get_y_list()
 		{
 			return y_list;
 		}
@@ -87,32 +87,32 @@ namespace degate
 			set_y_min(y);
 			set_y_max(y);
 
-			endPoint tmpX = {x1, x2};
-			endPoint_list listX;
-			listX.push_back(tmpX);
+			end_point      tmp_x = {x1, x2};
+			end_point_list list_x;
+			list_x.push_back(tmp_x);
 
-			regionLine tmpY = {y, listX};
-			y_list.push_back(tmpY);
+			region_line tmp_y = {y, list_x};
+			y_list.push_back(tmp_y);
 		}
 
 		void add_line(unsigned int Y, unsigned int Xs, unsigned int Xe)
 		{
-			regionLine_list::iterator iter_regionLine;
-			regionLine tmp_regionLine;
-			endPoint tmp_endPoint = {Xs, Xe};
+			region_line_list::iterator iter_region_line;
+			region_line                tmp_region_line;
+			end_point                  tmp_end_point = {Xs, Xe};
 
 
 			if (y_max == Y)
 			{
-				iter_regionLine = y_list.end();
-				--iter_regionLine;
-				(iter_regionLine->x_list).push_back(tmp_endPoint);
+                iter_region_line = y_list.end();
+				--iter_region_line;
+				(iter_region_line->x_list).push_back(tmp_end_point);
 			}
 			else if (y_max + 1 == Y)
 			{
-				tmp_regionLine.y = Y;
-				(tmp_regionLine.x_list).push_back(tmp_endPoint);
-				y_list.push_back(tmp_regionLine);
+                tmp_region_line.y = Y;
+				(tmp_region_line.x_list).push_back(tmp_end_point);
+				y_list.push_back(tmp_region_line);
 				set_y_max(Y);
 			}
 			else
@@ -125,133 +125,133 @@ namespace degate
 			return;
 		}
 
-		void merge(std::shared_ptr<Region> tmpRegion)
+		void merge(std::shared_ptr<Region> tmp_region)
 		{
-			regionLine_list tmp_regionLine_list;
-			endPoint_list tmp_endPoint_list;
-			regionLine_list::iterator iter_tmp_regionLine, iter_regionLine;
-			endPoint_list::iterator iter_tmp_endPoint, iter_endPoint;
-			//debug(TM, "y_max : %u, tmpRegion->get_y_max() : %u", y_max, tmpRegion->get_y_max());
-			//assert(y_max - 1 == tmpRegion->get_y_max());
+			region_line_list           tmp_region_line_list;
+			end_point_list             tmp_end_point_list;
+			region_line_list::iterator iter_tmp_region_line, iter_region_line;
+			end_point_list::iterator   iter_tmp_end_point, iter_end_point;
+			//debug(TM, "y_max : %u, tmp_region->get_y_max() : %u", y_max, tmp_region->get_y_max());
+			//assert(y_max - 1 == tmp_region->get_y_max());
 
-			tmp_regionLine_list = tmpRegion->get_y_list();
-			iter_tmp_regionLine = tmp_regionLine_list.end();
-			iter_regionLine = y_list.end();
-			if (y_max - tmpRegion->get_y_max() == 1)
-				--iter_regionLine;
+			tmp_region_line_list = tmp_region->get_y_list();
+            iter_tmp_region_line = tmp_region_line_list.end();
+            iter_region_line     = y_list.end();
+			if (y_max - tmp_region->get_y_max() == 1)
+				--iter_region_line;
 			// case of second region is higher than first region.
-			if (y_min > tmpRegion->get_y_min())
+			if (y_min > tmp_region->get_y_min())
 			{
-				--iter_tmp_regionLine;
-				--iter_regionLine;
-				while (iter_tmp_regionLine->y != y_min - 1)
+				--iter_tmp_region_line;
+				--iter_region_line;
+				while (iter_tmp_region_line->y != y_min - 1)
 				{
-					tmp_endPoint_list = iter_tmp_regionLine->x_list;
-					iter_tmp_endPoint = tmp_endPoint_list.begin();
-					iter_endPoint = (iter_regionLine->x_list).begin();
-					while (iter_endPoint != (iter_regionLine->x_list).end())
+                    tmp_end_point_list = iter_tmp_region_line->x_list;
+                    iter_tmp_end_point = tmp_end_point_list.begin();
+                    iter_end_point     = (iter_region_line->x_list).begin();
+					while (iter_end_point != (iter_region_line->x_list).end())
 					{
-						while (iter_tmp_endPoint != tmp_endPoint_list.end())
+						while (iter_tmp_end_point != tmp_end_point_list.end())
 						{
-							if (iter_endPoint->x_start < iter_tmp_endPoint->x_start)
+							if (iter_end_point->x_start < iter_tmp_end_point->x_start)
 							{
 								break;
 							}
 							else
 							{
-								(iter_regionLine->x_list).insert(iter_endPoint, *iter_tmp_endPoint);
-								++iter_tmp_endPoint;
+								(iter_region_line->x_list).insert(iter_end_point, *iter_tmp_end_point);
+								++iter_tmp_end_point;
 							}
 						}
-						++iter_endPoint;
+						++iter_end_point;
 					}
 
-					if (iter_tmp_endPoint != tmp_endPoint_list.end())
+					if (iter_tmp_end_point != tmp_end_point_list.end())
 					{
-						while (iter_tmp_endPoint != tmp_endPoint_list.end())
+						while (iter_tmp_end_point != tmp_end_point_list.end())
 						{
-							(iter_regionLine->x_list).push_back(*iter_tmp_endPoint);
-							++iter_tmp_endPoint;
+							(iter_region_line->x_list).push_back(*iter_tmp_end_point);
+							++iter_tmp_end_point;
 						}
 					}
-					--iter_tmp_regionLine;
-					--iter_regionLine;
+					--iter_tmp_region_line;
+					--iter_region_line;
 				}
 
-				while (iter_tmp_regionLine != tmp_regionLine_list.begin())
+				while (iter_tmp_region_line != tmp_region_line_list.begin())
 				{
-					y_list.push_front(*iter_tmp_regionLine);
-					--iter_tmp_regionLine;
+					y_list.push_front(*iter_tmp_region_line);
+					--iter_tmp_region_line;
 				}
-				if (iter_tmp_regionLine == tmp_regionLine_list.begin())
-					y_list.push_front(*iter_tmp_regionLine);
+				if (iter_tmp_region_line == tmp_region_line_list.begin())
+					y_list.push_front(*iter_tmp_region_line);
 			}
 			else
 			{
 				do
 				{
-					--iter_tmp_regionLine;
-					--iter_regionLine;
-					tmp_endPoint_list = iter_tmp_regionLine->x_list;
-					iter_tmp_endPoint = tmp_endPoint_list.begin();
-					iter_endPoint = (iter_regionLine->x_list).begin();
-					while (iter_endPoint != (iter_regionLine->x_list).end())
+					--iter_tmp_region_line;
+					--iter_region_line;
+                    tmp_end_point_list = iter_tmp_region_line->x_list;
+                    iter_tmp_end_point = tmp_end_point_list.begin();
+                    iter_end_point     = (iter_region_line->x_list).begin();
+					while (iter_end_point != (iter_region_line->x_list).end())
 					{
-						while (iter_tmp_endPoint != tmp_endPoint_list.end())
+						while (iter_tmp_end_point != tmp_end_point_list.end())
 						{
-							if (iter_endPoint->x_start < iter_tmp_endPoint->x_start)
+							if (iter_end_point->x_start < iter_tmp_end_point->x_start)
 							{
 								break;
 							}
 							else
 							{
-								(iter_regionLine->x_list).insert(iter_endPoint, *iter_tmp_endPoint);
-								++iter_tmp_endPoint;
+								(iter_region_line->x_list).insert(iter_end_point, *iter_tmp_end_point);
+								++iter_tmp_end_point;
 							}
 						}
-						++iter_endPoint;
+						++iter_end_point;
 					}
 
-					if (iter_tmp_endPoint != tmp_endPoint_list.end())
+					if (iter_tmp_end_point != tmp_end_point_list.end())
 					{
-						while (iter_tmp_endPoint != tmp_endPoint_list.end())
+						while (iter_tmp_end_point != tmp_end_point_list.end())
 						{
-							(iter_regionLine->x_list).push_back(*iter_tmp_endPoint);
-							++iter_tmp_endPoint;
+							(iter_region_line->x_list).push_back(*iter_tmp_end_point);
+							++iter_tmp_end_point;
 						}
 					}
 				}
-				while (iter_tmp_regionLine != tmp_regionLine_list.begin());
+				while (iter_tmp_region_line != tmp_region_line_list.begin());
 			}
 		}
 
-		bool isOverlap(unsigned int Y, unsigned int Xs, unsigned int Xe)
+		bool is_overlap(unsigned int Y, unsigned int Xs, unsigned int Xe)
 		{
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
-			unsigned int refPoint1, refPoint2;
+			region_line_list::iterator iter_region_line;
+			end_point_list::iterator   iter_end_point;
+			unsigned int               ref_point_1, ref_point_2;
 
-			iter_regionLine = y_list.end();
-			--iter_regionLine;
-			if (iter_regionLine->y == Y)
+            iter_region_line = y_list.end();
+			--iter_region_line;
+			if (iter_region_line->y == Y)
 			{
-			    if(iter_regionLine != y_list.begin())
-				    --iter_regionLine;
+			    if(iter_region_line != y_list.begin())
+				    --iter_region_line;
 			}
 
-			if (iter_regionLine->y != Y - 1)
+			if (iter_region_line->y != Y - 1)
 			{
 				//debug(TM, "not possible");
 				return false;
 			}
 
-			for (iter_endPoint = (iter_regionLine->x_list).begin(); iter_endPoint != (iter_regionLine->x_list).end(); ++
-			     iter_endPoint)
+			for (iter_end_point = (iter_region_line->x_list).begin(); iter_end_point != (iter_region_line->x_list).end(); ++
+			     iter_end_point)
 			{
-				refPoint1 = iter_endPoint->x_start;
-				refPoint2 = iter_endPoint->x_end;
+                ref_point_1 = iter_end_point->x_start;
+                ref_point_2 = iter_end_point->x_end;
 
-				if ((refPoint1 <= Xs && Xs <= refPoint2) || (Xs <= refPoint1 && refPoint1 <= Xe))
+				if ((ref_point_1 <= Xs && Xs <= ref_point_2) || (Xs <= ref_point_1 && ref_point_1 <= Xe))
 				{
 					//debug(TM, "line involved");
 					return true;
@@ -263,20 +263,20 @@ namespace degate
 
 		void print()
 		{
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
-			unsigned int cnt = 0;
+			region_line_list::iterator iter_region_line;
+			end_point_list::iterator   iter_end_point;
+			unsigned int               cnt = 0;
 
 			debug(TM, "\n");
-			for (iter_regionLine = y_list.begin(); iter_regionLine != y_list.end(); ++iter_regionLine)
+			for (iter_region_line = y_list.begin(); iter_region_line != y_list.end(); ++iter_region_line)
 			{
 				++cnt;
-				debug(TM, "y : %d", iter_regionLine->y);
-				for (iter_endPoint = (iter_regionLine->x_list).begin(); iter_endPoint != (iter_regionLine->x_list).end()
-				     ; ++iter_endPoint)
+				debug(TM, "y : %d", iter_region_line->y);
+				for (iter_end_point = (iter_region_line->x_list).begin(); iter_end_point != (iter_region_line->x_list).end()
+				     ; ++iter_end_point)
 				{
-					debug(TM, "\tx_start : %d", iter_endPoint->x_start);
-					debug(TM, "\tx_end : %d", iter_endPoint->x_end);
+					debug(TM, "\tx_start : %d", iter_end_point->x_start);
+					debug(TM, "\tx_end : %d", iter_end_point->x_end);
 				}
 			}
 
@@ -285,12 +285,12 @@ namespace degate
 
 		void free_region()
 		{
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
+			region_line_list::iterator iter_region_line;
+			end_point_list::iterator   iter_end_point;
 
-			for (iter_regionLine = y_list.begin(); iter_regionLine != y_list.end(); ++iter_regionLine)
+			for (iter_region_line = y_list.begin(); iter_region_line != y_list.end(); ++iter_region_line)
 			{
-				(iter_regionLine->x_list).erase((iter_regionLine->x_list).begin(), (iter_regionLine->x_list).end());
+				(iter_region_line->x_list).erase((iter_region_line->x_list).begin(), (iter_region_line->x_list).end());
 			}
 
 			y_list.erase(y_list.begin(), y_list.end());
@@ -299,17 +299,17 @@ namespace degate
 
 		void draw_region(TileImage_GS_DOUBLE_shptr& region)
 		{
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
+			region_line_list::iterator iter_region_line;
+			end_point_list::iterator   iter_end_point;
 
-			for (iter_regionLine = y_list.begin(); iter_regionLine != y_list.end(); ++iter_regionLine)
+			for (iter_region_line = y_list.begin(); iter_region_line != y_list.end(); ++iter_region_line)
 			{
-				for (iter_endPoint = (iter_regionLine->x_list).begin(); iter_endPoint != (iter_regionLine->x_list).end()
-				     ; ++iter_endPoint)
+				for (iter_end_point = (iter_region_line->x_list).begin(); iter_end_point != (iter_region_line->x_list).end()
+				     ; ++iter_end_point)
 				{
-					for (unsigned int i = iter_endPoint->x_start; i <= iter_endPoint->x_end; ++i)
+					for (unsigned int i = iter_end_point->x_start; i <= iter_end_point->x_end; ++i)
 					{
-						region->set_pixel(i, iter_regionLine->y, 1);
+						region->set_pixel(i, iter_region_line->y, 1);
 					}
 				}
 			}
@@ -317,17 +317,17 @@ namespace degate
 
 		void draw_region(std::string const& path, TileImage_GS_DOUBLE_shptr& region)
 		{
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
+			region_line_list::iterator iter_region_line;
+			end_point_list::iterator   iter_end_point;
 
-			for (iter_regionLine = y_list.begin(); iter_regionLine != y_list.end(); ++iter_regionLine)
+			for (iter_region_line = y_list.begin(); iter_region_line != y_list.end(); ++iter_region_line)
 			{
-				for (iter_endPoint = (iter_regionLine->x_list).begin(); iter_endPoint != (iter_regionLine->x_list).end()
-				     ; ++iter_endPoint)
+				for (iter_end_point = (iter_region_line->x_list).begin(); iter_end_point != (iter_region_line->x_list).end()
+				     ; ++iter_end_point)
 				{
-					for (unsigned int i = iter_endPoint->x_start; i <= iter_endPoint->x_end; ++i)
+					for (unsigned int i = iter_end_point->x_start; i <= iter_end_point->x_end; ++i)
 					{
-						region->set_pixel(i, iter_regionLine->y, 1);
+						region->set_pixel(i, iter_region_line->y, 1);
 					}
 				}
 			}
@@ -337,59 +337,59 @@ namespace degate
 
 		void draw_unfixed_grid_region(TileImage_GS_DOUBLE_shptr& region, unsigned int diameter)
 		{
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
-			unsigned int x_base, x_remainder;
-			bool starting_point = true;
+			region_line_list::iterator iter_region_line;
+			end_point_list::iterator   iter_end_point;
+			unsigned int               x_base, x_remainder;
+			bool                       starting_point = true;
 
-			for (iter_regionLine = y_list.begin(); iter_regionLine != y_list.end(); ++iter_regionLine)
+			for (iter_region_line = y_list.begin(); iter_region_line != y_list.end(); ++iter_region_line)
 			{
-				for (iter_endPoint = (iter_regionLine->x_list).begin(); iter_endPoint != (iter_regionLine->x_list).end()
-				     ; ++iter_endPoint)
+				for (iter_end_point = (iter_region_line->x_list).begin(); iter_end_point != (iter_region_line->x_list).end()
+				     ; ++iter_end_point)
 				{
-					for (unsigned int i = iter_endPoint->x_start; i <= iter_endPoint->x_end; ++i)
+					for (unsigned int i = iter_end_point->x_start; i <= iter_end_point->x_end; ++i)
 					{
-						region->set_pixel(i, iter_regionLine->y, 1);
+						region->set_pixel(i, iter_region_line->y, 1);
 					}
 				}
 			}
 
-			for (iter_regionLine = y_list.begin(); iter_regionLine != y_list.end(); ++iter_regionLine)
+			for (iter_region_line = y_list.begin(); iter_region_line != y_list.end(); ++iter_region_line)
 			{
-				if ((iter_regionLine->y - y_min) % diameter == diameter / 2)
+				if ((iter_region_line->y - y_min) % diameter == diameter / 2)
 				{
-					for (iter_endPoint = (iter_regionLine->x_list).begin(); iter_endPoint != (iter_regionLine->x_list).
-					     end(); ++iter_endPoint)
+					for (iter_end_point = (iter_region_line->x_list).begin(); iter_end_point != (iter_region_line->x_list).
+					     end(); ++iter_end_point)
 					{
 						if (starting_point)
 						{
-							x_remainder = (iter_endPoint->x_start + diameter / 2) % diameter;
+							x_remainder = (iter_end_point->x_start + diameter / 2) % diameter;
 							starting_point = false;
 						}
-						//x_base = iter_endPoint->x_start + (x_remainder - iter_endPoint->x_start % diameter);
-						x_base = iter_endPoint->x_start + (diameter - iter_endPoint->x_start % diameter) + x_remainder;
-						for (unsigned int x = x_base; x < iter_endPoint->x_end; x = x + diameter)
+						//x_base = iter_end_point->x_start + (x_remainder - iter_end_point->x_start % diameter);
+						x_base = iter_end_point->x_start + (diameter - iter_end_point->x_start % diameter) + x_remainder;
+						for (unsigned int x = x_base; x < iter_end_point->x_end; x = x + diameter)
 						{
-							region->set_pixel(x, iter_regionLine->y, 0);
+							region->set_pixel(x, iter_region_line->y, 0);
 						}
 					}
 				}
 			}
 		}
 
-		bool isPoint(unsigned int _x, unsigned int _y)
+		bool is_point(unsigned int x, unsigned int y)
 		{
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
+			region_line_list::iterator iter_region_line;
+			end_point_list::iterator   iter_end_point;
 
-			for (iter_regionLine = y_list.begin(); iter_regionLine != y_list.end(); ++iter_regionLine)
+			for (iter_region_line = y_list.begin(); iter_region_line != y_list.end(); ++iter_region_line)
 			{
-				if (iter_regionLine->y == _y)
+				if (iter_region_line->y == y)
 				{
-					for (iter_endPoint = (iter_regionLine->x_list).begin(); iter_endPoint != (iter_regionLine->x_list).
-					     end(); ++iter_endPoint)
+					for (iter_end_point = (iter_region_line->x_list).begin(); iter_end_point != (iter_region_line->x_list).
+					     end(); ++iter_end_point)
 					{
-						if (iter_endPoint->x_start <= _x && iter_endPoint->x_end >= _x)
+						if (iter_end_point->x_start <= x && iter_end_point->x_end >= x)
 							return true;
 						else
 							continue;
@@ -403,35 +403,35 @@ namespace degate
 			return false;
 		}
 
-		bool isWire(unsigned int diameter)
+		bool is_wire(unsigned int diameter)
 		{
-			regionLine_list::iterator iter_regionLine;
-			endPoint_list::iterator iter_endPoint;
-			unsigned int x_base, x_remainder;
-			unsigned int num_grid = 0;
-			bool starting_point = true;
+			region_line_list::iterator iter_region_line;
+			end_point_list::iterator   iter_end_point;
+			unsigned int               x_base, x_remainder;
+			unsigned int               num_grid = 0;
+			bool                       starting_point = true;
 
-			for (iter_regionLine = y_list.begin(); iter_regionLine != y_list.end(); ++iter_regionLine)
+			for (iter_region_line = y_list.begin(); iter_region_line != y_list.end(); ++iter_region_line)
 			{
-				//if((iter_regionLine->y)%diameter == 0) {
-				if (((iter_regionLine->y) - y_min) % diameter == diameter / 2)
+				//if((iter_region_line->y)%diameter == 0) {
+				if (((iter_region_line->y) - y_min) % diameter == diameter / 2)
 				{
-					for (iter_endPoint = iter_regionLine->x_list.begin(); iter_endPoint != iter_regionLine->x_list.end()
-					     ; ++iter_endPoint)
+					for (iter_end_point = iter_region_line->x_list.begin(); iter_end_point != iter_region_line->x_list.end()
+					     ; ++iter_end_point)
 					{
 						if (starting_point)
 						{
-							x_remainder = (iter_endPoint->x_start + diameter / 2) % diameter;
+							x_remainder = (iter_end_point->x_start + diameter / 2) % diameter;
 							starting_point = false;
 						}
-						//x_base = iter_endPoint->x_start + (x_remainder - iter_endPoint->x_start % diameter);
-						x_base = iter_endPoint->x_start + (diameter - iter_endPoint->x_start % diameter) + x_remainder;
-						while (isPoint(x_base, iter_regionLine->y))
+						//x_base = iter_end_point->x_start + (x_remainder - iter_end_point->x_start % diameter);
+						x_base = iter_end_point->x_start + (diameter - iter_end_point->x_start % diameter) + x_remainder;
+						while (is_point(x_base, iter_region_line->y))
 						{
 							num_grid++;
-							if (isPoint(x_base + diameter, iter_regionLine->y) &&
-								isPoint(x_base, iter_regionLine->y + diameter) &&
-								isPoint(x_base + diameter, iter_regionLine->y + diameter))
+							if (is_point(x_base + diameter, iter_region_line->y) &&
+                                is_point(x_base, iter_region_line->y + diameter) &&
+                                is_point(x_base + diameter, iter_region_line->y + diameter))
 							{
 								debug(TM, "not wire!!!");
 								return false;
@@ -449,19 +449,19 @@ namespace degate
 			return true;
 		}
 
-		unsigned int get_height(unsigned int _x, unsigned int _y)
+		unsigned int get_height(unsigned int x, unsigned int y)
 		{
-			assert(isPoint(_x, _y));
+			assert(is_point(x, y));
 			unsigned int height = 1;
 
-			unsigned int tmpY = _y;
-			while (isPoint(_x, --tmpY))
+			unsigned int tmp_y = y;
+			while (is_point(x, --tmp_y))
 			{
 				height++;
 			}
 
-			tmpY = _y;
-			while (isPoint(_x, ++tmpY))
+            tmp_y = y;
+			while (is_point(x, ++tmp_y))
 			{
 				height++;
 			}
@@ -475,12 +475,12 @@ namespace degate
 			x_min(Xs),
 			x_max(Xe)
 		{
-			endPoint tmpX = {Xs, Xe};
-			endPoint_list listX;
-			listX.push_back(tmpX);
+			end_point      tmp_x = {Xs, Xe};
+			end_point_list list_x;
+			list_x.push_back(tmp_x);
 
-			regionLine tmpY = {Y, listX};
-			y_list.push_back(tmpY);
+			region_line tmp_y = {Y, list_x};
+			y_list.push_back(tmp_y);
 		}
 
 		Region()

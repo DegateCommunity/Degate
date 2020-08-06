@@ -37,8 +37,8 @@ namespace degate
         int input_width = input_image.width();
         int input_height = input_image.height();
         int output_width = input_width / static_cast<int>(scale_factor);
-        int output_height = input_height / static_cast<int>(scale_factor);
-        std::shared_ptr<QImage> outImage = std::make_shared<QImage>(output_width, output_height, QImage::Format_ARGB32);
+        int                     output_height = input_height / static_cast<int>(scale_factor);
+        std::shared_ptr<QImage> out_image     = std::make_shared<QImage>(output_width, output_height, QImage::Format_ARGB32);
 
         // Create the input matrix.
         bool** input = new bool*[input_width];
@@ -60,9 +60,9 @@ namespace degate
         QtConcurrent::blockingMap(input_it, input_function);
 
         // Create the output.
-        std::function<void(const unsigned int& y)> output_function = [this, &output_width, &outImage, &input, &input_width, &input_height](const unsigned int& y)
+        std::function<void(const unsigned int& y)> output_function = [this, &output_width, &out_image, &input, &input_width, &input_height](const unsigned int& y)
         {
-            auto pixels = reinterpret_cast<QRgb*>(outImage->scanLine(y));
+            auto pixels = reinterpret_cast<QRgb*>(out_image->scanLine(y));
             for (unsigned int x = 0; x < output_width; x++)
             {
                 int center_x = (x * scale_factor) + (scale_factor / 2);
@@ -104,9 +104,9 @@ namespace degate
                 float alpha = 0.5f + 0.5f * (signed_distance / spread);
                 alpha = std::min<float>(1.0, std::max<float>(0.0, alpha));
 
-                auto alphaByte = static_cast<unsigned int>(alpha * 0xFF);
+                auto alpha_byte = static_cast<unsigned int>(alpha * 0xFF);
 
-                pixels[x] = (alphaByte << 24) | (color & 0xFFFFFF);
+                pixels[x] = (alpha_byte << 24) | (color & 0xFFFFFF);
             }
         };
 
@@ -119,6 +119,6 @@ namespace degate
             delete[] input[i];
         delete[] input;
 
-        return outImage;
+        return out_image;
     }
 }

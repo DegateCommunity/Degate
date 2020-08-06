@@ -30,15 +30,15 @@ ZeroCrossingEdgeDetection::ZeroCrossingEdgeDetection(unsigned int min_x, unsigne
                                                      unsigned int median_filter_width,
                                                      unsigned int blur_kernel_size,
                                                      double sigma,
-                                                     unsigned int _min_d,
-                                                     unsigned int _max_d,
-                                                     double _edge_threshold,
-                                                     double _zero_threshold) :
+                                                     unsigned int min_d,
+                                                     unsigned int max_d,
+                                                     double edge_threshold,
+                                                     double zero_threshold) :
 	EdgeDetection(min_x, max_x, min_y, max_y, median_filter_width, blur_kernel_size, sigma),
-	min_d(_min_d),
-	max_d(_max_d),
-	edge_threshold(_edge_threshold),
-	zero_threshold(_zero_threshold)
+	min_d(min_d),
+	max_d(max_d),
+	edge_threshold(edge_threshold),
+	zero_threshold(zero_threshold)
 {
 }
 
@@ -85,7 +85,7 @@ TileImage_GS_DOUBLE_shptr ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in,
 
 
 bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
-                                      int _x, int _y,
+                                      int x, int y,
                                       int inc_x, int inc_y,
                                       int* start_x, int* stop_x,
                                       int* start_y, int* stop_y,
@@ -100,18 +100,19 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
 
 	enum STATE { BEFORE, POS_EDGE, NEG_EDGE, END };
 	STATE s = BEFORE;
-	int x = _x, y = _y;
+
+	int x1 = x, y1 = y;
 	double max_pix = 0, min_pix = 0;
 
 	while (s != END)
 	{
-		double p = edge_image->get_pixel(x, y);
+		double p = edge_image->get_pixel(x1, y1);
 
 		if (s == BEFORE && p >= edge_threshold)
 		{
 			max_pix = p;
-			*start_x = x;
-			*start_y = y;
+			*start_x = x1;
+			*start_y = y1;
 			s = POS_EDGE;
 		}
 
@@ -119,14 +120,14 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
 		{
 			if (p > max_pix)
 			{
-				*start_x = x;
-				*start_y = y;
+				*start_x = x1;
+				*start_y = y1;
 				max_pix = p;
 			}
 			if (p <= -edge_threshold)
 			{
-				*stop_x = x;
-				*stop_y = y;
+				*stop_x = x1;
+				*stop_y = y1;
 				min_pix = p;
 				s = NEG_EDGE;
 			}
@@ -136,11 +137,11 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
 			if (p < min_pix)
 			{
 				min_pix = p;
-				*stop_x = x;
-				*stop_y = y;
+				*stop_x = x1;
+				*stop_y = y1;
 			}
 			if (p >= 0 ||
-				x > *stop_x || y > *stop_y)
+                x1 > *stop_x || y1 > *stop_y)
 			{
 				// that is at least one step beyond the maximum
 
@@ -162,15 +163,15 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
 				return fabs(p_center) < zero_threshold;
 			}
 		}
-		x += inc_x;
-		y += inc_y;
+        x1 += inc_x;
+        y1 += inc_y;
 
-		assert(x >= 0);
-		assert(y >= 0);
+		assert(x1 >= 0);
+		assert(y1 >= 0);
 
-		if (unsigned(x) >= edge_image->get_width() ||
-			unsigned(y) >= edge_image->get_height() ||
-			x == 0 || y == 0)
+		if (unsigned(x1) >= edge_image->get_width() ||
+            unsigned(y1) >= edge_image->get_height() ||
+            x1 == 0 || y1 == 0)
 			s = END;
 	}
 	return false;

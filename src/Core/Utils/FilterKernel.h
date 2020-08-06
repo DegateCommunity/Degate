@@ -43,10 +43,10 @@ namespace degate
 
 	public:
 
-		FilterKernel(unsigned int _columns, unsigned int _rows) :
-			columns(_columns),
-			rows(_rows),
-			data(_columns * _rows)
+		FilterKernel(unsigned int columns, unsigned int rows) :
+			columns(columns),
+			rows(rows),
+			data(columns * rows)
 		{
 		}
 

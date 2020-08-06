@@ -60,8 +60,8 @@ namespace degate
 
 		typedef std::shared_ptr<PlacedLogicModelObject> quadtree_element_type;
 
-		typedef region_iterator<quadtree_element_type> qt_region_iterator;
-		typedef qt_region_iterator object_iterator;
+		typedef RegionIterator<quadtree_element_type> qt_region_iterator;
+		typedef qt_region_iterator                    object_iterator;
 
 	private:
 
@@ -109,13 +109,13 @@ namespace degate
 		 * Create a new logic model layer.
 		 */
 
-		Layer(BoundingBox const& bbox, LAYER_TYPE _layer_type = Layer::UNDEFINED);
+		Layer(BoundingBox const& bbox, LAYER_TYPE layer_type = Layer::UNDEFINED);
 
 		/**
 		 * Create a new logic model layer.
 		 */
 
-		Layer(BoundingBox const& bbox, LAYER_TYPE _layer_type,
+		Layer(BoundingBox const& bbox, LAYER_TYPE layer_type,
 		      BackgroundImage_shptr img);
 
 		/**
@@ -125,8 +125,8 @@ namespace degate
 		virtual ~Layer();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const override;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
+		DeepCopyable_shptr clone_shallow() const override;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 		//@}
 
 		/**
@@ -156,7 +156,7 @@ namespace degate
 		/**
 		 * Get a layer type type as human readable string.
 		 */
-		static const std::string get_layer_type_as_string(LAYER_TYPE _layer_type);
+		static const std::string get_layer_type_as_string(LAYER_TYPE layer_type);
 
 		/**
 		 * Parse a layer type indicating string.
@@ -176,7 +176,7 @@ namespace degate
 		 * Set layer type.
 		 */
 
-		void set_layer_type(LAYER_TYPE _layer_type);
+		void set_layer_type(LAYER_TYPE layer_type);
 
 
 		/**

@@ -97,8 +97,8 @@ namespace degate
 
 	public:
 
-		LogicModelDOTExporter(ObjectIDRewriter_shptr _oid_rewriter) :
-			oid_rewriter(_oid_rewriter), scaling(1)
+		LogicModelDOTExporter(ObjectIDRewriter_shptr oid_rewriter) :
+                oid_rewriter(oid_rewriter), scaling(1)
 		{
 			properties[PRESERVE_GATE_POSITIONS] = false;
 			properties[ENABLE_EDGES] = true;

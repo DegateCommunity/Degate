@@ -43,8 +43,8 @@ namespace degate
 		/**
 		 * The constructor for a wire object.
 		 */
-		Wire(float _from_x, float _from_y, float _to_x, float _to_y, diameter_t _diameter);
-        Wire(Line _line);
+		Wire(float from_x, float from_y, float to_x, float to_y, diameter_t diameter);
+        Wire(Line line);
 
 		/**
 		 * Destructor for a wire object.
@@ -54,8 +54,8 @@ namespace degate
 		}
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**

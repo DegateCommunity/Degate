@@ -40,14 +40,14 @@ ConnectedLogicModelObject::~ConnectedLogicModelObject()
 	remove_net();
 };
 
-void ConnectedLogicModelObject::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void ConnectedLogicModelObject::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
-	PlacedLogicModelObject::cloneDeepInto(dest, oldnew);
+    PlacedLogicModelObject::clone_deep_into(dest, oldnew);
 
 	auto clone = std::dynamic_pointer_cast<ConnectedLogicModelObject>(dest);
 	if (net.get() != nullptr)
 	{
-		clone->net = std::dynamic_pointer_cast<Net>(net->cloneDeep(oldnew));
+		clone->net = std::dynamic_pointer_cast<Net>(net->clone_deep(oldnew));
 	}
 }
 

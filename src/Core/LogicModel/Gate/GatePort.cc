@@ -36,51 +36,51 @@
 
 using namespace degate;
 
-GatePort::GatePort(std::shared_ptr<Gate> _gate,
-                   std::shared_ptr<GateTemplatePort> _gate_template_port,
-                   unsigned int _diameter) :
-	Circle(_gate->get_min_x() +
-	       _gate->get_relative_x_position_within_gate(_gate_template_port->get_x()),
-	       _gate->get_min_y() +
-	       _gate->get_relative_y_position_within_gate(_gate_template_port->get_y()),
-	       _diameter),
-	gate(_gate),
-	gate_template_port(_gate_template_port),
-	template_port_id(_gate_template_port->get_object_id())
+GatePort::GatePort(std::shared_ptr<Gate> gate,
+                   std::shared_ptr<GateTemplatePort> gate_template_port,
+                   unsigned int diameter) :
+	Circle(gate->get_min_x() +
+           gate->get_relative_x_position_within_gate(gate_template_port->get_x()),
+           gate->get_min_y() +
+           gate->get_relative_y_position_within_gate(gate_template_port->get_y()),
+           diameter),
+	gate(gate),
+	gate_template_port(gate_template_port),
+	template_port_id(gate_template_port->get_object_id())
 {
 }
 
 
-GatePort::GatePort(std::shared_ptr<Gate> _gate, unsigned int _diameter) :
-	Circle(0, 0, _diameter),
-	gate(_gate),
+GatePort::GatePort(std::shared_ptr<Gate> gate, unsigned int diameter) :
+	Circle(0, 0, diameter),
+	gate(gate),
 	template_port_id(0)
 {
 	//set_x(gate->get_min_x());
 	//set_y(gate->get_min_y());
 }
 
-DeepCopyable_shptr GatePort::cloneShallow() const
+DeepCopyable_shptr GatePort::clone_shallow() const
 {
 	auto clone = std::make_shared<GatePort>();
 	clone->template_port_id = template_port_id;
 	return clone;
 }
 
-void GatePort::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void GatePort::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<GatePort>(dest);
 
-	clone->gate = std::dynamic_pointer_cast<Gate>(gate.lock()->cloneDeep(oldnew));
-	clone->gate_template_port = std::dynamic_pointer_cast<GateTemplatePort>(gate_template_port->cloneDeep(oldnew));
+	clone->gate = std::dynamic_pointer_cast<Gate>(gate.lock()->clone_deep(oldnew));
+	clone->gate_template_port = std::dynamic_pointer_cast<GateTemplatePort>(gate_template_port->clone_deep(oldnew));
 
-	Circle::cloneDeepInto(dest, oldnew);
-	ConnectedLogicModelObject::cloneDeepInto(dest, oldnew);
+    Circle::clone_deep_into(dest, oldnew);
+    ConnectedLogicModelObject::clone_deep_into(dest, oldnew);
 }
 
-void GatePort::set_template_port_type_id(object_id_t _template_port_id)
+void GatePort::set_template_port_type_id(object_id_t template_port_id)
 {
-	template_port_id = _template_port_id;
+	this->template_port_id = template_port_id;
 }
 
 
@@ -99,10 +99,10 @@ const GateTemplatePort_shptr GatePort::get_template_port() const
 	return gate_template_port;
 }
 
-void GatePort::set_template_port(std::shared_ptr<GateTemplatePort>
-	_gate_template_port)
+void GatePort::set_template_port(std::shared_ptr<GateTemplatePort> gate_template_port)
 {
-	gate_template_port = _gate_template_port;
+	this->gate_template_port = gate_template_port;
+
 	/* If the gate port is added to a gate afterwards, this caluclation will
 	 be ignored. But if the port already belongs to a gate and a a template is
 	 set afterwards, this calculation is used.

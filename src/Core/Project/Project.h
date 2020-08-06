@@ -124,7 +124,7 @@ namespace degate
 		 * It will create an empty logic model as well.
 		 */
 
-		Project(length_t width, length_t height, std::string const& _directory, unsigned int layers = 0);
+		Project(length_t width, length_t height, std::string const& directory, unsigned int layers = 0);
 
 
 		/**
@@ -134,14 +134,14 @@ namespace degate
 		virtual ~Project();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**
 		 * Set the project directory.
 		 */
-		void set_project_directory(std::string const& _directory);
+		void set_project_directory(std::string const& directory);
 
 		/**
 		 * Get the project directory.
@@ -179,13 +179,13 @@ namespace degate
 		 * If you reset the logic model, the old logic model will be destroyed.
 		 */
 
-		void set_logic_model(LogicModel_shptr _logic_model);
+		void set_logic_model(LogicModel_shptr logic_model);
 
 
-		void set_name(const std::string& _name);
+		void set_name(const std::string& name);
 		std::string const& get_name() const;
 
-		void set_description(std::string _description);
+		void set_description(std::string description);
 		std::string const& get_description() const;
 
 		void set_degate_version(std::string version_str);

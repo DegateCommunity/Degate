@@ -61,8 +61,8 @@ namespace degate
 		 * Create a template port.
 		 */
 
-		GateTemplatePort(float _x, float _y, PORT_TYPE _port_type = PORT_TYPE_UNDEFINED) :
-			point(_x, _y), port_type(_port_type), position_defined(true)
+		GateTemplatePort(float x, float y, PORT_TYPE port_type = PORT_TYPE_UNDEFINED) :
+                point(x, y), port_type(port_type), position_defined(true)
 		{
 		}
 
@@ -70,8 +70,8 @@ namespace degate
 		 * Create a template port.
 		 */
 
-		GateTemplatePort(PORT_TYPE _port_type = PORT_TYPE_UNDEFINED) :
-			point(0, 0), port_type(_port_type), position_defined(false)
+		GateTemplatePort(PORT_TYPE port_type = PORT_TYPE_UNDEFINED) :
+                point(0, 0), port_type(port_type), position_defined(false)
 		{
 		}
 
@@ -81,7 +81,7 @@ namespace degate
 		}
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const
+		DeepCopyable_shptr clone_shallow() const
 		{
 			auto clone = std::make_shared<GateTemplatePort>(port_type);
 			if (is_position_defined())
@@ -91,10 +91,10 @@ namespace degate
 			return clone;
 		};
 
-		void cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+		void clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 		{
-			ColoredObject::cloneDeepInto(dest, oldnew);
-			LogicModelObjectBase::cloneDeepInto(dest, oldnew);
+            ColoredObject::clone_deep_into(dest, oldnew);
+            LogicModelObjectBase::clone_deep_into(dest, oldnew);
 		};
 		//@}
 
@@ -145,7 +145,7 @@ namespace degate
 		 * Set the port type.
 		 */
 
-		virtual void set_port_type(PORT_TYPE _port_type) { port_type = _port_type; }
+		virtual void set_port_type(PORT_TYPE port_type) { this->port_type = port_type; }
 
 		/**
 		 * Get the port type.

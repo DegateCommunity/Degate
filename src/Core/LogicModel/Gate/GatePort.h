@@ -59,21 +59,21 @@ namespace degate
 		/**
 		 * Create a gate port and set a "reference" to the the template port.
 		 *
-		 * @param _gate A shared pointer to the gate, the port is created for.
-		 * @param _gate_template_port A shared pointer to a template port.
-		 * @param _diameter The diameter of the port.
+		 * @param gate A shared pointer to the gate, the port is created for.
+		 * @param gate_template_port A shared pointer to a template port.
+		 * @param diameter The diameter of the port.
 		 */
-		GatePort(std::shared_ptr<Gate> _gate,
-		         std::shared_ptr<GateTemplatePort> _gate_template_port,
-		         unsigned int _diameter = 5);
+		GatePort(std::shared_ptr<Gate> gate,
+		         std::shared_ptr<GateTemplatePort> gate_template_port,
+		         unsigned int diameter = 5);
 
 		/**
 		 * Create a gate port.
 		 *
-		 * @param _gate A shared pointer to the gate, the port is created for.
+		 * @param gate A shared pointer to the gate, the port is created for.
 		 * @param diameter The diameter of the port.
 		 */
-		GatePort(std::shared_ptr<Gate> _gate, unsigned int _diameter = 5);
+		GatePort(std::shared_ptr<Gate> gate, unsigned int diameter = 5);
 
 
 		/**
@@ -85,15 +85,15 @@ namespace degate
 		}
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**
 		 * Set the ID of the template port.
 		 */
 
-		virtual void set_template_port_type_id(object_id_t _template_port_id);
+		virtual void set_template_port_type_id(object_id_t template_port_id);
 
 		/**
 		 * Get the ID of the template port.
@@ -117,8 +117,7 @@ namespace degate
 		 * Set the template port.
 		 */
 
-		virtual void set_template_port(std::shared_ptr<GateTemplatePort>
-			_gate_template_port);
+		virtual void set_template_port(std::shared_ptr<GateTemplatePort> gate_template_port);
 
 
 		/**

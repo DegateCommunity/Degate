@@ -75,15 +75,15 @@ namespace degate
 		/**
 		 * Create a gate.
 		 */
-		Gate(float _min_x, float _max_x, float _min_y, float _max_y,
-		     ORIENTATION _orientation = ORIENTATION_UNDEFINED);
+		Gate(float min_x, float max_x, float min_y, float max_y,
+             ORIENTATION orientation = ORIENTATION_UNDEFINED);
 
 		/**
 		 * Create a gate.
 		 */
 
 		Gate(BoundingBox const& bounding_box,
-		     ORIENTATION _orientation = ORIENTATION_UNDEFINED);
+		     ORIENTATION orientation = ORIENTATION_UNDEFINED);
 
 
 		/**
@@ -93,8 +93,8 @@ namespace degate
 		virtual ~Gate();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**
@@ -209,7 +209,7 @@ namespace degate
 		 * relation to the master image.
 		 */
 
-		virtual void set_orientation(ORIENTATION _orientation);
+		virtual void set_orientation(ORIENTATION orientation);
 
 		/**
 		 * Get the orientation relative to the master image.

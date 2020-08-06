@@ -26,16 +26,16 @@
 
 using namespace degate;
 
-Annotation::Annotation(float _min_x, float _max_x, float _min_y, float _max_y,
-                       class_id_t _class_id) :
-	Rectangle(_min_x, _max_x, _min_y, _max_y), class_id(_class_id)
+Annotation::Annotation(float min_x, float max_x, float min_y, float max_y,
+                       class_id_t class_id) :
+        Rectangle(min_x, max_x, min_y, max_y), class_id(class_id)
 {
 }
 
-Annotation::Annotation(BoundingBox const& bbox, class_id_t _class_id) :
+Annotation::Annotation(BoundingBox const& bbox, class_id_t class_id) :
 	Rectangle(bbox.get_min_x(), bbox.get_max_x(),
 	          bbox.get_min_y(), bbox.get_max_y()),
-	class_id(_class_id)
+	class_id(class_id)
 {
 }
 
@@ -43,19 +43,19 @@ Annotation::~Annotation()
 {
 }
 
-DeepCopyable_shptr Annotation::cloneShallow() const
+DeepCopyable_shptr Annotation::clone_shallow() const
 {
 	auto clone = std::make_shared<Annotation>();
 	return clone;
 }
 
-void Annotation::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Annotation::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Annotation>(dest);
 	clone->class_id = class_id;
 	clone->parameters = parameters;
-	Rectangle::cloneDeepInto(dest, oldnew);
-	PlacedLogicModelObject::cloneDeepInto(dest, oldnew);
+    Rectangle::clone_deep_into(dest, oldnew);
+    PlacedLogicModelObject::clone_deep_into(dest, oldnew);
 }
 
 Annotation::class_id_t Annotation::get_class_id() const
@@ -63,9 +63,9 @@ Annotation::class_id_t Annotation::get_class_id() const
 	return class_id;
 }
 
-void Annotation::set_class_id(Annotation::class_id_t _class_id)
+void Annotation::set_class_id(Annotation::class_id_t class_id)
 {
-	class_id = _class_id;
+	this->class_id = class_id;
 }
 
 const std::string Annotation::get_descriptive_identifier() const

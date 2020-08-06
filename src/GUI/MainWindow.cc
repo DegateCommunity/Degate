@@ -590,12 +590,12 @@ namespace degate
 
 		if(project->is_changed())
 		{
-			QMessageBox msgBox(this);
-			msgBox.setText(tr("The project has been modified."));
-			msgBox.setInformativeText(tr("Do you want to save your changes ?"));
-            msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-			msgBox.setDefaultButton(QMessageBox::Save);
-			int ret = msgBox.exec();
+			QMessageBox msg_box(this);
+			msg_box.setText(tr("The project has been modified."));
+			msg_box.setInformativeText(tr("Do you want to save your changes ?"));
+            msg_box.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+			msg_box.setDefaultButton(QMessageBox::Save);
+			int ret = msg_box.exec();
 
             switch (ret)
             {
@@ -1170,7 +1170,7 @@ namespace degate
 	{
 		status_bar.showMessage(tr("Importing project/subproject..."));
 
-		ProjectImporter projectImporter;
+		ProjectImporter project_importer;
 
         ProgressDialog progress_dialog(tr("Opening project"), nullptr, this);
 
@@ -1184,7 +1184,7 @@ namespace degate
             {
                 try
                 {
-                    imported_project = projectImporter.import_all(path);
+                    imported_project = project_importer.import_all(path);
                 }
                 catch (const std::exception& e)
                 {
@@ -1292,7 +1292,7 @@ namespace degate
 	    if(project == nullptr)
 	        return;
 
-        QMenu contextMenu(tr("Context menu"), this);
+        QMenu context_menu(tr("Context menu"), this);
 
         // New
         QAction annotation_create_action(tr("Create new annotation"), this);
@@ -1326,18 +1326,18 @@ namespace degate
         if(workspace->has_area_selection())
         {
             connect(&annotation_create_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
-            contextMenu.addAction(&annotation_create_action);
+            context_menu.addAction(&annotation_create_action);
 
             connect(&gate_template_create_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
-            contextMenu.addAction(&gate_template_create_action);
+            context_menu.addAction(&gate_template_create_action);
 
             connect(&gate_create_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
-            contextMenu.addAction(&gate_create_action);
+            context_menu.addAction(&gate_create_action);
 
-            contextMenu.addSeparator();
+            context_menu.addSeparator();
 
             connect(&reset_selection_area_action, SIGNAL(triggered()), workspace, SLOT(reset_area_selection()));
-            contextMenu.addAction(&reset_selection_area_action);
+            context_menu.addAction(&reset_selection_area_action);
         }
         else if(workspace->has_selection())
         {
@@ -1346,61 +1346,61 @@ namespace degate
             if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
             {
                 connect(&annotation_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
-                contextMenu.addAction(&annotation_edit_action);
+                context_menu.addAction(&annotation_edit_action);
             }
             else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
             {
                 connect(&gate_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
-                contextMenu.addAction(&gate_edit_action);
+                context_menu.addAction(&gate_edit_action);
             }
             else if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(object))
             {
                 connect(&gate_port_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_port_edit()));
-                contextMenu.addAction(&gate_port_edit_action);
+                context_menu.addAction(&gate_port_edit_action);
             }
             else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(object))
             {
                 connect(&emarker_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
-                contextMenu.addAction(&emarker_edit_action);
+                context_menu.addAction(&emarker_edit_action);
             }
             else if (Via_shptr via = std::dynamic_pointer_cast<Via>(object))
             {
                 if(via->get_direction() == Via::DIRECTION_UP)
                 {
                     connect(&via_follow_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
-                    contextMenu.addAction(&via_follow_action);
+                    context_menu.addAction(&via_follow_action);
                 }
                 else
                 {
                     connect(&via_follow_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
-                    contextMenu.addAction(&via_follow_action);
+                    context_menu.addAction(&via_follow_action);
                 }
 
                 connect(&via_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
-                contextMenu.addAction(&via_edit_action);
+                context_menu.addAction(&via_edit_action);
             }
 
             connect(&delete_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
-            contextMenu.addAction(&delete_action);
+            context_menu.addAction(&delete_action);
         }
         else
         {
             connect(&emarker_create_action, SIGNAL(triggered()), this, SLOT(on_emarker_create()));
-            contextMenu.addAction(&emarker_create_action);
+            context_menu.addAction(&emarker_create_action);
 
             connect(&via_create_action, SIGNAL(triggered()), this, SLOT(on_via_create()));
-            contextMenu.addAction(&via_create_action);
+            context_menu.addAction(&via_create_action);
 
             if(workspace->get_current_tool() == WIRE)
             {
-                contextMenu.addSeparator();
+                context_menu.addSeparator();
 
                 connect(&reset_wire_tool_action, SIGNAL(triggered()), workspace, SLOT(reset_wire_tool()));
-                contextMenu.addAction(&reset_wire_tool_action);
+                context_menu.addAction(&reset_wire_tool_action);
             }
         }
 
-        contextMenu.exec(QCursor::pos());
+        context_menu.exec(QCursor::pos());
     }
 
     void MainWindow::on_emarker_create()

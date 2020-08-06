@@ -289,18 +289,18 @@ namespace degate
 
 		/**
 		 * Create a TileCache object.
-		 * @param _directory The directory where all the tiles are for a TileImage.
-		 * @param _tile_width_exp
-		 * @param _persistent
+		 * @param directory The directory where all the tiles are for a TileImage.
+		 * @param tile_width_exp
+		 * @param persistent
 		 */
 
-		TileCache(std::string const& _directory,
-		          unsigned int _tile_width_exp,
-		          bool _persistent,
-		          unsigned int _min_cache_tiles = 4) :
-			directory(_directory),
-			tile_width_exp(_tile_width_exp),
-			persistent(_persistent)
+		TileCache(std::string const& directory,
+		          unsigned int tile_width_exp,
+		          bool persistent,
+		          unsigned int min_cache_tiles = 4) :
+			directory(directory),
+			tile_width_exp(tile_width_exp),
+			persistent(persistent)
 		{
 		}
 

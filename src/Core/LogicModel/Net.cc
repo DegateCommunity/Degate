@@ -38,17 +38,17 @@ Net::~Net()
 {
 }
 
-DeepCopyable_shptr Net::cloneShallow() const
+DeepCopyable_shptr Net::clone_shallow() const
 {
 	auto clone = std::make_shared<Net>();
 	return clone;
 }
 
-void Net::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Net::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Net>(dest);
 	clone->connections = connections;
-	LogicModelObjectBase::cloneDeepInto(dest, oldnew);
+    LogicModelObjectBase::clone_deep_into(dest, oldnew);
 }
 
 Net::connection_iterator Net::begin()

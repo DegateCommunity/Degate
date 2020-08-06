@@ -17,20 +17,20 @@ bool compare_min_y(const Gate_shptr lhs, const Gate_shptr rhs)
 }
 
 AutoNameGates::AutoNameGates(LogicModel_shptr lmodel, ORIENTATION orientation) :
-	_lmodel(lmodel),
-	_orientation(orientation)
+        lmodel(lmodel),
+        orientation(orientation)
 {
 	layer = get_first_logic_layer(lmodel);
 }
 
 void AutoNameGates::run()
 {
-	std::vector<unsigned int> histogram(std::max(_lmodel->get_width(),
-	                                             _lmodel->get_height()));
+	std::vector<unsigned int> histogram(std::max(lmodel->get_width(),
+                                                 lmodel->get_height()));
 
-	fill_histogram(_lmodel, histogram, _orientation);
+	fill_histogram(lmodel, histogram, orientation);
 	std::list<int> scan_lines = scan_histogram(histogram);
-	rename_gates(histogram, _orientation, scan_lines);
+	rename_gates(histogram, orientation, scan_lines);
 }
 
 void AutoNameGates::rename_gates(std::vector<unsigned int> const& histogram,
@@ -73,12 +73,12 @@ void AutoNameGates::rename_gates(std::vector<unsigned int> const& histogram,
 			gate->set_name(f.str());
 
 			// next row or col
-			if (_orientation == ALONG_ROWS) col_num++;
+			if (this->orientation == ALONG_ROWS) col_num++;
 			else row_num++;
 		}
 
 		// next row or col
-		if (_orientation == ALONG_ROWS)
+		if (this->orientation == ALONG_ROWS)
 		{
 			row_num++;
 			col_num = 0;
@@ -104,11 +104,11 @@ void AutoNameGates::fill_histogram(LogicModel_shptr lmodel,
 		Gate_shptr gate = (*iter).second;
 		assert(gate != nullptr);
 
-		if (_orientation == ALONG_COLS)
+		if (this->orientation == ALONG_COLS)
 			for (x = gate->get_min_x(); x < gate->get_max_x(); x++)
 				histogram[x]++;
 
-		if (_orientation == ALONG_ROWS)
+		if (this->orientation == ALONG_ROWS)
 			for (y = gate->get_min_y(); y < gate->get_max_y(); y++)
 				histogram[y]++;
 	}

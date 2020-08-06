@@ -59,16 +59,16 @@ namespace degate
 		 * The constructor for working on an image region.
 		 */
 
-		IPCopy(unsigned int _min_x, unsigned int _max_x, unsigned int _min_y, unsigned int _max_y) :
+		IPCopy(unsigned int min_x, unsigned int max_x, unsigned int min_y, unsigned int max_y) :
 			ImageProcessorBase("IPCopy",
 			                   "Copy an image with pixel type auto conversion",
 			                   false,
 			                   typeid(typename ImageTypeIn::pixel_type),
 			                   typeid(typename ImageTypeOut::pixel_type)),
-			min_x(_min_x),
-			max_x(_max_x),
-			min_y(_min_y),
-			max_y(_max_y),
+			min_x(min_x),
+			max_x(max_x),
+			min_y(min_y),
+			max_y(max_y),
 			work_on_region(true)
 		{
 		}
@@ -82,17 +82,16 @@ namespace degate
 		}
 
 
-		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		virtual ImageBase_shptr run(ImageBase_shptr in)
 		{
-			assert(_in != nullptr);
+			assert(in != nullptr);
 
-			std::shared_ptr<ImageTypeIn> img_in =
-				std::dynamic_pointer_cast<ImageTypeIn>(_in);
+			std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
 
 			std::shared_ptr<ImageTypeOut> img_out
 			(work_on_region
 				 ? new ImageTypeOut(max_x - min_x, max_y - min_y)
-				 : new ImageTypeOut(_in->get_width(), _in->get_height()));
+				 : new ImageTypeOut(in->get_width(), in->get_height()));
 
 			assert(img_in != nullptr);
 			assert(img_out != nullptr);

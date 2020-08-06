@@ -74,7 +74,7 @@ namespace degate
 		 * Constructor for a via object.
 		 */
 
-		Via(float _x, float _y, diameter_t _diameter, DIRECTION _direction = DIRECTION_UNDEFINED);
+		Via(float x, float y, diameter_t diameter, DIRECTION direction = DIRECTION_UNDEFINED);
 
 		/**
 		 * Destructor for a via object.
@@ -83,8 +83,8 @@ namespace degate
 		virtual ~Via();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**

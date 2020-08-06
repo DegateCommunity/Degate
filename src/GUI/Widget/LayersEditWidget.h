@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __LAYEREDITWIDGET_H__
-#define __LAYEREDITWIDGET_H__
+#ifndef __LAYERSEDITWIDGET_H__
+#define __LAYERSEDITWIDGET_H__
 
 #include "Core/Project/Project.h"
 #include "Core/LogicModel/Layer.h"

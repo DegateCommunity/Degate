@@ -88,10 +88,10 @@ void RCVBlacklistImporter::parse_list(QDomElement const elem,
 			const std::string description(e.attribute("description").toStdString());
 			const std::string severity(e.attribute("severity").toStdString());
 
-			RCViolation_shptr rcv(new RCViolation(_lmodel->get_object(object_id),
-			                                      description,
-			                                      rcv_class,
-			                                      RCViolation::get_severity_from_string(severity)));
+			RCViolation_shptr rcv(new RCViolation(lmodel->get_object(object_id),
+                                                  description,
+                                                  rcv_class,
+                                                  RCViolation::get_severity_from_string(severity)));
 
 			blacklist.push_back(rcv);
 		}

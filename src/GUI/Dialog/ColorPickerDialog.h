@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __COLORSELECTION_H__
-#define __COLORSELECTION_H__
+#ifndef __COLORPICKERDIALOG_H__
+#define __COLORPICKERDIALOG_H__
 
 #include "Core/Utils/MemoryMap.h"
 

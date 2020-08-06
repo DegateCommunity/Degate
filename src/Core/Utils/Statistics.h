@@ -62,13 +62,13 @@ namespace degate
 		if (v.empty())
 			throw DegateRuntimeException("Error in average(): The vector is empty.");
 
-		double _sum = 0;
+		double sum = 0;
 
 		for (typename std::vector<T>::const_iterator iter = v.begin();
 		     iter != v.end(); ++iter)
-			_sum += *iter;
+            sum += *iter;
 
-		return _sum / (double)v.size();
+		return sum / (double)v.size();
 	}
 
 

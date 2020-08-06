@@ -42,7 +42,7 @@ Circle::Circle(float x, float y, unsigned int diameter)
 	calculate_bounding_box();
 }
 
-void Circle::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Circle::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Circle>(dest);
 	clone->x = x;

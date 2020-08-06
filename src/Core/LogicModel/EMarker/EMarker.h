@@ -52,7 +52,7 @@ namespace degate
 		 * Constructor for a via object.
 		 */
 
-		EMarker(float _x, float _y, diameter_t _diameter = 5);
+		EMarker(float x, float y, diameter_t diameter = 5);
 
 		/**
 		 * Destructor for a via object.
@@ -61,8 +61,8 @@ namespace degate
 		virtual ~EMarker();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**

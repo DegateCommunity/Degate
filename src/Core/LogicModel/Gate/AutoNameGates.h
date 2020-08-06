@@ -61,9 +61,9 @@ namespace degate
 		std::list<int> scan_histogram(std::vector<unsigned int> const& histogram) const;
 
 	private:
-		LogicModel_shptr _lmodel;
-		ORIENTATION _orientation;
-		Layer_shptr layer;
+		LogicModel_shptr lmodel;
+		ORIENTATION      orientation;
+		Layer_shptr      layer;
 	};
 }
 

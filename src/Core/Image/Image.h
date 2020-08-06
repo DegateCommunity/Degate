@@ -63,8 +63,8 @@ namespace degate
 
 	public:
 
-		ImageBase(unsigned int _width, unsigned int _height) :
-			bounding_box(_width, _height)
+		ImageBase(unsigned int width, unsigned int height) :
+			bounding_box(width, height)
 		{
 		}
 
@@ -127,9 +127,9 @@ namespace degate
 		 * The constructor.
 		 */
 
-		Image(unsigned int _width, unsigned int _height) :
-			ImageBase(_width, _height),
-			StoragePolicy<PixelPolicy>(_width, _height)
+		Image(unsigned int width, unsigned int height) :
+			ImageBase(width, height),
+			StoragePolicy<PixelPolicy>(width, height)
 		{
 		}
 
@@ -177,13 +177,13 @@ namespace degate
 		/**
 		 * @todo The third parameter must be optional. Create a temp image instead.
 		 */
-		Image(unsigned int _width,
-		      unsigned int _height,
+		Image(unsigned int width,
+		      unsigned int height,
 		      std::string const& filename) :
-			ImageBase(_width, _height),
-			StoragePolicy_PersistentFile<PixelPolicy>(_width,
-			                                          _height,
-			                                          filename)
+			ImageBase(width, height),
+			StoragePolicy_PersistentFile<PixelPolicy>(width,
+                                                      height,
+                                                      filename)
 		{
 		}
 
@@ -228,14 +228,14 @@ namespace degate
 		 * Constructor for temporary virtual images.
 		 */
 
-		Image(unsigned int _width,
-		      unsigned int _height,
-		      unsigned int _tile_width_exp = 10) :
-			ImageBase(_width, _height),
-			StoragePolicy_Tile<PixelPolicy>(_width, _height,
-			                                create_temp_directory(),
-			                                false,
-			                                _tile_width_exp)
+		Image(unsigned int width,
+		      unsigned int height,
+		      unsigned int tile_width_exp = 10) :
+			ImageBase(width, height),
+			StoragePolicy_Tile<PixelPolicy>(width, height,
+                                            create_temp_directory(),
+                                            false,
+                                            tile_width_exp)
 		{
 		}
 
@@ -243,16 +243,16 @@ namespace degate
 		 * Constructor for persistent virtual images.
 		 */
 
-		Image(unsigned int _width,
-		      unsigned int _height,
+		Image(unsigned int width,
+		      unsigned int height,
 		      std::string const& directory,
 		      bool persistent = true,
-		      unsigned int _tile_width_exp = 10) :
-			ImageBase(_width, _height),
-			StoragePolicy_Tile<PixelPolicy>(_width, _height,
-			                                directory,
-			                                persistent,
-			                                _tile_width_exp)
+		      unsigned int tile_width_exp = 10) :
+			ImageBase(width, height),
+			StoragePolicy_Tile<PixelPolicy>(width, height,
+                                            directory,
+                                            persistent,
+                                            tile_width_exp)
 		{
 		}
 

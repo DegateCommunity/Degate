@@ -30,10 +30,10 @@ using namespace degate;
 
 
 Module::Module(std::string const& module_name,
-               std::string const& _entity_name,
-               bool _is_root) :
-	entity_name(_entity_name),
-	is_root(_is_root)
+               std::string const& entity_name,
+               bool is_root) :
+	entity_name(entity_name),
+	is_root(is_root)
 {
 	set_name(module_name);
 }
@@ -42,13 +42,13 @@ Module::~Module()
 {
 }
 
-DeepCopyable_shptr Module::cloneShallow() const
+DeepCopyable_shptr Module::clone_shallow() const
 {
 	auto clone = std::make_shared<Module>(get_name(), entity_name, is_root);
 	return clone;
 }
 
-void Module::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Module::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Module>(dest);
 
@@ -56,23 +56,23 @@ void Module::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 	std::transform(modules.begin(), modules.end(), std::inserter(clone->modules, clone->modules.begin()),
 	               [&](const module_collection::value_type& v)
 	               {
-		               return std::dynamic_pointer_cast<Module>(v->cloneDeep(oldnew));
+		               return std::dynamic_pointer_cast<Module>(v->clone_deep(oldnew));
 	               });
 
 	// gates
 	std::transform(gates.begin(), gates.end(), std::inserter(clone->gates, clone->gates.begin()),
 	               [&](const gate_collection::value_type& v)
 	               {
-		               return std::dynamic_pointer_cast<Gate>(v->cloneDeep(oldnew));
+		               return std::dynamic_pointer_cast<Gate>(v->clone_deep(oldnew));
 	               });
 
 	// ports
 	std::for_each(ports.begin(), ports.end(), [&](const port_collection::value_type& v)
 	{
-		clone->ports[v.first] = std::dynamic_pointer_cast<GatePort>(v.second->cloneDeep(oldnew));
+		clone->ports[v.first] = std::dynamic_pointer_cast<GatePort>(v.second->clone_deep(oldnew));
 	});
 
-	LogicModelObjectBase::cloneDeepInto(dest, oldnew);
+    LogicModelObjectBase::clone_deep_into(dest, oldnew);
 }
 
 bool Module::is_main_module() const

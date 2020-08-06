@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __WORKSPACEVIA_H__
-#define __WORKSPACEVIA_H__
+#ifndef __WORKSPACEVIAS_H__
+#define __WORKSPACEVIAS_H__
 
 #include <GUI/Workspace/WorkspaceElement.h>
 #include <Core/LogicModel/Via/Via.h>
@@ -97,4 +97,4 @@ namespace degate
     };
 }
 
-#endif //__WORKSPACEVIA_H__
+#endif //__WORKSPACEVIAS_H__

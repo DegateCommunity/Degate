@@ -108,7 +108,7 @@ namespace degate
 		 *   have a the region as a copy.
 		 */
 
-		GateTemplate(float _min_x, float _max_x, float _min_y, float _max_y);
+		GateTemplate(float min_x, float max_x, float min_y, float max_y);
 
 		/**
 		 * Default constructor.
@@ -123,8 +123,8 @@ namespace degate
 		virtual ~GateTemplate();
 
 		//@{
-		DeepCopyable_shptr cloneShallow() const;
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		DeepCopyable_shptr clone_shallow() const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 		//@}
 
 		/**

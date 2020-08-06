@@ -127,7 +127,7 @@ LogicModel::~LogicModel()
 {
 }
 
-DeepCopyable_shptr LogicModel::cloneShallow() const
+DeepCopyable_shptr LogicModel::clone_shallow() const
 {
 	auto clone = std::make_shared<LogicModel>(*this);
 	clone->layers.clear();
@@ -144,14 +144,14 @@ DeepCopyable_shptr LogicModel::cloneShallow() const
 	return clone;
 }
 
-void LogicModel::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void LogicModel::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<LogicModel>(dest);
 
 	// layers
 	std::transform(layers.begin(), layers.end(), back_inserter(clone->layers), [&](const Layer_shptr& d)
 	{
-		Layer_shptr layer_cloned = std::dynamic_pointer_cast<Layer>(d->cloneDeep(oldnew));
+		Layer_shptr layer_cloned = std::dynamic_pointer_cast<Layer>(d->clone_deep(oldnew));
 		if (d == current_layer)
 		{
 			clone->current_layer = layer_cloned;
@@ -160,52 +160,52 @@ void LogicModel::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 	});
 
 	// gate_library
-	clone->gate_library = std::dynamic_pointer_cast<GateLibrary>(gate_library->cloneDeep(oldnew));
+	clone->gate_library = std::dynamic_pointer_cast<GateLibrary>(gate_library->clone_deep(oldnew));
 
 	// gates
 	std::for_each(gates.begin(), gates.end(), [&](const gate_collection::value_type& v)
 	{
-		clone->gates[v.first] = std::dynamic_pointer_cast<Gate>(v.second->cloneDeep(oldnew));
+		clone->gates[v.first] = std::dynamic_pointer_cast<Gate>(v.second->clone_deep(oldnew));
 	});
 
 	// wires
 	std::for_each(wires.begin(), wires.end(), [&](const wire_collection::value_type& v)
 	{
-		clone->wires[v.first] = std::dynamic_pointer_cast<Wire>(v.second->cloneDeep(oldnew));
+		clone->wires[v.first] = std::dynamic_pointer_cast<Wire>(v.second->clone_deep(oldnew));
 	});
 
 	// vias
 	std::for_each(vias.begin(), vias.end(), [&](const via_collection::value_type& v)
 	{
-		clone->vias[v.first] = std::dynamic_pointer_cast<Via>(v.second->cloneDeep(oldnew));
+		clone->vias[v.first] = std::dynamic_pointer_cast<Via>(v.second->clone_deep(oldnew));
 	});
 
 	// emarkers
 	std::for_each(emarkers.begin(), emarkers.end(), [&](const emarker_collection::value_type& v)
 	{
-		clone->emarkers[v.first] = std::dynamic_pointer_cast<EMarker>(v.second->cloneDeep(oldnew));
+		clone->emarkers[v.first] = std::dynamic_pointer_cast<EMarker>(v.second->clone_deep(oldnew));
 	});
 
 	// annotations
 	std::for_each(annotations.begin(), annotations.end(), [&](const annotation_collection::value_type& v)
 	{
-		clone->annotations[v.first] = std::dynamic_pointer_cast<Annotation>(v.second->cloneDeep(oldnew));
+		clone->annotations[v.first] = std::dynamic_pointer_cast<Annotation>(v.second->clone_deep(oldnew));
 	});
 
 	// nets
 	std::for_each(nets.begin(), nets.end(), [&](const net_collection::value_type& v)
 	{
-		clone->nets[v.first] = std::dynamic_pointer_cast<Net>(v.second->cloneDeep(oldnew));
+		clone->nets[v.first] = std::dynamic_pointer_cast<Net>(v.second->clone_deep(oldnew));
 	});
 
 	// objects
 	std::for_each(objects.begin(), objects.end(), [&](const object_collection::value_type& v)
 	{
-		clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->cloneDeep(oldnew));
+		clone->objects[v.first] = std::dynamic_pointer_cast<PlacedLogicModelObject>(v.second->clone_deep(oldnew));
 	});
 
 	// main_module
-	clone->main_module = std::dynamic_pointer_cast<Module>(main_module->cloneDeep(oldnew));
+	clone->main_module = std::dynamic_pointer_cast<Module>(main_module->clone_deep(oldnew));
 }
 
 unsigned int LogicModel::get_width() const

@@ -24,19 +24,19 @@
 
 using namespace degate;
 
-EdgeDetection::EdgeDetection(unsigned int _min_x, unsigned int _max_x,
-                             unsigned int _min_y, unsigned int _max_y,
-                             unsigned int _median_filter_width,
-                             unsigned int _blur_kernel_size,
-                             double _sigma) :
-	min_x(_min_x),
-	max_x(_max_x),
-	min_y(_min_y),
-	max_y(_max_y),
-	median_filter_width(_median_filter_width),
-	blur_kernel_size(_blur_kernel_size),
-	border(_blur_kernel_size >> 1),
-	sigma(_sigma),
+EdgeDetection::EdgeDetection(unsigned int min_x, unsigned int max_x,
+                             unsigned int min_y, unsigned int max_y,
+                             unsigned int median_filter_width,
+                             unsigned int blur_kernel_size,
+                             double sigma) :
+	min_x(min_x),
+	max_x(max_x),
+	min_y(min_y),
+	max_y(max_y),
+	median_filter_width(median_filter_width),
+	blur_kernel_size(blur_kernel_size),
+	border(blur_kernel_size >> 1),
+	sigma(sigma),
 	has_path(false)
 {
 	setup_pipe();
@@ -77,12 +77,11 @@ void EdgeDetection::setup_pipe()
 
 	if (blur_kernel_size > 0)
 	{
-		std::shared_ptr<GaussianBlur>
-			GaussianB(new GaussianBlur(blur_kernel_size, blur_kernel_size, sigma));
+		std::shared_ptr<GaussianBlur> gaussian_b(new GaussianBlur(blur_kernel_size, blur_kernel_size, sigma));
 
-		GaussianB->print();
+		gaussian_b->print();
 		std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> gaussian_blur
-			(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(GaussianB));
+			(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(gaussian_b));
 
 		pipe.add(gaussian_blur);
 	}
@@ -120,13 +119,13 @@ void EdgeDetection::run_edge_detection(ImageBase_shptr in)
 	ImageBase_shptr out = pipe.run(in);
 	assert(out != nullptr);
 
-	std::shared_ptr<SobelYOperator> SobelY(new SobelYOperator());
+	std::shared_ptr<SobelYOperator> sobel_y(new SobelYOperator());
 	std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> edge_filter_x
-		(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(SobelY));
+		(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(sobel_y));
 
-	std::shared_ptr<SobelXOperator> SobelX(new SobelXOperator());
+	std::shared_ptr<SobelXOperator> sobel_x(new SobelXOperator());
 	std::shared_ptr<IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>> edge_filter_y
-		(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(SobelX));
+		(new IPConvolve<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(sobel_x));
 
 	i1 = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(edge_filter_x->run(out));
 	i2 = std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(edge_filter_y->run(out));

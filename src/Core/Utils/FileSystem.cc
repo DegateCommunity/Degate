@@ -256,12 +256,12 @@ naive_uncomplete(boost::filesystem::path const p, boost::filesystem::path const 
 #endif
 
 	// Cache system-dependent dot, double-dot and slash strings
-	const std::string _dot = ".";
-	const std::string _dots = "..";
+	const std::string dot  = ".";
+	const std::string dots = "..";
 #ifdef WIN32
-	const std::string _sep = "/";
+	const std::string sep = "/";
 #else
-    const std::string _sep = "\\";
+    const std::string sep = "\\";
 #endif
 
 	// iterate over path and base
@@ -275,9 +275,9 @@ naive_uncomplete(boost::filesystem::path const p, boost::filesystem::path const 
 			// this is how far we've had to come down the tree from base to get to the common root
 			for (; base_it != base_end; ++base_it)
 			{
-				if (*base_it == _dot)
+				if (*base_it == dot)
 					continue;
-				else if (*base_it == _sep)
+				else if (*base_it == sep)
 					continue;
 
 				output /= "..";
@@ -288,9 +288,9 @@ naive_uncomplete(boost::filesystem::path const p, boost::filesystem::path const 
 			boost::filesystem::path::iterator path_it_start = path_it;
 			for (; path_it != path_end; ++path_it)
 			{
-				if (*path_it == _dot)
+				if (*path_it == dot)
 					continue;
-				if (*path_it == _sep)
+				if (*path_it == sep)
 					continue;
 
 				output /= *path_it;

@@ -33,27 +33,27 @@
 
 using namespace degate;
 
-Wire::Wire(float _from_x, float _from_y, float _to_x, float _to_y, unsigned int _diameter) :
-	Line(_from_x, _from_y, _to_x, _to_y, _diameter)
+Wire::Wire(float from_x, float from_y, float to_x, float to_y, unsigned int diameter) :
+	Line(from_x, from_y, to_x, to_y, diameter)
 {
 }
 
-Wire::Wire(Line _line) :
-    Line(_line)
+Wire::Wire(Line line) :
+    Line(line)
 {
 
 }
 
-DeepCopyable_shptr Wire::cloneShallow() const
+DeepCopyable_shptr Wire::clone_shallow() const
 {
 	return std::make_shared<Wire>(get_from_x(), get_from_y(), get_to_x(), get_to_y(), get_diameter());
 }
 
-void Wire::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Wire::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Wire>(dest);
-	Line::cloneDeepInto(dest, oldnew);
-	RemoteObject::cloneDeepInto(dest, oldnew);
+    Line::clone_deep_into(dest, oldnew);
+    RemoteObject::clone_deep_into(dest, oldnew);
 }
 
 const std::string Wire::get_descriptive_identifier() const

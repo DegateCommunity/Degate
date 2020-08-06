@@ -111,9 +111,9 @@ namespace degate
 
 	public:
 
-		CodeTemplateGenerator(std::string const& _entity_name,
-		                      std::string const& _description,
-		                      std::string const& _logic_class);
+		CodeTemplateGenerator(std::string const& entity_name,
+		                      std::string const& description,
+		                      std::string const& logic_class);
 
 		virtual ~CodeTemplateGenerator();
 

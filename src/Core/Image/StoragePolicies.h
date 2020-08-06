@@ -83,8 +83,8 @@ namespace degate
 
 	public:
 
-		StoragePolicy_Memory(unsigned int _width, unsigned int _height) :
-			memory_map(_width, _height)
+		StoragePolicy_Memory(unsigned int width, unsigned int height) :
+			memory_map(width, height)
 		{
 		}
 
@@ -126,13 +126,13 @@ namespace degate
 
 	public:
 
-		StoragePolicy_File(unsigned int _width,
-		                   unsigned int _height,
+		StoragePolicy_File(unsigned int width,
+		                   unsigned int height,
 		                   std::string const& filename,
 		                   bool persistent = false) :
-			memory_map(_width, _height,
+			memory_map(width, height,
 			           persistent == false ? MAP_STORAGE_TYPE_TEMP_FILE : MAP_STORAGE_TYPE_PERSISTENT_FILE,
-			           filename)
+                       filename)
 		{
 		}
 
@@ -169,11 +169,11 @@ namespace degate
 	class StoragePolicy_TempFile : public StoragePolicy_File<PixelPolicy>
 	{
 	public:
-		StoragePolicy_TempFile(unsigned int _width,
-		                       unsigned int _height) :
-			StoragePolicy_File<PixelPolicy>(_width, _height,
-			                                generate_temp_file_pattern(),
-			                                false)
+		StoragePolicy_TempFile(unsigned int width,
+		                       unsigned int height) :
+			StoragePolicy_File<PixelPolicy>(width, height,
+                                            generate_temp_file_pattern(),
+                                            false)
 		{
 		}
 
@@ -190,10 +190,10 @@ namespace degate
 	{
 	public:
 
-		StoragePolicy_PersistentFile(unsigned int _width,
-		                             unsigned int _height,
+		StoragePolicy_PersistentFile(unsigned int width,
+		                             unsigned int height,
 		                             std::string const& filename) :
-			StoragePolicy_File<PixelPolicy>(_width, _height, filename, true)
+			StoragePolicy_File<PixelPolicy>(width, height, filename, true)
 		{
 		}
 

@@ -54,7 +54,7 @@ LogicModelObjectBase::~LogicModelObjectBase()
 {
 }
 
-void LogicModelObjectBase::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void LogicModelObjectBase::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<LogicModelObjectBase>(dest);
 	clone->object_id = object_id;

@@ -39,46 +39,46 @@ double Otsu::get_otsu_threshold()
 
 void Otsu::run(TileImage_GS_DOUBLE_shptr gray)
 {
-	unsigned long histData[256] = {0,};
+	unsigned long hist_data[256] = {0,};
 
 	for (unsigned int y = 0; y < gray->get_height(); y++)
 		for (unsigned int x = 0; x < gray->get_width(); x++)
 		{
 			gs_byte_pixel_t h = gray->get_pixel_as<gs_byte_pixel_t>(x, y);
 			assert((h >= 0) && (h < 256));
-			histData[h]++;
+			hist_data[h]++;
 		}
 
 	unsigned long total = gray->get_height() * gray->get_width();
 
 	double sum = 0;
 	for (int t = 0; t < 256; t++)
-		sum += t * histData[t];
+		sum += t * hist_data[t];
 
-	double sumB = 0;
-	unsigned long wB = 0;
-	unsigned long wF = 0;
+	double        sum_b = 0;
+	unsigned long w_b   = 0;
+	unsigned long w_f   = 0;
 
-	double varMax = 0;
+	double var_max = 0;
 
 	for (int t = 0; t < 256; t++)
 	{
-		wB += histData[t];
-		if (wB == 0)
+        w_b += hist_data[t];
+		if (w_b == 0)
 			continue;
 
-		wF = total - wB;
-		if (wF == 0)
+        w_f = total - w_b;
+		if (w_f == 0)
 			break;
-		sumB += static_cast<double>(t * histData[t]);
+        sum_b += static_cast<double>(t * hist_data[t]);
 
-		double mB = sumB / wB;
-		double mF = (sum - sumB) / wF;
-		double varBetween = static_cast<double>(wB) * static_cast<double>(wF) * (mB - mF) * (mB - mF);
+		double m_b         = sum_b / w_b;
+		double m_f         = (sum - sum_b) / w_f;
+		double var_between = static_cast<double>(w_b) * static_cast<double>(w_f) * (m_b - m_f) * (m_b - m_f);
 
-		if (varBetween > varMax)
+		if (var_between > var_max)
 		{
-			varMax = varBetween;
+            var_max        = var_between;
 			otsu_threshold = t;
 		}
 	}

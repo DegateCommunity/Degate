@@ -78,11 +78,11 @@ namespace degate
 
 	public:
 
-		EdgeDetection(unsigned int _min_x, unsigned int _max_x,
-		              unsigned int _min_y, unsigned int _max_y,
-		              unsigned int median_filter_width = 3,
-		              unsigned int _blur_kernel_size = 10,
-		              double _sigma = 0.5);
+		EdgeDetection(unsigned int min_x, unsigned int max_x,
+                      unsigned int min_y, unsigned int max_y,
+                      unsigned int median_filter_width = 3,
+                      unsigned int blur_kernel_size = 10,
+                      double sigma = 0.5);
 
 		virtual ~EdgeDetection();
 

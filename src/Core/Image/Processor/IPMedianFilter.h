@@ -45,26 +45,24 @@ namespace degate
 		 * The constructor.
 		 */
 
-		IPMedianFilter(unsigned int _median_filter_width = 3) :
+		IPMedianFilter(unsigned int median_filter_width = 3) :
 			ImageProcessorBase("IPNormalize",
 			                   "Normalize an image.",
 			                   false,
 			                   typeid(typename ImageTypeIn::pixel_type),
 			                   typeid(typename ImageTypeOut::pixel_type)),
-			median_filter_width(_median_filter_width)
+			median_filter_width(median_filter_width)
 		{
 		}
 
 
-		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		virtual ImageBase_shptr run(ImageBase_shptr in)
 		{
-			assert(_in != nullptr);
+			assert(in != nullptr);
 
-			std::shared_ptr<ImageTypeIn> img_in =
-				std::dynamic_pointer_cast<ImageTypeIn>(_in);
+			std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
 
-			std::shared_ptr<ImageTypeOut>
-				img_out(new ImageTypeOut(_in->get_width(), _in->get_height()));
+			std::shared_ptr<ImageTypeOut> img_out(new ImageTypeOut(in->get_width(), in->get_height()));
 
 			assert(img_in != nullptr);
 			assert(img_out != nullptr);

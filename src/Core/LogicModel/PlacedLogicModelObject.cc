@@ -37,15 +37,15 @@ PlacedLogicModelObject::~PlacedLogicModelObject()
 {
 }
 
-void PlacedLogicModelObject::cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const
+void PlacedLogicModelObject::clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const
 {
-	ColoredObject::cloneDeepInto(destination, oldnew);
-	LogicModelObjectBase::cloneDeepInto(destination, oldnew);
+    ColoredObject::clone_deep_into(destination, oldnew);
+    LogicModelObjectBase::clone_deep_into(destination, oldnew);
 
 	auto clone = std::dynamic_pointer_cast<PlacedLogicModelObject>(destination);
 	assert(clone.get () != nullptr);
 	clone->highlight_state = highlight_state;
-	clone->layer = std::dynamic_pointer_cast<Layer>(layer.lock()->cloneDeep(oldnew));
+	clone->layer = std::dynamic_pointer_cast<Layer>(layer.lock()->clone_deep(oldnew));
 }
 
 PlacedLogicModelObject::HIGHLIGHTING_STATE PlacedLogicModelObject::get_highlighted() const

@@ -40,19 +40,19 @@ Line::Line() :
 	calculate_bounding_box();
 }
 
-Line::Line(float _from_x, float _from_y, float _to_x, float _to_y, unsigned int _diameter) :
-	from_x(_from_x),
-	from_y(_from_y),
-	to_x(_to_x),
-	to_y(_to_y),
-	diameter(_diameter),
-	d_x(_to_x - _from_x),
-	d_y(_to_y - _from_y)
+Line::Line(float from_x, float from_y, float to_x, float to_y, unsigned int diameter) :
+	from_x(from_x),
+	from_y(from_y),
+	to_x(to_x),
+	to_y(to_y),
+	diameter(diameter),
+	d_x(to_x - from_x),
+	d_y(to_y - from_y)
 {
 	calculate_bounding_box();
 }
 
-void Line::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Line::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Line>(dest);
 	clone->from_x = from_x;

@@ -57,15 +57,15 @@ namespace degate
 
 		/**
 		 * Create a new grid.
-		 * @param _orientation This parameter defines the orientation. E.g. a horizontal
+		 * @param orientation This parameter defines the orientation. E.g. a horizontal
 		 *   grid that defines horizontal spacings. This means that lines are vertical.
-		 * @param _enabled You can enable/disable grids. With this parameter you can
+		 * @param enabled You can enable/disable grids. With this parameter you can
 		 *   control whether the grid is enabled od disabled.
 		 */
 
-		Grid(ORIENTATION _orientation, bool _enabled = false) :
-			orientation(_orientation),
-			enabled(_enabled)
+		Grid(ORIENTATION orientation, bool enabled = false) :
+			orientation(orientation),
+			enabled(enabled)
 		{
 		}
 

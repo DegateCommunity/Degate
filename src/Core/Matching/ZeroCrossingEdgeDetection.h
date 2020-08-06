@@ -37,14 +37,14 @@ namespace degate
 	private:
 
 		bool trace(TileImage_GS_DOUBLE_shptr edge_image,
-		           int _x, int _y,
-		           int inc_x, int inc_y,
-		           int* start_x, int* stop_x,
-		           int* start_y, int* stop_y,
-		           double* mag,
-		           double edge_threshold,
-		           double zero_threshold,
-		           unsigned int min_d, unsigned int max_d);
+                   int x, int y,
+                   int inc_x, int inc_y,
+                   int* start_x, int* stop_x,
+                   int* start_y, int* stop_y,
+                   double* mag,
+                   double edge_threshold,
+                   double zero_threshold,
+                   unsigned int min_d, unsigned int max_d);
 
 		TileImage_GS_DOUBLE_shptr analyze_edge_image(TileImage_GS_DOUBLE_shptr edge_image,
 		                                             TileImage_GS_DOUBLE_shptr probability_map,
@@ -57,12 +57,12 @@ namespace degate
 	public:
 
 		ZeroCrossingEdgeDetection(unsigned int min_x, unsigned int max_x,
-		                          unsigned int min_y, unsigned int max_y,
-		                          unsigned int median_filter_width = 3,
-		                          unsigned int blur_kernel_size = 10,
-		                          double sigma = 0.5,
-		                          unsigned int _min_d = 1, unsigned int _max_d = 10,
-		                          double _edge_threshold = 0.25, double _zero_threshold = 0.4);
+                                  unsigned int min_y, unsigned int max_y,
+                                  unsigned int median_filter_width = 3,
+                                  unsigned int blur_kernel_size = 10,
+                                  double sigma = 0.5,
+                                  unsigned int min_d = 1, unsigned int max_d = 10,
+                                  double edge_threshold = 0.25, double zero_threshold = 0.4);
 
 		TileImage_GS_DOUBLE_shptr run(ImageBase_shptr img_in,
 		                              TileImage_GS_DOUBLE_shptr probability_map,

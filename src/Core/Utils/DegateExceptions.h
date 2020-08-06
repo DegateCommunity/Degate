@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __DEGATE_EXCEPTIONS_H__
-#define __DEGATE_EXCEPTIONS_H__
+#ifndef __DEGATEEXCEPTIONS_H__
+#define __DEGATEEXCEPTIONS_H__
 
 #include <stdexcept>
 

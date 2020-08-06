@@ -43,9 +43,9 @@ Project::Project(length_t width, length_t height) :
 }
 
 
-Project::Project(length_t width, length_t height, std::string const& _directory, unsigned int layers) :
+Project::Project(length_t width, length_t height, std::string const& directory, unsigned int layers) :
 	bounding_box(width, height),
-	directory(_directory),
+	directory(directory),
 	logic_model(new LogicModel(width, height, layers)),
 	port_color_manager(new PortColorManager())
 {
@@ -56,7 +56,7 @@ Project::~Project()
 {
 }
 
-DeepCopyable_shptr Project::cloneShallow() const
+DeepCopyable_shptr Project::clone_shallow() const
 {
 	auto clone = std::make_shared<Project>(*this);
 	clone->regular_horizontal_grid.reset();
@@ -68,11 +68,11 @@ DeepCopyable_shptr Project::cloneShallow() const
 	return clone;
 }
 
-void Project::cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const
+void Project::clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<Project>(destination);
 
-	clone->logic_model = std::dynamic_pointer_cast<LogicModel>(logic_model->cloneDeep(oldnew));
+	clone->logic_model = std::dynamic_pointer_cast<LogicModel>(logic_model->clone_deep(oldnew));
 
 	// For these members we use the default copy constructors.
 	clone->regular_horizontal_grid = std::make_shared<RegularGrid>(*regular_horizontal_grid);
@@ -82,9 +82,9 @@ void Project::cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) co
 	clone->port_color_manager = std::make_shared<PortColorManager>(*port_color_manager);
 }
 
-void Project::set_project_directory(std::string const& _directory)
+void Project::set_project_directory(std::string const& directory)
 {
-	directory = _directory;
+	this->directory = directory;
 }
 
 std::string const& Project::get_project_directory()
@@ -113,15 +113,15 @@ LogicModel_shptr Project::get_logic_model()
 }
 
 
-void Project::set_logic_model(LogicModel_shptr _logic_model)
+void Project::set_logic_model(LogicModel_shptr logic_model)
 {
-	logic_model = _logic_model;
+	this->logic_model = logic_model;
 }
 
 
-void Project::set_name(const std::string& _name)
+void Project::set_name(const std::string& name)
 {
-	name = _name;
+	this->name = name;
 }
 
 std::string const& Project::get_name() const
@@ -129,9 +129,9 @@ std::string const& Project::get_name() const
 	return name;
 }
 
-void Project::set_description(std::string _description)
+void Project::set_description(std::string description)
 {
-	description = _description;
+	this->description = description;
 }
 
 std::string const& Project::get_description() const

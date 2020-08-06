@@ -19,8 +19,8 @@
 
 */
 
-#ifndef __DOUBLESLIDER_H__
-#define __DOUBLESLIDER_H__
+#ifndef __DOUBLESLIDERWIDGET_H__
+#define __DOUBLESLIDERWIDGET_H__
 
 #include <QSlider>
 #include <QDoubleSpinBox>
@@ -164,4 +164,4 @@ namespace degate
     };
 }
 
-#endif //__DOUBLESLIDER_H__
+#endif //__DOUBLESLIDERWIDGET_H__

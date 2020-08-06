@@ -124,7 +124,7 @@ TEST_CASE("Test insert wire into qtree", "[QuadTree]")
 
     qtree->insert(dynamic_cast<PlacedLogicModelObject*>(w));
 
-    for(region_iterator<PlacedLogicModelObject *> i = qtree->region_iter_begin(); i != qtree->region_iter_end(); ++i)
+    for(RegionIterator<PlacedLogicModelObject *> i = qtree->region_iter_begin(); i != qtree->region_iter_end(); ++i)
     {
         PlacedLogicModelObject* o = *i;
 

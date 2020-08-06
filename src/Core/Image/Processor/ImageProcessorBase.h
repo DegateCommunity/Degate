@@ -64,19 +64,19 @@ namespace degate
 
 		/**
 		 * The constructor for a plugin
-		 * @param _name The name of the plugin.
+		 * @param name The name of the plugin.
 		 */
 
-		ImageProcessorBase(std::string const& _name,
-		                   std::string const& _description,
-		                   bool _has_properties,
-		                   std::type_info const& _type_in,
-		                   std::type_info const& _type_out) :
-			name(_name),
-			description(_description),
-			has_properties(_has_properties),
-			type_in(_type_in.name()),
-			type_out(_type_out.name())
+		ImageProcessorBase(std::string const& name,
+		                   std::string const& description,
+		                   bool has_properties,
+		                   std::type_info const& type_in,
+		                   std::type_info const& type_out) :
+			name(name),
+			description(description),
+			has_properties(has_properties),
+			type_in(type_in.name()),
+			type_out(type_out.name())
 		{
 		}
 
@@ -110,7 +110,7 @@ namespace degate
 		/**
 		 * Start processing.
 		 */
-		virtual ImageBase_shptr run(ImageBase_shptr _in) = 0;
+		virtual ImageBase_shptr run(ImageBase_shptr in) = 0;
 
 
 		/**

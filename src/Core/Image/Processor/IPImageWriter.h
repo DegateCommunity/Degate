@@ -44,13 +44,13 @@ namespace degate
 		 * The constructor.
 		 */
 
-		IPImageWriter(std::string _filename) :
+		IPImageWriter(std::string filename) :
 			ImageProcessorBase("IPImageWriter",
 			                   "Write an image.",
 			                   false,
 			                   typeid(typename ImageType::pixel_type),
 			                   typeid(typename ImageType::pixel_type)),
-			filename(_filename)
+			filename(filename)
 		{
 		}
 
@@ -62,16 +62,13 @@ namespace degate
 		{
 		}
 
-		virtual ImageBase_shptr run(ImageBase_shptr _in)
+		virtual ImageBase_shptr run(ImageBase_shptr in)
 		{
-			assert(_in != nullptr);
+			assert(in != nullptr);
 
-			std::shared_ptr<ImageType> img_in =
-				std::dynamic_pointer_cast<ImageType>(_in);
+			std::shared_ptr<ImageType> img_in = std::dynamic_pointer_cast<ImageType>(in);
 
-
-			std::shared_ptr<ImageType>
-				img_out(new ImageType(_in->get_width(), _in->get_height()));
+			std::shared_ptr<ImageType> img_out(new ImageType(in->get_width(), in->get_height()));
 
 			assert(img_in != nullptr);
 			assert(img_out != nullptr);

@@ -56,7 +56,7 @@ namespace degate
 
 		virtual ~ConnectedLogicModelObject();
 
-		void cloneDeepInto(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
 		/**
 		 * Set the net for this object. This method will add the object to the net.

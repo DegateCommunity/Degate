@@ -26,9 +26,9 @@
 
 using namespace degate;
 
-Via::Via(float _x, float _y, diameter_t _diameter, Via::DIRECTION _direction) :
-	Circle(_x, _y, _diameter),
-	direction(_direction)
+Via::Via(float x, float y, diameter_t diameter, Via::DIRECTION direction) :
+	Circle(x, y, diameter),
+	direction(direction)
 {
 }
 
@@ -36,18 +36,18 @@ Via::~Via()
 {
 }
 
-DeepCopyable_shptr Via::cloneShallow() const
+DeepCopyable_shptr Via::clone_shallow() const
 {
 	auto clone = std::make_shared<Via>();
 	clone->direction = direction;
 	return clone;
 }
 
-void Via::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void Via::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
-	Circle::cloneDeepInto(dest, oldnew);
-	ConnectedLogicModelObject::cloneDeepInto(dest, oldnew);
-	RemoteObject::cloneDeepInto(dest, oldnew);
+    Circle::clone_deep_into(dest, oldnew);
+    ConnectedLogicModelObject::clone_deep_into(dest, oldnew);
+    RemoteObject::clone_deep_into(dest, oldnew);
 }
 
 Via::DIRECTION Via::get_direction() const

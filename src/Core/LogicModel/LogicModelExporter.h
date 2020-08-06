@@ -59,7 +59,7 @@ namespace degate
 		ObjectIDRewriter_shptr oid_rewriter;
 
 	public:
-		LogicModelExporter(ObjectIDRewriter_shptr _oid_rewriter) : oid_rewriter(_oid_rewriter)
+		LogicModelExporter(ObjectIDRewriter_shptr oid_rewriter) : oid_rewriter(oid_rewriter)
 		{
 		}
 

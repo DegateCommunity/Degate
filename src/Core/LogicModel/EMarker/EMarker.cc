@@ -26,8 +26,8 @@
 
 using namespace degate;
 
-EMarker::EMarker(float _x, float _y, diameter_t _diameter) :
-	Circle(_x, _y, _diameter)
+EMarker::EMarker(float x, float y, diameter_t diameter) :
+	Circle(x, y, diameter)
 {
 }
 
@@ -35,18 +35,18 @@ EMarker::~EMarker()
 {
 }
 
-DeepCopyable_shptr EMarker::cloneShallow() const
+DeepCopyable_shptr EMarker::clone_shallow() const
 {
 	auto clone = std::make_shared<EMarker>();
 	return clone;
 }
 
-void EMarker::cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+void EMarker::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
 	auto clone = std::dynamic_pointer_cast<EMarker>(dest);
-	Circle::cloneDeepInto(clone, oldnew);
-	ConnectedLogicModelObject::cloneDeepInto(clone, oldnew);
-	RemoteObject::cloneDeepInto(clone, oldnew);
+    Circle::clone_deep_into(clone, oldnew);
+    ConnectedLogicModelObject::clone_deep_into(clone, oldnew);
+    RemoteObject::clone_deep_into(clone, oldnew);
 }
 
 const std::string EMarker::get_descriptive_identifier() const

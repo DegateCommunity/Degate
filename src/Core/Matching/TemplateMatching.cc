@@ -130,10 +130,8 @@ void TemplateMatching::prepare_background_images(ScalingManager_shptr sm,
 {
 	// Get the normal background image and the scaled background image
 	// These images are in RGBA format.
-	const ScalingManager<BackgroundImage>::image_map_element i1 =
-		sm->get_image(1);
-	const ScalingManager<BackgroundImage>::image_map_element i2 =
-		sm->get_image(scaling_factor);
+	const ScalingManager<BackgroundImage>::image_map_element i1 = sm->get_image(1);
+	const ScalingManager<BackgroundImage>::image_map_element i2 = sm->get_image(scaling_factor);
 
 	assert(i1.second != nullptr);
 	assert(i2.second != nullptr);

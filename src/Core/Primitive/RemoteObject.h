@@ -53,7 +53,7 @@ namespace degate
 		{
 		}
 
-		void cloneDeepInto(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+		void clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 		{
 			auto clone = std::dynamic_pointer_cast<RemoteObject>(dest);
 			clone->remote_oid = remote_oid;

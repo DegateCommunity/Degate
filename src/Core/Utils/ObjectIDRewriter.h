@@ -52,11 +52,11 @@ namespace degate
 
 		/**
 		 * Construct a new Rewriter.
-		 * @param _enable_id_rewrite If this parameter is set to false, then there is no object ID rewriting.
+		 * @param enable_id_rewrite If this parameter is set to false, then there is no object ID rewriting.
 		 */
-		ObjectIDRewriter(bool _enable_id_rewrite = true) :
+		ObjectIDRewriter(bool enable_id_rewrite = true) :
 			oid_counter(1),
-			enable_id_rewrite(_enable_id_rewrite)
+			enable_id_rewrite(enable_id_rewrite)
 		{
 		};
 
