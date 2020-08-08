@@ -591,7 +591,13 @@ namespace degate
                 selected_objects.add(plo);
             }
 
-            layer = get_first_logic_layer(project->get_logic_model());
+            try
+            {
+                layer = get_first_logic_layer(project->get_logic_model());
+            }
+            catch (std::exception& e)
+            {
+            }
 
             if(project->get_logic_model()->get_current_layer() == layer)
                 return;
