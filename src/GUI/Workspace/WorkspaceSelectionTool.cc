@@ -20,6 +20,7 @@
 */
 
 #include "WorkspaceSelectionTool.h"
+#include <GUI/Preferences/PreferencesHandler.h>
 
 namespace degate
 {
@@ -104,6 +105,12 @@ namespace degate
 	{
 		if(selection == false || project == nullptr)
 			return;
+
+        if (PREFERENCES_HANDLER.get_preferences().snap_to_grid && !object_selection_mode)
+        {
+            x = static_cast<float>(project->get_regular_horizontal_grid()->snap_to_grid(static_cast<int>(x)));
+            y = static_cast<float>(project->get_regular_vertical_grid()->snap_to_grid(static_cast<int>(y)));
+        }
 
 		if (x < origin.x())
 		{
@@ -262,6 +269,15 @@ namespace degate
 
 	void WorkspaceSelectionTool::set_origin(float x, float y)
 	{
+        if (project == nullptr)
+            return;
+
+        if (PREFERENCES_HANDLER.get_preferences().snap_to_grid && !object_selection_mode)
+        {
+            x = static_cast<float>(project->get_regular_horizontal_grid()->snap_to_grid(static_cast<int>(x)));
+            y = static_cast<float>(project->get_regular_vertical_grid()->snap_to_grid(static_cast<int>(y)));
+        }
+
 		origin.setX(x);
 		origin.setY(y);
 	}

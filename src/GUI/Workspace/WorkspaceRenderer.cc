@@ -575,7 +575,7 @@ namespace degate
         // Area selection + CTRL
         if (event->button() == Qt::RightButton &&
             current_tool == WorkspaceTool::AREA_SELECTION &&
-                selection_tool.is_object_selection_mode_active())
+            selection_tool.is_object_selection_mode_active())
         {
             BoundingBox bb = get_safe_area_selection();
             reset_area_selection();
@@ -655,13 +655,14 @@ namespace degate
             if(!selection_tool.has_selection())
             {
                 selection_tool.set_selection_state(true);
-                selection_tool.set_origin(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
                 // Area selection + CTRL
                 if (QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
                     selection_tool.set_object_selection_mode_state(true);
                 else
                     selection_tool.set_object_selection_mode_state(false);
+
+                selection_tool.set_origin(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
             }
 
             // Update other area extremity on mouse position

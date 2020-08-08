@@ -148,6 +148,14 @@ namespace degate
 		void on_menu_edit_preferences();
 
 
+		/* Show menu */
+
+		/**
+		 * Enable/disable snap to grid.
+		 */
+		void on_menu_view_snap_to_grid(bool value);
+
+
 		/* Layer menu */
 
 		/**
@@ -364,8 +372,9 @@ namespace degate
         QAction* show_vias_view_action;
         QAction* show_vias_name_view_action;
         QAction* show_wires_view_action;
-        QAction* view_grid_configuration_action;
+        QAction* grid_configuration_view_action;
         QAction* show_grid_view_action;
+        QAction* snap_to_grid_view_action;
 
         // Layer menu
         QMenu* layer_menu;

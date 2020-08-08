@@ -20,6 +20,7 @@
 */
 
 #include "WorkspaceWireTool.h"
+#include <GUI/Preferences/PreferencesHandler.h>
 
 namespace degate
 {
@@ -97,6 +98,12 @@ namespace degate
     {
         if(started == false || ended == true || project == nullptr)
             return;
+
+        if (PREFERENCES_HANDLER.get_preferences().snap_to_grid)
+        {
+            x = static_cast<float>(project->get_regular_horizontal_grid()->snap_to_grid(static_cast<int>(x)));
+            y = static_cast<float>(project->get_regular_vertical_grid()->snap_to_grid(static_cast<int>(y)));
+        }
 
         line.set_to_x(x);
         line.set_to_y(y);
@@ -178,6 +185,12 @@ namespace degate
     {
         if(project == nullptr)
             return;
+
+        if (PREFERENCES_HANDLER.get_preferences().snap_to_grid)
+        {
+            x = static_cast<float>(project->get_regular_horizontal_grid()->snap_to_grid(static_cast<int>(x)));
+            y = static_cast<float>(project->get_regular_vertical_grid()->snap_to_grid(static_cast<int>(y)));
+        }
 
         line.set_from_x(x);
         line.set_from_y(y);

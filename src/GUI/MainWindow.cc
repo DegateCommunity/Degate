@@ -144,8 +144,8 @@ namespace degate
 
         view_menu->addSeparator();
 
-        view_grid_configuration_action = view_menu->addAction("");
-        QObject::connect(view_grid_configuration_action, SIGNAL(triggered()), this, SLOT(on_grid_configuration()));
+        grid_configuration_view_action = view_menu->addAction("");
+        QObject::connect(grid_configuration_view_action, SIGNAL(triggered()), this, SLOT(on_grid_configuration()));
 
         show_grid_view_action = view_menu->addAction("");
         show_grid_view_action->setCheckable(true);
@@ -153,6 +153,13 @@ namespace degate
         show_grid_view_action->setChecked(show_grid);
         workspace->show_grid(show_grid);
         QObject::connect(show_grid_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_grid(bool)));
+
+        snap_to_grid_view_action = view_menu->addAction("");
+        snap_to_grid_view_action->setCheckable(true);
+        bool snap_to_grid = PREFERENCES_HANDLER.get_preferences().snap_to_grid;
+        snap_to_grid_view_action->setChecked(snap_to_grid);
+        QObject::connect(snap_to_grid_view_action, SIGNAL(toggled(bool)), this, SLOT(on_menu_view_snap_to_grid(bool)));
+
 
 
         // Layer menu
@@ -402,8 +409,9 @@ namespace degate
         show_vias_view_action->setText(tr("Show vias"));
         show_vias_name_view_action->setText(tr("Show vias name"));
         show_wires_view_action->setText(tr("Show wires"));
-        view_grid_configuration_action->setText(tr("Grid configuration"));
+        grid_configuration_view_action->setText(tr("Grid configuration"));
         show_grid_view_action->setText(tr("Show grid"));
+        snap_to_grid_view_action->setText(tr("Snap to grid"));
 
         // Layer menu
         layer_menu->setTitle(tr("Layer"));
@@ -715,6 +723,14 @@ namespace degate
 
 		workspace->update_grid();
 	}
+
+    void MainWindow::on_menu_view_snap_to_grid(bool value)
+    {
+	    Preferences new_preferences = PREFERENCES_HANDLER.get_preferences();
+        new_preferences.snap_to_grid = value;
+
+	    PREFERENCES_HANDLER.update(new_preferences);
+    }
 
 	void MainWindow::on_menu_layer_edit()
 	{

@@ -66,6 +66,9 @@ namespace degate
 
         // Show grid
         preferences.show_grid = settings.value("show_grid", false).toBool();
+
+        // Snap to grid
+        preferences.snap_to_grid = settings.value("snap_to_grid", false).toBool();
 	}
 
 	PreferencesHandler::~PreferencesHandler()
@@ -100,9 +103,10 @@ namespace degate
         settings.setValue("grid_color", preferences.grid_color);
         settings.setValue("max_grid_lines_count", preferences.max_grid_lines_count);
         settings.setValue("show_grid", preferences.show_grid);
+        settings.setValue("snap_to_grid", preferences.snap_to_grid);
 	}
 
-    void PreferencesHandler::update(Preferences updated_preferences)
+    void PreferencesHandler::update(const Preferences& updated_preferences)
     {
 	    if (preferences.theme != updated_preferences.theme)
         {
@@ -127,12 +131,7 @@ namespace degate
             emit language_changed();
         }
 
-        preferences.auto_save_status   = updated_preferences.auto_save_status;
-        preferences.auto_save_interval = updated_preferences.auto_save_interval;
-
-        preferences.max_grid_lines_count = updated_preferences.max_grid_lines_count;
-        preferences.grid_color           = updated_preferences.grid_color;
-        preferences.show_grid            = updated_preferences.show_grid;
+        preferences = updated_preferences;
     }
 
     void PreferencesHandler::update_language()

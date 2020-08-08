@@ -63,6 +63,7 @@ namespace degate
         color_t  grid_color;
         unsigned max_grid_lines_count;
         bool     show_grid;
+        bool     snap_to_grid;
     };
 
 	/**
@@ -91,7 +92,7 @@ namespace degate
 		/**
 		 * Update preferences.
 		 */
-		void update(Preferences updated_preferences);
+		void update(const Preferences& updated_preferences);
 
 		/**
 		 * Update language regarding the language in the preferences.
