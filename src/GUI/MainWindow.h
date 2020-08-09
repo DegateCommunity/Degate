@@ -328,6 +328,13 @@ namespace degate
          */
         void auto_save();
 
+        /**
+         * Center view on a specific object.
+         *
+         * @param object : the object to center view on.
+         */
+        void goto_object(PlacedLogicModelObject_shptr& object);
+
 	private:
 		QMenuBar menu_bar;
 		QToolBar* tool_bar = nullptr;

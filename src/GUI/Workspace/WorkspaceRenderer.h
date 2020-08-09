@@ -186,6 +186,13 @@ namespace degate
 		 */
         void update_object(PlacedLogicModelObject_shptr object);
 
+        /**
+         * Center the viewport on a specific point.
+         *
+         * @param point : the point to center the viewport on.
+         */
+        void center_view(QPointF point);
+
 	protected:
 		/**
 		 * Destroy all OpenGL textures.

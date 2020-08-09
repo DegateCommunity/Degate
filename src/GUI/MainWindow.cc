@@ -1498,4 +1498,31 @@ namespace degate
             on_menu_project_save();
         }
     }
+
+    void MainWindow::goto_object(PlacedLogicModelObject_shptr& object)
+    {
+	    if (object == nullptr || project == nullptr)
+	        return;
+
+        const BoundingBox& bounding_box = object->get_bounding_box();
+        Layer_shptr layer;
+
+        // Do not switch layer, if user jumps to a gate or a gate port.
+        if(std::dynamic_pointer_cast<GatePort>(object) || std::dynamic_pointer_cast<Gate>(object))
+        {
+            layer = project->get_logic_model()->get_current_layer();
+        }
+        else
+        {
+            layer = object->get_layer();
+        }
+
+        workspace->reset_selection();
+        workspace->add_object_to_selection(object);
+
+        project->get_logic_model()->set_current_layer(layer->get_layer_pos());
+        workspace->center_view(QPointF(bounding_box.get_center_x(), bounding_box.get_center_y()));
+
+        workspace->update();
+    }
 }

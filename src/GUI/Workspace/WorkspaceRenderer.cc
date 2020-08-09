@@ -435,6 +435,11 @@ namespace degate
         update();
     }
 
+    void WorkspaceRenderer::center_view(QPointF point)
+    {
+        set_projection(NO_ZOOM, point.x(), point.y());
+    }
+
 	void WorkspaceRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
 	{
 		scale *= scale_factor;
