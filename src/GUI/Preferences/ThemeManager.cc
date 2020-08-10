@@ -56,11 +56,11 @@ namespace degate
 
     void ThemeManager::update_theme()
     {
-	    // Reset style sheet
-        qApp->setStyleSheet("");
-
         // Save default (native) style name
         static QString default_style_name = qApp->style()->objectName();
+
+        // Reset style sheet
+        qApp->setStyleSheet("");
 
         // Default icon theme
         QPalette theme_palette;
@@ -97,12 +97,12 @@ namespace degate
                 theme_palette.setColor(QPalette::Disabled, QPalette::Button, Qt::black);
                 qApp->setPalette(theme_palette);
 
+                qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #191919; border: 1px solid white; } QToolBar { border: none; }");
+
                 break;
             default:
                 break;
         }
-
-        qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #191919; border: 1px solid white; } QToolBar { border: none; }");
     }
 
 	std::string theme_to_string(Theme theme)
