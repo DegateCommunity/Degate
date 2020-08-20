@@ -18,6 +18,7 @@
         <file>dark/remove.png</file>
         <file>dark/save.png</file>
         <file>dark/wire_tool.png</file>
+        <file>dark/rule_violations.png</file>
     </qresource>
     <qresource>
         <file>light/area_selection_tool.png</file>
@@ -34,5 +35,6 @@
         <file>light/remove.png</file>
         <file>light/save.png</file>
         <file>light/wire_tool.png</file>
+        <file>light/rule_violations.png</file>
     </qresource>
 </RCC>

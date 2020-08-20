@@ -40,6 +40,7 @@
 #include <GUI/Dialog/ViaMatchingDialog.h>
 #include <GUI/Dialog/WireMatchingDialog.h>
 #include <GUI/Dialog/RegularGridConfigurationDialog.h>
+#include <GUI/Dialog/RuleViolationsDialog.h>
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -335,6 +336,14 @@ namespace degate
          */
         void goto_object(PlacedLogicModelObject_shptr& object);
 
+        /**
+         * Open rule violations dialog.
+         */
+        void on_rule_violations_dialog();
+
+	protected:
+	    void closeEvent(QCloseEvent *event) override;
+
 	private:
 		QMenuBar menu_bar;
 		QToolBar* tool_bar = nullptr;
@@ -433,9 +442,14 @@ namespace degate
         QAction* tool_gate_library;
         QAction* area_selection_tool;
         QAction* wire_tool;
+        QAction* rule_violations_action;
 
         // QTimer for auto save
         QTimer auto_save_timer;
+
+        /* Dialogs */
+        RuleViolationsDialog* rcv_dialog = nullptr;
+
 	};
 }
 

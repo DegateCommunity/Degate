@@ -305,6 +305,11 @@ namespace degate
 
         tool_bar->addActions(tools_group.actions());
 
+        tool_bar->addSeparator();
+
+        rule_violations_action = tool_bar->addAction("");
+        QObject::connect(rule_violations_action, SIGNAL(triggered()), this, SLOT(on_rule_violations_dialog()));
+
 		// Other
 		QObject::connect(workspace, SIGNAL(project_changed(std::string)), this, SLOT(open_project(std::string)));
         QObject::connect(workspace, SIGNAL(right_mouse_button_released()), this, SLOT(show_context_menu()));
@@ -378,6 +383,7 @@ namespace degate
         tool_gate_library->setIcon(QIcon(GET_ICON_PATH("book.png")));
         area_selection_tool->setIcon(QIcon(GET_ICON_PATH("area_selection_tool.png")));
         wire_tool->setIcon(QIcon(GET_ICON_PATH("wire_tool.png")));
+        rule_violations_action->setIcon(QIcon(GET_ICON_PATH("rule_violations.png")));
     }
 
     void MainWindow::reload_texts()
@@ -468,6 +474,7 @@ namespace degate
         tool_gate_library->setText(tr("Gate library"));
         area_selection_tool->setText(tr("Area selection tool"));
         wire_tool->setText(tr("Wire tool"));
+        rule_violations_action->setText(tr("Rule violations"));
     }
 
 	void MainWindow::on_menu_help_about()
@@ -1126,7 +1133,7 @@ namespace degate
     {
 	    if(project != nullptr)
         {
-            QString window_title = tr("Degate : %1 project") + " [[*]]";
+            QString window_title = tr("Degate : %1 project") + " [*]";
             setWindowTitle(window_title.arg(QString::fromStdString(project->get_name())));
             setWindowModified(project->is_changed());
         }
@@ -1524,5 +1531,42 @@ namespace degate
         workspace->center_view(QPointF(bounding_box.get_center_x(), bounding_box.get_center_y()));
 
         workspace->update();
+    }
+
+    void MainWindow::on_rule_violations_dialog()
+    {
+        if (project == nullptr)
+            return;
+
+        if (rcv_dialog == nullptr)
+        {
+            rcv_dialog = new RuleViolationsDialog(this, project);
+            rcv_dialog->setWindowFlags(Qt::Window);
+
+            QObject::connect(rcv_dialog,
+                             SIGNAL(goto_object(PlacedLogicModelObject_shptr&)),
+                             this,
+                             SLOT(goto_object(PlacedLogicModelObject_shptr&)));
+        }
+
+        rcv_dialog->run_checks();
+        rcv_dialog->show();
+        rcv_dialog->clearFocus();
+
+        project_changed();
+    }
+
+    void MainWindow::closeEvent(QCloseEvent *event)
+    {
+	    // When the main window is closed, automatically close the rule violations dialog.
+	    // Since the dialog is modeless and not linked to this window, we have to force close.
+        if (rcv_dialog != nullptr)
+        {
+            rcv_dialog->close();
+
+            delete rcv_dialog;
+        }
+
+        QMainWindow::closeEvent(event);
     }
 }

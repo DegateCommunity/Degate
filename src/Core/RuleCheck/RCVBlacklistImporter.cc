@@ -76,11 +76,12 @@ void RCVBlacklistImporter::parse_list(QDomElement const elem,
                                       RCBase::container_type& blacklist)
 {
 	const QDomNodeList rcv_list = elem.elementsByTagName("rc-violation");
+    QDomElement e;
 	for (int i = 0; i < rcv_list.count(); i++)
 	{
-		QDomElement e = rcv_list.at(i).toElement();
+		e = rcv_list.at(i).toElement();
 
-		if (e.isNull())
+		if (!e.isNull())
 		{
 			object_id_t object_id = parse_number<object_id_t>(e, "object-id");
 

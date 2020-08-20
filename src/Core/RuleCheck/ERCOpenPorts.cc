@@ -59,9 +59,8 @@ void ERCOpenPorts::run(LogicModel_shptr lmodel)
 				boost::format f("Port %1% is unconnected.");
 				f % port->get_descriptive_identifier();
 
-				debug(TM, "\tRC: found a vioation.");
-				add_rc_violation(std::make_shared<RCViolation>(port, f.str(),
-				                                                   get_rc_class_name()));
+				//debug(TM, "\tRC: found a violation.");
+                add_rc_violation(std::make_shared<RCViolation>(port, f.str(), get_rc_class_name(), get_severity()));
 			}
 		}
 	}

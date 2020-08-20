@@ -36,7 +36,7 @@ namespace degate
 
 	public:
 
-		RuleChecker() : RCBase("rc-all", "A collection of all RCs.")
+		RuleChecker() : RCBase("rc-all", "A collection of all RCs.", RC_UNDEFINED)
 		{
 			checks.push_back(RCBase_shptr(new ERCOpenPorts()));
 			checks.push_back(RCBase_shptr(new ERCNet()));

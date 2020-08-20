@@ -77,9 +77,11 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net)
 				{
 					boost::format f("For the corresponding gate template port of %1% the port "
 						"direction is undefined.");
-					f % gate_port->get_descriptive_identifier();
-					add_rc_violation(std::make_shared<RCViolation>(gate_port, f.str(),
-					                                                   "undef_port_dir"));
+                    f % gate_port->get_descriptive_identifier();
+                    add_rc_violation(std::make_shared<RCViolation>(gate_port,
+                                                                   f.str(),
+                                                                   "undef_port_dir",
+                                                                   get_severity()));
 				}
 			}
 		}
@@ -105,7 +107,7 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net)
 					f % gate_port->get_descriptive_identifier() % (in_ports - 1);
 					error_msg = f.str();
 					rc_class = "net.not_feeded";
-					add_rc_violation(std::make_shared<RCViolation>(gate_port, error_msg, rc_class));
+                    add_rc_violation(std::make_shared<RCViolation>(gate_port, error_msg, rc_class, get_severity()));
 				}
 				else if (out_ports > 1)
 				{
@@ -115,7 +117,7 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net)
 						f % gate_port->get_descriptive_identifier() % (out_ports - 1);
 						error_msg = f.str();
 						rc_class = "net.outputs_connected";
-						add_rc_violation(std::make_shared<RCViolation>(gate_port, error_msg, rc_class));
+						add_rc_violation(std::make_shared<RCViolation>(gate_port, error_msg, rc_class, get_severity()));
 					}
 				}
 			}
