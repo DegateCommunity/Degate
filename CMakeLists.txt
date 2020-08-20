@@ -30,6 +30,8 @@ set(CMAKE_AUTORCC ON)
 # Group Qt files
 #
 source_group("qt" REGULAR_EXPRESSION "(resources.qrc|moc.*.cpp|qrc_resources.cpp)")
+source_group("qt\\languages" REGULAR_EXPRESSION "(.*.qm|translations.qrc)")
+source_group("res" REGULAR_EXPRESSION "(resource.rc)")
 set_property(GLOBAL PROPERTY AUTOGEN_TARGETS_FOLDER "Moc")
 set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "qt")
 
