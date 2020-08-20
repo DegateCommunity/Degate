@@ -132,7 +132,7 @@ You can find test projects in the 'etc' folder :
 
 # Contributing
 
-Any help is not just welcome, but also essential and precious to maintain and improve Degate. Feel free to help on all aspects of the project, from bug reports to code contributions. This project (and this repository) is for the community and by the community.
+Read the "CONTRIBUTING.md" file.
 
 # License
 
