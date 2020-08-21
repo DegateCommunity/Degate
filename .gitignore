@@ -5,3 +5,5 @@ build/*
 etc/installer/packages/Degate/data/*
 !etc/installer/packages/Degate/data/.keepme
 etc/installer/Degate installer.exe
+
+res/CHANGELOG.md

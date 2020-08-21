@@ -21,6 +21,7 @@
 
 #include "MainWindow.h"
 #include <GUI/Dialog/ProgressDialog.h>
+#include <GUI/Dialog/AboutDialog.h>
 
 #include <memory>
 
@@ -479,35 +480,7 @@ namespace degate
 
 	void MainWindow::on_menu_help_about()
 	{
-		const QString about_message =
-		        "<html><center>"
-                "<img src=':/degate_logo.png' alt='' width='100' height='87'> <br><br>"
-                "<strong>" + tr("Welcome to Degate version %1") + "</strong><br><br>"
-                "<strong>" + tr("This is a forked version of Degate.") + "</strong><br><br>" +
-                tr("This Degate version is still under development, if you find a bug you can report it on Github. "
-                   "You can also help us by adding new languages, see the Localization section of the README.md file, still on Github.")
-                + "<br><br>" +
-                  tr("To obtain the latest update of Degate go to the 'releases' section of the Github repository.")
-                + "<br><br>" +
-                tr("This software is released under the GNU General Public License Version 3.") + "<br><br>"
-                "<a href='https://github.com/DegateCommunity/Degate'>Github</a> <br>"
-                "<a href='http://www.degate.org/'>" + tr("Original website") + "</a>"
-                "</center></html>";
-
-		QMessageBox about(tr("About Degate"),
-		                  about_message.arg(DEGATE_VERSION),
-		                  QMessageBox::Icon::NoIcon,
-		                  QMessageBox::Button::Ok,
-		                  QMessageBox::Button::NoButton,
-		                  QMessageBox::Button::NoButton,
-		                  this
-		);
-
-        auto* about_layout = about.findChild<QGridLayout*>();
-        QMargins about_margins = about_layout->contentsMargins();
-        about_margins.setRight(40);
-        about_layout->setContentsMargins(about_margins);
-
+        AboutDialog about(this);
 		about.exec();
 	}
 

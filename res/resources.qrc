@@ -2,6 +2,7 @@
     <qresource>
         <file>degate_logo.png</file>
         <file>degate_splash.png</file>
+        <file>CHANGELOG.md</file>
     </qresource>
     <qresource>
         <file>dark/area_selection_tool.png</file>
