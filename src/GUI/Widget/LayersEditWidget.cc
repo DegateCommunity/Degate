@@ -312,7 +312,7 @@ namespace degate
                 if (background->has_new_image())
                     load_background_image(layer, project->get_project_directory(), background->get_image_path());
 			}
-			catch(std::exception& e)
+			catch (std::exception& e)
             {
                 QMessageBox::critical(this,
                                       tr("Error"),

@@ -757,7 +757,7 @@ namespace degate
 					layer = get_first_logic_layer(lmodel);
 					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
 			    }
-				catch(CollectionLookupException const& ex)
+				catch (CollectionLookupException const& ex)
 				{
 				}
 			}

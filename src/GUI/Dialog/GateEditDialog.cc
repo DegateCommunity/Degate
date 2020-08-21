@@ -436,7 +436,7 @@ namespace degate
             text_area.setText(QString::fromStdString(c));
             code_text[languages[language_selector.currentText()]] = c;
         }
-        catch(std::exception const& e)
+        catch (std::exception const& e)
         {
             QMessageBox::critical(this, tr("Error"), tr("Failed to create a code template: %1").arg(e.what()));
         }
