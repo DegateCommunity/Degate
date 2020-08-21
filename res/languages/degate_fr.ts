@@ -29,6 +29,11 @@
         <translation>Ce logiciel est distribué sous la licence GNU General Public License version 3.</translation>
     </message>
     <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="47"/>
+        <source>Roadmap</source>
+        <translation>Feuille de route</translation>
+    </message>
+    <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="48"/>
         <source>Original website</source>
         <translation>Site web original</translation>
