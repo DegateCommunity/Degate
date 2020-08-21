@@ -252,7 +252,7 @@ bool Layer::has_background_image() const
 
 void Layer::unset_image()
 {
-	if(!has_background_image())
+	if (!has_background_image())
 		return;
 	
 	if (scaling_manager == nullptr) throw DegateLogicException("There is no scaling manager.");
@@ -326,7 +326,7 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(float x, float y, flo
             }
             else if (std::dynamic_pointer_cast<Via>((*iter)) != nullptr && !ignore_vias)
             {
-                if(type == PlacedLogicModelObjectType::GATE_PORT)
+                if (type == PlacedLogicModelObjectType::GATE_PORT)
                     continue;
 
                 object = (*iter);
@@ -334,8 +334,8 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(float x, float y, flo
             }
             else if (std::dynamic_pointer_cast<EMarker>((*iter)) != nullptr && !ignore_emarkers)
             {
-                if(type == PlacedLogicModelObjectType::GATE_PORT
-                || type == PlacedLogicModelObjectType::VIA)
+                if (type == PlacedLogicModelObjectType::GATE_PORT ||
+                    type == PlacedLogicModelObjectType::VIA)
                     continue;
 
                 object = (*iter);
@@ -343,20 +343,20 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(float x, float y, flo
             }
 			else if (std::dynamic_pointer_cast<Gate>((*iter)) != nullptr && !ignore_gates)
 			{
-                if(type == PlacedLogicModelObjectType::GATE_PORT
-                || type == PlacedLogicModelObjectType::VIA
-                || type == PlacedLogicModelObjectType::EMARKER)
+                if (type == PlacedLogicModelObjectType::GATE_PORT ||
+                    type == PlacedLogicModelObjectType::VIA ||
+                    type == PlacedLogicModelObjectType::EMARKER)
                     continue;
 
                 object = (*iter);
                 type = PlacedLogicModelObjectType::GATE;
 			}
-            else if(std::dynamic_pointer_cast<Annotation>((*iter)) != nullptr && !ignore_annotations)
+            else if (std::dynamic_pointer_cast<Annotation>((*iter)) != nullptr && !ignore_annotations)
             {
-                if(type == PlacedLogicModelObjectType::GATE_PORT
-                || type == PlacedLogicModelObjectType::VIA
-                || type == PlacedLogicModelObjectType::EMARKER
-                || type == PlacedLogicModelObjectType::GATE)
+                if (type == PlacedLogicModelObjectType::GATE_PORT ||
+                    type == PlacedLogicModelObjectType::VIA ||
+                    type == PlacedLogicModelObjectType::EMARKER ||
+                    type == PlacedLogicModelObjectType::GATE)
                     continue;
 
                 object = (*iter);
@@ -364,11 +364,11 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(float x, float y, flo
             }
             else if (std::dynamic_pointer_cast<Wire>((*iter)) != nullptr && !ignore_wires)
             {
-                if(type == PlacedLogicModelObjectType::GATE_PORT
-                || type == PlacedLogicModelObjectType::VIA
-                || type == PlacedLogicModelObjectType::EMARKER
-                || type == PlacedLogicModelObjectType::GATE
-                || type == PlacedLogicModelObjectType::ANNOTATION)
+                if (type == PlacedLogicModelObjectType::GATE_PORT ||
+                    type == PlacedLogicModelObjectType::VIA ||
+                    type == PlacedLogicModelObjectType::EMARKER ||
+                    type == PlacedLogicModelObjectType::GATE ||
+                    type == PlacedLogicModelObjectType::ANNOTATION)
                     continue;
 
                 object = (*iter);

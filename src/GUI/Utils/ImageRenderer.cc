@@ -139,7 +139,7 @@ namespace degate
 
 	void ImageRenderer::free_texture()
 	{
-		if(glIsTexture(texture) == GL_TRUE)
+		if (glIsTexture(texture) == GL_TRUE)
 			glDeleteTextures(1, &texture);
 	}
 
@@ -154,7 +154,7 @@ namespace degate
         if (program != nullptr)
             delete program;
 
-        if(glIsBuffer(vbo) == GL_TRUE)
+        if (glIsBuffer(vbo) == GL_TRUE)
             glDeleteBuffers(1, &vbo);
     }
 
@@ -203,7 +203,7 @@ namespace degate
 
 		glGenBuffers(1, &vbo);
 
-		if(update_on_gl_initialize)
+		if (update_on_gl_initialize)
 			update_screen();
 
         connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &ImageRenderer::cleanup);

@@ -123,11 +123,11 @@ namespace degate
 
 	Theme string_to_theme(const std::string& theme)
 	{
-		if(theme == "native")
+		if (theme == "native")
 			return NATIVE_THEME;
-		else if(theme == "light")
+		else if (theme == "light")
 			return LIGHT_THEME;
-		else if(theme == "dark")
+		else if (theme == "dark")
 			return DARK_THEME;
 		else
 			return NATIVE_THEME;
@@ -148,9 +148,9 @@ namespace degate
 
 	IconTheme string_to_icon_theme(const std::string& theme)
 	{
-		if(theme == "light")
+		if (theme == "light")
 			return LIGHT_ICON_THEME;
-		else if(theme == "dark")
+		else if (theme == "dark")
 			return DARK_ICON_THEME;
 		else
 			return DARK_ICON_THEME;

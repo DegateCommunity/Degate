@@ -60,7 +60,7 @@
 /**
  * Check if a path exist, if not it will create it.
  */
-#define CHECK_PATH(path) if(!QDir(QString::fromStdString(path)).exists()) QDir().mkdir(QString::fromStdString(path));
+#define CHECK_PATH(path) if (!QDir(QString::fromStdString(path)).exists()) QDir().mkdir(QString::fromStdString(path));
 
 /**
  * Default degate configuration file name.

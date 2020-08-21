@@ -42,7 +42,7 @@ namespace degate
 
         // Create the input matrix.
         bool** input = new bool*[input_width];
-        for(unsigned int i = 0; i < input_width; i++)
+        for (unsigned int i = 0; i < input_width; i++)
             input[i] = new bool[input_height];
 
         // Fill the bool matrix to know if a pixel is considered inside or outside.
@@ -115,7 +115,7 @@ namespace degate
         QtConcurrent::blockingMap(output_it, output_function);
 
         // Delete the input matrix.
-        for(unsigned int i = 0; i < input_width; i++)
+        for (unsigned int i = 0; i < input_width; i++)
             delete[] input[i];
         delete[] input;
 

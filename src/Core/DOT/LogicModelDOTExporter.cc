@@ -96,7 +96,7 @@ void LogicModelDOTExporter::export_data(std::string const& filename, LogicModel_
 			if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(o))
 			{
 				// check if the gate should be rendered
-				//if(accept_gate_for_output)
+				//if (accept_gate_for_output)
 				add_gate(gate);
 			}
 
@@ -107,7 +107,7 @@ void LogicModelDOTExporter::export_data(std::string const& filename, LogicModel_
 			}
 
 			/*
-		  else if(Wire_shptr wire = std::dynamic_pointer_cast<Wire>(o))
+		  else if (Wire_shptr wire = std::dynamic_pointer_cast<Wire>(o))
 			add_wire(wires_elem, wire, layer_pos);
 	  
 			*/
@@ -234,7 +234,7 @@ void LogicModelDOTExporter::add_connection(Net_shptr net,
                                            std::string const& src_name,
                                            std::string const& edge_name)
 {
-    if(net == nullptr)
+    if (net == nullptr)
         return;
 
 	string net_name(oid_to_str("N", net->get_object_id()));

@@ -224,30 +224,30 @@ ZeroCrossingEdgeDetection::analyze_edge_image(TileImage_GS_DOUBLE_shptr edge_ima
 
 
 	/*
-	for(x = get_border(); x < edge_image->get_width() - get_border(); x++) {
-  for(y = get_border(); y < edge_image->get_height() - get_border(); y++) {
-	if(trace(edge_image, x, y, 1, 1,
+	for (x = get_border(); x < edge_image->get_width() - get_border(); x++) {
+  for (y = get_border(); y < edge_image->get_height() - get_border(); y++) {
+	if (trace(edge_image, x, y, 1, 1,
 		 &start_x, &stop_x, &start_y, &stop_y, &mag,
 		 edge_threshold, zero_threshold, sqrt(2*min_d*min_d), sqrt(2*max_d*max_d))) {
 	  int
 		p_x = start_x + (stop_x - start_x)/2,
 		p_y = start_y + (stop_y - start_y)/2;
-	  if(p_x >= 0 && p_y >= 0 && p_x < out_image->get_width() && p_y < out_image->get_height())
+	  if (p_x >= 0 && p_y >= 0 && p_x < out_image->get_width() && p_y < out_image->get_height())
 		out_image->set_pixel(p_x, p_y, mag);
 	}
   }
 	}
 
 
-	for(x = get_border(); x < edge_image->get_width() - get_border(); x++) {
-  for(y = get_border(); y < edge_image->get_height() - get_border(); y++) {
-	if(trace(edge_image, x, y, -1, 1,
+	for (x = get_border(); x < edge_image->get_width() - get_border(); x++) {
+  for (y = get_border(); y < edge_image->get_height() - get_border(); y++) {
+	if (trace(edge_image, x, y, -1, 1,
 		 &start_x, &stop_x, &start_y, &stop_y, &mag,
 		 edge_threshold, zero_threshold, sqrt(2*min_d*min_d), sqrt(2*max_d*max_d))) {
 	  int
 		p_x = start_x + (stop_x - start_x)/2,
 		p_y = start_y + (stop_y - start_y)/2;
-	  if(p_x >= 0 && p_y >= 0 && p_x < out_image->get_width() && p_y < out_image->get_height())
+	  if (p_x >= 0 && p_y >= 0 && p_x < out_image->get_width() && p_y < out_image->get_height())
 		out_image->set_pixel(p_x, p_y, mag);
 	}
   }

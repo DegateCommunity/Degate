@@ -41,10 +41,10 @@ namespace degate
         if (program != nullptr)
             delete program;
 
-        if(QOpenGLContext::currentContext() == nullptr || context == nullptr)
+        if (QOpenGLContext::currentContext() == nullptr || context == nullptr)
             return;
 
-        if(context->glIsBuffer(vbo) == GL_TRUE)
+        if (context->glIsBuffer(vbo) == GL_TRUE)
             context->glDeleteBuffers(1, &vbo);
     }
 
@@ -96,7 +96,7 @@ namespace degate
 
     void WorkspaceWireTool::update(float x, float y)
     {
-        if(started == false || ended == true || project == nullptr)
+        if (started == false || ended == true || project == nullptr)
             return;
 
         if (PREFERENCES_HANDLER.get_preferences().snap_to_grid)
@@ -156,7 +156,7 @@ namespace degate
 
     void WorkspaceWireTool::draw(const QMatrix4x4 &projection)
     {
-        if(started == false || project == nullptr || (line.get_from_x() == line.get_to_x() && line.get_from_y() == line.get_to_y()))
+        if (started == false || project == nullptr || (line.get_from_x() == line.get_to_x() && line.get_from_y() == line.get_to_y()))
             return;
 
         program->bind();
@@ -183,7 +183,7 @@ namespace degate
 
     void WorkspaceWireTool::start_line_drawing(float x, float y)
     {
-        if(project == nullptr)
+        if (project == nullptr)
             return;
 
         if (PREFERENCES_HANDLER.get_preferences().snap_to_grid)
@@ -203,7 +203,7 @@ namespace degate
 
     void WorkspaceWireTool::end_line_drawing()
     {
-        if(project == nullptr)
+        if (project == nullptr)
             return;
 
         ended = true;
@@ -211,7 +211,7 @@ namespace degate
 
     void WorkspaceWireTool::reset_line_drawing()
     {
-        if(project == nullptr)
+        if (project == nullptr)
             return;
 
         started = false;

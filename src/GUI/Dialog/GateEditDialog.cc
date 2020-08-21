@@ -80,7 +80,7 @@ namespace degate
 
 		logic_class_label.setText(tr("Logic Class:"));
 
-		for(auto& e : logic_classes)
+		for (auto& e : logic_classes)
             logic_class.addItem(e.second);
 
 		logic_class.setCurrentText(logic_classes[gate->get_logic_class()]);
@@ -155,14 +155,14 @@ namespace degate
 
 	void GateEditEntityTab::validate()
 	{
-		if(gate == nullptr)
+		if (gate == nullptr)
 			return;
 
 		gate->set_name(name.text().toStdString());
 		gate->set_description(description.text().toStdString());
 
 		unsigned index = 0;
-		for(GateTemplate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter)
+		for (GateTemplate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter)
 		{
 			GateTemplatePort_shptr tmpl_port = *iter;
 
@@ -184,11 +184,11 @@ namespace degate
 			out = ports.item(index, 5)->checkState() == Qt::CheckState::Checked ? true : false;
 
 			// In/Out set
-			if(in && !out)
+			if (in && !out)
 				tmpl_port->set_port_type(GateTemplatePort::PORT_TYPE_IN);
-			else if(!in && out)
+			else if (!in && out)
 				tmpl_port->set_port_type(GateTemplatePort::PORT_TYPE_OUT);
-			else if(in && out)
+			else if (in && out)
 				tmpl_port->set_port_type(GateTemplatePort::PORT_TYPE_INOUT);
 			else
 				tmpl_port->set_port_type(GateTemplatePort::PORT_TYPE_UNDEFINED);
@@ -196,9 +196,9 @@ namespace degate
 			index++;
 		}
 
-        for(auto& e : logic_classes)
+        for (auto& e : logic_classes)
         {
-            if(e.second == logic_class.currentText())
+            if (e.second == logic_class.currentText())
                 gate->set_logic_class(e.first);
         }
 
@@ -226,14 +226,14 @@ namespace degate
 
 		QItemSelectionModel* select = ports.selectionModel();
 
-		if(!select->hasSelection())
+		if (!select->hasSelection())
 			return;
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto & sel : index)
+		for (auto & sel : index)
 		{
-			if(sel.isValid())
+			if (sel.isValid())
 				gate->remove_template_port(ports.item(sel.row(), 0)->text().toInt());
 		}
 
@@ -246,7 +246,7 @@ namespace degate
 	{
 		ports.setRowCount(0);
 
-		for(GateTemplate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter)
+		for (GateTemplate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter)
 		{
 			GateTemplatePort_shptr tmpl_port = *iter;
 
@@ -297,14 +297,14 @@ namespace degate
 
 		QItemSelectionModel* select = ports.selectionModel();
 
-		if(!select->hasSelection())
+		if (!select->hasSelection())
 			return;
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto & sel : index)
+		for (auto & sel : index)
 		{
-			if(sel.isValid())
+			if (sel.isValid())
 			{
 				PortPlacementDialog dialog(this, project, gate, gate->get_template_port(ports.item(sel.row(), 0)->text().toInt()));
 				dialog.exec();
@@ -328,7 +328,7 @@ namespace degate
 
         language_label.setText(tr("Language:"));
 
-        for(auto& e : languages)
+        for (auto& e : languages)
             language_selector.addItem(e.first);
 
         QObject::connect(&language_selector, SIGNAL(currentIndexChanged(int)), this, SLOT(on_language_selector_changed(int)));
@@ -348,7 +348,7 @@ namespace degate
         buttons_layout.addWidget(&compile_button);
         buttons_layout.addWidget(&compile_save_button);
 
-        for(GateTemplate::implementation_iter iter = gate->implementations_begin(); iter != gate->implementations_end(); ++iter)
+        for (GateTemplate::implementation_iter iter = gate->implementations_begin(); iter != gate->implementations_end(); ++iter)
             code_text[iter->first] = iter->second;
 
         text_area.setText(QString::fromStdString(code_text[GateTemplate::IMPLEMENTATION_TYPE::TEXT]));
@@ -381,7 +381,7 @@ namespace degate
     {
         CodeTemplateGenerator_shptr generator;
 
-        if(code_text[languages[language_selector.currentText()]].length() != 0)
+        if (code_text[languages[language_selector.currentText()]].length() != 0)
         {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(this,
@@ -395,25 +395,25 @@ namespace degate
 
         auto index = languages[language_selector.currentText()];
 
-        if(index == GateTemplate::VHDL)
+        if (index == GateTemplate::VHDL)
         {
             generator = CodeTemplateGenerator_shptr(new VHDLCodeTemplateGenerator(entity_tab.name.text().toStdString().c_str(),
                                                                                   entity_tab.description.text().toStdString().c_str(),
                                                                                   entity_tab.logic_class.currentText().toStdString()));
         }
-        else if(index == GateTemplate::VHDL_TESTBENCH)
+        else if (index == GateTemplate::VHDL_TESTBENCH)
         {
             generator = CodeTemplateGenerator_shptr(new VHDLTBCodeTemplateGenerator(entity_tab.name.text().toStdString().c_str(),
                                                                                     entity_tab.description.text().toStdString().c_str(),
                                                                                     entity_tab.logic_class.currentText().toStdString()));
         }
-        else if(index == GateTemplate::VERILOG)
+        else if (index == GateTemplate::VERILOG)
         {
             generator = CodeTemplateGenerator_shptr(new VerilogCodeTemplateGenerator(entity_tab.name.text().toStdString().c_str(),
                                                                                      entity_tab.description.text().toStdString().c_str(),
                                                                                      entity_tab.logic_class.currentText().toStdString()));
         }
-        else if(index == GateTemplate::VERILOG_TESTBENCH)
+        else if (index == GateTemplate::VERILOG_TESTBENCH)
         {
             generator = CodeTemplateGenerator_shptr(new VerilogTBCodeTemplateGenerator(entity_tab.name.text().toStdString().c_str(),
                                                                                        entity_tab.description.text().toStdString().c_str(),
@@ -424,7 +424,7 @@ namespace degate
             return;
         }
 
-        for(unsigned int i = 0; i < entity_tab.ports.rowCount(); i++)
+        for (unsigned int i = 0; i < entity_tab.ports.rowCount(); i++)
         {
             generator->add_port(entity_tab.ports.item(i, 1)->text().toStdString(),
                                 entity_tab.ports.item(i, 4)->checkState() == Qt::CheckState::Checked ? true : false);
@@ -446,24 +446,24 @@ namespace degate
     {
         auto index = languages[language_selector.currentText()];
 
-        if(index == GateTemplate::VHDL || index == GateTemplate::VHDL_TESTBENCH)
+        if (index == GateTemplate::VHDL || index == GateTemplate::VHDL_TESTBENCH)
         {
             show_vhdl_warning();
 
             return;
         }
 
-        if(text_area.toPlainText().length() == 0)
+        if (text_area.toPlainText().length() == 0)
         {
             show_missing_code_warning();
 
             return;
         }
 
-	    if(index == GateTemplate::VERILOG)
+	    if (index == GateTemplate::VERILOG)
         {
             int result = std::system("iverilog -V");
-            if(result != 0)
+            if (result != 0)
             {
                 show_iverilog_warning();
 
@@ -485,9 +485,9 @@ namespace degate
 
             remove_directory(dir);
         }
-	    else if(index == GateTemplate::VERILOG_TESTBENCH)
+	    else if (index == GateTemplate::VERILOG_TESTBENCH)
         {
-	        if(code_text[GateTemplate::VERILOG].size() == 0)
+	        if (code_text[GateTemplate::VERILOG].size() == 0)
             {
                 show_missing_verilog_warning();
 
@@ -496,7 +496,7 @@ namespace degate
 
             int iverilog_result = std::system("iverilog -V");
             int gtkwave_result = std::system("gtkwave -V");
-            if(iverilog_result != 0 || gtkwave_result != 0)
+            if (iverilog_result != 0 || gtkwave_result != 0)
             {
                 show_iverilog_gtkwave_warning();
 
@@ -533,24 +533,24 @@ namespace degate
     {
         auto index = languages[language_selector.currentText()];
 
-        if(index == GateTemplate::VHDL || index == GateTemplate::VHDL_TESTBENCH)
+        if (index == GateTemplate::VHDL || index == GateTemplate::VHDL_TESTBENCH)
         {
             show_vhdl_warning();
 
             return;
         }
 
-        if(text_area.toPlainText().length() == 0)
+        if (text_area.toPlainText().length() == 0)
         {
             show_missing_code_warning();
 
             return;
         }
 
-        if(index == GateTemplate::VERILOG)
+        if (index == GateTemplate::VERILOG)
         {
             int result = std::system("iverilog -V");
-            if(result != 0)
+            if (result != 0)
             {
                 show_iverilog_warning();
 
@@ -559,7 +559,7 @@ namespace degate
 
             QString dir = QFileDialog::getExistingDirectory(this, tr("Select folder to save in"));
 
-            if(dir.isNull())
+            if (dir.isNull())
                 return;
 
             std::string in_file = join_pathes(dir.toStdString(), "cell.v");
@@ -574,9 +574,9 @@ namespace degate
             terminal.start();
             terminal.exec();
         }
-        else if(index == GateTemplate::VERILOG_TESTBENCH)
+        else if (index == GateTemplate::VERILOG_TESTBENCH)
         {
-            if(code_text[GateTemplate::VERILOG].size() == 0)
+            if (code_text[GateTemplate::VERILOG].size() == 0)
             {
                 show_missing_verilog_warning();
 
@@ -585,7 +585,7 @@ namespace degate
 
             int iverilog_result = std::system("iverilog -V");
             int gtkwave_result = std::system("gtkwave -V");
-            if(iverilog_result != 0 || gtkwave_result != 0)
+            if (iverilog_result != 0 || gtkwave_result != 0)
             {
                 show_iverilog_gtkwave_warning();
 
@@ -594,7 +594,7 @@ namespace degate
 
             QString dir = QFileDialog::getExistingDirectory(this, tr("Select folder to save in"));
 
-            if(dir.isNull())
+            if (dir.isNull())
                 return;
 
             std::string in_file = join_pathes(dir.toStdString(), "cell.v");
@@ -628,7 +628,7 @@ namespace degate
         text_area.setText(QString::fromStdString(code_text[languages[language_selector.currentText()]]));
         old_index = languages[language_selector.currentText()];
 
-        if(languages[language_selector.currentText()] == GateTemplate::TEXT)
+        if (languages[language_selector.currentText()] == GateTemplate::TEXT)
         {
             compile_button.setEnabled(false);
             compile_save_button.setEnabled(false);
@@ -684,7 +684,7 @@ namespace degate
 
 	GateEditLayoutTab::GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent), gate(gate), project(project)
 	{
-		if(gate->has_image(Layer::METAL))
+		if (gate->has_image(Layer::METAL))
 		{
 			metal_label.setText(tr("Metal:"));
 			metal = new ImageRenderer(gate->get_image(Layer::METAL), this);
@@ -693,7 +693,7 @@ namespace degate
 			layout.addLayout(&metal_layout);
 		}
 
-		if(gate->has_image(Layer::LOGIC))
+		if (gate->has_image(Layer::LOGIC))
 		{
 			logic_label.setText(tr("Logic:"));
 			logic = new ImageRenderer(gate->get_image(Layer::LOGIC), this);
@@ -702,7 +702,7 @@ namespace degate
 			layout.addLayout(&logic_layout);
 		}
 
-		if(gate->has_image(Layer::TRANSISTOR))
+		if (gate->has_image(Layer::TRANSISTOR))
 		{
 			transistor_label.setText(tr("Transistor:"));
 			transistor = new ImageRenderer(gate->get_image(Layer::TRANSISTOR), this);
@@ -716,13 +716,13 @@ namespace degate
 
 	GateEditLayoutTab::~GateEditLayoutTab()
 	{
-		if(transistor != nullptr)
+		if (transistor != nullptr)
 			delete transistor;
 
-		if(logic != nullptr)
+		if (logic != nullptr)
 			delete logic;
 
-		if(metal != nullptr)
+		if (metal != nullptr)
 			delete metal;
 	}
 
@@ -784,7 +784,7 @@ namespace degate
 
 		orientation_label.setText(tr("Orientation:"));
 
-		for(auto& e : orientations)
+		for (auto& e : orientations)
             orientation_edit.addItem(e.second);
 
         orientation_edit.setCurrentText(orientations[gate->get_orientation()]);
@@ -819,9 +819,9 @@ namespace degate
 
 	void GateInstanceEditDialog::validate()
 	{
-	    for(auto& e : orientations)
+	    for (auto& e : orientations)
         {
-	        if(e.second == orientation_edit.currentText())
+	        if (e.second == orientation_edit.currentText())
                 gate->set_orientation(e.first);
         }
 

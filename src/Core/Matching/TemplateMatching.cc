@@ -253,7 +253,7 @@ void TemplateMatching::set_orientations(std::list<Gate::ORIENTATION> tmpl_orient
 
 void TemplateMatching::run()
 {
-    if(is_canceled())
+    if (is_canceled())
         return;
 
 	debug(TM, "run template matching");
@@ -783,11 +783,11 @@ bool TemplateMatchingAlongGrid::initialize_state_struct(struct search_state* sta
 				state->iter_begin != state->grid->end())
 				state->iter_begin++;
 
-			//if(state->iter_last != state->grid->end()) state->iter_last++;
+			//if (state->iter_last != state->grid->end()) state->iter_last++;
 
 			if (state->iter_begin != state->grid->end())
 				debug(TM, "first grid offset %d", *(state->iter_begin));
-			//      if(state->iter_last != state->grid->end())
+			//      if (state->iter_last != state->grid->end())
 			debug(TM, "last  grid offset %d", *(state->iter_last));
 
 			if (state->iter_begin == state->grid->end() ||

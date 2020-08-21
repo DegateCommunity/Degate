@@ -83,26 +83,26 @@ namespace degate
 
     void WorkspaceEMarkers::update()
     {
-        if(project == nullptr)
+        if (project == nullptr)
             return;
 
         Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
-        if(layer == nullptr)
+        if (layer == nullptr)
             return;
 
         // Keep only emarkers of the active layer.
         std::vector<EMarker_shptr> emarkers;
-        for(Layer::object_iterator iter = layer->objects_begin(); iter != layer->objects_end(); ++iter)
+        for (Layer::object_iterator iter = layer->objects_begin(); iter != layer->objects_end(); ++iter)
         {
-            if(EMarker_shptr a = std::dynamic_pointer_cast<EMarker>(*iter))
+            if (EMarker_shptr a = std::dynamic_pointer_cast<EMarker>(*iter))
             {
                 emarkers.push_back(a);
             }
         }
         emarkers_count = emarkers.size();
 
-        if(emarkers_count == 0)
+        if (emarkers_count == 0)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -114,7 +114,7 @@ namespace degate
         unsigned text_size = 0;
 
         unsigned index = 0;
-        for(auto& e : emarkers)
+        for (auto& e : emarkers)
         {
             create_emarker(e, index);
             e->set_index(index);
@@ -126,7 +126,7 @@ namespace degate
         text.update(text_size);
 
         unsigned text_offset = 0;
-        for(auto& e : emarkers)
+        for (auto& e : emarkers)
         {
             unsigned x = e->get_x();
             unsigned y = e->get_y() + e->get_diameter() / 2.0 + TEXT_PADDING;
@@ -139,7 +139,7 @@ namespace degate
 
     void WorkspaceEMarkers::update(EMarker_shptr &emarker)
     {
-        if(emarker == nullptr)
+        if (emarker == nullptr)
             return;
 
         create_emarker(emarker, emarker->get_index());
@@ -147,7 +147,7 @@ namespace degate
 
     void WorkspaceEMarkers::draw(const QMatrix4x4 &projection)
     {
-        if(project == nullptr || emarkers_count == 0)
+        if (project == nullptr || emarkers_count == 0)
             return;
 
         program->bind();
@@ -174,7 +174,7 @@ namespace degate
 
     void WorkspaceEMarkers::draw_name(const QMatrix4x4 &projection)
     {
-        if(project == nullptr || emarkers_count == 0)
+        if (project == nullptr || emarkers_count == 0)
             return;
 
         text.draw(projection);
@@ -182,7 +182,7 @@ namespace degate
 
     void WorkspaceEMarkers::create_emarker(EMarker_shptr &emarker, unsigned int index)
     {
-        if(emarker == nullptr)
+        if (emarker == nullptr)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);

@@ -49,11 +49,11 @@ namespace degate
 
     void PreferencesPage::add_widget(QGridLayout* category_layout, const QString& label, QWidget* widget)
     {
-        if(category_layout == nullptr)
+        if (category_layout == nullptr)
             return;
 
         category_layout->addWidget(new QLabel(label), category_layout->rowCount(), 0);
-        if(widget != nullptr)
+        if (widget != nullptr)
             category_layout->addWidget(widget, category_layout->rowCount() - 1, 1);
     }
 }

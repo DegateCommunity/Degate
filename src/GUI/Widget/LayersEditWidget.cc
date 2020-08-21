@@ -32,7 +32,7 @@ namespace degate
 {
 	LayerBackgroundSelectionButton::LayerBackgroundSelectionButton(Layer_shptr layer, QWidget* parent) : QPushButton(parent)
 	{
-		if(layer == nullptr)
+		if (layer == nullptr)
 			change_button_color(false);
 		else
 			change_button_color(layer->has_background_image());
@@ -44,7 +44,7 @@ namespace degate
 	{
 		change_button_color(copy.get_state());
 
-		if(copy.has_new_image())
+		if (copy.has_new_image())
 			new_image = true;
 		else
 			new_image = false;
@@ -85,7 +85,7 @@ namespace degate
 
 	void LayerBackgroundSelectionButton::change_button_color(bool value)
 	{
-		if(value)
+		if (value)
 			setStyleSheet("background-color: rgba(0, 150, 0, 255)");
 		else
 			setStyleSheet("background-color: rgba(150, 0, 0, 255)");
@@ -100,7 +100,7 @@ namespace degate
         types[Layer::LOGIC]      = tr("Logic");
         types[Layer::METAL]      = tr("Metal");
 
-        for(auto& e : types)
+        for (auto& e : types)
             addItem(e.second);
 
         setCurrentText(types[type]);
@@ -113,7 +113,7 @@ namespace degate
         types[Layer::LOGIC]      = tr("Logic");
         types[Layer::METAL]      = tr("Metal");
 
-        for(auto& e : types)
+        for (auto& e : types)
             addItem(e.second);
 
         setCurrentText(types[copy.get_layer_type()]);
@@ -127,9 +127,9 @@ namespace degate
 
 	Layer::LAYER_TYPE LayerTypeSelectionBox::get_layer_type()
 	{
-        for(auto& e : types)
+        for (auto& e : types)
         {
-            if(e.second == currentText())
+            if (e.second == currentText())
                 type = e.first;
         }
 
@@ -181,11 +181,11 @@ namespace degate
 		setLayout(&layout);
 
 		// Initialize the layer list
-		for(LogicModel::layer_collection::iterator iter = project->get_logic_model()->layers_begin(); iter != project->get_logic_model()->layers_end(); ++iter)
+		for (LogicModel::layer_collection::iterator iter = project->get_logic_model()->layers_begin(); iter != project->get_logic_model()->layers_end(); ++iter)
 		{
 			Layer_shptr layer = *iter;
 
-			if(layer == nullptr)
+			if (layer == nullptr)
 				continue;
 
 			layers.insertRow(layers.rowCount());
@@ -260,14 +260,14 @@ namespace degate
 	{
 		QItemSelectionModel* select = layers.selectionModel();
 
-		if(!select->hasSelection())
+		if (!select->hasSelection())
 			return;
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto & sel : index)
+		for (auto & sel : index)
 		{
-			if(sel.isValid())
+			if (sel.isValid())
 				layers.removeRow(sel.row());
 		}
 	}
@@ -276,13 +276,13 @@ namespace degate
 	{
 		LogicModel::layer_collection layer_collection;
 
-		for(unsigned int i = 0; i < layers.rowCount(); i++)
+		for (unsigned int i = 0; i < layers.rowCount(); i++)
 		{
 			Layer_shptr layer;
 			
 			// Id
 			QString text_id = layers.item(i, 0)->text();
-			if(text_id == '?')
+			if (text_id == '?')
 			{
 				// New layer
 				layer = std::make_shared<Layer>(BoundingBox(project->get_logic_model()->get_width(), project->get_logic_model()->get_height()));
@@ -309,7 +309,7 @@ namespace degate
 
 			try
 			{
-                if(background->has_new_image())
+                if (background->has_new_image())
                     load_background_image(layer, project->get_project_directory(), background->get_image_path());
 			}
 			catch(std::exception& e)
@@ -336,12 +336,12 @@ namespace degate
 	{
 		QItemSelectionModel* select = layers.selectionModel();
 
-		if(!select->hasSelection())
+		if (!select->hasSelection())
 			return;
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto & sel : index)
+		for (auto & sel : index)
 		{
 			move_row(sel.row(), UP);
 		}
@@ -351,12 +351,12 @@ namespace degate
 	{
 		QItemSelectionModel* select = layers.selectionModel();
 
-		if(!select->hasSelection())
+		if (!select->hasSelection())
 			return;
 
 		QModelIndexList index = select->selectedRows();
 
-		for(auto & sel : index)
+		for (auto & sel : index)
 		{
 			move_row(sel.row(), DOWN);
 		}
@@ -367,9 +367,9 @@ namespace degate
 		LayersEditRow source;
 		LayersEditRow destination;
 
-		if(direction == UP)
+		if (direction == UP)
 		{
-			if(row_index == 0)
+			if (row_index == 0)
 				return;
 
 			// Get source
@@ -405,7 +405,7 @@ namespace degate
 		}
 		else
 		{
-			if(row_index == layers.rowCount() - 1)
+			if (row_index == layers.rowCount() - 1)
 				return;
 
 			// Get source

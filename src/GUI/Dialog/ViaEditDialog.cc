@@ -38,7 +38,7 @@ namespace degate
 
         direction_label.setText(tr("Via direction:"));
 
-        for(auto& e : directions)
+        for (auto& e : directions)
             direction_edit.addItem(e.second);
 
         direction_edit.setCurrentText(directions[via->get_direction()]);
@@ -86,9 +86,9 @@ namespace degate
 
     void ViaEditDialog::direction_changed()
     {
-        if(direction_edit.currentText() == directions[Via::DIRECTION_UP])
+        if (direction_edit.currentText() == directions[Via::DIRECTION_UP])
             fill_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_UP));
-        else if(direction_edit.currentText() == directions[Via::DIRECTION_DOWN])
+        else if (direction_edit.currentText() == directions[Via::DIRECTION_DOWN])
             fill_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_DOWN));
     }
 }

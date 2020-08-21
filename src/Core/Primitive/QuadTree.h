@@ -341,7 +341,7 @@ namespace degate
     template <typename T>
     ret_t QuadTree<T>::reinsert_all_objects(QuadTree<T>* tree)
     {
-        if(tree == nullptr)
+        if (tree == nullptr)
             return RET_INV_PTR;
 
         // Get all objects
@@ -439,7 +439,7 @@ namespace degate
 		{
 			const BoundingBox& sub_bbox = (*it).box.get_bounding_box();
 
-			//if(sub_bbox.in_bounding_box(box)) { // sub_bbox within box?
+			//if (sub_bbox.in_bounding_box(box)) { // sub_bbox within box?
 			if (box.in_bounding_box(sub_bbox))
 			{
 				// box within sub_bbox?

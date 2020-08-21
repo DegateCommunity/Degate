@@ -35,7 +35,7 @@ namespace degate
         languages["fr"] = "Français";
 
         QStringList language_list;
-        for(auto& e : languages)
+        for (auto& e : languages)
             language_list.append(e.second);
 
         language_edit.addItems(language_list);
@@ -69,9 +69,9 @@ namespace degate
     void GeneralPreferencesPage::apply(Preferences& preferences)
     {
         // Language
-        for(auto& e : languages)
+        for (auto& e : languages)
         {
-            if(e.second == language_edit.currentText())
+            if (e.second == language_edit.currentText())
                 preferences.language = e.first;
         }
 

@@ -85,7 +85,7 @@ namespace degate
 
 		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
 
-		if(smgr == nullptr)
+		if (smgr == nullptr)
 			return;
 
 		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(1/*scale*/); //Todo: fix scaling manager
@@ -149,7 +149,7 @@ namespace degate
 
 	void WorkspaceBackground::free_textures()
 	{
-		if(background_textures.empty())
+		if (background_textures.empty())
 			return;
 
 		context->glDeleteTextures(background_textures.size(), &background_textures[0]);

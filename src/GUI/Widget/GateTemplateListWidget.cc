@@ -36,7 +36,7 @@ namespace degate
 		resizeRowsToContents();
         setSelectionBehavior(SelectRows);
 
-		if(unique_selection)
+		if (unique_selection)
 		    setSelectionMode(SelectionMode::SingleSelection);
 		else
             setSelectionMode(SelectionMode::MultiSelection);
@@ -53,15 +53,15 @@ namespace degate
 	{
 		QItemSelectionModel* select = selectionModel();
 
-		if(!select->hasSelection())
+		if (!select->hasSelection())
 			return std::vector<GateTemplate_shptr>(); // Empty vector
 
 		QModelIndexList index = select->selectedRows();
 		std::vector<GateTemplate_shptr> res;
 
-		for(auto & sel : index)
+		for (auto & sel : index)
 		{
-			if(sel.isValid())
+			if (sel.isValid())
 			{
 				res.push_back(project->get_logic_model()->get_gate_library()->get_template(item(sel.row(), 0)->text().toInt()));
 			}
@@ -74,14 +74,14 @@ namespace degate
 	{
 		QItemSelectionModel* select = selectionModel();
 
-		if(!select->hasSelection())
+		if (!select->hasSelection())
 			return nullptr;
 
 		QModelIndexList index = select->selectedRows();
 
 		auto sel = index.at(0);
 
-		if(!sel.isValid())
+		if (!sel.isValid())
 			return nullptr;
 		else
 			return project->get_logic_model()->get_gate_library()->get_template(item(sel.row(), 0)->text().toInt());
@@ -100,7 +100,7 @@ namespace degate
 		setRowCount(0);
 		
 		GateLibrary_shptr gate_lib = project->get_logic_model()->get_gate_library();
-		for(GateLibrary::template_iterator iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
+		for (GateLibrary::template_iterator iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
 		{
 			GateTemplate_shptr gate = (*iter).second;
 

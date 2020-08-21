@@ -89,7 +89,7 @@ namespace degate
 
 	PreferencesEditor::~PreferencesEditor()
 	{
-        for(auto& e : pages)
+        for (auto& e : pages)
         {
             delete e.second;
         }
@@ -98,7 +98,7 @@ namespace degate
 	void PreferencesEditor::validate()
 	{
 	    // Apply changes for every page
-        for(auto& e : pages)
+        for (auto& e : pages)
         {
             e.second->apply(preferences);
         }
@@ -126,13 +126,13 @@ namespace degate
         // Delete pages
         pages_list.clear();
 
-        for(int i = preferences_pages.count(); i >= 0; i--)
+        for (int i = preferences_pages.count(); i >= 0; i--)
         {
             QWidget* widget = preferences_pages.widget(i);
             preferences_pages.removeWidget(widget);
         }
 
-        for(auto& e : pages)
+        for (auto& e : pages)
             delete e.second;
 
         pages.clear();
@@ -168,7 +168,7 @@ namespace degate
     void PreferencesEditor::insert_pages()
     {
 	    int index = 0;
-        for(auto& e : pages)
+        for (auto& e : pages)
         {
             pages_list.insertItem(index, e.first);
             preferences_pages.insertWidget(index, e.second);

@@ -309,7 +309,7 @@ void GateLibraryImporter::parse_template_ports_element(QDomElement const templat
 			tmpl_port->set_object_id(object_id);
 
 			// color
-            if(!port_fill_color.isNull())
+            if (!port_fill_color.isNull())
                 tmpl_port->set_fill_color(parse_color_string(port_fill_color.toStdString()));
 
 			// add port to the gate template

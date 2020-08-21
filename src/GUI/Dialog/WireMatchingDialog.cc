@@ -109,7 +109,7 @@ namespace degate
         // Start the process
         progress_dialog.exec();
 
-        if(progress_dialog.was_canceled())
+        if (progress_dialog.was_canceled())
             return;
 
         QMessageBox::information(this->parentWidget(),

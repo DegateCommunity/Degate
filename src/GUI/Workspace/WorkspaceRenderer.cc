@@ -135,7 +135,7 @@ namespace degate
 
 	void WorkspaceRenderer::reset_selection()
 	{
-		if(selected_objects.empty())
+		if (selected_objects.empty())
 			return;
 
         selected_objects.clear();
@@ -170,7 +170,7 @@ namespace degate
 
 	bool WorkspaceRenderer::has_selection()
 	{
-		if(selected_objects.empty())
+		if (selected_objects.empty())
 			return false;
 		else
 			return true;
@@ -323,46 +323,46 @@ namespace degate
 
 		background.draw(projection);
 
-		if(draw_wires)
+		if (draw_wires)
 		    wires.draw(projection);
 
-		if(draw_annotations)
+		if (draw_annotations)
 			annotations.draw(projection);
 
-		if(draw_annotations_name)
+		if (draw_annotations_name)
 			annotations.draw_name(projection);
 		
-		if(draw_gates)
+		if (draw_gates)
 			gates.draw(projection);
 		
-		if(draw_gates_name)
+		if (draw_gates_name)
 			gates.draw_gates_name(projection);
 
-		if(draw_ports)
+		if (draw_ports)
 			gates.draw_ports(projection);
 
-		if(draw_ports_name)
+		if (draw_ports_name)
 			gates.draw_ports_name(projection);
 
-        if(draw_emarkers)
+        if (draw_emarkers)
             emarkers.draw(projection);
 
-        if(draw_emarkers_name)
+        if (draw_emarkers_name)
             emarkers.draw_name(projection);
 
-        if(draw_vias)
+        if (draw_vias)
             vias.draw(projection);
 
-        if(draw_vias_name)
+        if (draw_vias_name)
             vias.draw_name(projection);
 
-        if(current_tool == WorkspaceTool::AREA_SELECTION)
+        if (current_tool == WorkspaceTool::AREA_SELECTION)
 		    selection_tool.draw(projection);
 
-        if(current_tool == WorkspaceTool::WIRE)
+        if (current_tool == WorkspaceTool::WIRE)
             wire_tool.draw(projection);
 
-        if(draw_grid)
+        if (draw_grid)
             regular_grid.draw(projection);
 	}
 
@@ -400,7 +400,7 @@ namespace degate
 
     void WorkspaceRenderer::update_object(PlacedLogicModelObject_shptr object)
     {
-        if(object == nullptr)
+        if (object == nullptr)
             return;
 
         if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
@@ -412,9 +412,9 @@ namespace degate
             gates.update(gate_port);
         }
 
-        if(object->get_layer() == project->get_logic_model()->get_current_layer())
+        if (object->get_layer() == project->get_logic_model()->get_current_layer())
         {
-            if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
+            if (Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
             {
                 annotations.update(annotation);
             }
@@ -548,7 +548,7 @@ namespace degate
 			if (!selected_objects.empty() && !QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
 				reset_selection();
 			
-			if(plo != nullptr)
+			if (plo != nullptr)
 			    add_object_to_selection(plo);
 		}
 
@@ -588,7 +588,7 @@ namespace degate
             Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
             // Current layer
-            for(Layer::qt_region_iterator iter = layer->region_begin(bb); iter != layer->region_end(); ++iter)
+            for (Layer::qt_region_iterator iter = layer->region_begin(bb); iter != layer->region_end(); ++iter)
             {
                 PlacedLogicModelObject_shptr plo = *iter;
                 assert(plo != nullptr);
@@ -604,7 +604,7 @@ namespace degate
             {
             }
 
-            if(project->get_logic_model()->get_current_layer() == layer)
+            if (project->get_logic_model()->get_current_layer() == layer)
                 return;
 
             // Logic layer (gates and gate ports)
@@ -652,12 +652,12 @@ namespace degate
 		}
 
 		// Area selection
-		if(event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::AREA_SELECTION)
+		if (event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::AREA_SELECTION)
 		{
             mouse_moved = true;
 
             // If there is no area selection, start new one and set new origin
-            if(!selection_tool.has_selection())
+            if (!selection_tool.has_selection())
             {
                 selection_tool.set_selection_state(true);
 
@@ -674,20 +674,20 @@ namespace degate
 			selection_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
             // If an object is selected, reset selection
-			if(!selected_objects.empty())
+			if (!selected_objects.empty())
 			    reset_selection();
 
 			update();
 		}
 
-		if(event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::WIRE)
+		if (event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::WIRE)
         {
             mouse_moved = true;
 
-            if(wire_tool.has_ended())
+            if (wire_tool.has_ended())
                 wire_tool.reset_line_drawing();
 
-            if(!wire_tool.has_started())
+            if (!wire_tool.has_started())
                 wire_tool.start_line_drawing(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
             wire_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
@@ -725,7 +725,7 @@ namespace degate
 
 		QOpenGLWidget::keyReleaseEvent(event);
 
-		if(event->key() == Qt::Key_Escape)
+		if (event->key() == Qt::Key_Escape)
         {
             wire_tool.reset_line_drawing();
             update();
@@ -740,7 +740,7 @@ namespace degate
 
 		if (event->button() == Qt::LeftButton)
 		{
-			if(project == nullptr)
+			if (project == nullptr)
 				return;
 
 			QPointF pos = get_opengl_mouse_position();
@@ -750,7 +750,7 @@ namespace degate
 			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
 
 			// Check if there is a gate or gate port on the logic layer
-			if(plo == nullptr) 
+			if (plo == nullptr)
 			{
 				try 
 				{
@@ -762,16 +762,16 @@ namespace degate
 				}
 			}
 
-			if(plo != nullptr)
+			if (plo != nullptr)
 			{
-				if(SubProjectAnnotation_shptr sp = std::dynamic_pointer_cast<SubProjectAnnotation>(plo))
+				if (SubProjectAnnotation_shptr sp = std::dynamic_pointer_cast<SubProjectAnnotation>(plo))
 				{
 					std::string dir = join_pathes(project->get_project_directory(), sp->get_path());
 					debug(TM, "Will open or create project at %s", dir.c_str());
 
 					emit project_changed(dir);
 				}
-				else if(Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo))
+				else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo))
 				{
 					GateInstanceEditDialog dialog(this, gate, project);
 					dialog.exec();
@@ -784,7 +784,7 @@ namespace degate
 
                     emit project_changed();
 				}
-				else if(GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
+				else if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
 				{
 					{
 						PortPlacementDialog dialog(this, project, gate_port->get_gate()->get_gate_template(), gate_port->get_template_port());
@@ -799,7 +799,7 @@ namespace degate
 
                     emit project_changed();
 				}
-				else if(Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(plo))
+				else if (Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(plo))
 				{
 					AnnotationEditDialog dialog(annotation, this);
 					dialog.exec();
@@ -851,21 +851,21 @@ namespace degate
 
     QPointF WorkspaceRenderer::get_safe_position(QPointF position) const
     {
-        if(project == nullptr)
+        if (project == nullptr)
             return position;
 
         QPointF res(position);
 
-        if(position.x() < 0)
+        if (position.x() < 0)
             res.setX(0);
 
-        if(position.y() < 0)
+        if (position.y() < 0)
             res.setY(0);
 
-        if(position.x() > project->get_bounding_box().get_max_x())
+        if (position.x() > project->get_bounding_box().get_max_x())
             res.setX(project->get_bounding_box().get_max_x());
 
-        if(position.y() > project->get_bounding_box().get_max_y())
+        if (position.y() > project->get_bounding_box().get_max_y())
             res.setY(project->get_bounding_box().get_max_y());
 
         return res;
@@ -873,33 +873,33 @@ namespace degate
 
     BoundingBox WorkspaceRenderer::get_safe_bounding_box(BoundingBox bounding_box) const
     {
-        if(project == nullptr)
+        if (project == nullptr)
             return bounding_box;
 
         BoundingBox res(bounding_box);
 
-        if(bounding_box.get_min_x() < 0)
+        if (bounding_box.get_min_x() < 0)
             res.set_min_x(0);
 
-        if(bounding_box.get_min_y() < 0)
+        if (bounding_box.get_min_y() < 0)
             res.set_min_y(0);
 
-        if(bounding_box.get_max_x() < 0)
+        if (bounding_box.get_max_x() < 0)
             res.set_max_x(0);
 
-        if(bounding_box.get_max_y() < 0)
+        if (bounding_box.get_max_y() < 0)
             res.set_max_y(0);
 
-        if(bounding_box.get_min_x() > project->get_bounding_box().get_max_x())
+        if (bounding_box.get_min_x() > project->get_bounding_box().get_max_x())
             res.set_min_x(project->get_bounding_box().get_max_x());
 
-        if(bounding_box.get_min_y() > project->get_bounding_box().get_max_y())
+        if (bounding_box.get_min_y() > project->get_bounding_box().get_max_y())
             res.set_min_y(project->get_bounding_box().get_max_y());
 
-        if(bounding_box.get_max_x() > project->get_bounding_box().get_max_x())
+        if (bounding_box.get_max_x() > project->get_bounding_box().get_max_x())
             res.set_max_x(project->get_bounding_box().get_max_x());
 
-        if(bounding_box.get_max_y() > project->get_bounding_box().get_max_y())
+        if (bounding_box.get_max_y() > project->get_bounding_box().get_max_y())
             res.set_max_y(project->get_bounding_box().get_max_y());
 
         return res;

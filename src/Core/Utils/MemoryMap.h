@@ -397,14 +397,14 @@ namespace degate
 #else
 
 			file = open(filename.c_str(), O_RDWR | O_CREAT, 0600);
-			if(file == -1)
+			if (file == -1)
 			{
 				debug(TM, "can't open file: %s", filename.c_str());
 				return RET_ERR;
 			}
 
 			struct stat64 inf;
-			if(fstat64(file, &inf) < 0)
+			if (fstat64(file, &inf) < 0)
 			{
 				debug(TM, "can't get the size of file: %s", filename.c_str());
 				return RET_ERR;
@@ -441,7 +441,7 @@ namespace degate
 
 			mem_view = (T*)mmap(nullptr, filesize, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, file, 0);
 
-			if(mem_view == (void*)(-1))
+			if (mem_view == (void*)(-1))
 			{
 				debug(TM, "can't create memory map");
 				return RET_ERR;

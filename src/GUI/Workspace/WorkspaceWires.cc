@@ -79,26 +79,26 @@ namespace degate
 
     void WorkspaceWires::update()
     {
-        if(project == nullptr)
+        if (project == nullptr)
             return;
 
         Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
-        if(layer == nullptr)
+        if (layer == nullptr)
             return;
 
         // Keep only wires of the active layer.
         std::vector<Wire_shptr> wires;
-        for(Layer::object_iterator iter = layer->objects_begin(); iter != layer->objects_end(); ++iter)
+        for (Layer::object_iterator iter = layer->objects_begin(); iter != layer->objects_end(); ++iter)
         {
-            if(Wire_shptr a = std::dynamic_pointer_cast<Wire>(*iter))
+            if (Wire_shptr a = std::dynamic_pointer_cast<Wire>(*iter))
             {
                 wires.push_back(a);
             }
         }
         wires_count = wires.size();
 
-        if(wires_count == 0)
+        if (wires_count == 0)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -108,7 +108,7 @@ namespace degate
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         unsigned index = 0;
-        for(auto& e : wires)
+        for (auto& e : wires)
         {
             create_wire(e, index);
             e->set_index(index);
@@ -118,7 +118,7 @@ namespace degate
 
     void WorkspaceWires::update(Wire_shptr &wire)
     {
-        if(wire == nullptr)
+        if (wire == nullptr)
             return;
 
         create_wire(wire, wire->get_index());
@@ -126,7 +126,7 @@ namespace degate
 
     void WorkspaceWires::draw(const QMatrix4x4 &projection)
     {
-        if(project == nullptr || wires_count == 0)
+        if (project == nullptr || wires_count == 0)
             return;
 
         program->bind();
@@ -153,7 +153,7 @@ namespace degate
 
     void WorkspaceWires::create_wire(Wire_shptr &wire, unsigned int index)
     {
-        if(wire == nullptr)
+        if (wire == nullptr)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);

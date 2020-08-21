@@ -96,9 +96,9 @@ namespace degate
 
     FontContext::~FontContext()
     {
-        for(auto& font : fonts)
+        for (auto& font : fonts)
         {
-            if(context->functions()->glIsTexture(font->font_atlas_texture_array) == GL_TRUE)
+            if (context->functions()->glIsTexture(font->font_atlas_texture_array) == GL_TRUE)
                 context->functions()->glDeleteTextures(1, &font->font_atlas_texture_array);
         }
     }
@@ -106,9 +106,9 @@ namespace degate
     std::shared_ptr<FontContextData> FontContext::get_font(const Font& font)
     {
         // Check if the font is already "ready" for this context (created the OpenGL texture).
-        for(auto& e : fonts)
+        for (auto& e : fonts)
         {
-            if(e->font_data->font == font)
+            if (e->font_data->font == font)
                 return e;
         }
 
@@ -134,7 +134,7 @@ namespace degate
         static unsigned int atlas_count = font_context_data->font_data->font_atlas.size();
 
         // If there is no new atlas since last time just add the last glyph (last generated/loaded) to the texture array.
-        if(full_reload == false && atlas_count == font_context_data->font_data->font_atlas.size() && context->functions()->glIsTexture(font_context_data->font_atlas_texture_array) == GL_TRUE)
+        if (full_reload == false && atlas_count == font_context_data->font_data->font_atlas.size() && context->functions()->glIsTexture(font_context_data->font_atlas_texture_array) == GL_TRUE)
         {
             std::shared_ptr<GlyphData> glyph_data = font_context_data->font_data->glyphs.back();
             auto atlas = font_context_data->font_data->font_atlas.back();
@@ -162,7 +162,7 @@ namespace degate
 
         atlas_count = font_context_data->font_data->font_atlas.size();
 
-        if(context->functions()->glIsTexture(font_context_data->font_atlas_texture_array) == GL_TRUE)
+        if (context->functions()->glIsTexture(font_context_data->font_atlas_texture_array) == GL_TRUE)
             context->functions()->glDeleteTextures(1, &font_context_data->font_atlas_texture_array);
 
         GLuint texture_array_id;
@@ -186,7 +186,7 @@ namespace degate
         assert(this->context->functions()->glGetError() == GL_NO_ERROR);
 
         // Fill the storage with all font atlas
-        for(unsigned int i = 0; i < font_context_data->font_data->font_atlas.size(); i++)
+        for (unsigned int i = 0; i < font_context_data->font_data->font_atlas.size(); i++)
         {
             this->context->extraFunctions()->glTexSubImage3D(GL_TEXTURE_2D_ARRAY,
                                                              0,
@@ -222,14 +222,14 @@ namespace degate
 
     void Text::init_context(QOpenGLContext *context)
     {
-        if(context == nullptr)
+        if (context == nullptr)
         {
             std::cout << "Can't initialize font context without valid QOpenGLContext." << std::endl;
             return;
         }
 
         // Context was already initialised
-        if(contexts.find(context) != contexts.end())
+        if (contexts.find(context) != contexts.end())
             return;
 
         std::shared_ptr<FontContext> font_context = std::make_shared<FontContext>(context);
@@ -239,7 +239,7 @@ namespace degate
 
     void Text::delete_context(QOpenGLContext* context)
     {
-        if(context == nullptr)
+        if (context == nullptr)
         {
             std::cout << "Can't delete the font's context without valid QOpenGLContext." << std::endl;
             return;
@@ -248,7 +248,7 @@ namespace degate
         auto it = contexts.find(context);
 
         // Context wasn't initialised
-        if(it == contexts.end())
+        if (it == contexts.end())
             return;
 
         // Delete context
@@ -258,7 +258,7 @@ namespace degate
 
     std::shared_ptr<FontContext> Text::get_font_context(QOpenGLContext *context)
     {
-        if(context == nullptr)
+        if (context == nullptr)
         {
             std::cout << "Can't get the font's context without valid QOpenGLContext." << std::endl;
             return nullptr;
@@ -267,7 +267,7 @@ namespace degate
         auto it = contexts.find(context);
 
         // Context wasn't initialised
-        if(it == contexts.end())
+        if (it == contexts.end())
             return nullptr;
 
         return it->second;
@@ -293,7 +293,7 @@ namespace degate
         // Font image
         std::shared_ptr<QImage> font_image;
 
-        if(font_data->font_atlas.size() <= glyph_data->atlas_index)
+        if (font_data->font_atlas.size() <= glyph_data->atlas_index)
         {
             font_image = std::make_shared<QImage>(font_data->atlas_width, font_data->atlas_height, QImage::Format_ARGB32);
             font_data->font_atlas.push_back(font_image);
@@ -353,12 +353,12 @@ namespace degate
 
     std::shared_ptr<GlyphData> Text::get_glyph(const Glyph& glyph)
     {
-        if(font_context_data.lock() == nullptr || font_context_data.lock()->font_data == nullptr)
+        if (font_context_data.lock() == nullptr || font_context_data.lock()->font_data == nullptr)
             return nullptr;
 
-        for(auto& g : font_context_data.lock()->font_data->glyphs)
+        for (auto& g : font_context_data.lock()->font_data->glyphs)
         {
-            if(g->glyph == glyph)
+            if (g->glyph == glyph)
                 return g;
         }
 
@@ -371,15 +371,15 @@ namespace degate
 
     std::shared_ptr<FontData> Text::search_font(const Font& font)
     {
-        if(font.font_size == 0 || font.font_family_name.empty())
+        if (font.font_size == 0 || font.font_family_name.empty())
             return nullptr;
 
 
         // Try to get the fond from memory.
 
-        for(auto& e : fonts)
+        for (auto& e : fonts)
         {
-            if(font == e->font)
+            if (font == e->font)
                 return e;
         }
 
@@ -390,7 +390,7 @@ namespace degate
 
         res = load_font(font);
 
-        if(res != nullptr)
+        if (res != nullptr)
         {
             fonts.push_back(res);
 
@@ -437,30 +437,30 @@ namespace degate
 
     void Text::save_fonts_to_cache()
     {
-        if(fonts.empty())
+        if (fonts.empty())
             return;
 
-        for(auto& font_data : fonts)
+        for (auto& font_data : fonts)
         {
-            if(font_data->as_changed == true)
+            if (font_data->as_changed == true)
                 save_font(font_data);
         }
     }
 
     std::shared_ptr<FontData> Text::load_font(const Font& font)
     {
-        if(font.font_size == 0 || font.font_family_name.empty())
+        if (font.font_size == 0 || font.font_family_name.empty())
             return nullptr;
 
         // Fonts config file
 
-        if(!QFile::exists(QString::fromStdString(DEGATE_IN_CONFIGURATION(FONTS_CONFIG_FILE_NAME))))
+        if (!QFile::exists(QString::fromStdString(DEGATE_IN_CONFIGURATION(FONTS_CONFIG_FILE_NAME))))
         {
             return nullptr;
         }
 
         QFile config_file(QString::fromStdString(DEGATE_IN_CONFIGURATION(FONTS_CONFIG_FILE_NAME)));
-        if(!config_file.open(QIODevice::ReadWrite | QIODevice::Text))
+        if (!config_file.open(QIODevice::ReadWrite | QIODevice::Text))
         {
             return nullptr;
         }
@@ -471,7 +471,7 @@ namespace degate
         QDomElement font_elem;
 
         // If file version differs clear all fonts in the cache and reset the font configuration file.
-        if(root.attribute("file_version").toInt() != FONT_FILE_VERSION)
+        if (root.attribute("file_version").toInt() != FONT_FILE_VERSION)
         {
             QDomNodeList list = root.elementsByTagName("font");
             for (int x = 0; x < list.length(); x++)
@@ -482,13 +482,13 @@ namespace degate
                 QString font_atlas_file_path = node.attribute("font_atlas_file_path");
                 unsigned int font_count = node.attribute("font_atlas_count").toUInt();
 
-                if(!font_config_file_path.isEmpty())
+                if (!font_config_file_path.isEmpty())
                     QFile::remove(font_config_file_path);
 
-                if(!font_atlas_file_path.isEmpty() && font_count != 0)
+                if (!font_atlas_file_path.isEmpty() && font_count != 0)
                 {
-                    for(unsigned int i = 0; i < font_count; i++)
-                    QFile::remove(font_atlas_file_path + QString::number(i + 1) + FONT_ATLAS_EXTENSION);
+                    for (unsigned int i = 0; i < font_count; i++)
+                        QFile::remove(font_atlas_file_path + QString::number(i + 1) + FONT_ATLAS_EXTENSION);
                 }
             }
 
@@ -506,14 +506,14 @@ namespace degate
         {
             QDomElement node = list.at(x).toElement();
 
-            if(node.attribute("font_size").toUInt() == font.font_size && node.attribute("font_family_name") == QString::fromStdString(font.font_family_name))
+            if (node.attribute("font_size").toUInt() == font.font_size && node.attribute("font_family_name") == QString::fromStdString(font.font_family_name))
             {
                 font_elem = node;
                 break;
             }
         }
 
-        if(font_elem.isNull())
+        if (font_elem.isNull())
         {
             config_file.close();
             return nullptr;
@@ -523,7 +523,7 @@ namespace degate
         QString font_atlas_file_path = font_elem.attribute("font_atlas_file_path");
         unsigned int font_count = font_elem.attribute("font_atlas_count").toUInt();
 
-        if(font_config_file_path.isEmpty() || font_atlas_file_path.isEmpty() || font_count == 0)
+        if (font_config_file_path.isEmpty() || font_atlas_file_path.isEmpty() || font_count == 0)
         {
             root.removeChild(font_elem);
             config_file.close();
@@ -534,7 +534,7 @@ namespace degate
         // Font config file
 
         QFile font_config_file(font_config_file_path);
-        if(!font_config_file.open(QIODevice::ReadOnly | QIODevice::Text))
+        if (!font_config_file.open(QIODevice::ReadOnly | QIODevice::Text))
             return nullptr;
 
         std::shared_ptr<FontData> font_data = std::make_shared<FontData>();
@@ -543,7 +543,7 @@ namespace degate
         QTextStream font_config_file_stream(&font_config_file);
         font_config_file_stream.setCodec("UTF-8");
 
-        if(font_config_file_stream.readLine().toUInt() != font_data->font.font_size || font_config_file_stream.readLine().toStdString() != font_data->font.font_family_name)
+        if (font_config_file_stream.readLine().toUInt() != font_data->font.font_size || font_config_file_stream.readLine().toStdString() != font_data->font.font_family_name)
         {
             config_file.close();
             font_config_file.close();
@@ -565,11 +565,11 @@ namespace degate
         unsigned int glyph_count = font_config_file_stream.readLine().toUInt();
 
         // Font atlas file
-        for(unsigned int i = 0; i < font_count; i++)
+        for (unsigned int i = 0; i < font_count; i++)
         {
             font_data->font_atlas.push_back(std::make_shared<QImage>(font_atlas_file_path + QString::number(i + 1) + FONT_ATLAS_EXTENSION));
 
-            if(font_data->font_atlas.at(i)->isNull())
+            if (font_data->font_atlas.at(i)->isNull())
             {
                 root.removeChild(font_elem);
                 config_file.close();
@@ -579,7 +579,7 @@ namespace degate
         }
 
         // Load glyphs
-        for(unsigned int i = 0; i < glyph_count; i++)
+        for (unsigned int i = 0; i < glyph_count; i++)
         {
             auto glyph = std::make_shared<GlyphData>();
             glyph->glyph = font_config_file_stream.readLine().at(0);
@@ -599,7 +599,7 @@ namespace degate
 
     void Text::save_font(const std::shared_ptr<FontData>& font_data)
     {
-        if(font_data == nullptr)
+        if (font_data == nullptr)
             return;
 
         CHECK_PATH(DEGATE_CONFIGURATION_PATH)
@@ -612,9 +612,9 @@ namespace degate
         QDomElement font_elem;
 
         // Check if the config file exists
-        if(!QFile::exists(QString::fromStdString(DEGATE_IN_CONFIGURATION(FONTS_CONFIG_FILE_NAME))))
+        if (!QFile::exists(QString::fromStdString(DEGATE_IN_CONFIGURATION(FONTS_CONFIG_FILE_NAME))))
         {
-            if(!config_file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
+            if (!config_file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
             {
                 throw FileSystemException("Can't create the font config file.");
             }
@@ -626,7 +626,7 @@ namespace degate
         }
         else
         {
-            if(!config_file.open(QIODevice::ReadWrite | QIODevice::Text))
+            if (!config_file.open(QIODevice::ReadWrite | QIODevice::Text))
             {
                 throw FileSystemException("Can't create the font config file.");
             }
@@ -634,7 +634,7 @@ namespace degate
             doc.setContent(&config_file);
             root = doc.firstChildElement("config");
 
-            if(root.isNull())
+            if (root.isNull())
             {
                 root = doc.createElement("config");
                 root.setAttribute("file_version", FONT_FILE_VERSION);
@@ -649,14 +649,14 @@ namespace degate
                 {
                     QDomElement node = list.at(x).toElement();
 
-                    if(node.attribute("font_size").toUInt() == font_data->font.font_size && node.attribute("font_family_name") == QString::fromStdString(font_data->font.font_family_name))
+                    if (node.attribute("font_size").toUInt() == font_data->font.font_size && node.attribute("font_family_name") == QString::fromStdString(font_data->font.font_family_name))
                     {
                         font_elem = node;
                         break;
                     }
                 }
 
-                if(font_elem.isNull())
+                if (font_elem.isNull())
                 {
                     font_elem = doc.createElement("font");
                 }
@@ -688,7 +688,7 @@ namespace degate
         // Font config file
 
         QFile font_config_file(QString::fromStdString(font_config_file_path));
-        if(!font_config_file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
+        if (!font_config_file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
         {
             throw FileSystemException("Can't create the font config file.");
         }
@@ -711,7 +711,7 @@ namespace degate
         font_config_file_stream << font_data->scale << endl;
         font_config_file_stream << font_data->glyphs.size() << endl;
 
-        for(auto& glyph_data : font_data->glyphs)
+        for (auto& glyph_data : font_data->glyphs)
         {
             font_config_file_stream << glyph_data->glyph << endl;
             font_config_file_stream << glyph_data->char_width << endl;
@@ -725,7 +725,7 @@ namespace degate
 
         // Save font atlas
 
-        for(unsigned int i = 0; i < font_data->font_atlas.size(); i++)
+        for (unsigned int i = 0; i < font_data->font_atlas.size(); i++)
             font_data->font_atlas.at(i)->save(QString::fromStdString(font_atlas_file_path) + QString::number(i + 1) + FONT_ATLAS_EXTENSION);
 
     }
@@ -737,7 +737,7 @@ namespace degate
 
     Text::~Text()
     {
-        if(font_context->context->functions()->glIsBuffer(vbo) == GL_TRUE)
+        if (font_context->context->functions()->glIsBuffer(vbo) == GL_TRUE)
             font_context->context->functions()->glDeleteBuffers(1, &vbo);
     }
 
@@ -766,16 +766,16 @@ namespace degate
         float size_factor = static_cast<float>(text_size) / static_cast<float>(font.font_size);
 
         // Max width
-        if(max_width > 0)
+        if (max_width > 0)
         {
             float text_width = 0;
-            for(Glyph& g : string)
+            for (Glyph& g : string)
             {
                 glyph = get_glyph(g);
                 text_width += static_cast<float>(glyph->char_advance) * size_factor;
             }
 
-            if(text_width >= max_width)
+            if (text_width >= max_width)
                 size_downscale_factor = static_cast<float>(max_width) / static_cast<float>(text_width);
         }
 
@@ -788,10 +788,10 @@ namespace degate
         x -= padding * size_factor;
 
         // Center x
-        if(center_x == true)
+        if (center_x == true)
         {
             float x_offset = 0.f;
-            for(Glyph& g : string)
+            for (Glyph& g : string)
             {
                 glyph = get_glyph(g);
                 x_offset += static_cast<float>(glyph->char_advance) * size_factor;
@@ -801,7 +801,7 @@ namespace degate
         }
 
         // Center y
-        if(center_y == true)
+        if (center_y == true)
             y -= ((font_context_data.lock()->font_data->default_glyph_height + padding) * size_factor) / 2.0;
         else
             y -= padding * 2.0f * size_factor;
@@ -820,7 +820,7 @@ namespace degate
         unsigned int glyph_per_line = font_context_data.lock()->font_data->atlas_glyph_per_line;
 
         float pixel_size = 0;
-        for(unsigned int i = 0; i < string.size(); i++)
+        for (unsigned int i = 0; i < string.size(); i++)
         {
             glyph = get_glyph(string[i]);
 

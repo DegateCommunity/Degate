@@ -72,7 +72,7 @@ namespace degate
         for (auto& step : steps)
         {
             bool is_ok = true;
-            if(step != 1)
+            if (step != 1)
             {
                 for (auto& gate : gate_templates)
                 {
@@ -84,7 +84,7 @@ namespace degate
                 }
             }
 
-            if(is_ok)
+            if (is_ok)
                 image_scale_factor_edit.addItem(QString::number(step));
         }
 
@@ -234,7 +234,7 @@ namespace degate
         // Start the process
         progress_dialog.exec();
 
-        if(progress_dialog.was_canceled())
+        if (progress_dialog.was_canceled())
             return;
 
         // If the template matching succeeded, show statistics (number of hits)

@@ -55,12 +55,12 @@ namespace degate
 
 	void GateLibraryDialog::on_gate_edit_button()
 	{
-		if(!list.has_selection())
+		if (!list.has_selection())
 			return;
 
 		std::vector<GateTemplate_shptr> selected_gates = list.get_selected_gates();
 
-		for(auto& e : selected_gates)
+		for (auto& e : selected_gates)
 		{
 			GateEditDialog dialog(this, e, project);
 			dialog.exec();
@@ -71,12 +71,12 @@ namespace degate
 
     void GateLibraryDialog::on_gate_remove_button()
     {
-        if(!list.has_selection())
+        if (!list.has_selection())
             return;
 
         std::vector<GateTemplate_shptr> selected_gates = list.get_selected_gates();
 
-        for(auto& e : selected_gates)
+        for (auto& e : selected_gates)
         {
             // Ask for confirmation
             QMessageBox::StandardButton reply;
@@ -86,19 +86,19 @@ namespace degate
                                           .arg(QString::fromStdString(e->get_name())),
                                           QMessageBox::Yes | QMessageBox::No);
 
-            if(reply != QMessageBox::Yes)
+            if (reply != QMessageBox::Yes)
                 continue;
 
             // Search every gate instance
             std::vector<Gate_shptr> delete_list;
-            for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
+            for (LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
             {
-                if(iter->second->get_gate_template() == e)
+                if (iter->second->get_gate_template() == e)
                     delete_list.push_back(iter->second);
             }
 
             // Delete all gate instances
-            for(auto& gate : delete_list)
+            for (auto& gate : delete_list)
                 project->get_logic_model()->remove_object(gate);
 
             // Delete gate template

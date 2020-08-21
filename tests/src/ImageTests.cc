@@ -129,7 +129,7 @@ TEST_CASE("Test image reader", "[ImageTests]")
 
     std::string tiff_out("degate_image_test.tif");
 
-    if(file_exists(tiff_out)) remove_file(tiff_out);
+    if (file_exists(tiff_out)) remove_file(tiff_out);
 
     REQUIRE(file_exists(tiff_out) == false);
 

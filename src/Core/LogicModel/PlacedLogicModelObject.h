@@ -146,7 +146,7 @@ namespace degate
 
 	static inline uint32_t highlight_color_by_state(uint32_t col, PlacedLogicModelObject::HIGHLIGHTING_STATE state)
 	{
-		switch(state) 
+		switch (state)
 		{
 			case PlacedLogicModelObject::HLIGHTSTATE_DIRECT:
 				return highlight_color(highlight_color(col));

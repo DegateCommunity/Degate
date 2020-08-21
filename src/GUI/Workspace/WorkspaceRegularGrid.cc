@@ -119,7 +119,7 @@ namespace degate
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         // If the number of lines is the same as before, skip buffer update
-        if(new_height_count != height_count || new_width_count != width_count)
+        if (new_height_count != height_count || new_width_count != width_count)
         {
             width_count = new_width_count;
             height_count = new_height_count;

@@ -83,26 +83,26 @@ namespace degate
 
     void WorkspaceVias::update()
     {
-        if(project == nullptr)
+        if (project == nullptr)
             return;
 
         Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
-        if(layer == nullptr)
+        if (layer == nullptr)
             return;
 
         // Keep only emarkers of the active layer.
         std::vector<Via_shptr> vias;
-        for(Layer::object_iterator iter = layer->objects_begin(); iter != layer->objects_end(); ++iter)
+        for (Layer::object_iterator iter = layer->objects_begin(); iter != layer->objects_end(); ++iter)
         {
-            if(Via_shptr a = std::dynamic_pointer_cast<Via>(*iter))
+            if (Via_shptr a = std::dynamic_pointer_cast<Via>(*iter))
             {
                 vias.push_back(a);
             }
         }
         vias_count = vias.size();
 
-        if(vias_count == 0)
+        if (vias_count == 0)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -114,7 +114,7 @@ namespace degate
         unsigned text_size = 0;
 
         unsigned index = 0;
-        for(auto& e : vias)
+        for (auto& e : vias)
         {
             create_via(e, index);
             e->set_index(index);
@@ -126,7 +126,7 @@ namespace degate
         text.update(text_size);
 
         unsigned text_offset = 0;
-        for(auto& e : vias)
+        for (auto& e : vias)
         {
             unsigned x = e->get_x();
             unsigned y = e->get_y() + e->get_diameter() / 2.0 + TEXT_PADDING;
@@ -139,7 +139,7 @@ namespace degate
 
     void WorkspaceVias::update(Via_shptr &via)
     {
-        if(via == nullptr)
+        if (via == nullptr)
             return;
 
         create_via(via, via->get_index());
@@ -147,7 +147,7 @@ namespace degate
 
     void WorkspaceVias::draw(const QMatrix4x4& projection)
     {
-        if(project == nullptr || vias_count == 0)
+        if (project == nullptr || vias_count == 0)
             return;
 
         program->bind();
@@ -174,7 +174,7 @@ namespace degate
 
     void WorkspaceVias::draw_name(const QMatrix4x4 &projection)
     {
-        if(project == nullptr || vias_count == 0)
+        if (project == nullptr || vias_count == 0)
             return;
 
         text.draw(projection);
@@ -182,7 +182,7 @@ namespace degate
 
     void WorkspaceVias::create_via(Via_shptr &via, unsigned int index)
     {
-        if(via == nullptr)
+        if (via == nullptr)
             return;
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -193,9 +193,9 @@ namespace degate
 
         color_t color;
 
-        if(via->get_direction() == Via::DIRECTION_UP)
+        if (via->get_direction() == Via::DIRECTION_UP)
             color = via->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_VIA_UP) : via->get_fill_color();
-        else if(via->get_direction() == Via::DIRECTION_DOWN)
+        else if (via->get_direction() == Via::DIRECTION_DOWN)
             color = via->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_VIA_DOWN) : via->get_fill_color();
         else
             color = via->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_EMARKER) : via->get_fill_color();

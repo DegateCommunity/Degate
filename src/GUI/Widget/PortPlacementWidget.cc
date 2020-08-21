@@ -48,10 +48,10 @@ namespace degate
 
         Text::delete_context();
 
-        if(QOpenGLContext::currentContext() == nullptr)
+        if (QOpenGLContext::currentContext() == nullptr)
             return;
 
-        if(glIsBuffer(vbo) == GL_TRUE)
+        if (glIsBuffer(vbo) == GL_TRUE)
             glDeleteBuffers(1, &vbo);
 	}
 
@@ -80,7 +80,7 @@ namespace degate
 
 	void PortPlacementWidget::next_layer()
 	{
-		if(gate->has_image(static_cast<Layer::LAYER_TYPE>(layer + 1)))
+		if (gate->has_image(static_cast<Layer::LAYER_TYPE>(layer + 1)))
 		{
 			layer++;
 			change_image(gate->get_image(static_cast<Layer::LAYER_TYPE>(layer)));
@@ -89,7 +89,7 @@ namespace degate
 
 	void PortPlacementWidget::previous_layer()
 	{
-		if(gate->has_image(static_cast<Layer::LAYER_TYPE>(layer - 1)))
+		if (gate->has_image(static_cast<Layer::LAYER_TYPE>(layer - 1)))
 		{
 			layer--;
 			change_image(gate->get_image(static_cast<Layer::LAYER_TYPE>(layer)));
@@ -187,7 +187,7 @@ namespace degate
 		ImageRenderer::mousePressEvent(event);
 
 		// Displacement
-		if(event->button() == Qt::RightButton 
+		if (event->button() == Qt::RightButton
 			&& get_opengl_mouse_position().x() >= 0 
 			&& get_opengl_mouse_position().y() >= 0 
 			&& get_opengl_mouse_position().x() <= gate->get_width() 
@@ -213,7 +213,7 @@ namespace degate
 		ImageRenderer::mouseMoveEvent(event);
 
 		// Displacement
-		if(event->buttons() & Qt::RightButton
+		if (event->buttons() & Qt::RightButton
 			&& get_opengl_mouse_position().x() >= 0 
 			&& get_opengl_mouse_position().y() >= 0 
 			&& get_opengl_mouse_position().x() <= gate->get_width() 
@@ -347,7 +347,7 @@ namespace degate
 	{
 		color_t color = port->get_fill_color() == 0 ? project->get_default_color(DEFAULT_COLOR_GATE_PORT) : port->get_fill_color();
 
-		switch(port->get_port_type()) 
+		switch (port->get_port_type())
 		{
 			case GateTemplatePort::PORT_TYPE_UNDEFINED:
 				create_port_in_out(pos.get_x(), pos.get_y(), DEFAULT_PORT_SIZE, QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0);

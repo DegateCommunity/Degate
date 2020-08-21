@@ -37,7 +37,7 @@ namespace degate
         themes[DARK_THEME] = tr("Dark");
 
         QStringList theme_list;
-        for(auto& e : themes)
+        for (auto& e : themes)
             theme_list.append(e.second);
 
 		theme_box.addItems(theme_list);
@@ -48,7 +48,7 @@ namespace degate
         icon_themes[DARK_ICON_THEME] = tr("Dark");
 
 		QStringList icon_theme_list;
-        for(auto& e : icon_themes)
+        for (auto& e : icon_themes)
             icon_theme_list.append(e.second);
 
 		icon_theme_box.addItems(icon_theme_list);
@@ -88,16 +88,16 @@ namespace degate
     void AppearancePreferencesPage::apply(Preferences& preferences)
     {
 	    // Theme
-	    for(auto& e : themes)
+	    for (auto& e : themes)
         {
-	        if(e.second == theme_box.currentText())
+	        if (e.second == theme_box.currentText())
                 preferences.theme = e.first;
         }
 
         // Icon theme
-        if(automatic_check_box.isChecked())
+        if (automatic_check_box.isChecked())
         {
-            if(preferences.theme == NATIVE_THEME)
+            if (preferences.theme == NATIVE_THEME)
             {
                 icon_theme_box.setCurrentText(icon_themes[DARK_ICON_THEME]);
                 preferences.icon_theme = DARK_ICON_THEME;
@@ -115,9 +115,9 @@ namespace degate
         }
         else
         {
-            for(auto& e : icon_themes)
+            for (auto& e : icon_themes)
             {
-                if(e.second == icon_theme_box.currentText())
+                if (e.second == icon_theme_box.currentText())
                     preferences.icon_theme = e.first;
             }
         }

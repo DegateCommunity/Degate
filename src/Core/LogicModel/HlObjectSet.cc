@@ -39,7 +39,7 @@ void HlObjectSet::clear()
 {
 	highlight(PlacedLogicModelObject::HLIGHTSTATE_NOT);
 
-	for(auto & adjacent_object : adjacent_objects)
+	for (auto & adjacent_object : adjacent_objects)
 	{
 		unhighlight_adjacent_objects(adjacent_object.second);
 	}
@@ -54,7 +54,7 @@ void HlObjectSet::highlight(PlacedLogicModelObject::HIGHLIGHTING_STATE state)
     {
         e->set_highlighted(state);
 
-        if(object_update_function)
+        if (object_update_function)
             object_update_function(e);
     }
 }
@@ -65,7 +65,7 @@ void HlObjectSet::add(std::shared_ptr<PlacedLogicModelObject> object)
 	ObjectSet::add(object);
 	object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_DIRECT);
 
-    if(object_update_function)
+    if (object_update_function)
         object_update_function(object);
 }
 
@@ -90,7 +90,7 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
 	if (net == nullptr) return;
 
 	// iterate over net
-	for(auto& oid : *net)
+	for (auto& oid : *net)
 	{
 		PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
 		ConnectedLogicModelObject_shptr clo =
@@ -103,7 +103,7 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
 		{
 			clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_ADJACENT);
 
-            if(object_update_function)
+            if (object_update_function)
                 object_update_function(clo);
 
 			adjacent_objects[o].push_back(clo);
@@ -114,14 +114,14 @@ void HlObjectSet::highlight_adjacent_objects(ConnectedLogicModelObject_shptr o,
 void HlObjectSet::unhighlight_adjacent_objects(adjacent_objects_t::mapped_type& list)
 {
 	// iterate over list
-	for(auto& clo : list)
+	for (auto& clo : list)
 	{
 		auto iter = adjacent_objects.find(clo);
 		if (iter == adjacent_objects.end())
         {
             clo->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
 
-            if(object_update_function)
+            if (object_update_function)
                 object_update_function(clo);
         }
 	}
@@ -145,6 +145,6 @@ void HlObjectSet::remove(std::shared_ptr<PlacedLogicModelObject> object)
 
 	object->set_highlighted(PlacedLogicModelObject::HLIGHTSTATE_NOT);
 
-    if(object_update_function)
+    if (object_update_function)
         object_update_function(object);
 }

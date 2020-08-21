@@ -41,13 +41,13 @@ namespace degate
 		if (program != nullptr)
 			delete program;
 
-		if(QOpenGLContext::currentContext() == nullptr || context == nullptr)
+		if (QOpenGLContext::currentContext() == nullptr || context == nullptr)
 			return;
 
-		if(context->glIsBuffer(vbo) == GL_TRUE)
+		if (context->glIsBuffer(vbo) == GL_TRUE)
 		    context->glDeleteBuffers(1, &vbo);
 
-        if(context->glIsBuffer(line_vbo) == GL_TRUE)
+        if (context->glIsBuffer(line_vbo) == GL_TRUE)
 		    context->glDeleteBuffers(1, &line_vbo);
 	}
 
@@ -103,7 +103,7 @@ namespace degate
 
 	void WorkspaceSelectionTool::update(float x, float y)
 	{
-		if(selection == false || project == nullptr)
+		if (selection == false || project == nullptr)
 			return;
 
         if (PREFERENCES_HANDLER.get_preferences().snap_to_grid && !object_selection_mode)
@@ -144,7 +144,7 @@ namespace degate
 
 		temp.color = QVector3D(33, 76, 117) / 255.0;
 
-		if(object_selection_mode)
+		if (object_selection_mode)
             temp.alpha = 0;
 		else
 		    temp.alpha = 0.6;
@@ -204,7 +204,7 @@ namespace degate
 
 	void WorkspaceSelectionTool::draw(const QMatrix4x4& projection)
 	{
-		if(selection == false || project == nullptr)
+		if (selection == false || project == nullptr)
 			return;
 
 		program->bind();

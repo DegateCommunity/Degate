@@ -37,7 +37,7 @@ namespace degate
         timer.setInterval(100);
 
         // If no progress control disable the cancel button
-        if(progress_control == nullptr)
+        if (progress_control == nullptr)
             setCancelButton(nullptr);
 
         // Disable auto close when progress is at maximum
@@ -98,7 +98,7 @@ namespace degate
                 setMaximum(100);
 
                 QString text;
-                if(progress_control->has_log_message())
+                if (progress_control->has_log_message())
                     text = QString::fromStdString(progress_control->get_log_message());
                 text += "\n";
                 text += tr("Time left:") + " " + QString::fromStdString(progress_control->get_time_left_as_string());

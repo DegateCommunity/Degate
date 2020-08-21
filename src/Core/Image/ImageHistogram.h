@@ -304,8 +304,8 @@ namespace degate
 	    assert_is_multi_channel_image<ImageType>();
 	    check_bounding_box(bb, img);
   
-	    for(unsigned int y = (unsigned int)bb.get_min_y(); y <= (unsigned int)bb.get_max_y(); y++) {
-	  for(unsigned int x = (unsigned int)bb.get_min_x(); x <= (unsigned int)bb.get_max_x(); x++) {
+	    for (unsigned int y = (unsigned int)bb.get_min_y(); y <= (unsigned int)bb.get_max_y(); y++) {
+	  for (unsigned int x = (unsigned int)bb.get_min_x(); x <= (unsigned int)bb.get_max_x(); x++) {
   
 		std::vector<double> v = fill_vector<ImageType, EvaluateFunc>(img, bb, x, y, radius);
 		add(standard_deviation<double>(v));
@@ -324,8 +324,8 @@ namespace degate
 	    unsigned int min_y = bb.get_min_y() + radius < y ? y - radius : bb.get_min_y();
 	    unsigned int max_y = (y + radius < (unsigned int)bb.get_max_y()) ? y + radius : bb.get_max_y();
   
-	    for(unsigned int _y = min_y; _y < max_y; _y++)
-	  for(unsigned int _x = min_x; _x < max_x; _x++)
+	    for (unsigned int _y = min_y; _y < max_y; _y++)
+	  for (unsigned int _x = min_x; _x < max_x; _x++)
 		v.push_back(EvaluateFunc::func(img->get_pixel(_x, _y)));
 	    return v;
 	  }

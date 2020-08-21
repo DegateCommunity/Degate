@@ -165,8 +165,8 @@ namespace degate
 	  std::vector<double> col_sum(width), row_sum(width);
   
   
-	  for(int _y = -radius; _y < radius; _y++)
-		for(int _x = -radius; _x < radius; _x++) {
+	  for (int _y = -radius; _y < radius; _y++)
+		for (int _x = -radius; _x < radius; _x++) {
   
   
 		  rgba_pixel_t p = img->get_pixel(x + _x, y + _y);
@@ -178,7 +178,7 @@ namespace degate
 	    }
   
 	    bool col_iter_ok = true;
-	    for(unsigned int i = 0; i < col_sum.size() - 1; i++) {
+	    for (unsigned int i = 0; i < col_sum.size() - 1; i++) {
 	  if(col_sum[i] >
 	    }
   
@@ -225,7 +225,7 @@ namespace degate
 	  void add_background_areas(std::shared_ptr<ImageType> img,
 				    std::list<BoundingBox> const& bg_areas) {
   
-	    for(std::list<BoundingBox>::const_iterator iter = bg_areas.begin(); iter != bg_areas.end(); ++iter) {
+	    for (std::list<BoundingBox>::const_iterator iter = bg_areas.begin(); iter != bg_areas.end(); ++iter) {
 	  bg_hue.add_area<ImageType>(img, *iter);
 	  bg_sat.add_area<ImageType>(img, *iter);
 	  bg_l.add_area<ImageType>(img, *iter);
@@ -243,7 +243,7 @@ namespace degate
 				    std::list<BoundingBox> const& fg_areas) {
   
   
-	    for(std::list<BoundingBox>::const_iterator iter = fg_areas.begin(); iter != fg_areas.end(); ++iter) {
+	    for (std::list<BoundingBox>::const_iterator iter = fg_areas.begin(); iter != fg_areas.end(); ++iter) {
 	  fg_hue.add_area<ImageType>(img, *iter);
 	  fg_sat.add_area<ImageType>(img, *iter);
 	  fg_l.add_area<ImageType>(img, *iter);

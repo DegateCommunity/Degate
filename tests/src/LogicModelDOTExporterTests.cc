@@ -60,7 +60,7 @@ TEST_CASE("Test export", "[LogicModelDOTExporter]")
 
     std::string out_filename("tests_files/layout_gate_placement.dot");
 
-    if(file_exists(out_filename)) remove_file(out_filename);
+    if (file_exists(out_filename)) remove_file(out_filename);
 
     exporter.set_property(LogicModelDOTExporter::PRESERVE_GATE_POSITIONS, true);
     exporter.set_property(LogicModelDOTExporter::ENABLE_EDGES, false);
@@ -74,7 +74,7 @@ TEST_CASE("Test export", "[LogicModelDOTExporter]")
 
     std::string out_filename2("tests_files/logic_model_graph.dot");
 
-    if(file_exists(out_filename2)) remove_file(out_filename2);
+    if (file_exists(out_filename2)) remove_file(out_filename2);
 
     exporter2.set_property(LogicModelDOTExporter::PRESERVE_GATE_POSITIONS, false);
     exporter2.set_property(LogicModelDOTExporter::ENABLE_EDGES, true);

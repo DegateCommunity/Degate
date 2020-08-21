@@ -33,10 +33,10 @@ namespace degate
 		if (program != nullptr)
 			delete program;
 
-		if(QOpenGLContext::currentContext() == nullptr || context == nullptr)
+		if (QOpenGLContext::currentContext() == nullptr || context == nullptr)
 			return;
 
-        if(context->glIsBuffer(vbo) == GL_TRUE)
+        if (context->glIsBuffer(vbo) == GL_TRUE)
 		    context->glDeleteBuffers(1, &vbo);
 	}
 

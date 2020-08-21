@@ -56,7 +56,7 @@ namespace degate
 
     void TerminalWidget::process_finished()
     {
-        if(commands.size() <= 0)
+        if (commands.size() <= 0)
             return;
 
         start();
@@ -99,7 +99,7 @@ namespace degate
 
     void TerminalDialog::start()
     {
-        if(!isVisible())
+        if (!isVisible())
             open();
 
         terminal.start();

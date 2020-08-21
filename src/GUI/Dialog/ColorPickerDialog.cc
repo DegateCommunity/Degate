@@ -122,7 +122,7 @@ namespace degate
 
     void ColorPickerDialog::on_color_changed(const QColor& color)
     {
-        if(color.alpha() != alpha_slider.value())
+        if (color.alpha() != alpha_slider.value())
             alpha_slider.setValue(color.alpha());
 
         this->color = to_degate_color(color);

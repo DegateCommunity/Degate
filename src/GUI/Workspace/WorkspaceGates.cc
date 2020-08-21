@@ -41,10 +41,10 @@ namespace degate
 
 	WorkspaceGates::~WorkspaceGates()
 	{
-        if(context->glIsBuffer(line_vbo) == GL_TRUE)
+        if (context->glIsBuffer(line_vbo) == GL_TRUE)
 		    context->glDeleteBuffers(1, &line_vbo);
 
-        if(context->glIsBuffer(port_vbo) == GL_TRUE)
+        if (context->glIsBuffer(port_vbo) == GL_TRUE)
 		    context->glDeleteBuffers(1, &port_vbo);
 	}
 
@@ -95,7 +95,7 @@ namespace degate
 
 	void WorkspaceGates::update()
 	{
-		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
+		if (project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -113,19 +113,19 @@ namespace degate
         ports_count = 0;
 
 		unsigned index = 0;
-		for(LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
+		for (LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
 			create_gate(iter->second, index);
 			iter->second->set_index(index);
 
             gate_template_name_text_size += iter->second->get_gate_template()->get_name().length();
 
-            if(!iter->second->get_name().empty())
+            if (!iter->second->get_name().empty())
                 gate_template_name_text_size += iter->second->get_name().length() + 3;
 
             ports_count += iter->second->get_ports_number();
 
-			for(Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
+			for (Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
 			{
                 port_name_text_size += (*port_iter)->get_name().length();
 			}
@@ -146,11 +146,11 @@ namespace degate
 		unsigned port_name_text_offset = 0;
 		unsigned ports_index = 0;
 
-		for(auto iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
+		for (auto iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
 		{
 		    std::string text = iter->second->get_gate_template()->get_name();
 
-            if(!iter->second->get_name().empty())
+            if (!iter->second->get_name().empty())
                 text += " [" + iter->second->get_name() + "]";
 
             gate_template_name_text.add_sub_text(gate_template_name_text_offset,
@@ -168,12 +168,12 @@ namespace degate
 
             gate_template_name_text_offset += iter->second->get_gate_template()->get_name().length();
 
-            if(!iter->second->get_name().empty())
+            if (!iter->second->get_name().empty())
                 gate_template_name_text_offset += iter->second->get_name().length() + 3;
 
 			ports_index += iter->second->get_ports_number();
 
-			for(auto port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
+			for (auto port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
 			{
 				unsigned x = (*port_iter)->get_x();
 				unsigned y = (*port_iter)->get_y() + (*port_iter)->get_diameter() / 2.0 + TEXT_PADDING;
@@ -194,7 +194,7 @@ namespace degate
 
 	void WorkspaceGates::update(Gate_shptr& gate)
 	{
-		if(gate == nullptr)
+		if (gate == nullptr)
 			return;
 
 		create_gate(gate, gate->get_index());
@@ -202,7 +202,7 @@ namespace degate
 
 	void WorkspaceGates::draw(const QMatrix4x4& projection)
 	{
-		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
+		if (project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 
 		program->bind();
@@ -242,7 +242,7 @@ namespace degate
 
 	void WorkspaceGates::draw_gates_name(const QMatrix4x4& projection)
 	{
-		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
+		if (project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 
         gate_template_name_text.draw(projection);
@@ -250,7 +250,7 @@ namespace degate
 
 	void WorkspaceGates::draw_ports(const QMatrix4x4& projection)
 	{
-		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
+		if (project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 		
 		program->bind();
@@ -277,7 +277,7 @@ namespace degate
 
 	void WorkspaceGates::draw_ports_name(const QMatrix4x4& projection)
 	{
-		if(project == nullptr || project->get_logic_model()->get_gates_count() == 0)
+		if (project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 
         port_name_text.draw(projection);
@@ -285,7 +285,7 @@ namespace degate
 
 	void WorkspaceGates::create_gate(Gate_shptr& gate, unsigned index)
 	{
-		if(gate == nullptr)
+		if (gate == nullptr)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -471,7 +471,7 @@ namespace degate
 
 	void WorkspaceGates::update(GatePort_shptr& port)
 	{
-		if(port == nullptr)
+		if (port == nullptr)
 			return;
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
@@ -481,7 +481,7 @@ namespace degate
 
 		color = highlight_color_by_state(color, port->get_highlighted());
 
-		switch(tmpl_port->get_port_type()) 
+		switch (tmpl_port->get_port_type())
 		{
 			case GateTemplatePort::PORT_TYPE_UNDEFINED:
 				draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0, port->get_index());
@@ -507,7 +507,7 @@ namespace degate
 	{
 		context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
-		for(Gate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter)
+		for (Gate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter)
 		{
 			GatePort_shptr port = *iter;
 			GateTemplatePort_shptr tmpl_port = port->get_template_port();
@@ -515,7 +515,7 @@ namespace degate
 
 			color = highlight_color_by_state(color, port->get_highlighted());
 
-			switch(tmpl_port->get_port_type()) 
+			switch (tmpl_port->get_port_type())
 			{
 				case GateTemplatePort::PORT_TYPE_UNDEFINED:
 					draw_port_in_out(context, port->get_x(), port->get_y(), port->get_diameter(), QVector3D(MASK_R(color) / 255.0, MASK_G(color) / 255.0, MASK_B(color) / 255.0), MASK_A(color) / 255.0, index);
