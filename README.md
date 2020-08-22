@@ -1,11 +1,23 @@
-![Degate Logo](res/degate_logo.png) 
+![DegateBanner](etc/degate_banner.png)
 
-Degate 2.0
-===========
+<p align="center">
+    <a href="https://github.com/DegateCommunity/Degate" alt="Project Status: Active">
+        <img src="https://www.repostatus.org/badges/latest/active.svg" /></a>
+    <a href="https://github.com/DegateCommunity/Degate/blob/master/LICENSE.TXT" alt="License">
+        <img src="https://img.shields.io/github/license/DegateCommunity/Degate" /></a>
+    <a href="https://github.com/DegateCommunity/Degate/issues" alt="GitHub Issues">
+        <img src="https://img.shields.io/github/issues/DegateCommunity/Degate" /></a>
+    <a href="https://github.com/DegateCommunity/Degate/commits/develop" alt="Last Commit">
+        <img src="https://img.shields.io/github/last-commit/DegateCommunity/Degate/develop" /></a>
+    <a href="https://github.com/DegateCommunity/Degate/releases" alt="Last Release">
+        <img src="https://img.shields.io/github/release-date-pre/DegateCommunity/Degate" /></a>
+    <a href="https://github.com/DegateCommunity/Degate/graphs/contributors" alt="Contributors">
+        <img src="https://img.shields.io/github/contributors/DegateCommunity/Degate" /></a>
+</p>
 
-Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips.
+&nbsp;
 
-This project is a fork of the initial Degate project. The final goal is to replace it.
+Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project. The final goal is to replace it.
 
 # The project
 
@@ -45,6 +57,7 @@ For the moment we have (as functionalities) :
 - Sub-projects,
 - Annotation and annotation configuration,
 - Light and dark theme support,
+- Rule checks,
 - And much more...
 
 We dropped those functionalities from old Degate :
@@ -57,12 +70,13 @@ A lot of bugs were fixed in this newer version, and it should be a better base t
 There is still a lot to do in this new version, but all core functionalities (and even more) are implemented.
 
 Future functionalities remaining to implement (not limited) :
-- Rule checks (old feature),
 - Modules (old feature),
 - Connection inspector (old feature),
 - Explicit full netlist exporter (old/new feature),
 - More languages (new feature),
 - Integrated gate analyzer (new feature).
+
+For a more precise roadmap see the [ROADMAP.md](https://github.com/DegateCommunity/Degate/blob/develop/ROADMAP.md) file.
 
 ## Screenshots
 
