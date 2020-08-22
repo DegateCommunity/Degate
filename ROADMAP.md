@@ -20,22 +20,22 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [ ] Bug fixes.
 - [ ] Connection inspector dialog.
 
-## For 2.0.0-alpha.3:
+## For 2.0.0-alpha.3 *[next]*:
 
 - [ ] Bug fixes.
 - [ ] Module dialog.
 - [ ] German language.
 
-## For 2.0.0-alpha.2 *[next]*:
+## For 2.0.0-alpha.2 *[**current**]*:
 
-- [ ] Bug fixes.
+- [x] Bug fixes.
 - [x] Better theme support.
 - [x] Rule violations dialog.
 - [x] "go to" function (useful for some dialogs).
 - [x] Snap to grid.
 - [x] First half of code homogenization work.
 
-## For 2.0.0-alpha.1 *[**current**]*:
+## For 2.0.0-alpha.1:
 
 - [x] Full GUI rewrites.
 - [x] Moved from Gtkmm to Qt5.
