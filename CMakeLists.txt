@@ -142,15 +142,6 @@ endif()
 #
 add_subdirectory(tests)
 
-#
-# Copy changelog to the res directory
-#
-add_custom_command(
-		TARGET DegateCore PRE_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG.md" "${CMAKE_CURRENT_SOURCE_DIR}/res/"
-		DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG.md"
-)
-
 ############################################################################
 #
 # Documentation

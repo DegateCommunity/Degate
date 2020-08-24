@@ -128,7 +128,7 @@ For example, on debian like Linux distribution, you can install all dependencies
 
 - CMake 3.12.0 or newer,
 - Boost 1.70.0 or newer,
-- Qt 5.12.0 or newer.
+- Qt 5.14.0 or newer.
 
 ## Build
 
