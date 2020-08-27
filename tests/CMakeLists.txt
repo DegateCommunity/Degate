@@ -38,9 +38,17 @@ set_target_properties(DegateTests
 	RUNTIME_OUTPUT_DIRECTORY "out/bin"
 )
 
-add_test(Run DegateTests)
+#
+# Link Catch2 tests to CTest
+#
+include(catch2/Catch.cmake)
+catch_discover_tests(DegateTests)
 
 #
 # Copy test files
 #
-file(COPY "tests_files" DESTINATION "${CMAKE_BINARY_DIR}/tests/out/bin")
+add_custom_command(
+		TARGET DegateTests POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${CMAKE_SOURCE_DIR}/tests/tests_files/
+		$<TARGET_FILE_DIR:DegateTests>/tests_files/)
