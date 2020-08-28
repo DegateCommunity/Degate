@@ -139,6 +139,9 @@ namespace degate
 	    if (translator != nullptr)
             QApplication::removeTranslator(translator.get());
 
+        if (qt_translator != nullptr)
+            QApplication::removeTranslator(qt_translator.get());
+
         if (base_translator != nullptr)
             QApplication::removeTranslator(base_translator.get());
 
@@ -149,6 +152,10 @@ namespace degate
         translator = std::make_shared<QTranslator>();
         translator->load(QString(":/languages/degate_") + locale);
         QApplication::installTranslator(translator.get());
+
+        qt_translator = std::make_shared<QTranslator>();
+        qt_translator->load("qt_" + locale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+        QApplication::installTranslator(qt_translator.get());
 
         base_translator = std::make_shared<QTranslator>();
         base_translator->load("qtbase_" + locale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));

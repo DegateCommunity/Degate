@@ -133,6 +133,7 @@ namespace degate
         QSettings settings;
         Preferences preferences;
         std::shared_ptr<QTranslator> translator = nullptr;
+        std::shared_ptr<QTranslator> qt_translator = nullptr;
         std::shared_ptr<QTranslator> base_translator = nullptr;
 	};
 }
