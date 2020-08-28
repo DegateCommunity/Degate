@@ -322,12 +322,6 @@ namespace degate
 
         reload_texts();
 
-        if (PREFERENCES_HANDLER.get_settings().value("first_launch", true).toBool())
-        {
-            on_menu_help_about();
-            PREFERENCES_HANDLER.get_settings().setValue("first_launch", false);
-        }
-
         QObject::connect(workspace, SIGNAL(project_changed()), this, SLOT(project_changed()));
 
         auto_save_timer.setInterval(PREFERENCES_HANDLER.get_preferences().auto_save_interval * 60000);
@@ -1529,7 +1523,7 @@ namespace degate
         project_changed();
     }
 
-    void MainWindow::closeEvent(QCloseEvent *event)
+    void MainWindow::closeEvent(QCloseEvent* event)
     {
 	    // When the main window is closed, automatically close the rule violations dialog.
 	    // Since the dialog is modeless and not linked to this window, we have to force close.

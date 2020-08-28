@@ -29,6 +29,16 @@ int main(int argc, char* argv[])
 
         splash.finish(&window);
 
+        // If it's a first launch or an updated Degate version, show help menu.
+        if (degate::PreferencesHandler::get_instance().get_settings().value("first_launch", true).toBool() ||
+            degate::PreferencesHandler::get_instance().get_settings().value("last_launch_version", "") != DEGATE_VERSION)
+        {
+            window.on_menu_help_about();
+
+            degate::PreferencesHandler::get_instance().get_settings().setValue("first_launch", false);
+            degate::PreferencesHandler::get_instance().get_settings().setValue("last_launch_version", DEGATE_VERSION);
+        }
+
         ret = QApplication::exec();
     }
     catch (const std::exception& e)

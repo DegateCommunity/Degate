@@ -342,7 +342,7 @@ namespace degate
         void on_rule_violations_dialog();
 
 	protected:
-	    void closeEvent(QCloseEvent *event) override;
+	    void closeEvent(QCloseEvent* event) override;
 
 	private:
 		QMenuBar menu_bar;
