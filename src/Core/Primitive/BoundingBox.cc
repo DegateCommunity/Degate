@@ -212,7 +212,7 @@ void BoundingBox::print(std::ostream& os, int n_tabs) const
 
 std::string BoundingBox::to_string() const
 {
-	boost::format f("x = %1% .. %2% / y = %3% ... %4%");
+	boost::format f("x = %1% .. %2% / y = %3% ... %4%\n");
 	f % min_x % max_x % min_y % max_y;
 	return f.str();
 }
