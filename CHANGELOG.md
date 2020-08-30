@@ -6,13 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Added a "SECURITY.md" file for contributors.
+- Added proper top menu options for many dialogs.
 
 ### Changed
 - Updated the roadmap.
-- Improved CTest support.
 
 ### Fixed
+- Fixed a translation problem with default Qt buttons.
+- Fixed a bug with color buttons of the project settings dialog (Linux).
+- Fixed a menu error in the main window (for the layer edit menu).
 - Fixed a translation problem with default Qt buttons.
 
 ## [2.0.0-alpha.2] - 2020-08-22
