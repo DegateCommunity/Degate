@@ -24,11 +24,11 @@
 #include "catch.hpp"
 
 #include <QByteArray>
-#include <QApplication>
+#include <QCoreApplication>
 
 int main( int argc, char* argv[] )
 {
-    QApplication a(argc, argv);
+    QCoreApplication a(argc, argv);
 
     int result = Catch::Session().run( argc, argv );
 
