@@ -1,0 +1,48 @@
+name: Windows deploy
+
+on: [workflow_dispatch]
+
+env:
+  BUILD_TYPE: Release # Change build type here.
+
+jobs:
+  build:
+    runs-on: windows-latest # Change Windows version here.
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2.8.0
+      with:
+        version: 5.15.0 # Update Qt version here.
+
+    - name: Build
+      shell: bash
+      # Update the boost version here (see https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md to know latest supported Boost version).
+      run: |
+        cd build
+        cmake .. -DBOOST_ROOT=$BOOST_ROOT_1_72_0
+        cmake --build . --config $BUILD_TYPE
+      
+    - name: Prepare installer
+      shell: bash
+      run: |
+        cd build/out/bin/$BUILD_TYPE
+        $Qt5_Dir/bin/windeployqt.exe ./
+        cp -R ./ ../../../../etc/installer/packages/Degate/data
+      
+    - name: Create Degate installer
+      shell: cmd
+      # Update the Qt Installer Framework (ifw) version here (by providing the exe download link and changing the exe name/path).
+      run: |
+        cd etc/installer
+        C:\msys64\usr\bin\wget.exe https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ifw/qt.tools.ifw.32/3.2.2ifw-win-x86.7z
+        7z.exe x 3.2.2ifw-win-x86.7z -y
+        .\Tools\QtInstallerFramework\3.2\bin\binarycreator.exe -c config\config.xml -p packages "Degate_Windows_installer_x64.exe"
+      
+    - name: Upload Degate installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: Degate_Windows_installer_x64.exe
+        path: etc/installer/Degate_Windows_installer_x64.exe

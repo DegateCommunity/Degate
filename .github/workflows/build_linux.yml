@@ -1,0 +1,32 @@
+name: Linux build & tests
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  BUILD_TYPE: Release # Change build type here.
+  BOOST_ROOT: /opt/hostedtoolcache/boost/1.72.0/x64 # Update Boost version here (See https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md to know latest supported Boost version).
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04 # Update Ubuntu version here.
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2.8.0
+      with:
+        version: 5.15.0 # Update Qt version here.
+
+    - name: Build
+      shell: bash
+      run: |
+        cd build
+        cmake ..
+        cmake --build . --config $BUILD_TYPE
+
+    - name: Tests
+      shell: bash
+      run: |
+        cd build/tests/out/bin
+        ./DegateTests

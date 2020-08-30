@@ -1,0 +1,52 @@
+name: Linux deploy
+
+on: [workflow_dispatch]
+
+env:
+  BUILD_TYPE: Release # Change build type here.
+  BOOST_ROOT: /opt/hostedtoolcache/boost/1.72.0/x64 # Update Boost version here (See https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md to know latest supported Boost version).
+
+jobs:
+  build:
+    runs-on: ubuntu-16.04 # Update Ubuntu version here (might be the oldest LTS for AppImage creation).
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2.8.0
+      with:
+        version: 5.15.0 # Update Qt version here.
+
+    - name: Build
+      shell: bash
+      run: |
+        cd build
+        cmake ..
+        cmake --build . --config $BUILD_TYPE
+
+    - name: Prepare Degate AppImage
+      shell: bash
+      run: |
+        cd etc
+        mkdir linux_deploy
+        sudo chown -R $USER:$USER linux_deploy
+        cd linux_deploy
+        mv ../../build/out/bin/Degate ./
+        cp ../degate.desktop ./degate.desktop
+        cp ../degate.png ./degate.png
+        sudo apt-get install libxcb-*
+
+    - name: Create Degate AppImage
+      shell: bash
+      run: |
+        cd etc/linux_deploy/
+        wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+        ./linuxdeployqt-continuous-x86_64.AppImage Degate -appimage
+
+    - name: Upload Degate appimage
+      uses: actions/upload-artifact@v2
+      with:
+        name: Degate_Linux_x64.AppImage
+        path: etc/linux_deploy/Degate*.AppImage

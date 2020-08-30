@@ -1,0 +1,33 @@
+name: Windows build & tests
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  BUILD_TYPE: Release # Change build type here.
+
+jobs:
+  build:
+    runs-on: windows-latest # Change Windows version here.
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2.8.0
+      with:
+        version: 5.15.0 # Update Qt version here.
+
+    - name: Build
+      shell: bash
+      # Update the boost version here (see https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md to know latest supported Boost version).
+      run: |
+        cd build
+        cmake .. -DBOOST_ROOT=$BOOST_ROOT_1_72_0
+        cmake --build . --config $BUILD_TYPE
+
+    - name: Tests
+      shell: bash
+      run: |
+        cd build/tests/out/bin/$BUILD_TYPE
+        $Qt5_Dir/bin/windeployqt.exe ./
+        ./DegateTests.exe
