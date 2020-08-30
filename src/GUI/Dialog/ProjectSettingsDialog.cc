@@ -71,7 +71,17 @@ namespace degate
     }
 
     ProjectSettingsColorsTab::ProjectSettingsColorsTab(QWidget* parent, const Project_shptr& project)
-            : QWidget(parent), project(project)
+            : QWidget(parent),
+              project(project),
+              wire_color_edit(parent),
+              via_up_color_edit(parent),
+              via_down_color_edit(parent),
+              annotation_color_edit(parent),
+              annotation_frame_color_edit(parent),
+              gate_color_edit(parent),
+              gate_frame_color_edit(parent),
+              gate_port_color_edit(parent),
+              emarker_color_edit(parent)
     {
         wire_color_label.setText(tr("Wire default color:"));
         wire_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_WIRE));
