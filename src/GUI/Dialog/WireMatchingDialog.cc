@@ -32,6 +32,7 @@ namespace degate
             : QDialog(parent), bounding_box(bounding_box), project(project)
     {
         setWindowTitle(tr("Wire matching"));
+        setWindowFlags(Qt::Window);
 
         // Via diameter
         wire_diameter_label.setText(tr("Wire diameter:"));

@@ -742,7 +742,7 @@ namespace degate
 																											  project(project)
 	{
 		setWindowTitle(tr("Edit gate"));
-        setWindowFlags(windowFlags() | Qt::WindowMaximizeButtonHint);
+        setWindowFlags(Qt::Window);
 
 		tab.addTab(&entity_tab, tr("Entity"));
 		tab.addTab(&behaviour_tab, tr("Behaviour"));
@@ -772,6 +772,7 @@ namespace degate
 	GateInstanceEditDialog::GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project) : GateEditDialog(parent, gate->get_gate_template(), project), gate(gate)
 	{
 		setWindowTitle(tr("Edit gate instance"));
+        setWindowFlags(Qt::Window);
 
         instance_label.setText(tr("Gate instance edition:"));
 

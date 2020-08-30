@@ -40,6 +40,7 @@ namespace degate
               gate_templates(gate_templates)
     {
         setWindowTitle(tr("Template matching"));
+        setWindowFlags(Qt::Window);
 
         // Threshold to start hill climbing
         hill_climbing_threshold_label.setText(tr("Threshold to start hill climbing:"));

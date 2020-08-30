@@ -31,6 +31,8 @@ namespace degate
 {
     AboutDialog::AboutDialog(QWidget* parent) : QDialog(parent)
     {
+        setWindowFlags(Qt::Window);
+
         // First tab
         const QString about_message =
                               "<html><center>"

@@ -32,6 +32,7 @@ namespace degate
             : QDialog(parent), bounding_box(bounding_box), project(project)
     {
         setWindowTitle(tr("Via matching"));
+        setWindowFlags(Qt::Window);
 
         // Threshold for detection
         threshold_label.setText(tr("Threshold for detection:"));
