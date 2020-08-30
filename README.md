@@ -17,7 +17,7 @@
 
 &nbsp;
 
-Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project. The final goal is to replace it.
+Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project. The final goal is to replace it. For more please visit our [wiki](https://github.com/DegateCommunity/Degate/wiki) page.
 
 # The project
 
