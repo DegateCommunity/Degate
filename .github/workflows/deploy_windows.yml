@@ -1,6 +1,6 @@
 name: Windows deploy
 
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release # Change build type here.
