@@ -167,7 +167,7 @@ namespace degate
 		layer_menu = menu_bar.addMenu("");
 
 		layers_edit_action = layer_menu->addAction("");
-		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_grid_configuration()));
+		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
 
 		background_import_action = layer_menu->addAction("");
 		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
