@@ -122,7 +122,7 @@ void GateLibraryImporter::parse_gate_templates_element(QDomElement const gate_te
 
 			const std::string name(gate_elem.attribute("name").toStdString());
 			const std::string description(gate_elem.attribute("description").toStdString());
-			const std::string logic_class(gate_elem.attribute("logic-class").toStdString());
+			const std::string logic_class(gate_elem.attribute("logic-class", "undefined").toStdString());
 			const std::string frame_color_str(gate_elem.attribute("frame-color").toStdString());
 			const std::string fill_color_str(gate_elem.attribute("fill-color").toStdString());
 

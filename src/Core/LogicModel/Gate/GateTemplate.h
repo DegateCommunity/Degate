@@ -71,7 +71,7 @@ namespace degate
 		implementation_collection implementations;
 		image_collection images;
 
-		std::string logic_class; // e.g. nand, xor, flipflop, buffer, oai
+		std::string logic_class = "undefined"; // e.g. nand, xor, flipflop, buffer, oai
 
 	protected:
 
