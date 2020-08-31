@@ -24,9 +24,9 @@
 
 #include <memory>
 
-#include <Core/Generator/VerilogCodeTemplateGenerator.h>
-#include <Core/LogicModel/Gate/GateTemplate.h>
-#include <Core/LogicModel/Module.h>
+#include "Core/Generator/VerilogCodeTemplateGenerator.h"
+#include "Core/LogicModel/Gate/GateTemplate.h"
+#include "Core/LogicModel/Module.h"
 
 namespace degate
 {

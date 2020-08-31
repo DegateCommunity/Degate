@@ -22,8 +22,8 @@
 #ifndef __GRIDPREFERENCESPAGE_H__
 #define __GRIDPREFERENCESPAGE_H__
 
-#include <GUI/Preferences/PreferencesPage/PreferencesPage.h>
-#include <GUI/Dialog/ColorPickerDialog.h>
+#include "GUI/Preferences/PreferencesPage/PreferencesPage.h"
+#include "GUI/Dialog/ColorPickerDialog.h"
 
 #include <QSpinBox>
 

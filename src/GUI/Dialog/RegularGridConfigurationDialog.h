@@ -22,8 +22,8 @@
 #ifndef __REGULARGRIDCONFIGURATIONDIALOG_H__
 #define __REGULARGRIDCONFIGURATIONDIALOG_H__
 
-#include <Core/Project/Project.h>
-#include <Core/Grid/RegularGrid.h>
+#include "Core/Project/Project.h"
+#include "Core/Grid/RegularGrid.h"
 
 #include <QDialog>
 #include <QGridLayout>

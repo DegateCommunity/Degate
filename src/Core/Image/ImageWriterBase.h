@@ -30,7 +30,7 @@
 #include "StoragePolicies.h"
 #include "PixelPolicies.h"
 #include "Core/Utils/FileSystem.h"
-#include <Core/Utils/DegateExceptions.h>
+#include "Core/Utils/DegateExceptions.h"
 
 namespace degate
 {

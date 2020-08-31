@@ -26,7 +26,7 @@
 #include <memory>
 #include <string>
 
-#include <Core/LogicModel/LogicModelHelper.h>
+#include "Core/LogicModel/LogicModelHelper.h"
 
 #include <boost/foreach.hpp>
 

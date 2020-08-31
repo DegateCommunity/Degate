@@ -23,7 +23,7 @@
 #define __IPCOPY_H__
 
 #include <string>
-#include <Core/Image/Processor/ImageProcessorBase.h>
+#include "Core/Image/Processor/ImageProcessorBase.h"
 
 namespace degate
 {

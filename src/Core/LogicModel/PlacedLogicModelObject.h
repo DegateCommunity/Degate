@@ -25,12 +25,12 @@
 
 #include "Core/Image/Image.h"
 
-#include <Globals.h>
-#include <Core/LogicModel/LogicModelObjectBase.h>
-#include <Core/LogicModel/Layer.h>
-#include <Core/Primitive/BoundingBox.h>
-#include <Core/Primitive/ColoredObject.h>
-#include <Core/Primitive/AbstractShape.h>
+#include "Globals.h"
+#include "Core/LogicModel/LogicModelObjectBase.h"
+#include "Core/LogicModel/Layer.h"
+#include "Core/Primitive/BoundingBox.h"
+#include "Core/Primitive/ColoredObject.h"
+#include "Core/Primitive/AbstractShape.h"
 
 namespace degate
 {

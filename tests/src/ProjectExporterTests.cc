@@ -19,9 +19,9 @@
 
 */
 
-#include <Core/Project/ProjectImporter.h>
-#include <Core/Project/ProjectExporter.h>
-#include <Core/Project/Project.h>
+#include "Core/Project/ProjectImporter.h"
+#include "Core/Project/ProjectExporter.h"
+#include "Core/Project/Project.h"
 
 #include "catch.hpp"
 

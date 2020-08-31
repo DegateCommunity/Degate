@@ -22,9 +22,9 @@
 #ifndef __EXTERNALMATCHING_H__
 #define __EXTERNALMATCHING_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Project/Project.h>
-#include <Core/Matching/TemplateMatching.h>
+#include "Core/Image/Image.h"
+#include "Core/Project/Project.h"
+#include "Core/Matching/TemplateMatching.h"
 
 namespace degate
 {

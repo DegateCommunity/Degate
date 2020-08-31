@@ -19,9 +19,9 @@
 
 */
 
-#include <Core/Image/Manipulation/ScalingManager.h>
-#include <Core/Image/Image.h>
-#include <Core/Image/TIFFReader.h>
+#include "Core/Image/Manipulation/ScalingManager.h"
+#include "Core/Image/Image.h"
+#include "Core/Image/TIFFReader.h"
 
 #include "catch.hpp"
 

@@ -27,7 +27,7 @@
 #include <map>
 #include <memory>
 
-#include <Core/LogicModel/ObjectSet.h>
+#include "Core/LogicModel/ObjectSet.h"
 
 namespace degate
 {

@@ -1,6 +1,6 @@
-#include <Core/LogicModel/Gate/AutoNameGates.h>
-#include <Core/LogicModel/LogicModelHelper.h>
-#include <Core/LogicModel/Layer.h>
+#include "Core/LogicModel/Gate/AutoNameGates.h"
+#include "Core/LogicModel/LogicModelHelper.h"
+#include "Core/LogicModel/Layer.h"
 
 #include <boost/foreach.hpp>
 

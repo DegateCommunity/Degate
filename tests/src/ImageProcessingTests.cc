@@ -19,9 +19,9 @@
 
 */
 
-#include <Core/Image/Image.h>
-#include <Core/Image/Processor/IPPipe.h>
-#include <Core/Image/Processor/IPCopy.h>
+#include "Core/Image/Image.h"
+#include "Core/Image/Processor/IPPipe.h"
+#include "Core/Image/Processor/IPCopy.h"
 
 #include "catch.hpp"
 

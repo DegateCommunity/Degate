@@ -20,7 +20,7 @@
 
 */
 
-#include <Core/LogicModel/Gate/Gate.h>
+#include "Core/LogicModel/Gate/Gate.h"
 
 #include <boost/format.hpp>
 

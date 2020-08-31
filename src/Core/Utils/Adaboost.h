@@ -6,8 +6,8 @@
 
  */
 
-#ifndef __ADABOOST_HPP__
-#define __ADABOOST_HPP__
+#ifndef __ADABOOST_H__
+#define __ADABOOST_H__
 
 #include <vector>
 #include <string>

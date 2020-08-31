@@ -23,8 +23,8 @@
 #define __IPPIPE_H__
 
 #include <string>
-#include <Core/Image/Processor/ImageProcessorBase.h>
-#include <Core/Utils/ProgressControl.h>
+#include "Core/Image/Processor/ImageProcessorBase.h"
+#include "Core/Utils/ProgressControl.h"
 
 namespace degate
 {

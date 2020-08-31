@@ -19,10 +19,10 @@
 
 */
 
-#include <Core/LogicModel/Gate/GateLibraryImporter.h>
-#include <Core/LogicModel/LogicModelImporter.h>
-#include <Core/Utils/ObjectIDRewriter.h>
-#include <Core/DOT/LogicModelDOTExporter.h>
+#include "Core/LogicModel/Gate/GateLibraryImporter.h"
+#include "Core/LogicModel/LogicModelImporter.h"
+#include "Core/Utils/ObjectIDRewriter.h"
+#include "Core/DOT/LogicModelDOTExporter.h"
 
 #include <memory>
 

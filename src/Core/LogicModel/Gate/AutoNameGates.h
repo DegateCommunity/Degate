@@ -22,7 +22,7 @@
 #ifndef __AUTONAMEGATES_H__
 #define __AUTONAMEGATES_H__
 
-#include <Core/LogicModel/LogicModel.h>
+#include "Core/LogicModel/LogicModel.h"
 
 namespace degate
 {

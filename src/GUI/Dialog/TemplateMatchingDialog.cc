@@ -21,8 +21,8 @@
 
 #include "TemplateMatchingDialog.h"
 
-#include <Core/LogicModel/LogicModelHelper.h>
-#include <GUI/Dialog/ProgressDialog.h>
+#include "Core/LogicModel/LogicModelHelper.h"
+#include "GUI/Dialog/ProgressDialog.h"
 
 #include <QMessageBox>
 #include <QtConcurrent/QtConcurrent>

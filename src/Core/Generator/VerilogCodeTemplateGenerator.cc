@@ -20,8 +20,8 @@
 */
 
 
-#include <Core/Generator/VerilogCodeTemplateGenerator.h>
-#include <Core/Utils/DegateExceptions.h>
+#include "Core/Generator/VerilogCodeTemplateGenerator.h"
+#include "Core/Utils/DegateExceptions.h"
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>

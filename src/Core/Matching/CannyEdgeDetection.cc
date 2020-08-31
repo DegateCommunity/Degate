@@ -19,14 +19,14 @@
 
 */
 
-#include <Core/Matching/CannyEdgeDetection.h>
-#include <Core/Image/Processor/IPPipe.h>
-#include <Core/Image/Processor/IPCopy.h>
-#include <Core/Image/Processor/IPConvolve.h>
-#include <Core/Image/Processor/IPNormalize.h>
-#include <Core/Image/Processor/IPThresholding.h>
-#include <Core/Image/Manipulation/ImageManipulation.h>
-#include <Core/Image/Processor/IPImageWriter.h>
+#include "Core/Matching/CannyEdgeDetection.h"
+#include "Core/Image/Processor/IPPipe.h"
+#include "Core/Image/Processor/IPCopy.h"
+#include "Core/Image/Processor/IPConvolve.h"
+#include "Core/Image/Processor/IPNormalize.h"
+#include "Core/Image/Processor/IPThresholding.h"
+#include "Core/Image/Manipulation/ImageManipulation.h"
+#include "Core/Image/Processor/IPImageWriter.h"
 
 using namespace degate;
 

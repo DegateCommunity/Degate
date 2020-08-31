@@ -20,14 +20,14 @@
 */
 
 
-#include <Core/Matching/TemplateMatching.h>
-#include <Core/Image/Image.h>
-#include <Globals.h>
+#include "Core/Matching/TemplateMatching.h"
+#include "Core/Image/Image.h"
+#include "Globals.h"
 #include <algorithm>
-#include <Core/Utils/Statistics.h>
-#include <Core/Image/ImageHelper.h>
-#include <Core/Image/Manipulation/MedianFilter.h>
-#include <Core/Utils/DegateHelper.h>
+#include "Core/Utils/Statistics.h"
+#include "Core/Image/ImageHelper.h"
+#include "Core/Image/Manipulation/MedianFilter.h"
+#include "Core/Utils/DegateHelper.h"
 
 #include <memory>
 

@@ -32,7 +32,7 @@
 #include "Core/Utils/DegateExceptions.h"
 #include "Core/LogicModel/Wire/Wire.h"
 #include "Core/Primitive/Circle.h"
-#include <Core/Primitive/RemoteObject.h>
+#include "Core/Primitive/RemoteObject.h"
 
 #include <memory>
 

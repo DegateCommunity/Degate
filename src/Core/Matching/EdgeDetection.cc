@@ -19,8 +19,8 @@
 
 */
 
-#include <Core/Matching/EdgeDetection.h>
-#include <Core/Image/Processor/IPMedianFilter.h>
+#include "Core/Matching/EdgeDetection.h"
+#include "Core/Image/Processor/IPMedianFilter.h"
 
 using namespace degate;
 

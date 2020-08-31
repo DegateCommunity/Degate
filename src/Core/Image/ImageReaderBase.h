@@ -24,12 +24,12 @@
 
 #include <list>
 #include <memory>
-#include <Core/Utils/DegateExceptions.h>
+#include "Core/Utils/DegateExceptions.h"
 
-#include <Core/Utils/TypeTraits.h>
-#include <Core/Image/StoragePolicies.h>
-#include <Core/Image/PixelPolicies.h>
-#include <Core/Utils/FileSystem.h>
+#include "Core/Utils/TypeTraits.h"
+#include "Core/Image/StoragePolicies.h"
+#include "Core/Image/PixelPolicies.h"
+#include "Core/Utils/FileSystem.h"
 
 namespace degate
 {

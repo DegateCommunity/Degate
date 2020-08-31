@@ -19,9 +19,9 @@
 
  */
 
-#include <Core/LogicModel/HlObjectSet.h>
-#include <Core/LogicModel/ConnectedLogicModelObject.h>
-#include <Core/LogicModel/LogicModel.h>
+#include "Core/LogicModel/HlObjectSet.h"
+#include "Core/LogicModel/ConnectedLogicModelObject.h"
+#include "Core/LogicModel/LogicModel.h"
 
 #include <algorithm>
 #include <memory>

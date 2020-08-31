@@ -19,10 +19,10 @@
 
 */
 
-#include <Globals.h>
-#include <Core/LogicModel/LogicModelHelper.h>
-#include <Core/LogicModel/LogicModelObjectBase.h>
-#include <Core/Utils/TangencyCheck.h>
+#include "Globals.h"
+#include "Core/LogicModel/LogicModelHelper.h"
+#include "Core/LogicModel/LogicModelObjectBase.h"
+#include "Core/Utils/TangencyCheck.h"
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>

@@ -19,10 +19,10 @@
 
 */
 
-#include <GUI/Workspace/WorkspaceRenderer.h>
-#include <GUI/Dialog/GateEditDialog.h>
-#include <GUI/Dialog/AnnotationEditDialog.h>
-#include <GUI/Preferences/PreferencesHandler.h>
+#include "GUI/Workspace/WorkspaceRenderer.h"
+#include "GUI/Dialog/GateEditDialog.h"
+#include "GUI/Dialog/AnnotationEditDialog.h"
+#include "GUI/Preferences/PreferencesHandler.h"
 
 namespace degate
 {

@@ -19,11 +19,11 @@
 
 */
 
-#include <Core/Image/Image.h>
-#include <Core/Image/TileImage.h>
-#include <Core/Image/TIFFReader.h>
-#include <Core/Image/TIFFWriter.h>
-#include <Core/Image/ImageReaderFactory.h>
+#include "Core/Image/Image.h"
+#include "Core/Image/TileImage.h"
+#include "Core/Image/TIFFReader.h"
+#include "Core/Image/TIFFWriter.h"
+#include "Core/Image/ImageReaderFactory.h"
 
 #include "catch.hpp"
 

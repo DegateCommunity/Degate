@@ -22,11 +22,11 @@
 #ifndef __TANGENCYCHECK_H__
 #define __TANGENCYCHECK_H__
 
-#include <Globals.h>
-#include <Core/Primitive/Circle.h>
-#include <Core/Primitive/Line.h>
-#include <Core/Primitive/Rectangle.h>
-#include <Core/LogicModel/PlacedLogicModelObject.h>
+#include "Globals.h"
+#include "Core/Primitive/Circle.h"
+#include "Core/Primitive/Line.h"
+#include "Core/Primitive/Rectangle.h"
+#include "Core/LogicModel/PlacedLogicModelObject.h"
 
 namespace degate
 {

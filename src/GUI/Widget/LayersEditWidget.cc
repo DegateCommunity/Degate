@@ -21,8 +21,8 @@
 
 #include "LayersEditWidget.h"
 
-#include <Core/Image/ImageHelper.h>
-#include <Core/LogicModel/LogicModelHelper.h>
+#include "Core/Image/ImageHelper.h"
+#include "Core/LogicModel/LogicModelHelper.h"
 
 #include <memory>
 #include <QtWidgets/QMessageBox>

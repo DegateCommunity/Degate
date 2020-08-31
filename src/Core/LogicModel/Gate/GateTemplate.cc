@@ -20,7 +20,7 @@
 
 */
 
-#include <Core/LogicModel/Gate/GateTemplate.h>
+#include "Core/LogicModel/Gate/GateTemplate.h"
 
 using namespace degate;
 

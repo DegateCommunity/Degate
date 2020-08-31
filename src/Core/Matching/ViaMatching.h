@@ -22,10 +22,10 @@
 #ifndef __VIAMATCHING_H__
 #define __VIAMATCHING_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Project/Project.h>
-#include <Core/Matching/TemplateMatching.h>
-#include <Core/LogicModel/Via/Via.h>
+#include "Core/Image/Image.h"
+#include "Core/Project/Project.h"
+#include "Core/Matching/TemplateMatching.h"
+#include "Core/LogicModel/Via/Via.h"
 
 namespace degate
 {

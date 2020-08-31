@@ -20,18 +20,18 @@
 
 */
 
-#include <Core/Matching/BinaryLineDetection.h>
-#include <Core/Utils/Otsu.h>
-#include <Core/Image/Processor/IPCopy.h>
-#include <Core/Image/Processor/IPMedianFilter.h>
-#include <Core/Image/Processor/IPNormalize.h>
-#include <Core/Image/Processor/IPConvolve.h>
-#include <Core/Image/Processor/IPThresholding.h>
+#include "Core/Matching/BinaryLineDetection.h"
+#include "Core/Utils/Otsu.h"
+#include "Core/Image/Processor/IPCopy.h"
+#include "Core/Image/Processor/IPMedianFilter.h"
+#include "Core/Image/Processor/IPNormalize.h"
+#include "Core/Image/Processor/IPConvolve.h"
+#include "Core/Image/Processor/IPThresholding.h"
 
-#include <Core/Image/Manipulation/ImageManipulation.h>
-#include <Core/Image/Processor/IPImageWriter.h>
+#include "Core/Image/Manipulation/ImageManipulation.h"
+#include "Core/Image/Processor/IPImageWriter.h"
 
-#include <Core/Primitive/RegionList.h>
+#include "Core/Primitive/RegionList.h"
 
 using namespace degate;
 

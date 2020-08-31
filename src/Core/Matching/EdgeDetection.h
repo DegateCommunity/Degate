@@ -22,16 +22,16 @@
 #ifndef __EDGEDETECTION_H__
 #define __EDGEDETECTION_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Image/Processor/IPPipe.h>
-#include <Core/Image/ImageHelper.h>
+#include "Core/Image/Image.h"
+#include "Core/Image/Processor/IPPipe.h"
+#include "Core/Image/ImageHelper.h"
 
-#include <Core/Image/Processor/IPCopy.h>
-#include <Core/Image/Processor/IPConvolve.h>
-#include <Core/Image/Processor/IPNormalize.h>
-#include <Core/Image/Processor/IPThresholding.h>
-#include <Core/Image/Manipulation/ImageManipulation.h>
-#include <Core/Image/Processor/IPImageWriter.h>
+#include "Core/Image/Processor/IPCopy.h"
+#include "Core/Image/Processor/IPConvolve.h"
+#include "Core/Image/Processor/IPNormalize.h"
+#include "Core/Image/Processor/IPThresholding.h"
+#include "Core/Image/Manipulation/ImageManipulation.h"
+#include "Core/Image/Processor/IPImageWriter.h"
 
 namespace degate
 {

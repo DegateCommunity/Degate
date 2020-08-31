@@ -22,10 +22,10 @@
 #ifndef __IMAGEHISTOGRAM_H__
 #define __IMAGEHISTOGRAM_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Utils/DegateExceptions.h>
-#include <Core/Image/TypeConstraints.h>
-#include <Core/Image/Manipulation/ImageManipulation.h>
+#include "Core/Image/Image.h"
+#include "Core/Utils/DegateExceptions.h"
+#include "Core/Image/TypeConstraints.h"
+#include "Core/Image/Manipulation/ImageManipulation.h"
 
 #include <fstream>
 #include <iostream>

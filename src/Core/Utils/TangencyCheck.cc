@@ -19,7 +19,7 @@
 
 */
 
-#include <Core/Utils/TangencyCheck.h>
+#include "Core/Utils/TangencyCheck.h"
 
 /**
  * Calculate the parameter for a linear function f(x) = m*x + n.

@@ -20,8 +20,8 @@
 
 */
 
-#include <Core/LogicModel/Gate/GateLibrary.h>
-#include <Core/LogicModel/Gate/GateTemplate.h>
+#include "Core/LogicModel/Gate/GateLibrary.h"
+#include "Core/LogicModel/Gate/GateTemplate.h"
 
 using namespace degate;
 

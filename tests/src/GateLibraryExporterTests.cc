@@ -19,11 +19,11 @@
 
 */
 
-#include <Core/LogicModel/Gate/GateLibraryExporter.h>
-#include <Core/LogicModel/Gate/GateLibraryImporter.h>
-#include <Core/LogicModel/Gate/GateLibrary.h>
-#include <Core/LogicModel/Gate/GateTemplate.h>
-#include <Core/LogicModel/Gate/GateTemplatePort.h>
+#include "Core/LogicModel/Gate/GateLibraryExporter.h"
+#include "Core/LogicModel/Gate/GateLibraryImporter.h"
+#include "Core/LogicModel/Gate/GateLibrary.h"
+#include "Core/LogicModel/Gate/GateTemplate.h"
+#include "Core/LogicModel/Gate/GateTemplatePort.h"
 
 #include <memory>
 

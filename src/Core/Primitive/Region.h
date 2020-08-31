@@ -23,7 +23,7 @@
 #define __REGION_H__
 
 #include "Globals.h"
-#include <Core/Image/ImageHelper.h>
+#include "Core/Image/ImageHelper.h"
 
 namespace degate
 {

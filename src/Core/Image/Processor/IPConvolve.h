@@ -23,8 +23,8 @@
 #define __IPCONVOLVE_H__
 
 #include <string>
-#include <Core/Image/Processor/ImageProcessorBase.h>
-#include <Core/Utils/FilterKernel.h>
+#include "Core/Image/Processor/ImageProcessorBase.h"
+#include "Core/Utils/FilterKernel.h"
 
 namespace degate
 {

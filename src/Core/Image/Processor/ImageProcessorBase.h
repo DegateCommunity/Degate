@@ -23,7 +23,7 @@
 #define __IMAGEPROCESSORBASE_H__
 
 #include <string>
-#include <Core/Utils/ProgressControl.h>
+#include "Core/Utils/ProgressControl.h"
 
 namespace degate
 {

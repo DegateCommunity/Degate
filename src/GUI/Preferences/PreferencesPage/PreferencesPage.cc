@@ -19,7 +19,7 @@
 
 */
 
-#include <GUI/Preferences/PreferencesPage/PreferencesPage.h>
+#include "GUI/Preferences/PreferencesPage/PreferencesPage.h"
 
 #include <QGroupBox>
 

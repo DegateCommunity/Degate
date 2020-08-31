@@ -22,8 +22,8 @@
 #ifndef __WORKSPACEREGULARGRID_H__
 #define __WORKSPACEREGULARGRID_H__
 
-#include <GUI/Workspace/WorkspaceElement.h>
-#include <Core/Grid/RegularGrid.h>
+#include "GUI/Workspace/WorkspaceElement.h"
+#include "Core/Grid/RegularGrid.h"
 
 namespace degate
 {

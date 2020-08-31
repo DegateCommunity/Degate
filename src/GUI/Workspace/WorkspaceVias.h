@@ -22,9 +22,9 @@
 #ifndef __WORKSPACEVIAS_H__
 #define __WORKSPACEVIAS_H__
 
-#include <GUI/Workspace/WorkspaceElement.h>
-#include <Core/LogicModel/Via/Via.h>
-#include <GUI/Text/Text.h>
+#include "GUI/Workspace/WorkspaceElement.h"
+#include "Core/LogicModel/Via/Via.h"
+#include "GUI/Text/Text.h"
 
 namespace degate
 {

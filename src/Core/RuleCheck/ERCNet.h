@@ -25,8 +25,8 @@
 #include <boost/foreach.hpp>
 #include <memory>
 #include <list>
-#include <Core/LogicModel/LogicModel.h>
-#include <Core/RuleCheck/RCBase.h>
+#include "Core/LogicModel/LogicModel.h"
+#include "Core/RuleCheck/RCBase.h"
 
 namespace degate
 {

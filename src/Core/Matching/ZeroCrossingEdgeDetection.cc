@@ -20,8 +20,8 @@
 
 */
 
-#include <Core/Matching/ZeroCrossingEdgeDetection.h>
-#include <Core/Image/Manipulation/MorphologicalFilter.h>
+#include "Core/Matching/ZeroCrossingEdgeDetection.h"
+#include "Core/Image/Manipulation/MorphologicalFilter.h"
 
 using namespace degate;
 

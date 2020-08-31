@@ -23,9 +23,9 @@
 #ifndef __GATETEMPLATE_H__
 #define __GATETEMPLATE_H__
 
-#include <Core/LogicModel/Layer.h>
-#include <Core/Image/Image.h>
-#include <Core/LogicModel/Gate/GateTemplatePort.h>
+#include "Core/LogicModel/Layer.h"
+#include "Core/Image/Image.h"
+#include "Core/LogicModel/Gate/GateTemplatePort.h"
 
 #include <set>
 #include <memory>

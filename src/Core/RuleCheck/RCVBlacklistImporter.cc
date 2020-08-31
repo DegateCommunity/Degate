@@ -19,8 +19,8 @@
 
 */
 
-#include <Core/RuleCheck/RCVBlacklistImporter.h>
-#include <Core/Image/ImageHelper.h>
+#include "Core/RuleCheck/RCVBlacklistImporter.h"
+#include "Core/Image/ImageHelper.h"
 
 #include <cerrno>
 #include <iostream>

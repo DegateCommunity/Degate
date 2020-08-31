@@ -23,8 +23,8 @@
 #define __RCVBLACKLISTEXPORTER_H__
 
 #include "Globals.h"
-#include <Core/RuleCheck/RCBase.h>
-#include <Core/RuleCheck/RCViolation.h>
+#include "Core/RuleCheck/RCBase.h"
+#include "Core/RuleCheck/RCViolation.h"
 #include "Core/XML/XMLExporter.h"
 #include "Core/Utils/ObjectIDRewriter.h"
 

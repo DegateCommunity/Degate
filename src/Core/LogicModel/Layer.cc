@@ -20,9 +20,9 @@
 
 */
 
-#include <Core/LogicModel/Layer.h>
-#include <Core/LogicModel/Gate/Gate.h>
-#include <Core/LogicModel/Via/Via.h>
+#include "Core/LogicModel/Layer.h"
+#include "Core/LogicModel/Gate/Gate.h"
+#include "Core/LogicModel/Via/Via.h"
 
 
 #include <memory>

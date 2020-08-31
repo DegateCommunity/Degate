@@ -1,9 +1,9 @@
 #ifndef __LINESEGMENTEXTRACTION_H__
 #define __LINESEGMENTEXTRACTION_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Image/Manipulation/ImageManipulation.h>
-#include <Core/Primitive/Line.h>
+#include "Core/Image/Image.h"
+#include "Core/Image/Manipulation/ImageManipulation.h"
+#include "Core/Primitive/Line.h"
 #include <memory>
 #include <fstream>
 

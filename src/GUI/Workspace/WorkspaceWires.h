@@ -22,9 +22,9 @@
 #ifndef __WORKSPACEWIRES_H__
 #define __WORKSPACEWIRES_H__
 
-#include <GUI/Workspace/WorkspaceElement.h>
-#include <Core/LogicModel/Wire/Wire.h>
-#include <GUI/Text/Text.h>
+#include "GUI/Workspace/WorkspaceElement.h"
+#include "Core/LogicModel/Wire/Wire.h"
+#include "GUI/Text/Text.h"
 
 namespace degate
 {

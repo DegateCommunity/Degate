@@ -22,8 +22,8 @@
 #ifndef __ABSTRACTSHAPE_H__
 #define __ABSTRACTSHAPE_H__
 
-#include <Core/Primitive/BoundingBox.h>
-#include <Core/Primitive/ColoredObject.h>
+#include "Core/Primitive/BoundingBox.h"
+#include "Core/Primitive/ColoredObject.h"
 
 namespace degate
 {

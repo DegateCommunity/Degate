@@ -26,8 +26,8 @@
 #include <map>
 #include <memory>
 
-#include <Core/LogicModel/LogicModelObjectBase.h>
-#include <Core/LogicModel/LogicModel.h>
+#include "Core/LogicModel/LogicModelObjectBase.h"
+#include "Core/LogicModel/LogicModel.h"
 #include <boost/optional.hpp>
 
 namespace degate

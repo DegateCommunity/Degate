@@ -22,7 +22,7 @@
 #ifndef __DOTATTRIBUTES_H__
 #define __DOTATTRIBUTES_H__
 
-#include <Globals.h>
+#include "Globals.h"
 
 #include <string>
 #include <list>

@@ -22,7 +22,7 @@
 #ifndef __CANNYEDGEDETECTION_H__
 #define __CANNYEDGEDETECTION_H__
 
-#include <Core/Image/Image.h>
+#include "Core/Image/Image.h"
 
 /*
 #include <IPPipe.h>
@@ -42,7 +42,7 @@
 #include <fstream>
 */
 
-#include <Core/Matching/EdgeDetection.h>
+#include "Core/Matching/EdgeDetection.h"
 
 namespace degate
 {

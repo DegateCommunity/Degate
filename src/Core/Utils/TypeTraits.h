@@ -22,7 +22,7 @@
 #ifndef __TYPETRAITS_H__
 #define __TYPETRAITS_H__
 
-#include <Core/Image/PixelPolicies.h>
+#include "Core/Image/PixelPolicies.h"
 
 namespace degate
 {

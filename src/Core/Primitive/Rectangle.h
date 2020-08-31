@@ -23,9 +23,9 @@
 #ifndef __RECTANGLE_H__
 #define __RECTANGLE_H__
 
-#include <Core/Primitive/BoundingBox.h>
-#include <Core/Primitive/DeepCopyable.h>
-#include <Core/Primitive/AbstractShape.h>
+#include "Core/Primitive/BoundingBox.h"
+#include "Core/Primitive/DeepCopyable.h"
+#include "Core/Primitive/AbstractShape.h"
 
 namespace degate
 {

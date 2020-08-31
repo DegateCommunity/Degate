@@ -22,7 +22,7 @@
 #ifndef __PROJECTARCHIVER_H__
 #define __PROJECTARCHIVER_H__
 
-#include <Core/Project/Project.h>
+#include "Core/Project/Project.h"
 
 #include <stdexcept>
 

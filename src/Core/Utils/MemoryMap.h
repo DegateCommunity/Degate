@@ -22,9 +22,9 @@
 #ifndef __MEMORYMAP_H__
 #define __MEMORYMAP_H__
 
-#include <Prerequisites.h>
-#include <Globals.h>
-#include <Core/Utils/FileSystem.h>
+#include "Prerequisites.h"
+#include "Globals.h"
+#include "Core/Utils/FileSystem.h"
 
 #include <string>
 #include <cstdio>

@@ -23,9 +23,9 @@
 #ifndef __CIRCLE_H__
 #define __CIRCLE_H__
 
-#include <Core/Primitive/AbstractShape.h>
-#include <Core/Primitive/DeepCopyable.h>
-#include <Core/Primitive/BoundingBox.h>
+#include "Core/Primitive/AbstractShape.h"
+#include "Core/Primitive/DeepCopyable.h"
+#include "Core/Primitive/BoundingBox.h"
 
 namespace degate
 {

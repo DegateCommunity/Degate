@@ -23,8 +23,8 @@
 #ifndef __REMOTEOBJECT_H__
 #define __REMOTEOBJECT_H__
 
-#include <Core/Primitive/DeepCopyable.h>
-#include <Globals.h>
+#include "Core/Primitive/DeepCopyable.h"
+#include "Globals.h"
 
 #include <cstdlib>
 #include <string>

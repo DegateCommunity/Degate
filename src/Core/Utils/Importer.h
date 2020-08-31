@@ -22,7 +22,7 @@
 #ifndef __IMPORTER_H__
 #define __IMPORTER_H__
 
-#include <Globals.h>
+#include "Globals.h"
 
 #include <stdexcept>
 #include <sstream>

@@ -19,11 +19,11 @@
 
 */
 
-#include <Core/Image/Manipulation/MedianFilter.h>
-#include <Core/LogicModel/LogicModelHelper.h>
-#include <Core/Matching/EdgeDetection.h>
-#include <Core/Matching/ViaMatching.h>
-#include <Core/Primitive/BoundingBox.h>
+#include "Core/Image/Manipulation/MedianFilter.h"
+#include "Core/LogicModel/LogicModelHelper.h"
+#include "Core/Matching/EdgeDetection.h"
+#include "Core/Matching/ViaMatching.h"
+#include "Core/Primitive/BoundingBox.h"
 #include <boost/foreach.hpp>
 #include <memory>
 

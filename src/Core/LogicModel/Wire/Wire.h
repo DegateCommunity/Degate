@@ -25,11 +25,11 @@
 
 #include <memory>
 
-#include <Globals.h>
-#include <Core/LogicModel/LogicModelObjectBase.h>
-#include <Core/LogicModel/ConnectedLogicModelObject.h>
-#include <Core/Primitive/Line.h>
-#include <Core/Primitive/RemoteObject.h>
+#include "Globals.h"
+#include "Core/LogicModel/LogicModelObjectBase.h"
+#include "Core/LogicModel/ConnectedLogicModelObject.h"
+#include "Core/Primitive/Line.h"
+#include "Core/Primitive/RemoteObject.h"
 
 namespace degate
 {

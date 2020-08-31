@@ -25,7 +25,7 @@
 
 #include <memory>
 
-#include <Core/LogicModel/Layer.h>
+#include "Core/LogicModel/Layer.h"
 
 #include "GatePort.h"
 #include "Core/LogicModel/PlacedLogicModelObject.h"

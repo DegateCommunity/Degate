@@ -22,11 +22,11 @@
 #ifndef __TEMPLATEMATCHINGDIALOG_H__
 #define __TEMPLATEMATCHINGDIALOG_H__
 
-#include <Core/LogicModel/Gate/GateTemplate.h>
-#include <Core/Matching/TemplateMatching.h>
-#include <Core/LogicModel/LogicModel.h>
-#include <GUI/Dialog/SelectGateTemplateDialog.h>
-#include <GUI/Widget/DoubleSliderWidget.h>
+#include "Core/LogicModel/Gate/GateTemplate.h"
+#include "Core/Matching/TemplateMatching.h"
+#include "Core/LogicModel/LogicModel.h"
+#include "GUI/Dialog/SelectGateTemplateDialog.h"
+#include "GUI/Widget/DoubleSliderWidget.h"
 
 #include <QDialog>
 #include <QGridLayout>

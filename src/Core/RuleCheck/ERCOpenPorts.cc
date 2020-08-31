@@ -19,8 +19,8 @@
 
 */
 
-#include <Core/RuleCheck/RCBase.h>
-#include <Core/RuleCheck/ERCOpenPorts.h>
+#include "Core/RuleCheck/RCBase.h"
+#include "Core/RuleCheck/ERCOpenPorts.h"
 
 
 #include <memory>

@@ -22,9 +22,9 @@
 #ifndef __TYPECONSTRAINTS_H__
 #define __TYPECONSTRAINTS_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Image/PixelPolicies.h>
-#include <Core/Image/StoragePolicies.h>
+#include "Core/Image/Image.h"
+#include "Core/Image/PixelPolicies.h"
+#include "Core/Image/StoragePolicies.h"
 
 namespace degate
 {

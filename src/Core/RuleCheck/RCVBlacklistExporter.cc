@@ -19,8 +19,8 @@
 
 */
 
-#include <Core/RuleCheck/RCVBlacklistExporter.h>
-#include <Core/Image/ImageHelper.h>
+#include "Core/RuleCheck/RCVBlacklistExporter.h"
+#include "Core/Image/ImageHelper.h"
 
 #include <iostream>
 #include <stdexcept>

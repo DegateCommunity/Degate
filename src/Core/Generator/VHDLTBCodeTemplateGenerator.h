@@ -25,7 +25,7 @@
 #include <memory>
 #include <cctype>
 
-#include <Core/Generator/VHDLCodeTemplateGenerator.h>
+#include "Core/Generator/VHDLCodeTemplateGenerator.h"
 #include <boost/foreach.hpp>
 
 namespace degate

@@ -20,6 +20,6 @@
 */
 
 
-#include <Core/Primitive/RemoteObject.h>
+#include "Core/Primitive/RemoteObject.h"
 
 using namespace degate;

@@ -22,11 +22,11 @@
 #ifndef __IMAGEMANIPULATION_H__
 #define __IMAGEMANIPULATION_H__
 
-#include <Core/Primitive/BoundingBox.h>
-#include <Core/Image/Image.h>
-#include <Core/Utils/FilterKernel.h>
-#include <Core/Utils/Statistics.h>
-#include <Core/Image/ImageStatistics.h>
+#include "Core/Primitive/BoundingBox.h"
+#include "Core/Image/Image.h"
+#include "Core/Utils/FilterKernel.h"
+#include "Core/Utils/Statistics.h"
+#include "Core/Image/ImageStatistics.h"
 
 #include <boost/format.hpp>
 

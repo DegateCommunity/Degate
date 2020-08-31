@@ -22,9 +22,9 @@
 #ifndef __RULEVIOLATIONSDIALOG_H__
 #define __RULEVIOLATIONSDIALOG_H__
 
-#include <Core/RuleCheck/RCViolation.h>
-#include <Core/Project/Project.h>
-#include <Core/RuleCheck/RuleChecker.h>
+#include "Core/RuleCheck/RCViolation.h"
+#include "Core/Project/Project.h"
+#include "Core/RuleCheck/RuleChecker.h"
 
 #include <map>
 #include <QDialog>

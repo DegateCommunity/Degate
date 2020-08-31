@@ -22,11 +22,11 @@
 #ifndef __BACKGROUNDCLASSIFIER_H__
 #define __BACKGROUNDCLASSIFIER_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Utils/DegateExceptions.h>
-#include <Core/Image/TypeConstraints.h>
-#include <Core/Image/Manipulation/ImageManipulation.h>
-#include <Core/Image/ImageHistogram.h>
+#include "Core/Image/Image.h"
+#include "Core/Utils/DegateExceptions.h"
+#include "Core/Image/TypeConstraints.h"
+#include "Core/Image/Manipulation/ImageManipulation.h"
+#include "Core/Image/ImageHistogram.h"
 
 #include <fstream>
 #include <iostream>
@@ -34,7 +34,7 @@
 
 #include <list>
 #include <vector>
-#include <Core/Utils/Adaboost.hpp>
+#include "Core/Utils/Adaboost.h"
 
 namespace degate
 {

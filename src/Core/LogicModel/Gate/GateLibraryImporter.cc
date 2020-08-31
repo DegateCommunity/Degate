@@ -19,9 +19,9 @@
 
 */
 
-#include <Core/LogicModel/Gate/GateLibraryImporter.h>
-#include <Core/Image/ImageHelper.h>
-#include <Core/LogicModel/Gate/GateTemplate.h>
+#include "Core/LogicModel/Gate/GateLibraryImporter.h"
+#include "Core/Image/ImageHelper.h"
+#include "Core/LogicModel/Gate/GateTemplate.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>

@@ -22,8 +22,8 @@
 #ifndef __ERCOPENPORTS_H__
 #define __ERCOPENPORTS_H__
 
-#include <Core/RuleCheck/RCBase.h>
-#include <Core/LogicModel/LogicModel.h>
+#include "Core/RuleCheck/RCBase.h"
+#include "Core/LogicModel/LogicModel.h"
 
 namespace degate
 {

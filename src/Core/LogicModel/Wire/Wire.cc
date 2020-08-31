@@ -20,14 +20,14 @@
 
 */
 
-#include <Globals.h>
-#include <Core/LogicModel/LogicModelObjectBase.h>
-#include <Core/LogicModel/Net.h>
-#include <Core/LogicModel/Layer.h>
-#include <Core/LogicModel/LogicModel.h>
-#include <Core/LogicModel/ConnectedLogicModelObject.h>
-#include <Core/Utils/DegateExceptions.h>
-#include <Core/LogicModel/Wire/Wire.h>
+#include "Globals.h"
+#include "Core/LogicModel/LogicModelObjectBase.h"
+#include "Core/LogicModel/Net.h"
+#include "Core/LogicModel/Layer.h"
+#include "Core/LogicModel/LogicModel.h"
+#include "Core/LogicModel/ConnectedLogicModelObject.h"
+#include "Core/Utils/DegateExceptions.h"
+#include "Core/LogicModel/Wire/Wire.h"
 //#include <XmlRpc.h>
 #include <exception>
 

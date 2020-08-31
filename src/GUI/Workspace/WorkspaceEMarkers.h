@@ -22,9 +22,9 @@
 #ifndef __WORKSPACEEMARKERS_H__
 #define __WORKSPACEEMARKERS_H__
 
-#include <GUI/Workspace/WorkspaceElement.h>
-#include <Core/LogicModel/EMarker/EMarker.h>
-#include <GUI/Text/Text.h>
+#include "GUI/Workspace/WorkspaceElement.h"
+#include "Core/LogicModel/EMarker/EMarker.h"
+#include "GUI/Text/Text.h"
 
 namespace degate
 {

@@ -25,8 +25,8 @@
 #include <boost/foreach.hpp>
 #include <memory>
 #include <list>
-#include <Core/LogicModel/LogicModel.h>
-#include <Core/RuleCheck/RCVContainer.h>
+#include "Core/LogicModel/LogicModel.h"
+#include "Core/RuleCheck/RCVContainer.h"
 
 namespace degate
 {
@@ -134,6 +134,6 @@ namespace degate
 	typedef std::shared_ptr<RCBase> RCBase_shptr;
 }
 
-#include <Core/RuleCheck/RCViolation.h>
+#include "Core/RuleCheck/RCViolation.h"
 
 #endif

@@ -26,8 +26,8 @@
 #include <set>
 #include <memory>
 
-#include <Globals.h>
-#include <Core/LogicModel/LogicModelObjectBase.h>
+#include "Globals.h"
+#include "Core/LogicModel/LogicModelObjectBase.h"
 
 
 namespace degate

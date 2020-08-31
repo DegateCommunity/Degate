@@ -19,13 +19,13 @@
 
 */
 
-#include <Core/Primitive/QuadTree.h>
-#include <Core/Primitive/QuadTreeDownIterator.h>
-#include <Core/Primitive/QuadTreeRegionIterator.h>
-#include <Core/LogicModel/Gate/Gate.h>
-#include <Core/LogicModel/Wire/Wire.h>
-#include <Core/Primitive/QuadTree.h>
-#include <Core/LogicModel/Via/Via.h>
+#include "Core/Primitive/QuadTree.h"
+#include "Core/Primitive/QuadTreeDownIterator.h"
+#include "Core/Primitive/QuadTreeRegionIterator.h"
+#include "Core/LogicModel/Gate/Gate.h"
+#include "Core/LogicModel/Wire/Wire.h"
+#include "Core/Primitive/QuadTree.h"
+#include "Core/LogicModel/Via/Via.h"
 
 #include "catch.hpp"
 

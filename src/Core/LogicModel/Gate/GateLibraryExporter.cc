@@ -19,11 +19,11 @@
 
 */
 
-#include <Core/LogicModel/Gate/GateLibraryExporter.h>
-#include <Core/Utils/FileSystem.h>
-#include <Core/Image/ImageHelper.h>
-#include <Core/Utils/DegateHelper.h>
-#include <Core/LogicModel/Gate/GateTemplate.h>
+#include "Core/LogicModel/Gate/GateLibraryExporter.h"
+#include "Core/Utils/FileSystem.h"
+#include "Core/Image/ImageHelper.h"
+#include "Core/Utils/DegateHelper.h"
+#include "Core/LogicModel/Gate/GateTemplate.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>

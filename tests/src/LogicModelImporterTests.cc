@@ -18,9 +18,9 @@
   along with degate. If not, see <http://www.gnu.org/licenses/>.
 
 */
-#include <Globals.h>
-#include <Core/LogicModel/Gate/GateLibraryImporter.h>
-#include <Core/LogicModel/LogicModelImporter.h>
+#include "Globals.h"
+#include "Core/LogicModel/Gate/GateLibraryImporter.h"
+#include "Core/LogicModel/LogicModelImporter.h"
 
 #include "catch.hpp"
 

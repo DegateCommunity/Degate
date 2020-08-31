@@ -22,9 +22,9 @@
 #ifndef __REGIONLIST_H__
 #define __REGIONLIST_H__
 
-#include <Core/Primitive/Region.h>
-#include <Core/Image/Image.h>
-#include <Core/Utils/FileSystem.h>
+#include "Core/Primitive/Region.h"
+#include "Core/Image/Image.h"
+#include "Core/Utils/FileSystem.h"
 
 namespace degate
 {

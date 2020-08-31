@@ -26,13 +26,13 @@
 #include <memory>
 #include <QImageWriter>
 
-#include <Globals.h>
-#include <Core/Utils/DegateExceptions.h>
-#include <Core/Image/PixelPolicies.h>
-#include <Core/Image/StoragePolicies.h>
-#include <Core/Image/ImageWriterBase.h>
-#include <Core/Utils/FileSystem.h>
-#include <Core/Image/Image.h>
+#include "Globals.h"
+#include "Core/Utils/DegateExceptions.h"
+#include "Core/Image/PixelPolicies.h"
+#include "Core/Image/StoragePolicies.h"
+#include "Core/Image/ImageWriterBase.h"
+#include "Core/Utils/FileSystem.h"
+#include "Core/Image/Image.h"
 
 #include <cerrno>
 

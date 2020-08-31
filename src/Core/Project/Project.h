@@ -23,11 +23,11 @@
 #ifndef __PROJECT_H__
 #define __PROJECT_H__
 
-#include <Core/Primitive/DeepCopyable.h>
-#include <Globals.h>
-#include <Core/LogicModel/LogicModel.h>
-#include <Core/Project/PortColorManager.h>
-#include <Core/RuleCheck/RCBase.h>
+#include "Core/Primitive/DeepCopyable.h"
+#include "Globals.h"
+#include "Core/LogicModel/LogicModel.h"
+#include "Core/Project/PortColorManager.h"
+#include "Core/RuleCheck/RCBase.h"
 
 #include <boost/date_time.hpp>
 

@@ -23,10 +23,10 @@
 #ifndef __LINE_H__
 #define __LINE_H__
 
-#include <Core/Primitive/BoundingBox.h>
-#include <Core/Primitive/DeepCopyable.h>
-#include <Core/Primitive/Point.h>
-#include <Core/Primitive/AbstractShape.h>
+#include "Core/Primitive/BoundingBox.h"
+#include "Core/Primitive/DeepCopyable.h"
+#include "Core/Primitive/Point.h"
+#include "Core/Primitive/AbstractShape.h"
 
 namespace degate
 {

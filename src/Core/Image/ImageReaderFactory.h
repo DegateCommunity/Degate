@@ -24,14 +24,14 @@
 
 #include <list>
 #include <memory>
-#include <Core/Utils/DegateExceptions.h>
+#include "Core/Utils/DegateExceptions.h"
 
-#include <Core/Image/StoragePolicies.h>
-#include <Core/Image/PixelPolicies.h>
-#include <Core/Utils/FileSystem.h>
-#include <Core/Image/ImageReaderBase.h>
-#include <Core/Image/TIFFReader.h>
-#include <Core/Image/JPEGReader.h>
+#include "Core/Image/StoragePolicies.h"
+#include "Core/Image/PixelPolicies.h"
+#include "Core/Utils/FileSystem.h"
+#include "Core/Image/ImageReaderBase.h"
+#include "Core/Image/TIFFReader.h"
+#include "Core/Image/JPEGReader.h"
 
 
 namespace degate

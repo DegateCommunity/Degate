@@ -22,8 +22,8 @@
 #ifndef __MEDIANFILTER_H__
 #define __MEDIANFILTER_H__
 
-#include <Core/Image/PixelPolicies.h>
-#include <Core/Image/Image.h>
+#include "Core/Image/PixelPolicies.h"
+#include "Core/Image/Image.h"
 
 #include <memory>
 

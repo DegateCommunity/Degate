@@ -22,7 +22,7 @@
 #ifndef __OTSU_H__
 #define __OTSU_H__
 
-#include <Core/Image/Image.h>
+#include "Core/Image/Image.h"
 
 namespace degate
 {

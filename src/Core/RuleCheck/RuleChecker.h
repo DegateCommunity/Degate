@@ -22,9 +22,9 @@
 #ifndef __RULECHECKER_H__
 #define __RULECHECKER_H__
 
-#include <Core/RuleCheck/RCBase.h>
-#include <Core/RuleCheck/ERCOpenPorts.h>
-#include <Core/RuleCheck/ERCNet.h>
+#include "Core/RuleCheck/RCBase.h"
+#include "Core/RuleCheck/ERCOpenPorts.h"
+#include "Core/RuleCheck/ERCNet.h"
 
 namespace degate
 {

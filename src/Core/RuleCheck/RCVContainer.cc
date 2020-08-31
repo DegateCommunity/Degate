@@ -19,7 +19,7 @@
 
 */
 
-#include <Core/RuleCheck/RCBase.h>
+#include "Core/RuleCheck/RCBase.h"
 
 using namespace degate;
 

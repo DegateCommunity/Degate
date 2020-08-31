@@ -20,7 +20,7 @@
 */
 
 #include "WorkspaceWireTool.h"
-#include <GUI/Preferences/PreferencesHandler.h>
+#include "GUI/Preferences/PreferencesHandler.h"
 
 namespace degate
 {

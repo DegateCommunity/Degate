@@ -19,8 +19,8 @@
 
 */
 
-#include <Core/LogicModel/Wire/Wire.h>
-#include <Core/LogicModel/LogicModel.h>
+#include "Core/LogicModel/Wire/Wire.h"
+#include "Core/LogicModel/LogicModel.h"
 
 #include "catch.hpp"
 

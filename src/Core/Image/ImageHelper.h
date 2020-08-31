@@ -22,13 +22,13 @@
 #ifndef __IMAGEHELPER_H__
 #define __IMAGEHELPER_H__
 
-#include <Core/Image/ImageReaderFactory.h>
-#include <Core/Image/ImageReaderBase.h>
-#include <Core/Image/ImageWriterBase.h>
-#include <Core/Image/TIFFWriter.h>
-#include <Core/Image/PixelPolicies.h>
-#include <Core/Image/StoragePolicies.h>
-#include <Core/Image/Image.h>
+#include "Core/Image/ImageReaderFactory.h"
+#include "Core/Image/ImageReaderBase.h"
+#include "Core/Image/ImageWriterBase.h"
+#include "Core/Image/TIFFWriter.h"
+#include "Core/Image/PixelPolicies.h"
+#include "Core/Image/StoragePolicies.h"
+#include "Core/Image/Image.h"
 
 #include <set>
 #include <boost/foreach.hpp>

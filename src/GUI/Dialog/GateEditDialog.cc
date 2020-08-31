@@ -19,7 +19,7 @@
 
 */
 
-#include <Core/Utils/DegateHelper.h>
+#include "Core/Utils/DegateHelper.h"
 #include "Core/Generator/CodeTemplateGenerator.h"
 #include "Core/Generator/VHDLCodeTemplateGenerator.h"
 #include "Core/Generator/VHDLTBCodeTemplateGenerator.h"

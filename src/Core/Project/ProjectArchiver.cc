@@ -21,8 +21,8 @@
 
 //#include <zip.h>
 
-#include <Globals.h>
-#include <Core/Project/ProjectArchiver.h>
+#include "Globals.h"
+#include "Core/Project/ProjectArchiver.h"
 #include <list>
 #include <memory>
 

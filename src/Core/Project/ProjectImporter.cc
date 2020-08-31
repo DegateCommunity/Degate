@@ -19,11 +19,11 @@
 
 */
 
-#include <Core/Project/ProjectImporter.h>
-#include <Core/LogicModel/Gate/GateLibraryImporter.h>
-#include <Core/LogicModel/LogicModelImporter.h>
-#include <Core/RuleCheck/RCVBlacklistImporter.h>
-#include <Core/LogicModel/LogicModelHelper.h>
+#include "Core/Project/ProjectImporter.h"
+#include "Core/LogicModel/Gate/GateLibraryImporter.h"
+#include "Core/LogicModel/LogicModelImporter.h"
+#include "Core/RuleCheck/RCVBlacklistImporter.h"
+#include "Core/LogicModel/LogicModelHelper.h"
 
 #include <cerrno>
 #include <iostream>

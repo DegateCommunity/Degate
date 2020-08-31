@@ -27,8 +27,8 @@
 #include <algorithm>
 #include <iostream>
 
-#include <Core/Image/Image.h>
-#include <Core/Image/TypeConstraints.h>
+#include "Core/Image/Image.h"
+#include "Core/Image/TypeConstraints.h"
 
 namespace degate
 {

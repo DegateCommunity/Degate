@@ -22,9 +22,9 @@
 #ifndef __VIAEDITDIALOG_H__
 #define __VIAEDITDIALOG_H__
 
-#include <GUI/Dialog/ColorPickerDialog.h>
-#include <Core/LogicModel/Via/Via.h>
-#include <Core/Project/Project.h>
+#include "GUI/Dialog/ColorPickerDialog.h"
+#include "Core/LogicModel/Via/Via.h"
+#include "Core/Project/Project.h"
 
 #include <map>
 #include <QDialog>

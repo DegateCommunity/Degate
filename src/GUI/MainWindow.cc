@@ -20,8 +20,8 @@
 */
 
 #include "MainWindow.h"
-#include <GUI/Dialog/ProgressDialog.h>
-#include <GUI/Dialog/AboutDialog.h>
+#include "GUI/Dialog/ProgressDialog.h"
+#include "GUI/Dialog/AboutDialog.h"
 
 #include <memory>
 

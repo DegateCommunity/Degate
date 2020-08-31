@@ -19,8 +19,8 @@
 
  */
 
-#include <Core/LogicModel/ObjectSet.h>
-#include <Core/LogicModel/Gate/GatePort.h>
+#include "Core/LogicModel/ObjectSet.h"
+#include "Core/LogicModel/Gate/GatePort.h"
 
 #include <algorithm>
 #include <memory>

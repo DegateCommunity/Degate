@@ -22,9 +22,9 @@
 #ifndef __VIAMATCHINGDIALOG_H__
 #define __VIAMATCHINGDIALOG_H__
 
-#include <Core/Project/Project.h>
-#include <Core/LogicModel/LogicModel.h>
-#include <GUI/Widget/DoubleSliderWidget.h>
+#include "Core/Project/Project.h"
+#include "Core/LogicModel/LogicModel.h"
+#include "GUI/Widget/DoubleSliderWidget.h"
 
 #include <QDialog>
 #include <QGridLayout>

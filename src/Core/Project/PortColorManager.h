@@ -22,7 +22,7 @@
 #ifndef __PORTCOLORMANAGER_H__
 #define __PORTCOLORMANAGER_H__
 
-#include <Globals.h>
+#include "Globals.h"
 
 #include <map>
 #include <memory>

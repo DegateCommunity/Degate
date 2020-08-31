@@ -21,8 +21,8 @@
 
 #include "WireMatchingDialog.h"
 
-#include <GUI/Dialog/ProgressDialog.h>
-#include <Core/Matching/WireMatching.h>
+#include "GUI/Dialog/ProgressDialog.h"
+#include "Core/Matching/WireMatching.h"
 #include <QtWidgets/QMessageBox>
 
 namespace degate

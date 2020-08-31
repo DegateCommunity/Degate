@@ -19,8 +19,8 @@
 
 */
 
-#include <Core/Utils/FileSystem.h>
-#include <Core/Configuration.h>
+#include "Core/Utils/FileSystem.h"
+#include "Core/Configuration.h"
 
 #include <cstring>
 #include <climits>

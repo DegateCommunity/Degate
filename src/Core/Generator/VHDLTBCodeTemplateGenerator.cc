@@ -20,7 +20,7 @@
 */
 
 
-#include <Core/Generator/VHDLTBCodeTemplateGenerator.h>
+#include "Core/Generator/VHDLTBCodeTemplateGenerator.h"
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/join.hpp>

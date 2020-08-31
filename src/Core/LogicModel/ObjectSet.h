@@ -22,7 +22,7 @@
 #ifndef __OBJECTSET_H__
 #define __OBJECTSET_H__
 
-#include <Core/LogicModel/PlacedLogicModelObject.h>
+#include "Core/LogicModel/PlacedLogicModelObject.h"
 
 #include <set>
 #include <list>

@@ -22,7 +22,7 @@
 #ifndef __ZEROCROSSINGEDGEDETECTION_H__
 #define __ZEROCROSSINGEDGEDETECTION_H__
 
-#include <Core/Matching/EdgeDetection.h>
+#include "Core/Matching/EdgeDetection.h"
 
 namespace degate
 {

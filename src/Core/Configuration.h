@@ -22,8 +22,8 @@
 #ifndef __CONFIGURATION_H__
 #define __CONFIGURATION_H__
 
-#include <Globals.h>
-#include <Core/Primitive/SingletonBase.h>
+#include "Globals.h"
+#include "Core/Primitive/SingletonBase.h"
 
 namespace degate {
 

@@ -22,7 +22,7 @@
 #ifndef __PROGRESSDIALOG_H__
 #define __PROGRESSDIALOG_H__
 
-#include <Core/Utils/ProgressControl.h>
+#include "Core/Utils/ProgressControl.h"
 
 #include <mutex>
 #include <thread>

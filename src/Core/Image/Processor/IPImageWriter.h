@@ -23,8 +23,8 @@
 #define __IPIMAGEWRITER_H__
 
 #include <string>
-#include <Core/Image/Processor/ImageProcessorBase.h>
-#include <Core/Image/ImageHelper.h>
+#include "Core/Image/Processor/ImageProcessorBase.h"
+#include "Core/Image/ImageHelper.h"
 
 namespace degate
 {

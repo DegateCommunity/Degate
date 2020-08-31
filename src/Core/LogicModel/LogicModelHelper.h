@@ -22,10 +22,10 @@
 #ifndef __LOGICMODELHELPER_H__
 #define __LOGICMODELHELPER_H__
 
-#include <Core/Image/ImageHelper.h>
-#include <Core/LogicModel/ConnectedLogicModelObject.h>
-#include <Core/Project/Project.h>
-#include <Core/LogicModel/ObjectSet.h>
+#include "Core/Image/ImageHelper.h"
+#include "Core/LogicModel/ConnectedLogicModelObject.h"
+#include "Core/Project/Project.h"
+#include "Core/LogicModel/ObjectSet.h"
 
 namespace degate
 {

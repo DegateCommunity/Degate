@@ -29,7 +29,7 @@
 #include <set>
 #include <map>
 #include <sstream>
-#include <Globals.h>
+#include "Globals.h"
 
 namespace degate
 {

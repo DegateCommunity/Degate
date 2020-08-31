@@ -19,13 +19,13 @@
 
 */
 
-#include <Core/Matching/WireMatching.h>
-#include <Core/Matching/ZeroCrossingEdgeDetection.h>
-#include <Core/Matching/CannyEdgeDetection.h>
-#include <Core/Matching/BinaryLineDetection.h>
-#include <Core/Primitive/BoundingBox.h>
-#include <Core/Matching/LineSegmentExtraction.h>
-#include <Core/Image/Manipulation/MedianFilter.h>
+#include "Core/Matching/WireMatching.h"
+#include "Core/Matching/ZeroCrossingEdgeDetection.h"
+#include "Core/Matching/CannyEdgeDetection.h"
+#include "Core/Matching/BinaryLineDetection.h"
+#include "Core/Primitive/BoundingBox.h"
+#include "Core/Matching/LineSegmentExtraction.h"
+#include "Core/Image/Manipulation/MedianFilter.h"
 #include <boost/foreach.hpp>
 
 using namespace degate;

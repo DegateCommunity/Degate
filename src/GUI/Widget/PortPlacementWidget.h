@@ -22,11 +22,11 @@
 #ifndef __PORTPLACEMENTWIDGET_H__
 #define __PORTPLACEMENTWIDGET_H__
 
-#include <GUI/Utils/ImageRenderer.h>
-#include <Core/LogicModel/Gate/GateTemplate.h>
-#include <Core/LogicModel/Gate/GateTemplatePort.h>
-#include <Core/Project/Project.h>
-#include <GUI/Text/Text.h>
+#include "GUI/Utils/ImageRenderer.h"
+#include "Core/LogicModel/Gate/GateTemplate.h"
+#include "Core/LogicModel/Gate/GateTemplatePort.h"
+#include "Core/Project/Project.h"
+#include "GUI/Text/Text.h"
 
 /**
  * Define the default port size for port placement.

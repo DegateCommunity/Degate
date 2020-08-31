@@ -21,8 +21,8 @@
 
 #include "ViaMatchingDialog.h"
 
-#include <GUI/Dialog/ProgressDialog.h>
-#include <Core/Matching/ViaMatching.h>
+#include "GUI/Dialog/ProgressDialog.h"
+#include "Core/Matching/ViaMatching.h"
 #include <QtWidgets/QMessageBox>
 
 namespace degate

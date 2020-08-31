@@ -22,8 +22,8 @@
 #ifndef __IMAGESTATISTICS_H__
 #define __IMAGESTATISTICS_H__
 
-#include <Core/Primitive/BoundingBox.h>
-#include <Core/Image/Manipulation/ImageManipulation.h>
+#include "Core/Primitive/BoundingBox.h"
+#include "Core/Image/Manipulation/ImageManipulation.h"
 
 namespace degate
 {

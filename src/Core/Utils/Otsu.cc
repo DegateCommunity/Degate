@@ -19,7 +19,7 @@
 
 */
 
-#include <Core/Utils/Otsu.h>
+#include "Core/Utils/Otsu.h"
 
 using namespace degate;
 

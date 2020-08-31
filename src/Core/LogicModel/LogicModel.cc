@@ -20,12 +20,12 @@
 
  */
 
-#include <Globals.h>
-#include <Core/LogicModel/Layer.h>
-#include <Core/LogicModel/Net.h>
-#include <Core/LogicModel/ConnectedLogicModelObject.h>
-#include <Core/LogicModel/Gate/GateLibrary.h>
-#include <Core/LogicModel/LogicModel.h>
+#include "Globals.h"
+#include "Core/LogicModel/Layer.h"
+#include "Core/LogicModel/Net.h"
+#include "Core/LogicModel/ConnectedLogicModelObject.h"
+#include "Core/LogicModel/Gate/GateLibrary.h"
+#include "Core/LogicModel/LogicModel.h"
 
 #include <algorithm>
 #include <boost/foreach.hpp>

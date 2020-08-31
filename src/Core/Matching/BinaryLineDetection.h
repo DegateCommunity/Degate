@@ -22,10 +22,10 @@
 #ifndef __BINARYLINEDETECTION_H__
 #define __BINARYLINEDETECTION_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Image/Processor/IPPipe.h>
-#include <Core/Primitive/Region.h>
-#include <Core/Primitive/RegionList.h>
+#include "Core/Image/Image.h"
+#include "Core/Image/Processor/IPPipe.h"
+#include "Core/Primitive/Region.h"
+#include "Core/Primitive/RegionList.h"
 
 namespace degate
 {

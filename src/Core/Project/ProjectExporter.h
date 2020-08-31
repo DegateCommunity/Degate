@@ -22,8 +22,8 @@
 #ifndef __PROJECTEXPORTER_H__
 #define __PROJECTEXPORTER_H__
 
-#include <Core/XML/XMLExporter.h>
-#include <Core/Project/Project.h>
+#include "Core/XML/XMLExporter.h"
+#include "Core/Project/Project.h"
 
 #include <stdexcept>
 

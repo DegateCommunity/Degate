@@ -22,10 +22,10 @@
 #ifndef __TEMPLATEMATCHING_H__
 #define __TEMPLATEMATCHING_H__
 
-#include <Core/Image/Image.h>
-#include <Core/Project/Project.h>
-#include <Core/LogicModel/Layer.h>
-#include <Core/Utils/ProgressControl.h>
+#include "Core/Image/Image.h"
+#include "Core/Project/Project.h"
+#include "Core/LogicModel/Layer.h"
+#include "Core/Utils/ProgressControl.h"
 
 namespace degate
 {

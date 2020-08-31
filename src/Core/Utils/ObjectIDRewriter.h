@@ -22,7 +22,7 @@
 #ifndef __OBJECTIDREWRITER_H__
 #define __OBJECTIDREWRITER_H__
 
-#include <Globals.h>
+#include "Globals.h"
 
 #include <stdexcept>
 #include <sstream>

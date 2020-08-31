@@ -20,7 +20,7 @@
 */
 
 
-#include <Core/Generator/VerilogTBCodeTemplateGenerator.h>
+#include "Core/Generator/VerilogTBCodeTemplateGenerator.h"
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/join.hpp>

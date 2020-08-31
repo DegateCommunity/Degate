@@ -19,10 +19,10 @@
 
 */
 
-#include <Core/Primitive/Line.h>
-#include <Core/Primitive/Circle.h>
-#include <Core/Primitive/Point.h>
-#include <Core/Primitive/Rectangle.h>
+#include "Core/Primitive/Line.h"
+#include "Core/Primitive/Circle.h"
+#include "Core/Primitive/Point.h"
+#include "Core/Primitive/Rectangle.h"
 
 #include "catch.hpp"
 

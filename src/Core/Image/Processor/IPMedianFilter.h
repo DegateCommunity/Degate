@@ -23,8 +23,8 @@
 #define __IPMEDIANFILTER_H__
 
 #include <string>
-#include <Core/Image/Processor/ImageProcessorBase.h>
-#include <Core/Image/Manipulation/MedianFilter.h>
+#include "Core/Image/Processor/ImageProcessorBase.h"
+#include "Core/Image/Manipulation/MedianFilter.h"
 
 namespace degate
 {
