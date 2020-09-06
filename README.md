@@ -1,8 +1,8 @@
 ![DegateBanner](etc/degate_banner.png)
 
 <p align="center">
-    <a href="https://github.com/DegateCommunity/Degate" alt="Project Status: Active">
-        <img src="https://www.repostatus.org/badges/latest/active.svg" /></a>
+    <a href="https://gitter.im/DegateCommunity/Degate" alt="Gitter">
+        <img src="https://badges.gitter.im/DegateCommunity/Degate.svg" /></a>
     <a href="https://github.com/DegateCommunity/Degate/blob/master/LICENSE.TXT" alt="License">
         <img src="https://img.shields.io/github/license/DegateCommunity/Degate" /></a>
     <a href="https://github.com/DegateCommunity/Degate/issues" alt="GitHub Issues">
@@ -17,7 +17,29 @@
 
 &nbsp;
 
-Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project. The final goal is to replace it. For more please visit our [wiki](https://github.com/DegateCommunity/Degate/wiki) page.
+Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project, the final goal is to replace it. For more please visit our [wiki](https://github.com/DegateCommunity/Degate/wiki) page and, if you want to chat, visit our [Gitter](https://gitter.im/DegateCommunity/Degate).
+
+&nbsp;
+
+- [The project](#the-project)
+  - [Little history](#little-history)
+  - [Current status](#current-status)
+  - [Future](#future)
+  - [Tutorials/Wiki](#tutorialswiki)
+  - [Screenshots](#screenshots)
+- [Build](#build)
+  - [Dependencies](#dependencies)
+  - [Dependencies version](#dependencies-version)
+  - [Quick start](#quick-start)
+    - [For Linux (debian-like)](#for-linux-debian-like)
+    - [For Windows](#for-windows)
+- [Test projects](#test-projects)
+- [Contributing](#contributing)
+- [Localization](#localization)
+  - [Help us](#help-us)
+- [License](#license)
+
+&nbsp;
 
 # The project
 
@@ -78,6 +100,10 @@ Future functionalities remaining to implement (not limited) :
 
 For a more precise roadmap see the [ROADMAP.md](https://github.com/DegateCommunity/Degate/blob/develop/ROADMAP.md) file.
 
+## Tutorials/Wiki
+
+You can find [here](https://github.com/DegateCommunity/Degate/wiki) the official Degate wiki. It is still under construction. For example, you can find on it a list of tutorials for [Degate](https://github.com/DegateCommunity/Degate/wiki/Tutorials-:-Degate) and for [IC Reverse-Engineering](https://github.com/DegateCommunity/Degate/wiki/Tutorials-:-IC-Reverse-Engineering).
+
 ## Screenshots
 
 ![](etc/screenshots/1.png) 
@@ -87,6 +113,64 @@ For a more precise roadmap see the [ROADMAP.md](https://github.com/DegateCommuni
 ![](etc/screenshots/3.png) 
 
 ![](etc/screenshots/4.png) 
+
+# Build
+
+## Dependencies
+
+Degate has only 2 dependencies : Boost and Qt5.
+
+For Boost, you can specify to CMake a custom path with : -DBOOST_ROOT="custom_path_to_boost". Prebuilt versions for Windows are available here : https://sourceforge.net/projects/boost/files/boost-binaries/.
+
+For Qt5, you can specify to CMake a custom path with : -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example, on Windows : Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here : https://www.qt.io/download.
+
+For Linux, don't forget to install the Qt5 add-on module : ImageFormats (you just need to have the package installed, it will be embedded in the Qt5::Core module after). See https://doc.qt.io/qt-5/qtimageformats-index.html. For example, on debian, the package is : qt5-image-formats-plugins. Same problem with linguist tools, for example for debian you need the package : qttools5-dev.
+
+## Dependencies version
+
+- CMake 3.12.0 or newer,
+- Boost 1.70.0 or newer,
+- Qt 5.14.0 or newer.
+
+## Quick start
+
+Firstly, clone this repository (help [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)).
+
+### For Linux (debian-like)
+
+Install dependencies:
+```console
+> sudo apt-get install cmake g++ qt5-default qt5-image-formats-plugins qttools5-dev libboost-all-dev
+```
+Build (in the 'build' folder, for example):
+```console
+> cmake ..
+> make
+```
+Binaries are in the 'build/out/bin' folder.
+
+### For Windows
+
+Install dependencies:
+- Qt: https://www.qt.io/download-qt-installer
+- Boost: https://sourceforge.net/projects/boost/files/boost-binaries/
+
+Build (in the 'build' folder, for example):
+```console
+> cmake .. -DBOOST_ROOT="path_to_boost" -DCMAKE_PREFIX_PATH="path_to_qt"
+> cmake --build .
+```
+Binaries are in the 'build/out/bin' folder.
+
+# Test projects
+
+You can find test projects in the 'etc' folder :
+- DECT,
+- Legic Prime.
+
+# Contributing
+
+Read the "CONTRIBUTING.md" file.
 
 # Localization
 
@@ -105,48 +189,6 @@ Languages :
 - Korean (0%).
 
 To add a new language opens a new issue.
-
-# Build
-
-## Dependencies
-
-Degate has only 2 dependencies : Boost and Qt5.
-
-For Boost, you can specify to CMake a custom path with : -DBOOST_ROOT="custom_path_to_boost". Prebuilt versions for Windows are available here : https://sourceforge.net/projects/boost/files/boost-binaries/.
-
-For Qt5, you can specify to CMake a custom path with : -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example, on Windows : Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here : https://www.qt.io/download.
-
-For Linux, don't forget to install the Qt5 add-on module : ImageFormats (you just need to have the package installed, it will be embedded in the Qt5::Core module after). See https://doc.qt.io/qt-5/qtimageformats-index.html. For example, on debian, the package is : qt5-image-formats-plugins. Same problem with linguist tools, for example for debian you need the package : qttools5-dev.
-
-For example, on debian like Linux distribution, you can install all dependencies with this command : 
-
-```console
-> sudo apt-get install cmake g++ qt5-default qt5-image-formats-plugins qttools5-dev libboost-all-dev
-```
-
-## Dependencies version
-
-- CMake 3.12.0 or newer,
-- Boost 1.70.0 or newer,
-- Qt 5.14.0 or newer.
-
-## Build
-
-After installing Boost and Qt5, use cmake : 
-
-```console
-> cmake [path_to_source] [optional:] -DBOOST_ROOT="custom_path_to_boost" [optional:] -DCMAKE_PREFIX_PATH="custom_path_to_qt"
-```
-
-# Test projects
-
-You can find test projects in the 'etc' folder :
-- DECT,
-- Legic Prime.
-
-# Contributing
-
-Read the "CONTRIBUTING.md" file.
 
 # License
 
