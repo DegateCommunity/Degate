@@ -48,5 +48,5 @@ jobs:
     - name: Upload Degate appimage
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_Linux_x64.AppImage
+        name: Degate_Linux_x64
         path: etc/linux_deploy/Degate*.AppImage

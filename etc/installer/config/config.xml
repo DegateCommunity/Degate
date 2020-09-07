@@ -2,7 +2,7 @@
 <Installer>
     <Name>Degate</Name>
     <Version>2.0.0-alpha.2</Version>
-    <Title>Degate installer</Title>
+    <Title>Degate</Title>
     <Publisher>Degate community</Publisher>
     <StartMenuDir>Degate</StartMenuDir>
 	<TargetDir>@ApplicationsDir@/Degate</TargetDir>
