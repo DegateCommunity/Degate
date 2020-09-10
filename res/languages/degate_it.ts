@@ -10,17 +10,26 @@
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="41"/>
-        <source>This is a forked version of Degate.</source>
+        <source>The current project maintainer is %2.</source>
+        <comment>... maintainer is NAME.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="42"/>
-        <source>This Degate version is still under development, if you find a bug you can report it on Github. You can also help us by adding new languages, see the Localization section of the README.md file, still on Github.</source>
+        <source>This project is a forked version of Degate and is still under development, if you find a bug please report it %3.</source>
+        <comment>... report it here.</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="43"/>
+        <source>You can also help us by adding new languages, see the Localization section of the README.md file, available %4.</source>
+        <comment>... available here.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="45"/>
-        <source>To obtain the latest update of Degate go to the &apos;releases&apos; section of the Github repository.</source>
+        <source>To obtain the latest update of Degate, please see %5 page.</source>
+        <comment>... please see this page.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -29,22 +38,34 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="49"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
         <source>Roadmap</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="51"/>
         <source>Original website</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="70"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="56"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="57"/>
+        <source>here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="58"/>
+        <source>this</source>
+        <comment>... please see this page.</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="75"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="71"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
         <source>Changelog</source>
         <translation type="unfinished"></translation>
     </message>

@@ -10,18 +10,27 @@
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="41"/>
-        <source>This is a forked version of Degate.</source>
-        <translation>Ceci est un fork de Degate.</translation>
+        <source>The current project maintainer is %2.</source>
+        <comment>... maintainer is NAME.</comment>
+        <translation>Le responsable actuel du projet est %2.</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="42"/>
-        <source>This Degate version is still under development, if you find a bug you can report it on Github. You can also help us by adding new languages, see the Localization section of the README.md file, still on Github.</source>
-        <translation>Cette version de Degate est toujours en cours de développement, si vous trouvez un bug vous pouvez le signaler sur Github. Vous pouvez également nous aider en ajoutant de nouvelles langues, voir la section Localization du fichier README.md, toujours sur Github.</translation>
+        <source>This project is a forked version of Degate and is still under development, if you find a bug please report it %3.</source>
+        <comment>... report it here.</comment>
+        <translation>Ce projet est un fork de Degate et est toujours en cours de développement, si vous trouvez un bogue, veuillez le signaler %3.</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="43"/>
+        <source>You can also help us by adding new languages, see the Localization section of the README.md file, available %4.</source>
+        <comment>... available here.</comment>
+        <translation>Vous pouvez également nous aider en ajoutant de nouvelles langues, voir la section Localization du fichier README.md, disponible %4.</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="45"/>
-        <source>To obtain the latest update of Degate go to the &apos;releases&apos; section of the Github repository.</source>
-        <translation>Pour obtenir la dernière mise à jour de Degate, rendez-vous dans la section &quot;releases&quot; du dépôt Github.</translation>
+        <source>To obtain the latest update of Degate, please see %5 page.</source>
+        <comment>... please see this page.</comment>
+        <translation>Pour obtenir la dernière mise à jour de Degate, veuillez consulter %5 page.</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="47"/>
@@ -29,22 +38,34 @@
         <translation>Ce logiciel est distribué sous la licence GNU General Public License version 3.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="49"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
         <source>Roadmap</source>
         <translation>Feuille de route</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="51"/>
         <source>Original website</source>
         <translation>Site web original</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="70"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="56"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="57"/>
+        <source>here</source>
+        <translation>ici</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="58"/>
+        <source>this</source>
+        <comment>... please see this page.</comment>
+        <translation>cette</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="75"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="71"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
         <source>Changelog</source>
         <translation>Journal des modifications</translation>
     </message>
