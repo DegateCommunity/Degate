@@ -225,6 +225,10 @@ namespace degate
         interconnect_objects_action->setShortcut(Qt::CTRL + Qt::Key_C);
         QObject::connect(interconnect_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
 
+        isolate_objects_action = logic_menu->addAction("");
+        isolate_objects_action->setShortcut(Qt::CTRL + Qt::Key_X);
+        QObject::connect(isolate_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_isolate_selected_objects()));
+
         move_selected_gates_into_module = logic_menu->addAction("");
         QObject::connect(move_selected_gates_into_module, SIGNAL(triggered()), this, SLOT(on_menu_logic_move_selected_gates_into_module()));
 
@@ -450,6 +454,7 @@ namespace degate
         logic_menu->setTitle(tr("Logic"));
         remove_objects_action->setText(tr("Remove selected objects"));
         interconnect_objects_action->setText(tr("Interconnect selected objects"));
+        isolate_objects_action->setText(tr("Isolate selected objects"));
         move_selected_gates_into_module->setText(tr("Move selected gates into module"));
 
         // Matching menu
@@ -1012,6 +1017,28 @@ namespace degate
         }
 
         connect_objects(project->get_logic_model(), objects.begin(), objects.end());
+
+        workspace->update_screen();
+
+        project_changed();
+    }
+
+    void MainWindow::on_menu_logic_isolate_selected_objects()
+    {
+        if (project == nullptr || !workspace->has_selection())
+            return;
+
+        auto objects = workspace->get_selected_objects();
+
+        if (!objects.check_for_all(&is_interconnectable))
+        {
+            QMessageBox::warning(this, tr("Error during interconnect"), tr("One of the objects you selected cannot have connections at all."));
+            return;
+        }
+
+        isolate_objects<std::set<PlacedLogicModelObject_shptr>::iterator>(project->get_logic_model(),
+                                                                          objects.begin(),
+                                                                          objects.end());
 
         workspace->update_screen();
 

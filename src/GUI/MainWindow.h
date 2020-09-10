@@ -241,6 +241,11 @@ namespace degate
 		void on_menu_logic_interconnect_selected_objects();
 
 		/**
+		 * Break connections of all selected objects (isolation).
+		 */
+		void on_menu_logic_isolate_selected_objects();
+
+		/**
 		 * Move selected gates into a specific module.
 		 * It will open a module selector dialog.
 		 */
@@ -439,6 +444,7 @@ namespace degate
         QMenu* logic_menu;
         QAction* remove_objects_action;
         QAction* interconnect_objects_action;
+        QAction* isolate_objects_action;
         QAction* move_selected_gates_into_module;
 
         // Template matching menu
