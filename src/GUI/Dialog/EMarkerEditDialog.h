@@ -26,9 +26,10 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QCheckBox>
 
-#include <GUI/Dialog/ColorPickerDialog.h>
-#include <Core/LogicModel/EMarker/EMarker.h>
+#include "GUI/Dialog/ColorPickerDialog.h"
+#include "Core/LogicModel/EMarker/EMarker.h"
 
 namespace degate
 {
@@ -54,7 +55,7 @@ namespace degate
 		 * @see QDialog
 		 */
         EMarkerEditDialog(EMarker_shptr& emarker, QWidget* parent);
-        ~EMarkerEditDialog() override;
+        ~EMarkerEditDialog() override = default;
 
     public slots:
 
@@ -67,10 +68,23 @@ namespace degate
         QGridLayout layout;
         EMarker_shptr emarker;
 
+        // Name
         QLabel name_label;
         QLineEdit name;
+
+        // Description
+        QLabel description_label;
+        QLineEdit description;
+
+        // Is module port
+        QLabel is_module_port_label;
+        QCheckBox is_module_port;
+
+        // Fill color
         QLabel fill_color_label;
         ColorSelectionButton fill_color;
+
+        // Buttons
         QPushButton validate_button;
         QPushButton cancel_button;
     };

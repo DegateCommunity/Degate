@@ -41,6 +41,7 @@
 #include "GUI/Dialog/WireMatchingDialog.h"
 #include "GUI/Dialog/RegularGridConfigurationDialog.h"
 #include "GUI/Dialog/RuleViolationsDialog.h"
+#include "GUI/Dialog/ModulesDialog.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -239,6 +240,12 @@ namespace degate
 		 */
 		void on_menu_logic_interconnect_selected_objects();
 
+		/**
+		 * Move selected gates into a specific module.
+		 * It will open a module selector dialog.
+		 */
+		void on_menu_logic_move_selected_gates_into_module();
+
 
 		/* Matching menu */
 
@@ -341,8 +348,19 @@ namespace degate
          */
         void on_rule_violations_dialog();
 
+        /**
+         * Open modules dialog.
+         */
+        void on_modules_dialog();
+
 	protected:
 	    void closeEvent(QCloseEvent* event) override;
+
+	    /**
+	     * Close and delete all remaining sub windows.
+	     * For example it will close and delete rcv_dialog and modules_dialog.
+	     */
+	    void close_sub_windows();
 
 	private:
 		QMenuBar menu_bar;
@@ -421,6 +439,7 @@ namespace degate
         QMenu* logic_menu;
         QAction* remove_objects_action;
         QAction* interconnect_objects_action;
+        QAction* move_selected_gates_into_module;
 
         // Template matching menu
         QMenu* matching_menu;
@@ -443,12 +462,14 @@ namespace degate
         QAction* area_selection_tool;
         QAction* wire_tool;
         QAction* rule_violations_action;
+        QAction* modules_action;
 
         // QTimer for auto save
         QTimer auto_save_timer;
 
         /* Dialogs */
         RuleViolationsDialog* rcv_dialog = nullptr;
+        ModulesDialog* modules_dialog = nullptr;
 
 	};
 }

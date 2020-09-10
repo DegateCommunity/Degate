@@ -288,6 +288,7 @@ void LogicModelExporter::add_emarker(QDomDocument& doc, QDomElement& emarkers_el
 	emarker_elem.setAttribute("id", QString::fromStdString(number_to_string<object_id_t>(new_oid)));
 	emarker_elem.setAttribute("name", QString::fromStdString(emarker->get_name()));
 	emarker_elem.setAttribute("description", QString::fromStdString(emarker->get_description()));
+    emarker_elem.setAttribute("is-module-port", emarker->is_module_port());
 	emarker_elem.setAttribute("layer", QString::fromStdString(number_to_string<layer_position_t>(layer_pos)));
 	emarker_elem.setAttribute(
 		"diameter", QString::fromStdString(number_to_string<unsigned int>(emarker->get_diameter())));

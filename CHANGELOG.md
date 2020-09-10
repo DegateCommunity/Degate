@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added proper top menu options for many dialogs.
+- Added modules support.
 
 ### Changed
 - Updated the roadmap.
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug with color buttons of the project settings dialog (Linux).
 - Fixed a menu error in the main window (for the layer edit menu).
 - Fixed a translation problem with default Qt buttons.
+- Fixed project switching transition, it will now ask to save current project before all.
 
 ## [2.0.0-alpha.2] - 2020-08-22
 ### Added

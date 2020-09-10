@@ -26,21 +26,50 @@ namespace degate
 
     EMarkerEditDialog::EMarkerEditDialog(EMarker_shptr &emarker, QWidget *parent) : emarker(emarker), QDialog(parent), fill_color(parent)
     {
+        // Name
         name_label.setText(tr("Name:"));
         name.setText(QString::fromStdString(emarker->get_name()));
 
+        // Description
+        description_label.setText(tr("Description:"));
+        description.setText(QString::fromStdString(emarker->get_description()));
+
+        // Is module port
+        is_module_port_label.setText(tr("Is a module port:"));
+        is_module_port.setCheckState(emarker->is_module_port() ? Qt::Checked : Qt::Unchecked);
+
+        // Fill color
         fill_color_label.setText(tr("Fill color:"));
         fill_color.set_color(emarker->get_fill_color());
 
+        // Buttons
         validate_button.setText(tr("Ok"));
         cancel_button.setText(tr("Cancel"));
 
+
+        //////////////////////////////////////
+        //// Layout
+        //////////////////////////////////////
+
+        // Name
         layout.addWidget(&name_label, 0, 0);
         layout.addWidget(&name, 0, 1);
-        layout.addWidget(&fill_color_label, 1, 0);
-        layout.addWidget(&fill_color, 1, 1);
-        layout.addWidget(&validate_button, 3, 0);
-        layout.addWidget(&cancel_button, 3, 1);
+
+        // Description
+        layout.addWidget(&description_label, 1, 0);
+        layout.addWidget(&description, 1, 1);
+
+        // Is module port
+        layout.addWidget(&is_module_port_label, 2, 0);
+        layout.addWidget(&is_module_port, 2, 1);
+
+        // Fill color
+        layout.addWidget(&fill_color_label, 3, 0);
+        layout.addWidget(&fill_color, 3, 1);
+
+        // Buttons
+        layout.addWidget(&validate_button, 4, 0);
+        layout.addWidget(&cancel_button, 4, 1);
 
         QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
         QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
@@ -48,14 +77,11 @@ namespace degate
         setLayout(&layout);
     }
 
-    EMarkerEditDialog::~EMarkerEditDialog()
-    {
-
-    }
-
     void EMarkerEditDialog::validate()
     {
         emarker->set_name(name.text().toStdString());
+        emarker->set_description(description.text().toStdString());
+        emarker->set_module_port(is_module_port.checkState() == Qt::Checked ? true : false);
         emarker->set_fill_color(fill_color.get_color());
 
         accept();

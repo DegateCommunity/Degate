@@ -31,7 +31,7 @@
 #include "Core/LogicModel/ConnectedLogicModelObject.h"
 #include "Core/Utils/DegateExceptions.h"
 #include "Core/Primitive/Circle.h"
-#include <Core/Primitive/RemoteObject.h>
+#include "Core/Primitive/RemoteObject.h"
 
 #include <memory>
 
@@ -51,7 +51,7 @@ namespace degate
 		/**
 		 * Constructor for a via object.
 		 */
-		EMarker(float x, float y, diameter_t diameter = 5);
+		EMarker(float x, float y, diameter_t diameter = 5, bool is_module_port = false);
 
 		/**
 		 * Destructor for a via object.
@@ -104,9 +104,23 @@ namespace degate
 			return Circle::in_shape(x, y, max_distance);
 		}
 
+		bool is_module_port() const
+        {
+		    return module_port;
+        }
+
+        void set_module_port(bool is_module_port)
+        {
+		    module_port = is_module_port;
+        }
+
 	protected:
 
 		virtual object_id_t push_object_to_server(std::string const& server_url);
+
+	private:
+	    bool module_port = false;
+
 	};
 }
 

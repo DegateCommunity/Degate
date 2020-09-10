@@ -19,8 +19,8 @@
 
 */
 
-#include <Core/LogicModel/LogicModelImporter.h>
-#include <Core/LogicModel/Annotation/SubProjectAnnotation.h>
+#include "Core/LogicModel/LogicModelImporter.h"
+#include "Core/LogicModel/Annotation/SubProjectAnnotation.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -319,12 +319,13 @@ void LogicModelImporter::parse_emarkers_element(QDomElement const emarkers_eleme
 
 			const std::string name(emarker_elem.attribute("name").toStdString());
 			const std::string description(emarker_elem.attribute("description").toStdString());
+            const bool is_module_port(emarker_elem.attribute("is-module-port", "0").toInt());
 			const std::string fill_color_str(emarker_elem.attribute("fill-color").toStdString());
 			const std::string frame_color_str(emarker_elem.attribute("frame-color").toStdString());
 			const std::string direction_str(
 				boost::algorithm::to_lower_copy(emarker_elem.attribute("direction").toStdString()));
 
-			EMarker_shptr emarker(new EMarker(x, y, diameter));
+			EMarker_shptr emarker(new EMarker(x, y, diameter, is_module_port));
 			emarker->set_name(name.c_str());
 			emarker->set_description(description.c_str());
 			emarker->set_object_id(object_id);
@@ -482,76 +483,73 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(QDomElement co
                                                                   LogicModel_shptr lmodel)
 {
 	if (modules_element.isNull() || lmodel == nullptr)
-		throw InvalidPointerException("Got a nullptr pointer in  LogicModelImporter::parse_modules_element()");
+		throw InvalidPointerException("Got a nullptr pointer in LogicModelImporter::parse_modules_element()");
 
 	std::list<Module_shptr> modules;
 
-	const QDomNodeList module_list = modules_element.elementsByTagName("module");
+    QDomElement module_elem = modules_element.firstChildElement("module");
 
-	for (int i = 0; i < module_list.count(); i++)
-	{
-		QDomElement module_elem = module_list.at(i).toElement();
-		if (!module_elem.isNull())
-		{
-			// parse module attributes
-			object_id_t id = parse_number<object_id_t>(module_elem, "id");
-			const std::string name(module_elem.attribute("name").toStdString());
-			const std::string entity(module_elem.attribute("entity").toStdString());
+    while (!module_elem.isNull())
+    {
+        // parse module attributes
+        object_id_t id = parse_number<object_id_t>(module_elem, "id");
+        const std::string name(module_elem.attribute("name").toStdString());
+        const std::string entity(module_elem.attribute("entity").toStdString());
 
-			Module_shptr module(new Module(name, entity));
-			module->set_object_id(id);
+        Module_shptr module(new Module(name, entity));
+        module->set_object_id(id);
 
-			// parse standard cell list
-			const QDomElement cells_elem = get_dom_twig(module_elem, "cells");
-			if (!cells_elem.isNull())
-			{
-				const QDomNodeList cell_list = cells_elem.elementsByTagName("cell");
-				for (int j = 0; j < cell_list.count(); j++)
-				{
-					QDomElement cell_elem = cell_list.at(j).toElement();
-					if (!cell_elem.isNull())
-					{
-						object_id_t cell_id = parse_number<object_id_t>(cell_elem, "object-id");
+        // parse standard cell list
+        const QDomElement cells_elem = module_elem.firstChildElement("cells");
+        if (!cells_elem.isNull())
+        {
+            const QDomNodeList cell_list = cells_elem.elementsByTagName("cell");
+            for (int j = 0; j < cell_list.count(); j++)
+            {
+                QDomElement cell_elem = cell_list.at(j).toElement();
+                if (!cell_elem.isNull())
+                {
+                    object_id_t cell_id = parse_number<object_id_t>(cell_elem, "object-id");
 
-						// Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
-						if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(lmodel->get_object(cell_id)))
-							module->add_gate(gate, /* autodetect module ports = */ false);
-					}
-				}
-			}
+                    // Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
+                    if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(lmodel->get_object(cell_id)))
+                        module->add_gate(gate, /* autodetect module ports = */ false);
+                }
+            }
+        }
 
-			// parse module ports
-			const QDomElement mports_elem = get_dom_twig(module_elem, "module-ports");
-			if (!mports_elem.isNull())
-			{
-				const QDomNodeList mport_list = mports_elem.elementsByTagName("module-port");
-				for (int k = 0; k < mport_list.count(); k++)
-				{
-					QDomElement mport_elem = mport_list.at(k).toElement();
-					if (!mport_elem.isNull())
-					{
-						const std::string port_name(mport_elem.attribute("name").toStdString());
-						object_id_t ref_id = parse_number<object_id_t>(mport_elem, "object-id");
+        // parse module ports
+        const QDomElement mports_elem = module_elem.firstChildElement("module-ports");
+        if (!mports_elem.isNull())
+        {
+            const QDomNodeList mport_list = mports_elem.elementsByTagName("module-port");
+            for (int k = 0; k < mport_list.count(); k++)
+            {
+                QDomElement mport_elem = mport_list.at(k).toElement();
+                if (!mport_elem.isNull())
+                {
+                    const std::string port_name(mport_elem.attribute("name").toStdString());
+                    object_id_t ref_id = parse_number<object_id_t>(mport_elem, "object-id");
 
-						// Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
-						if (GatePort_shptr gport = std::dynamic_pointer_cast<GatePort>(lmodel->get_object(ref_id)))
-							module->add_module_port(port_name, gport);
-					}
-				}
-			}
+                    // Lookup will throw an exception, if cell is not in the logic model. This is intended behaviour.
+                    if (GatePort_shptr gport = std::dynamic_pointer_cast<GatePort>(lmodel->get_object(ref_id)))
+                        module->add_module_port(port_name, gport);
+                }
+            }
+        }
 
 
-			// parse sub-modules
-			const QDomElement sub_modules_elem = get_dom_twig(module_elem, "modules");
-			if (!sub_modules_elem.isNull())
-			{
-				std::list<Module_shptr> sub_modules = parse_modules_element(sub_modules_elem, lmodel);
-				BOOST_FOREACH(Module_shptr submod, sub_modules) module->add_module(submod);
-			}
+        // parse sub-modules
+        const QDomElement sub_modules_elem = module_elem.firstChildElement("modules");
+        if (!sub_modules_elem.isNull())
+        {
+            std::list<Module_shptr> sub_modules = parse_modules_element(sub_modules_elem, lmodel);
+            BOOST_FOREACH(Module_shptr submod, sub_modules) module->add_module(submod);
+        }
 
+        modules.push_back(module);
 
-			modules.push_back(module);
-		}
+        module_elem = module_elem.nextSiblingElement("module");
 	}
 
 	return modules;

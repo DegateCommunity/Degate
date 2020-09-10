@@ -42,7 +42,7 @@ namespace degate
 
 	public:
 
-		typedef std::set<Module_shptr, LMOCompare> module_collection;
+		typedef std::vector<Module_shptr> module_collection;
 		typedef std::set<Gate_shptr, LMOCompare> gate_collection;
 
 		/**
@@ -164,6 +164,15 @@ namespace degate
 		 * @exception InvalidPointerException This exception is thrown, if \p gate is a nullptr pointer.
 		 */
 		bool remove_module(Module_shptr module);
+
+
+		/**
+		 * Remove a module port from the module.
+		 * This is not recursive.
+		 *
+		 * @param module_port_name : the name of the module port.
+		 */
+		void remove_port(std::string module_port_name);
 
 
 		module_collection::iterator modules_begin();

@@ -20,7 +20,7 @@
 
 */
 
-#include <Core/LogicModel/Module.h>
+#include "Core/LogicModel/Module.h"
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -138,7 +138,7 @@ void Module::add_module(Module_shptr module)
 	if (module == nullptr)
 		throw InvalidPointerException("Invalid pointer passed to add_modue().");
 
-	modules.insert(module);
+	modules.push_back(module);
 }
 
 
@@ -163,6 +163,11 @@ bool Module::remove_module(Module_shptr module)
 	}
 
 	return false;
+}
+
+void Module::remove_port(std::string module_port_name)
+{
+    ports.erase(module_port_name);
 }
 
 void Module::move_gates_recursive(Module* dst_mod)
@@ -306,20 +311,19 @@ void Module::determine_module_ports()
 {
 	if (is_main_module())
 	{
-		throw std::logic_error(
-			"determine_module_ports() is not suited for main modules. See determine_module_ports_for_root().");
+		throw std::logic_error("determine_module_ports() is not suited for main modules. See determine_module_ports_for_root().");
 	}
 
 	int pnum = 0;
 	port_collection new_ports;
 	std::set<Net_shptr> known_net;
 
-	for (gate_collection::iterator g_iter = gates_begin(); g_iter != gates_end(); ++g_iter)
+	for (auto g_iter = gates_begin(); g_iter != gates_end(); ++g_iter)
 	{
 		Gate_shptr gate = *g_iter;
 		assert(gate != nullptr);
 
-		for (Gate::port_const_iterator p_iter = gate->ports_begin(); p_iter != gate->ports_end(); ++p_iter)
+		for (auto p_iter = gate->ports_begin(); p_iter != gate->ports_end(); ++p_iter)
 		{
 			GatePort_shptr gate_port = *p_iter;
 			assert(gate_port != nullptr);
@@ -327,6 +331,7 @@ void Module::determine_module_ports()
 			Net_shptr net = gate_port->get_net();
 			std::cout << "Check net for object gate port " << gate_port->get_descriptive_identifier() << "?\n";
 
+			// To process only 1 time a net.
 			bool net_already_processed = known_net.find(net) != known_net.end();
 			if ((net != nullptr) && !net_already_processed && !net_completely_internal(net))
 			{
@@ -338,7 +343,7 @@ void Module::determine_module_ports()
 
 					if (!exists_gate_port_recursive(oid))
 					{
-						// outbound connection
+						// Outbound connection
 
 						// Now we check, whether the connection is feeded by an outside entity or feeded
 						// from this module.
@@ -349,19 +354,18 @@ void Module::determine_module_ports()
 						// port.
 
 						GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-						assert(tmpl_port != nullptr); // if a gate has no standard cell type, the gate cannot have a port
+						assert(tmpl_port != nullptr); // If a gate has no standard cell type, the gate cannot have a port
 
 						if (net_feeded_internally(net) && tmpl_port->is_inport())
 						{
-							std::cout <<
-								"  Net feeded internally, but port is inport. Will check where the net is driven.\n";
+							std::cout << "  Net feeded internally, but port is inport. Will check where the net is driven.\n";
 						}
 						else
 						{
 							std::string mod_port_name = gate_port_already_named(ports, gate_port);
 							if (mod_port_name == "")
 							{
-								// generate a new port name and check if the port name is already in use
+								// Generate a new port name and check if the port name is already in use
 								do
 								{
 									pnum++;
@@ -372,8 +376,7 @@ void Module::determine_module_ports()
 								while (ports.find(mod_port_name) != ports.end());
 							}
 
-							std::cout << "  New module port: " << gate_port->get_descriptive_identifier() << " == "
-								<< mod_port_name << "\n";
+							std::cout << "  New module port: " << gate_port->get_descriptive_identifier() << " == " << mod_port_name << "\n";
 							new_ports[mod_port_name] = gate_port;
 
 							is_a_port = true;
@@ -498,11 +501,12 @@ void degate::determine_module_ports_for_root(LogicModel_shptr lmodel)
 					{
 						debug(TM, "Connected with emarker");
 
-						if (em->get_description() == "module-port")
+						if (em->is_module_port() || em->get_description() == "module-port")
 						{
 							GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
+
+                            // If a gate has no standard cell type, the gate cannot have a port.
 							assert(tmpl_port != nullptr);
-							// if a gate has no standard cell type, the gate cannot have a port
 
 							main_module->ports[em->get_name()] = gate_port;
 							is_a_port = true;

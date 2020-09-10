@@ -225,6 +225,9 @@ namespace degate
         interconnect_objects_action->setShortcut(Qt::CTRL + Qt::Key_C);
         QObject::connect(interconnect_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
 
+        move_selected_gates_into_module = logic_menu->addAction("");
+        QObject::connect(move_selected_gates_into_module, SIGNAL(triggered()), this, SLOT(on_menu_logic_move_selected_gates_into_module()));
+
 
         // Matching menu
         matching_menu = menu_bar.addMenu("");
@@ -311,6 +314,9 @@ namespace degate
         rule_violations_action = tool_bar->addAction("");
         QObject::connect(rule_violations_action, SIGNAL(triggered()), this, SLOT(on_rule_violations_dialog()));
 
+        modules_action = tool_bar->addAction("");
+        QObject::connect(modules_action, SIGNAL(triggered()), this, SLOT(on_modules_dialog()));
+
 		// Other
 		QObject::connect(workspace, SIGNAL(project_changed(std::string)), this, SLOT(open_project(std::string)));
         QObject::connect(workspace, SIGNAL(right_mouse_button_released()), this, SLOT(show_context_menu()));
@@ -379,6 +385,7 @@ namespace degate
         area_selection_tool->setIcon(QIcon(GET_ICON_PATH("area_selection_tool.png")));
         wire_tool->setIcon(QIcon(GET_ICON_PATH("wire_tool.png")));
         rule_violations_action->setIcon(QIcon(GET_ICON_PATH("rule_violations.png")));
+        modules_action->setIcon(QIcon(GET_ICON_PATH("modules.png")));
     }
 
     void MainWindow::reload_texts()
@@ -443,6 +450,7 @@ namespace degate
         logic_menu->setTitle(tr("Logic"));
         remove_objects_action->setText(tr("Remove selected objects"));
         interconnect_objects_action->setText(tr("Interconnect selected objects"));
+        move_selected_gates_into_module->setText(tr("Move selected gates into module"));
 
         // Matching menu
         matching_menu->setTitle(tr("Matching"));
@@ -470,6 +478,7 @@ namespace degate
         area_selection_tool->setText(tr("Area selection tool"));
         wire_tool->setText(tr("Wire tool"));
         rule_violations_action->setText(tr("Rule violations"));
+        modules_action->setText(tr("Modules"));
     }
 
 	void MainWindow::on_menu_help_about()
@@ -526,9 +535,6 @@ namespace degate
             return;
         }
 
-		if (project != nullptr)
-			project.reset();
-
         try
         {
             open_project(dir.toStdString());
@@ -566,6 +572,8 @@ namespace degate
 	void MainWindow::on_menu_project_close()
 	{
 		status_bar.showMessage(tr("Closing project..."));
+
+        close_sub_windows();
 
 		if (project == nullptr)
 			return;
@@ -609,6 +617,8 @@ namespace degate
 
 	void MainWindow::on_menu_project_new()
 	{
+        on_menu_project_close();
+
 		status_bar.showMessage(tr("Creating a new project..."));
 
 		QString dir = QFileDialog::getExistingDirectory(this, tr("Select the directory where the project will be created"));
@@ -982,6 +992,9 @@ namespace degate
 
         workspace->update_screen();
 
+        if (modules_dialog != nullptr)
+            modules_dialog->reload();
+
         project_changed();
 	}
 
@@ -1001,6 +1014,43 @@ namespace degate
         connect_objects(project->get_logic_model(), objects.begin(), objects.end());
 
         workspace->update_screen();
+
+        project_changed();
+    }
+
+    void MainWindow::on_menu_logic_move_selected_gates_into_module()
+    {
+        if (project == nullptr || !workspace->has_selection())
+            return;
+
+        for (auto& e : workspace->get_selected_objects())
+        {
+            if (!is_of_object_type<Gate>(e))
+                return;
+        }
+
+        ModuleSelectionDialog dialog(project, this);
+        auto ret = dialog.exec();
+
+        if (ret != QDialog::Accepted)
+            return;
+
+        auto selected_module = dialog.get_selected_module();
+
+        if (selected_module == nullptr)
+            return;
+
+        for (auto& e : workspace->get_selected_objects())
+        {
+            if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(e))
+            {
+                auto root_module = project->get_logic_model()->get_main_module();
+
+                // It will search recursively, not only in the main module.
+                root_module->remove_gate(o);
+                selected_module->add_gate(o);
+            }
+        }
 
         project_changed();
     }
@@ -1158,6 +1208,8 @@ namespace degate
 
 	void MainWindow::open_project(const std::string& path)
 	{
+        on_menu_project_close();
+
 		status_bar.showMessage(tr("Importing project/subproject..."));
 
 		ProjectImporter project_importer;
@@ -1523,17 +1575,55 @@ namespace degate
         project_changed();
     }
 
+    void MainWindow::on_modules_dialog()
+    {
+        if (project == nullptr)
+            return;
+
+        if (modules_dialog == nullptr)
+        {
+            modules_dialog = new ModulesDialog(project, this);
+            modules_dialog->setWindowFlags(Qt::Window);
+
+            QObject::connect(modules_dialog,
+                             SIGNAL(goto_object(PlacedLogicModelObject_shptr&)),
+                             this,
+                             SLOT(goto_object(PlacedLogicModelObject_shptr&)));
+        }
+
+        modules_dialog->show();
+        modules_dialog->clearFocus();
+
+        project_changed();
+    }
+
     void MainWindow::closeEvent(QCloseEvent* event)
     {
 	    // When the main window is closed, automatically close the rule violations dialog.
 	    // Since the dialog is modeless and not linked to this window, we have to force close.
+        close_sub_windows();
+
+        QMainWindow::closeEvent(event);
+    }
+
+    void MainWindow::close_sub_windows()
+    {
         if (rcv_dialog != nullptr)
         {
             rcv_dialog->close();
 
             delete rcv_dialog;
+
+            rcv_dialog = nullptr;
         }
 
-        QMainWindow::closeEvent(event);
+        if (modules_dialog != nullptr)
+        {
+            modules_dialog->close();
+
+            delete modules_dialog;
+
+            modules_dialog = nullptr;
+        }
     }
 }

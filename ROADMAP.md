@@ -5,6 +5,7 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 ## For 2.2.0-x:
 
 - [ ] Explicit full net-list exporter.
+- [ ] Improved modules.
 - [ ] Integrated gate analyzer.
 
 ## For 2.1.0-x:
@@ -14,17 +15,20 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [ ] Rework gate template matching.
 - [ ] Complete existing via matching (add more consistency).
 - [ ] Rework rule violations blacklist to add translations.
+- [ ] Search interface (by name or ID).
 
 ## For 2.0.0-alpha.4:
 
 - [ ] Bug fixes.
 - [ ] Connection inspector dialog.
+- [ ] External matching support.
+- [ ] German language.
 
 ## For 2.0.0-alpha.3 *[next]*:
 
 - [ ] Bug fixes.
-- [ ] Module dialog.
-- [ ] German language.
+- [x] Module dialog.
+- [ ] New option to break interconnexions (isolation).
 
 ## For 2.0.0-alpha.2 *[**current**]*:
 

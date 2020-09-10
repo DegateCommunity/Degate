@@ -26,8 +26,8 @@
 
 using namespace degate;
 
-EMarker::EMarker(float x, float y, diameter_t diameter) :
-	Circle(x, y, diameter)
+EMarker::EMarker(float x, float y, diameter_t diameter, bool is_module_port) :
+	Circle(x, y, diameter), module_port(is_module_port)
 {
 }
 
