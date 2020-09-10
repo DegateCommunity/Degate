@@ -77,6 +77,11 @@ namespace degate
 
         delete vshader;
         delete fshader;
+
+        // Init grid color.
+        grid_color = PREFERENCES_HANDLER.get_preferences().grid_color;
+        converted_grid_color = QVector3D(MASK_R(grid_color) / 255.0, MASK_G(grid_color) / 255.0, MASK_B(grid_color) / 255.0);
+        converted_grid_alpha = MASK_A(grid_color) / 255.0;
     }
 
     void WorkspaceRegularGrid::update()

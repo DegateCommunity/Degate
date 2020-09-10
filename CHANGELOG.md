@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a menu error in the main window (for the layer edit menu).
 - Fixed a translation problem with default Qt buttons.
 - Fixed project switching transition, it will now ask to save current project before all.
+- Fixed default grid color.
 
 ## [2.0.0-alpha.2] - 2020-08-22
 ### Added
