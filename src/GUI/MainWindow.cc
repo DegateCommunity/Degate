@@ -267,6 +267,7 @@ namespace degate
         update_status_bar_layer_info();
 
 		status_bar.addPermanentWidget(&status_bar_coords);
+        change_status_bar_coords(0, 0);
 		QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
 
         update_status_bar_layer_info();
