@@ -74,7 +74,7 @@ namespace degate
 
 		std::string name;
 		std::string description;
-		std::string degate_version = DEGATE_VERSION;
+		std::string degate_version;
 		std::string directory;
 		std::string server_url;
 

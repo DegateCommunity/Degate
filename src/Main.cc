@@ -28,6 +28,7 @@
 
 #include "GUI/Preferences/PreferencesHandler.h"
 #include "GUI/MainWindow.h"
+#include "Core/Version.h"
 
 int main(int argc, char* argv[])
 {

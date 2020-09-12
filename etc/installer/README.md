@@ -5,7 +5,8 @@ It works on Windows, Linux and Mac.
 
 ## Process
 
-- Update the Degate version in the 'config/config.xml' file and in the 'packages/Degate/meta/package.xml' file (with the release date for the last one).
+- Update the Degate version and release date in the 'VERSION' file.
+- Build the project.
 - On Windows, run 'windeployqt.exe' to automatically get all Qt stuff near the executable.
 - On Linux, you can use https://github.com/probonopd/linuxdeployqt (the best is to use the oldest Ubuntu LTS to build Degate and use linuxdeployqt).
 - Copy all freshly built files to the 'packages/Degate/data' folder.

@@ -21,7 +21,7 @@
 
 #include "AboutDialog.h"
 
-#include "Globals.h"
+#include "Core/Version.h"
 
 #include <stdexcept>
 #include <QFile>

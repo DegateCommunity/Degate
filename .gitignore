@@ -7,3 +7,7 @@ etc/installer/packages/Degate/data/*
 etc/installer/Degate installer.exe
 
 res/CHANGELOG.md
+
+src/Core/Version.h
+etc/installer/config/config.xml
+etc/installer/packages/Degate/meta/package.xml

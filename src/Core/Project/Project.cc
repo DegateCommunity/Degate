@@ -22,6 +22,7 @@
 
 #include "Globals.h"
 #include "Project.h"
+#include "Core/Version.h"
 
 #include <algorithm>
 #include <memory>
@@ -37,7 +38,8 @@ using namespace degate;
 Project::Project(length_t width, length_t height) :
 	bounding_box(width, height),
 	logic_model(new LogicModel(width, height)),
-	port_color_manager(new PortColorManager())
+	port_color_manager(new PortColorManager()),
+	degate_version(DEGATE_VERSION)
 {
 	init_default_values();
 }
@@ -47,7 +49,8 @@ Project::Project(length_t width, length_t height, std::string const& directory, 
 	bounding_box(width, height),
 	directory(directory),
 	logic_model(new LogicModel(width, height, layers)),
-	port_color_manager(new PortColorManager())
+	port_color_manager(new PortColorManager()),
+	degate_version(DEGATE_VERSION)
 {
 	init_default_values();
 }

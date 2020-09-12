@@ -1,11 +1,38 @@
-cmake_minimum_required(VERSION 3.0)
+#####################################################################
+# This file is part of the IC reverse engineering tool Degate.
+#
+# Copyright 2008, 2009, 2010 by Martin Schobert
+# Copyright 2019-2020 Dorian Bachelot
+#
+# Degate is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# Degate is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with degate. If not, see <http://www.gnu.org/licenses/>.
+#
+#####################################################################
+
+cmake_minimum_required(VERSION 3.12.0)
 project(DEGATE)
 
+#
+# Cpp version
+#
 set(CMAKE_CXX_STANDARD 11)
 message(STATUS "Using compiler: ${CMAKE_CXX_COMPILER}")
 
 set(CMAKE_VERBOSE_MAKEFILE true)
 
+#
+# Set flags
+#
 if (NOT MSVC)
 	add_definitions(-Wall -g -fno-inline -std=c++11 -DBOOST_NO_CXX11_SCOPED_ENUMS)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -21,7 +48,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 ############################ Dependencies ##################################
 
+#
 # Turn on automatic invocation of the MOC, UIC & RCC
+#
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -47,6 +76,34 @@ find_package(Qt5 COMPONENTS Core Widgets Gui Xml OpenGL Concurrent LinguistTools
 set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml Qt5::OpenGL Qt5::Concurrent)
 
 ############################################################################
+
+#
+# Configuration
+#
+if (CMAKE_SIZEOF_VOID_P MATCHES 8) # if x64
+	message(STATUS "x64 configuration")
+	set(CONFIGURATION "x64")
+else() # if x86
+	message(STATUS "x86 configuration")
+	set(CONFIGURATION "x86")
+endif()
+
+#
+# Version
+#
+include(${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake/ConfigureFiles.cmake)
+
+#
+# Version command
+#
+add_custom_command(
+		OUTPUT "Degate version" # Not an error, we need a dummy output to force command execution for every build
+		COMMAND ${CMAKE_COMMAND} -DPROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}"
+								 -DCMAKE_SYSTEM_NAME="${CMAKE_SYSTEM_NAME}"
+								 -DCONFIGURATION="${CONFIGURATION}"
+								 -P "${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake/ConfigureFiles.cmake"
+		DEPENDS "${PROJECT_SOURCE_DIR}/VERSION"
+)
 
 #
 # The source files
@@ -98,7 +155,7 @@ list(REMOVE_ITEM SRC_FILES "src/Main.cc")
 #
 # Link DegateCore
 #
-add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${QM_FILES})
+add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${QM_FILES} "Degate version")
 target_link_libraries(DegateCore ${LIBS})
 
 #
@@ -148,16 +205,10 @@ add_subdirectory(tests)
 #
 #find_package(Doxygen QUIET)
 #IF (DOXYGEN_FOUND)
-#   add_custom_target(libdoc 
+#   add_custom_target(libdoc
 #     COMMAND ${DOXYGEN_EXECUTABLE} "${PROJECT_SOURCE_DIR}/doc/Doxyfile.libdegate"
 #     SOURCES ${SOURCES})
 #else()
 #   message("Warning: Doxygen not found. Ignoring. You should "
 #   	"install the doxygen package to generate the documentation for libdegate.")
 #ENDIF(DOXYGEN_FOUND)
-
-if (CMAKE_SIZEOF_VOID_P MATCHES 8) # if x64
-		message("-- x64 configuration")
-	else() # if x86
-		message("-- x86 configuration")
-endif()
