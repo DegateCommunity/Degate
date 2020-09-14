@@ -17,21 +17,21 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [ ] Rework rule violations blacklist to add translations.
 - [ ] Search interface (by name or ID).
 
-## For 2.0.0-alpha.4:
+## For 2.0.0-alpha.4 *[next]*:
 
 - [ ] Bug fixes.
 - [ ] Connection inspector dialog.
 - [ ] External matching support.
 - [ ] German language.
 
-## For 2.0.0-alpha.3 *[next]*:
+## For 2.0.0-alpha.3 *[**current**]*:
 
-- [ ] Bug fixes.
+- [x] Bug fixes.
 - [x] Module dialog.
-- [x] New option to break interconnexions (isolation).
+- [x] New option to break interconnections (isolation).
 - [x] Full-screen mode.
 
-## For 2.0.0-alpha.2 *[**current**]*:
+## For 2.0.0-alpha.2:
 
 - [x] Bug fixes.
 - [x] Better theme support.
