@@ -50,13 +50,14 @@ namespace degate
         /**
 		 * Create the dialog, to show it call the exec function.
 		 *
+         * @param parent : the parent of the dialog.
 		 * @param via : the via to edit.
-		 * @param parent : the parent of the dialog.
+         * @param project : the current project.
 		 *
 		 * @see QDialog
 		 */
-        ViaEditDialog(Via_shptr& via, QWidget* parent, Project_shptr& project);
-        ~ViaEditDialog();
+        ViaEditDialog(QWidget* parent, Via_shptr& via, Project_shptr& project);
+        ~ViaEditDialog() override = default;
 
     public slots:
 

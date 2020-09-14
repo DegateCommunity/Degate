@@ -93,9 +93,7 @@ namespace degate
         wire_matching->set_min_edge_magnitude(min_edge_magnitude_edit.get_value());
 
         // Start progress dialog
-        ProgressDialog progress_dialog(tr("Wire matching"),
-                                       wire_matching,
-                                       this->parentWidget());
+        ProgressDialog progress_dialog(this->parentWidget(), tr("Wire matching"), wire_matching);
 
         // Set the job to start the via matching (will run in another thread)
         progress_dialog.set_job([wire_matching, this]()

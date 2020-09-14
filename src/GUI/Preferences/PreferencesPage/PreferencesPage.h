@@ -42,7 +42,7 @@ namespace degate
     public:
 
         explicit PreferencesPage(QWidget* parent);
-        ~PreferencesPage() = default;
+        ~PreferencesPage() override = default;
 
         /**
          * Update preferences, the preferences editor will call this function to apply changes for every page.

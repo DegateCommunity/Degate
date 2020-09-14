@@ -53,7 +53,7 @@ namespace degate
          * @param project : the current valid project.
          */
         RegularGridConfigurationDialog(QWidget* parent, Project_shptr project);
-        ~RegularGridConfigurationDialog() override;
+        ~RegularGridConfigurationDialog() override = default;
 
     protected slots:
         /**

@@ -21,10 +21,12 @@
 
 #include "GateTemplateListWidget.h"
 
+#include <utility>
+
 namespace degate
 {
-	GateTemplateListWidget::GateTemplateListWidget(Project_shptr project, QWidget* parent, bool unique_selection)
-            : QTableWidget(parent), project(project)
+    GateTemplateListWidget::GateTemplateListWidget(QWidget* parent, Project_shptr project, bool unique_selection)
+            : QTableWidget(parent), project(std::move(project))
 	{
 		setColumnCount(3);
 		QStringList list;
@@ -42,11 +44,6 @@ namespace degate
             setSelectionMode(SelectionMode::MultiSelection);
 
 		update_list();
-	}
-
-	GateTemplateListWidget::~GateTemplateListWidget()
-	{
-		
 	}
 
 	std::vector<GateTemplate_shptr> GateTemplateListWidget::get_selected_gates()
@@ -100,24 +97,24 @@ namespace degate
 		setRowCount(0);
 		
 		GateLibrary_shptr gate_lib = project->get_logic_model()->get_gate_library();
-		for (GateLibrary::template_iterator iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
+		for (auto iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
 		{
 			GateTemplate_shptr gate = (*iter).second;
 
 			insertRow(rowCount());
 
 			// Id
-			QTableWidgetItem* id_item = new QTableWidgetItem(QString::number(gate->get_object_id()));
+			auto id_item = new QTableWidgetItem(QString::number(gate->get_object_id()));
 			id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 			setItem(rowCount() - 1, 0, id_item);
 
 			// Name
-			QTableWidgetItem* name_item = new QTableWidgetItem(QString::fromStdString(gate->get_name()));
+            auto name_item = new QTableWidgetItem(QString::fromStdString(gate->get_name()));
 			name_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 			setItem(rowCount() - 1, 1, name_item);
 
 			// Description
-			QTableWidgetItem* description_item = new QTableWidgetItem(QString::fromStdString(gate->get_description()));
+            auto description_item = new QTableWidgetItem(QString::fromStdString(gate->get_description()));
 			description_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 			setItem(rowCount() - 1, 2, description_item);
 		}

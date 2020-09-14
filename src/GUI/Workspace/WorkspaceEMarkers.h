@@ -47,7 +47,7 @@ namespace degate
 		 *
 		 * @param parent : the parent widget pointer.
 		 */
-        WorkspaceEMarkers(QWidget* parent);
+        explicit WorkspaceEMarkers(QWidget* parent);
         ~WorkspaceEMarkers();
 
         /**

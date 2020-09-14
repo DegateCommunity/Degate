@@ -80,11 +80,6 @@ namespace degate
         PreferencesPage::add_widget(theme_layout, tr("Icon theme:"), &icon_theme_box);
 	}
 
-	AppearancePreferencesPage::~AppearancePreferencesPage()
-	{
-		
-	}
-
     void AppearancePreferencesPage::apply(Preferences& preferences)
     {
 	    // Theme

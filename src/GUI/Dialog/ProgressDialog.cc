@@ -26,9 +26,7 @@
 
 namespace degate
 {
-    ProgressDialog::ProgressDialog(const QString& text,
-                                   const ProgressControl_shptr& progress_control,
-                                   QWidget* parent)
+    ProgressDialog::ProgressDialog(QWidget* parent, const QString& text, const ProgressControl_shptr& progress_control)
             : QProgressDialog(text, tr("Cancel"), 0, 0, parent),
               progress_control(progress_control),
               timer(this),

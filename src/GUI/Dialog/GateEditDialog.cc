@@ -32,11 +32,8 @@ namespace degate
 {
 	// Entity tab
 
-	GateEditEntityTab::GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent),
-																													gate(gate),
-																													fill_color(parent),
-																													frame_color(parent),
-																													project(project)
+    GateEditEntityTab::GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project)
+            : QWidget(parent), gate(gate), fill_color(parent), frame_color(parent), project(project)
 	{
 		// Name
 		name_label.setText(tr("Name:"));
@@ -147,10 +144,6 @@ namespace degate
 
 		QObject::connect(&fill_color_reset_button, SIGNAL(clicked()), this, SLOT(reset_fill_color()));
 		QObject::connect(&frame_color_reset_button, SIGNAL(clicked()), this, SLOT(reset_frame_color()));
-	}
-
-	GateEditEntityTab::~GateEditEntityTab()
-	{
 	}
 
 	void GateEditEntityTab::validate()
@@ -317,8 +310,12 @@ namespace degate
 
 	// Behaviour tab
 
-	GateEditBehaviourTab::GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project, GateEditEntityTab& entity_tab) : QWidget(parent), gate(gate), project(project), entity_tab(entity_tab)
-	{
+    GateEditBehaviourTab::GateEditBehaviourTab(QWidget* parent,
+                                               GateTemplate_shptr gate,
+                                               Project_shptr project,
+                                               GateEditEntityTab& entity_tab)
+            : QWidget(parent), gate(gate), project(project), entity_tab(entity_tab)
+    {
 	    // Languages
         languages[tr("Free text")] = GateTemplate::TEXT;
         languages[tr("VHDL")] = GateTemplate::VHDL;
@@ -362,11 +359,6 @@ namespace degate
         layout.addWidget(&text_area);
 
         setLayout(&layout);
-	}
-
-	GateEditBehaviourTab::~GateEditBehaviourTab()
-	{
-
 	}
 
 	void GateEditBehaviourTab::validate()
@@ -682,12 +674,13 @@ namespace degate
 
     // Layout tab
 
-	GateEditLayoutTab::GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QWidget(parent), gate(gate), project(project)
+    GateEditLayoutTab::GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project)
+            : QWidget(parent), gate(gate), project(project)
 	{
 		if (gate->has_image(Layer::METAL))
 		{
 			metal_label.setText(tr("Metal:"));
-			metal = new ImageRenderer(gate->get_image(Layer::METAL), this);
+			metal = new ImageRenderer(this, gate->get_image(Layer::METAL));
 			metal_layout.addWidget(&metal_label);
 			metal_layout.addWidget(metal);
 			layout.addLayout(&metal_layout);
@@ -696,7 +689,7 @@ namespace degate
 		if (gate->has_image(Layer::LOGIC))
 		{
 			logic_label.setText(tr("Logic:"));
-			logic = new ImageRenderer(gate->get_image(Layer::LOGIC), this);
+			logic = new ImageRenderer(this, gate->get_image(Layer::LOGIC));
 			logic_layout.addWidget(&logic_label);
 			logic_layout.addWidget(logic);
 			layout.addLayout(&logic_layout);
@@ -705,7 +698,7 @@ namespace degate
 		if (gate->has_image(Layer::TRANSISTOR))
 		{
 			transistor_label.setText(tr("Transistor:"));
-			transistor = new ImageRenderer(gate->get_image(Layer::TRANSISTOR), this);
+			transistor = new ImageRenderer(this, gate->get_image(Layer::TRANSISTOR));
 			transistor_layout.addWidget(&transistor_label);
 			transistor_layout.addWidget(transistor);
 			layout.addLayout(&transistor_layout);
@@ -733,13 +726,14 @@ namespace degate
 
 	// Main dialog
 
-	GateEditDialog::GateEditDialog(QWidget* parent, GateTemplate_shptr gate, Project_shptr project) : QDialog(parent),
-																											  gate(gate),
-																											  button_box(QDialogButtonBox::Ok),
-																											  entity_tab(parent, gate, project),
-																											  behaviour_tab(parent, gate, project, entity_tab),
-																											  layout_tab(parent, gate, project),
-																											  project(project)
+    GateEditDialog::GateEditDialog(QWidget* parent, GateTemplate_shptr gate, Project_shptr project)
+            : QDialog(parent),
+              gate(gate),
+              button_box(QDialogButtonBox::Ok),
+              entity_tab(parent, gate, project),
+              behaviour_tab(parent, gate, project, entity_tab),
+              layout_tab(parent, gate, project),
+              project(project)
 	{
 		setWindowTitle(tr("Edit gate"));
         setWindowFlags(Qt::Window);
@@ -756,10 +750,6 @@ namespace degate
 		QObject::connect(&button_box, SIGNAL(accepted()), this, SLOT(validate()));
 	}
 
-	GateEditDialog::~GateEditDialog()
-	{
-	}
-
 	void GateEditDialog::validate()
 	{
 		entity_tab.validate();
@@ -769,7 +759,8 @@ namespace degate
 		accept();
 	}
 
-	GateInstanceEditDialog::GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project) : GateEditDialog(parent, gate->get_gate_template(), project), gate(gate)
+    GateInstanceEditDialog::GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project)
+            : GateEditDialog(parent, gate->get_gate_template(), project), gate(gate)
 	{
 		setWindowTitle(tr("Edit gate instance"));
         setWindowFlags(Qt::Window);
@@ -812,10 +803,6 @@ namespace degate
         layout.insertLayout(2, &instance_layout);
 		layout.insertSpacing(3, 20);
         layout.insertWidget(4, &gate_template_label);
-	}
-
-	GateInstanceEditDialog::~GateInstanceEditDialog()
-	{
 	}
 
 	void GateInstanceEditDialog::validate()

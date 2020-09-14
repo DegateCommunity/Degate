@@ -96,7 +96,7 @@ namespace degate
 		 *
 		 * @param parent : the parent widget pointer (usually the main window).
 		 */
-		WorkspaceRenderer(QWidget* parent = nullptr);
+		explicit WorkspaceRenderer(QWidget* parent = nullptr);
 		~WorkspaceRenderer() override;
 
 		/**

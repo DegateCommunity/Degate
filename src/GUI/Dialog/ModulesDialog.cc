@@ -28,9 +28,8 @@
 
 namespace degate
 {
-    ModulesDialog::ModulesDialog(Project_shptr project, QWidget* parent)
-            : QDialog(parent),
-              project(std::move(project))
+    ModulesDialog::ModulesDialog(QWidget* parent, Project_shptr project)
+            : QDialog(parent), project(std::move(project))
     {
         setWindowFlags(Qt::Window);
         setWindowTitle(tr("Modules"));

@@ -49,13 +49,13 @@ namespace degate
 		/**
 		 * Create the dialog, to show it call the exec function.
 		 *
-		 * @param annotation : the annotation to edit.
 		 * @param parent : the parent of the dialog.
+		 * @param annotation : the annotation to edit.
 		 *
 		 * @see QDialog
 		 */
-		AnnotationEditDialog(Annotation_shptr annotation, QWidget* parent);
-		~AnnotationEditDialog();
+		AnnotationEditDialog(QWidget* parent, const Annotation_shptr& annotation);
+		~AnnotationEditDialog() override = default;
 
 	public slots:
 

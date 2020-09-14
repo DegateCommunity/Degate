@@ -49,8 +49,8 @@ namespace degate
 		 *
 		 * @param parent : the parent of the dialog.
 		 */
-		NewProjectDialog(QWidget* parent);
-		~NewProjectDialog();
+		explicit NewProjectDialog(QWidget* parent);
+		~NewProjectDialog() override = default;
 
 		/**
 		 * Get the new project name.
@@ -58,6 +58,12 @@ namespace degate
 		 * @return Returns the new project name.
 		 */
 		std::string get_project_name();
+
+        /**
+         * Get the height of the new project.
+         *
+         * @return Returns the height of the new project.
+         */
 		unsigned get_height();
 
 		/**

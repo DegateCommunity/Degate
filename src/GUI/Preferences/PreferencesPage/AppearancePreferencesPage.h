@@ -48,8 +48,8 @@ namespace degate
 		 *
 		 * @param parent : the parent of the widget.
 		 */
-		AppearancePreferencesPage(QWidget* parent);
-		~AppearancePreferencesPage();
+		explicit AppearancePreferencesPage(QWidget* parent);
+		~AppearancePreferencesPage() override = default;
 
         /**
          * Update preferences, the preferences editor will call this function to apply changes for every page.

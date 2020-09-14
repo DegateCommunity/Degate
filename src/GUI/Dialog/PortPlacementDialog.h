@@ -49,8 +49,8 @@ namespace degate
 		 * @param project : the current active project.
 		 * @param port : the port template to place.
 		 */
-		PortPlacementDialog(QWidget* parent, Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port);
-		~PortPlacementDialog();
+		PortPlacementDialog(QWidget* parent, const Project_shptr& project, const GateTemplate_shptr& gate, const GateTemplatePort_shptr& port);
+		~PortPlacementDialog() override;
 
 	public slots:
 		/**

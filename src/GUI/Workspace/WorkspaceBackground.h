@@ -43,7 +43,7 @@ namespace degate
 		 *
 		 * @param parent : the parent widget pointer.
 		 */
-		WorkspaceBackground(QWidget* parent);
+		explicit WorkspaceBackground(QWidget* parent);
 		~WorkspaceBackground();
 
 		/**

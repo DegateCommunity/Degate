@@ -49,12 +49,12 @@ namespace degate
         /**
 		 * Create the dialog, to show it call the exec function.
 		 *
+         * @param parent : the parent of the dialog.
 		 * @param emarker : the emarker to edit.
-		 * @param parent : the parent of the dialog.
 		 *
 		 * @see QDialog
 		 */
-        EMarkerEditDialog(EMarker_shptr& emarker, QWidget* parent);
+        EMarkerEditDialog(QWidget* parent, EMarker_shptr& emarker);
         ~EMarkerEditDialog() override = default;
 
     public slots:

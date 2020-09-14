@@ -45,6 +45,7 @@ namespace degate
          * @param parent : the parent of the widget.
          */
         explicit DoubleSliderWidget(QWidget* parent = nullptr);
+        ~DoubleSliderWidget() override = default;
 
         /**
          * Set the single step of the slider (the step between values), inferior or equal 1.

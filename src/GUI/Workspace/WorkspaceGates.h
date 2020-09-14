@@ -49,7 +49,7 @@ namespace degate
 		 *
 		 * @param parent : the parent widget pointer.
 		 */
-		WorkspaceGates(QWidget* parent);
+		explicit WorkspaceGates(QWidget* parent);
 		~WorkspaceGates();
 
 		/**

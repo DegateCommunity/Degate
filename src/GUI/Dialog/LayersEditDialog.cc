@@ -23,7 +23,8 @@
 
 namespace degate
 {
-	LayersEditDialog::LayersEditDialog(Project_shptr project, QWidget* parent) : layers(project, parent), QDialog(parent), project(project)
+    LayersEditDialog::LayersEditDialog(QWidget* parent, const Project_shptr& project)
+            : layers(parent, project), QDialog(parent), project(project)
 	{
 		setWindowTitle(tr("Edit layers"));
 		resize(500, 400);
@@ -42,11 +43,6 @@ namespace degate
 
 		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
 		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
-	}
-
-	LayersEditDialog::~LayersEditDialog()
-	{
-		
 	}
 
 	void LayersEditDialog::validate()

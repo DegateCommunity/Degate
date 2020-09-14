@@ -46,12 +46,12 @@ namespace degate
 		/**
 		 * Create the gate template selection dialog.
 		 *
-		 * @param project : the current active project.
 		 * @param parent : the parent of the dialog.
+		 * @param project : the current active project.
 		 * @param unique_selection : if true allow only one selection at a time.
 		 */
-		SelectGateTemplateDialog(Project_shptr project, QWidget* parent, bool unique_selection);
-		~SelectGateTemplateDialog();
+		SelectGateTemplateDialog(QWidget* parent, Project_shptr project, bool unique_selection);
+		~SelectGateTemplateDialog() override = default;
 
 		/**
 		 * Get the selected gate template.

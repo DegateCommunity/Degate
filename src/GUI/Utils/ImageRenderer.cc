@@ -29,7 +29,8 @@ namespace degate
 		QVector2D texCoord;
 	};
 
-	ImageRenderer::ImageRenderer(MemoryImage_shptr image, QWidget* parent, bool update_on_gl_initialize) : QOpenGLWidget(parent), image(image), update_on_gl_initialize(update_on_gl_initialize)
+    ImageRenderer::ImageRenderer(QWidget* parent, MemoryImage_shptr image, bool update_on_gl_initialize)
+            : QOpenGLWidget(parent), image(image), update_on_gl_initialize(update_on_gl_initialize)
 	{
 		assert(image != nullptr);
 

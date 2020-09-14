@@ -46,7 +46,7 @@ namespace degate
 		 *
 		 * @param parent : the parent widget pointer.
 		 */
-        WorkspaceVias(QWidget* parent);
+        explicit WorkspaceVias(QWidget* parent);
         ~WorkspaceVias();
 
         /**

@@ -56,7 +56,7 @@ namespace degate
 
     void TerminalWidget::process_finished()
     {
-        if (commands.size() <= 0)
+        if (commands.empty())
             return;
 
         start();
@@ -64,7 +64,7 @@ namespace degate
 
     void TerminalWidget::start()
     {
-        std::vector<std::string>::iterator pop = commands.begin();
+        auto pop = commands.begin();
         std::string temp = *pop;
         commands.erase(pop);
 
@@ -79,7 +79,8 @@ namespace degate
 
     // Dialog
 
-    TerminalDialog::TerminalDialog(QWidget *parent, std::vector<std::string> &commands) : terminal(parent, commands), button_box(QDialogButtonBox::Ok)
+    TerminalDialog::TerminalDialog(QWidget* parent, std::vector<std::string>& commands)
+            : terminal(parent, commands), button_box(QDialogButtonBox::Ok)
     {
         setWindowTitle(tr("Degate terminal"));
         resize(500, 400);
@@ -90,11 +91,6 @@ namespace degate
         setLayout(&layout);
 
         QObject::connect(&button_box, SIGNAL(accepted()), this, SLOT(finish()));
-    }
-
-    TerminalDialog::~TerminalDialog()
-    {
-
     }
 
     void TerminalDialog::start()

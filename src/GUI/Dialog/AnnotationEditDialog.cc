@@ -23,7 +23,8 @@
 
 namespace degate
 {
-	AnnotationEditDialog::AnnotationEditDialog(Annotation_shptr annotation, QWidget* parent) : QDialog(parent), fill_color(parent), frame_color(parent), annotation(annotation)
+    AnnotationEditDialog::AnnotationEditDialog(QWidget* parent, const Annotation_shptr& annotation)
+            : QDialog(parent), fill_color(parent), frame_color(parent), annotation(annotation)
 	{
 		text_label.setText(tr("Text:"));
 		text.setText(QString::fromStdString(annotation->get_name()));
@@ -50,11 +51,6 @@ namespace degate
 		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
 
 		setLayout(&layout);
-	}
-
-	AnnotationEditDialog::~AnnotationEditDialog()
-	{
-		
 	}
 
 	void AnnotationEditDialog::validate()

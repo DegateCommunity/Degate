@@ -53,18 +53,18 @@ namespace degate
 		/**
 		 * Create a port placement widget.
 		 *
+		 * @param parent : the parent of the widget.
 		 * @param project : the current active project.
 		 * @param gate : the gate template of the port template to place.
 		 * @param port : the gate template port to place.
-		 * @param parent : the parent of the widget.
 		 */
-		PortPlacementWidget(Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port, QWidget* parent);
-		~PortPlacementWidget();
+		PortPlacementWidget(QWidget* parent, Project_shptr project, const GateTemplate_shptr& gate, const GateTemplatePort_shptr& port);
+		~PortPlacementWidget() override;
 
 		/**
 	     * Update the screen.
 	     */
-		void update_screen();
+		void update_screen() override;
 
 		/**
 		 * Get the new port template position.
@@ -86,15 +86,15 @@ namespace degate
 
 	protected:
 		/* Qt OpenGL functions */
-		void initializeGL();
-		void paintGL();
-		void resizeGL(int w, int h);
+		void initializeGL() override;
+		void paintGL() override;
+		void resizeGL(int w, int h) override;
 
 		/* Qt mouse and keyboard events functions */
-		void mousePressEvent(QMouseEvent* event);
-		void mouseReleaseEvent(QMouseEvent* event);
-		void mouseMoveEvent(QMouseEvent* event);
-		void wheelEvent(QWheelEvent* event);
+		void mousePressEvent(QMouseEvent* event) override;
+		void mouseReleaseEvent(QMouseEvent* event) override;
+		void mouseMoveEvent(QMouseEvent* event) override;
+		void wheelEvent(QWheelEvent* event) override;
 
 	private:
 		/**

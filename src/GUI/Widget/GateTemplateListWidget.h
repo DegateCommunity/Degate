@@ -44,12 +44,12 @@ namespace degate
 		/**
 		 * Create a gate template list widget.
 		 *
-		 * @param project : the current active project.
 		 * @param parent : the parent of the widget.
+		 * @param project : the current active project.
 		 * @param unique_selection : if true allow only one selection at a time.
 		 */
-		GateTemplateListWidget(Project_shptr project, QWidget* parent, bool unique_selection = true);
-		~GateTemplateListWidget();
+		GateTemplateListWidget(QWidget* parent, Project_shptr project, bool unique_selection = true);
+		~GateTemplateListWidget() override = default;
 
 		/**
 		 * Get a vector of the selected gates template.

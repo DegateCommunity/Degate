@@ -53,10 +53,10 @@ namespace degate
 		/**
 		 * Specify the concerned layer to set the state of the button (if the layer already have a background image so the state will be true == green color).
 		 *
-		 * @param layer : the concerned layer.
 		 * @param parent : the parent of the button.
+		 * @param layer : the concerned layer.
 		 */
-		LayerBackgroundSelectionButton(Layer_shptr layer, QWidget* parent);
+		LayerBackgroundSelectionButton(QWidget* parent, const Layer_shptr& layer);
 
 		/**
 		 * Create a layer background selection button from another one (copy).
@@ -64,7 +64,7 @@ namespace degate
 		 * @param copy : the other layer background selection button to copy.
 		 */
 		LayerBackgroundSelectionButton(LayerBackgroundSelectionButton& copy);
-		~LayerBackgroundSelectionButton();
+		~LayerBackgroundSelectionButton() override = default;
 
 		/**
 		 * Was the button clicked and a new image selected.
@@ -136,7 +136,7 @@ namespace degate
 		 * @param copy : the other box to copy.
 		 */
 		LayerTypeSelectionBox(LayerTypeSelectionBox& copy);
-		~LayerTypeSelectionBox();
+		~LayerTypeSelectionBox() override = default;
 
 		/**
 		 * Get the layer type.
@@ -200,11 +200,11 @@ namespace degate
 		/**
 		 * Create a layers edit widget.
 		 *
-		 * @param project : the current active project.
 		 * @param parent : the parent of the widget.
+		 * @param project : the current active project.
 		 */
-		LayersEditWidget(Project_shptr project, QWidget* parent);
-		~LayersEditWidget();
+		LayersEditWidget(QWidget* parent, const Project_shptr& project);
+		~LayersEditWidget() override = default;
 		
 	public slots:
 		/**
@@ -239,7 +239,7 @@ namespace degate
 		 * @param row_index : the index of the row to move.
 		 * @param direction : the direction to move the row (@see RowMoveDirection).
 		 */
-		void move_row(unsigned row_index, RowMoveDirection direction);
+		void move_row(int row_index, RowMoveDirection direction);
 
 		Project_shptr project;
 		QGridLayout layout;

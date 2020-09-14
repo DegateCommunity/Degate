@@ -60,14 +60,14 @@ namespace degate
         /**
          * Create a new progress dialog.
          *
+         * @param parent : the parent widget of the dialog.
          * @param text : the default text to show.
          * @param progress_control : the progress control of the job (can be nullptr). It needs to control the whole
          * job.
-         * @param parent : the parent widget of the dialog.
          */
-        explicit ProgressDialog(const QString& text,
-                                const ProgressControl_shptr& progress_control,
-                                QWidget* parent = nullptr);
+        explicit ProgressDialog(QWidget* parent,
+                                const QString& text,
+                                const ProgressControl_shptr& progress_control);
         ~ProgressDialog() override;
 
         /**

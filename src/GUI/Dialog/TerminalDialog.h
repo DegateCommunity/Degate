@@ -50,7 +50,7 @@ namespace degate
          * @param commands : vector of commands (std::string type).
          */
         TerminalWidget(QWidget* parent, std::vector<std::string>& commands);
-        ~TerminalWidget();
+        ~TerminalWidget() override;
 
         /**
          * Get current available outputs (that are shown).
@@ -105,7 +105,7 @@ namespace degate
          * @param commands : vector of commands (std::string type).
          */
         TerminalDialog(QWidget* parent, std::vector<std::string> &commands);
-        ~TerminalDialog();
+        ~TerminalDialog() override = default;
 
         /**
          * Get current available outputs (that are shown).

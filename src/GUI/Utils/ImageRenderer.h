@@ -71,12 +71,12 @@ namespace degate
 		/**
 		 * Create the image renderer.
 		 *
-		 * @param image : the memory image to draw.
 		 * @param parent : the parent of the renderer.
+		 * @param image : the memory image to draw.
 		 * @param update_on_gl_initialize : if true call the update_screen function after initializeGL function.
 		 */
-		ImageRenderer(MemoryImage_shptr image, QWidget* parent, bool update_on_gl_initialize = true);
-		~ImageRenderer();
+		ImageRenderer(QWidget* parent, MemoryImage_shptr image, bool update_on_gl_initialize = true);
+		~ImageRenderer() override;
 
 		/**
 	     * Update the screen.
@@ -102,15 +102,15 @@ namespace degate
 		void cleanup();
 
 		/* Qt OpenGL functions */
-		virtual void initializeGL();
-		virtual void paintGL();
-		virtual void resizeGL(int w, int h);
+		void initializeGL() override;
+		void paintGL() override;
+		void resizeGL(int w, int h) override;
 
 		/* Qt mouse and keyboard events functions */
-		virtual void mousePressEvent(QMouseEvent* event);
-		virtual void mouseReleaseEvent(QMouseEvent* event);
-		virtual void mouseMoveEvent(QMouseEvent* event);
-		virtual void wheelEvent(QWheelEvent* event);
+		void mousePressEvent(QMouseEvent* event) override;
+		void mouseReleaseEvent(QMouseEvent* event) override;
+		void mouseMoveEvent(QMouseEvent* event) override;
+		void wheelEvent(QWheelEvent* event) override;
 
 		/**
 		 * Set the new projection matrix with ortho operation.

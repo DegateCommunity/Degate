@@ -218,9 +218,7 @@ namespace degate
         matching->set_orientations(orientations_list);
 
         // Start progress dialog
-        ProgressDialog progress_dialog(tr("Template matching"),
-                                       matching,
-                                       this->parentWidget());
+        ProgressDialog progress_dialog(this->parentWidget(), tr("Template matching"), matching);
 
         // Set the job to start the template matching (will run in another thread)
         progress_dialog.set_job([matching, this]()

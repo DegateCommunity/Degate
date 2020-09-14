@@ -45,8 +45,8 @@ namespace degate
 		 *
 		 * @param parent : the parent of the widget.
 		 */
-        GridPreferencesPage(QWidget* parent);
-        ~GridPreferencesPage() = default;
+        explicit GridPreferencesPage(QWidget* parent);
+        ~GridPreferencesPage() override = default;
 
         /**
          * Update preferences, the preferences editor will call this function to apply changes for every page.

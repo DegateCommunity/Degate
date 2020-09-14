@@ -55,8 +55,8 @@ namespace degate
 		 *
 		 * @param parent : the parent of the dialog.
 		 */
-		PreferencesEditor(QWidget* parent);
-		~PreferencesEditor();
+		explicit PreferencesEditor(QWidget* parent);
+		~PreferencesEditor() override;
 
 	public slots:
 		/**

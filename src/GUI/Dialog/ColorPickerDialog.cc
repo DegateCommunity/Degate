@@ -58,7 +58,8 @@ namespace degate
 
     // Color picker dialog
 
-    ColorPickerDialog::ColorPickerDialog(QWidget *parent, color_t color) : QDialog(parent), color_dialog(parent), color(color), button_box(QDialogButtonBox::Ok)
+    ColorPickerDialog::ColorPickerDialog(QWidget* parent, color_t color)
+            : QDialog(parent), color_dialog(parent), color(color), button_box(QDialogButtonBox::Ok)
     {
         // Alpha label
         aplha_label.setText(tr("Transparency:"));
@@ -98,11 +99,6 @@ namespace degate
         setLayout(&layout);
     }
 
-    ColorPickerDialog::~ColorPickerDialog()
-    {
-
-    }
-
     void ColorPickerDialog::on_slide_changed(int value)
     {
         color = MERGE_CHANNELS(qRed(color_dialog.currentColor().rgb()), qGreen(color_dialog.currentColor().rgb()), qBlue(color_dialog.currentColor().rgb()), alpha_slider.value());
@@ -133,7 +129,7 @@ namespace degate
         color_preview.setPalette(palette);
     }
 
-    color_t ColorPickerDialog::get_color()
+    color_t ColorPickerDialog::get_color() const
     {
         return color;
     }
@@ -141,17 +137,13 @@ namespace degate
 
     // Color selection button
 
-	ColorSelectionButton::ColorSelectionButton(QWidget* parent, const QString& text) : QPushButton(parent)
+    ColorSelectionButton::ColorSelectionButton(QWidget* parent, const QString& text) : QPushButton(parent)
 	{
 		setText(text);
         setFlat(true);
         setAutoFillBackground(true);
 
 		QObject::connect(this, SIGNAL(clicked()), this, SLOT(update_color()));
-	}
-
-	ColorSelectionButton::~ColorSelectionButton()
-	{
 	}
 
 	void ColorSelectionButton::set_color(const color_t& color)
@@ -164,7 +156,7 @@ namespace degate
         setPalette(palette);
 	}
 
-	color_t ColorSelectionButton::get_color()
+	color_t ColorSelectionButton::get_color() const
 	{
 		return color;
 	}

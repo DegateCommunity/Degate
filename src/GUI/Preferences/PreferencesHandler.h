@@ -82,7 +82,7 @@ namespace degate
 		 * Create the preferences handler.
 		 */
 		PreferencesHandler();
-		~PreferencesHandler();
+		~PreferencesHandler() override;
 
 		/**
 		 * Save preferences in the configuration file.

@@ -21,6 +21,8 @@
 
 #include "PortPlacementWidget.h"
 
+#include <utility>
+
 #define TEXT_PADDING 2
 
 namespace degate
@@ -32,8 +34,16 @@ namespace degate
 		float alpha;
 	};
 
-	PortPlacementWidget::PortPlacementWidget(Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port, QWidget* parent) : ImageRenderer(gate->get_image(Layer::LAYER_TYPE::LOGIC), parent, false), gate(gate), port(port), project(project), port_name_text(parent)
-	{
+    PortPlacementWidget::PortPlacementWidget(QWidget* parent,
+                                             Project_shptr project,
+                                             const GateTemplate_shptr& gate,
+                                             const GateTemplatePort_shptr& port)
+            : ImageRenderer(parent, gate->get_image(Layer::LAYER_TYPE::LOGIC), false),
+              gate(gate),
+              port(port),
+              project(std::move(project)),
+              port_name_text(parent)
+    {
 		layer = Layer::LAYER_TYPE::LOGIC;
 
 		pos = port->get_point();

@@ -46,13 +46,13 @@ namespace degate
 		/**
 		 * Create the dialog, to show it call the exec function.
 		 *
-		 * @param project : the current active project.
 		 * @param parent : the parent of the dialog.
+		 * @param project : the current active project.
 		 *
 		 * @see QDialog
 		 */
-		LayersEditDialog(Project_shptr project, QWidget* parent);
-		~LayersEditDialog();
+		LayersEditDialog(QWidget* parent, const Project_shptr& project);
+		~LayersEditDialog() override = default;
 
 	public slots:
 		/**

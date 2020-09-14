@@ -24,7 +24,8 @@
 namespace degate
 {
 
-    ViaEditDialog::ViaEditDialog(Via_shptr& via, QWidget *parent, Project_shptr& project): via(via), QDialog(parent), fill_color_edit(parent), project(project)
+    ViaEditDialog::ViaEditDialog(QWidget* parent, Via_shptr& via, Project_shptr& project)
+            : QDialog(parent), via(via), fill_color_edit(parent), project(project)
     {
         name_label.setText(tr("Name:"));
         name_edit.setText(QString::fromStdString(via->get_name()));
@@ -63,11 +64,6 @@ namespace degate
         QObject::connect(&direction_edit, SIGNAL(currentTextChanged(const QString&)), this, SLOT(direction_changed(void)));
 
         setLayout(&layout);
-    }
-
-    ViaEditDialog::~ViaEditDialog()
-    {
-
     }
 
     void ViaEditDialog::validate()

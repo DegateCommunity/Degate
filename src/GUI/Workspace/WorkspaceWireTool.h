@@ -49,7 +49,7 @@ namespace degate
          *
          * @param parent : the parent widget pointer.
          */
-        WorkspaceWireTool(QWidget* parent);
+        explicit WorkspaceWireTool(QWidget* parent);
         ~WorkspaceWireTool();
 
         /**

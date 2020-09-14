@@ -70,7 +70,7 @@ namespace degate
 		 * @param project : the current active project.
 		 */
 		GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project);
-		~GateEditEntityTab();
+		~GateEditEntityTab() override = default;
 
 	public slots:
 		/**
@@ -173,7 +173,7 @@ namespace degate
 		 * @param project : the current active project.
 		 */
 		GateEditBehaviourTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project, GateEditEntityTab& entity_tab);
-		~GateEditBehaviourTab();
+		~GateEditBehaviourTab() override = default;
 
 	public slots:
 		/**
@@ -281,7 +281,7 @@ namespace degate
 		 * @param project : the current active project.
 		 */
 		GateEditLayoutTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project);
-		~GateEditLayoutTab();
+		~GateEditLayoutTab() override;
 
 	public slots:
 		/**
@@ -336,7 +336,7 @@ namespace degate
 		 * @see QDialog
 		 */
 		GateEditDialog(QWidget* parent, GateTemplate_shptr gate, Project_shptr project);
-		~GateEditDialog();
+		~GateEditDialog() override = default;
 
 	public slots:
 		/**
@@ -384,13 +384,13 @@ namespace degate
 		 * @see QDialog
 		 */
 		GateInstanceEditDialog(QWidget* parent, Gate_shptr gate, Project_shptr project);
-		~GateInstanceEditDialog();
+		~GateInstanceEditDialog() override = default;
 
 	public slots:
 		/**
 		 * Save all changes.
 		 */
-		void validate();
+		void validate() override;
 
 	private:
 		Gate_shptr gate = nullptr;

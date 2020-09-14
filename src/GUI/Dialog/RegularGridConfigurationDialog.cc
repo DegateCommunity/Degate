@@ -77,8 +77,6 @@ namespace degate
         QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
     }
 
-    RegularGridConfigurationDialog::~RegularGridConfigurationDialog() = default;
-
     void RegularGridConfigurationDialog::validate()
     {
         auto horizontal_grid = project->get_regular_horizontal_grid();

@@ -52,15 +52,15 @@ namespace degate
          * @param parent : the parent of the dialog.
          * @param color : the initial color.
          */
-        ColorPickerDialog(QWidget* parent, color_t color = 0);
-        ~ColorPickerDialog();
+        explicit ColorPickerDialog(QWidget* parent, color_t color = 0);
+        ~ColorPickerDialog() override = default;
 
         /**
          * Get the picked color (call it after the dialog closed).
          *
          * @return Returns the picked color.
          */
-        color_t get_color();
+        color_t get_color() const;
 
     public slots:
         /**
@@ -113,8 +113,8 @@ namespace degate
 	     * @param parent : the widget parent.
 	     * @param text : the button text (default none).
 	     */
-		ColorSelectionButton(QWidget* parent = nullptr, const QString& text = QString());
-		~ColorSelectionButton();
+		explicit ColorSelectionButton(QWidget* parent = nullptr, const QString& text = QString());
+		~ColorSelectionButton() override = default;
 
 		/**
 		 * Set the button color.
@@ -128,7 +128,7 @@ namespace degate
 	     *
 	     * @return Returns the selected color.
 	     */
-	    color_t get_color();
+	    color_t get_color() const;
 
 	public slots:
 	    /**
@@ -137,7 +137,7 @@ namespace degate
 	    void update_color();
 
 	private:
-	    color_t color;
+	    color_t color{};
 	};
 }
 

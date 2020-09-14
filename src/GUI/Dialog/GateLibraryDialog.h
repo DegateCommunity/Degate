@@ -51,13 +51,13 @@ namespace degate
 		/**
 		 * Create the dialog, to show it call the exec function.
 		 *
-		 * @param project : the current active project.
 		 * @param parent : the parent of the dialog.
+		 * @param project : the current active project.
 		 *
 		 * @see QDialog
 		 */
-		GateLibraryDialog(Project_shptr project, QWidget* parent);
-		~GateLibraryDialog();
+		GateLibraryDialog(QWidget* parent, const Project_shptr& project);
+		~GateLibraryDialog() override = default;
 
 	public slots:
 		/**

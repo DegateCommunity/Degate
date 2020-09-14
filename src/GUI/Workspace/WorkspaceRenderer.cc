@@ -801,7 +801,7 @@ namespace degate
 				}
 				else if (Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(plo))
 				{
-					AnnotationEditDialog dialog(annotation, this);
+					AnnotationEditDialog dialog(this, annotation);
 					dialog.exec();
 
 					annotations.update();
@@ -811,7 +811,7 @@ namespace degate
 				}
                 else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(plo))
                 {
-                    EMarkerEditDialog dialog(emarker, this);
+                    EMarkerEditDialog dialog(this, emarker);
                     dialog.exec();
 
                     emarkers.update();
@@ -821,7 +821,7 @@ namespace degate
                 }
                 else if (Via_shptr via = std::dynamic_pointer_cast<Via>(plo))
                 {
-                    ViaEditDialog dialog(via, this, project);
+                    ViaEditDialog dialog(this, via, project);
                     dialog.exec();
 
                     vias.update();

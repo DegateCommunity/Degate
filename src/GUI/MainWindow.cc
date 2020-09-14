@@ -684,7 +684,7 @@ namespace degate
 
                 workspace->set_project(project);
 
-                LayersEditDialog layers_edit_dialog(project, this);
+                LayersEditDialog layers_edit_dialog(this, project);
                 layers_edit_dialog.exec();
 
                 on_menu_project_save();
@@ -708,7 +708,7 @@ namespace degate
 		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
 		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
-        AnnotationEditDialog dialog(new_annotation, this);
+        AnnotationEditDialog dialog(this, new_annotation);
         auto res = dialog.exec();
 
         if (res == QDialog::Accepted)
@@ -753,7 +753,7 @@ namespace degate
 		if (project == nullptr)
 			return;
 
-		LayersEditDialog layers_edit_dialog(project, this);
+		LayersEditDialog layers_edit_dialog(this, project);
 		layers_edit_dialog.exec();
 
         update_status_bar_layer_info();
@@ -852,7 +852,7 @@ namespace degate
 			return;
 		}
 
-		SelectGateTemplateDialog select_dialog(project, this, true);
+		SelectGateTemplateDialog select_dialog(this, project, true);
 		auto res = select_dialog.exec();
 
         if (res == QDialog::Rejected)
@@ -909,7 +909,7 @@ namespace degate
 		if (project == nullptr)
 			return;
 
-		GateLibraryDialog dialog(project, this);
+		GateLibraryDialog dialog(this, project);
 		dialog.exec();
 
 		workspace->update_screen();
@@ -944,7 +944,7 @@ namespace degate
 		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
 		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
-        AnnotationEditDialog dialog(new_annotation, this);
+        AnnotationEditDialog dialog(this, new_annotation);
         auto res = dialog.exec();
 
         if (res == QDialog::Accepted)
@@ -967,7 +967,7 @@ namespace degate
 
 		if (Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(workspace->get_selected_objects().back()))
 		{
-			AnnotationEditDialog dialog(o, this);
+			AnnotationEditDialog dialog(this, o);
 			dialog.exec();
 
 			workspace->update_screen();
@@ -983,7 +983,7 @@ namespace degate
 
         if (EMarker_shptr o = std::dynamic_pointer_cast<EMarker>(workspace->get_selected_objects().back()))
         {
-            EMarkerEditDialog dialog(o, this);
+            EMarkerEditDialog dialog(this, o);
             dialog.exec();
 
             workspace->update_screen();
@@ -999,7 +999,7 @@ namespace degate
 
         if (Via_shptr o = std::dynamic_pointer_cast<Via>(workspace->get_selected_objects().back()))
         {
-            ViaEditDialog dialog(o, this, project);
+            ViaEditDialog dialog(this, o, project);
             dialog.exec();
 
             workspace->update_screen();
@@ -1114,7 +1114,7 @@ namespace degate
         if (project == nullptr)
             return;
 
-        SelectGateTemplateDialog select_dialog(project, this, false);
+        SelectGateTemplateDialog select_dialog(this, project, false);
         auto res = select_dialog.exec();
 
         if (res == QDialog::Rejected)
@@ -1268,7 +1268,7 @@ namespace degate
 
 		ProjectImporter project_importer;
 
-        ProgressDialog progress_dialog(tr("Opening project"), nullptr, this);
+        ProgressDialog progress_dialog(this, tr("Opening project"), nullptr);
 
         std::string error_message;
         bool error = false;
@@ -1335,7 +1335,7 @@ namespace degate
                             project = std::make_shared<Project>(width, height, path, layer_count);
                             project->set_name(project_name);
 
-                            LayersEditDialog layers_edit_dialog(project, this);
+                            LayersEditDialog layers_edit_dialog(this, project);
                             layers_edit_dialog.exec();
 
                             on_menu_project_save();
@@ -1507,7 +1507,7 @@ namespace degate
         EMarker_shptr new_emarker = std::make_shared<EMarker>(context_menu_mouse_position.x(), context_menu_mouse_position.y());
         new_emarker->set_fill_color(project->get_default_color(DEFAULT_COLOR_EMARKER));
 
-        EMarkerEditDialog dialog(new_emarker, this);
+        EMarkerEditDialog dialog(this, new_emarker);
         auto res = dialog.exec();
 
         if (res == QDialog::Accepted)
@@ -1530,7 +1530,7 @@ namespace degate
         Via_shptr new_via = std::make_shared<Via>(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UNDEFINED);
         new_via->set_diameter(project->get_default_via_diameter());
 
-        ViaEditDialog dialog(new_via, this, project);
+        ViaEditDialog dialog(this, new_via, project);
         auto res = dialog.exec();
 
         if (res == QDialog::Accepted)
@@ -1636,7 +1636,7 @@ namespace degate
 
         if (modules_dialog == nullptr)
         {
-            modules_dialog = new ModulesDialog(project, this);
+            modules_dialog = new ModulesDialog(this, project);
             modules_dialog->setWindowFlags(Qt::Window);
 
             QObject::connect(modules_dialog,

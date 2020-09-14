@@ -30,7 +30,8 @@
 
 namespace degate
 {
-	LayerBackgroundSelectionButton::LayerBackgroundSelectionButton(Layer_shptr layer, QWidget* parent) : QPushButton(parent)
+    LayerBackgroundSelectionButton::LayerBackgroundSelectionButton(QWidget* parent, const Layer_shptr& layer)
+            : QPushButton(parent)
 	{
 		if (layer == nullptr)
 			change_button_color(false);
@@ -40,7 +41,8 @@ namespace degate
 		QObject::connect(this, SIGNAL(clicked()), this, SLOT(on_button_clicked()));
 	}
 
-	LayerBackgroundSelectionButton::LayerBackgroundSelectionButton(LayerBackgroundSelectionButton& copy) : QPushButton(copy.parentWidget())
+    LayerBackgroundSelectionButton::LayerBackgroundSelectionButton(LayerBackgroundSelectionButton& copy)
+            : QPushButton(copy.parentWidget())
 	{
 		change_button_color(copy.get_state());
 
@@ -52,11 +54,6 @@ namespace degate
 		image_path = copy.get_image_path();
 
 		QObject::connect(this, SIGNAL(clicked()), this, SLOT(on_button_clicked()));
-	}
-
-	LayerBackgroundSelectionButton::~LayerBackgroundSelectionButton()
-	{
-		
 	}
 
 	bool LayerBackgroundSelectionButton::has_new_image()
@@ -121,10 +118,6 @@ namespace degate
 		type = copy.get_layer_type();
 	}
 
-	LayerTypeSelectionBox::~LayerTypeSelectionBox()
-	{
-	}
-
 	Layer::LAYER_TYPE LayerTypeSelectionBox::get_layer_type()
 	{
         for (auto& e : types)
@@ -143,7 +136,8 @@ namespace degate
         setCurrentText(types[type]);
 	}
 
-	LayersEditWidget::LayersEditWidget(Project_shptr project, QWidget* parent) : QWidget(parent), project(project)
+    LayersEditWidget::LayersEditWidget(QWidget* parent, const Project_shptr& project)
+            : QWidget(parent), project(project)
 	{
 		// Label
 		layers_label.setText(tr("Layer config:"));
@@ -181,7 +175,7 @@ namespace degate
 		setLayout(&layout);
 
 		// Initialize the layer list
-		for (LogicModel::layer_collection::iterator iter = project->get_logic_model()->layers_begin(); iter != project->get_logic_model()->layers_end(); ++iter)
+		for (auto iter = project->get_logic_model()->layers_begin(); iter != project->get_logic_model()->layers_end(); ++iter)
 		{
 			Layer_shptr layer = *iter;
 
@@ -191,12 +185,12 @@ namespace degate
 			layers.insertRow(layers.rowCount());
 
 			// Id
-			QTableWidgetItem* id_item = new QTableWidgetItem(QString::number(layer->get_layer_id()));
+            auto id_item = new QTableWidgetItem(QString::number(layer->get_layer_id()));
 			id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 			layers.setItem(layers.rowCount() - 1, 0, id_item);
 
 			// Enabled
-			QTableWidgetItem* enabled = new QTableWidgetItem();
+            auto enabled = new QTableWidgetItem();
 			enabled->setCheckState(layer->is_enabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
 			layers.setItem(layers.rowCount() - 1, 1, enabled);
 
@@ -204,15 +198,15 @@ namespace degate
 			layers.setItem(layers.rowCount() - 1, 2, new QTableWidgetItem(QString::fromStdString(layer->get_description())));
 
 			// Type
-			LayerTypeSelectionBox* cb = new LayerTypeSelectionBox(layer->get_layer_type(), this);
+            auto cb = new LayerTypeSelectionBox(layer->get_layer_type(), this);
 			layers.setCellWidget(layers.rowCount() - 1, 3, cb);
 
 			// Background
-			LayerBackgroundSelectionButton* bb = new LayerBackgroundSelectionButton(layer, this);
+            auto bb = new LayerBackgroundSelectionButton(this, layer);
 			layers.setCellWidget(layers.rowCount() - 1, 4, bb);
 		}
 
-        QHeaderView* header_view = static_cast<QHeaderView*>(layers.horizontalHeader());
+        auto header_view = static_cast<QHeaderView*>(layers.horizontalHeader());
         header_view->setSectionResizeMode(QHeaderView::Stretch);
 
 		layers.resizeColumnsToContents();
@@ -224,21 +218,17 @@ namespace degate
 		QObject::connect(&layers_down_buttons, SIGNAL(clicked()), this, SLOT(on_layer_down()));
 	}
 
-	LayersEditWidget::~LayersEditWidget()
-	{
-	}
-
 	void LayersEditWidget::on_layer_add()
 	{
 		layers.insertRow(layers.rowCount());
 
 		// Id
-		QTableWidgetItem* id_item = new QTableWidgetItem("?");
+        auto id_item = new QTableWidgetItem("?");
 		id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 		layers.setItem(layers.rowCount() - 1, 0, id_item);
 
 		// Enabled
-		QTableWidgetItem* enabled = new QTableWidgetItem();
+        auto enabled = new QTableWidgetItem();
 		enabled->setCheckState(Qt::CheckState::Checked);
 		layers.setItem(layers.rowCount() - 1, 1, enabled);
 
@@ -246,11 +236,11 @@ namespace degate
 		layers.setItem(layers.rowCount() - 1, 2, new QTableWidgetItem(""));
 
 		// Type
-		LayerTypeSelectionBox* cb = new LayerTypeSelectionBox(Layer::UNDEFINED, this);
+		auto cb = new LayerTypeSelectionBox(Layer::UNDEFINED, this);
 		layers.setCellWidget(layers.rowCount() - 1, 3, cb);
 
 		// Background
-		LayerBackgroundSelectionButton* bb = new LayerBackgroundSelectionButton(nullptr, this);
+        auto bb = new LayerBackgroundSelectionButton(this, nullptr);
 		layers.setCellWidget(layers.rowCount() - 1, 4, bb);
 
 		layers.selectRow(layers.rowCount() - 1);
@@ -302,10 +292,10 @@ namespace degate
 			layer->set_description(layers.item(i, 2)->text().toStdString());
 
 			// Type
-			layer->set_layer_type(static_cast<LayerTypeSelectionBox*>(layers.cellWidget(i, 3))->get_layer_type());
+			layer->set_layer_type(dynamic_cast<LayerTypeSelectionBox*>(layers.cellWidget(i, 3))->get_layer_type());
 
 			// Image
-			LayerBackgroundSelectionButton* background = static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(i, 4));
+			LayerBackgroundSelectionButton* background = dynamic_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(i, 4));
 
 			try
 			{
@@ -362,7 +352,7 @@ namespace degate
 		}
 	}
 
-	void LayersEditWidget::move_row(unsigned row_index, RowMoveDirection direction)
+	void LayersEditWidget::move_row(int row_index, RowMoveDirection direction)
 	{
 		LayersEditRow source;
 		LayersEditRow destination;
@@ -376,15 +366,15 @@ namespace degate
 			source.id = layers.takeItem(row_index, 0);
 			source.enabled = layers.takeItem(row_index, 1);
 			source.description = layers.takeItem(row_index, 2);
-			source.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index, 3)));
-			source.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index, 4)));
+			source.type = new LayerTypeSelectionBox(*dynamic_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index, 3)));
+			source.background = new LayerBackgroundSelectionButton(*dynamic_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index, 4)));
 
 			// Get destination
 			destination.id = layers.takeItem(row_index - 1, 0);
 			destination.enabled = layers.takeItem(row_index - 1, 1);
 			destination.description = layers.takeItem(row_index - 1, 2);
-			destination.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index - 1, 3)));
-			destination.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index - 1, 4)));
+			destination.type = new LayerTypeSelectionBox(*dynamic_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index - 1, 3)));
+			destination.background = new LayerBackgroundSelectionButton(*dynamic_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index - 1, 4)));
 
 			
 			// Set new source
@@ -412,15 +402,15 @@ namespace degate
 			source.id = layers.takeItem(row_index, 0);
 			source.enabled = layers.takeItem(row_index, 1);
 			source.description = layers.takeItem(row_index, 2);
-			source.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index, 3)));
-			source.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index, 4)));
+			source.type = new LayerTypeSelectionBox(*dynamic_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index, 3)));
+			source.background = new LayerBackgroundSelectionButton(*dynamic_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index, 4)));
 
 			// Get destination
 			destination.id = layers.takeItem(row_index + 1, 0);
 			destination.enabled = layers.takeItem(row_index + 1, 1);
 			destination.description = layers.takeItem(row_index + 1, 2);
-			destination.type = new LayerTypeSelectionBox(*static_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index + 1, 3)));
-			destination.background = new LayerBackgroundSelectionButton(*static_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index + 1, 4)));
+			destination.type = new LayerTypeSelectionBox(*dynamic_cast<LayerTypeSelectionBox*>(layers.cellWidget(row_index + 1, 3)));
+			destination.background = new LayerBackgroundSelectionButton(*dynamic_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(row_index + 1, 4)));
 
 			
 			// Set new source

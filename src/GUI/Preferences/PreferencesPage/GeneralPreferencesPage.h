@@ -47,8 +47,8 @@ namespace degate
 		 *
 		 * @param parent : the parent of the widget.
 		 */
-        GeneralPreferencesPage(QWidget* parent);
-        ~GeneralPreferencesPage() = default;
+        explicit GeneralPreferencesPage(QWidget* parent);
+        ~GeneralPreferencesPage() override = default;
 
         /**
          * Update preferences, the preferences editor will call this function to apply changes for every page.

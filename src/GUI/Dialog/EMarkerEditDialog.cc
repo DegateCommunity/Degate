@@ -24,7 +24,8 @@
 namespace degate
 {
 
-    EMarkerEditDialog::EMarkerEditDialog(EMarker_shptr &emarker, QWidget *parent) : emarker(emarker), QDialog(parent), fill_color(parent)
+    EMarkerEditDialog::EMarkerEditDialog(QWidget* parent, EMarker_shptr& emarker)
+            : QDialog(parent), emarker(emarker), fill_color(parent)
     {
         // Name
         name_label.setText(tr("Name:"));

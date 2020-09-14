@@ -23,7 +23,8 @@
 
 namespace degate
 {
-	NewProjectDialog::NewProjectDialog(QWidget* parent) : QDialog(parent)
+    NewProjectDialog::NewProjectDialog(QWidget* parent)
+            : QDialog(parent)
 	{
 		project_label.setText(tr("Project name:"));
 		layer_label.setText(tr("Layer count:"));
@@ -54,11 +55,6 @@ namespace degate
 		QObject::connect(&validate_button, SIGNAL(pressed()), this, SLOT(accept()));
 
 		setLayout(&main_layout);
-	}
-
-	NewProjectDialog::~NewProjectDialog()
-	{
-
 	}
 
 	std::string NewProjectDialog::get_project_name()

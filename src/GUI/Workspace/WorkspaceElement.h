@@ -52,7 +52,7 @@ namespace degate
 		 *
 		 * @param parent : the widget parent pointer.
 		 */
-		WorkspaceElement(QWidget* parent);
+		explicit WorkspaceElement(QWidget* parent);
 		~WorkspaceElement();
 
 		/**

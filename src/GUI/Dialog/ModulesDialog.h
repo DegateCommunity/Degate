@@ -43,7 +43,7 @@ namespace degate
          * @param project : the current project.
          * @param parent : the parent widget.
          */
-        ModulesDialog(Project_shptr project, QWidget* parent);
+        ModulesDialog(QWidget* parent, Project_shptr project);
         ~ModulesDialog() override = default;
 
         /**

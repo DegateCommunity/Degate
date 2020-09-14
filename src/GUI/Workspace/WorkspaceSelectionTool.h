@@ -51,7 +51,7 @@ namespace degate
 		 *
 		 * @param parent : the parent widget pointer.
 		 */
-		WorkspaceSelectionTool(QWidget* parent);
+		explicit WorkspaceSelectionTool(QWidget* parent);
 		~WorkspaceSelectionTool();
 
 		/**

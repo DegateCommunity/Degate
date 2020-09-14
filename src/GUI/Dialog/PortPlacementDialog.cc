@@ -23,11 +23,11 @@
 
 namespace degate
 {
-	PortPlacementDialog::PortPlacementDialog(QWidget* parent, Project_shptr project, GateTemplate_shptr gate, GateTemplatePort_shptr port) : QDialog(parent), 
-																																			 gate(gate), 
-																																			 port(port), 
-																																			 project(project), 
-																																			 placement(project, gate, port, this)
+    PortPlacementDialog::PortPlacementDialog(QWidget* parent,
+                                             const Project_shptr& project,
+                                             const GateTemplate_shptr& gate,
+                                             const GateTemplatePort_shptr& port)
+            : QDialog(parent), gate(gate), port(port), project(project), placement(this, project, gate, port)
 	{
 	    setWindowTitle(tr("Place/move the port"));
 

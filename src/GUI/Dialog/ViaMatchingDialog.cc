@@ -82,9 +82,7 @@ namespace degate
         via_matching->set_threshold_match(threshold_edit.get_value());
 
         // Start progress dialog
-        ProgressDialog progress_dialog(tr("Via matching"),
-                                       via_matching,
-                                       this->parentWidget());
+        ProgressDialog progress_dialog(this->parentWidget(), tr("Via matching"), via_matching);
 
         // Set the job to start the via matching (will run in another thread)
         progress_dialog.set_job([via_matching, this]()

@@ -23,7 +23,8 @@
 
 namespace degate
 {
-	GateLibraryDialog::GateLibraryDialog(Project_shptr project, QWidget* parent) : QDialog(parent), list(project, parent, false), project(project)
+    GateLibraryDialog::GateLibraryDialog(QWidget* parent, const Project_shptr& project)
+            : QDialog(parent), list(parent, project, false), project(project)
 	{
 		setWindowTitle(tr("Gate library"));
 		resize(300, 400);
@@ -46,11 +47,6 @@ namespace degate
 		QObject::connect(&edit_gate_button, SIGNAL(clicked()), this, SLOT(on_gate_edit_button()));
         QObject::connect(&remove_gate_button, SIGNAL(clicked()), this, SLOT(on_gate_remove_button()));
 		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(close()));
-	}
-
-	GateLibraryDialog::~GateLibraryDialog()
-	{
-		
 	}
 
 	void GateLibraryDialog::on_gate_edit_button()
@@ -91,7 +87,7 @@ namespace degate
 
             // Search every gate instance
             std::vector<Gate_shptr> delete_list;
-            for (LogicModel::gate_collection::iterator iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
+            for (auto iter = project->get_logic_model()->gates_begin(); iter != project->get_logic_model()->gates_end(); ++iter)
             {
                 if (iter->second->get_gate_template() == e)
                     delete_list.push_back(iter->second);
