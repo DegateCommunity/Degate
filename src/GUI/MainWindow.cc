@@ -23,6 +23,10 @@
 #include "GUI/Dialog/ProgressDialog.h"
 #include "GUI/Dialog/AboutDialog.h"
 
+#ifdef SYS_WINDOWS
+#include <QtPlatformHeaders/QWindowsWindowFunctions>
+#endif
+
 #include <memory>
 
 #define SECOND(a) a * 1000
@@ -161,6 +165,12 @@ namespace degate
         snap_to_grid_view_action->setChecked(snap_to_grid);
         QObject::connect(snap_to_grid_view_action, SIGNAL(toggled(bool)), this, SLOT(on_menu_view_snap_to_grid(bool)));
 
+        view_menu->addSeparator();
+
+        fullscreen_view_action = view_menu->addAction("");
+        fullscreen_view_action->setCheckable(true);
+        fullscreen_view_action->setShortcut(Qt::Key_F11);
+        QObject::connect(fullscreen_view_action, SIGNAL(toggled(bool)), this, SLOT(on_menu_view_fullscreen(bool)));
 
 
         // Layer menu
@@ -339,6 +349,13 @@ namespace degate
         auto_save_timer.start();
 
         QObject::connect(&auto_save_timer, SIGNAL(timeout()), this, SLOT(auto_save()));
+
+        // Workaround for a bug on Windows that occurs when using QOpenGLWidget + fullscreen mode.
+        // See: https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows.
+        #ifdef SYS_WINDOWS
+            this->topLevelWidget()->winId();
+            QWindowsWindowFunctions::setHasBorderInFullScreen(this->topLevelWidget()->windowHandle(), true);
+        #endif
 	}
 
 	MainWindow::~MainWindow()
@@ -425,6 +442,7 @@ namespace degate
         grid_configuration_view_action->setText(tr("Grid configuration"));
         show_grid_view_action->setText(tr("Show grid"));
         snap_to_grid_view_action->setText(tr("Snap to grid"));
+        fullscreen_view_action->setText(tr("Fullscreen"));
 
         // Layer menu
         layer_menu->setTitle(tr("Layer"));
@@ -720,6 +738,14 @@ namespace degate
         new_preferences.snap_to_grid = value;
 
 	    PREFERENCES_HANDLER.update(new_preferences);
+    }
+
+    void MainWindow::on_menu_view_fullscreen(bool value)
+    {
+	    if (value)
+            showFullScreen();
+	    else
+	        showNormal();
     }
 
 	void MainWindow::on_menu_layer_edit()

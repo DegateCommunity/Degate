@@ -122,7 +122,9 @@ void LogicModelImporter::parse_logic_model_element(QDomElement const lm_elem,
 	if (!modules_elem.isNull())
 	{
 		std::list<Module_shptr> mods = parse_modules_element(modules_elem, lmodel);
-		//assert(mods.size() == 1); //Todo : why problem with legic prime subproject loading ??
+
+		assert(mods.size() == 1);
+
 		lmodel->set_main_module(mods.front());
 	}
 }

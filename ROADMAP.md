@@ -29,6 +29,7 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [ ] Bug fixes.
 - [x] Module dialog.
 - [x] New option to break interconnexions (isolation).
+- [x] Full-screen mode.
 
 ## For 2.0.0-alpha.2 *[**current**]*:
 

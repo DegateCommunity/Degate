@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added proper top menu options for many dialogs.
 - Added modules support.
 - Added the possibility to isolate/break connections of any connectable object.
+- Added a full-screen mode.
 
 ### Changed
 - Updated the roadmap.

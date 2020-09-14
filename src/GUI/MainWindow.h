@@ -157,6 +157,11 @@ namespace degate
 		 */
 		void on_menu_view_snap_to_grid(bool value);
 
+		/**
+		 * Enable/disable fullscreen mode.
+		 */
+		void on_menu_view_fullscreen(bool value);
+
 
 		/* Layer menu */
 
@@ -414,6 +419,7 @@ namespace degate
         QAction* grid_configuration_view_action;
         QAction* show_grid_view_action;
         QAction* snap_to_grid_view_action;
+        QAction* fullscreen_view_action;
 
         // Layer menu
         QMenu* layer_menu;
