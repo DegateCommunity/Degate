@@ -19,6 +19,8 @@
  *
  */
 
+#define _CRT_SECURE_NO_WARNINGS 1
+
 #include "Core/Configuration.h"
 #include "Core/Utils/FileSystem.h"
 

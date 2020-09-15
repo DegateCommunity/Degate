@@ -223,6 +223,7 @@
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="336"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="668"/>
         <source>Compile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -233,11 +234,11 @@
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="380"/>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="642"/>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="652"/>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="658"/>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="664"/>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="670"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="679"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="689"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="695"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="701"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="707"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
@@ -257,39 +258,44 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="552"/>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="587"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="565"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="605"/>
         <source>Select folder to save in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="638"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="664"/>
+        <source>Compile and Run</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="675"/>
         <source>You must install %1 to compile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="648"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="685"/>
         <source>You must install %1 and %2 to compile and run.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="649"/>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="650"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="686"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="687"/>
         <source>and</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="659"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="696"/>
         <source>You must write the Verilog code for the standard cell&apos;s behaviour first.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="664"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="701"/>
         <source>You need to add code before compiling.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="671"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="708"/>
         <source>You can&apos;t compile or run VHDL code within Degate, use Verilog language instead.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -297,22 +303,22 @@
 <context>
     <name>degate::GateEditDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="738"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="775"/>
         <source>Edit gate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="741"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="778"/>
         <source>Entity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="742"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="779"/>
         <source>Behaviour</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="743"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="780"/>
         <source>Layout</source>
         <translation type="unfinished"></translation>
     </message>
@@ -554,17 +560,17 @@
 <context>
     <name>degate::GateEditLayoutTab</name>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="682"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="719"/>
         <source>Metal:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="691"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="728"/>
         <source>Logic:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="700"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="737"/>
         <source>Transistor:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -572,57 +578,57 @@
 <context>
     <name>degate::GateInstanceEditDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="765"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="802"/>
         <source>Edit gate instance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="768"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="805"/>
         <source>Gate instance edition:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="771"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="808"/>
         <source>Undefined</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="772"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="809"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="773"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="810"/>
         <source>Flipped up and down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="774"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="811"/>
         <source>Flipped left and right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="775"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="812"/>
         <source>Flipped both</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="777"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="814"/>
         <source>Orientation:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="785"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="822"/>
         <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="789"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="826"/>
         <source>Description:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="799"/>
+        <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="836"/>
         <source>Gate template edition:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2084,7 +2090,7 @@ Those settings are independent (per project).</source>
 <context>
     <name>degate::TerminalDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/TerminalDialog.cc" line="85"/>
+        <location filename="../../src/GUI/Dialog/TerminalDialog.cc" line="92"/>
         <source>Degate terminal</source>
         <translation type="unfinished"></translation>
     </message>

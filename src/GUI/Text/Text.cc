@@ -696,28 +696,28 @@ namespace degate
         QTextStream font_config_file_stream(&font_config_file);
         font_config_file_stream.setCodec("UTF-8");
 
-        font_config_file_stream << font_data->font.font_size << endl;
-        font_config_file_stream << QString::fromStdString(font_data->font.font_family_name) << endl;
-        font_config_file_stream << font_data->default_glyph_height << endl;
-        font_config_file_stream << font_data->glyph_width << endl;
-        font_config_file_stream << font_data->glyph_height << endl;
-        font_config_file_stream << font_data->atlas_width << endl;
-        font_config_file_stream << font_data->atlas_height << endl;
-        font_config_file_stream << font_data->atlas_glyph_per_line << endl;
-        font_config_file_stream << font_data->atlas_glyph_per_column << endl;
-        font_config_file_stream << font_data->glyph_per_atlas << endl;
-        font_config_file_stream << font_data->padding << endl;
-        font_config_file_stream << font_data->spread << endl;
-        font_config_file_stream << font_data->scale << endl;
-        font_config_file_stream << font_data->glyphs.size() << endl;
+        font_config_file_stream << font_data->font.font_size << Qt::endl;
+        font_config_file_stream << QString::fromStdString(font_data->font.font_family_name) << Qt::endl;
+        font_config_file_stream << font_data->default_glyph_height << Qt::endl;
+        font_config_file_stream << font_data->glyph_width << Qt::endl;
+        font_config_file_stream << font_data->glyph_height << Qt::endl;
+        font_config_file_stream << font_data->atlas_width << Qt::endl;
+        font_config_file_stream << font_data->atlas_height << Qt::endl;
+        font_config_file_stream << font_data->atlas_glyph_per_line << Qt::endl;
+        font_config_file_stream << font_data->atlas_glyph_per_column << Qt::endl;
+        font_config_file_stream << font_data->glyph_per_atlas << Qt::endl;
+        font_config_file_stream << font_data->padding << Qt::endl;
+        font_config_file_stream << font_data->spread << Qt::endl;
+        font_config_file_stream << font_data->scale << Qt::endl;
+        font_config_file_stream << font_data->glyphs.size() << Qt::endl;
 
         for (auto& glyph_data : font_data->glyphs)
         {
-            font_config_file_stream << glyph_data->glyph << endl;
-            font_config_file_stream << glyph_data->char_width << endl;
-            font_config_file_stream << glyph_data->char_advance << endl;
-            font_config_file_stream << glyph_data->atlas_position << endl;
-            font_config_file_stream << glyph_data->atlas_index << endl;
+            font_config_file_stream.operator<<(glyph_data->glyph) << Qt::endl;
+            font_config_file_stream.operator<<(glyph_data->char_width) << Qt::endl;
+            font_config_file_stream.operator<<(glyph_data->char_advance) << Qt::endl;
+            font_config_file_stream.operator<<(glyph_data->atlas_position) << Qt::endl;
+            font_config_file_stream.operator<<(glyph_data->atlas_index) << Qt::endl;
         }
 
         font_config_file.close();

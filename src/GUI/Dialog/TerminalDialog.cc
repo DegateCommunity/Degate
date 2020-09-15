@@ -27,7 +27,8 @@ namespace degate
 
     // Widget
 
-    TerminalWidget::TerminalWidget(QWidget *parent, std::vector<std::string>& commands) : process(parent), commands(commands)
+    TerminalWidget::TerminalWidget(QWidget* parent, TerminalCommands& commands)
+            : process(parent), commands(commands)
     {
         terminal.setReadOnly(true);
         layout.addWidget(&terminal);
@@ -65,10 +66,16 @@ namespace degate
     void TerminalWidget::start()
     {
         auto pop = commands.begin();
-        std::string temp = *pop;
+        TerminalCommand command = *pop;
         commands.erase(pop);
 
-        process.start(QString::fromStdString(temp));
+        // Print command.
+        QString string_command = "> " + command.program;
+        for (auto& item : command.arguments)
+            string_command += " " + item;
+        terminal.append(string_command + "\n");
+
+        process.start(command.program, command.arguments);
     }
 
     std::string TerminalWidget::get_output()
@@ -79,7 +86,7 @@ namespace degate
 
     // Dialog
 
-    TerminalDialog::TerminalDialog(QWidget* parent, std::vector<std::string>& commands)
+    TerminalDialog::TerminalDialog(QWidget* parent, TerminalCommands& commands)
             : terminal(parent, commands), button_box(QDialogButtonBox::Ok)
     {
         setWindowTitle(tr("Degate terminal"));

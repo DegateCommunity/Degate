@@ -469,7 +469,10 @@ namespace degate
 
             degate::write_string_to_file(in_file, text_area.toPlainText().toStdString());
 
-            std::vector<std::string> cmd{"iverilog -o \"" + out_file + "\" \"" + in_file + "\""};
+            TerminalCommands cmd;
+            QStringList args;
+            args << "-v" << "-o" << QString::fromStdString(out_file) << QString::fromStdString(in_file);
+            cmd.push_back({"iverilog", args});
 
             TerminalDialog terminal(this, cmd);
             terminal.start();
@@ -506,11 +509,21 @@ namespace degate
             write_string_to_file(tb_file, text_area.toPlainText().toStdString());
             write_string_to_file(file_list_file, in_file + "\n");
 
-            std::vector<std::string> cmd{
-                    "iverilog " + std::string("-v ") + "-o " + out_file + " -f " + file_list_file + " " + tb_file,
-                    "vvp \"" + out_file + "\"",
-                    "gtkwave test.vcd" //WARNING: the path "test.vcd" to the simulation file (that gtkwave will use) is hardcoded in the VerilogTBCodeTemplateGenerator (included in the generation code with tag "$dumpfile("test.vcd");")
-            };
+            TerminalCommands cmd;
+            QStringList args;
+
+            args << "-v" << "-o" << QString::fromStdString(out_file) << "-f" << QString::fromStdString(file_list_file) << QString::fromStdString(tb_file);
+            cmd.push_back({"iverilog", args});
+            args.clear();
+
+            args << QString::fromStdString(out_file);
+            cmd.push_back({"vvp", args});
+            args.clear();
+
+            //WARNING: the path "test.vcd" to the simulation file (that gtkwave will use) is hardcoded in the VerilogTBCodeTemplateGenerator (included in the generation code with tag "$dumpfile("test.vcd");")
+            args << "test.vcd";
+            cmd.push_back({"gtkwave", args});
+            args.clear();
 
             TerminalDialog terminal(this, cmd);
             terminal.start();
@@ -560,7 +573,12 @@ namespace degate
 
             degate::write_string_to_file(in_file, text_area.toPlainText().toStdString());
 
-            std::vector<std::string> cmd{"iverilog -o \"" + out_file + "\" \"" + in_file + "\""};
+            TerminalCommands cmd;
+            QStringList args;
+
+            args << "-v" << "-o" << QString::fromStdString(out_file) << QString::fromStdString(in_file);
+            cmd.push_back({"iverilog", args});
+            args.clear();
 
             TerminalDialog terminal(this, cmd);
             terminal.start();
@@ -599,11 +617,21 @@ namespace degate
             write_string_to_file(tb_file, text_area.toPlainText().toStdString());
             write_string_to_file(file_list_file, in_file + "\n");
 
-            std::vector<std::string> cmd{
-                    "iverilog " + std::string("-v ") + "-o " + out_file + " -f " + file_list_file + " " + tb_file,
-                    "vvp \"" + out_file + "\"",
-                    "gtkwave test.vcd" //WARNING: the path "test.vcd" to the simulation file (that gtkwave will use) is hardcoded in the VerilogTBCodeTemplateGenerator (included in the generation code with tag "$dumpfile("test.vcd");")
-            };
+            TerminalCommands cmd;
+            QStringList args;
+
+            args << "-v" << "-o" << QString::fromStdString(out_file) << "-f" << QString::fromStdString(file_list_file) << QString::fromStdString(tb_file);
+            cmd.push_back({"iverilog", args});
+            args.clear();
+
+            args << QString::fromStdString(out_file);
+            cmd.push_back({"vvp", args});
+            args.clear();
+
+            //WARNING: the path "test.vcd" to the simulation file (that gtkwave will use) is hardcoded in the VerilogTBCodeTemplateGenerator (included in the generation code with tag "$dumpfile("test.vcd");")
+            args << "test.vcd";
+            cmd.push_back({"gtkwave", args});
+            args.clear();
 
             TerminalDialog terminal(this, cmd);
             terminal.start();
@@ -622,13 +650,22 @@ namespace degate
 
         if (languages[language_selector.currentText()] == GateTemplate::TEXT)
         {
-            compile_button.setEnabled(false);
-            compile_save_button.setEnabled(false);
+            compile_button.setDisabled(true);
+            compile_save_button.setDisabled(true);
         }
         else
         {
-            compile_button.setEnabled(true);
-            compile_save_button.setEnabled(true);
+            compile_button.setDisabled(false);
+            compile_save_button.setDisabled(false);
+        }
+
+        if (languages[language_selector.currentText()] == GateTemplate::VERILOG_TESTBENCH)
+        {
+            compile_button.setText(tr("Compile and Run"));
+        }
+        else
+        {
+            compile_button.setText(tr("Compile"));
         }
     }
 

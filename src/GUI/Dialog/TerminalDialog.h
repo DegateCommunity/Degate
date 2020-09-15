@@ -35,6 +35,27 @@
 namespace degate
 {
     /**
+     * @struct TerminalCommand
+     * @brief Define a terminal command to use with a TerminalWidget.
+     *
+     * @see TerminalWidget
+     * @see TerminalDialog
+     */
+    struct TerminalCommand
+    {
+        QString program;       /**< The program name to run */
+        QStringList arguments; /**< The program arguments */
+    };
+
+    /**
+     * Define a list of terminal commands.
+     *
+     * @see TerminalWidget
+     * @see TerminalDialog
+     */
+    typedef std::vector<TerminalCommand> TerminalCommands;
+
+    /**
      * @class TerminalWidget
      * @brief Run commands and show outputs in the widget.
      */
@@ -47,9 +68,9 @@ namespace degate
          * Create the terminal widget.
          *
          * @param parent : the parent of the widget.
-         * @param commands : vector of commands (std::string type).
+         * @param commands : terminal commands (@see TerminalCommands).
          */
-        TerminalWidget(QWidget* parent, std::vector<std::string>& commands);
+        TerminalWidget(QWidget* parent, TerminalCommands& commands);
         ~TerminalWidget() override;
 
         /**
@@ -82,7 +103,7 @@ namespace degate
         void process_finished();
 
     private:
-        std::vector<std::string>& commands;
+        TerminalCommands& commands;
         QProcess process;
         QVBoxLayout layout;
 
@@ -102,9 +123,9 @@ namespace degate
          * Create the terminal dialog.
          *
          * @param parent : the parent of the widget.
-         * @param commands : vector of commands (std::string type).
+         * @param commands : terminal commands (@see TerminalCommands).
          */
-        TerminalDialog(QWidget* parent, std::vector<std::string> &commands);
+        TerminalDialog(QWidget* parent, TerminalCommands& commands);
         ~TerminalDialog() override = default;
 
         /**

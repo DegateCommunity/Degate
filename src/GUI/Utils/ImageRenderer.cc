@@ -287,7 +287,7 @@ namespace degate
 	{
 		QOpenGLWidget::wheelEvent(event);
 
-		event->delta() < 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
+		event->angleDelta().y() < 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
 
 		event->accept();
 
