@@ -47,5 +47,7 @@ int IrregularGrid::snap_to_grid(int pos) const
 
 		// should not reach this line
 		assert(1 == 0);
+
+		return pos;
 	}
 }

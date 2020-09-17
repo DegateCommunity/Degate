@@ -260,7 +260,7 @@ Gate::port_const_iterator Gate::ports_end() const
 }
 
 
-unsigned int Gate::get_relative_x_position_within_gate(float rel_x) const
+float Gate::get_relative_x_position_within_gate(float rel_x) const
 {
 	switch (orientation)
 	{
@@ -278,7 +278,7 @@ unsigned int Gate::get_relative_x_position_within_gate(float rel_x) const
 }
 
 
-unsigned int Gate::get_relative_y_position_within_gate(float rel_y) const
+float Gate::get_relative_y_position_within_gate(float rel_y) const
 {
 	switch (orientation)
 	{

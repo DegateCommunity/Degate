@@ -24,7 +24,7 @@
 namespace degate
 {
     LayersEditDialog::LayersEditDialog(QWidget* parent, const Project_shptr& project)
-            : layers(parent, project), QDialog(parent), project(project)
+            : QDialog(parent), project(project), layers(parent, project)
 	{
 		setWindowTitle(tr("Edit layers"));
 		resize(500, 400);

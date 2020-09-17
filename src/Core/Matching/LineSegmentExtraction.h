@@ -241,7 +241,7 @@ namespace degate
 		           unsigned int search_radius_across)
 		{
 			unsigned int counter = 0;
-			unsigned int max_rounds = lines.size();
+			unsigned int max_rounds = static_cast<unsigned int>(lines.size());
 			int distance = 1;
 			int max_distance = search_radius_along;
 			bool running = lines.size() > 0;

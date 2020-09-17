@@ -24,7 +24,7 @@
 namespace degate
 {
     AnnotationEditDialog::AnnotationEditDialog(QWidget* parent, const Annotation_shptr& annotation)
-            : QDialog(parent), fill_color(parent), frame_color(parent), annotation(annotation)
+            : QDialog(parent), annotation(annotation), fill_color(parent), frame_color(parent)
 	{
 		text_label.setText(tr("Text:"));
 		text.setText(QString::fromStdString(annotation->get_name()));

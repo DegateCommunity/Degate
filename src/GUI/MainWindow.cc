@@ -563,7 +563,7 @@ namespace degate
         {
             open_project(dir.toStdString());
         }
-        catch (const std::exception& ex)
+        catch (const std::exception&)
         {
             return;
         }
@@ -1359,7 +1359,7 @@ namespace degate
                 project = imported_project;
             }
         }
-        catch (const std::exception& e)
+        catch (const std::exception&)
         {
             QMessageBox::warning(this,
                                  tr("Project/Subproject import failed"),

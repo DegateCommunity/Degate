@@ -118,16 +118,16 @@ namespace degate
 			create_gate(iter->second, index);
 			iter->second->set_index(index);
 
-            gate_template_name_text_size += iter->second->get_gate_template()->get_name().length();
+            gate_template_name_text_size += static_cast<unsigned int>(iter->second->get_gate_template()->get_name().length());
 
             if (!iter->second->get_name().empty())
-                gate_template_name_text_size += iter->second->get_name().length() + 3;
+                gate_template_name_text_size += static_cast<unsigned int>(iter->second->get_name().length()) + 3;
 
             ports_count += iter->second->get_ports_number();
 
 			for (Gate::port_iterator port_iter = iter->second->ports_begin(); port_iter != iter->second->ports_end(); ++port_iter)
 			{
-                port_name_text_size += (*port_iter)->get_name().length();
+                port_name_text_size += static_cast<unsigned int>((*port_iter)->get_name().length());
 			}
 			
 			index++;
@@ -166,10 +166,10 @@ namespace degate
 
 			create_ports(iter->second, ports_index);
 
-            gate_template_name_text_offset += iter->second->get_gate_template()->get_name().length();
+            gate_template_name_text_offset += static_cast<unsigned int>(iter->second->get_gate_template()->get_name().length());
 
             if (!iter->second->get_name().empty())
-                gate_template_name_text_offset += iter->second->get_name().length() + 3;
+                gate_template_name_text_offset += static_cast<unsigned int>(iter->second->get_name().length()) + 3;
 
 			ports_index += iter->second->get_ports_number();
 
@@ -187,7 +187,7 @@ namespace degate
                                             true,
                                             false);
 
-                port_name_text_offset += (*port_iter)->get_name().length();
+                port_name_text_offset += static_cast<unsigned int>((*port_iter)->get_name().length());
 			}
 		}
 	}

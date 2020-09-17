@@ -43,7 +43,7 @@ std::vector<std::string> degate::tokenize(std::string const& str)
 	{
 		if (item[0] == '"')
 		{
-			int last_item_position = item.length() - 1;
+			int last_item_position = static_cast<int>(item.length()) - 1;
 			if (item[last_item_position] != '"')
 			{
 				// read the rest of the double-quoted item

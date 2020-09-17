@@ -474,7 +474,7 @@ namespace degate
 		 */
 		inline unsigned get_gates_count()
 		{
-			return gates.size();
+			return static_cast<unsigned int>(gates.size());
 		}
 
 		/**
@@ -493,7 +493,7 @@ namespace degate
 		 */
 		inline unsigned get_vias_count()
 		{
-			return vias.size();
+			return static_cast<unsigned int>(vias.size());
 		}
 
 		/**
@@ -534,7 +534,7 @@ namespace degate
 		 */
 		inline unsigned get_annotations_count()
 		{
-			return annotations.size();
+			return static_cast<unsigned int>(annotations.size());
 		}
 
 		/**

@@ -25,7 +25,7 @@
 
 using namespace degate;
 
-SubProjectAnnotation::SubProjectAnnotation(int min_x, int max_x, int min_y, int max_y,
+SubProjectAnnotation::SubProjectAnnotation(float min_x, float max_x, float min_y, float max_y,
                                            std::string const& subproject_path) :
 	Annotation(min_x, max_x, min_y, max_y, Annotation::SUBPROJECT)
 {

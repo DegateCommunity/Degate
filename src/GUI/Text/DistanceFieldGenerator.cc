@@ -27,7 +27,8 @@
 namespace degate
 {
 
-    DistanceFieldGenerator::DistanceFieldGenerator(float spread, unsigned int scale_factor, unsigned int color) : spread(spread), scale_factor(scale_factor), color(color)
+    DistanceFieldGenerator::DistanceFieldGenerator(float spread, unsigned int scale_factor, unsigned int color)
+            : color(color), spread(spread), scale_factor(scale_factor)
     {
 
     }
@@ -42,14 +43,14 @@ namespace degate
 
         // Create the input matrix.
         bool** input = new bool*[input_width];
-        for (unsigned int i = 0; i < input_width; i++)
+        for (unsigned int i = 0; i < static_cast<unsigned int>(input_width); i++)
             input[i] = new bool[input_height];
 
         // Fill the bool matrix to know if a pixel is considered inside or outside.
         std::function<void(const unsigned int& y)> input_function = [&input_image, &input, &input_width](const unsigned int& y)
         {
             auto pixels = (QRgb*)(input_image.scanLine(y));
-            for (unsigned int x = 0; x < input_width; x++)
+            for (unsigned int x = 0; x < static_cast<unsigned int>(input_width); x++)
             {
                 input[x][y] = (pixels[x] & 0x808080) != 0 && (pixels[x] & 0x80000000) != 0;
             }
@@ -63,7 +64,7 @@ namespace degate
         std::function<void(const unsigned int& y)> output_function = [this, &output_width, &out_image, &input, &input_width, &input_height](const unsigned int& y)
         {
             auto pixels = reinterpret_cast<QRgb*>(out_image->scanLine(y));
-            for (unsigned int x = 0; x < output_width; x++)
+            for (unsigned int x = 0; x < static_cast<unsigned int>(output_width); x++)
             {
                 int center_x = (x * scale_factor) + (scale_factor / 2);
                 int center_y = (y * scale_factor) + (scale_factor / 2);
@@ -115,7 +116,7 @@ namespace degate
         QtConcurrent::blockingMap(output_it, output_function);
 
         // Delete the input matrix.
-        for (unsigned int i = 0; i < input_width; i++)
+        for (unsigned int i = 0; i < static_cast<unsigned int>(input_width); i++)
             delete[] input[i];
         delete[] input;
 

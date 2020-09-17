@@ -103,7 +103,7 @@ namespace degate
 				annotations.push_back(a);
 			}
 		}
-        annotations_count = annotations.size();
+        annotations_count = static_cast<unsigned int>(annotations.size());
 
 		if (annotations_count == 0)
 			return;
@@ -126,7 +126,7 @@ namespace degate
 			create_annotation(e, index);
 			e->set_index(index);
 
-			text_size += e->get_name().length();
+			text_size += static_cast<unsigned int>(e->get_name().length());
 			index++;
 		}
 
@@ -139,7 +139,7 @@ namespace degate
 			unsigned y = e->get_min_y() + (e->get_max_y() - e->get_min_y()) / 2.0;
 			text.add_sub_text(text_offset, x, y, e->get_name(), 20, QVector3D(255, 255, 255), 1, true, true, e->get_max_x() - e->get_min_x());
 
-			text_offset += e->get_name().length();
+			text_offset += static_cast<unsigned int>(e->get_name().length());
 			index++;
 		}
 	}

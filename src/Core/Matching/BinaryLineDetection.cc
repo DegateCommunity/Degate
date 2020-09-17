@@ -20,6 +20,7 @@
  *
  */
 
+#define _CRT_SECURE_NO_WARNINGS 1
 #include "Core/Matching/BinaryLineDetection.h"
 #include "Core/Utils/Otsu.h"
 #include "Core/Image/Processor/IPCopy.h"

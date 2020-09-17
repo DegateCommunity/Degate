@@ -59,7 +59,7 @@ namespace degate
     // Color picker dialog
 
     ColorPickerDialog::ColorPickerDialog(QWidget* parent, color_t color)
-            : QDialog(parent), color_dialog(parent), color(color), button_box(QDialogButtonBox::Ok)
+            : QDialog(parent), button_box(QDialogButtonBox::Ok), color(color), color_dialog(parent)
     {
         // Alpha label
         aplha_label.setText(tr("Transparency:"));
@@ -85,7 +85,7 @@ namespace degate
 
         // Color preview
         QPalette palette;
-        palette.setColor(QPalette::Background, to_qt_color(color));
+        palette.setColor(QPalette::Window, to_qt_color(color));
         color_preview.setPalette(palette);
         color_preview.setMinimumSize(100, 100);
         color_preview.setAutoFillBackground(true);
@@ -107,7 +107,7 @@ namespace degate
 
         // Update preview color
         QPalette palette;
-        palette.setColor(QPalette::Background, to_qt_color(color));
+        palette.setColor(QPalette::Window, to_qt_color(color));
         color_preview.setPalette(palette);
     }
 
@@ -125,7 +125,7 @@ namespace degate
 
         // Update preview color
         QPalette palette;
-        palette.setColor(QPalette::Background, color);
+        palette.setColor(QPalette::Window, color);
         color_preview.setPalette(palette);
     }
 

@@ -47,7 +47,7 @@ static void get_clock(struct timespec* ts)
 		nanoseconds>(secs);
 
 	ts->tv_sec = secs.time_since_epoch().count();
-	ts->tv_nsec = ns.count();
+	ts->tv_nsec = static_cast<long>(ns.count());
 }
 
 #define GET_CLOCK(dst_variable) \
@@ -428,7 +428,7 @@ namespace degate
 		 */
 		size_t get_image_size() const
 		{
-			return sizeof(typename PixelPolicy::pixel_type) * (1 << tile_width_exp) * (1 << tile_width_exp);
+			return sizeof(typename PixelPolicy::pixel_type) * (uint64_t(1) << tile_width_exp) * (uint64_t(1) << tile_width_exp);
 		}
 
 		/**

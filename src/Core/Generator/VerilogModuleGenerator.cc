@@ -71,11 +71,10 @@ std::string VerilogModuleGenerator::generate_common_code_for_gates(Module_shptr 
 					{
 						common_code += gtmpl->get_implementation(GateTemplate::VERILOG);
 					}
-					catch (CollectionLookupException const& ex)
-					{
+					catch (CollectionLookupException const&)
+					{	
 						// maybe we should pass the exception?
-						common_code += "// Error: failed to lookup Verilog implementation for module " + gtmpl->
-							get_name() + ".\n\n";
+						common_code += "// Error: failed to lookup Verilog implementation for module " + gtmpl->get_name() + ".\n\n";
 					}
 					already_dumped.insert(gtmpl);
 				}

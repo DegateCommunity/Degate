@@ -30,7 +30,8 @@ using namespace degate;
 
 Circle::Circle()
 {
-	x = y = diameter = 0;
+	x = y = 0.f;
+	diameter = 0;
 	calculate_bounding_box();
 }
 
@@ -53,9 +54,9 @@ void Circle::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 
 bool Circle::in_shape(float x, float y, float max_distance) const
 {
-	int delta_x = this->x - x;
-	int delta_y = this->y - y;
-	return sqrt(static_cast<double>(delta_x * delta_x + delta_y * delta_y)) <= diameter + max_distance;
+	float delta_x = this->x - x;
+	float delta_y = this->y - y;
+	return sqrt(delta_x * delta_x + delta_y * delta_y) <= static_cast<float>(diameter) + max_distance;
 }
 
 bool Circle::in_bounding_box(BoundingBox const& bbox) const

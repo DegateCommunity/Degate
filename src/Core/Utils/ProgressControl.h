@@ -59,7 +59,7 @@ namespace degate
 			for (int i = 0; i < averaging_buf_size; i++)
 				if (estimated[i] != -1)
 				{
-					sum += estimated[i];
+					sum += static_cast<unsigned int>(estimated[i]);
 					valid_values++;
 				}
 
@@ -73,7 +73,7 @@ namespace degate
 		 */
 		virtual void set_progress(double progress)
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			this->progress = progress;
 		}
 
@@ -82,7 +82,7 @@ namespace degate
 		 */
 		virtual void set_progress_step_size(double step_size)
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			this->step_size = step_size;
 		}
 
@@ -91,7 +91,7 @@ namespace degate
 		 */
 		virtual void progress_step_done()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			progress += step_size;
 		}
 
@@ -100,7 +100,7 @@ namespace degate
 		 */
 		virtual void reset_progress()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			time_started = time(nullptr);
 			canceled = false;
 			progress = 0;
@@ -130,9 +130,9 @@ namespace degate
 		/**
 		 * Check if the process is canceled.
 		 */
-		virtual bool is_canceled() const
+		virtual bool is_canceled()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			return canceled;
 		}
 
@@ -141,7 +141,7 @@ namespace degate
 		 */
 		virtual void cancel()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			canceled = true;
 		}
 
@@ -150,18 +150,18 @@ namespace degate
 		 * Get progress.
 		 * @return Returns a value between 0 and 100 percent.
 		 */
-		virtual double get_progress() const
+		virtual double get_progress()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			return progress;
 		}
 
 		/**
 		 * Get (real) time since the progress counter was resetted.
 		 */
-		virtual time_t get_time_passed() const
+		virtual time_t get_time_passed()
 		{
-			boost::mutex::scoped_lock (m_mutex);
+            boost::recursive_mutex::scoped_lock lock(this->mtx);
 			return time(nullptr) - time_started;
 		}
 
@@ -170,17 +170,17 @@ namespace degate
 		 * @return Returns the time to go in seconds or -1, if
 		 *   that time cannot be calculated.
 		 */
-		virtual time_t get_time_left() const
+		virtual time_t get_time_left()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			if (progress < 1.0)
-				return progress > 0 ? (1.0 - progress) * get_time_passed() / progress : -1;
+				return progress > 0 ? static_cast<time_t>((1.0 - progress) * static_cast<double>(get_time_passed()) / progress) : static_cast<time_t>(-1);
 			return 0;
 		}
 
 		virtual std::string get_time_left_as_string()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			time_t time_left = get_time_left_averaged();
 			if (time_left == -1) return std::string("-");
 			else
@@ -202,20 +202,20 @@ namespace degate
 
 		virtual void set_log_message(std::string const& msg)
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			log_message = msg;
 			log_message_set = true;
 		}
 
-		virtual std::string get_log_message() const
+		virtual std::string get_log_message()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			return log_message;
 		}
 
-		virtual bool has_log_message() const
+		virtual bool has_log_message()
 		{
-			boost::recursive_mutex::scoped_lock (mtx);
+			boost::recursive_mutex::scoped_lock lock(this->mtx);
 			return log_message_set;
 		}
 	};

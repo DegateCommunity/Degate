@@ -64,7 +64,7 @@ namespace degate
 	public:
 
 		ImageBase(unsigned int width, unsigned int height) :
-			bounding_box(width, height)
+			bounding_box(static_cast<float>(width), static_cast<float>(height))
 		{
 		}
 
@@ -77,7 +77,7 @@ namespace degate
 		 */
 		inline unsigned int get_width() const
 		{
-			return bounding_box.get_width();
+			return static_cast<unsigned int>(bounding_box.get_width());
 		}
 
 		/**
@@ -85,7 +85,7 @@ namespace degate
 		 */
 		inline unsigned int get_height() const
 		{
-			return bounding_box.get_height();
+			return static_cast<unsigned int>(bounding_box.get_height());
 		}
 
 		/**

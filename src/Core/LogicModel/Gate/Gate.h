@@ -219,7 +219,7 @@ namespace degate
 		 */
 		inline virtual unsigned get_ports_number()
 		{
-			return gate_ports.size();
+			return static_cast<unsigned int>(gate_ports.size());
 		}
 
 		/**
@@ -251,7 +251,7 @@ namespace degate
 		 *   undefined gate orientation.
 		 * @see has_orientation()
 		 */
-		virtual unsigned int get_relative_x_position_within_gate(float rel_x) const;
+		virtual float get_relative_x_position_within_gate(float rel_x) const;
 
 		/**
 		 * Get the y-coordinate relative to min_y depending on the gate's orientation.
@@ -260,7 +260,7 @@ namespace degate
 		 *   undefined gate orientation.
 		 * @see has_orientation()
 		 */
-		virtual unsigned int get_relative_y_position_within_gate(float rel_y) const;
+		virtual float get_relative_y_position_within_gate(float rel_y) const;
 
 		/**
 		 * Get a human readable string that describes the whole

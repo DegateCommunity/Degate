@@ -180,7 +180,7 @@ void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
 							}
 						}
 					}
-					catch (CollectionLookupException const& ex)
+					catch (CollectionLookupException const&)
 					{
 						debug(TM,
 						      "Failed to insert a connection for net %d into the logic layer. "

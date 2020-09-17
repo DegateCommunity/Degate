@@ -19,6 +19,7 @@
  *
  */
 
+#define _CRT_SECURE_NO_WARNINGS 1
 #include "Core/Matching/WireMatching.h"
 #include "Core/Matching/ZeroCrossingEdgeDetection.h"
 #include "Core/Matching/CannyEdgeDetection.h"

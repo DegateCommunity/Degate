@@ -140,7 +140,7 @@ namespace degate
 	template <typename PixelTypeDst, typename PixelTypeSrc>
 	inline PixelTypeDst convert_pixel(PixelTypeSrc p)
 	{
-		return p;
+		return static_cast<PixelTypeDst>(p);
 	}
 
 
@@ -178,7 +178,7 @@ namespace degate
 	template <>
 	inline rgba_pixel_t convert_pixel<rgba_pixel_t, gs_double_pixel_t>(gs_double_pixel_t p)
 	{
-		gs_byte_pixel_t b = p;
+		gs_byte_pixel_t b = convert_pixel<gs_byte_pixel_t, gs_double_pixel_t>(p);
 		return MERGE_CHANNELS(b, b, b, 255);
 	}
 

@@ -48,21 +48,21 @@
  *
  * @see WorkspaceRenderer
  */
-#define ZOOM_OUT 10.0 / 9.0
+#define ZOOM_OUT 10.0f / 9.0f
 
 /**
  * This define the zoom in factor (zoom *= zoom_in).
  *
  * @see WorkspaceRenderer
  */
-#define ZOOM_IN 9.0 / 10.0
+#define ZOOM_IN 9.0f / 10.0f
 
 /**
  * This define the no zoom factor (zoom = zoom).
  *
  * @see WorkspaceRenderer
  */
-#define NO_ZOOM 1
+#define NO_ZOOM 1.f
 
 namespace degate
 {

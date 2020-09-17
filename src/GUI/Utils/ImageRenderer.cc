@@ -30,7 +30,7 @@ namespace degate
 	};
 
     ImageRenderer::ImageRenderer(QWidget* parent, MemoryImage_shptr image, bool update_on_gl_initialize)
-            : QOpenGLWidget(parent), image(image), update_on_gl_initialize(update_on_gl_initialize)
+            : QOpenGLWidget(parent), update_on_gl_initialize(update_on_gl_initialize), image(image)
 	{
 		assert(image != nullptr);
 

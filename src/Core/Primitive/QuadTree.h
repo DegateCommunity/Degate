@@ -260,13 +260,13 @@ namespace degate
 	template <typename T>
 	unsigned int QuadTree<T>::get_width() const
 	{
-		return box.get_width();
+		return static_cast<unsigned int>(box.get_width());
 	}
 
 	template <typename T>
 	unsigned int QuadTree<T>::get_height() const
 	{
-		return box.get_height();
+		return static_cast<unsigned int>(box.get_height());
 	}
 
 
@@ -453,7 +453,7 @@ namespace degate
 	template <typename T>
 	unsigned int QuadTree<T>::total_size() const
 	{
-		unsigned int this_node = children.size();
+		unsigned int this_node = static_cast<unsigned int>(children.size());
 		unsigned int sub_nodes = 0;
 		if (!is_leave())
 		{
@@ -500,7 +500,10 @@ namespace degate
 	template <typename T>
 	RegionIterator<T> QuadTree<T>::region_iter_begin(int min_x, int max_x, int min_y, int max_y)
 	{
-		BoundingBox bbox(min_x, max_x, min_y, max_y);
+		BoundingBox bbox(static_cast<float>(min_x), 
+						 static_cast<float>(max_x), 
+						 static_cast<float>(min_y), 
+						 static_cast<float>(max_y));
 		return region_iter_begin(bbox);
 	}
 

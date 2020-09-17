@@ -274,7 +274,7 @@ void GateTemplate::print(std::ostream& os)
 
 unsigned int GateTemplate::get_number_of_ports() const
 {
-	return ports.size();
+	return static_cast<unsigned int>(ports.size());
 }
 
 

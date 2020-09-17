@@ -37,9 +37,9 @@ using namespace degate;
 
 Project::Project(length_t width, length_t height) :
 	bounding_box(width, height),
+    degate_version(DEGATE_VERSION),
 	logic_model(new LogicModel(width, height)),
-	port_color_manager(new PortColorManager()),
-	degate_version(DEGATE_VERSION)
+    port_color_manager(new PortColorManager())
 {
 	init_default_values();
 }
@@ -47,10 +47,10 @@ Project::Project(length_t width, length_t height) :
 
 Project::Project(length_t width, length_t height, std::string const& directory, unsigned int layers) :
 	bounding_box(width, height),
+    degate_version(DEGATE_VERSION),
 	directory(directory),
 	logic_model(new LogicModel(width, height, layers)),
-	port_color_manager(new PortColorManager()),
-	degate_version(DEGATE_VERSION)
+	port_color_manager(new PortColorManager())
 {
 	init_default_values();
 }

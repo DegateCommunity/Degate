@@ -40,7 +40,7 @@ namespace degate
 
 		std::sort(v.begin(), v.end());
 
-		unsigned int center = v.size() / 2;
+		unsigned int center = static_cast<unsigned int>(v.size()) / 2;
 
 		if (v.size() % 2 == 0)
 		{

@@ -145,9 +145,9 @@ namespace degate
 		temp.color = QVector3D(33, 76, 117) / 255.0;
 
 		if (object_selection_mode)
-            temp.alpha = 0;
+            temp.alpha = 0.f;
 		else
-		    temp.alpha = 0.6;
+		    temp.alpha = 0.6f;
 
 		temp.pos = QVector2D(selection_box.get_min_x(), selection_box.get_min_y());
 		context->glBufferSubData(GL_ARRAY_BUFFER, 0 * sizeof(SelectionToolVertex2D), sizeof(SelectionToolVertex2D), &temp);

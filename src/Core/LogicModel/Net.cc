@@ -100,7 +100,7 @@ void Net::add_object(ConnectedLogicModelObject_shptr o)
 
 unsigned int Net::size() const
 {
-	return connections.size();
+	return static_cast<unsigned int>(connections.size());
 }
 
 const std::string Net::get_descriptive_identifier() const

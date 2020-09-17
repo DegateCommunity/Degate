@@ -297,7 +297,7 @@ void GateLibraryImporter::parse_template_ports_element(QDomElement const templat
 
 				tmpl_port = std::make_shared<GateTemplatePort>(pos_x, pos_y, port_type);
 			}
-			catch (XMLAttributeMissingException const& ex)
+			catch (XMLAttributeMissingException const&)
 			{
 				tmpl_port = std::make_shared<GateTemplatePort>(port_type);
 			}

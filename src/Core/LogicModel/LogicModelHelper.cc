@@ -59,7 +59,7 @@ Layer_shptr degate::get_first_logic_layer(LogicModel_shptr lmodel)
 	{
 		return get_first_layer(lmodel, Layer::LOGIC);
 	}
-	catch (CollectionLookupException const& ex)
+	catch (CollectionLookupException const&)
 	{
 		throw;
 	}

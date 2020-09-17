@@ -25,7 +25,7 @@ namespace degate
 {
 
     ViaEditDialog::ViaEditDialog(QWidget* parent, Via_shptr& via, Project_shptr& project)
-            : QDialog(parent), via(via), fill_color_edit(parent), project(project)
+            : QDialog(parent), project(project), via(via), fill_color_edit(parent)
     {
         name_label.setText(tr("Name:"));
         name_edit.setText(QString::fromStdString(via->get_name()));

@@ -44,7 +44,7 @@ namespace degate
 		/**
 		 * Create a new annotation.
 		 */
-		SubProjectAnnotation(int min_x, int max_x, int min_y, int max_y,
+		SubProjectAnnotation(float min_x, float max_x, float min_y, float max_y,
 		                     std::string const& subproject_path);
 
 

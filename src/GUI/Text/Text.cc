@@ -131,7 +131,7 @@ namespace degate
     {
         assert(font_context_data != nullptr);
 
-        static unsigned int atlas_count = font_context_data->font_data->font_atlas.size();
+        static unsigned int atlas_count = static_cast<unsigned int>(font_context_data->font_data->font_atlas.size());
 
         // If there is no new atlas since last time just add the last glyph (last generated/loaded) to the texture array.
         if (full_reload == false && atlas_count == font_context_data->font_data->font_atlas.size() && context->functions()->glIsTexture(font_context_data->font_atlas_texture_array) == GL_TRUE)
@@ -160,7 +160,7 @@ namespace degate
             return;
         }
 
-        atlas_count = font_context_data->font_data->font_atlas.size();
+        atlas_count = static_cast<unsigned int>(font_context_data->font_data->font_atlas.size());
 
         if (context->functions()->glIsTexture(font_context_data->font_atlas_texture_array) == GL_TRUE)
             context->functions()->glDeleteTextures(1, &font_context_data->font_atlas_texture_array);
@@ -177,7 +177,7 @@ namespace degate
                                                       0,
                                                       GL_RGBA,
                                                       font_context_data->font_data->atlas_width, font_context_data->font_data->atlas_height,
-                                                      font_context_data->font_data->font_atlas.size(),
+                                                      static_cast<GLsizei>(font_context_data->font_data->font_atlas.size()),
                                                       0,
                                                       GL_RGBA,
                                                       GL_UNSIGNED_BYTE,
@@ -286,7 +286,7 @@ namespace degate
 
         glyph_data->glyph = glyph;
         glyph_data->atlas_position = (font_data->glyphs.size() - 1) % font_data->glyph_per_atlas;
-        glyph_data->atlas_index = (font_data->glyphs.size() - 1) / font_data->glyph_per_atlas;
+        glyph_data->atlas_index = (static_cast<unsigned int>(font_data->glyphs.size()) - 1) / font_data->glyph_per_atlas;
         glyph_data->char_advance = font_metrics.horizontalAdvance(glyph);
         glyph_data->char_width = font_metrics.boundingRect(glyph).width();
 
@@ -760,7 +760,7 @@ namespace degate
 
     QSizeF Text::add_sub_text(unsigned int offset, float x, float y, const std::string& text, const unsigned int text_size, const QVector3D &color, const float alpha, const bool center_x, const bool center_y, float max_width)
     {
-        QString string = QString::fromUtf8(text.data(), text.size());
+        QString string = QString::fromUtf8(text.data(), static_cast<int>(text.size()));
         std::shared_ptr<GlyphData> glyph;
         float size_downscale_factor = 1;
         float size_factor = static_cast<float>(text_size) / static_cast<float>(font.font_size);
@@ -820,7 +820,7 @@ namespace degate
         unsigned int glyph_per_line = font_context_data.lock()->font_data->atlas_glyph_per_line;
 
         float pixel_size = 0;
-        for (unsigned int i = 0; i < string.size(); i++)
+        for (unsigned int i = 0; i < static_cast<unsigned int>(string.size()); i++)
         {
             glyph = get_glyph(string[i]);
 

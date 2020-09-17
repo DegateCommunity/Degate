@@ -252,8 +252,7 @@ void TemplateMatching::set_orientations(std::list<Gate::ORIENTATION> tmpl_orient
 
 void TemplateMatching::run()
 {
-    if (is_canceled())
-        return;
+    if (is_canceled()) return;
 
 	debug(TM, "run template matching");
 	std::list<match_found> matches;
@@ -475,7 +474,7 @@ TemplateMatching::match_single_template(struct prepared_template& tmpl,
 {
 	debug(TM, "match_single_template(): start iterating over background image");
 	search_state state;
-	memset(&state, 0, sizeof(search_state));
+	//memset(&state, 0, sizeof(search_state));
 	state.x = 1;
 	state.y = 1;
 	state.step_size_search = get_max_step_size();

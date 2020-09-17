@@ -27,7 +27,7 @@ namespace degate
                                              const Project_shptr& project,
                                              const GateTemplate_shptr& gate,
                                              const GateTemplatePort_shptr& port)
-            : QDialog(parent), gate(gate), port(port), project(project), placement(this, project, gate, port)
+            : QDialog(parent), project(project), gate(gate), port(port), placement(this, project, gate, port)
 	{
 	    setWindowTitle(tr("Place/move the port"));
 

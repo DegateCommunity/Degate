@@ -247,9 +247,12 @@ void Line::calculate_bounding_box()
 }
 
 
-unsigned int Line::get_length() const
+float Line::get_length() const
 {
-	return ((labs(from_x - to_x) << 1) + (labs(from_y - to_y) << 1)) >> 1;
+	float dif_x = to_x - from_x;
+	float dif_y = to_y - from_y;
+	
+	return std::sqrt((dif_x * dif_x) + (dif_y * dif_y));
 }
 
 Point Line::get_p1() const

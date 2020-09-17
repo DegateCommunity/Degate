@@ -100,7 +100,7 @@ namespace degate
                 vias.push_back(a);
             }
         }
-        vias_count = vias.size();
+        vias_count = static_cast<unsigned int>(vias.size());
 
         if (vias_count == 0)
             return;
@@ -119,7 +119,7 @@ namespace degate
             create_via(e, index);
             e->set_index(index);
 
-            text_size += e->get_name().length();
+            text_size += static_cast<unsigned int>(e->get_name().length());
             index++;
         }
 
@@ -132,7 +132,7 @@ namespace degate
             unsigned y = e->get_y() + e->get_diameter() / 2.0 + TEXT_PADDING;
             text.add_sub_text(text_offset, x, y, e->get_name(), 5, QVector3D(255, 255, 255), 1, true, false);
 
-            text_offset += e->get_name().length();
+            text_offset += static_cast<unsigned int>(e->get_name().length());
             index++;
         }
     }

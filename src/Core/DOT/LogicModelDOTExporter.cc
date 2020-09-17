@@ -192,8 +192,8 @@ void LogicModelDOTExporter::add_gate(Gate_shptr gate)
 
 	if (properties[PRESERVE_GATE_POSITIONS])
 	{
-		attrs.add_number<float>("height", lround(scaling * gate->get_height()));
-		attrs.add_number<float>("width", lround(scaling * gate->get_width()));
+		attrs.add_number<long>("height", lround(scaling * static_cast<double>(gate->get_height())));
+		attrs.add_number<long>("width", lround(scaling * static_cast<double>(gate->get_width())));
 	}
 
 	/* Use the placement on the chip as hint for graphviz. Graphviz
@@ -234,10 +234,9 @@ void LogicModelDOTExporter::add_connection(Net_shptr net,
                                            std::string const& src_name,
                                            std::string const& edge_name)
 {
-    if (net == nullptr)
-        return;
+    if (net == nullptr) return;
 
-	string net_name(oid_to_str("N", net->get_object_id()));
+	std::string net_name(oid_to_str("N", net->get_object_id()));
 
 	DOTAttributes edge_attrs;
 	edge_attrs.add("taillabel", edge_name);

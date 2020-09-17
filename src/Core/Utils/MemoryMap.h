@@ -198,9 +198,9 @@ namespace degate
 		width(width), height(height),
         storage_type(mode),
         filename(file_to_map),
-        file(0),
         filesize(0),
         mem_size(width * height * sizeof(T)),
+        file(0),
 #ifdef SYS_WINDOWS
 		mem_file(nullptr),
 #endif
@@ -369,8 +369,8 @@ namespace degate
 		{
 			filesize = mem_size;
 
-			DWORD res = SetFilePointer(file, filesize - 1, nullptr, FILE_BEGIN);
-			if (res == INVALID_SET_FILE_POINTER || res == ERROR_NEGATIVE_SEEK)
+			const DWORD ret = SetFilePointer(file, static_cast<LONG>(filesize - 1), nullptr, FILE_BEGIN);
+			if (ret == INVALID_SET_FILE_POINTER || ret == ERROR_NEGATIVE_SEEK)
 			{
 				debug(TM, "can't set file pointer of file: %s", filename.c_str());
 				return RET_ERR;
@@ -379,7 +379,7 @@ namespace degate
 			DWORD dwBytesWritten = 0;
 			char str[] = " ";
 
-			bool write_res = WriteFile(file, str, strlen(str), &dwBytesWritten, nullptr);
+			const bool write_res = WriteFile(file, str, static_cast<DWORD>(strlen(str)), &dwBytesWritten, nullptr);
 			if (!write_res)
 			{
 				debug(TM, "can't write to file: %s", filename.c_str());

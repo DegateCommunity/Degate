@@ -185,7 +185,7 @@ namespace degate
 		{
 			nets = collect_nets<InputIterator>(first, last);
 		}
-		catch (DegateRuntimeException const& ex)
+		catch (DegateRuntimeException const&)
 		{
 			throw;
 		}
@@ -249,7 +249,7 @@ namespace degate
 		{
 			nets = collect_nets<InputIterator>(first, last);
 		}
-		catch (DegateRuntimeException const& ex)
+		catch (DegateRuntimeException const&)
 		{
 			throw;
 		}

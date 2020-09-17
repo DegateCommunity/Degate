@@ -28,7 +28,7 @@ namespace degate
     // Widget
 
     TerminalWidget::TerminalWidget(QWidget* parent, TerminalCommands& commands)
-            : process(parent), commands(commands)
+            : commands(commands), process(parent)
     {
         terminal.setReadOnly(true);
         layout.addWidget(&terminal);

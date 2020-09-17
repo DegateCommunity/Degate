@@ -40,8 +40,8 @@ namespace degate
                                              const GateTemplatePort_shptr& port)
             : ImageRenderer(parent, gate->get_image(Layer::LAYER_TYPE::LOGIC), false),
               gate(gate),
-              port(port),
               project(std::move(project)),
+              port(port),
               port_name_text(parent)
     {
 		layer = Layer::LAYER_TYPE::LOGIC;
@@ -77,7 +77,7 @@ namespace degate
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        port_name_text.update(port->get_name().length());
+        port_name_text.update(static_cast<unsigned int>(port->get_name().length()));
         port_name_text.add_sub_text(0, pos.get_x(), pos.get_y() + DEFAULT_PORT_SIZE / 2.0 + TEXT_PADDING, port->get_name(), 5, QVector3D(255, 255, 255), 1, true, false);
 
 		ImageRenderer::update_screen();

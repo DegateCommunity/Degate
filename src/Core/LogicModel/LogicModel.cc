@@ -110,7 +110,7 @@ object_id_t LogicModel::get_new_object_id()
 
 
 LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int layers) :
-	bounding_box(width, height),
+	bounding_box(static_cast<float>(width), static_cast<float>(height)),
 	main_module(new Module("main_module", "", true)),
 	object_id_counter(0)
 {
@@ -210,12 +210,12 @@ void LogicModel::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) cons
 
 unsigned int LogicModel::get_width() const
 {
-	return bounding_box.get_width();
+	return static_cast<unsigned int>(bounding_box.get_width());
 }
 
 unsigned int LogicModel::get_height() const
 {
-	return bounding_box.get_height();
+	return static_cast<unsigned int>(bounding_box.get_height());
 }
 
 PlacedLogicModelObject_shptr LogicModel::get_object(object_id_t object_id)
@@ -603,7 +603,7 @@ void LogicModel::update_ports(Gate_shptr gate)
 				// reset port coordinates
 				if (gate->has_orientation())
 				{
-					unsigned int x, y;
+					float x, y;
 					x = gate->get_relative_x_position_within_gate(tmpl_port->get_x());
 					y = gate->get_relative_y_position_within_gate(tmpl_port->get_y());
 					gate_port->set_x(x + gate->get_min_x());
@@ -912,7 +912,7 @@ LogicModel::annotation_collection::iterator LogicModel::annotations_end()
 
 unsigned int LogicModel::get_num_layers() const
 {
-	return layers.size();
+	return static_cast<unsigned int>(layers.size());
 }
 
 Module_shptr LogicModel::get_main_module() const

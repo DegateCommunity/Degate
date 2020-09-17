@@ -24,7 +24,7 @@
 namespace degate
 {
     GateLibraryDialog::GateLibraryDialog(QWidget* parent, const Project_shptr& project)
-            : QDialog(parent), list(parent, project, false), project(project)
+            : QDialog(parent), project(project), list(parent, project, false)
 	{
 		setWindowTitle(tr("Gate library"));
 		resize(300, 400);

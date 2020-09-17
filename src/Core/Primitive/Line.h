@@ -87,7 +87,7 @@ namespace degate
 		virtual bool is_vertical() const;
 		virtual bool is_horizontal() const;
 
-		virtual unsigned int get_length() const;
+		virtual float get_length() const;
 
 		virtual Point get_p1() const;
 		virtual Point get_p2() const;

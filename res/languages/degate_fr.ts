@@ -746,26 +746,26 @@
 <context>
     <name>degate::LayerTypeSelectionBox</name>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="95"/>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="108"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="96"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="109"/>
         <source>Undefined</source>
         <translation>Indéfini</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="96"/>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="109"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="97"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="110"/>
         <source>Transistor</source>
         <translation>Transistor</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="97"/>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="110"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="98"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="111"/>
         <source>Logic</source>
         <translation>Logique</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="98"/>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="111"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="99"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="112"/>
         <source>Metal</source>
         <translation>Métal</translation>
     </message>
@@ -791,67 +791,67 @@
 <context>
     <name>degate::LayersEditWidget</name>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="143"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="144"/>
         <source>Layer config:</source>
         <translation>Configuration de la couche :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="148"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="149"/>
         <source>ID</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="149"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="150"/>
         <source>Enable</source>
         <translation>Active</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="150"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="151"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="151"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="152"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="152"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="153"/>
         <source>Background</source>
         <translation>Arrière-plan</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="158"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="159"/>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="159"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="160"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="164"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="165"/>
         <source>Up</source>
         <translation>Haut</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="165"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="166"/>
         <source>Down</source>
         <translation>Bas</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="308"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="309"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="309"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="310"/>
         <source>Can&apos;t import the background image.</source>
         <translation>Impossible d&apos;importer l&apos;image d&apos;arrière-plan.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="309"/>
+        <location filename="../../src/GUI/Widget/LayersEditWidget.cc" line="310"/>
         <source>Error:</source>
         <translation>Erreur :</translation>
     </message>

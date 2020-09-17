@@ -33,7 +33,7 @@ namespace degate
 	// Entity tab
 
     GateEditEntityTab::GateEditEntityTab(QWidget* parent, GateTemplate_shptr gate, Project_shptr project)
-            : QWidget(parent), gate(gate), fill_color(parent), frame_color(parent), project(project)
+            : QWidget(parent), gate(gate), project(project), fill_color(parent), frame_color(parent)
 	{
 		// Name
 		name_label.setText(tr("Name:"));
@@ -416,7 +416,7 @@ namespace degate
             return;
         }
 
-        for (unsigned int i = 0; i < entity_tab.ports.rowCount(); i++)
+        for (unsigned int i = 0; i < static_cast<unsigned int>(entity_tab.ports.rowCount()); i++)
         {
             generator->add_port(entity_tab.ports.item(i, 1)->text().toStdString(),
                                 entity_tab.ports.item(i, 4)->checkState() == Qt::CheckState::Checked ? true : false);
@@ -765,12 +765,12 @@ namespace degate
 
     GateEditDialog::GateEditDialog(QWidget* parent, GateTemplate_shptr gate, Project_shptr project)
             : QDialog(parent),
-              gate(gate),
               button_box(QDialogButtonBox::Ok),
+              project(project),
+              gate(gate),
               entity_tab(parent, gate, project),
               behaviour_tab(parent, gate, project, entity_tab),
-              layout_tab(parent, gate, project),
-              project(project)
+              layout_tab(parent, gate, project)
 	{
 		setWindowTitle(tr("Edit gate"));
         setWindowFlags(Qt::Window);

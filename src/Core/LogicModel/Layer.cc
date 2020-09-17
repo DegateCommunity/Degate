@@ -311,10 +311,10 @@ PlacedLogicModelObject_shptr Layer::get_object_at_position(float x, float y, flo
 	PlacedLogicModelObject_shptr object = nullptr;
     auto type = PlacedLogicModelObjectType::NONE;
 
-	for (qt_region_iterator iter = quadtree.region_iter_begin(std::floor(x - max_distance),
-                                                              std::ceil(x + max_distance),
-                                                              std::floor(y - max_distance),
-                                                              std::ceil(y + max_distance));
+	for (qt_region_iterator iter = quadtree.region_iter_begin(static_cast<int>(std::floor(x - max_distance)),
+                                                              static_cast<int>(std::ceil(x + max_distance)),
+                                                              static_cast<int>(std::floor(y - max_distance)),
+                                                              static_cast<int>(std::ceil(y + max_distance)));
 	     iter != quadtree.region_iter_end(); ++iter)
 	{
 		if ((*iter)->in_shape(x, y, max_distance))
@@ -394,12 +394,12 @@ unsigned int Layer::get_distance_to_gate_boundary(unsigned int x, unsigned int y
 			if (query_horizontal_distance)
 			{
 				assert(gate->get_max_x() >= (int)x);
-				return gate->get_max_x() - x;
+				return static_cast<unsigned int>(gate->get_max_x()) - x;
 			}
 			else
 			{
 				assert(gate->get_max_y() >= (int)y);
-				return gate->get_max_y() - y;
+				return static_cast<unsigned int>(gate->get_max_y()) - y;
 			}
 		}
 	}

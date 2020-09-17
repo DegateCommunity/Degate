@@ -148,14 +148,14 @@ namespace degate
         shift_x = viewport.get_min_x() + offset_x - std::floor(shift_x) * distance_x;
         shift_x = distance_x - shift_x;
 
-        for (int x = 0; x < width_count; x += 1)
+        for (unsigned int x = 0; x < width_count; x += 1)
         {
-            temp.pos = QVector2D(viewport.get_min_x() + shift_x + x * distance_x, viewport.get_min_y());
+            temp.pos = QVector2D(viewport.get_min_x() + static_cast<float>(shift_x) + static_cast<float>(x) * static_cast<float>(distance_x), viewport.get_min_y());
             context->glBufferSubData(GL_ARRAY_BUFFER,
                                      index * 2 * sizeof(RegularGridVertex2D) + 0 * sizeof(RegularGridVertex2D),
                                      sizeof(RegularGridVertex2D), &temp);
 
-            temp.pos = QVector2D(viewport.get_min_x() + shift_x + x * distance_x, viewport.get_max_y());
+            temp.pos = QVector2D(viewport.get_min_x() + static_cast<float>(shift_x) + static_cast<float>(x) * static_cast<float>(distance_x), viewport.get_max_y());
             context->glBufferSubData(GL_ARRAY_BUFFER,
                                      index * 2 * sizeof(RegularGridVertex2D) + 1 * sizeof(RegularGridVertex2D),
                                      sizeof(RegularGridVertex2D), &temp);
@@ -169,14 +169,14 @@ namespace degate
         shift_y = viewport.get_min_y() + offset_y - std::floor(shift_y) * distance_y;
         shift_y = distance_y - shift_y;
 
-        for (int y = 0; y < height_count; y += 1)
+        for (unsigned int y = 0; y < height_count; y += 1)
         {
-            temp.pos = QVector2D(viewport.get_min_x(), viewport.get_min_y() + shift_y + y * distance_y);
+            temp.pos = QVector2D(viewport.get_min_x(), viewport.get_min_y() + static_cast<float>(shift_y) + static_cast<float>(y) * static_cast<float>(distance_y));
             context->glBufferSubData(GL_ARRAY_BUFFER,
                                      index * 2 * sizeof(RegularGridVertex2D) + 0 * sizeof(RegularGridVertex2D),
                                      sizeof(RegularGridVertex2D), &temp);
 
-            temp.pos = QVector2D(viewport.get_max_x(), viewport.get_min_y() + shift_y + y * distance_y);
+            temp.pos = QVector2D(viewport.get_max_x(), viewport.get_min_y() + static_cast<float>(shift_y) + static_cast<float>(y) * static_cast<float>(distance_y));
             context->glBufferSubData(GL_ARRAY_BUFFER,
                                      index * 2 * sizeof(RegularGridVertex2D) + 1 * sizeof(RegularGridVertex2D),
                                      sizeof(RegularGridVertex2D), &temp);

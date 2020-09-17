@@ -96,7 +96,7 @@ namespace degate
                 wires.push_back(a);
             }
         }
-        wires_count = wires.size();
+        wires_count = static_cast<unsigned int>(wires.size());
 
         if (wires_count == 0)
             return;

@@ -90,7 +90,8 @@ namespace degate
 		state = value;
 	}
 
-	LayerTypeSelectionBox::LayerTypeSelectionBox(Layer::LAYER_TYPE type, QWidget* parent) : type(type), QComboBox(parent)
+    LayerTypeSelectionBox::LayerTypeSelectionBox(Layer::LAYER_TYPE type, QWidget* parent)
+            : QComboBox(parent), type(type)
 	{
         types[Layer::UNDEFINED]  = tr("Undefined");
         types[Layer::TRANSISTOR] = tr("Transistor");
@@ -266,7 +267,7 @@ namespace degate
 	{
 		LogicModel::layer_collection layer_collection;
 
-		for (unsigned int i = 0; i < layers.rowCount(); i++)
+		for (unsigned int i = 0; i < static_cast<unsigned int>(layers.rowCount()); i++)
 		{
 			Layer_shptr layer;
 			

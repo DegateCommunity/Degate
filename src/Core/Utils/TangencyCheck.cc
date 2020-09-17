@@ -25,20 +25,20 @@
  * Calculate the parameter for a linear function f(x) = m*x + n.
  * @return Returns if the parameter can be calculated.
  */
-bool get_line_function_for_wire(degate::Line_shptr l, double* m, double* n)
+bool get_line_function_for_wire(degate::Line_shptr l, float* m, float* n)
 {
 	assert(l != nullptr);
 	assert(m != nullptr);
 	assert(n != nullptr);
 
-	int d_y = l->get_to_y() - l->get_from_y();
-	int d_x = l->get_to_x() - l->get_from_x();
+	float d_y = l->get_to_y() - l->get_from_y();
+	float d_x = l->get_to_x() - l->get_from_x();
 
 	if (abs(d_x) == 0) return false;
 	else
 	{
-		*m = static_cast<double>(d_y) / static_cast<double>(d_x);
-		*n = l->get_from_y() - l->get_from_x() * *m;
+		*m = d_y / d_x;
+		*n = l->get_from_y() - l->get_from_x() * (*m);
 		return true;
 	}
 }
@@ -47,22 +47,22 @@ bool get_line_function_for_wire(degate::Line_shptr l, double* m, double* n)
 bool degate::check_object_tangency(Circle_shptr o1,
                                    Circle_shptr o2)
 {
-	int dx = o1->get_x() - o1->get_x();
-	int dy = o2->get_y() - o1->get_y();
-	return (sqrt(dx * dx + dy * dy) <= (o1->get_diameter() + o2->get_diameter()) / 2.0);
+	float dx = o1->get_x() - o1->get_x();
+	float dy = o2->get_y() - o1->get_y();
+	return (sqrt(dx * dx + dy * dy) <= static_cast<float>(o1->get_diameter() + o2->get_diameter()) / 2.0f);
 }
 
 bool degate::check_object_tangency(Line_shptr o1,
                                    Line_shptr o2)
 {
-	double m1, n1, m2, n2;
+	float m1, n1, m2, n2;
 	bool ret1 = get_line_function_for_wire(o1, &m1, &n1);
 	bool ret2 = get_line_function_for_wire(o2, &m2, &n2);
 
 	if (ret1 && ret2)
 	{
-		double xi = - (n1 - n2) / (m1 - m2);
-		double yi = n1 + m1 * xi;
+		float xi = - (n1 - n2) / (m1 - m2);
+		float yi = n1 + m1 * xi;
 
 		return ((o1->get_from_x() - xi) * (xi - o1->get_to_x()) >= 0 &&
 			(o2->get_from_x() - xi) * (xi - o2->get_to_x()) >= 0 &&
@@ -135,7 +135,7 @@ bool degate::check_object_tangency(Line_shptr l,
 	// Let the segment endpoints be p1=(x1 y1) and p2=(x2 y2).
 	// Let the rectangle's corners be (xBL yBL) and (xTR yTR).
 
-	int x1, x2, y1, y2;
+	float x1, x2, y1, y2;
 
 	if (l->get_from_x() < l->get_to_x())
 	{
@@ -154,25 +154,25 @@ bool degate::check_object_tangency(Line_shptr l,
 
 	// F(x y) = (y2-y1)x + (x1-x2)y + (x2*y1-x1*y2)
 
-	int dy = y2 - y1;
-	int dx = x1 - x2;
-	int i = x2 * y1 - x1 * y2;
+	float dy = y2 - y1;
+	float dx = x1 - x2;
+	float i = x2 * y1 - x1 * y2;
 
 	// Calculate F(x,y) for each corner of the rectangle.
 	// If any of the values f[i] is 0, the corner is on the line.
-	int f1 = dy * r->get_min_x() + dx * r->get_min_y() + i;
-	if (f1 == 0) return true;
-	int f2 = dy * r->get_min_x() + dx * r->get_max_y() + i;
-	if (f2 == 0) return true;
-	int f3 = dy * r->get_max_x() + dx * r->get_min_y() + i;
-	if (f3 == 0) return true;
-	int f4 = dy * r->get_max_x() + dx * r->get_max_y() + i;
-	if (f4 == 0) return true;
+	float f1 = dy * r->get_min_x() + dx * r->get_min_y() + i;
+	if (std::abs(f1) <= 0.0000001f) return true;
+	float f2 = dy * r->get_min_x() + dx * r->get_max_y() + i;
+	if (std::abs(f2) <= 0.0000001f) return true;
+	float f3 = dy * r->get_max_x() + dx * r->get_min_y() + i;
+	if (std::abs(f3) <= 0.0000001f) return true;
+	float f4 = dy * r->get_max_x() + dx * r->get_max_y() + i;
+	if (std::abs(f4) <= 0.0000001f) return true;
 
 	/* If all corners are "below" or "above" the line, the
 	   objects can't intersect. */
-	if ((f1 < 0 && f2 < 0 && f3 < 0 && f4 < 0) ||
-		(f1 > 0 && f2 > 0 && f3 > 0 && f4 > 0))
+	if ((f1 < 0.f && f2 < 0.f && f3 < 0.f && f4 < 0.f) ||
+		(f1 > 0.f && f2 > 0.f && f3 > 0.f && f4 > 0.f))
 	{
 		return false;
 	}
@@ -253,4 +253,6 @@ bool degate::check_object_tangency(PlacedLogicModelObject_shptr o1,
 		return check_object_tangency(l2, r1);
 
 	assert(1==0);
+
+	return false;
 }

@@ -152,7 +152,7 @@ namespace degate
 		if (background_textures.empty())
 			return;
 
-		context->glDeleteTextures(background_textures.size(), &background_textures[0]);
+		context->glDeleteTextures(static_cast<GLsizei>(background_textures.size()), &background_textures[0]);
 
 		background_textures.clear();
 	}
