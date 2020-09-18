@@ -46,7 +46,10 @@ endif()
 #
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+
+############################################################################
 ############################ Dependencies ##################################
+############################################################################
 
 #
 # Turn on automatic invocation of the MOC, UIC & RCC
@@ -75,6 +78,9 @@ set(LIBS ${Boost_LIBRARIES})
 find_package(Qt5 COMPONENTS Core Widgets Gui Xml OpenGL Concurrent LinguistTools REQUIRED)
 set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml Qt5::OpenGL Qt5::Concurrent)
 
+
+############################################################################
+################################ Main ######################################
 ############################################################################
 
 #
@@ -198,3 +204,22 @@ endif()
 # Tests
 #
 add_subdirectory(tests)
+
+
+############################################################################
+################################ Doc #######################################
+############################################################################
+
+find_package(Doxygen QUIET)
+if(DOXYGEN_FOUND)
+	message(STATUS "Doxygen found")
+
+	add_custom_target(Documentation ALL
+			COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/DoxyFile"
+			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+			COMMENT "Generating documentation with Doxygen."
+			SOURCES "Degate version")
+
+else()
+	message(STATUS "Doxygen not found")
+endif()

@@ -9,3 +9,7 @@ A pull request template is provided. If you add code to the Degate core, try to 
 ## Style guide
 
 There is currently no written style guide for Degate. In the meantime, you can read code to understand the philosophy.
+
+## Documentation
+
+You can build the Degate **code** documentation to help you (in the "doc" folder), see the "doc/README.md" file for more.

@@ -51,7 +51,7 @@ if("${PROJECT_NAME}" STREQUAL "")
             "\t Degate version: ${DEGATE_VERSION}"
             "\t Release date:   ${DEGATE_RELEASE_DATE}"
             "\t Build date:     ${CURRENT_DATE}"
-            "\t OS:			 ${CMAKE_SYSTEM_NAME}"
+            "\t OS:             ${CMAKE_SYSTEM_NAME}"
             "\t Configuration:  ${CONFIGURATION}"
             "=======================================")
 else()
@@ -69,3 +69,4 @@ endif()
 configure_file("${PROJECT_SOURCE_DIR}/etc/config/Version.config" "${PROJECT_SOURCE_DIR}/src/Core/Version.h")
 configure_file("${PROJECT_SOURCE_DIR}/etc/installer/packages/Degate/meta/package.config" "${PROJECT_SOURCE_DIR}/etc/installer/packages/Degate/meta/package.xml")
 configure_file("${PROJECT_SOURCE_DIR}/etc/installer/config/config.config" "${PROJECT_SOURCE_DIR}/etc/installer/config/config.xml")
+configure_file("${PROJECT_SOURCE_DIR}/doc/Doxyfile.config" "${PROJECT_SOURCE_DIR}/doc/DoxyFile")

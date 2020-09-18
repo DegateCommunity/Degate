@@ -49,7 +49,7 @@ Degate was actively developed by Martin Schobert, during his thesis, from 2008 t
 
 Degate has definitely a great potential, mainly because it is the only free and open-source software for hardware reverse engineering of chips, but never knew how to impose itself in the community. One possible reason for that is because Degate was known to be unstable and have impacting bugs in a first place. 
 
-You can visit the initial project website to learn more :
+You can visit the initial project website to learn more:
 
   http://degate.org
 
@@ -59,7 +59,7 @@ This project aims to totally replace the old Degate, with a focus on Windows and
 
 The stability was the main problem of the old Degate and the main reason why the community hadn't already united around it. Regarding that, we want to have fewer bugs as possible, even if some functionality needs to be dropped (for the moment).
 
-For the moment we have (as functionalities) :
+For the moment we have (as functionalities):
 - OpenGL 3 support (better performances and evolutive),
 - Qt (bunch of tools, open-source and easy cross-platform),
 - Multi-platform support (tested on Linux and Windows),
@@ -83,7 +83,7 @@ For the moment we have (as functionalities) :
 - Modules,
 - And much more...
 
-We dropped those functionalities from old Degate :
+We dropped those functionalities from old Degate:
 - Collaborative tracking of wires and vias.
 
 A lot of bugs were fixed in this newer version, and it should be a better base to improve Degate even more in the future.
@@ -92,7 +92,7 @@ A lot of bugs were fixed in this newer version, and it should be a better base t
 
 There is still a lot to do in this new version, but all core functionalities (and even more) are implemented.
 
-Future functionalities remaining to implement (not limited) :
+Future functionalities remaining to implement (not limited):
 - Connection inspector (old feature),
 - Explicit full netlist exporter (new feature),
 - More languages (new feature),
@@ -118,13 +118,13 @@ You can find [here](https://github.com/DegateCommunity/Degate/wiki) the official
 
 ## Dependencies
 
-Degate has only 2 dependencies : Boost and Qt5.
+Degate has only 2 dependencies: Boost and Qt5.
 
-For Boost, you can specify to CMake a custom path with : -DBOOST_ROOT="custom_path_to_boost". Prebuilt versions for Windows are available here : https://sourceforge.net/projects/boost/files/boost-binaries/.
+For Boost, you can specify to CMake a custom path with: -DBOOST_ROOT="custom_path_to_boost". Prebuilt versions for Windows are available here: https://sourceforge.net/projects/boost/files/boost-binaries/.
 
-For Qt5, you can specify to CMake a custom path with : -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example, on Windows : Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here : https://www.qt.io/download.
+For Qt5, you can specify to CMake a custom path with: -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example, on Windows: Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here: https://www.qt.io/download.
 
-For Linux, don't forget to install the Qt5 add-on module : ImageFormats (you just need to have the package installed, it will be embedded in the Qt5::Core module after). See https://doc.qt.io/qt-5/qtimageformats-index.html. For example, on debian, the package is : qt5-image-formats-plugins. Same problem with linguist tools, for example for debian you need the package : qttools5-dev.
+For Linux, don't forget to install the Qt5 add-on module: ImageFormats (you just need to have the package installed, it will be embedded in the Qt5::Core module after). See https://doc.qt.io/qt-5/qtimageformats-index.html. For example, on debian, the package is: qt5-image-formats-plugins. Same problem with linguist tools, for example for debian you need the package: qttools5-dev.
 
 ## Dependencies version
 
@@ -164,7 +164,7 @@ Binaries are in the 'build/out/bin' folder.
 
 # Test projects
 
-You can find test projects in the 'etc' folder :
+You can find test projects in the 'etc' folder:
 - DECT,
 - Legic Prime.
 
@@ -176,10 +176,10 @@ Read the "CONTRIBUTING.md" file.
 
 ## Help us
 
-For now only English and French are supported, but if you wish you can help easily. Degate use Qt Linguist for translation, you can learn more here : https://doc.qt.io/qt-5/linguist-translators.html.
+For now only English and French are supported, but if you wish you can help easily. Degate use Qt Linguist for translation, you can learn more here: https://doc.qt.io/qt-5/linguist-translators.html.
 You can find .ts files (to use with Qt Linguist) in 'res/languages'.
 
-Languages :
+Languages:
 - English (100%),
 - French (100%).
 - German (0%),
