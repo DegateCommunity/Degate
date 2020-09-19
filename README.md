@@ -33,7 +33,7 @@ Degate is a multi-platform software for semi-automatic VLSI reverse engineering 
   - [Quick start](#quick-start)
     - [For Linux (debian-like)](#for-linux-debian-like)
     - [For Windows](#for-windows)
-- [Test projects](#test-projects)
+- [Demo projects](#demo-projects)
 - [Contributing](#contributing)
 - [Localization](#localization)
   - [Help us](#help-us)
@@ -162,11 +162,9 @@ Build (in the 'build' folder, for example):
 ```
 Binaries are in the 'build/out/bin' folder.
 
-# Test projects
+# Demo projects
 
-You can find test projects in the 'etc' folder:
-- DECT,
-- Legic Prime.
+You can find demo projects [here](https://github.com/DegateCommunity/DegateDemoProjects).
 
 # Contributing
 
