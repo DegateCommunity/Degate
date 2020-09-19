@@ -19,4 +19,4 @@ For example:
 > cmake --build . --target Documentation
 ```
 
-The documentation will be generated in the "/doc/build" folder.
+The documentation will be generated in the "/doc/build" folder. You can open the "Documentation.html" file for quick access.

@@ -12,7 +12,6 @@ src/Core/Version.h
 etc/installer/config/config.xml
 etc/installer/packages/Degate/meta/package.xml
 
-doc/DoxyFile
 doc/build/*
 !doc/build/.keepme
-!doc/build/MainPage.md
+doc/config/DoxyFile

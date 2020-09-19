@@ -215,7 +215,7 @@ if(DOXYGEN_FOUND)
 	message(STATUS "Doxygen found")
 
 	add_custom_target(Documentation ALL
-			COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/DoxyFile"
+			COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/config/DoxyFile"
 			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 			COMMENT "Generating documentation with Doxygen."
 			SOURCES "Degate version")
