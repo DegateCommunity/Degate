@@ -100,7 +100,6 @@ namespace degate
 	/**
 	 * Get the basename of a file. That is the substring without the directory
 	 * part, the suffix and the dot.
-	 * @test FileSystemTest::test_get_basename()
 	 */
 	std::string get_basename(std::string const& path);
 

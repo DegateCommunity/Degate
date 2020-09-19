@@ -40,7 +40,7 @@
 namespace degate
 {
     /**
-     * @class RuleViolationsList
+     * @class RuleViolationsTab
      * @brief Base widget for listing rule violations.
      */
     class RuleViolationsTab : public QWidget
