@@ -152,6 +152,8 @@ Binaries are in the 'build/out/bin' folder.
 ### For Windows
 
 Install dependencies:
+- CMake: https://cmake.org/download/
+- A compiler (for example MSVC): https://visualstudio.microsoft.com/fr/
 - Qt: https://www.qt.io/download-qt-installer
 - Boost: https://sourceforge.net/projects/boost/files/boost-binaries/
 
