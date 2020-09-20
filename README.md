@@ -25,7 +25,7 @@ Degate is a multi-platform software for semi-automatic VLSI reverse engineering 
   - [Little history](#little-history)
   - [Current status](#current-status)
   - [Future](#future)
-  - [Tutorials/Wiki](#tutorialswiki)
+  - [Documentation](#documentation)
   - [Screenshots](#screenshots)
 - [Build](#build)
   - [Dependencies](#dependencies)
@@ -100,9 +100,11 @@ Future functionalities remaining to implement (not limited):
 
 For a more precise roadmap see the [ROADMAP.md](https://github.com/DegateCommunity/Degate/blob/develop/ROADMAP.md) file.
 
-## Tutorials/Wiki
+## Documentation
 
-You can find [here](https://github.com/DegateCommunity/Degate/wiki) the official Degate wiki. It is still under construction. For example, you can find on it a list of tutorials for [Degate](https://github.com/DegateCommunity/Degate/wiki/Tutorials-:-Degate) and for [IC Reverse-Engineering](https://github.com/DegateCommunity/Degate/wiki/Tutorials-:-IC-Reverse-Engineering).
+The official Degate documentation is available [here](https://degate.readthedocs.io). It is still under construction.
+
+Also, you can find [here](https://github.com/DegateCommunity/Degate/wiki) the official Degate wiki. For example, you can find on it a list of tutorials for [Degate](https://github.com/DegateCommunity/Degate/wiki/Tutorials-:-Degate) and for [IC Reverse-Engineering](https://github.com/DegateCommunity/Degate/wiki/Tutorials-:-IC-Reverse-Engineering).
 
 ## Screenshots
 

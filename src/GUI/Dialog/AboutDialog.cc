@@ -48,6 +48,7 @@ namespace degate
                               "<a href='https://github.com/DegateCommunity/Degate/wiki'>Wiki</a> <br>"
                               "<a href='https://github.com/DegateCommunity/Degate'>Github</a> <br>"
                               "<a href='https://github.com/DegateCommunity/Degate/blob/develop/ROADMAP.md'>" + tr("Roadmap") + "</a> <br>"
+                              "<a href='https://degate.readthedocs.io'>" + tr("Documentation") + "</a> <br>"
                               "<a href='http://www.degate.org/'>" + tr("Original website") + "</a>"
                               "</center></html>";
 

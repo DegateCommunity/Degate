@@ -38,34 +38,39 @@
         <translation>Ce logiciel est distribué sous la licence GNU General Public License version 3.</translation>
     </message>
     <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="51"/>
+        <source>Documentation</source>
+        <translation>Documentation</translation>
+    </message>
+    <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
         <source>Roadmap</source>
         <translation>Feuille de route</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="51"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="52"/>
         <source>Original website</source>
         <translation>Site web original</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="56"/>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="57"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="58"/>
         <source>here</source>
         <translation>ici</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="58"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="59"/>
         <source>this</source>
         <comment>... please see this page.</comment>
         <translation>cette</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="75"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="77"/>
         <source>Changelog</source>
         <translation>Journal des modifications</translation>
     </message>

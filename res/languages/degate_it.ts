@@ -38,34 +38,39 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="51"/>
+        <source>Documentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
         <source>Roadmap</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="51"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="52"/>
         <source>Original website</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="56"/>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="57"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="58"/>
         <source>here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="58"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="59"/>
         <source>this</source>
         <comment>... please see this page.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="75"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="77"/>
         <source>Changelog</source>
         <translation type="unfinished"></translation>
     </message>
