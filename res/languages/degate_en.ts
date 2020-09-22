@@ -362,7 +362,7 @@
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="51"/>
-        <source>Tristate inverter (hight active)</source>
+        <source>Tristate inverter (high active)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
