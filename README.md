@@ -184,7 +184,7 @@ You can find .ts files (to use with Qt Linguist) in 'res/languages'.
 Languages:
 - English (100%),
 - French (100%).
-- German (0%),
+- German (100%),
 - Russian (0%),
 - Spanish (0%),
 - Italian (0%),
