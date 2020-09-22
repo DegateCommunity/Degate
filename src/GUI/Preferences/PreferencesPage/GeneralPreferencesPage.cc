@@ -33,6 +33,7 @@ namespace degate
         languages[""] = tr("System");
         languages["en"] = "English";
         languages["fr"] = "Français";
+        languages["de"] = "Deutsch";
 
         QStringList language_list;
         for (auto& e : languages)
