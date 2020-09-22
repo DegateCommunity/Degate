@@ -52,7 +52,7 @@ namespace degate
 
         setLayout(&layout);
 
-        inset_modules();
+        insert_modules();
     }
 
     Module_shptr ModuleSelectionDialog::get_selected_module()
@@ -60,7 +60,7 @@ namespace degate
         return selected_module;
     }
 
-    void ModuleSelectionDialog::inset_modules()
+    void ModuleSelectionDialog::insert_modules()
     {
         assert(project != nullptr);
 

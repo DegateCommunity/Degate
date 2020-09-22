@@ -77,7 +77,7 @@ namespace degate
         /**
          * Insert all modules of a project in the modules tree.
          */
-        void inset_modules();
+        void insert_modules();
 
         /**
          * Insert a module and his children (recursive) in the modules tree.
