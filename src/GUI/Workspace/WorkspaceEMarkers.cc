@@ -86,6 +86,8 @@ namespace degate
         if (project == nullptr)
             return;
 
+        assert(context->glGetError() == GL_NO_ERROR);
+
         Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
         if (layer == nullptr)
@@ -135,6 +137,8 @@ namespace degate
             text_offset += static_cast<unsigned int>(e->get_name().length());
             index++;
         }
+
+        assert(context->glGetError() == GL_NO_ERROR);
     }
 
     void WorkspaceEMarkers::update(EMarker_shptr &emarker)

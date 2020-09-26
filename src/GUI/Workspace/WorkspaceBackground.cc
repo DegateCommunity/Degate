@@ -83,6 +83,8 @@ namespace degate
 		if (project == nullptr)
 			return;
 
+        assert(context->glGetError() == GL_NO_ERROR);
+
 		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
 
 		if (smgr == nullptr)
@@ -110,6 +112,8 @@ namespace degate
 		}
 
 		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        assert(context->glGetError() == GL_NO_ERROR);
 	}
 
 	void WorkspaceBackground::draw(const QMatrix4x4& projection)

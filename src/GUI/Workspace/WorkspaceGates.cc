@@ -98,6 +98,8 @@ namespace degate
 		if (project == nullptr || project->get_logic_model()->get_gates_count() == 0)
 			return;
 
+		assert(context->glGetError() == GL_NO_ERROR);
+
 		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 6 * sizeof(GatesVertex2D), nullptr, GL_STATIC_DRAW);
@@ -190,6 +192,8 @@ namespace degate
                 port_name_text_offset += static_cast<unsigned int>((*port_iter)->get_name().length());
 			}
 		}
+
+		assert(context->glGetError() == GL_NO_ERROR);
 	}
 
 	void WorkspaceGates::update(Gate_shptr& gate)

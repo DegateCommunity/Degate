@@ -82,6 +82,8 @@ namespace degate
         if (project == nullptr)
             return;
 
+        assert(context->glGetError() == GL_NO_ERROR);
+
         Layer_shptr layer = project->get_logic_model()->get_current_layer();
 
         if (layer == nullptr)
@@ -114,6 +116,8 @@ namespace degate
             e->set_index(index);
             index++;
         }
+
+        assert(context->glGetError() == GL_NO_ERROR);
     }
 
     void WorkspaceWires::update(Wire_shptr &wire)
