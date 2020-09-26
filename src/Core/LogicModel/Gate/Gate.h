@@ -110,7 +110,7 @@ namespace degate
 
 		/**
 		 * Remove a gate port.
-		 * @se add_port()
+		 * @see add_port()
 		 * @see LogicModel::update_ports()
 		 */
 		virtual void remove_port(GatePort_shptr gate_port);
