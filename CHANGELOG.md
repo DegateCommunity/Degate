@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a link to the Degate documentation.
 - German translation from [Martin Schobert](https://github.com/nitram2342).
+- Added a connection inspector dialog.
 
 ## [2.0.0-alpha.3] - 2020-09-14
 ### Added

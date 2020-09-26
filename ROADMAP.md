@@ -20,7 +20,7 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 ## For 2.0.0-alpha.4 *[next]*:
 
 - [ ] Bug fixes.
-- [ ] Connection inspector dialog.
+- [x] Connection inspector dialog.
 - [ ] External matching support.
 - [x] German language.
 

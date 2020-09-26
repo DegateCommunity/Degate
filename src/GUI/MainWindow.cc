@@ -242,6 +242,10 @@ namespace degate
         move_selected_gates_into_module = logic_menu->addAction("");
         QObject::connect(move_selected_gates_into_module, SIGNAL(triggered()), this, SLOT(on_menu_logic_move_selected_gates_into_module()));
 
+        inspect_selected_object_action = logic_menu->addAction("");
+        QObject::connect(inspect_selected_object_action, SIGNAL(triggered()), this, SLOT(
+                on_menu_logic_inspect_selected_object()));
+
 
         // Matching menu
         matching_menu = menu_bar.addMenu("");
@@ -474,7 +478,9 @@ namespace degate
         remove_objects_action->setText(tr("Remove selected objects"));
         interconnect_objects_action->setText(tr("Interconnect selected objects"));
         isolate_objects_action->setText(tr("Isolate selected objects"));
+        logic_menu->addSeparator();
         move_selected_gates_into_module->setText(tr("Move selected gates into module"));
+        inspect_selected_object_action->setText(tr("Inspect selected object"));
 
         // Matching menu
         matching_menu->setTitle(tr("Matching"));
@@ -1109,6 +1115,29 @@ namespace degate
         project_changed();
     }
 
+    void MainWindow::on_menu_logic_inspect_selected_object()
+    {
+        if (project == nullptr)
+            return;
+
+        if (connection_inspector_dialog == nullptr)
+        {
+            connection_inspector_dialog = new ConnectionInspector(this, project);
+            connection_inspector_dialog->setWindowFlags(Qt::Window);
+
+            QObject::connect(connection_inspector_dialog,
+                             SIGNAL(goto_object(PlacedLogicModelObject_shptr&)),
+                             this,
+                             SLOT(goto_object(PlacedLogicModelObject_shptr&)));
+        }
+
+        if (!workspace->get_selected_objects().empty())
+            connection_inspector_dialog->set_object(workspace->get_selected_objects().back());
+
+        connection_inspector_dialog->show();
+        connection_inspector_dialog->clearFocus();
+    }
+
     void MainWindow::on_menu_matching_template_matching()
     {
         if (project == nullptr)
@@ -1391,49 +1420,52 @@ namespace degate
         QMenu context_menu(tr("Context menu"), this);
 
         // New
-        QAction annotation_create_action(tr("Create new annotation"), this);
-        QAction gate_template_create_action(tr("Create new gate template"), this);
-        QAction gate_create_action(tr("Create new gate"), this);
-        QAction emarker_create_action(tr("Create new EMarker"), this);
-        QAction via_create_action(tr("Create new via"), this);
+        QAction annotation_create_context_action(tr("Create new annotation"), this);
+        QAction gate_template_create_context_action(tr("Create new gate template"), this);
+        QAction gate_create_context_action(tr("Create new gate"), this);
+        QAction emarker_create_context_action(tr("Create new EMarker"), this);
+        QAction via_create_context_action(tr("Create new via"), this);
 
         // Edit
-        QAction annotation_edit_action(tr("Edit selected annotation"), this);
-        QAction gate_edit_action(tr("Edit selected gate"), this);
-        QAction gate_port_edit_action(tr("Move selected port"), this);
-        QAction emarker_edit_action(tr("Edit selected EMarker"), this);
-        QAction via_edit_action(tr("Edit selected via"), this);
+        QAction annotation_edit_context_action(tr("Edit selected annotation"), this);
+        QAction gate_edit_context_action(tr("Edit selected gate"), this);
+        QAction gate_port_edit_context_action(tr("Move selected port"), this);
+        QAction emarker_edit_context_action(tr("Edit selected EMarker"), this);
+        QAction via_edit_context_action(tr("Edit selected via"), this);
 
         // Via
-        QAction via_follow_action(tr("Follow via"), this);
+        QAction via_follow_context_action(tr("Follow via"), this);
 
         // Delete
-        QAction delete_action(tr("Remove selected object(s)"), this);
+        QAction delete_context_action(tr("Remove selected object(s)"), this);
 
         // Reset area
-        QAction reset_selection_area_action(tr("Reset selection area"), this);
+        QAction reset_selection_area_context_action(tr("Reset selection area"), this);
 
         // Reset wire tool
-        QAction reset_wire_tool_action(tr("Reset wire tool"), this);
+        QAction reset_wire_tool_context_action(tr("Reset wire tool"), this);
+
+        // Inspect selected object
+        QAction inspect_selected_object_context_action(tr("Inspect selected object"), this);
 
         // Get current opengl mouse position
         context_menu_mouse_position = workspace->get_safe_opengl_mouse_position();
 
         if (workspace->has_area_selection())
         {
-            connect(&annotation_create_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
-            context_menu.addAction(&annotation_create_action);
+            connect(&annotation_create_context_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
+            context_menu.addAction(&annotation_create_context_action);
 
-            connect(&gate_template_create_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
-            context_menu.addAction(&gate_template_create_action);
+            connect(&gate_template_create_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
+            context_menu.addAction(&gate_template_create_context_action);
 
-            connect(&gate_create_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
-            context_menu.addAction(&gate_create_action);
+            connect(&gate_create_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
+            context_menu.addAction(&gate_create_context_action);
 
             context_menu.addSeparator();
 
-            connect(&reset_selection_area_action, SIGNAL(triggered()), workspace, SLOT(reset_area_selection()));
-            context_menu.addAction(&reset_selection_area_action);
+            connect(&reset_selection_area_context_action, SIGNAL(triggered()), workspace, SLOT(reset_area_selection()));
+            context_menu.addAction(&reset_selection_area_context_action);
         }
         else if (workspace->has_selection())
         {
@@ -1441,58 +1473,61 @@ namespace degate
 
             if (Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
             {
-                connect(&annotation_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
-                context_menu.addAction(&annotation_edit_action);
+                connect(&annotation_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
+                context_menu.addAction(&annotation_edit_context_action);
             }
             else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
             {
-                connect(&gate_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
-                context_menu.addAction(&gate_edit_action);
+                connect(&gate_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
+                context_menu.addAction(&gate_edit_context_action);
             }
             else if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(object))
             {
-                connect(&gate_port_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_port_edit()));
-                context_menu.addAction(&gate_port_edit_action);
+                connect(&gate_port_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_port_edit()));
+                context_menu.addAction(&gate_port_edit_context_action);
             }
             else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(object))
             {
-                connect(&emarker_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
-                context_menu.addAction(&emarker_edit_action);
+                connect(&emarker_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
+                context_menu.addAction(&emarker_edit_context_action);
             }
             else if (Via_shptr via = std::dynamic_pointer_cast<Via>(object))
             {
                 if (via->get_direction() == Via::DIRECTION_UP)
                 {
-                    connect(&via_follow_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
-                    context_menu.addAction(&via_follow_action);
+                    connect(&via_follow_context_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
+                    context_menu.addAction(&via_follow_context_action);
                 }
                 else
                 {
-                    connect(&via_follow_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
-                    context_menu.addAction(&via_follow_action);
+                    connect(&via_follow_context_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
+                    context_menu.addAction(&via_follow_context_action);
                 }
 
-                connect(&via_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
-                context_menu.addAction(&via_edit_action);
+                connect(&via_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_via_edit()));
+                context_menu.addAction(&via_edit_context_action);
             }
 
-            connect(&delete_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
-            context_menu.addAction(&delete_action);
+            connect(&delete_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
+            context_menu.addAction(&delete_context_action);
+
+            connect(&inspect_selected_object_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_inspect_selected_object()));
+            context_menu.addAction(&inspect_selected_object_context_action);
         }
         else
         {
-            connect(&emarker_create_action, SIGNAL(triggered()), this, SLOT(on_emarker_create()));
-            context_menu.addAction(&emarker_create_action);
+            connect(&emarker_create_context_action, SIGNAL(triggered()), this, SLOT(on_emarker_create()));
+            context_menu.addAction(&emarker_create_context_action);
 
-            connect(&via_create_action, SIGNAL(triggered()), this, SLOT(on_via_create()));
-            context_menu.addAction(&via_create_action);
+            connect(&via_create_context_action, SIGNAL(triggered()), this, SLOT(on_via_create()));
+            context_menu.addAction(&via_create_context_action);
 
             if (workspace->get_current_tool() == WIRE)
             {
                 context_menu.addSeparator();
 
-                connect(&reset_wire_tool_action, SIGNAL(triggered()), workspace, SLOT(reset_wire_tool()));
-                context_menu.addAction(&reset_wire_tool_action);
+                connect(&reset_wire_tool_context_action, SIGNAL(triggered()), workspace, SLOT(reset_wire_tool()));
+                context_menu.addAction(&reset_wire_tool_context_action);
             }
         }
 
@@ -1598,12 +1633,15 @@ namespace degate
         }
 
         workspace->reset_selection();
-        workspace->add_object_to_selection(object);
 
-        project->get_logic_model()->set_current_layer(layer->get_layer_pos());
+        if (layer != nullptr && layer->is_enabled())
+            project->get_logic_model()->set_current_layer(layer->get_layer_pos());
+
         workspace->center_view(QPointF(bounding_box.get_center_x(), bounding_box.get_center_y()));
+        update_status_bar_layer_info();
 
-        workspace->update();
+        workspace->add_object_to_selection(object);
+        workspace->update_screen();
     }
 
     void MainWindow::on_rule_violations_dialog()
@@ -1678,6 +1716,15 @@ namespace degate
             delete modules_dialog;
 
             modules_dialog = nullptr;
+        }
+
+        if (connection_inspector_dialog != nullptr)
+        {
+            connection_inspector_dialog->close();
+
+            delete connection_inspector_dialog;
+
+            connection_inspector_dialog = nullptr;
         }
     }
 }

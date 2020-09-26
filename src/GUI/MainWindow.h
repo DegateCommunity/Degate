@@ -42,6 +42,7 @@
 #include "GUI/Dialog/RegularGridConfigurationDialog.h"
 #include "GUI/Dialog/RuleViolationsDialog.h"
 #include "GUI/Dialog/ModulesDialog.h"
+#include "GUI/Dialog/ConnectionInspector.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -256,6 +257,11 @@ namespace degate
 		 */
 		void on_menu_logic_move_selected_gates_into_module();
 
+        /**
+         * Open connection inspector dialog.
+         */
+        void on_menu_logic_inspect_selected_object();
+
 
 		/* Matching menu */
 
@@ -452,6 +458,7 @@ namespace degate
         QAction* interconnect_objects_action;
         QAction* isolate_objects_action;
         QAction* move_selected_gates_into_module;
+        QAction* inspect_selected_object_action;
 
         // Template matching menu
         QMenu* matching_menu;
@@ -482,6 +489,7 @@ namespace degate
         /* Dialogs */
         RuleViolationsDialog* rcv_dialog = nullptr;
         ModulesDialog* modules_dialog = nullptr;
+        ConnectionInspector* connection_inspector_dialog = nullptr;
 
 	};
 }
