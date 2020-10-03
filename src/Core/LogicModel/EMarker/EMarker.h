@@ -42,6 +42,8 @@ namespace degate
 	 */
 	class EMarker : public Circle, public ConnectedLogicModelObject, public RemoteObject
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::EMarker)
+
 	public:
 
 		explicit EMarker()

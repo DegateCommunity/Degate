@@ -70,14 +70,18 @@ void Annotation::set_class_id(Annotation::class_id_t class_id)
 
 const std::string Annotation::get_descriptive_identifier() const
 {
-	boost::format fmter("%1% (id=%2%,class=%3%)");
-	fmter % get_object_id() % get_name() % get_class_id();
-	return fmter.str();
+    return QString("[%1] %2 (%3=%4,%5=%6)").arg(tr("Annotation"))
+                                           .arg(QString::fromStdString(get_name()))
+                                           .arg(tr("id"))
+                                           .arg(get_object_id())
+                                           .arg(tr("class"))
+                                           .arg(get_class_id())
+                                           .toStdString();
 }
 
 const std::string Annotation::get_object_type_name() const
 {
-	return std::string("Annotation");
+	return tr("Annotation").toStdString();
 }
 
 void Annotation::print(std::ostream& os, int n_tabs) const

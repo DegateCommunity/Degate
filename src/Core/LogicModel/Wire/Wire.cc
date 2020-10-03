@@ -20,6 +20,7 @@
  *
  */
 
+#include "Wire.h"
 #include "Globals.h"
 #include "Core/LogicModel/LogicModelObjectBase.h"
 #include "Core/LogicModel/Net.h"
@@ -27,8 +28,7 @@
 #include "Core/LogicModel/LogicModel.h"
 #include "Core/LogicModel/ConnectedLogicModelObject.h"
 #include "Core/Utils/DegateExceptions.h"
-#include "Core/LogicModel/Wire/Wire.h"
-//#include <XmlRpc.h>
+
 #include <exception>
 
 using namespace degate;
@@ -60,21 +60,20 @@ const std::string Wire::get_descriptive_identifier() const
 {
 	if (has_name())
 	{
-		boost::format fmter("wire %1% (%2%)");
-		fmter % get_name() % get_object_id();
-		return fmter.str();
+        return QString("[%1] %2 (%3)").arg(tr("Wire"))
+                                      .arg(QString::fromStdString(get_name()))
+                                      .arg(get_object_id())
+                                      .toStdString();
 	}
 	else
 	{
-		boost::format fmter("wire (%1%)");
-		fmter % get_object_id();
-		return fmter.str();
+        return QString("[%1] (%2)").arg(tr("Wire")).arg(get_object_id()).toStdString();
 	}
 }
 
 const std::string Wire::get_object_type_name() const
 {
-	return std::string("Wire");
+	return tr("Wire").toStdString();
 }
 
 void Wire::print(std::ostream& os, int n_tabs) const

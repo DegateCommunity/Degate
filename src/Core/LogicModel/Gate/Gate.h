@@ -44,6 +44,8 @@ namespace degate
 	 */
 	class Gate : public Rectangle, public PlacedLogicModelObject
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::Gate)
+
 	public:
 
 		enum ORIENTATION

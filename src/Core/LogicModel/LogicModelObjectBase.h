@@ -27,6 +27,8 @@
 #include "Core/Primitive/DeepCopyable.h"
 #include <boost/format.hpp>
 
+#include <QCoreApplication>
+
 namespace degate
 {
 	/**
@@ -35,6 +37,8 @@ namespace degate
 	 */
 	class LogicModelObjectBase : public DeepCopyableBase
 	{
+        Q_DECLARE_TR_FUNCTIONS(degate::LogicModelObjectBase)
+
 	private:
 
 		object_id_t object_id;

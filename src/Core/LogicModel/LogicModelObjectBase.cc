@@ -114,14 +114,12 @@ const std::string LogicModelObjectBase::get_descriptive_identifier() const
 	// should be dispatched. In debug mode we break here.
 	assert(1 == 0);
 
-	boost::format fmter("Generic object %1%");
-	fmter % get_object_id();;
-	return fmter.str();
+	return QString("%1 %2").arg(tr("Generic object")).arg(get_object_id()).toStdString();
 }
 
 const std::string LogicModelObjectBase::get_object_type_name() const
 {
-	return std::string("Generic object");
+	return tr("Generic object").toStdString();
 }
 
 

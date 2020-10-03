@@ -60,6 +60,8 @@ namespace degate
 	 */
 	class Annotation : public Rectangle, public PlacedLogicModelObject
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::Annotation)
+
 	public:
 
 		typedef unsigned int class_id_t;

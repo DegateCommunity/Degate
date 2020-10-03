@@ -43,6 +43,8 @@ namespace degate
 	 */
 	class GatePort : public Circle, public ConnectedLogicModelObject
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::GatePort)
+
 	private:
 
 		std::weak_ptr<Gate> gate;

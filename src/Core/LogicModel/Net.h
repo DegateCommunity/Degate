@@ -51,6 +51,8 @@ namespace degate
 	 */
 	class Net : public LogicModelObjectBase, public DeepCopyable
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::Net)
+
 		friend class ConnectedLogicModelObject;
 
 	private:

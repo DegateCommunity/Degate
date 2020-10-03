@@ -38,6 +38,8 @@ namespace degate
 	 */
 	class Wire : public Line, public ConnectedLogicModelObject, public RemoteObject
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::Wire)
+
 	public:
 
 		/**

@@ -20,7 +20,7 @@
  *
  */
 
-#include "Core/LogicModel/Gate/Gate.h"
+#include "Gate.h"
 
 #include <boost/format.hpp>
 
@@ -302,30 +302,31 @@ const std::string Gate::get_descriptive_identifier() const
 	{
 		if (has_name())
 		{
-			boost::format fmter("%1% : %2%");
-			fmter % get_name() % get_gate_template()->get_name();
-			return fmter.str();
+            return QString("[%1] %2 : %3").arg(tr("Gate"))
+                                          .arg(QString::fromStdString(get_name()))
+                                          .arg(QString::fromStdString(get_gate_template()->get_name()))
+                                          .toStdString();
 		}
 		else
 		{
-			boost::format fmter("%1% (%2%)");
-			fmter % get_gate_template()->get_name() % get_object_id();
-			return fmter.str();
+            return QString("[%1] %2 (%3)").arg(tr("Gate"))
+                                          .arg(QString::fromStdString(get_gate_template()->get_name()))
+                                          .arg(get_object_id())
+                                          .toStdString();
 		}
 	}
 	else
 	{
 		if (!has_name())
 		{
-			boost::format fmter("gate (%1%)");
-			fmter % get_object_id();
-			return fmter.str();
+			return QString("[%1] (%2)").arg(tr("Gate")).arg(get_object_id()).toStdString();
 		}
 		else
 		{
-			boost::format fmter("gate %1% (%2%)");
-			fmter % get_name() % get_object_id();
-			return fmter.str();
+            return QString("[%1] %2 (%3)").arg(tr("Gate"))
+                                          .arg(QString::fromStdString(get_name()))
+                                          .arg(get_object_id())
+                                          .toStdString();
 		}
 	}
 }
@@ -333,7 +334,7 @@ const std::string Gate::get_descriptive_identifier() const
 
 const std::string Gate::get_object_type_name() const
 {
-	return std::string("Gate");
+	return tr("Gate").toStdString();
 }
 
 void Gate::print(std::ostream& os, int n_tabs) const

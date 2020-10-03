@@ -138,35 +138,36 @@ const std::string GatePort::get_descriptive_identifier() const
 	{
 		if (gate.lock()->has_name())
 		{
-			boost::format fmter("%1%: %2% (%3%)");
-			fmter
-				% gate.lock()->get_name()
-				% gate_template_port->get_name()
-				% gate.lock()->get_gate_template()->get_name();
-			return fmter.str();
+            return QString("[%1] %2 : %3 (%4)").arg(tr("Gate port"))
+                                               .arg(QString::fromStdString(gate.lock()->get_name()))
+                                               .arg(QString::fromStdString(gate_template_port->get_name()))
+                                               .arg(QString::fromStdString(gate.lock()
+                                                                               ->get_gate_template()
+                                                                               ->get_name()))
+                                               .toStdString();
 		}
 		else
 		{
-			boost::format fmter("%1% (%2%, gate=%3%)");
-			fmter
-				% gate_template_port->get_name()
-				% gate.lock()->get_gate_template()->get_name()
-				% gate.lock()->get_object_id();
-			return fmter.str();
+            return QString("[%1] %2 (%3, %4=%5)").arg(tr("Gate port"))
+                                                 .arg(QString::fromStdString(gate_template_port->get_name()))
+                                                 .arg(QString::fromStdString(gate.lock()
+                                                                                 ->get_gate_template()
+                                                                                 ->get_name()))
+                                                 .arg(tr("gate"))
+                                                 .arg(gate.lock()->get_object_id())
+                                                 .toStdString();
 		}
 	}
 	else
 	{
-		boost::format fmter("Gate port %1%");
-		fmter % get_object_id();
-		return fmter.str();
+		return QString("[%1] (%2)").arg(tr("Gate port")).arg(get_object_id()).toStdString();
 	}
 }
 
 
 const std::string GatePort::get_object_type_name() const
 {
-	return std::string("Gate port");
+	return tr("Gate port").toStdString();
 }
 
 

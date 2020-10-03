@@ -43,6 +43,8 @@ namespace degate
 	 */
 	class Via : public Circle, public ConnectedLogicModelObject, public RemoteObject
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::Via)
+
 	public:
 
 		/**

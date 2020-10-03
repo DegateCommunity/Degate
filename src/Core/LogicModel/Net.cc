@@ -105,7 +105,5 @@ unsigned int Net::size() const
 
 const std::string Net::get_descriptive_identifier() const
 {
-	boost::format fmter("Net %1%");
-	fmter % get_object_id();;
-	return fmter.str();
+	return QString("%1 %2").arg(tr("Net")).arg(get_object_id()).toStdString();
 }

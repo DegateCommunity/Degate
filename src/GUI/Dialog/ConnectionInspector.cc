@@ -238,6 +238,8 @@ namespace degate
                 }
             }
         }
+
+        connections_table.resizeColumnsToContents();
     }
 
     void ConnectionInspector::clear()

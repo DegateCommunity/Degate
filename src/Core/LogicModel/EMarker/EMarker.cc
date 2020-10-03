@@ -53,21 +53,20 @@ const std::string EMarker::get_descriptive_identifier() const
 {
 	if (has_name())
 	{
-		boost::format fmter("emarker %1% (%2%)");
-		fmter % get_name() % get_object_id();
-		return fmter.str();
+        return QString("[%1] %2 (%3)").arg(tr("EMarker"))
+                                      .arg(QString::fromStdString(get_name()))
+                                      .arg(get_object_id())
+                                      .toStdString();
 	}
 	else
 	{
-		boost::format fmter("emarker (%1%)");
-		fmter % get_object_id();
-		return fmter.str();
+        return QString("[%1] (%2)").arg(tr("EMarker")).arg(get_object_id()).toStdString();
 	}
 }
 
 const std::string EMarker::get_object_type_name() const
 {
-	return std::string("EMarker");
+	return tr("EMarker").toStdString();
 }
 
 
