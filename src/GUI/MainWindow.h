@@ -96,16 +96,6 @@ namespace degate
 	    void reload_texts();
 
 		/* Project menu */
-		
-		/**
-		 * Create and open the about window.
-		 */
-		void on_menu_help_about();
-
-		/**
-		 * Create and open the help window.
-		 */
-		void on_menu_help_open_help();
 
 		/**
 		 * Import a new project, it will force the user to find the project folder.
@@ -279,6 +269,24 @@ namespace degate
          * Start a wire matching process.
          */
         void on_menu_matching_wire_matching();
+
+
+        /* Help menu */
+
+        /**
+         * Create and open the help window.
+         */
+        void on_menu_help_open_help();
+
+        /**
+         * Redirect to the Degate documentation URL.
+         */
+        void on_menu_help_documentation();
+
+        /**
+         * Create and open the about window.
+         */
+        void on_menu_help_about();
 
 
 		/* Other */
@@ -469,6 +477,7 @@ namespace degate
         // Help menu
         QMenu* help_menu;
         QAction* help_action;
+        QAction* documentation_action;
         QAction* about_action;
 
 

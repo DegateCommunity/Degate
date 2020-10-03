@@ -266,6 +266,9 @@ namespace degate
         help_action = help_menu->addAction("");
         QObject::connect(help_action, SIGNAL(triggered()), this, SLOT(on_menu_help_open_help()));
 
+        documentation_action = help_menu->addAction("");
+        QObject::connect(documentation_action, SIGNAL(triggered()), this, SLOT(on_menu_help_documentation()));
+
 		about_action = help_menu->addAction("");
 		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
 		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
@@ -491,6 +494,7 @@ namespace degate
         // Help menu
         help_menu->setTitle(tr("Help"));
         help_action->setText(tr("Help"));
+        documentation_action->setText(tr("Documentation"));
         about_action->setText(tr("About"));
 
         // Status bar
@@ -509,49 +513,6 @@ namespace degate
         wire_tool->setText(tr("Wire tool"));
         rule_violations_action->setText(tr("Rule violations"));
         modules_action->setText(tr("Modules"));
-    }
-
-	void MainWindow::on_menu_help_about()
-	{
-        AboutDialog about(this);
-		about.exec();
-	}
-
-	void MainWindow::on_menu_help_open_help()
-    {
-	    static auto add_shortcut = [](const QString& shortcut, const QString& text){
-            return "<tr><td><strong>" + shortcut + "</strong></td><td>" + text + "</td></tr>";
-	    };
-
-        const QString help_message =
-                              "<html><center><strong>" +
-                              tr("Shortcuts:") + "</strong><br><table cellpadding=\"5\">" +
-
-                              add_shortcut(tr("LEFT click:"), tr("Object selection")) +
-                              add_shortcut(tr("RIGHT click:"), tr("Context menu")) +
-                              add_shortcut(tr("Hold LEFT click:"), tr("Move")) +
-                              add_shortcut(tr("Hold RIGHT click:"), tr("Area selection OR wire tool")) +
-                              add_shortcut(tr("CTRL + LEFT click:"), tr("Multiple object selection")) +
-                              add_shortcut(tr("CTRL + hold RIGHT click:"), tr("Selection of all objects in the area")) +
-                              add_shortcut(tr("DEL:"), tr("Delete selected objects")) +
-
-                              "</table></center></html>";
-
-        QMessageBox help(tr("Degate help"),
-                             help_message,
-                             QMessageBox::Icon::NoIcon,
-                             QMessageBox::Button::Ok,
-                             QMessageBox::Button::NoButton,
-                             QMessageBox::Button::NoButton,
-                             this
-        );
-
-        auto* about_layout = help.findChild<QGridLayout*>();
-        QMargins about_margins = about_layout->contentsMargins();
-        about_margins.setRight(40);
-        about_layout->setContentsMargins(about_margins);
-
-        help.exec();
     }
 
 	void MainWindow::on_menu_project_importer()
@@ -1207,6 +1168,54 @@ namespace degate
         workspace->update_screen();
 
         project_changed();
+    }
+
+    void MainWindow::on_menu_help_open_help()
+    {
+        static auto add_shortcut = [](const QString& shortcut, const QString& text){
+            return "<tr><td><strong>" + shortcut + "</strong></td><td>" + text + "</td></tr>";
+        };
+
+        const QString help_message =
+                "<html><center><strong>" +
+                tr("Shortcuts:") + "</strong><br><table cellpadding=\"5\">" +
+
+                add_shortcut(tr("LEFT click:"), tr("Object selection")) +
+                add_shortcut(tr("RIGHT click:"), tr("Context menu")) +
+                add_shortcut(tr("Hold LEFT click:"), tr("Move")) +
+                add_shortcut(tr("Hold RIGHT click:"), tr("Area selection OR wire tool")) +
+                add_shortcut(tr("CTRL + LEFT click:"), tr("Multiple object selection")) +
+                add_shortcut(tr("CTRL + hold RIGHT click:"), tr("Selection of all objects in the area")) +
+                add_shortcut(tr("DEL:"), tr("Delete selected objects")) +
+
+                "</table></center></html>";
+
+        QMessageBox help(tr("Degate help"),
+                         help_message,
+                         QMessageBox::Icon::NoIcon,
+                         QMessageBox::Button::Ok,
+                         QMessageBox::Button::NoButton,
+                         QMessageBox::Button::NoButton,
+                         this
+                        );
+
+        auto* about_layout = help.findChild<QGridLayout*>();
+        QMargins about_margins = about_layout->contentsMargins();
+        about_margins.setRight(40);
+        about_layout->setContentsMargins(about_margins);
+
+        help.exec();
+    }
+
+    void MainWindow::on_menu_help_documentation()
+    {
+        QDesktopServices::openUrl(QUrl("https://degate.readthedocs.io"));
+    }
+
+    void MainWindow::on_menu_help_about()
+    {
+        AboutDialog about(this);
+        about.exec();
     }
 
     void MainWindow::on_menu_project_settings()
