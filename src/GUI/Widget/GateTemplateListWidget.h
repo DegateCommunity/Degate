@@ -29,59 +29,59 @@
 
 namespace degate
 {
-	/**
-	 * @class GateTemplateListWidget
-	 * @brief List all gates template of the logic model.
-	 *
-	 * @see QTableWidget
-	 */
-	class GateTemplateListWidget : public QTableWidget
-	{
-		Q_OBJECT
-		
-	public:
+    /**
+     * @class GateTemplateListWidget
+     * @brief List all gates template of the logic model.
+     *
+     * @see QTableWidget
+     */
+    class GateTemplateListWidget : public QTableWidget
+    {
+        Q_OBJECT
 
-		/**
-		 * Create a gate template list widget.
-		 *
-		 * @param parent : the parent of the widget.
-		 * @param project : the current active project.
-		 * @param unique_selection : if true allow only one selection at a time.
-		 */
-		GateTemplateListWidget(QWidget* parent, Project_shptr project, bool unique_selection = true);
-		~GateTemplateListWidget() override = default;
+    public:
 
-		/**
-		 * Get a vector of the selected gates template.
-		 *
-		 * @return Returns a vector of selected gates template (can return an empty vector).
-		 */
-		std::vector<GateTemplate_shptr> get_selected_gates();
+        /**
+         * Create a gate template list widget.
+         *
+         * @param parent : the parent of the widget.
+         * @param project : the current active project.
+         * @param unique_selection : if true allow only one selection at a time.
+         */
+        GateTemplateListWidget(QWidget* parent, Project_shptr project, bool unique_selection = true);
+        ~GateTemplateListWidget() override = default;
 
-		/**
-		 * Get the first selected gate template.
-		 *
-		 * @return Returns the first selected gate template.
-		 */
-		GateTemplate_shptr get_selected_gate();
+        /**
+         * Get a vector of the selected gates template.
+         *
+         * @return Returns a vector of selected gates template (can return an empty vector).
+         */
+        std::vector<GateTemplate_shptr> get_selected_gates();
 
-		/**
-		 * Know if there an active selection.
-		 *
-		 * @return Returns true if at least one gate is selected.
-		 */
-		bool has_selection();
+        /**
+         * Get the first selected gate template.
+         *
+         * @return Returns the first selected gate template.
+         */
+        GateTemplate_shptr get_selected_gate();
 
-	public slots:
-		/**
-		 * Update the gate template list.
-		 */
-		void update_list();
+        /**
+         * Know if there an active selection.
+         *
+         * @return Returns true if at least one gate is selected.
+         */
+        bool has_selection();
 
-	private:
-		Project_shptr project;
-		
-	};
+    public slots:
+        /**
+         * Update the gate template list.
+         */
+        void update_list();
+
+    private:
+        Project_shptr project;
+
+    };
 }
 
 #endif

@@ -37,52 +37,52 @@ ConnectedLogicModelObject::ConnectedLogicModelObject()
 
 ConnectedLogicModelObject::~ConnectedLogicModelObject()
 {
-	remove_net();
+    remove_net();
 };
 
 void ConnectedLogicModelObject::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
     PlacedLogicModelObject::clone_deep_into(dest, oldnew);
 
-	auto clone = std::dynamic_pointer_cast<ConnectedLogicModelObject>(dest);
-	if (net.get() != nullptr)
-	{
-		clone->net = std::dynamic_pointer_cast<Net>(net->clone_deep(oldnew));
-	}
+    auto clone = std::dynamic_pointer_cast<ConnectedLogicModelObject>(dest);
+    if (net.get() != nullptr)
+    {
+        clone->net = std::dynamic_pointer_cast<Net>(net->clone_deep(oldnew));
+    }
 }
 
 void ConnectedLogicModelObject::set_net(Net_shptr net)
 {
-	if (this->net != nullptr)
-	{
-		this->net->remove_object(get_object_id());
-	}
-	this->net = net;
-	this->net->add_object(get_object_id());
+    if (this->net != nullptr)
+    {
+        this->net->remove_object(get_object_id());
+    }
+    this->net = net;
+    this->net->add_object(get_object_id());
 }
 
 void ConnectedLogicModelObject::remove_net()
 {
-	if (net != nullptr)
-	{
-		net->remove_object(get_object_id());
-		net.reset();
-	}
+    if (net != nullptr)
+    {
+        net->remove_object(get_object_id());
+        net.reset();
+    }
 }
 
 
 Net_shptr ConnectedLogicModelObject::get_net()
 {
-	return net;
+    return net;
 }
 
 bool ConnectedLogicModelObject::is_connected() const
 {
-	if (net == nullptr) return false;
-	if (net->size() >= 2) return true;
-	BOOST_FOREACH(object_id_t oid, *net)
-	{
-		if (oid != get_object_id()) return true;
-	}
-	return false;
+    if (net == nullptr) return false;
+    if (net->size() >= 2) return true;
+    BOOST_FOREACH(object_id_t oid, *net)
+    {
+        if (oid != get_object_id()) return true;
+    }
+    return false;
 }

@@ -38,25 +38,25 @@ using namespace degate;
 
 ret_t Importer::check_file(std::string const& filename) const
 {
-	if (is_file(filename))
-	{
-		return RET_OK;
-	}
-	else
-	{
-		debug(TM, "Can't open file %s", filename.c_str());
-		return RET_ERR;
-	}
+    if (is_file(filename))
+    {
+        return RET_OK;
+    }
+    else
+    {
+        debug(TM, "Can't open file %s", filename.c_str());
+        return RET_ERR;
+    }
 }
 
 
 bool Importer::parse_bool(std::string const& str) const
 {
-	if (str == "true" || str == "enabled") return true;
-	else if (str == "false" || str == "disabled") return false;
-	else
-	{
-		debug(TM, "invalid attribute value '%s'", str.c_str());
-		throw std::invalid_argument("Can't parse string as a boolean value.");
-	}
+    if (str == "true" || str == "enabled") return true;
+    else if (str == "false" || str == "disabled") return false;
+    else
+    {
+        debug(TM, "invalid attribute value '%s'", str.c_str());
+        throw std::invalid_argument("Can't parse string as a boolean value.");
+    }
 }

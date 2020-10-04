@@ -30,34 +30,34 @@
 
 namespace degate
 {
-	/**
-	 * A code template generator for VHDL.
-	 */
-	class VHDLTBCodeTemplateGenerator : public VHDLCodeTemplateGenerator
-	{
-	public:
+    /**
+     * A code template generator for VHDL.
+     */
+    class VHDLTBCodeTemplateGenerator : public VHDLCodeTemplateGenerator
+    {
+    public:
 
-		VHDLTBCodeTemplateGenerator(std::string const& entity_name,
-		                            std::string const& description,
-		                            std::string const& logic_class);
+        VHDLTBCodeTemplateGenerator(std::string const& entity_name,
+                                    std::string const& description,
+                                    std::string const& logic_class);
 
-		virtual ~VHDLTBCodeTemplateGenerator();
-		virtual std::string generate() const;
+        virtual ~VHDLTBCodeTemplateGenerator();
+        virtual std::string generate() const;
 
-	protected:
+    protected:
 
-		//using VHDLCodeTemplateGenerator::generate_component;
+        //using VHDLCodeTemplateGenerator::generate_component;
 
-		virtual std::string generate_header() const;
+        virtual std::string generate_header() const;
 
-		virtual std::string generate_impl(std::string const& logic_class) const;
+        virtual std::string generate_impl(std::string const& logic_class) const;
 
-		std::string generate_signals() const;
+        std::string generate_signals() const;
 
-		std::string generate_clock_process(std::string const& clock_signal_name) const;
-	};
+        std::string generate_clock_process(std::string const& clock_signal_name) const;
+    };
 
-	typedef std::shared_ptr<VHDLTBCodeTemplateGenerator> VHDLTBCodeTemplateGenerator_shptr;
+    typedef std::shared_ptr<VHDLTBCodeTemplateGenerator> VHDLTBCodeTemplateGenerator_shptr;
 }
 
 #endif

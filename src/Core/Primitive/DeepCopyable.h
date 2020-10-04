@@ -27,58 +27,58 @@
 
 namespace degate
 {
-	class DeepCopyable;
-	typedef std::shared_ptr<DeepCopyable> DeepCopyable_shptr;
-	typedef std::shared_ptr<const DeepCopyable> c_DeepCopyable_shptr;
+    class DeepCopyable;
+    typedef std::shared_ptr<DeepCopyable> DeepCopyable_shptr;
+    typedef std::shared_ptr<const DeepCopyable> c_DeepCopyable_shptr;
 
-	class DeepCopyableBase
-	{
-	public:
-		typedef std::map<c_DeepCopyable_shptr, DeepCopyable_shptr> oldnew_t;
-	protected:
-		/**
-		 * @brief Deep-copy all members to \a destination.
-		 * 
-		 * @todo Find out whether the default assignment operator can be used to simplify implementations of this method.
-		 */
-		virtual void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const = 0;
-	};
+    class DeepCopyableBase
+    {
+    public:
+        typedef std::map<c_DeepCopyable_shptr, DeepCopyable_shptr> oldnew_t;
+    protected:
+        /**
+         * @brief Deep-copy all members to \a destination.
+         *
+         * @todo Find out whether the default assignment operator can be used to simplify implementations of this method.
+         */
+        virtual void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const = 0;
+    };
 
-	/**
-	 * DeepCopyable is a type for cloneable objects (deep-copyable).
-	 *
-	 * You can think of an object hierarchy as a graph. To make a deep-copy possible,
-	 * all leafs of the graph must implement the DeepCopyable interface, and the inner nodes
-	 * must implement the DeepCopyableBase interface. Then, it is possible to recursively
-	 * visit all nodes in the graph by calling clone_deep().
-	 *
-	 * The \a oldnew mapping is used to ensure that each object in the object hierarchy
-	 * is copied only once, even if there are multiple paths to the object in the
-	 * hierarchy. This is achieved by searching for an existing clone in the map
-	 * before cloning the respective object.
-	 */
-	class DeepCopyable : public DeepCopyableBase, public std::enable_shared_from_this<DeepCopyable>
-	{
-	public:
-		/**
-		 * @brief Returns a copy of this object, but with all references to other DeepCopyables cleared (e.g. set to 0-pointer).
-		 */
-		virtual DeepCopyable_shptr clone_shallow() const = 0;
+    /**
+     * DeepCopyable is a type for cloneable objects (deep-copyable).
+     *
+     * You can think of an object hierarchy as a graph. To make a deep-copy possible,
+     * all leafs of the graph must implement the DeepCopyable interface, and the inner nodes
+     * must implement the DeepCopyableBase interface. Then, it is possible to recursively
+     * visit all nodes in the graph by calling clone_deep().
+     *
+     * The \a oldnew mapping is used to ensure that each object in the object hierarchy
+     * is copied only once, even if there are multiple paths to the object in the
+     * hierarchy. This is achieved by searching for an existing clone in the map
+     * before cloning the respective object.
+     */
+    class DeepCopyable : public DeepCopyableBase, public std::enable_shared_from_this<DeepCopyable>
+    {
+    public:
+        /**
+         * @brief Returns a copy of this object, but with all references to other DeepCopyables cleared (e.g. set to 0-pointer).
+         */
+        virtual DeepCopyable_shptr clone_shallow() const = 0;
 
-		/**
-		 * @brief Returns a deep-copy of this object, i.e. with all DeepCopyable members deep-copied themselves.
-		 * 
-		 * Use \a oldnew to avoid cloning objects multiple times.
-		 */
-		virtual DeepCopyable_shptr clone_deep(oldnew_t* oldnew) const;
-	protected:
-		/**
-		 * @brief Store o->clone_shallow() in oldnew[o], unless there already exists such a clone.
-		 * 
-		 * This should be used as convenience function in clone_deep() implementations.
-		 */
-		static bool clone_once(const c_DeepCopyable_shptr& o, oldnew_t* oldnew);
-	};
+        /**
+         * @brief Returns a deep-copy of this object, i.e. with all DeepCopyable members deep-copied themselves.
+         *
+         * Use \a oldnew to avoid cloning objects multiple times.
+         */
+        virtual DeepCopyable_shptr clone_deep(oldnew_t* oldnew) const;
+    protected:
+        /**
+         * @brief Store o->clone_shallow() in oldnew[o], unless there already exists such a clone.
+         *
+         * This should be used as convenience function in clone_deep() implementations.
+         */
+        static bool clone_once(const c_DeepCopyable_shptr& o, oldnew_t* oldnew);
+    };
 }
 
 #endif    /* __DEEPCOPYABLE_H__ */

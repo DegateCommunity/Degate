@@ -26,15 +26,15 @@ using namespace degate;
 
 void RegularGrid::precalc_steps()
 {
-	grid_offsets.clear();
-	if (distance > 0)
-	{
-		for (double i = min; i < max; i += distance)
-		{
-			grid_offsets.push_back(lround(i));
-		}
-		grid_offsets.sort();
-	}
+    grid_offsets.clear();
+    if (distance > 0)
+    {
+        for (double i = min; i < max; i += distance)
+        {
+            grid_offsets.push_back(lround(i));
+        }
+        grid_offsets.sort();
+    }
 }
 
 int RegularGrid::snap_to_grid(int pos) const

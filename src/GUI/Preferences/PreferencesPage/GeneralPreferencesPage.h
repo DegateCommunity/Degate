@@ -32,21 +32,21 @@
 namespace degate
 {
     /**
-	 * @class GeneralPreferencesPage
-	 * @brief Widget to change general preferences (like language).
-	 *
-	 * @see PreferencesDialog
-	 */
+     * @class GeneralPreferencesPage
+     * @brief Widget to change general preferences (like language).
+     *
+     * @see PreferencesDialog
+     */
     class GeneralPreferencesPage : public PreferencesPage
     {
     Q_OBJECT
 
     public:
         /**
-		 * Create the general preferences page widget.
-		 *
-		 * @param parent : the parent of the widget.
-		 */
+         * Create the general preferences page widget.
+         *
+         * @param parent : the parent of the widget.
+         */
         explicit GeneralPreferencesPage(QWidget* parent);
         ~GeneralPreferencesPage() override = default;
 

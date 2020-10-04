@@ -27,99 +27,99 @@ namespace degate
 {
     GateTemplateListWidget::GateTemplateListWidget(QWidget* parent, Project_shptr project, bool unique_selection)
             : QTableWidget(parent), project(std::move(project))
-	{
-		setColumnCount(3);
-		QStringList list;
-		list.append(tr("ID"));
-		list.append(tr("Name"));
-		list.append(tr("Description"));
-		setHorizontalHeaderLabels(list);
-		resizeColumnsToContents();
-		resizeRowsToContents();
+    {
+        setColumnCount(3);
+        QStringList list;
+        list.append(tr("ID"));
+        list.append(tr("Name"));
+        list.append(tr("Description"));
+        setHorizontalHeaderLabels(list);
+        resizeColumnsToContents();
+        resizeRowsToContents();
         setSelectionBehavior(SelectRows);
 
-		if (unique_selection)
-		    setSelectionMode(SelectionMode::SingleSelection);
-		else
+        if (unique_selection)
+            setSelectionMode(SelectionMode::SingleSelection);
+        else
             setSelectionMode(SelectionMode::MultiSelection);
 
-		update_list();
-	}
+        update_list();
+    }
 
-	std::vector<GateTemplate_shptr> GateTemplateListWidget::get_selected_gates()
-	{
-		QItemSelectionModel* select = selectionModel();
+    std::vector<GateTemplate_shptr> GateTemplateListWidget::get_selected_gates()
+    {
+        QItemSelectionModel* select = selectionModel();
 
-		if (!select->hasSelection())
-			return std::vector<GateTemplate_shptr>(); // Empty vector
+        if (!select->hasSelection())
+            return std::vector<GateTemplate_shptr>(); // Empty vector
 
-		QModelIndexList index = select->selectedRows();
-		std::vector<GateTemplate_shptr> res;
+        QModelIndexList index = select->selectedRows();
+        std::vector<GateTemplate_shptr> res;
 
-		for (auto & sel : index)
-		{
-			if (sel.isValid())
-			{
-				res.push_back(project->get_logic_model()->get_gate_library()->get_template(item(sel.row(), 0)->text().toInt()));
-			}
-		}
+        for (auto & sel : index)
+        {
+            if (sel.isValid())
+            {
+                res.push_back(project->get_logic_model()->get_gate_library()->get_template(item(sel.row(), 0)->text().toInt()));
+            }
+        }
 
-		return res;
-	}
+        return res;
+    }
 
-	GateTemplate_shptr GateTemplateListWidget::get_selected_gate()
-	{
-		QItemSelectionModel* select = selectionModel();
+    GateTemplate_shptr GateTemplateListWidget::get_selected_gate()
+    {
+        QItemSelectionModel* select = selectionModel();
 
-		if (!select->hasSelection())
-			return nullptr;
+        if (!select->hasSelection())
+            return nullptr;
 
-		QModelIndexList index = select->selectedRows();
+        QModelIndexList index = select->selectedRows();
 
-		auto sel = index.at(0);
+        auto sel = index.at(0);
 
-		if (!sel.isValid())
-			return nullptr;
-		else
-			return project->get_logic_model()->get_gate_library()->get_template(item(sel.row(), 0)->text().toInt());
-	}
+        if (!sel.isValid())
+            return nullptr;
+        else
+            return project->get_logic_model()->get_gate_library()->get_template(item(sel.row(), 0)->text().toInt());
+    }
 
-	bool GateTemplateListWidget::has_selection()
-	{
-		return selectionModel()->hasSelection();
-	}
+    bool GateTemplateListWidget::has_selection()
+    {
+        return selectionModel()->hasSelection();
+    }
 
-	void GateTemplateListWidget::update_list()
-	{
-		if (project == nullptr)
-			return;
+    void GateTemplateListWidget::update_list()
+    {
+        if (project == nullptr)
+            return;
 
-		setRowCount(0);
-		
-		GateLibrary_shptr gate_lib = project->get_logic_model()->get_gate_library();
-		for (auto iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
-		{
-			GateTemplate_shptr gate = (*iter).second;
+        setRowCount(0);
 
-			insertRow(rowCount());
+        GateLibrary_shptr gate_lib = project->get_logic_model()->get_gate_library();
+        for (auto iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
+        {
+            GateTemplate_shptr gate = (*iter).second;
 
-			// Id
-			auto id_item = new QTableWidgetItem(QString::number(gate->get_object_id()));
-			id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-			setItem(rowCount() - 1, 0, id_item);
+            insertRow(rowCount());
 
-			// Name
+            // Id
+            auto id_item = new QTableWidgetItem(QString::number(gate->get_object_id()));
+            id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+            setItem(rowCount() - 1, 0, id_item);
+
+            // Name
             auto name_item = new QTableWidgetItem(QString::fromStdString(gate->get_name()));
-			name_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-			setItem(rowCount() - 1, 1, name_item);
+            name_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+            setItem(rowCount() - 1, 1, name_item);
 
-			// Description
+            // Description
             auto description_item = new QTableWidgetItem(QString::fromStdString(gate->get_description()));
-			description_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-			setItem(rowCount() - 1, 2, description_item);
-		}
+            description_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+            setItem(rowCount() - 1, 2, description_item);
+        }
 
-		resizeColumnsToContents();
-		resizeRowsToContents();
-	}
+        resizeColumnsToContents();
+        resizeRowsToContents();
+    }
 }

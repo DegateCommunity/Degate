@@ -29,29 +29,29 @@
 namespace degate
 {
     /**
-	 * @class WorkspaceVias
-	 * @brief Prepare and draw all vias of the active layer on the workspace.
-	 *
-	 * The parent vbo buffer will store all squares.
-	 *
-	 * @see WorkspaceElement
-	 */
+     * @class WorkspaceVias
+     * @brief Prepare and draw all vias of the active layer on the workspace.
+     *
+     * The parent vbo buffer will store all squares.
+     *
+     * @see WorkspaceElement
+     */
     class WorkspaceVias : public WorkspaceElement
     {
     public:
 
         /**
-		 * Create a workspace vias element.
-		 * This will only set the parent, real creation will start with init and update functions.
-		 *
-		 * @param parent : the parent widget pointer.
-		 */
+         * Create a workspace vias element.
+         * This will only set the parent, real creation will start with init and update functions.
+         *
+         * @param parent : the parent widget pointer.
+         */
         explicit WorkspaceVias(QWidget* parent);
         ~WorkspaceVias();
 
         /**
-		 * Init all OpenGL routine (buffers, shaders...).
-		 */
+         * Init all OpenGL routine (buffers, shaders...).
+         */
         void init() override;
 
         /**
@@ -84,11 +84,11 @@ namespace degate
 
     private:
         /**
-		 * Create an via in OpenGL buffers.
-		 *
-		 * @param via : the via object.
-		 * @param index : the index of the annotation for OpenGL buffers.
-		 */
+         * Create an via in OpenGL buffers.
+         *
+         * @param via : the via object.
+         * @param index : the index of the annotation for OpenGL buffers.
+         */
         void create_via(Via_shptr& via, unsigned index);
 
         Text text;

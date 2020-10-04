@@ -27,88 +27,88 @@
 
 namespace degate
 {
-	/**
-	 * Processor: Copy an image with auto conversion.
-	 */
-	template <typename ImageTypeIn, typename ImageTypeOut>
-	class IPCopy : public ImageProcessorBase
-	{
-	private:
+    /**
+     * Processor: Copy an image with auto conversion.
+     */
+    template <typename ImageTypeIn, typename ImageTypeOut>
+    class IPCopy : public ImageProcessorBase
+    {
+    private:
 
-		unsigned int min_x, max_x, min_y, max_y;
-		bool work_on_region;
+        unsigned int min_x, max_x, min_y, max_y;
+        bool work_on_region;
 
-	public:
+    public:
 
-		/**
-		 * The constructor for processing the whole image.
-		 */
-		IPCopy() :
-			ImageProcessorBase("IPCopy",
-			                   "Copy an image with pixel type auto conversion",
-			                   false,
-			                   typeid(typename ImageTypeIn::pixel_type),
-			                   typeid(typename ImageTypeOut::pixel_type)),
-			work_on_region(false)
-		{
-		}
+        /**
+         * The constructor for processing the whole image.
+         */
+        IPCopy() :
+            ImageProcessorBase("IPCopy",
+                               "Copy an image with pixel type auto conversion",
+                               false,
+                               typeid(typename ImageTypeIn::pixel_type),
+                               typeid(typename ImageTypeOut::pixel_type)),
+            work_on_region(false)
+        {
+        }
 
-		/**
-		 * The constructor for working on an image region.
-		 */
-		IPCopy(unsigned int min_x, unsigned int max_x, unsigned int min_y, unsigned int max_y) :
-			ImageProcessorBase("IPCopy",
-			                   "Copy an image with pixel type auto conversion",
-			                   false,
-			                   typeid(typename ImageTypeIn::pixel_type),
-			                   typeid(typename ImageTypeOut::pixel_type)),
-			min_x(min_x),
-			max_x(max_x),
-			min_y(min_y),
-			max_y(max_y),
-			work_on_region(true)
-		{
-		}
+        /**
+         * The constructor for working on an image region.
+         */
+        IPCopy(unsigned int min_x, unsigned int max_x, unsigned int min_y, unsigned int max_y) :
+            ImageProcessorBase("IPCopy",
+                               "Copy an image with pixel type auto conversion",
+                               false,
+                               typeid(typename ImageTypeIn::pixel_type),
+                               typeid(typename ImageTypeOut::pixel_type)),
+            min_x(min_x),
+            max_x(max_x),
+            min_y(min_y),
+            max_y(max_y),
+            work_on_region(true)
+        {
+        }
 
-		/**
-		 * The destructor.
-		 */
-		virtual ~IPCopy()
-		{
-		}
+        /**
+         * The destructor.
+         */
+        virtual ~IPCopy()
+        {
+        }
 
 
-		virtual ImageBase_shptr run(ImageBase_shptr in)
-		{
-			assert(in != nullptr);
+        virtual ImageBase_shptr run(ImageBase_shptr in)
+        {
+            assert(in != nullptr);
 
-			std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
+            std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
 
-			std::shared_ptr<ImageTypeOut> img_out
-			(work_on_region
-				 ? new ImageTypeOut(max_x - min_x, max_y - min_y)
-				 : new ImageTypeOut(in->get_width(), in->get_height()));
+            std::shared_ptr<ImageTypeOut> img_out
+            (work_on_region
+                 ? new ImageTypeOut(max_x - min_x, max_y - min_y)
+                 : new ImageTypeOut(in->get_width(), in->get_height()));
 
-			assert(img_in != nullptr);
-			assert(img_out != nullptr);
+            assert(img_in != nullptr);
+            assert(img_out != nullptr);
 
-			std::cout << "Copy image." << std::endl;
+            std::cout << "Copy image." << std::endl;
 
-			if (work_on_region == true)
-			{
-				extract_partial_image<ImageTypeOut,
-				                      ImageTypeIn>(img_out, img_in,
-				                                   min_x, max_x,
-				                                   min_y, max_y);
-			}
-			else
-			{
-				copy_image<ImageTypeOut, ImageTypeIn>(img_out, img_in);
-			}
+            if (work_on_region == true)
+            {
+                extract_partial_image<ImageTypeOut,
+                                      ImageTypeIn>(img_out, img_in,
+                                                   min_x, max_x,
+                                                   min_y, max_y);
+            }
+            else
+            {
+                copy_image<ImageTypeOut, ImageTypeIn>(img_out, img_in);
+            }
 
-			return img_out;
-		}
-	};
+            return img_out;
+        }
+    };
 }
 
 #endif

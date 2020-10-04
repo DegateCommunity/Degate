@@ -42,42 +42,42 @@ void PlacedLogicModelObject::clone_deep_into(DeepCopyable_shptr destination, old
     ColoredObject::clone_deep_into(destination, oldnew);
     LogicModelObjectBase::clone_deep_into(destination, oldnew);
 
-	auto clone = std::dynamic_pointer_cast<PlacedLogicModelObject>(destination);
-	assert(clone.get () != nullptr);
-	clone->highlight_state = highlight_state;
-	clone->layer = std::dynamic_pointer_cast<Layer>(layer.lock()->clone_deep(oldnew));
+    auto clone = std::dynamic_pointer_cast<PlacedLogicModelObject>(destination);
+    assert(clone.get () != nullptr);
+    clone->highlight_state = highlight_state;
+    clone->layer = std::dynamic_pointer_cast<Layer>(layer.lock()->clone_deep(oldnew));
 }
 
 PlacedLogicModelObject::HIGHLIGHTING_STATE PlacedLogicModelObject::get_highlighted() const
 {
-	return highlight_state;
+    return highlight_state;
 }
 
 bool PlacedLogicModelObject::is_highlighted() const
 {
-	return highlight_state != PlacedLogicModelObject::HLIGHTSTATE_NOT;
+    return highlight_state != PlacedLogicModelObject::HLIGHTSTATE_NOT;
 }
 
 void PlacedLogicModelObject::set_highlighted(PlacedLogicModelObject::HIGHLIGHTING_STATE state)
 {
-	highlight_state = state;
+    highlight_state = state;
 }
 
 
 void PlacedLogicModelObject::set_layer(std::shared_ptr<Layer> layer)
 {
-	this->layer = layer;
+    this->layer = layer;
 }
 
 std::shared_ptr<Layer> PlacedLogicModelObject::get_layer()
 {
-	return layer.lock();
+    return layer.lock();
 }
 
 void PlacedLogicModelObject::notify_shape_change()
 {
-	if (layer.lock() != nullptr && has_valid_object_id())
-	{
-		layer.lock()->notify_shape_change(get_object_id());
-	}
+    if (layer.lock() != nullptr && has_valid_object_id())
+    {
+        layer.lock()->notify_shape_change(get_object_id());
+    }
 }

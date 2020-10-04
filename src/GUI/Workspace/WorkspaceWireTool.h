@@ -31,14 +31,14 @@
 namespace degate
 {
     /**
-	 * @class WorkspaceWireTool
-	 * @brief Prepare, draw and manage the wire tool.
-	 *
-	 * This will draw the wire (when the drawing started) and manage the line (until the drawing end).
-	 * The wire tool is composed of a square.
-	 *
-	 * The vbo buffer will store the line.
-	 */
+     * @class WorkspaceWireTool
+     * @brief Prepare, draw and manage the wire tool.
+     *
+     * This will draw the wire (when the drawing started) and manage the line (until the drawing end).
+     * The wire tool is composed of a square.
+     *
+     * The vbo buffer will store the line.
+     */
     class WorkspaceWireTool
     {
     public:

@@ -25,45 +25,45 @@ namespace degate
 {
     GateLibraryDialog::GateLibraryDialog(QWidget* parent, const Project_shptr& project)
             : QDialog(parent), project(project), list(parent, project, false)
-	{
-		setWindowTitle(tr("Gate library"));
-		resize(300, 400);
+    {
+        setWindowTitle(tr("Gate library"));
+        resize(300, 400);
 
-		// Buttons text
-		edit_gate_button.setText(tr("Edit"));
+        // Buttons text
+        edit_gate_button.setText(tr("Edit"));
         remove_gate_button.setText(tr("Remove"));
-		validate_button.setText(tr("Ok"));
+        validate_button.setText(tr("Ok"));
 
-		// Layout
-		buttons_layout.addWidget(&edit_gate_button);
+        // Layout
+        buttons_layout.addWidget(&edit_gate_button);
         buttons_layout.addWidget(&remove_gate_button);
-		buttons_layout.addWidget(&validate_button);
+        buttons_layout.addWidget(&validate_button);
 
-		layout.addWidget(&list);
-		layout.addLayout(&buttons_layout);
-		
-		setLayout(&layout);
+        layout.addWidget(&list);
+        layout.addLayout(&buttons_layout);
 
-		QObject::connect(&edit_gate_button, SIGNAL(clicked()), this, SLOT(on_gate_edit_button()));
+        setLayout(&layout);
+
+        QObject::connect(&edit_gate_button, SIGNAL(clicked()), this, SLOT(on_gate_edit_button()));
         QObject::connect(&remove_gate_button, SIGNAL(clicked()), this, SLOT(on_gate_remove_button()));
-		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(close()));
-	}
+        QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(close()));
+    }
 
-	void GateLibraryDialog::on_gate_edit_button()
-	{
-		if (!list.has_selection())
-			return;
+    void GateLibraryDialog::on_gate_edit_button()
+    {
+        if (!list.has_selection())
+            return;
 
-		std::vector<GateTemplate_shptr> selected_gates = list.get_selected_gates();
+        std::vector<GateTemplate_shptr> selected_gates = list.get_selected_gates();
 
-		for (auto& e : selected_gates)
-		{
-			GateEditDialog dialog(this, e, project);
-			dialog.exec();
-		}
+        for (auto& e : selected_gates)
+        {
+            GateEditDialog dialog(this, e, project);
+            dialog.exec();
+        }
 
-		list.update_list();
-	}
+        list.update_list();
+    }
 
     void GateLibraryDialog::on_gate_remove_button()
     {

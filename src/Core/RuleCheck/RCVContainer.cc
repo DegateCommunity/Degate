@@ -33,69 +33,69 @@ RCVContainer::~RCVContainer()
 
 void RCVContainer::push_back(RCViolation_shptr rcv)
 {
-	violations.push_back(rcv);
+    violations.push_back(rcv);
 }
 
 RCVContainer::iterator RCVContainer::begin()
 {
-	return violations.begin();
+    return violations.begin();
 }
 
 RCVContainer::iterator RCVContainer::end()
 {
-	return violations.end();
+    return violations.end();
 }
 
 RCVContainer::const_iterator RCVContainer::begin() const
 {
-	return violations.begin();
+    return violations.begin();
 }
 
 RCVContainer::const_iterator RCVContainer::end() const
 {
-	return violations.end();
+    return violations.end();
 }
 
 void RCVContainer::clear()
 {
-	violations.clear();
+    violations.clear();
 }
 
 size_t RCVContainer::size() const
 {
-	return violations.size();
+    return violations.size();
 }
 
 bool RCVContainer::contains(RCViolation_shptr rcv) const
 {
-	return find(rcv) != end();
+    return find(rcv) != end();
 }
 
 bool RCVContainer::erase(RCViolation_shptr rcv)
 {
-	iterator iter = find(rcv);
-	if (iter != end())
-	{
-		violations.erase(iter);
-		return true;
-	}
-	return false;
+    iterator iter = find(rcv);
+    if (iter != end())
+    {
+        violations.erase(iter);
+        return true;
+    }
+    return false;
 }
 
 RCVContainer::iterator RCVContainer::find(RCViolation_shptr rcv)
 {
-	for (iterator iter = begin(); iter != end(); ++iter)
-	{
-		if ((*iter)->equals(rcv)) return iter;
-	}
-	return end();
+    for (iterator iter = begin(); iter != end(); ++iter)
+    {
+        if ((*iter)->equals(rcv)) return iter;
+    }
+    return end();
 }
 
 RCVContainer::const_iterator RCVContainer::find(RCViolation_shptr rcv) const
 {
-	for (const_iterator iter = begin(); iter != end(); ++iter)
-	{
-		if ((*iter)->equals(rcv)) return iter;
-	}
-	return end();
+    for (const_iterator iter = begin(); iter != end(); ++iter)
+    {
+        if ((*iter)->equals(rcv)) return iter;
+    }
+    return end();
 }

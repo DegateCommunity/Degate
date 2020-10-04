@@ -28,51 +28,51 @@
 
 namespace degate
 {
-	/**
-	 * A dummy method to get rid of compiler warnings.
-	 */
-	template <class T>
-	inline void ignore_unused_variable_warning(T const&)
-	{
-	}
+    /**
+     * A dummy method to get rid of compiler warnings.
+     */
+    template <class T>
+    inline void ignore_unused_variable_warning(T const&)
+    {
+    }
 
-	/**
-	 * Compile time check for single channel image types.
-	 */
-	template <class ImageType>
-	struct assert_is_single_channel_image
-	{
-		static void constraints(ImageType img)
-		{
-			typedef typename ImageType::pixel_policy PolicyType;
-			PolicyType::is_single_channel();
-		}
+    /**
+     * Compile time check for single channel image types.
+     */
+    template <class ImageType>
+    struct assert_is_single_channel_image
+    {
+        static void constraints(ImageType img)
+        {
+            typedef typename ImageType::pixel_policy PolicyType;
+            PolicyType::is_single_channel();
+        }
 
-		assert_is_single_channel_image()
-		{
-			void (*p)(ImageType) = constraints;
-			ignore_unused_variable_warning(p);
-		}
-	};
+        assert_is_single_channel_image()
+        {
+            void (*p)(ImageType) = constraints;
+            ignore_unused_variable_warning(p);
+        }
+    };
 
-	/**
-	 * Compile time check for multi channel image types.
-	 */
-	template <class ImageType>
-	struct assert_is_multi_channel_image
-	{
-		static void constraints(ImageType img)
-		{
-			typedef typename ImageType::pixel_policy PolicyType;
-			PolicyType::is_multi_channel();
-		}
+    /**
+     * Compile time check for multi channel image types.
+     */
+    template <class ImageType>
+    struct assert_is_multi_channel_image
+    {
+        static void constraints(ImageType img)
+        {
+            typedef typename ImageType::pixel_policy PolicyType;
+            PolicyType::is_multi_channel();
+        }
 
-		assert_is_multi_channel_image()
-		{
-			void (*p)(ImageType) = constraints;
-			ignore_unused_variable_warning(p);
-		}
-	};
+        assert_is_multi_channel_image()
+        {
+            void (*p)(ImageType) = constraints;
+            ignore_unused_variable_warning(p);
+        }
+    };
 }
 
 #endif

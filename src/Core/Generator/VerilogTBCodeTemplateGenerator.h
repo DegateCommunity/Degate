@@ -30,30 +30,30 @@
 
 namespace degate
 {
-	/**
-	 * A code template generator for Verilog.
-	 */
-	class VerilogTBCodeTemplateGenerator : public VerilogCodeTemplateGenerator
-	{
-	public:
+    /**
+     * A code template generator for Verilog.
+     */
+    class VerilogTBCodeTemplateGenerator : public VerilogCodeTemplateGenerator
+    {
+    public:
 
-		VerilogTBCodeTemplateGenerator(std::string const& entity_name,
-		                               std::string const& description,
-		                               std::string const& logic_class);
+        VerilogTBCodeTemplateGenerator(std::string const& entity_name,
+                                       std::string const& description,
+                                       std::string const& logic_class);
 
-		virtual ~VerilogTBCodeTemplateGenerator();
-		virtual std::string generate() const;
+        virtual ~VerilogTBCodeTemplateGenerator();
+        virtual std::string generate() const;
 
-	protected:
+    protected:
 
-		virtual std::string generate_header() const;
-		virtual std::string generate_module(std::string const& device_type_name) const;
+        virtual std::string generate_header() const;
+        virtual std::string generate_module(std::string const& device_type_name) const;
 
-		std::string generate_all_assignments(std::vector<std::string> const& in_port_idents,
-		                                     std::vector<std::string> const& out_port_idents) const;
-	};
+        std::string generate_all_assignments(std::vector<std::string> const& in_port_idents,
+                                             std::vector<std::string> const& out_port_idents) const;
+    };
 
-	typedef std::shared_ptr<VerilogTBCodeTemplateGenerator> VerilogTBCodeTemplateGenerator_shptr;
+    typedef std::shared_ptr<VerilogTBCodeTemplateGenerator> VerilogTBCodeTemplateGenerator_shptr;
 }
 
 #endif

@@ -36,85 +36,85 @@
 
 namespace degate
 {
-	typedef std::list<std::string> file_format_collection;
+    typedef std::list<std::string> file_format_collection;
 
-	/**
-	 * A factory for creating image reader objects.
-	 */
-	template <class ImageType>
-	class ImageReaderFactory
-	{
-	public:
+    /**
+     * A factory for creating image reader objects.
+     */
+    template <class ImageType>
+    class ImageReaderFactory
+    {
+    public:
 
-	private:
+    private:
 
-		file_format_collection file_formats;
+        file_format_collection file_formats;
 
-	public:
+    public:
 
-		ImageReaderFactory()
-		{
-			// Tiff file format parser
-			file_formats.push_back("tif");
-			file_formats.push_back("tiff");
+        ImageReaderFactory()
+        {
+            // Tiff file format parser
+            file_formats.push_back("tif");
+            file_formats.push_back("tiff");
 
-			// Jpeg file format parser
-			file_formats.push_back("jpg");
-			file_formats.push_back("jpeg");
-		}
+            // Jpeg file format parser
+            file_formats.push_back("jpg");
+            file_formats.push_back("jpeg");
+        }
 
 
-		~ImageReaderFactory()
-		{
-		}
+        ~ImageReaderFactory()
+        {
+        }
 
-		/**
-		 * Get a list of parseable file formats.
-		 */
-		file_format_collection const& get_file_formats() const
-		{
-			return file_formats;
-		}
+        /**
+         * Get a list of parseable file formats.
+         */
+        file_format_collection const& get_file_formats() const
+        {
+            return file_formats;
+        }
 
-		/**
-		 * Get a concrete image reader object for a file name.
-		 * @param filename The file name is evaluated. Depending on the file suffix an
-		 *   image reader is choosen. The file must not exists for the reader selection,
-		 *   but the reader will fail, if it can't read the image.
-		 * @return Returns an image reader object that is able to read the image.
-		 * @exception InvalidFileFormatException This exception is thrown if the there is no
-		 *   reader that can read the file.
-		 */
-		std::shared_ptr<class ImageReaderBase<ImageType>>
-		get_reader(std::string const& filename)
-		{
-			std::string suffix(get_file_suffix(filename).c_str());
+        /**
+         * Get a concrete image reader object for a file name.
+         * @param filename The file name is evaluated. Depending on the file suffix an
+         *   image reader is choosen. The file must not exists for the reader selection,
+         *   but the reader will fail, if it can't read the image.
+         * @return Returns an image reader object that is able to read the image.
+         * @exception InvalidFileFormatException This exception is thrown if the there is no
+         *   reader that can read the file.
+         */
+        std::shared_ptr<class ImageReaderBase<ImageType>>
+        get_reader(std::string const& filename)
+        {
+            std::string suffix(get_file_suffix(filename).c_str());
 
-			/*
-		  Convert suffix string to a lowercase string.
-	  
-		  This comment should not be necessary, if there would be a simple
-		  way to convert it. You may have seen other programming languages
-		  with a simple convenient way to lowercase strings. But hey! The
-		  transform is really generic, You can even apply it to strings. Wow!
-		  BTW: If you omit the static cast, you will get a long error message
-		  from your compiler. Great!
-			*/
+            /*
+          Convert suffix string to a lowercase string.
 
-			std::transform(suffix.begin(), suffix.end(), suffix.begin(),
-			               static_cast<int (*)(int)>(std::tolower));
+          This comment should not be necessary, if there would be a simple
+          way to convert it. You may have seen other programming languages
+          with a simple convenient way to lowercase strings. But hey! The
+          transform is really generic, You can even apply it to strings. Wow!
+          BTW: If you omit the static cast, you will get a long error message
+          from your compiler. Great!
+            */
 
-			// Ok. Enough sarcasm. Let us finish the job ...
+            std::transform(suffix.begin(), suffix.end(), suffix.begin(),
+                           static_cast<int (*)(int)>(std::tolower));
 
-			if (suffix == "tif" || suffix == "tiff")
-				return std::shared_ptr<ImageReaderBase<ImageType>>
-					(new TIFFReader<ImageType>(filename));
-			else if (suffix == "jpg" || suffix == "jpeg")
-				return std::shared_ptr<ImageReaderBase<ImageType>>
-					(new JPEGReader<ImageType>(filename));
-			else throw InvalidFileFormatException();
-		}
-	};
+            // Ok. Enough sarcasm. Let us finish the job ...
+
+            if (suffix == "tif" || suffix == "tiff")
+                return std::shared_ptr<ImageReaderBase<ImageType>>
+                    (new TIFFReader<ImageType>(filename));
+            else if (suffix == "jpg" || suffix == "jpeg")
+                return std::shared_ptr<ImageReaderBase<ImageType>>
+                    (new JPEGReader<ImageType>(filename));
+            else throw InvalidFileFormatException();
+        }
+    };
 }
 
 

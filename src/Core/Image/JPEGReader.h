@@ -31,90 +31,90 @@
 
 namespace degate
 {
-	/**
-	 * The JPEGReader parses jpeg images.
-	 */
-	template <class ImageType>
-	class JPEGReader : public ImageReaderBase<ImageType>
-	{
-	private:
+    /**
+     * The JPEGReader parses jpeg images.
+     */
+    template <class ImageType>
+    class JPEGReader : public ImageReaderBase<ImageType>
+    {
+    private:
 
-		QImage* image = nullptr;
-		int depth;
+        QImage* image = nullptr;
+        int depth;
 
-	public:
+    public:
 
-		using ImageReaderBase<ImageType>::get_filename;
-		using ImageReaderBase<ImageType>::set_width;
-		using ImageReaderBase<ImageType>::set_height;
-		using ImageReaderBase<ImageType>::get_width;
-		using ImageReaderBase<ImageType>::get_height;
+        using ImageReaderBase<ImageType>::get_filename;
+        using ImageReaderBase<ImageType>::set_width;
+        using ImageReaderBase<ImageType>::set_height;
+        using ImageReaderBase<ImageType>::get_width;
+        using ImageReaderBase<ImageType>::get_height;
 
-		JPEGReader(std::string const& filename) :
-			ImageReaderBase<ImageType>(filename),
-			image(nullptr)
-		{
-		}
+        JPEGReader(std::string const& filename) :
+            ImageReaderBase<ImageType>(filename),
+            image(nullptr)
+        {
+        }
 
-		~JPEGReader()
-		{
-			if (image != nullptr) delete image;
-		}
+        ~JPEGReader()
+        {
+            if (image != nullptr) delete image;
+        }
 
-		bool read();
+        bool read();
 
-		bool get_image(std::shared_ptr<ImageType>);
-	};
+        bool get_image(std::shared_ptr<ImageType>);
+    };
 
-	template <class ImageType>
-	bool JPEGReader<ImageType>::read()
-	{
-		QImageReader reader(get_filename().c_str());
-		QSize size = reader.size();
-		if (!size.isValid())
-		{
-			debug(TM, "can't read size of %s\n", get_filename().c_str());
-			return false;
-		}
+    template <class ImageType>
+    bool JPEGReader<ImageType>::read()
+    {
+        QImageReader reader(get_filename().c_str());
+        QSize size = reader.size();
+        if (!size.isValid())
+        {
+            debug(TM, "can't read size of %s\n", get_filename().c_str());
+            return false;
+        }
 
-		set_width(size.width());
-		set_height(size.height());
+        set_width(size.width());
+        set_height(size.height());
 
-		assert(reader.imageFormat() == QImage::Format_ARGB32 || reader.imageFormat() == QImage::Format_RGB32);
+        assert(reader.imageFormat() == QImage::Format_ARGB32 || reader.imageFormat() == QImage::Format_RGB32);
 
-		image = new QImage(size.width(), size.height(), reader.imageFormat());
+        image = new QImage(size.width(), size.height(), reader.imageFormat());
 
-		debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
+        debug(TM, "Reading image with size: %d x %d", get_width(), get_height());
 
-		if (!reader.read(image))
-		{
-			debug(TM, "can't read %s\n", get_filename().c_str());
-			return false;
-		}
-		depth = image->depth();
+        if (!reader.read(image))
+        {
+            debug(TM, "can't read %s\n", get_filename().c_str());
+            return false;
+        }
+        depth = image->depth();
 
-		debug(TM, "Image read\n");
+        debug(TM, "Image read\n");
 
-		return true;
-	}
+        return true;
+    }
 
-	template <class ImageType>
-	bool JPEGReader<ImageType>::get_image(std::shared_ptr<ImageType> img)
-	{
-		if (img == nullptr) return false;
-		if (image == nullptr) return false;
+    template <class ImageType>
+    bool JPEGReader<ImageType>::get_image(std::shared_ptr<ImageType> img)
+    {
+        if (img == nullptr) return false;
+        if (image == nullptr) return false;
 
-		for (unsigned int y = 0; y < get_height(); y++)
-		{
-			for (unsigned int x = 0; x < get_width(); x++)
-			{
-				QRgb rgb = image->pixel(x, y);
-				img->set_pixel(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), 0xff));
-			}
-		}
+        for (unsigned int y = 0; y < get_height(); y++)
+        {
+            for (unsigned int x = 0; x < get_width(); x++)
+            {
+                QRgb rgb = image->pixel(x, y);
+                img->set_pixel(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), 0xff));
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }
 
 #endif

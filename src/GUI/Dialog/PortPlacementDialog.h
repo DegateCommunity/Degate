@@ -30,48 +30,48 @@
 namespace degate
 {
 
-	/**
-	 * @class PortPlacementDialog
-	 * @brief Dialog to place a port template of a gate template.
-	 *
-	 * @see QDialog
-	 */
-	class PortPlacementDialog : public QDialog
-	{
-		Q_OBJECT
+    /**
+     * @class PortPlacementDialog
+     * @brief Dialog to place a port template of a gate template.
+     *
+     * @see QDialog
+     */
+    class PortPlacementDialog : public QDialog
+    {
+        Q_OBJECT
 
-	public:
+    public:
 
-		/**
-		 * Create a port placement dialog.
-		 *
-		 * @param parent : the parent of the dialog.
-		 * @param project : the current active project.
-		 * @param port : the port template to place.
-		 */
-		PortPlacementDialog(QWidget* parent, const Project_shptr& project, const GateTemplate_shptr& gate, const GateTemplatePort_shptr& port);
-		~PortPlacementDialog() override;
+        /**
+         * Create a port placement dialog.
+         *
+         * @param parent : the parent of the dialog.
+         * @param project : the current active project.
+         * @param port : the port template to place.
+         */
+        PortPlacementDialog(QWidget* parent, const Project_shptr& project, const GateTemplate_shptr& gate, const GateTemplatePort_shptr& port);
+        ~PortPlacementDialog() override;
 
-	public slots:
-		/**
-		 * Save the new position of the port template.
-		 */
-		void on_validation();
+    public slots:
+        /**
+         * Save the new position of the port template.
+         */
+        void on_validation();
 
-	private:
-		Project_shptr project;
-		GateTemplate_shptr gate;
-		GateTemplatePort_shptr port;
+    private:
+        Project_shptr project;
+        GateTemplate_shptr gate;
+        GateTemplatePort_shptr port;
 
-		QVBoxLayout layout;
-		QHBoxLayout quit_buttons_layout;
-		QHBoxLayout layers_buttons_layout;
-		PortPlacementWidget placement;
-		QPushButton validate_button;
-		QPushButton cancel_button;
-		QPushButton next_layer_button;
-		QPushButton previous_layer_button;
-	};
+        QVBoxLayout layout;
+        QHBoxLayout quit_buttons_layout;
+        QHBoxLayout layers_buttons_layout;
+        PortPlacementWidget placement;
+        QPushButton validate_button;
+        QPushButton cancel_button;
+        QPushButton next_layer_button;
+        QPushButton previous_layer_button;
+    };
 }
 
 #endif

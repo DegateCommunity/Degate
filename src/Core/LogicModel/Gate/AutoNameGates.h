@@ -26,45 +26,45 @@
 
 namespace degate
 {
-	/**
-	 * This class helps to generate names for gates depending on their position.
-	 *
-	 * Gates are usually placed in rows or columns. It might be useful to name
-	 * them by their position. The class AutoNameGates generates names in the
-	 * format ${row}.${column}. E.g. the gate name "5.23" indicates that this
-	 * gate is placed in the 5th row and the 23th column.
-	 *
-	 */
-	class AutoNameGates
-	{
-	public:
+    /**
+     * This class helps to generate names for gates depending on their position.
+     *
+     * Gates are usually placed in rows or columns. It might be useful to name
+     * them by their position. The class AutoNameGates generates names in the
+     * format ${row}.${column}. E.g. the gate name "5.23" indicates that this
+     * gate is placed in the 5th row and the 23th column.
+     *
+     */
+    class AutoNameGates
+    {
+    public:
 
-		enum ORIENTATION
-		{
-			ALONG_ROWS = 1,
-			ALONG_COLS = 2
-		};
+        enum ORIENTATION
+        {
+            ALONG_ROWS = 1,
+            ALONG_COLS = 2
+        };
 
-		AutoNameGates(LogicModel_shptr lmodel, ORIENTATION orientation);
+        AutoNameGates(LogicModel_shptr lmodel, ORIENTATION orientation);
 
-		void run();
+        void run();
 
-	private:
-		void rename_gates(std::vector<unsigned int> const& histogram,
-		                  ORIENTATION orientation,
-		                  std::list<int> const& scan_lines) const;
+    private:
+        void rename_gates(std::vector<unsigned int> const& histogram,
+                          ORIENTATION orientation,
+                          std::list<int> const& scan_lines) const;
 
-		void fill_histogram(LogicModel_shptr lmodel,
-		                    std::vector<unsigned int>& histogram,
-		                    ORIENTATION orientation) const;
+        void fill_histogram(LogicModel_shptr lmodel,
+                            std::vector<unsigned int>& histogram,
+                            ORIENTATION orientation) const;
 
-		std::list<int> scan_histogram(std::vector<unsigned int> const& histogram) const;
+        std::list<int> scan_histogram(std::vector<unsigned int> const& histogram) const;
 
-	private:
-		LogicModel_shptr lmodel;
-		ORIENTATION      orientation;
-		Layer_shptr      layer;
-	};
+    private:
+        LogicModel_shptr lmodel;
+        ORIENTATION      orientation;
+        Layer_shptr      layer;
+    };
 }
 
 #endif

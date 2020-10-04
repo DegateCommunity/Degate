@@ -27,96 +27,96 @@
 
 namespace degate
 {
-	/**
-	 * Abstract base class for an image processor.
-	 */
-	class ImageProcessorBase : public ProgressControl
-	{
-		friend class IPPipe;
+    /**
+     * Abstract base class for an image processor.
+     */
+    class ImageProcessorBase : public ProgressControl
+    {
+        friend class IPPipe;
 
-	private:
+    private:
 
-		const std::string name;
-		const std::string description;
+        const std::string name;
+        const std::string description;
 
-		const bool has_properties;
+        const bool has_properties;
 
-		std::string type_in;
-		std::string type_out;
+        std::string type_in;
+        std::string type_out;
 
-	protected:
-
-
-		std::string const& get_type_in() const
-		{
-			return type_in;
-		}
-
-		std::string const& get_type_out() const
-		{
-			return type_out;
-		}
+    protected:
 
 
-	public:
+        std::string const& get_type_in() const
+        {
+            return type_in;
+        }
 
-		/**
-		 * The constructor for a plugin
-		 * @param name The name of the plugin.
-		 */
-		ImageProcessorBase(std::string const& name,
-		                   std::string const& description,
-		                   bool has_properties,
-		                   std::type_info const& type_in,
-		                   std::type_info const& type_out) :
-			name(name),
-			description(description),
-			has_properties(has_properties),
-			type_in(type_in.name()),
-			type_out(type_out.name())
-		{
-		}
-
-		/**
-		 * The destructor for a plugin.
-		 */
-		virtual ~ImageProcessorBase()
-		{
-		}
+        std::string const& get_type_out() const
+        {
+            return type_out;
+        }
 
 
-		/**
-		 * Get the processor's name.
-		 */
-		std::string const& get_name() const
-		{
-			return name;
-		}
+    public:
 
-		/**
-		 * Get the processor's description.
-		 */
-		std::string const& get_description() const
-		{
-			return description;
-		}
+        /**
+         * The constructor for a plugin
+         * @param name The name of the plugin.
+         */
+        ImageProcessorBase(std::string const& name,
+                           std::string const& description,
+                           bool has_properties,
+                           std::type_info const& type_in,
+                           std::type_info const& type_out) :
+            name(name),
+            description(description),
+            has_properties(has_properties),
+            type_in(type_in.name()),
+            type_out(type_out.name())
+        {
+        }
 
-		/**
-		 * Start processing.
-		 */
-		virtual ImageBase_shptr run(ImageBase_shptr in) = 0;
+        /**
+         * The destructor for a plugin.
+         */
+        virtual ~ImageProcessorBase()
+        {
+        }
 
 
-		/**
-		 * Check if the processor can be configured.
-		 */
-		virtual bool has_property() const
-		{
-			return has_properties;
-		}
-	};
+        /**
+         * Get the processor's name.
+         */
+        std::string const& get_name() const
+        {
+            return name;
+        }
 
-	typedef std::shared_ptr<ImageProcessorBase> ImageProcessorBase_shptr;
+        /**
+         * Get the processor's description.
+         */
+        std::string const& get_description() const
+        {
+            return description;
+        }
+
+        /**
+         * Start processing.
+         */
+        virtual ImageBase_shptr run(ImageBase_shptr in) = 0;
+
+
+        /**
+         * Check if the processor can be configured.
+         */
+        virtual bool has_property() const
+        {
+            return has_properties;
+        }
+    };
+
+    typedef std::shared_ptr<ImageProcessorBase> ImageProcessorBase_shptr;
 }
 
 #endif

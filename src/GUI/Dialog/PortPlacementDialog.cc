@@ -28,44 +28,44 @@ namespace degate
                                              const GateTemplate_shptr& gate,
                                              const GateTemplatePort_shptr& port)
             : QDialog(parent), project(project), gate(gate), port(port), placement(this, project, gate, port)
-	{
-	    setWindowTitle(tr("Place/move the port"));
+    {
+        setWindowTitle(tr("Place/move the port"));
 
-		resize(gate->get_width() + 300, gate->get_height() + 300);
-		placement.resize(gate->get_width(), gate->get_height());
-		next_layer_button.setText(tr("Next layer"));
-		previous_layer_button.setText(tr("Previous layer"));
-		validate_button.setText(tr("Ok"));
-		cancel_button.setText(tr("Cancel"));
+        resize(gate->get_width() + 300, gate->get_height() + 300);
+        placement.resize(gate->get_width(), gate->get_height());
+        next_layer_button.setText(tr("Next layer"));
+        previous_layer_button.setText(tr("Previous layer"));
+        validate_button.setText(tr("Ok"));
+        cancel_button.setText(tr("Cancel"));
 
-		layers_buttons_layout.addWidget(&next_layer_button);
-		layers_buttons_layout.addWidget(&previous_layer_button);
-		
-		quit_buttons_layout.addWidget(&validate_button);
-		quit_buttons_layout.addWidget(&cancel_button);
+        layers_buttons_layout.addWidget(&next_layer_button);
+        layers_buttons_layout.addWidget(&previous_layer_button);
 
-		layout.addWidget(&placement);
-		layout.addLayout(&layers_buttons_layout);
-		layout.addLayout(&quit_buttons_layout);
+        quit_buttons_layout.addWidget(&validate_button);
+        quit_buttons_layout.addWidget(&cancel_button);
 
-		setLayout(&layout);
+        layout.addWidget(&placement);
+        layout.addLayout(&layers_buttons_layout);
+        layout.addLayout(&quit_buttons_layout);
 
-		QObject::connect(&next_layer_button, SIGNAL(clicked()), &placement, SLOT(next_layer()));
-		QObject::connect(&previous_layer_button, SIGNAL(clicked()), &placement, SLOT(previous_layer()));
-		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(on_validation()));
-		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
-	}
+        setLayout(&layout);
 
-	PortPlacementDialog::~PortPlacementDialog()
-	{
-		placement.doneCurrent();
-	}
+        QObject::connect(&next_layer_button, SIGNAL(clicked()), &placement, SLOT(next_layer()));
+        QObject::connect(&previous_layer_button, SIGNAL(clicked()), &placement, SLOT(previous_layer()));
+        QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(on_validation()));
+        QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
+    }
 
-	void PortPlacementDialog::on_validation()
-	{
-		port->set_point(placement.get_new_port_position());
-		project->get_logic_model()->update_ports(gate);
+    PortPlacementDialog::~PortPlacementDialog()
+    {
+        placement.doneCurrent();
+    }
 
-		close();
-	}
+    void PortPlacementDialog::on_validation()
+    {
+        port->set_point(placement.get_new_port_position());
+        project->get_logic_model()->update_ports(gate);
+
+        close();
+    }
 }

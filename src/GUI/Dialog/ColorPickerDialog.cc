@@ -138,31 +138,31 @@ namespace degate
     // Color selection button
 
     ColorSelectionButton::ColorSelectionButton(QWidget* parent, const QString& text) : QPushButton(parent)
-	{
-		setText(text);
+    {
+        setText(text);
         setFlat(true);
         setAutoFillBackground(true);
 
-		QObject::connect(this, SIGNAL(clicked()), this, SLOT(update_color()));
-	}
+        QObject::connect(this, SIGNAL(clicked()), this, SLOT(update_color()));
+    }
 
-	void ColorSelectionButton::set_color(const color_t& color)
-	{
-		this->color = color;
+    void ColorSelectionButton::set_color(const color_t& color)
+    {
+        this->color = color;
 
-		// Update color
+        // Update color
         QPalette palette;
         palette.setColor(QPalette::Button, to_qt_color(color));
         setPalette(palette);
-	}
+    }
 
-	color_t ColorSelectionButton::get_color() const
-	{
-		return color;
-	}
+    color_t ColorSelectionButton::get_color() const
+    {
+        return color;
+    }
 
-	void ColorSelectionButton::update_color()
-	{
+    void ColorSelectionButton::update_color()
+    {
         ColorPickerDialog color_picker(parentWidget(), color);
         color_picker.exec();
 
@@ -172,5 +172,5 @@ namespace degate
         QPalette palette;
         palette.setColor(QPalette::Button, to_qt_color(color));
         setPalette(palette);
-	}
+    }
 }

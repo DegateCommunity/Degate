@@ -30,61 +30,61 @@
 
 namespace degate
 {
-	/**
-	 * Represents a grid with equidistant spacing between grid lines.
-	 */
-	class RegularGrid : public Grid
-	{
-	private:
-		double distance;
-		int min, max;
-		grid_set grid_offsets;
+    /**
+     * Represents a grid with equidistant spacing between grid lines.
+     */
+    class RegularGrid : public Grid
+    {
+    private:
+        double distance;
+        int min, max;
+        grid_set grid_offsets;
 
-		void precalc_steps();
-	public:
-		RegularGrid(Grid::ORIENTATION orientation) : Grid(orientation)
-		{
-			min = 0;
-			max = 0;
-			distance = 0;
-		}
+        void precalc_steps();
+    public:
+        RegularGrid(Grid::ORIENTATION orientation) : Grid(orientation)
+        {
+            min = 0;
+            max = 0;
+            distance = 0;
+        }
 
-		virtual ~RegularGrid()
-		{
-		}
+        virtual ~RegularGrid()
+        {
+        }
 
-		virtual grid_iter begin() const { return grid_offsets.begin(); }
-		virtual grid_iter end() const { return grid_offsets.end(); }
+        virtual grid_iter begin() const { return grid_offsets.begin(); }
+        virtual grid_iter end() const { return grid_offsets.end(); }
 
-		virtual void clear()
-		{
-			distance = 0;
-			min = max = 0;
-			grid_offsets.clear();
-		}
+        virtual void clear()
+        {
+            distance = 0;
+            min = max = 0;
+            grid_offsets.clear();
+        }
 
-		virtual int get_min() const { return min; }
-		virtual int get_max() const { return max; }
+        virtual int get_min() const { return min; }
+        virtual int get_max() const { return max; }
 
-		virtual void set_range(int min, int max)
-		{
-			this->min = std::min(min, max);
-			this->max = std::max(min, max);
-			precalc_steps();
-		}
+        virtual void set_range(int min, int max)
+        {
+            this->min = std::min(min, max);
+            this->max = std::max(min, max);
+            precalc_steps();
+        }
 
-		virtual void set_distance(double distance)
-		{
-			assert(distance >= 0);
-			this->distance = abs(static_cast<long>(distance));
-			precalc_steps();
-		}
+        virtual void set_distance(double distance)
+        {
+            assert(distance >= 0);
+            this->distance = abs(static_cast<long>(distance));
+            precalc_steps();
+        }
 
-		virtual double get_distance() const { return distance; }
-		virtual int snap_to_grid(int pos) const;
-	};
+        virtual double get_distance() const { return distance; }
+        virtual int snap_to_grid(int pos) const;
+    };
 
-	typedef std::shared_ptr<RegularGrid> RegularGrid_shptr;
+    typedef std::shared_ptr<RegularGrid> RegularGrid_shptr;
 }
 
 #endif

@@ -34,129 +34,129 @@
 
 namespace degate
 {
-	/**
-	 * Represents a placeable object.
-	 *
-	 * Any class that represents a somewhere placeable objects should inherit
-	 * from that base class. The term "placed objects" is related to real
-	 * existent physical structures on the chip surface
-	 * (e.g. wire, vias, ...) as well as logical objects (e.g. annotations).
-	 */
-	class PlacedLogicModelObject : public AbstractShape,
-	                               public LogicModelObjectBase,
-	                               public ColoredObject,
-	                               public DeepCopyable
-	{
-	public:
+    /**
+     * Represents a placeable object.
+     *
+     * Any class that represents a somewhere placeable objects should inherit
+     * from that base class. The term "placed objects" is related to real
+     * existent physical structures on the chip surface
+     * (e.g. wire, vias, ...) as well as logical objects (e.g. annotations).
+     */
+    class PlacedLogicModelObject : public AbstractShape,
+                                   public LogicModelObjectBase,
+                                   public ColoredObject,
+                                   public DeepCopyable
+    {
+    public:
 
-		enum HIGHLIGHTING_STATE
-		{
-			HLIGHTSTATE_NOT = 0,
-			HLIGHTSTATE_DIRECT = 1,
-			HLIGHTSTATE_ADJACENT = 2
-		};
+        enum HIGHLIGHTING_STATE
+        {
+            HLIGHTSTATE_NOT = 0,
+            HLIGHTSTATE_DIRECT = 1,
+            HLIGHTSTATE_ADJACENT = 2
+        };
 
-	private:
+    private:
 
-		HIGHLIGHTING_STATE highlight_state;
-		std::weak_ptr<Layer> layer;
-		unsigned index;
+        HIGHLIGHTING_STATE highlight_state;
+        std::weak_ptr<Layer> layer;
+        unsigned index;
 
-	protected:
+    protected:
 
-		/**
-		 * Ajust the position in the quadtree.
-		 */
-		void notify_shape_change();
+        /**
+         * Ajust the position in the quadtree.
+         */
+        void notify_shape_change();
 
-	public:
+    public:
 
-		/**
-		 * The constructor.
-		 */
-		PlacedLogicModelObject();
+        /**
+         * The constructor.
+         */
+        PlacedLogicModelObject();
 
-		/**
-		 * The destructor.
-		 */
-		~PlacedLogicModelObject() override;
+        /**
+         * The destructor.
+         */
+        ~PlacedLogicModelObject() override;
 
-		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
+        void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 
-		/**
-		 * A placed object is highlightable. You can ask for its
-		 * state with this method.
-		 */
-		virtual HIGHLIGHTING_STATE get_highlighted() const;
+        /**
+         * A placed object is highlightable. You can ask for its
+         * state with this method.
+         */
+        virtual HIGHLIGHTING_STATE get_highlighted() const;
 
-		/**
-		 * Check if an object is highlighted at all.
-		 */
-		virtual bool is_highlighted() const;
+        /**
+         * Check if an object is highlighted at all.
+         */
+        virtual bool is_highlighted() const;
 
-		/**
-		 * Set the selection state.
-		 */
-		virtual void set_highlighted(HIGHLIGHTING_STATE state);
+        /**
+         * Set the selection state.
+         */
+        virtual void set_highlighted(HIGHLIGHTING_STATE state);
 
-		/**
-		 * Set the layer on which the object is placed.
-		 */
-		virtual void set_layer(std::shared_ptr<Layer> layer);
+        /**
+         * Set the layer on which the object is placed.
+         */
+        virtual void set_layer(std::shared_ptr<Layer> layer);
 
-		/**
-		 * Get the layer on which the object is placed.
-		 */
-		virtual std::shared_ptr<Layer> get_layer();
-
-
-		/**
-		 * Print the object.
-		 */
-		virtual void print(std::ostream& os = std::cout, int n_tabs = 0) const = 0;
+        /**
+         * Get the layer on which the object is placed.
+         */
+        virtual std::shared_ptr<Layer> get_layer();
 
 
-		/**
-		 * Set the index of the object.
-		 */
-		inline void set_index(unsigned value)
-		{
-			index = value;
-		}
-
-		/**
-		 * Get the index of the object.
-		 */
-		inline unsigned get_index()
-		{
-			return index;
-		}
-	};
-
-	static inline uint32_t highlight_color(uint32_t col) 
-	{
-		uint8_t r = MASK_R(col);
-		uint8_t g = MASK_G(col);
-		uint8_t b = MASK_B(col);
-		uint8_t a = MASK_A(col);
-
-		return MERGE_CHANNELS((((255-r)>>1) + r), (((255-g)>>1) + g), (((255-b)>>1) + b), (a < 128 ? 128 : a));
-	}
+        /**
+         * Print the object.
+         */
+        virtual void print(std::ostream& os = std::cout, int n_tabs = 0) const = 0;
 
 
-	static inline uint32_t highlight_color_by_state(uint32_t col, PlacedLogicModelObject::HIGHLIGHTING_STATE state)
-	{
-		switch (state)
-		{
-			case PlacedLogicModelObject::HLIGHTSTATE_DIRECT:
-				return highlight_color(highlight_color(col));
-			case PlacedLogicModelObject::HLIGHTSTATE_ADJACENT:
-				return highlight_color(col);
-			case PlacedLogicModelObject::HLIGHTSTATE_NOT:
-			default:
-				return col;
-		}
-	}
+        /**
+         * Set the index of the object.
+         */
+        inline void set_index(unsigned value)
+        {
+            index = value;
+        }
+
+        /**
+         * Get the index of the object.
+         */
+        inline unsigned get_index()
+        {
+            return index;
+        }
+    };
+
+    static inline uint32_t highlight_color(uint32_t col)
+    {
+        uint8_t r = MASK_R(col);
+        uint8_t g = MASK_G(col);
+        uint8_t b = MASK_B(col);
+        uint8_t a = MASK_A(col);
+
+        return MERGE_CHANNELS((((255-r)>>1) + r), (((255-g)>>1) + g), (((255-b)>>1) + b), (a < 128 ? 128 : a));
+    }
+
+
+    static inline uint32_t highlight_color_by_state(uint32_t col, PlacedLogicModelObject::HIGHLIGHTING_STATE state)
+    {
+        switch (state)
+        {
+            case PlacedLogicModelObject::HLIGHTSTATE_DIRECT:
+                return highlight_color(highlight_color(col));
+            case PlacedLogicModelObject::HLIGHTSTATE_ADJACENT:
+                return highlight_color(col);
+            case PlacedLogicModelObject::HLIGHTSTATE_NOT:
+            default:
+                return col;
+        }
+    }
 }
 
 #endif

@@ -27,65 +27,65 @@
 
 namespace degate
 {
-	enum IMAGE_TYPE
-	{
-		IMAGE_TYPE_GS_BYTE = 1,
-		IMAGE_TYPE_GS_DOUBLE = 2,
-		IMAGE_TYPE_RGBA = 3
-	};
+    enum IMAGE_TYPE
+    {
+        IMAGE_TYPE_GS_BYTE = 1,
+        IMAGE_TYPE_GS_DOUBLE = 2,
+        IMAGE_TYPE_RGBA = 3
+    };
 
-	typedef uint8_t gs_byte_pixel_t;
-	typedef double gs_double_pixel_t;
-	typedef uint32_t rgba_pixel_t;
+    typedef uint8_t gs_byte_pixel_t;
+    typedef double gs_double_pixel_t;
+    typedef uint32_t rgba_pixel_t;
 
-	/* -------------------------------------------------------------------------- *
-	 * pixel type policies
-	 * -------------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------- *
+     * pixel type policies
+     * -------------------------------------------------------------------------- */
 
 
-	/**
-	 * Base class for image policies.
-	 */
-	class PixelPolicy_Base
-	{
-	};
+    /**
+     * Base class for image policies.
+     */
+    class PixelPolicy_Base
+    {
+    };
 
-	/*
-	 * Image policy for RGBA images. Each channel is a 8 bit value.
-	 */
-	class PixelPolicy_RGBA : public PixelPolicy_Base
-	{
-	protected:
-		static const IMAGE_TYPE image_type = IMAGE_TYPE_RGBA;
+    /*
+     * Image policy for RGBA images. Each channel is a 8 bit value.
+     */
+    class PixelPolicy_RGBA : public PixelPolicy_Base
+    {
+    protected:
+        static const IMAGE_TYPE image_type = IMAGE_TYPE_RGBA;
 
-	public:
-		typedef rgba_pixel_t pixel_type;
-		static bool is_multi_channel() { return true; }
-	};
+    public:
+        typedef rgba_pixel_t pixel_type;
+        static bool is_multi_channel() { return true; }
+    };
 
-	/**
-	 * Represents a greyscale image pixel policy. Each pixel value is a double.
-	 */
-	class PixelPolicy_GS_DOUBLE : public PixelPolicy_Base
-	{
-	protected:
-		static const IMAGE_TYPE image_type = IMAGE_TYPE_GS_DOUBLE;
-	public:
-		typedef gs_double_pixel_t pixel_type;
-		static bool is_single_channel() { return true; }
-	};
+    /**
+     * Represents a greyscale image pixel policy. Each pixel value is a double.
+     */
+    class PixelPolicy_GS_DOUBLE : public PixelPolicy_Base
+    {
+    protected:
+        static const IMAGE_TYPE image_type = IMAGE_TYPE_GS_DOUBLE;
+    public:
+        typedef gs_double_pixel_t pixel_type;
+        static bool is_single_channel() { return true; }
+    };
 
-	/**
-	 * Represents a greyscale image pixel policy. Each pixel value is a 8 bit value.
-	 */
-	class PixelPolicy_GS_BYTE : public PixelPolicy_Base
-	{
-	protected:
-		static const IMAGE_TYPE image_type = IMAGE_TYPE_GS_BYTE;
-	public:
-		typedef gs_byte_pixel_t pixel_type;
-		static bool is_single_channel() { return true; }
-	};
+    /**
+     * Represents a greyscale image pixel policy. Each pixel value is a 8 bit value.
+     */
+    class PixelPolicy_GS_BYTE : public PixelPolicy_Base
+    {
+    protected:
+        static const IMAGE_TYPE image_type = IMAGE_TYPE_GS_BYTE;
+    public:
+        typedef gs_byte_pixel_t pixel_type;
+        static bool is_single_channel() { return true; }
+    };
 }
 
 #endif

@@ -23,11 +23,11 @@
 
 namespace degate
 {
-	AppearancePreferencesPage::AppearancePreferencesPage(QWidget* parent) : PreferencesPage(parent)
-	{
-	    //////////
-	    // Widgets creation
-	    //////////
+    AppearancePreferencesPage::AppearancePreferencesPage(QWidget* parent) : PreferencesPage(parent)
+    {
+        //////////
+        // Widgets creation
+        //////////
 
         introduction_label.setText(tr("You can change appearance preferences here, like theme and icon theme."));
 
@@ -40,24 +40,24 @@ namespace degate
         for (auto& e : themes)
             theme_list.append(e.second);
 
-		theme_box.addItems(theme_list);
-		theme_box.setCurrentText(themes[PREFERENCES_HANDLER.get_preferences().theme]);
+        theme_box.addItems(theme_list);
+        theme_box.setCurrentText(themes[PREFERENCES_HANDLER.get_preferences().theme]);
 
-		// Icon theme
+        // Icon theme
         icon_themes[LIGHT_ICON_THEME] = tr("Light");
         icon_themes[DARK_ICON_THEME] = tr("Dark");
 
-		QStringList icon_theme_list;
+        QStringList icon_theme_list;
         for (auto& e : icon_themes)
             icon_theme_list.append(e.second);
 
-		icon_theme_box.addItems(icon_theme_list);
-		icon_theme_box.setCurrentText(icon_themes[PREFERENCES_HANDLER.get_preferences().icon_theme]);
+        icon_theme_box.addItems(icon_theme_list);
+        icon_theme_box.setCurrentText(icon_themes[PREFERENCES_HANDLER.get_preferences().icon_theme]);
         icon_theme_box.setDisabled(PREFERENCES_HANDLER.get_preferences().automatic_icon_theme);
 
-		// Automatic icon theme
+        // Automatic icon theme
         automatic_check_box.setChecked(PREFERENCES_HANDLER.get_preferences().automatic_icon_theme);
-		QObject::connect(&automatic_check_box, SIGNAL(toggled(bool)), &icon_theme_box, SLOT(setDisabled(bool)));
+        QObject::connect(&automatic_check_box, SIGNAL(toggled(bool)), &icon_theme_box, SLOT(setDisabled(bool)));
 
 
         //////////
@@ -78,14 +78,14 @@ namespace degate
 
         // Icon theme
         PreferencesPage::add_widget(theme_layout, tr("Icon theme:"), &icon_theme_box);
-	}
+    }
 
     void AppearancePreferencesPage::apply(Preferences& preferences)
     {
-	    // Theme
-	    for (auto& e : themes)
+        // Theme
+        for (auto& e : themes)
         {
-	        if (e.second == theme_box.currentText())
+            if (e.second == theme_box.currentText())
                 preferences.theme = e.first;
         }
 

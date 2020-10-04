@@ -27,22 +27,22 @@
 
 namespace degate
 {
-	/**
-	 * Electrical Rule Checks that detects open ports, that means if
-	 * a port is electrically unconnected.
-	 */
-	class ERCOpenPorts : public RCBase
-	{
+    /**
+     * Electrical Rule Checks that detects open ports, that means if
+     * a port is electrically unconnected.
+     */
+    class ERCOpenPorts : public RCBase
+    {
     Q_DECLARE_TR_FUNCTIONS(degate::ERCOpenPorts)
 
-	public:
+    public:
 
-		ERCOpenPorts();
+        ERCOpenPorts();
 
-		void run(LogicModel_shptr lmodel) override;
+        void run(LogicModel_shptr lmodel) override;
 
         std::string generate_description(const RCViolation& violation) override;
-	};
+    };
 }
 
 #endif

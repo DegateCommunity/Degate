@@ -102,43 +102,43 @@ namespace degate
      * @class ColorSelectionButton
      * @brief A colored button that allow color selection on click.
      */
-	class ColorSelectionButton : public QPushButton
-	{
-	    Q_OBJECT
+    class ColorSelectionButton : public QPushButton
+    {
+        Q_OBJECT
 
-	public:
-	    /**
-	     * Create a new color selection button.
-	     *
-	     * @param parent : the widget parent.
-	     * @param text : the button text (default none).
-	     */
-		explicit ColorSelectionButton(QWidget* parent = nullptr, const QString& text = QString());
-		~ColorSelectionButton() override = default;
+    public:
+        /**
+         * Create a new color selection button.
+         *
+         * @param parent : the widget parent.
+         * @param text : the button text (default none).
+         */
+        explicit ColorSelectionButton(QWidget* parent = nullptr, const QString& text = QString());
+        ~ColorSelectionButton() override = default;
 
-		/**
-		 * Set the button color.
-		 *
-		 * @param color : the new color.
-		 */
-	    void set_color(const color_t& color);
+        /**
+         * Set the button color.
+         *
+         * @param color : the new color.
+         */
+        void set_color(const color_t& color);
 
-	    /**
-	     * Get the selected color.
-	     *
-	     * @return Returns the selected color.
-	     */
-	    color_t get_color() const;
+        /**
+         * Get the selected color.
+         *
+         * @return Returns the selected color.
+         */
+        color_t get_color() const;
 
-	public slots:
-	    /**
-	     * Update the color button with current selected color.
-	     */
-	    void update_color();
+    public slots:
+        /**
+         * Update the color button with current selected color.
+         */
+        void update_color();
 
-	private:
-	    color_t color{};
-	};
+    private:
+        color_t color{};
+    };
 }
 
 #endif

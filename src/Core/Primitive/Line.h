@@ -30,73 +30,73 @@
 
 namespace degate
 {
-	class Line : public AbstractShape, public DeepCopyableBase
-	{
-	private:
-		float from_x, from_y, to_x, to_y;
-		unsigned int diameter;
+    class Line : public AbstractShape, public DeepCopyableBase
+    {
+    private:
+        float from_x, from_y, to_x, to_y;
+        unsigned int diameter;
 
-		double d_x, d_y;
+        double d_x, d_y;
 
-		BoundingBox bounding_box;
+        BoundingBox bounding_box;
 
-	private:
+    private:
 
-		/**
-		 * Recalulate the bounding box of a line.
-		 * If the line is either horizontally nor vertically
-		 * aligned, the bounding box corresponds exactly to
-		 * the area, the line spans. If the line is horizontal
-		 * or vertical, the bounding box also depends on the
-		 * diameter.
-		 */
-		void calculate_bounding_box();
+        /**
+         * Recalulate the bounding box of a line.
+         * If the line is either horizontally nor vertically
+         * aligned, the bounding box corresponds exactly to
+         * the area, the line spans. If the line is horizontal
+         * or vertical, the bounding box also depends on the
+         * diameter.
+         */
+        void calculate_bounding_box();
 
-	public:
+    public:
 
-		Line();
-		Line(float from_x, float from_y, float to_x, float to_y, unsigned int diameter);
+        Line();
+        Line(float from_x, float from_y, float to_x, float to_y, unsigned int diameter);
 
-		virtual ~Line()
-		{
-		}
+        virtual ~Line()
+        {
+        }
 
-		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
+        void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
 
-		bool in_shape(float x, float y, float max_distance = 0) const override;
-		bool in_bounding_box(BoundingBox const& bbox) const override;
-		BoundingBox const& get_bounding_box() const override;
+        bool in_shape(float x, float y, float max_distance = 0) const override;
+        bool in_bounding_box(BoundingBox const& bbox) const override;
+        BoundingBox const& get_bounding_box() const override;
 
 
-		virtual float get_from_x() const;
-		virtual float get_to_x() const;
-		virtual float get_from_y() const;
-		virtual float get_to_y() const;
+        virtual float get_from_x() const;
+        virtual float get_to_x() const;
+        virtual float get_from_y() const;
+        virtual float get_to_y() const;
 
-		virtual void set_from_x(float min_x);
-		virtual void set_from_y(float min_y);
-		virtual void set_to_x(float max_x);
-		virtual void set_to_y(float max_y);
+        virtual void set_from_x(float min_x);
+        virtual void set_from_y(float min_y);
+        virtual void set_to_x(float max_x);
+        virtual void set_to_y(float max_y);
 
-		void shift_x(float delta_x) override;
-		void shift_y(float delta_y) override;
+        void shift_x(float delta_x) override;
+        void shift_y(float delta_y) override;
 
-		virtual unsigned int get_diameter() const;
-		virtual void set_diameter(unsigned int diameter);
+        virtual unsigned int get_diameter() const;
+        virtual void set_diameter(unsigned int diameter);
 
-		virtual bool is_vertical() const;
-		virtual bool is_horizontal() const;
+        virtual bool is_vertical() const;
+        virtual bool is_horizontal() const;
 
-		virtual float get_length() const;
+        virtual float get_length() const;
 
-		virtual Point get_p1() const;
-		virtual Point get_p2() const;
+        virtual Point get_p1() const;
+        virtual Point get_p2() const;
 
-		virtual void set_p1(Point const& p);
-		virtual void set_p2(Point const& p);
+        virtual void set_p1(Point const& p);
+        virtual void set_p2(Point const& p);
 
-		float distance_to_line(const Point &p) const;
-	};
+        float distance_to_line(const Point &p) const;
+    };
 }
 
 #endif

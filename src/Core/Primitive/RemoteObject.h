@@ -33,62 +33,62 @@
 
 namespace degate
 {
-	class RemoteObject : public DeepCopyableBase
-	{
-	private:
+    class RemoteObject : public DeepCopyableBase
+    {
+    private:
 
-		object_id_t remote_oid;
+        object_id_t remote_oid;
 
-	protected:
+    protected:
 
-		virtual object_id_t push_object_to_server(std::string const& server_url) = 0;
+        virtual object_id_t push_object_to_server(std::string const& server_url) = 0;
 
-	public:
+    public:
 
-		RemoteObject() : remote_oid(0)
-		{
-		}
+        RemoteObject() : remote_oid(0)
+        {
+        }
 
-		virtual ~RemoteObject()
-		{
-		}
+        virtual ~RemoteObject()
+        {
+        }
 
-		void clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
-		{
-			auto clone = std::dynamic_pointer_cast<RemoteObject>(dest);
-			clone->remote_oid = remote_oid;
-		}
+        void clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
+        {
+            auto clone = std::dynamic_pointer_cast<RemoteObject>(dest);
+            clone->remote_oid = remote_oid;
+        }
 
-		virtual bool has_remote_object_id() const
-		{
-			return remote_oid != 0;
-		}
+        virtual bool has_remote_object_id() const
+        {
+            return remote_oid != 0;
+        }
 
-		virtual object_id_t get_remote_object_id() const
-		{
-			return remote_oid;
-		}
+        virtual object_id_t get_remote_object_id() const
+        {
+            return remote_oid;
+        }
 
-		virtual void set_remote_object_id(object_id_t oid)
-		{
-			remote_oid = oid;
-		}
+        virtual void set_remote_object_id(object_id_t oid)
+        {
+            remote_oid = oid;
+        }
 
 
-		virtual object_id_t push(std::string const& server_url)
-		{
-			if (remote_oid == 0)
-			{
-				debug(TM, "RemoteObject::push(): push object to server.");
-				return push_object_to_server(server_url);
-			}
-			else
-			{
-				debug(TM, "RemoteObject::push(): object is already pushed to server.");
-				return 0;
-			}
-		}
-	};
+        virtual object_id_t push(std::string const& server_url)
+        {
+            if (remote_oid == 0)
+            {
+                debug(TM, "RemoteObject::push(): push object to server.");
+                return push_object_to_server(server_url);
+            }
+            else
+            {
+                debug(TM, "RemoteObject::push(): object is already pushed to server.");
+                return 0;
+            }
+        }
+    };
 }
 
 #endif

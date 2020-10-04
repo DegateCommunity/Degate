@@ -30,64 +30,64 @@
 
 namespace degate
 {
-	/**
-	 * A code template generator for VHDL.
-	 */
-	class VHDLCodeTemplateGenerator : public CodeTemplateGenerator
-	{
-	public:
+    /**
+     * A code template generator for VHDL.
+     */
+    class VHDLCodeTemplateGenerator : public CodeTemplateGenerator
+    {
+    public:
 
-		VHDLCodeTemplateGenerator(std::string const& entity_name,
-		                          std::string const& description,
-		                          std::string const& logic_class);
+        VHDLCodeTemplateGenerator(std::string const& entity_name,
+                                  std::string const& description,
+                                  std::string const& logic_class);
 
-		virtual ~VHDLCodeTemplateGenerator();
+        virtual ~VHDLCodeTemplateGenerator();
 
-		virtual std::string generate() const;
+        virtual std::string generate() const;
 
-		typedef std::map<std::string, std::string> port_map_type;
+        typedef std::map<std::string, std::string> port_map_type;
 
-	protected:
+    protected:
 
-		virtual std::string generate_header() const;
+        virtual std::string generate_header() const;
 
-		virtual std::string generate_port_description() const;
+        virtual std::string generate_port_description() const;
 
-		virtual std::string generate_entity(std::string const& entity_name,
-		                                    std::string const& port_description = "") const;
+        virtual std::string generate_entity(std::string const& entity_name,
+                                            std::string const& port_description = "") const;
 
-		virtual std::string generate_component(std::string const& entity_name,
-		                                       std::string const& port_description) const;
+        virtual std::string generate_component(std::string const& entity_name,
+                                               std::string const& port_description) const;
 
-		virtual std::string generate_architecture(std::string const& entity_name,
-		                                          std::string const& header,
-		                                          std::string const& impl) const;
+        virtual std::string generate_architecture(std::string const& entity_name,
+                                                  std::string const& header,
+                                                  std::string const& impl) const;
 
-		virtual std::string generate_impl(std::string const& logic_class) const;
+        virtual std::string generate_impl(std::string const& logic_class) const;
 
 
-		virtual std::string generate_instance(std::string const& instance_name,
-		                                      std::string const& instance_type,
-		                                      port_map_type const& port_map) const;
+        virtual std::string generate_instance(std::string const& instance_name,
+                                              std::string const& instance_type,
+                                              port_map_type const& port_map) const;
 
-		/**
-		 * Generate a VHDL complient identifier from a string.
-		 *
-		 * VHDL identifier:
-		 *
-		 * - Must begin with alphabetic characters (a-z or A-Z)
-		 * - Can contain alphanumeric (a-z, A-Z, 0-9) or underscore (_) characters
-		 * - Can be up to 1024 characters long
-		 * - Cannot contain white space
-		 * - are not case sensitive.
-		 */
-		virtual std::string generate_identifier(std::string const& name,
-		                                        std::string const& prefix = "") const;
+        /**
+         * Generate a VHDL complient identifier from a string.
+         *
+         * VHDL identifier:
+         *
+         * - Must begin with alphabetic characters (a-z or A-Z)
+         * - Can contain alphanumeric (a-z, A-Z, 0-9) or underscore (_) characters
+         * - Can be up to 1024 characters long
+         * - Cannot contain white space
+         * - are not case sensitive.
+         */
+        virtual std::string generate_identifier(std::string const& name,
+                                                std::string const& prefix = "") const;
 
-		using CodeTemplateGenerator::generate_identifier;
-	};
+        using CodeTemplateGenerator::generate_identifier;
+    };
 
-	typedef std::shared_ptr<VHDLCodeTemplateGenerator> VHDLCodeTemplateGenerator_shptr;
+    typedef std::shared_ptr<VHDLCodeTemplateGenerator> VHDLCodeTemplateGenerator_shptr;
 }
 
 #endif

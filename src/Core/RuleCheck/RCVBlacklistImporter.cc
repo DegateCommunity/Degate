@@ -33,66 +33,66 @@ using namespace degate;
 void RCVBlacklistImporter::import_into(std::string const& filename,
                                        RCBase::container_type& blacklist)
 {
-	if (RET_IS_NOT_OK(check_file(filename)))
-	{
-		debug(TM, "Problem: file %s not found.", filename.c_str());
-		throw InvalidPathException("Can't load gate library from file.");
-	}
+    if (RET_IS_NOT_OK(check_file(filename)))
+    {
+        debug(TM, "Problem: file %s not found.", filename.c_str());
+        throw InvalidPathException("Can't load gate library from file.");
+    }
 
-	std::string directory = get_basedir(filename);
+    std::string directory = get_basedir(filename);
 
-	try
-	{
-		QDomDocument parser;
+    try
+    {
+        QDomDocument parser;
 
-		QFile file(QString::fromStdString(filename));
-		if (!file.open(QIODevice::ReadOnly))
-		{
-			debug(TM, "Problem: can't open the file %s.", filename.c_str());
-			throw InvalidFileFormatException("The ProjectImporter cannot load the project file. Can't open the file.");
-		}
+        QFile file(QString::fromStdString(filename));
+        if (!file.open(QIODevice::ReadOnly))
+        {
+            debug(TM, "Problem: can't open the file %s.", filename.c_str());
+            throw InvalidFileFormatException("The ProjectImporter cannot load the project file. Can't open the file.");
+        }
 
-		if (!parser.setContent(&file))
-		{
-			debug(TM, "Problem: can't parse the file %s.", filename.c_str());
-			throw InvalidXMLException("The ProjectImporter cannot load the project file. Can't parse the file.");
-		}
-		file.close();
+        if (!parser.setContent(&file))
+        {
+            debug(TM, "Problem: can't parse the file %s.", filename.c_str());
+            throw InvalidXMLException("The ProjectImporter cannot load the project file. Can't parse the file.");
+        }
+        file.close();
 
-		const QDomElement root_elem = parser.documentElement(); // deleted by DomParser
-		assert(!root_elem.isNull());
+        const QDomElement root_elem = parser.documentElement(); // deleted by DomParser
+        assert(!root_elem.isNull());
 
-		parse_list(root_elem, blacklist);
-	}
-	catch (const std::exception& ex)
-	{
-		std::cout << "Exception caught: " << ex.what() << std::endl;
-		throw;
-	}
+        parse_list(root_elem, blacklist);
+    }
+    catch (const std::exception& ex)
+    {
+        std::cout << "Exception caught: " << ex.what() << std::endl;
+        throw;
+    }
 }
 
 
 void RCVBlacklistImporter::parse_list(QDomElement const elem,
                                       RCBase::container_type& blacklist)
 {
-	const QDomNodeList rcv_list = elem.elementsByTagName("rc-violation");
+    const QDomNodeList rcv_list = elem.elementsByTagName("rc-violation");
     QDomElement e;
-	for (int i = 0; i < rcv_list.count(); i++)
-	{
-		e = rcv_list.at(i).toElement();
+    for (int i = 0; i < rcv_list.count(); i++)
+    {
+        e = rcv_list.at(i).toElement();
 
-		if (!e.isNull())
-		{
-			object_id_t object_id = parse_number<object_id_t>(e, "object-id");
+        if (!e.isNull())
+        {
+            object_id_t object_id = parse_number<object_id_t>(e, "object-id");
 
-			const std::string rcv_class(e.attribute("rc-violation-class").toStdString());
-			const std::string severity(e.attribute("severity").toStdString());
+            const std::string rcv_class(e.attribute("rc-violation-class").toStdString());
+            const std::string severity(e.attribute("severity").toStdString());
 
-			RCViolation_shptr rcv(new RCViolation(lmodel->get_object(object_id),
+            RCViolation_shptr rcv(new RCViolation(lmodel->get_object(object_id),
                                                   rcv_class,
                                                   RCViolation::get_severity_from_string(severity)));
 
-			blacklist.push_back(rcv);
-		}
-	}
+            blacklist.push_back(rcv);
+        }
+    }
 }

@@ -30,26 +30,26 @@
 
 namespace degate
 {
-	/**
-	 * The RCVBlacklistImporter imports a list of RC violations, which should be ignored.
-	 */
-	class RCVBlacklistImporter : public XMLImporter
-	{
-	private:
+    /**
+     * The RCVBlacklistImporter imports a list of RC violations, which should be ignored.
+     */
+    class RCVBlacklistImporter : public XMLImporter
+    {
+    private:
 
-		void parse_list(QDomElement const element, RCBase::container_type& blacklist);
-		LogicModel_shptr lmodel;
+        void parse_list(QDomElement const element, RCBase::container_type& blacklist);
+        LogicModel_shptr lmodel;
 
-	public:
-		RCVBlacklistImporter(LogicModel_shptr lmodel) : lmodel(lmodel)
-		{
-		}
+    public:
+        RCVBlacklistImporter(LogicModel_shptr lmodel) : lmodel(lmodel)
+        {
+        }
 
-		~RCVBlacklistImporter()
-		{
-		}
+        ~RCVBlacklistImporter()
+        {
+        }
 
-		void import_into(std::string const& filename, RCBase::container_type& blacklist);
-	};
+        void import_into(std::string const& filename, RCBase::container_type& blacklist);
+    };
 }
 #endif

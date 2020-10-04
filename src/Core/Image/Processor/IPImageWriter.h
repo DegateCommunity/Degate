@@ -28,57 +28,57 @@
 
 namespace degate
 {
-	/**
-	 * Processor: Write an image to file.
-	 */
-	template <typename ImageType>
-	class IPImageWriter : public ImageProcessorBase
-	{
-	private:
-		std::string filename;
+    /**
+     * Processor: Write an image to file.
+     */
+    template <typename ImageType>
+    class IPImageWriter : public ImageProcessorBase
+    {
+    private:
+        std::string filename;
 
-	public:
+    public:
 
-		/**
-		 * The constructor.
-		 */
-		IPImageWriter(std::string filename) :
-			ImageProcessorBase("IPImageWriter",
-			                   "Write an image.",
-			                   false,
-			                   typeid(typename ImageType::pixel_type),
-			                   typeid(typename ImageType::pixel_type)),
-			filename(filename)
-		{
-		}
+        /**
+         * The constructor.
+         */
+        IPImageWriter(std::string filename) :
+            ImageProcessorBase("IPImageWriter",
+                               "Write an image.",
+                               false,
+                               typeid(typename ImageType::pixel_type),
+                               typeid(typename ImageType::pixel_type)),
+            filename(filename)
+        {
+        }
 
-		/**
-		 * The destructor.
-		 */
-		virtual ~IPImageWriter()
-		{
-		}
+        /**
+         * The destructor.
+         */
+        virtual ~IPImageWriter()
+        {
+        }
 
-		virtual ImageBase_shptr run(ImageBase_shptr in)
-		{
-			assert(in != nullptr);
+        virtual ImageBase_shptr run(ImageBase_shptr in)
+        {
+            assert(in != nullptr);
 
-			std::shared_ptr<ImageType> img_in = std::dynamic_pointer_cast<ImageType>(in);
+            std::shared_ptr<ImageType> img_in = std::dynamic_pointer_cast<ImageType>(in);
 
-			std::shared_ptr<ImageType> img_out(new ImageType(in->get_width(), in->get_height()));
+            std::shared_ptr<ImageType> img_out(new ImageType(in->get_width(), in->get_height()));
 
-			assert(img_in != nullptr);
-			assert(img_out != nullptr);
+            assert(img_in != nullptr);
+            assert(img_out != nullptr);
 
-			std::cout << "writing file: " << filename << std::endl;
+            std::cout << "writing file: " << filename << std::endl;
 
-			normalize<ImageType, ImageType>(img_out, img_in, 0, 255);
+            normalize<ImageType, ImageType>(img_out, img_in, 0, 255);
 
-			save_image<ImageType>(filename, img_out);
+            save_image<ImageType>(filename, img_out);
 
-			return img_in;
-		}
-	};
+            return img_in;
+        }
+    };
 }
 
 #endif

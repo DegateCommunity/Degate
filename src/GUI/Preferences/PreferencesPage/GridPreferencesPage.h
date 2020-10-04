@@ -30,21 +30,21 @@
 namespace degate
 {
     /**
-	 * @class GridPreferencesPage
-	 * @brief Widget to change grid preferences.
-	 *
-	 * @see PreferencesDialog
-	 */
+     * @class GridPreferencesPage
+     * @brief Widget to change grid preferences.
+     *
+     * @see PreferencesDialog
+     */
     class GridPreferencesPage : public PreferencesPage
     {
     Q_OBJECT
 
     public:
         /**
-		 * Create the grid preferences page widget.
-		 *
-		 * @param parent : the parent of the widget.
-		 */
+         * Create the grid preferences page widget.
+         *
+         * @param parent : the parent of the widget.
+         */
         explicit GridPreferencesPage(QWidget* parent);
         ~GridPreferencesPage() override = default;
 

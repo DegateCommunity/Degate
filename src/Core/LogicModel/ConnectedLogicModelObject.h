@@ -29,57 +29,57 @@
 
 namespace degate
 {
-	/**
-	 * Represents a logic model object, that can be electrically connected to other
-	 * logic model objects.
-	 */
-	class ConnectedLogicModelObject : public PlacedLogicModelObject
-	{
-	private:
+    /**
+     * Represents a logic model object, that can be electrically connected to other
+     * logic model objects.
+     */
+    class ConnectedLogicModelObject : public PlacedLogicModelObject
+    {
+    private:
 
-		Net_shptr net;
+        Net_shptr net;
 
-	public:
+    public:
 
-		/**
-		 * Construct an object.
-		 */
-		ConnectedLogicModelObject();
-
-
-		/**
-		 * Destroy object. It will deregister this object from the net.
-		 * @see remove_net()
-		 */
-		virtual ~ConnectedLogicModelObject();
-
-		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
-
-		/**
-		 * Set the net for this object. This method will add the object to the net.
-		 */
-		virtual void set_net(Net_shptr net);
-
-		/**
-		 * Remove the net from this object. It will deregister this object
-		 * from the net's connection list as well.
-		 */
-		virtual void remove_net();
+        /**
+         * Construct an object.
+         */
+        ConnectedLogicModelObject();
 
 
-		/**
-		 * Get a shared pointer to the net.
-		 */
-		virtual Net_shptr get_net();
+        /**
+         * Destroy object. It will deregister this object from the net.
+         * @see remove_net()
+         */
+        virtual ~ConnectedLogicModelObject();
 
-		/**
-		 * Check if an connectable object is connected to
-		 * another connectable object.
-		 * @return Returns true, if this object is connected to
-		 *   another object. Else false is returned.
-		 */
-		virtual bool is_connected() const;
-	};
+        void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+
+        /**
+         * Set the net for this object. This method will add the object to the net.
+         */
+        virtual void set_net(Net_shptr net);
+
+        /**
+         * Remove the net from this object. It will deregister this object
+         * from the net's connection list as well.
+         */
+        virtual void remove_net();
+
+
+        /**
+         * Get a shared pointer to the net.
+         */
+        virtual Net_shptr get_net();
+
+        /**
+         * Check if an connectable object is connected to
+         * another connectable object.
+         * @return Returns true, if this object is connected to
+         *   another object. Else false is returned.
+         */
+        virtual bool is_connected() const;
+    };
 }
 
 #endif

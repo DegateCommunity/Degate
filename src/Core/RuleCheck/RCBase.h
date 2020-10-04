@@ -30,104 +30,104 @@
 
 namespace degate
 {
-	/**
-	 * An enum for several types of Rule Check problem types.
-	 */
-	enum RC_SEVERITY
-	{
-		RC_UNDEFINED = 0,
-		RC_ERROR = 1,
-		RC_WARNING = 2
-	};
+    /**
+     * An enum for several types of Rule Check problem types.
+     */
+    enum RC_SEVERITY
+    {
+        RC_UNDEFINED = 0,
+        RC_ERROR = 1,
+        RC_WARNING = 2
+    };
 
 
-	/**
-	 * Base class for Rule Checks.
-	 * When creating a new ERC you need to register it, with corresponding violation class, in the ERCRegister.h file.
-	 */
-	class RCBase
-	{
-	public:
+    /**
+     * Base class for Rule Checks.
+     * When creating a new ERC you need to register it, with corresponding violation class, in the ERCRegister.h file.
+     */
+    class RCBase
+    {
+    public:
 
-		typedef RCVContainer container_type;
+        typedef RCVContainer container_type;
 
 
-	private:
+    private:
 
-		std::string description;
-		RC_SEVERITY severity;
+        std::string description;
+        RC_SEVERITY severity;
 
-		container_type rc_violations;
+        container_type rc_violations;
 
-	public:
+    public:
 
-		/**
-		 * The constructor.
-		 * @param description A decription of what the RC basically checks.
-		 * @param severity This parameter indicates wheather this 
-		 *   RC violation container is for an error or just for a warning.
-		 */
+        /**
+         * The constructor.
+         * @param description A decription of what the RC basically checks.
+         * @param severity This parameter indicates wheather this
+         *   RC violation container is for an error or just for a warning.
+         */
         RCBase(std::string const& description, RC_SEVERITY severity = RC_ERROR)
                 : description(description), severity(severity)
-		{
-		}
+        {
+        }
 
-		virtual ~RCBase()
-		{
-		}
+        virtual ~RCBase()
+        {
+        }
 
-		/**
-		 * The run method is abstract and must be implemented in derived
-		 * classes. The implementation should check for design rule violations.
-		 * Each RC violation must be stored via method add_rc_violation().
-		 * Note: Because run() can be called multiple times, at the beginning of
-		 * run() you must clear the list of detected violations.
-		 */
-		virtual void run(LogicModel_shptr lmodel) = 0;
+        /**
+         * The run method is abstract and must be implemented in derived
+         * classes. The implementation should check for design rule violations.
+         * Each RC violation must be stored via method add_rc_violation().
+         * Note: Because run() can be called multiple times, at the beginning of
+         * run() you must clear the list of detected violations.
+         */
+        virtual void run(LogicModel_shptr lmodel) = 0;
 
-		/**
-		 * Generate the description for a violation regarding the tuple class + object.
-		 * A violation needs to be unique for that tuple.
-		 *
-		 * @param violation : the violation.
-		 *
-		 * @return Returns a translated and newly generated description for the violation.
-		 */
-		virtual std::string generate_description(const RCViolation& violation) = 0;
+        /**
+         * Generate the description for a violation regarding the tuple class + object.
+         * A violation needs to be unique for that tuple.
+         *
+         * @param violation : the violation.
+         *
+         * @return Returns a translated and newly generated description for the violation.
+         */
+        virtual std::string generate_description(const RCViolation& violation) = 0;
 
-		/**
-		 * Get the list of RC violations.
-		 */
-		container_type get_rc_violations() const
-		{
-			return rc_violations;
-		}
+        /**
+         * Get the list of RC violations.
+         */
+        container_type get_rc_violations() const
+        {
+            return rc_violations;
+        }
 
-		RC_SEVERITY get_severity() const
-		{
-			return severity;
-		}
+        RC_SEVERITY get_severity() const
+        {
+            return severity;
+        }
 
-	protected:
+    protected:
 
-		/**
-		 * Add a RC violation to the list of already detected violations.
-		 */
-		void add_rc_violation(RCViolation_shptr violation)
-		{
-			rc_violations.push_back(violation);
-		}
+        /**
+         * Add a RC violation to the list of already detected violations.
+         */
+        void add_rc_violation(RCViolation_shptr violation)
+        {
+            rc_violations.push_back(violation);
+        }
 
-		/**
-		 * Clear list of detected violations.
-		 */
-		void clear_rc_violations()
-		{
-			rc_violations.clear();
-		}
-	};
+        /**
+         * Clear list of detected violations.
+         */
+        void clear_rc_violations()
+        {
+            rc_violations.clear();
+        }
+    };
 
-	typedef std::shared_ptr<RCBase> RCBase_shptr;
+    typedef std::shared_ptr<RCBase> RCBase_shptr;
 }
 
 #include "Core/RuleCheck/RCViolation.h"

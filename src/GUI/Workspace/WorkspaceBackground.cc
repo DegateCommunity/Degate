@@ -23,233 +23,233 @@
 
 namespace degate
 {
-	struct BackgroundVertex2D
-	{
-		QVector2D pos;
-		QVector2D texCoord;
-	};
+    struct BackgroundVertex2D
+    {
+        QVector2D pos;
+        QVector2D texCoord;
+    };
 
-	WorkspaceBackground::WorkspaceBackground(QWidget* parent) : WorkspaceElement(parent)
-	{
+    WorkspaceBackground::WorkspaceBackground(QWidget* parent) : WorkspaceElement(parent)
+    {
 
-	}
+    }
 
-	WorkspaceBackground::~WorkspaceBackground()
-	{
+    WorkspaceBackground::~WorkspaceBackground()
+    {
         free_textures();
-	}
+    }
 
-	void WorkspaceBackground::init()
-	{
-		WorkspaceElement::init();
+    void WorkspaceBackground::init()
+    {
+        WorkspaceElement::init();
 
-		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
-		const char* vsrc =
-			"attribute vec2 pos;\n"
-			"attribute vec2 texCoord;\n"
-			"uniform mat4 mvp;\n"
-			"varying vec2 texCoord0;\n"
-			"void main(void)\n"
-			"{\n"
-			"    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
-			"    texCoord0 = texCoord;\n"
-			"}\n";
-		vshader->compileSourceCode(vsrc);
+        QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
+        const char* vsrc =
+            "attribute vec2 pos;\n"
+            "attribute vec2 texCoord;\n"
+            "uniform mat4 mvp;\n"
+            "varying vec2 texCoord0;\n"
+            "void main(void)\n"
+            "{\n"
+            "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
+            "    texCoord0 = texCoord;\n"
+            "}\n";
+        vshader->compileSourceCode(vsrc);
 
-		QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
-		const char* fsrc =
-			"uniform sampler2D texture;\n"
-			"varying vec2 texCoord0;\n"
-			"void main(void)\n"
-			"{\n"
-			"    gl_FragColor = texture2D(texture, texCoord0);\n"
-			"}\n";
-		fshader->compileSourceCode(fsrc);
+        QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
+        const char* fsrc =
+            "uniform sampler2D texture;\n"
+            "varying vec2 texCoord0;\n"
+            "void main(void)\n"
+            "{\n"
+            "    gl_FragColor = texture2D(texture, texCoord0);\n"
+            "}\n";
+        fshader->compileSourceCode(fsrc);
 
-		program = new QOpenGLShaderProgram;
-		program->addShader(vshader);
-		program->addShader(fshader);
+        program = new QOpenGLShaderProgram;
+        program->addShader(vshader);
+        program->addShader(fshader);
 
-		delete vshader;
-		delete fshader;
+        delete vshader;
+        delete fshader;
 
-		program->link();
-	}
+        program->link();
+    }
 
-	void WorkspaceBackground::update()
-	{
-		free_textures();
+    void WorkspaceBackground::update()
+    {
+        free_textures();
 
-		if (project == nullptr)
-			return;
-
-        assert(context->glGetError() == GL_NO_ERROR);
-
-		ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
-
-		if (smgr == nullptr)
-			return;
-
-		ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(1/*scale*/); //Todo: fix scaling manager
-
-		background_image = elem.second;
-		if (background_image == nullptr)
-			return;
-
-		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-		context->glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(BackgroundVertex2D), nullptr, GL_STATIC_DRAW);
-
-		unsigned index = 0;
-		for (unsigned int x = 0; x < background_image->get_width(); x += background_image->get_tile_size())
-		{
-			for (unsigned int y = 0; y < background_image->get_height(); y += background_image->get_tile_size())
-			{
-				background_textures.push_back(create_background_tile(x, y, 1/*elem.first*/, index)); //Todo: fix scaling manager
-
-				index++;
-			}
-		}
-
-		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        if (project == nullptr)
+            return;
 
         assert(context->glGetError() == GL_NO_ERROR);
-	}
 
-	void WorkspaceBackground::draw(const QMatrix4x4& projection)
-	{
-		if (project == nullptr)
-			return;
+        ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
 
-		program->bind();
-		context->glEnable(GL_TEXTURE_2D);
+        if (smgr == nullptr)
+            return;
 
-		program->setUniformValue("mvp", projection);
+        ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(1/*scale*/); //Todo: fix scaling manager
 
-		context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        background_image = elem.second;
+        if (background_image == nullptr)
+            return;
 
-		program->enableAttributeArray("pos");
-		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(BackgroundVertex2D));
+        context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		program->enableAttributeArray("texCoord");
-		program->setAttributeBuffer("texCoord", GL_FLOAT, 2 * sizeof(float), 2, sizeof(BackgroundVertex2D));
+        context->glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(BackgroundVertex2D), nullptr, GL_STATIC_DRAW);
 
-		unsigned index = 0;
-		for (auto& e : background_textures)
-		{
-			context->glBindTexture(GL_TEXTURE_2D, e);
-			context->glDrawArrays(GL_TRIANGLES, index * 6, 6);
+        unsigned index = 0;
+        for (unsigned int x = 0; x < background_image->get_width(); x += background_image->get_tile_size())
+        {
+            for (unsigned int y = 0; y < background_image->get_height(); y += background_image->get_tile_size())
+            {
+                background_textures.push_back(create_background_tile(x, y, 1/*elem.first*/, index)); //Todo: fix scaling manager
 
-			index++;
-		}
+                index++;
+            }
+        }
 
-		context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		context->glBindTexture(GL_TEXTURE_2D, 0);
+        assert(context->glGetError() == GL_NO_ERROR);
+    }
 
-		context->glDisable(GL_TEXTURE_2D);
-		program->release();
-	}
+    void WorkspaceBackground::draw(const QMatrix4x4& projection)
+    {
+        if (project == nullptr)
+            return;
 
-	void WorkspaceBackground::free_textures()
-	{
-		if (background_textures.empty())
-			return;
+        program->bind();
+        context->glEnable(GL_TEXTURE_2D);
 
-		context->glDeleteTextures(static_cast<GLsizei>(background_textures.size()), &background_textures[0]);
+        program->setUniformValue("mvp", projection);
 
-		background_textures.clear();
-	}
+        context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	GLuint WorkspaceBackground::create_background_tile(unsigned x, unsigned y, float pre_scaling, unsigned index)
-	{
-		assert(project != nullptr);
-		assert(background_image != nullptr);
+        program->enableAttributeArray("pos");
+        program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(BackgroundVertex2D));
 
-		const unsigned int tile_width = background_image->get_tile_size();
+        program->enableAttributeArray("texCoord");
+        program->setAttributeBuffer("texCoord", GL_FLOAT, 2 * sizeof(float), 2, sizeof(BackgroundVertex2D));
 
-		// Real pixel coordinates
-		float min_x = (static_cast<float>(x)) * pre_scaling;
-		float min_y = (static_cast<float>(y)) * pre_scaling;
-		float max_x = min_x + static_cast<float>(tile_width) * pre_scaling;
-		float max_y = min_y + static_cast<float>(tile_width) * pre_scaling;
+        unsigned index = 0;
+        for (auto& e : background_textures)
+        {
+            context->glBindTexture(GL_TEXTURE_2D, e);
+            context->glDrawArrays(GL_TRIANGLES, index * 6, 6);
 
+            index++;
+        }
 
-		// Texture
+        context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		auto data = new GLuint[tile_width * tile_width];
-		assert(data != nullptr);
+        context->glBindTexture(GL_TEXTURE_2D, 0);
 
-		memset(data, 0, tile_width * tile_width * sizeof(GLuint));
-		background_image->raw_copy(data, x, y);
+        context->glDisable(GL_TEXTURE_2D);
+        program->release();
+    }
 
-		GLuint texture = 0;
+    void WorkspaceBackground::free_textures()
+    {
+        if (background_textures.empty())
+            return;
 
-		context->glGenTextures(1, &texture);
-		assert(context->glGetError() == GL_NO_ERROR);
+        context->glDeleteTextures(static_cast<GLsizei>(background_textures.size()), &background_textures[0]);
 
-		context->glBindTexture(GL_TEXTURE_2D, texture);
-		assert(context->glGetError() == GL_NO_ERROR);
+        background_textures.clear();
+    }
 
-		context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		assert(context->glGetError() == GL_NO_ERROR);
+    GLuint WorkspaceBackground::create_background_tile(unsigned x, unsigned y, float pre_scaling, unsigned index)
+    {
+        assert(project != nullptr);
+        assert(background_image != nullptr);
 
-		context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		assert(context->glGetError() == GL_NO_ERROR);
+        const unsigned int tile_width = background_image->get_tile_size();
 
-		context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		assert(context->glGetError() == GL_NO_ERROR);
-
-		context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		assert(context->glGetError() == GL_NO_ERROR);
-
-		context->glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
-		assert(context->glGetError() == GL_NO_ERROR);
-
-		context->glTexImage2D(GL_TEXTURE_2D,
-		             0, // level
-		             GL_RGBA, // BGRA,
-		             tile_width, tile_width,
-		             0, // border
-		             GL_RGBA,
-		             GL_UNSIGNED_BYTE,
-		             data);
-		assert(context->glGetError() == GL_NO_ERROR);
-
-		delete[] data;
-
-		context->glBindTexture(GL_TEXTURE_2D, 0);
+        // Real pixel coordinates
+        float min_x = (static_cast<float>(x)) * pre_scaling;
+        float min_y = (static_cast<float>(y)) * pre_scaling;
+        float max_x = min_x + static_cast<float>(tile_width) * pre_scaling;
+        float max_y = min_y + static_cast<float>(tile_width) * pre_scaling;
 
 
-		// Vertices
+        // Texture
 
-		BackgroundVertex2D temp;
+        auto data = new GLuint[tile_width * tile_width];
+        assert(data != nullptr);
 
-		temp.pos = QVector2D(min_x, min_y);
-		temp.texCoord = QVector2D(0, 0);
-		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 0 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        memset(data, 0, tile_width * tile_width * sizeof(GLuint));
+        background_image->raw_copy(data, x, y);
 
-		temp.pos = QVector2D(max_x, min_y);
-		temp.texCoord = QVector2D(1, 0);
-		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 1 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        GLuint texture = 0;
 
-		temp.pos = QVector2D(min_x, max_y);
-		temp.texCoord = QVector2D(0, 1);
-		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 2 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glGenTextures(1, &texture);
+        assert(context->glGetError() == GL_NO_ERROR);
 
-		temp.pos = QVector2D(max_x, min_y);
-		temp.texCoord = QVector2D(1, 0);
-		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 3 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glBindTexture(GL_TEXTURE_2D, texture);
+        assert(context->glGetError() == GL_NO_ERROR);
 
-		temp.pos = QVector2D(min_x, max_y);
-		temp.texCoord = QVector2D(0, 1);
-		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 4 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        assert(context->glGetError() == GL_NO_ERROR);
 
-		temp.pos = QVector2D(max_x, max_y);
-		temp.texCoord = QVector2D(1, 1);
-		context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 5 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        assert(context->glGetError() == GL_NO_ERROR);
+
+        context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        assert(context->glGetError() == GL_NO_ERROR);
+
+        context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        assert(context->glGetError() == GL_NO_ERROR);
+
+        context->glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
+        assert(context->glGetError() == GL_NO_ERROR);
+
+        context->glTexImage2D(GL_TEXTURE_2D,
+                     0, // level
+                     GL_RGBA, // BGRA,
+                     tile_width, tile_width,
+                     0, // border
+                     GL_RGBA,
+                     GL_UNSIGNED_BYTE,
+                     data);
+        assert(context->glGetError() == GL_NO_ERROR);
+
+        delete[] data;
+
+        context->glBindTexture(GL_TEXTURE_2D, 0);
 
 
-		return texture;
-	}
+        // Vertices
+
+        BackgroundVertex2D temp;
+
+        temp.pos = QVector2D(min_x, min_y);
+        temp.texCoord = QVector2D(0, 0);
+        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 0 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+
+        temp.pos = QVector2D(max_x, min_y);
+        temp.texCoord = QVector2D(1, 0);
+        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 1 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+
+        temp.pos = QVector2D(min_x, max_y);
+        temp.texCoord = QVector2D(0, 1);
+        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 2 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+
+        temp.pos = QVector2D(max_x, min_y);
+        temp.texCoord = QVector2D(1, 0);
+        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 3 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+
+        temp.pos = QVector2D(min_x, max_y);
+        temp.texCoord = QVector2D(0, 1);
+        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 4 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+
+        temp.pos = QVector2D(max_x, max_y);
+        temp.texCoord = QVector2D(1, 1);
+        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 5 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+
+
+        return texture;
+    }
 }

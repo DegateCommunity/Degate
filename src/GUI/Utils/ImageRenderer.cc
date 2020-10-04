@@ -23,126 +23,126 @@
 
 namespace degate
 {
-	struct ImageVertex2D
-	{
-		QVector2D pos;
-		QVector2D texCoord;
-	};
+    struct ImageVertex2D
+    {
+        QVector2D pos;
+        QVector2D texCoord;
+    };
 
     ImageRenderer::ImageRenderer(QWidget* parent, MemoryImage_shptr image, bool update_on_gl_initialize)
             : QOpenGLWidget(parent), update_on_gl_initialize(update_on_gl_initialize), image(image)
-	{
-		assert(image != nullptr);
+    {
+        assert(image != nullptr);
 
-		center_x = image->get_width() / 2.0;
-		center_y = image->get_height() / 2.0;
-	}
+        center_x = image->get_width() / 2.0;
+        center_y = image->get_height() / 2.0;
+    }
 
-	ImageRenderer::~ImageRenderer()
-	{
+    ImageRenderer::~ImageRenderer()
+    {
         makeCurrent();
 
         // Use cleanup function for opengl objects destruction
 
-		doneCurrent();
-	}
+        doneCurrent();
+    }
 
-	void ImageRenderer::update_screen()
-	{
-		makeCurrent();
+    void ImageRenderer::update_screen()
+    {
+        makeCurrent();
 
-		free_texture();
+        free_texture();
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(ImageVertex2D), nullptr, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(ImageVertex2D), nullptr, GL_STATIC_DRAW);
 
-		// Texture
+        // Texture
 
-		auto data = new GLuint[image->get_width() * image->get_height() * sizeof(GLuint)];
-		image->raw_copy(data);
+        auto data = new GLuint[image->get_width() * image->get_height() * sizeof(GLuint)];
+        image->raw_copy(data);
 
-		glGenTextures(1, &texture);
-		assert(glGetError() == GL_NO_ERROR);
+        glGenTextures(1, &texture);
+        assert(glGetError() == GL_NO_ERROR);
 
-		glBindTexture(GL_TEXTURE_2D, texture);
-		assert(glGetError() == GL_NO_ERROR);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        assert(glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		assert(glGetError() == GL_NO_ERROR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        assert(glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		assert(glGetError() == GL_NO_ERROR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        assert(glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		assert(glGetError() == GL_NO_ERROR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        assert(glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		assert(glGetError() == GL_NO_ERROR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        assert(glGetError() == GL_NO_ERROR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
-		assert(glGetError() == GL_NO_ERROR);
+        glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
+        assert(glGetError() == GL_NO_ERROR);
 
-		glTexImage2D(GL_TEXTURE_2D,
-		             0, // level
-		             GL_RGBA, // BGRA,
-		             image->get_width(), image->get_height(),
-		             0, // border
-		             GL_RGBA,
-		             GL_UNSIGNED_BYTE,
-		             data);
-		assert(glGetError() == GL_NO_ERROR);
+        glTexImage2D(GL_TEXTURE_2D,
+                     0, // level
+                     GL_RGBA, // BGRA,
+                     image->get_width(), image->get_height(),
+                     0, // border
+                     GL_RGBA,
+                     GL_UNSIGNED_BYTE,
+                     data);
+        assert(glGetError() == GL_NO_ERROR);
 
-		delete[] data;
+        delete[] data;
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
 
-		// Vertices
+        // Vertices
 
-		ImageVertex2D temp;
+        ImageVertex2D temp;
 
-		temp.pos = QVector2D(0, 0);
-		temp.texCoord = QVector2D(0, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, 0 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
+        temp.pos = QVector2D(0, 0);
+        temp.texCoord = QVector2D(0, 0);
+        glBufferSubData(GL_ARRAY_BUFFER, 0 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
 
-		temp.pos = QVector2D(image->get_width(), 0);
-		temp.texCoord = QVector2D(1, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, 1 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
+        temp.pos = QVector2D(image->get_width(), 0);
+        temp.texCoord = QVector2D(1, 0);
+        glBufferSubData(GL_ARRAY_BUFFER, 1 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
 
-		temp.pos = QVector2D(0, image->get_height());
-		temp.texCoord = QVector2D(0, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, 2 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
+        temp.pos = QVector2D(0, image->get_height());
+        temp.texCoord = QVector2D(0, 1);
+        glBufferSubData(GL_ARRAY_BUFFER, 2 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
 
-		temp.pos = QVector2D(image->get_width(), 0);
-		temp.texCoord = QVector2D(1, 0);
-		glBufferSubData(GL_ARRAY_BUFFER, 3 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
+        temp.pos = QVector2D(image->get_width(), 0);
+        temp.texCoord = QVector2D(1, 0);
+        glBufferSubData(GL_ARRAY_BUFFER, 3 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
 
-		temp.pos = QVector2D(0, image->get_height());
-		temp.texCoord = QVector2D(0, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, 4 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
+        temp.pos = QVector2D(0, image->get_height());
+        temp.texCoord = QVector2D(0, 1);
+        glBufferSubData(GL_ARRAY_BUFFER, 4 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
 
-		temp.pos = QVector2D(image->get_width(), image->get_height());
-		temp.texCoord = QVector2D(1, 1);
-		glBufferSubData(GL_ARRAY_BUFFER, 5 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
+        temp.pos = QVector2D(image->get_width(), image->get_height());
+        temp.texCoord = QVector2D(1, 1);
+        glBufferSubData(GL_ARRAY_BUFFER, 5 * sizeof(ImageVertex2D), sizeof(ImageVertex2D), &temp);
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		update();
-	}
+        update();
+    }
 
-	void ImageRenderer::change_image(MemoryImage_shptr image)
-	{
-		this->image = image;
+    void ImageRenderer::change_image(MemoryImage_shptr image)
+    {
+        this->image = image;
 
-		update_screen();
-	}
+        update_screen();
+    }
 
-	void ImageRenderer::free_texture()
-	{
-		if (glIsTexture(texture) == GL_TRUE)
-			glDeleteTextures(1, &texture);
-	}
+    void ImageRenderer::free_texture()
+    {
+        if (glIsTexture(texture) == GL_TRUE)
+            glDeleteTextures(1, &texture);
+    }
 
     void ImageRenderer::cleanup()
     {
@@ -159,167 +159,167 @@ namespace degate
             glDeleteBuffers(1, &vbo);
     }
 
-	void ImageRenderer::initializeGL()
-	{
-		makeCurrent();
+    void ImageRenderer::initializeGL()
+    {
+        makeCurrent();
 
-		initializeOpenGLFunctions();
+        initializeOpenGLFunctions();
 
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glEnable(GL_BLEND);
         glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
         glDisable(GL_LINE_SMOOTH);
 
-		QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
-		const char* vsrc =
-			"attribute vec2 pos;\n"
-			"attribute vec2 texCoord;\n"
-			"uniform mat4 mvp;\n"
-			"varying vec2 texCoord0;\n"
-			"void main(void)\n"
-			"{\n"
-			"    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
-			"    texCoord0 = texCoord;\n"
-			"}\n";
-		vshader->compileSourceCode(vsrc);
+        QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
+        const char* vsrc =
+            "attribute vec2 pos;\n"
+            "attribute vec2 texCoord;\n"
+            "uniform mat4 mvp;\n"
+            "varying vec2 texCoord0;\n"
+            "void main(void)\n"
+            "{\n"
+            "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
+            "    texCoord0 = texCoord;\n"
+            "}\n";
+        vshader->compileSourceCode(vsrc);
 
-		QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
-		const char* fsrc =
-			"uniform sampler2D texture;\n"
-			"varying vec2 texCoord0;\n"
-			"void main(void)\n"
-			"{\n"
-			"    gl_FragColor = texture2D(texture, texCoord0);\n"
-			"}\n";
-		fshader->compileSourceCode(fsrc);
+        QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
+        const char* fsrc =
+            "uniform sampler2D texture;\n"
+            "varying vec2 texCoord0;\n"
+            "void main(void)\n"
+            "{\n"
+            "    gl_FragColor = texture2D(texture, texCoord0);\n"
+            "}\n";
+        fshader->compileSourceCode(fsrc);
 
-		program = new QOpenGLShaderProgram;
-		program->addShader(vshader);
-		program->addShader(fshader);
+        program = new QOpenGLShaderProgram;
+        program->addShader(vshader);
+        program->addShader(fshader);
 
         delete vshader;
         delete fshader;
 
-		program->link();
+        program->link();
 
-		glGenBuffers(1, &vbo);
+        glGenBuffers(1, &vbo);
 
-		if (update_on_gl_initialize)
-			update_screen();
+        if (update_on_gl_initialize)
+            update_screen();
 
         connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &ImageRenderer::cleanup);
-	}
+    }
 
-	void ImageRenderer::paintGL()
-	{
-		makeCurrent();
+    void ImageRenderer::paintGL()
+    {
+        makeCurrent();
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		program->bind();
-		glEnable(GL_TEXTURE_2D);
+        program->bind();
+        glEnable(GL_TEXTURE_2D);
 
-		program->setUniformValue("mvp", projection);
+        program->setUniformValue("mvp", projection);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		program->enableAttributeArray("pos");
-		program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(ImageVertex2D));
+        program->enableAttributeArray("pos");
+        program->setAttributeBuffer("pos", GL_FLOAT, 0, 2, sizeof(ImageVertex2D));
 
-		program->enableAttributeArray("texCoord");
-		program->setAttributeBuffer("texCoord", GL_FLOAT, 2 * sizeof(float), 2, sizeof(ImageVertex2D));
+        program->enableAttributeArray("texCoord");
+        program->setAttributeBuffer("texCoord", GL_FLOAT, 2 * sizeof(float), 2, sizeof(ImageVertex2D));
 
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
-		glDisable(GL_TEXTURE_2D);
-		program->release();
-	}
+        glDisable(GL_TEXTURE_2D);
+        program->release();
+    }
 
-	void ImageRenderer::resizeGL(int w, int h)
-	{
-		makeCurrent();
+    void ImageRenderer::resizeGL(int w, int h)
+    {
+        makeCurrent();
 
-		glViewport(0, 0, w, h);
+        glViewport(0, 0, w, h);
 
-		set_projection(NO_ZOOM, center_x, center_y);
-	}
+        set_projection(NO_ZOOM, center_x, center_y);
+    }
 
-	void ImageRenderer::mousePressEvent(QMouseEvent* event)
-	{
-		QOpenGLWidget::mousePressEvent(event);
+    void ImageRenderer::mousePressEvent(QMouseEvent* event)
+    {
+        QOpenGLWidget::mousePressEvent(event);
 
-		mouse_last_pos = get_opengl_mouse_position();
+        mouse_last_pos = get_opengl_mouse_position();
 
-		if (event->button() == Qt::LeftButton)
-			setCursor(Qt::ClosedHandCursor);
-	}
+        if (event->button() == Qt::LeftButton)
+            setCursor(Qt::ClosedHandCursor);
+    }
 
-	void ImageRenderer::mouseReleaseEvent(QMouseEvent* event)
-	{
-		QOpenGLWidget::mouseReleaseEvent(event);
+    void ImageRenderer::mouseReleaseEvent(QMouseEvent* event)
+    {
+        QOpenGLWidget::mouseReleaseEvent(event);
 
-		if (event->button() == Qt::LeftButton)
-			setCursor(Qt::CrossCursor);
-	}
+        if (event->button() == Qt::LeftButton)
+            setCursor(Qt::CrossCursor);
+    }
 
-	void ImageRenderer::mouseMoveEvent(QMouseEvent* event)
-	{
-		// Movement
-		if (event->buttons() & Qt::LeftButton)
-		{
-			float dx = get_opengl_mouse_position().x() - mouse_last_pos.x();
-			float dy = get_opengl_mouse_position().y() - mouse_last_pos.y();
+    void ImageRenderer::mouseMoveEvent(QMouseEvent* event)
+    {
+        // Movement
+        if (event->buttons() & Qt::LeftButton)
+        {
+            float dx = get_opengl_mouse_position().x() - mouse_last_pos.x();
+            float dy = get_opengl_mouse_position().y() - mouse_last_pos.y();
 
-			center_x -= dx;
-			center_y -= dy;
-			set_projection(NO_ZOOM, center_x, center_y);
+            center_x -= dx;
+            center_y -= dy;
+            set_projection(NO_ZOOM, center_x, center_y);
 
-			update();
-		}
-	}
+            update();
+        }
+    }
 
-	void ImageRenderer::wheelEvent(QWheelEvent* event)
-	{
-		QOpenGLWidget::wheelEvent(event);
+    void ImageRenderer::wheelEvent(QWheelEvent* event)
+    {
+        QOpenGLWidget::wheelEvent(event);
 
-		event->angleDelta().y() < 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
+        event->angleDelta().y() < 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
 
-		event->accept();
+        event->accept();
 
-		update();
-	}
+        update();
+    }
 
-	void ImageRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
-	{
-		scale *= scale_factor;
+    void ImageRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
+    {
+        scale *= scale_factor;
 
-		center_x = new_center_x;
-		center_y = new_center_y;
+        center_x = new_center_x;
+        center_y = new_center_y;
 
-		viewport_min_x = center_x - (static_cast<float>(width()) * scale) / 2.0;
-		viewport_min_y = center_y - (static_cast<float>(height()) * scale) / 2.0;
-		viewport_max_x = center_x + (static_cast<float>(width()) * scale) / 2.0;
-		viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
+        viewport_min_x = center_x - (static_cast<float>(width()) * scale) / 2.0;
+        viewport_min_y = center_y - (static_cast<float>(height()) * scale) / 2.0;
+        viewport_max_x = center_x + (static_cast<float>(width()) * scale) / 2.0;
+        viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
 
-		projection.setToIdentity();
-		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
-	}
+        projection.setToIdentity();
+        projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
+    }
 
-	QPointF ImageRenderer::get_widget_mouse_position() const
-	{
-		const QPointF qt_widget_relative = mapFromGlobal(QCursor::pos());
-		return QPointF(qt_widget_relative.x(), qt_widget_relative.y());
-	}
+    QPointF ImageRenderer::get_widget_mouse_position() const
+    {
+        const QPointF qt_widget_relative = mapFromGlobal(QCursor::pos());
+        return QPointF(qt_widget_relative.x(), qt_widget_relative.y());
+    }
 
-	QPointF ImageRenderer::get_opengl_mouse_position() const
-	{
-		const QPointF widget_mouse_position = get_widget_mouse_position();
-		return QPointF(viewport_min_x + widget_mouse_position.x() * scale,
-		              viewport_min_y + widget_mouse_position.y() * scale);
-	}
+    QPointF ImageRenderer::get_opengl_mouse_position() const
+    {
+        const QPointF widget_mouse_position = get_widget_mouse_position();
+        return QPointF(viewport_min_x + widget_mouse_position.x() * scale,
+                      viewport_min_y + widget_mouse_position.y() * scale);
+    }
 }

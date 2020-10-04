@@ -30,56 +30,56 @@
 
 namespace degate
 {
-	/**
-	 * This is a base class for singletons.
-	 */
-	template <class T>
-	class SingletonBase : private boost::noncopyable
-	{
-	private:
-		static boost::scoped_ptr<T> t;
-		static boost::once_flag flag;
+    /**
+     * This is a base class for singletons.
+     */
+    template <class T>
+    class SingletonBase : private boost::noncopyable
+    {
+    private:
+        static boost::scoped_ptr<T> t;
+        static boost::once_flag flag;
 
-	protected:
+    protected:
 
-		/**
-		 * Constructor.
-		 */
-		SingletonBase()
-		{
-		}
+        /**
+         * Constructor.
+         */
+        SingletonBase()
+        {
+        }
 
-		/**
-		 * Destructor.
-		 */
-		virtual ~SingletonBase()
-		{
-		}
+        /**
+         * Destructor.
+         */
+        virtual ~SingletonBase()
+        {
+        }
 
-	public:
+    public:
 
-		/**
-		 * Get a reference to the singleton.
-		 */
-		static T& get_instance()
-		{
-			boost::call_once(init, flag);
-			return *t;
-		}
+        /**
+         * Get a reference to the singleton.
+         */
+        static T& get_instance()
+        {
+            boost::call_once(init, flag);
+            return *t;
+        }
 
-		/**
-		 * Initialize the singleton.
-		 */
-		static void init()
-		{
-			t.reset(new T());
-		}
-	};
+        /**
+         * Initialize the singleton.
+         */
+        static void init()
+        {
+            t.reset(new T());
+        }
+    };
 
-	template <class T>
-	boost::scoped_ptr<T> SingletonBase<T>::t(nullptr);
-	template <class T>
-	boost::once_flag SingletonBase<T>::flag = BOOST_ONCE_INIT;
+    template <class T>
+    boost::scoped_ptr<T> SingletonBase<T>::t(nullptr);
+    template <class T>
+    boost::once_flag SingletonBase<T>::flag = BOOST_ONCE_INIT;
 }
 
 #endif

@@ -30,38 +30,38 @@
 
 namespace degate
 {
-	/**
-	 * Electrical Rule Checks that detects unusual net configurations.
-	 * These cases are checked:
-	 * - A net connects gate ports, but these ports are all of the
-	 *   type. E.g. only inports or only outports are connected.
-	 * - Corresponding gate templates have an undefined port direction.
-	 * - Connection of multiple output ports.
-	 *
-	 * It is possible, that the port direction is still undefined, because
-	 * the user forgot to define it. This could be checked with a dedicated RC
-	 * for gate template ports, but in order to simplify it, we generate a
-	 * violation entry here. The drawback is, that it will generate more
-	 * entries than necessary, because the template port direction is implicitly
-	 * checked multiple times.
-	 *
-	 */
-	class ERCNet : public RCBase
-	{
+    /**
+     * Electrical Rule Checks that detects unusual net configurations.
+     * These cases are checked:
+     * - A net connects gate ports, but these ports are all of the
+     *   type. E.g. only inports or only outports are connected.
+     * - Corresponding gate templates have an undefined port direction.
+     * - Connection of multiple output ports.
+     *
+     * It is possible, that the port direction is still undefined, because
+     * the user forgot to define it. This could be checked with a dedicated RC
+     * for gate template ports, but in order to simplify it, we generate a
+     * violation entry here. The drawback is, that it will generate more
+     * entries than necessary, because the template port direction is implicitly
+     * checked multiple times.
+     *
+     */
+    class ERCNet : public RCBase
+    {
     Q_DECLARE_TR_FUNCTIONS(degate::ERCNet)
 
-	public:
+    public:
 
-		ERCNet();
+        ERCNet();
 
-		void run(LogicModel_shptr lmodel);
+        void run(LogicModel_shptr lmodel);
 
         std::string generate_description(const RCViolation& violation) override;
 
-	private:
+    private:
 
-		void check_net(LogicModel_shptr lmodel, Net_shptr net);
-	};
+        void check_net(LogicModel_shptr lmodel, Net_shptr net);
+    };
 }
 
 #endif

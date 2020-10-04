@@ -23,16 +23,16 @@
 
 namespace degate
 {
-	PreferencesEditor::PreferencesEditor(QWidget* parent) : QDialog(parent)
-	{
+    PreferencesEditor::PreferencesEditor(QWidget* parent) : QDialog(parent)
+    {
         // Create pages (go to the end of the file to add new ones).
         create_pages();
 
         // Base settings
         setWindowTitle(tr("Preferences"));
-	    //setBaseSize(parent->size() * 0.5);
+        //setBaseSize(parent->size() * 0.5);
 
-	    // Get preferences
+        // Get preferences
         preferences = PREFERENCES_HANDLER.get_preferences();
 
         // Pages list setup
@@ -43,13 +43,13 @@ namespace degate
         // Insert pages
         insert_pages();
 
-		// Save
-		save_button.setText(tr("Apply"));
-		QObject::connect(&save_button, SIGNAL(clicked()), this, SLOT(validate()));
+        // Save
+        save_button.setText(tr("Apply"));
+        QObject::connect(&save_button, SIGNAL(clicked()), this, SLOT(validate()));
 
-		// Cancel
-		cancel_button.setText(tr("Close"));
-		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
+        // Cancel
+        cancel_button.setText(tr("Close"));
+        QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(close()));
 
         pages_list.setCurrentItem(pages_list.item(0));
 
@@ -77,36 +77,36 @@ namespace degate
 
         // Global layout
         layout.addLayout(&content_layout);
-		layout.addLayout(&buttons_layout);
+        layout.addLayout(&buttons_layout);
 
-		setLayout(&layout);
+        setLayout(&layout);
 
         QObject::connect(&pages_list, &QListWidget::currentItemChanged, this, &PreferencesEditor::change_page);
         QObject::connect(&PREFERENCES_HANDLER, &PreferencesHandler::language_changed, this, &PreferencesEditor::reload_editor);
 
         scroll_area.setMinimumWidth(area_content->minimumSizeHint().width());
-	}
+    }
 
-	PreferencesEditor::~PreferencesEditor()
-	{
+    PreferencesEditor::~PreferencesEditor()
+    {
         for (auto& e : pages)
         {
             delete e.second;
         }
-	}
+    }
 
-	void PreferencesEditor::validate()
-	{
-	    // Apply changes for every page
+    void PreferencesEditor::validate()
+    {
+        // Apply changes for every page
         for (auto& e : pages)
         {
             e.second->apply(preferences);
         }
 
-		PREFERENCES_HANDLER.update(preferences);
+        PREFERENCES_HANDLER.update(preferences);
 
-		PREFERENCES_HANDLER.save();
-	}
+        PREFERENCES_HANDLER.save();
+    }
 
     void PreferencesEditor::change_page(QListWidgetItem* current, QListWidgetItem* previous)
     {
@@ -118,7 +118,7 @@ namespace degate
 
     void PreferencesEditor::reload_editor()
     {
-	    int current_index = pages_list.currentRow();
+        int current_index = pages_list.currentRow();
 
         save_button.setText(tr("Apply"));
         cancel_button.setText(tr("Close"));
@@ -167,7 +167,7 @@ namespace degate
 
     void PreferencesEditor::insert_pages()
     {
-	    int index = 0;
+        int index = 0;
         for (auto& e : pages)
         {
             pages_list.insertItem(index, e.first);

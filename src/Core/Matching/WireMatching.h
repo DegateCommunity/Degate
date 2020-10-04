@@ -28,37 +28,37 @@
 
 namespace degate
 {
-	class WireMatching : public Matching
-	{
-	private:
+    class WireMatching : public Matching
+    {
+    private:
 
-		Layer_shptr layer;
-		LogicModel_shptr lmodel;
-		unsigned int wire_diameter, median_filter_width;
-		double sigma, min_edge_magnitude;
-		BackgroundImage_shptr img;
+        Layer_shptr layer;
+        LogicModel_shptr lmodel;
+        unsigned int wire_diameter, median_filter_width;
+        double sigma, min_edge_magnitude;
+        BackgroundImage_shptr img;
 
-		BoundingBox bounding_box;
+        BoundingBox bounding_box;
 
-	public:
+    public:
 
-		WireMatching();
+        WireMatching();
 
-		/**
-		 * @exception InvalidPointerException
-		 * @exception DegateRuntimeException
-		 */
-		virtual void init(BoundingBox const& bounding_box, Project_shptr project);
+        /**
+         * @exception InvalidPointerException
+         * @exception DegateRuntimeException
+         */
+        virtual void init(BoundingBox const& bounding_box, Project_shptr project);
 
-		virtual void run();
+        virtual void run();
 
-		void set_wire_diameter(unsigned int wire_diameter);
-		void set_median_filter_width(unsigned int median_filter_width);
-		void set_sigma(double sigma);
-		void set_min_edge_magnitude(double min_edge_magnitude);
-	};
+        void set_wire_diameter(unsigned int wire_diameter);
+        void set_median_filter_width(unsigned int median_filter_width);
+        void set_sigma(double sigma);
+        void set_min_edge_magnitude(double min_edge_magnitude);
+    };
 
-	typedef std::shared_ptr<WireMatching> WireMatching_shptr;
+    typedef std::shared_ptr<WireMatching> WireMatching_shptr;
 }
 
 #endif

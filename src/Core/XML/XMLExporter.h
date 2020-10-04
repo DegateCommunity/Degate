@@ -28,27 +28,27 @@
 
 namespace degate
 {
-	/**
-	 * A base class for XML exporter.
-	 */
-	class XMLExporter : public Exporter
-	{
-	public:
+    /**
+     * A base class for XML exporter.
+     */
+    class XMLExporter : public Exporter
+    {
+    public:
 
-		/**
-		 * The ctor.
-		 */
-		XMLExporter()
-		{
-		};
+        /**
+         * The ctor.
+         */
+        XMLExporter()
+        {
+        };
 
-		/**
-		 * The dtor.
-		 */
-		~XMLExporter() override
-		{
-		};
-	};
+        /**
+         * The dtor.
+         */
+        ~XMLExporter() override
+        {
+        };
+    };
 }
 
 #endif

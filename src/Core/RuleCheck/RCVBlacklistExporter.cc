@@ -33,57 +33,57 @@ using namespace degate;
 void RCVBlacklistExporter::export_data(std::string const& filename,
                                        RCBase::container_type const& violations)
 {
-	std::string directory = get_basedir(filename);
+    std::string directory = get_basedir(filename);
 
-	try
-	{
-		QDomDocument doc;
+    try
+    {
+        QDomDocument doc;
 
-		QDomProcessingInstruction head = doc.createProcessingInstruction("xml", XML_ENCODING);
-		doc.appendChild(head);
+        QDomProcessingInstruction head = doc.createProcessingInstruction("xml", XML_ENCODING);
+        doc.appendChild(head);
 
-		QDomElement root_elem = doc.createElement("rc-blacklist");
-		assert(!root_elem.isNull());
+        QDomElement root_elem = doc.createElement("rc-blacklist");
+        assert(!root_elem.isNull());
 
-		BOOST_FOREACH(RCViolation_shptr rcv, violations)
-		{
-			add_rcv(doc, root_elem, rcv);
-		}
+        BOOST_FOREACH(RCViolation_shptr rcv, violations)
+        {
+            add_rcv(doc, root_elem, rcv);
+        }
 
-		doc.appendChild(root_elem);
+        doc.appendChild(root_elem);
 
-		QFile file(QString::fromStdString(filename));
-		if (!file.open(QIODevice::WriteOnly))
-		{
-			throw InvalidPathException("Can't create export file.");
-		}
+        QFile file(QString::fromStdString(filename));
+        if (!file.open(QIODevice::WriteOnly))
+        {
+            throw InvalidPathException("Can't create export file.");
+        }
 
-		QTextStream stream(&file);
+        QTextStream stream(&file);
         stream.setCodec("UTF-8");
-		stream << doc.toString();
+        stream << doc.toString();
 
-		file.close();
-	}
-	catch (const std::exception& ex)
-	{
-		std::cout << "Exception caught: " << ex.what() << std::endl;
-		throw;
-	}
+        file.close();
+    }
+    catch (const std::exception& ex)
+    {
+        std::cout << "Exception caught: " << ex.what() << std::endl;
+        throw;
+    }
 }
 
 void RCVBlacklistExporter::add_rcv(QDomDocument& doc,
                                    QDomElement& root_elem,
                                    RCViolation_shptr rcv)
 {
-	QDomElement rcv_elem = doc.createElement("rc-violation");
-	if (rcv_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    QDomElement rcv_elem = doc.createElement("rc-violation");
+    if (rcv_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-	PlacedLogicModelObject_shptr o = rcv->get_object();
-	object_id_t new_oid = oid_rewriter->get_new_object_id(o->get_object_id());
+    PlacedLogicModelObject_shptr o = rcv->get_object();
+    object_id_t new_oid = oid_rewriter->get_new_object_id(o->get_object_id());
 
-	rcv_elem.setAttribute("object-id", QString::fromStdString(number_to_string<object_id_t>(new_oid)));
-	rcv_elem.setAttribute("rc-violation-class", QString::fromStdString(rcv->get_rc_violation_class()));
-	rcv_elem.setAttribute("severity", QString::fromStdString(rcv->get_severity_as_string()));
+    rcv_elem.setAttribute("object-id", QString::fromStdString(number_to_string<object_id_t>(new_oid)));
+    rcv_elem.setAttribute("rc-violation-class", QString::fromStdString(rcv->get_rc_violation_class()));
+    rcv_elem.setAttribute("severity", QString::fromStdString(rcv->get_severity_as_string()));
 
-	root_elem.appendChild(rcv_elem);
+    root_elem.appendChild(rcv_elem);
 }

@@ -60,152 +60,152 @@
 namespace degate
 {
 
-	/**
-	 * @class MainWindow
-	 * @brief The Qt main window of Degate.
-	 *
-	 * The class hold the menu, workspace, status bar and more.
-	 *
-	 * @see QMainWindow
-	 */
-	class MainWindow : public QMainWindow
-	{
-	Q_OBJECT
+    /**
+     * @class MainWindow
+     * @brief The Qt main window of Degate.
+     *
+     * The class hold the menu, workspace, status bar and more.
+     *
+     * @see QMainWindow
+     */
+    class MainWindow : public QMainWindow
+    {
+    Q_OBJECT
 
-	public:
+    public:
 
-		/**
-		 * Create the main window, if width and height are equal to 0 then the size will be 70% of the available screen space.
-		 *
-		 * @param width : the desired window with.
-		 * @param height : the desired window height.
-		 */
-		MainWindow(int width = 0, int height = 0);
-		~MainWindow() override;
+        /**
+         * Create the main window, if width and height are equal to 0 then the size will be 70% of the available screen space.
+         *
+         * @param width : the desired window with.
+         * @param height : the desired window height.
+         */
+        MainWindow(int width = 0, int height = 0);
+        ~MainWindow() override;
 
-	public slots:
+    public slots:
 
-	    /**
-	     * Load/Reload all icons of the main window.
-	     */
-	    void reload_icons();
+        /**
+         * Load/Reload all icons of the main window.
+         */
+        void reload_icons();
 
-	    /**
-	     * Load/Reload all texts of the main window (useful when language changed).
-	     */
-	    void reload_texts();
+        /**
+         * Load/Reload all texts of the main window (useful when language changed).
+         */
+        void reload_texts();
 
-		/* Project menu */
+        /* Project menu */
 
-		/**
-		 * Import a new project, it will force the user to find the project folder.
-		 */
-		void on_menu_project_importer();
+        /**
+         * Import a new project, it will force the user to find the project folder.
+         */
+        void on_menu_project_importer();
 
-		/**
-		 * Save (export) the current project at the same place he where loaded.
-		 */
-		void on_menu_project_save();
+        /**
+         * Save (export) the current project at the same place he where loaded.
+         */
+        void on_menu_project_save();
 
-		/**
-		 * Close the current project (if one is opened).
-		 */
-		void on_menu_project_close();
+        /**
+         * Close the current project (if one is opened).
+         */
+        void on_menu_project_close();
 
-		/**
-		 * Create a new project, it will force the user to select a project folder.
-		 */
-		void on_menu_project_new();
+        /**
+         * Create a new project, it will force the user to select a project folder.
+         */
+        void on_menu_project_new();
 
-		/**
-		 * Create a subproject from selection.
-		 */
-		void on_menu_project_create_subproject();
+        /**
+         * Create a subproject from selection.
+         */
+        void on_menu_project_create_subproject();
 
-		/**
-		 * Open the project settings dialog.
-		 */
-		void on_menu_project_settings();
+        /**
+         * Open the project settings dialog.
+         */
+        void on_menu_project_settings();
 
-		/**
-		 * Quit the application without saving.
-		 */
-		void on_menu_project_quit();
-
-
-		/* Edit menu */
-
-		/**
-		 * Open the preference window to update preferences.
-		 */
-		void on_menu_edit_preferences();
+        /**
+         * Quit the application without saving.
+         */
+        void on_menu_project_quit();
 
 
-		/* Show menu */
+        /* Edit menu */
 
-		/**
-		 * Enable/disable snap to grid.
-		 */
-		void on_menu_view_snap_to_grid(bool value);
-
-		/**
-		 * Enable/disable fullscreen mode.
-		 */
-		void on_menu_view_fullscreen(bool value);
+        /**
+         * Open the preference window to update preferences.
+         */
+        void on_menu_edit_preferences();
 
 
-		/* Layer menu */
+        /* Show menu */
 
-		/**
-		 * Open a new window to edit layers properties of the current project.
-		 */
-		void on_menu_layer_edit();
+        /**
+         * Enable/disable snap to grid.
+         */
+        void on_menu_view_snap_to_grid(bool value);
 
-		/**
-		 * Import a new background image for the current layer (this open a new window to select the background image).
-		 */
-		void on_menu_layer_import_background();
+        /**
+         * Enable/disable fullscreen mode.
+         */
+        void on_menu_view_fullscreen(bool value);
 
 
-		/* Gate menu */
-		
-		/**
-		 * Create a new gate template from selection, this will create the gate template, create the gate instance and then open the gate instance edit dialog.
-		 */
-		void on_menu_gate_new_gate_template();
+        /* Layer menu */
 
-		/**
-		 * Create a new gate from selection, this will open a window to select a gate template, create the gate and then open the gate instance edit dialog.
-		 */
-		void on_menu_gate_new_gate();
+        /**
+         * Open a new window to edit layers properties of the current project.
+         */
+        void on_menu_layer_edit();
 
-		/**
-		 * Open the gate edit instance dialog for the selected gate.
-		 */
-		void on_menu_gate_edit();
+        /**
+         * Import a new background image for the current layer (this open a new window to select the background image).
+         */
+        void on_menu_layer_import_background();
 
-		/**
-		 * Open the gate library window, this will list all gates template of the project.
-		 */
-		void on_menu_gate_library();
 
-		/**
-		 * Edit/Move the selected gate port.
-		 */
-		 void on_menu_gate_port_edit();
+        /* Gate menu */
 
-		
-		/* Annotation menu */
-		
-		/**
-		 * Create a new annotation from selection, this will create the annotation and then open the annotation edit dialog. 
-		 */
-		void on_menu_annotation_create();
+        /**
+         * Create a new gate template from selection, this will create the gate template, create the gate instance and then open the gate instance edit dialog.
+         */
+        void on_menu_gate_new_gate_template();
 
-		/**
-		 * Open the annotation edit dialog for the selected annotation.
-		 */
-		void on_menu_annotation_edit();
+        /**
+         * Create a new gate from selection, this will open a window to select a gate template, create the gate and then open the gate instance edit dialog.
+         */
+        void on_menu_gate_new_gate();
+
+        /**
+         * Open the gate edit instance dialog for the selected gate.
+         */
+        void on_menu_gate_edit();
+
+        /**
+         * Open the gate library window, this will list all gates template of the project.
+         */
+        void on_menu_gate_library();
+
+        /**
+         * Edit/Move the selected gate port.
+         */
+         void on_menu_gate_port_edit();
+
+
+        /* Annotation menu */
+
+        /**
+         * Create a new annotation from selection, this will create the annotation and then open the annotation edit dialog.
+         */
+        void on_menu_annotation_create();
+
+        /**
+         * Open the annotation edit dialog for the selected annotation.
+         */
+        void on_menu_annotation_edit();
 
 
         /* EMarker menu */
@@ -223,29 +223,29 @@ namespace degate
          */
         void on_menu_via_edit();
 
-		
-		/* Logic menu */
-		
-		/**
-		 * Remove all selected objects from the logic model.
-		 */
-		void on_menu_logic_remove_selected_objects();
 
-		/**
-		 * Connect all selected objects together.
-		 */
-		void on_menu_logic_interconnect_selected_objects();
+        /* Logic menu */
 
-		/**
-		 * Break connections of all selected objects (isolation).
-		 */
-		void on_menu_logic_isolate_selected_objects();
+        /**
+         * Remove all selected objects from the logic model.
+         */
+        void on_menu_logic_remove_selected_objects();
 
-		/**
-		 * Move selected gates into a specific module.
-		 * It will open a module selector dialog.
-		 */
-		void on_menu_logic_move_selected_gates_into_module();
+        /**
+         * Connect all selected objects together.
+         */
+        void on_menu_logic_interconnect_selected_objects();
+
+        /**
+         * Break connections of all selected objects (isolation).
+         */
+        void on_menu_logic_isolate_selected_objects();
+
+        /**
+         * Move selected gates into a specific module.
+         * It will open a module selector dialog.
+         */
+        void on_menu_logic_move_selected_gates_into_module();
 
         /**
          * Open connection inspector dialog.
@@ -253,12 +253,12 @@ namespace degate
         void on_menu_logic_inspect_selected_object();
 
 
-		/* Matching menu */
+        /* Matching menu */
 
-		/**
-		 * Start a template matching process.
-		 */
-		void on_menu_matching_template_matching();
+        /**
+         * Start a template matching process.
+         */
+        void on_menu_matching_template_matching();
 
         /**
          * Start a via matching process.
@@ -289,51 +289,51 @@ namespace degate
         void on_menu_help_about();
 
 
-		/* Other */
+        /* Other */
 
-		/**
-		 * Update the window title.
-		 */
-		void update_window_title();
+        /**
+         * Update the window title.
+         */
+        void update_window_title();
 
-		/**
-		 * Update the status bar layer info.
-		 */
-		void update_status_bar_layer_info();
-		
-		/**
-		 * Change the current layer to the next (up) layer.
-		 */
-		void on_tool_via_up();
+        /**
+         * Update the status bar layer info.
+         */
+        void update_status_bar_layer_info();
 
-		/**
-		 * Change the current layer to the previous (down) layer.
-		 */
-		void on_tool_via_down();
+        /**
+         * Change the current layer to the next (up) layer.
+         */
+        void on_tool_via_up();
 
-		/**
-		 * Open a project with a path already specified.
-		 *
-		 * @param path : the path of the project to open.
-		 *
-		 * @see WorkspaceRenderer::project_changed
-		 */
-		void open_project(const std::string& path);
+        /**
+         * Change the current layer to the previous (down) layer.
+         */
+        void on_tool_via_down();
 
-		/**
-		 * Update the mouse coordinates on the status bar.
-		 *
-		 * @param x : the new x coordinate.
-		 * @param y : the new y coordinate.
-		 *
-		 * @see WorkspaceRenderer::mouse_coords_changed
-		 */
-		void change_status_bar_coords(int x, int y);
+        /**
+         * Open a project with a path already specified.
+         *
+         * @param path : the path of the project to open.
+         *
+         * @see WorkspaceRenderer::project_changed
+         */
+        void open_project(const std::string& path);
 
-		/**
-		 * Show a context menu on mouse.
-		 */
-		void show_context_menu();
+        /**
+         * Update the mouse coordinates on the status bar.
+         *
+         * @param x : the new x coordinate.
+         * @param y : the new y coordinate.
+         *
+         * @see WorkspaceRenderer::mouse_coords_changed
+         */
+        void change_status_bar_coords(int x, int y);
+
+        /**
+         * Show a context menu on mouse.
+         */
+        void show_context_menu();
 
         /**
          * Create a new emarker at mouse position, this will create the emarker and then open the emarker edit dialog.
@@ -377,33 +377,33 @@ namespace degate
          */
         void on_modules_dialog();
 
-	protected:
-	    void closeEvent(QCloseEvent* event) override;
+    protected:
+        void closeEvent(QCloseEvent* event) override;
 
-	    /**
-	     * Close and delete all remaining sub windows.
-	     * For example it will close and delete rcv_dialog and modules_dialog.
-	     */
-	    void close_sub_windows();
+        /**
+         * Close and delete all remaining sub windows.
+         * For example it will close and delete rcv_dialog and modules_dialog.
+         */
+        void close_sub_windows();
 
-	private:
-		QMenuBar menu_bar;
-		QToolBar* tool_bar = nullptr;
-		QStatusBar status_bar;
-		QLabel status_bar_coords;
-		QLabel status_bar_layer;
+    private:
+        QMenuBar menu_bar;
+        QToolBar* tool_bar = nullptr;
+        QStatusBar status_bar;
+        QLabel status_bar_coords;
+        QLabel status_bar_layer;
 
-		QActionGroup tools_group;
+        QActionGroup tools_group;
 
-		Project_shptr project;
-		WorkspaceRenderer* workspace = nullptr;
-		QPointF context_menu_mouse_position;
+        Project_shptr project;
+        WorkspaceRenderer* workspace = nullptr;
+        QPointF context_menu_mouse_position;
 
-	private:
+    private:
 
-	    /* Menus */
+        /* Menus */
 
-	    // Project menu
+        // Project menu
         QMenu* project_menu;
         QAction* project_new_action;
         QAction* project_import_action;
@@ -500,7 +500,7 @@ namespace degate
         ModulesDialog* modules_dialog = nullptr;
         ConnectionInspector* connection_inspector_dialog = nullptr;
 
-	};
+    };
 }
 
 #endif

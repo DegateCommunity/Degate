@@ -30,34 +30,34 @@
 
 namespace degate
 {
-	/**
-	 * Check if two objects are tangent. It is assumed that both
-	 * objects are on the same layer.
-	 * @return Returns whether the objects are touching each other.
-	 */
-	bool check_object_tangency(PlacedLogicModelObject_shptr o1,
-	                           PlacedLogicModelObject_shptr o2);
+    /**
+     * Check if two objects are tangent. It is assumed that both
+     * objects are on the same layer.
+     * @return Returns whether the objects are touching each other.
+     */
+    bool check_object_tangency(PlacedLogicModelObject_shptr o1,
+                               PlacedLogicModelObject_shptr o2);
 
 
-	bool check_object_tangency(Circle_shptr o1,
-	                           Circle_shptr o2);
+    bool check_object_tangency(Circle_shptr o1,
+                               Circle_shptr o2);
 
 
-	bool check_object_tangency(Line_shptr o1,
-	                           Line_shptr o2);
+    bool check_object_tangency(Line_shptr o1,
+                               Line_shptr o2);
 
-	bool check_object_tangency(Rectangle_shptr o1,
-	                           Rectangle_shptr o2);
+    bool check_object_tangency(Rectangle_shptr o1,
+                               Rectangle_shptr o2);
 
-	bool check_object_tangency(Circle_shptr o1,
-	                           Line_shptr o2);
+    bool check_object_tangency(Circle_shptr o1,
+                               Line_shptr o2);
 
 
-	bool check_object_tangency(Circle_shptr o1,
-	                           Rectangle_shptr o2);
+    bool check_object_tangency(Circle_shptr o1,
+                               Rectangle_shptr o2);
 
-	bool check_object_tangency(Line_shptr l,
-	                           Rectangle_shptr r);
+    bool check_object_tangency(Line_shptr l,
+                               Rectangle_shptr r);
 }
 
 #endif

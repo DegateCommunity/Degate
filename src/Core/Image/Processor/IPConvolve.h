@@ -28,54 +28,54 @@
 
 namespace degate
 {
-	/**
-	 * Processor: Convolve an image.
-	 */
-	template <typename ImageTypeIn, typename ImageTypeOut>
-	class IPConvolve : public ImageProcessorBase
-	{
-	private:
-		FilterKernel_shptr kernel;
+    /**
+     * Processor: Convolve an image.
+     */
+    template <typename ImageTypeIn, typename ImageTypeOut>
+    class IPConvolve : public ImageProcessorBase
+    {
+    private:
+        FilterKernel_shptr kernel;
 
-	public:
+    public:
 
-		/**
-		 * The constructor.
-		 */
-		IPConvolve(FilterKernel_shptr kernel) :
-			ImageProcessorBase("IPConvolve",
-			                   "Convolve an image.",
-			                   false,
-			                   typeid(typename ImageTypeIn::pixel_type),
-			                   typeid(typename ImageTypeOut::pixel_type)),
-			kernel(kernel)
-		{
-		}
+        /**
+         * The constructor.
+         */
+        IPConvolve(FilterKernel_shptr kernel) :
+            ImageProcessorBase("IPConvolve",
+                               "Convolve an image.",
+                               false,
+                               typeid(typename ImageTypeIn::pixel_type),
+                               typeid(typename ImageTypeOut::pixel_type)),
+            kernel(kernel)
+        {
+        }
 
-		/**
-		 * The destructor.
-		 */
-		virtual ~IPConvolve()
-		{
-		}
+        /**
+         * The destructor.
+         */
+        virtual ~IPConvolve()
+        {
+        }
 
 
-		virtual ImageBase_shptr run(ImageBase_shptr in)
-		{
-			assert(in != nullptr);
+        virtual ImageBase_shptr run(ImageBase_shptr in)
+        {
+            assert(in != nullptr);
 
-			std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
+            std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
 
-			std::shared_ptr<ImageTypeOut> img_out(new ImageTypeOut(in->get_width(), in->get_height()));
+            std::shared_ptr<ImageTypeOut> img_out(new ImageTypeOut(in->get_width(), in->get_height()));
 
-			assert(img_in != nullptr);
-			assert(img_out != nullptr);
+            assert(img_in != nullptr);
+            assert(img_out != nullptr);
 
-			convolve<ImageTypeOut, ImageTypeIn>(img_out, img_in, kernel);
+            convolve<ImageTypeOut, ImageTypeIn>(img_out, img_in, kernel);
 
-			return img_out;
-		}
-	};
+            return img_out;
+        }
+    };
 }
 
 #endif

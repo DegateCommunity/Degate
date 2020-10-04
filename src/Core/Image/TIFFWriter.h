@@ -38,71 +38,71 @@
 
 namespace degate
 {
-	/**
-	 * The TIFFWriter parses tiff images.
-	 */
-	template <class ImageType>
-	class TIFFWriter : public ImageWriterBase<ImageType>
-	{
-	public:
+    /**
+     * The TIFFWriter parses tiff images.
+     */
+    template <class ImageType>
+    class TIFFWriter : public ImageWriterBase<ImageType>
+    {
+    public:
 
-		using ImageWriterBase<ImageType>::get_filename;
-		using ImageWriterBase<ImageType>::get_width;
-		using ImageWriterBase<ImageType>::get_height;
-
-
-		TIFFWriter(unsigned int width, unsigned int height,
-		           std::string const& filename) :
-			ImageWriterBase<ImageType>(width, height, filename)
-		{
-		}
-
-		virtual ~TIFFWriter()
-		{
-		}
-
-		/**
-		 * exception FileSystemException
-		 */
-		bool write_image(std::shared_ptr<ImageType> img);
-	};
+        using ImageWriterBase<ImageType>::get_filename;
+        using ImageWriterBase<ImageType>::get_width;
+        using ImageWriterBase<ImageType>::get_height;
 
 
-	template <class ImageType>
-	bool TIFFWriter<ImageType>::write_image(std::shared_ptr<ImageType> img)
-	{
-		QImageWriter writer(get_filename().c_str());
+        TIFFWriter(unsigned int width, unsigned int height,
+                   std::string const& filename) :
+            ImageWriterBase<ImageType>(width, height, filename)
+        {
+        }
 
-		// Write the tiff tags to the file
-		writer.setFormat("TIFF");
-		writer.setCompression(0);
-		writer.setText("ImageWidth", QString::number(get_width()));
-		writer.setText("ImageLength", QString::number(get_height()));
-		writer.setText("Compression", "1");
-		writer.setText("PlanarConfiguration", "1");
-		writer.setText("PhotometricInterpretation", "2");
-		writer.setText("BitsPerSample", "8");
-		writer.setText("SamplesPerPixel", "3");
+        virtual ~TIFFWriter()
+        {
+        }
 
-		QImage image(get_width(), get_height(), QImage::Format_ARGB32);
+        /**
+         * exception FileSystemException
+         */
+        bool write_image(std::shared_ptr<ImageType> img);
+    };
 
-		for (unsigned int y = 0; y < get_height(); y++)
-		{
-			for (unsigned int x = 0; x < get_width(); x++)
-			{
-				rgba_pixel_t p = img->template get_pixel_as<rgba_pixel_t>(x, y);
 
-				image.setPixel(x, y, qRgba(MASK_R(p), MASK_G(p), MASK_B(p), MASK_A(p)));
-			}
-		}
+    template <class ImageType>
+    bool TIFFWriter<ImageType>::write_image(std::shared_ptr<ImageType> img)
+    {
+        QImageWriter writer(get_filename().c_str());
 
-		if (!writer.write(image))
-		{
-			return false;
-		}
+        // Write the tiff tags to the file
+        writer.setFormat("TIFF");
+        writer.setCompression(0);
+        writer.setText("ImageWidth", QString::number(get_width()));
+        writer.setText("ImageLength", QString::number(get_height()));
+        writer.setText("Compression", "1");
+        writer.setText("PlanarConfiguration", "1");
+        writer.setText("PhotometricInterpretation", "2");
+        writer.setText("BitsPerSample", "8");
+        writer.setText("SamplesPerPixel", "3");
 
-		return true;
-	}
+        QImage image(get_width(), get_height(), QImage::Format_ARGB32);
+
+        for (unsigned int y = 0; y < get_height(); y++)
+        {
+            for (unsigned int x = 0; x < get_width(); x++)
+            {
+                rgba_pixel_t p = img->template get_pixel_as<rgba_pixel_t>(x, y);
+
+                image.setPixel(x, y, qRgba(MASK_R(p), MASK_G(p), MASK_B(p), MASK_A(p)));
+            }
+        }
+
+        if (!writer.write(image))
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 #endif

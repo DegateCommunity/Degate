@@ -32,24 +32,24 @@
 namespace degate
 {
 
-	/**
-	 * @class AppearancePreferencesPage
-	 * @brief Widget to change appearance preferences (like theme and icon theme).
-	 *
-	 * @see PreferencesDialog
-	 */
-	class AppearancePreferencesPage : public PreferencesPage
-	{
-		Q_OBJECT
-		
-	public:
-		/**
-		 * Create the appearance preferences page widget.
-		 *
-		 * @param parent : the parent of the widget.
-		 */
-		explicit AppearancePreferencesPage(QWidget* parent);
-		~AppearancePreferencesPage() override = default;
+    /**
+     * @class AppearancePreferencesPage
+     * @brief Widget to change appearance preferences (like theme and icon theme).
+     *
+     * @see PreferencesDialog
+     */
+    class AppearancePreferencesPage : public PreferencesPage
+    {
+        Q_OBJECT
+
+    public:
+        /**
+         * Create the appearance preferences page widget.
+         *
+         * @param parent : the parent of the widget.
+         */
+        explicit AppearancePreferencesPage(QWidget* parent);
+        ~AppearancePreferencesPage() override = default;
 
         /**
          * Update preferences, the preferences editor will call this function to apply changes for every page.
@@ -57,17 +57,17 @@ namespace degate
          * @param preferences : the updated preferences to apply changes to.
          */
         void apply(Preferences& preferences) override;
-		
-	private:
 
-		QComboBox theme_box;
-		QComboBox icon_theme_box;
+    private:
+
+        QComboBox theme_box;
+        QComboBox icon_theme_box;
         QCheckBox automatic_check_box;
         QLabel introduction_label;
 
         std::map<IconTheme, QString> icon_themes;
         std::map<Theme, QString> themes;
-	};
+    };
 }
 
 #endif

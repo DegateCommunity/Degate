@@ -32,28 +32,28 @@
 
 namespace degate
 {
-	/**
-	 * The RCVBlacklistExporter exports a set of RC Violations, which should be ignored.
-	 */
-	class RCVBlacklistExporter : public XMLExporter
-	{
-	private:
+    /**
+     * The RCVBlacklistExporter exports a set of RC Violations, which should be ignored.
+     */
+    class RCVBlacklistExporter : public XMLExporter
+    {
+    private:
 
-		void add_rcv(QDomDocument& doc, QDomElement& templates_elem, RCViolation_shptr rcv);
+        void add_rcv(QDomDocument& doc, QDomElement& templates_elem, RCViolation_shptr rcv);
 
-		ObjectIDRewriter_shptr oid_rewriter;
+        ObjectIDRewriter_shptr oid_rewriter;
 
-	public:
-		RCVBlacklistExporter(ObjectIDRewriter_shptr oid_rewriter) : oid_rewriter(oid_rewriter)
-		{
-		}
+    public:
+        RCVBlacklistExporter(ObjectIDRewriter_shptr oid_rewriter) : oid_rewriter(oid_rewriter)
+        {
+        }
 
-		~RCVBlacklistExporter()
-		{
-		}
+        ~RCVBlacklistExporter()
+        {
+        }
 
-		void export_data(std::string const& filename, RCBase::container_type const& violations);
-	};
+        void export_data(std::string const& filename, RCBase::container_type const& violations);
+    };
 }
 
 #endif

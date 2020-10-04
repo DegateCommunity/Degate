@@ -29,65 +29,65 @@
 namespace degate
 {
 
-	/**
-	 * @class WorkspaceElement
-	 * @brief Virtual class to create a workspace element (with OpenGL routines functions)
-	 *
-	 * Every workspace element need to know the current active project and have 3 basic OpenGL functions (init, update and draw).
-	 *
-	 * @warning The OpenGL context of a workspace element is always the actual active context where the init function is called (@see WorkspaceElement::init).
-	 *
-	 * To set the actual active OpenGL context with Qt @see QOpenGLWidget::makeCurrent().
-	 * An element initialized in a context can't be use in another one, so don't forgot to set the right context when switching (eg. @see ImageRenderer or @see WorkspaceRenderer).
-	 *
-	 * A workspace element has one vbo buffer by default (generally the shape buffer of the element).
-	 */
-	class WorkspaceElement
-	{
-	public:
+    /**
+     * @class WorkspaceElement
+     * @brief Virtual class to create a workspace element (with OpenGL routines functions)
+     *
+     * Every workspace element need to know the current active project and have 3 basic OpenGL functions (init, update and draw).
+     *
+     * @warning The OpenGL context of a workspace element is always the actual active context where the init function is called (@see WorkspaceElement::init).
+     *
+     * To set the actual active OpenGL context with Qt @see QOpenGLWidget::makeCurrent().
+     * An element initialized in a context can't be use in another one, so don't forgot to set the right context when switching (eg. @see ImageRenderer or @see WorkspaceRenderer).
+     *
+     * A workspace element has one vbo buffer by default (generally the shape buffer of the element).
+     */
+    class WorkspaceElement
+    {
+    public:
 
-		/**
-		 * Create a workspace element.
-		 * Every workspace element need to know at least his parent.
-		 *
-		 * @param parent : the widget parent pointer.
-		 */
-		explicit WorkspaceElement(QWidget* parent);
-		~WorkspaceElement();
+        /**
+         * Create a workspace element.
+         * Every workspace element need to know at least his parent.
+         *
+         * @param parent : the widget parent pointer.
+         */
+        explicit WorkspaceElement(QWidget* parent);
+        ~WorkspaceElement();
 
-		/**
-		 * Set the actual project.
-		 * 
-		 * @param new_project : shared_ptr to the new project.
-		 */
-		void set_project(const Project_shptr& new_project);
+        /**
+         * Set the actual project.
+         *
+         * @param new_project : shared_ptr to the new project.
+         */
+        void set_project(const Project_shptr& new_project);
 
-		/**
-		 * Init OpenGL routine (vbo and shaders).
-		 *
-		 * @warning Always call this parent init method in the child implementation.
-		 */
-		virtual void init();
+        /**
+         * Init OpenGL routine (vbo and shaders).
+         *
+         * @warning Always call this parent init method in the child implementation.
+         */
+        virtual void init();
 
-		/**
-	     * Update all vbo.
-	     */
-		virtual void update() = 0;
+        /**
+         * Update all vbo.
+         */
+        virtual void update() = 0;
 
-		/**
-	     * Draw.
-	     * 
-	     * @param projection : the projection matrix to apply. 
-	     */
-		virtual void draw(const QMatrix4x4& projection) = 0;
+        /**
+         * Draw.
+         *
+         * @param projection : the projection matrix to apply.
+         */
+        virtual void draw(const QMatrix4x4& projection) = 0;
 
-	protected:
-		QWidget* parent = nullptr;
-		Project_shptr project = nullptr;
-		QOpenGLShaderProgram* program = nullptr;
-		GLuint vbo = 0;
-		QOpenGLFunctions* context = nullptr;
-	};
+    protected:
+        QWidget* parent = nullptr;
+        Project_shptr project = nullptr;
+        QOpenGLShaderProgram* program = nullptr;
+        GLuint vbo = 0;
+        QOpenGLFunctions* context = nullptr;
+    };
 }
 
 #endif

@@ -33,94 +33,94 @@
 
 namespace degate
 {
-	MainWindow::MainWindow(int width, int height) : status_bar(this), tools_group(this)
-	{
-		if (width == 0 || height == 0)
-			resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
-		else
-			resize(width, height);
+    MainWindow::MainWindow(int width, int height) : status_bar(this), tools_group(this)
+    {
+        if (width == 0 || height == 0)
+            resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+        else
+            resize(width, height);
 
-		setWindowTitle("Degate");
-		setWindowIcon(QIcon(":/degate_logo.png"));
-
-
-		// Workspace
-
-		workspace = new WorkspaceRenderer(this);
-		setCentralWidget(workspace);
+        setWindowTitle("Degate");
+        setWindowIcon(QIcon(":/degate_logo.png"));
 
 
-		// Menu bar
+        // Workspace
 
-		setMenuBar(&menu_bar);
+        workspace = new WorkspaceRenderer(this);
+        setCentralWidget(workspace);
 
-		// Project menu
-		project_menu = menu_bar.addMenu("");
 
-		project_new_action = project_menu->addAction("");
-		QObject::connect(project_new_action, SIGNAL(triggered()), this, SLOT(on_menu_project_new()));
+        // Menu bar
 
-		project_import_action = project_menu->addAction("");
-		QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
+        setMenuBar(&menu_bar);
 
-		project_export_action = project_menu->addAction("");
+        // Project menu
+        project_menu = menu_bar.addMenu("");
+
+        project_new_action = project_menu->addAction("");
+        QObject::connect(project_new_action, SIGNAL(triggered()), this, SLOT(on_menu_project_new()));
+
+        project_import_action = project_menu->addAction("");
+        QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
+
+        project_export_action = project_menu->addAction("");
         project_export_action->setShortcut(Qt::CTRL + Qt::Key_S);
-		QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_save()));
+        QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_save()));
 
-		project_close_action = project_menu->addAction("");
-		QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
+        project_close_action = project_menu->addAction("");
+        QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
 
-		project_menu->addSeparator();
-		project_create_subproject_action = project_menu->addAction("");
-		QObject::connect(project_create_subproject_action, SIGNAL(triggered()), this, SLOT(on_menu_project_create_subproject()));
+        project_menu->addSeparator();
+        project_create_subproject_action = project_menu->addAction("");
+        QObject::connect(project_create_subproject_action, SIGNAL(triggered()), this, SLOT(on_menu_project_create_subproject()));
 
-		project_menu->addSeparator();
+        project_menu->addSeparator();
         project_settings_action = project_menu->addAction("");
         QObject::connect(project_settings_action, SIGNAL(triggered()), this, SLOT(on_menu_project_settings()));
 
-		project_menu->addSeparator();
-		project_quit_action = project_menu->addAction("");
-		QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_project_quit()));
+        project_menu->addSeparator();
+        project_quit_action = project_menu->addAction("");
+        QObject::connect(project_quit_action, SIGNAL(triggered()), this, SLOT(on_menu_project_quit()));
 
 
-		// Edit menu
-		edit_menu = menu_bar.addMenu("");
-		preferences_edit_action = edit_menu->addAction("");
-		QObject::connect(preferences_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_edit_preferences()));
+        // Edit menu
+        edit_menu = menu_bar.addMenu("");
+        preferences_edit_action = edit_menu->addAction("");
+        QObject::connect(preferences_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_edit_preferences()));
 
 
-		// View menu
-		view_menu = menu_bar.addMenu("");
+        // View menu
+        view_menu = menu_bar.addMenu("");
 
-		show_gates_view_action = view_menu->addAction("");
-		show_gates_view_action->setCheckable(true);
-		show_gates_view_action->setChecked(true);
-		QObject::connect(show_gates_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates(bool)));
+        show_gates_view_action = view_menu->addAction("");
+        show_gates_view_action->setCheckable(true);
+        show_gates_view_action->setChecked(true);
+        QObject::connect(show_gates_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates(bool)));
 
-		show_gates_name_view_action = view_menu->addAction("");
-		show_gates_name_view_action->setCheckable(true);
-		show_gates_name_view_action->setChecked(true);
-		QObject::connect(show_gates_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates_name(bool)));
+        show_gates_name_view_action = view_menu->addAction("");
+        show_gates_name_view_action->setCheckable(true);
+        show_gates_name_view_action->setChecked(true);
+        QObject::connect(show_gates_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_gates_name(bool)));
 
-		show_ports_view_action = view_menu->addAction("");
-		show_ports_view_action->setCheckable(true);
-		show_ports_view_action->setChecked(true);
-		QObject::connect(show_ports_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports(bool)));
+        show_ports_view_action = view_menu->addAction("");
+        show_ports_view_action->setCheckable(true);
+        show_ports_view_action->setChecked(true);
+        QObject::connect(show_ports_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports(bool)));
 
-		show_ports_name_view_action = view_menu->addAction("");
-		show_ports_name_view_action->setCheckable(true);
-		show_ports_name_view_action->setChecked(true);
-		QObject::connect(show_ports_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports_name(bool)));
+        show_ports_name_view_action = view_menu->addAction("");
+        show_ports_name_view_action->setCheckable(true);
+        show_ports_name_view_action->setChecked(true);
+        QObject::connect(show_ports_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_ports_name(bool)));
 
-		show_annotations_view_action = view_menu->addAction("");
-		show_annotations_view_action->setCheckable(true);
-		show_annotations_view_action->setChecked(true);
-		QObject::connect(show_annotations_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations(bool)));
+        show_annotations_view_action = view_menu->addAction("");
+        show_annotations_view_action->setCheckable(true);
+        show_annotations_view_action->setChecked(true);
+        QObject::connect(show_annotations_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations(bool)));
 
-		show_annotations_name_view_action = view_menu->addAction("");
-		show_annotations_name_view_action->setCheckable(true);
-		show_annotations_name_view_action->setChecked(true);
-		QObject::connect(show_annotations_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations_name(bool)));
+        show_annotations_name_view_action = view_menu->addAction("");
+        show_annotations_name_view_action->setCheckable(true);
+        show_annotations_name_view_action->setChecked(true);
+        QObject::connect(show_annotations_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations_name(bool)));
 
         show_emarkers_view_action = view_menu->addAction("");
         show_emarkers_view_action->setCheckable(true);
@@ -174,43 +174,43 @@ namespace degate
 
 
         // Layer menu
-		layer_menu = menu_bar.addMenu("");
+        layer_menu = menu_bar.addMenu("");
 
-		layers_edit_action = layer_menu->addAction("");
-		QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
+        layers_edit_action = layer_menu->addAction("");
+        QObject::connect(layers_edit_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_edit()));
 
-		background_import_action = layer_menu->addAction("");
-		QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
-
-
-		// Gate menu
-		gate_menu = menu_bar.addMenu("");
-
-		edit_gate_action = gate_menu->addAction("");
-		QObject::connect(edit_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
-
-		new_gate_template_action = gate_menu->addAction("");
-		QObject::connect(new_gate_template_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
-
-		new_gate_action = gate_menu->addAction("");
-		QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
-
-		gate_menu->addSeparator();
-		gate_library_action = gate_menu->addAction("");
-		QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
+        background_import_action = layer_menu->addAction("");
+        QObject::connect(background_import_action, SIGNAL(triggered()), this, SLOT(on_menu_layer_import_background()));
 
 
-		// Annotation menu
-		annotation_menu = menu_bar.addMenu("");
+        // Gate menu
+        gate_menu = menu_bar.addMenu("");
 
-		edit_annotation_action = annotation_menu->addAction("");
-		QObject::connect(edit_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
+        edit_gate_action = gate_menu->addAction("");
+        QObject::connect(edit_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
 
-		create_annotation_action = annotation_menu->addAction("");
-		QObject::connect(create_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
+        new_gate_template_action = gate_menu->addAction("");
+        QObject::connect(new_gate_template_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
+
+        new_gate_action = gate_menu->addAction("");
+        QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
+
+        gate_menu->addSeparator();
+        gate_library_action = gate_menu->addAction("");
+        QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
 
-		// EMarker menu
+        // Annotation menu
+        annotation_menu = menu_bar.addMenu("");
+
+        edit_annotation_action = annotation_menu->addAction("");
+        QObject::connect(edit_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
+
+        create_annotation_action = annotation_menu->addAction("");
+        QObject::connect(create_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
+
+
+        // EMarker menu
         emarker_menu = menu_bar.addMenu("");
 
         edit_emarker_action = emarker_menu->addAction("");
@@ -225,11 +225,11 @@ namespace degate
 
 
         // Logic menu
-		logic_menu = menu_bar.addMenu("");
+        logic_menu = menu_bar.addMenu("");
 
         remove_objects_action = logic_menu->addAction("");
         remove_objects_action->setShortcut(Qt::Key_Delete);
-		QObject::connect(remove_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
+        QObject::connect(remove_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
 
         interconnect_objects_action = logic_menu->addAction("");
         interconnect_objects_action->setShortcut(Qt::CTRL + Qt::Key_C);
@@ -260,8 +260,8 @@ namespace degate
         QObject::connect(wire_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_wire_matching()));
 
 
-		// Help menu
-		help_menu = menu_bar.addMenu("");
+        // Help menu
+        help_menu = menu_bar.addMenu("");
 
         help_action = help_menu->addAction("");
         QObject::connect(help_action, SIGNAL(triggered()), this, SLOT(on_menu_help_open_help()));
@@ -269,53 +269,53 @@ namespace degate
         documentation_action = help_menu->addAction("");
         QObject::connect(documentation_action, SIGNAL(triggered()), this, SLOT(on_menu_help_documentation()));
 
-		about_action = help_menu->addAction("");
-		about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
-		QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
+        about_action = help_menu->addAction("");
+        about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
+        QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
 
 
-		// Status bar
+        // Status bar
 
-		status_bar.setStyleSheet("QStatusBar::item { border: none; } ""QStatusBar QLabel { border: 1px solid black; border-radius: 3px; }");
-		setStatusBar(&status_bar);
-		status_bar.showMessage(tr("Initialization..."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+        status_bar.setStyleSheet("QStatusBar::item { border: none; } ""QStatusBar QLabel { border: 1px solid black; border-radius: 3px; }");
+        setStatusBar(&status_bar);
+        status_bar.showMessage(tr("Initialization..."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
-		status_bar.addPermanentWidget(&status_bar_layer);
+        status_bar.addPermanentWidget(&status_bar_layer);
         update_status_bar_layer_info();
 
-		status_bar.addPermanentWidget(&status_bar_coords);
+        status_bar.addPermanentWidget(&status_bar_coords);
         change_status_bar_coords(0, 0);
-		QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
+        QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
 
         update_status_bar_layer_info();
 
 
-		// Tool bar
+        // Tool bar
 
-		tool_bar = addToolBar("");
-		tool_bar->setIconSize(QSize(27, 27));
-		tool_bar->setMovable(false);
-		tool_bar->setFloatable(false);
-		setContextMenuPolicy(Qt::NoContextMenu);
+        tool_bar = addToolBar("");
+        tool_bar->setIconSize(QSize(27, 27));
+        tool_bar->setMovable(false);
+        tool_bar->setFloatable(false);
+        setContextMenuPolicy(Qt::NoContextMenu);
 
-		tool_via_up_action = tool_bar->addAction("");
-		QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
+        tool_via_up_action = tool_bar->addAction("");
+        QObject::connect(tool_via_up_action, SIGNAL(triggered()), this, SLOT(on_tool_via_up()));
 
-		tool_via_down_action = tool_bar->addAction("");
-		QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
+        tool_via_down_action = tool_bar->addAction("");
+        QObject::connect(tool_via_down_action, SIGNAL(triggered()), this, SLOT(on_tool_via_down()));
 
-		tool_bar->addSeparator();
+        tool_bar->addSeparator();
 
-		tool_zoom_in_action = tool_bar->addAction("");
-		QObject::connect(tool_zoom_in_action, SIGNAL(triggered()), workspace, SLOT(zoom_in()));
+        tool_zoom_in_action = tool_bar->addAction("");
+        QObject::connect(tool_zoom_in_action, SIGNAL(triggered()), workspace, SLOT(zoom_in()));
 
-		tool_zoom_out_action = tool_bar->addAction("");
-		QObject::connect(tool_zoom_out_action, SIGNAL(triggered()), workspace, SLOT(zoom_out()));
+        tool_zoom_out_action = tool_bar->addAction("");
+        QObject::connect(tool_zoom_out_action, SIGNAL(triggered()), workspace, SLOT(zoom_out()));
 
-		tool_bar->addSeparator();
+        tool_bar->addSeparator();
 
-		tool_gate_library = tool_bar->addAction("");
-		QObject::connect(tool_gate_library, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
+        tool_gate_library = tool_bar->addAction("");
+        QObject::connect(tool_gate_library, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
         tool_bar->addSeparator();
 
@@ -339,8 +339,8 @@ namespace degate
         modules_action = tool_bar->addAction("");
         QObject::connect(modules_action, SIGNAL(triggered()), this, SLOT(on_modules_dialog()));
 
-		// Other
-		QObject::connect(workspace, SIGNAL(project_changed(std::string)), this, SLOT(open_project(std::string)));
+        // Other
+        QObject::connect(workspace, SIGNAL(project_changed(std::string)), this, SLOT(open_project(std::string)));
         QObject::connect(workspace, SIGNAL(right_mouse_button_released()), this, SLOT(show_context_menu()));
 
         QObject::connect(&THEME_MANAGER, SIGNAL(icon_theme_changed()), this, SLOT(reload_icons()));
@@ -363,22 +363,22 @@ namespace degate
             this->topLevelWidget()->winId();
             QWindowsWindowFunctions::setHasBorderInFullScreen(this->topLevelWidget()->windowHandle(), true);
         #endif
-	}
+    }
 
-	MainWindow::~MainWindow()
-	{
+    MainWindow::~MainWindow()
+    {
         on_menu_project_close();
 
-	    delete workspace;
+        delete workspace;
 
-		Text::save_fonts_to_cache();
-	}
+        Text::save_fonts_to_cache();
+    }
 
     void MainWindow::reload_icons()
     {
-	    /* Menus */
+        /* Menus */
 
-	    // Project menu
+        // Project menu
         project_new_action->setIcon(QIcon(GET_ICON_PATH("folder_new.png")));
         project_import_action->setIcon(QIcon(GET_ICON_PATH("folder.png")));
         project_export_action->setIcon(QIcon(GET_ICON_PATH("save.png")));
@@ -419,7 +419,7 @@ namespace degate
 
     void MainWindow::reload_texts()
     {
-	    // Project menu
+        // Project menu
         project_menu->setTitle(tr("Project"));
         project_new_action->setText(tr("New"));
         project_import_action->setText(tr("Open"));
@@ -517,11 +517,11 @@ namespace degate
         close_sub_windows();
     }
 
-	void MainWindow::on_menu_project_importer()
-	{
-		QString dir = QFileDialog::getExistingDirectory(this, tr("Import project"));
+    void MainWindow::on_menu_project_importer()
+    {
+        QString dir = QFileDialog::getExistingDirectory(this, tr("Import project"));
 
-		if (dir.isNull())
+        if (dir.isNull())
         {
             status_bar.showMessage(tr("Project opening operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
@@ -540,45 +540,45 @@ namespace degate
         if (project == nullptr)
             return;
 
-		QString project_name = QString::fromStdString(project->get_name());
+        QString project_name = QString::fromStdString(project->get_name());
 
-		QString message = tr("The project") + " <i>" + project_name + "</i> " + tr("was successfully loaded.");
-		QMessageBox::information(this, tr("Import project"), message);
-	}
+        QString message = tr("The project") + " <i>" + project_name + "</i> " + tr("was successfully loaded.");
+        QMessageBox::information(this, tr("Import project"), message);
+    }
 
-	void MainWindow::on_menu_project_save()
-	{
-		if (project == nullptr)
-			return;
+    void MainWindow::on_menu_project_save()
+    {
+        if (project == nullptr)
+            return;
 
-		status_bar.showMessage(tr("Saving project..."));
+        status_bar.showMessage(tr("Saving project..."));
 
-		ProjectExporter exporter;
-		exporter.export_all(project->get_project_directory(), project);
+        ProjectExporter exporter;
+        exporter.export_all(project->get_project_directory(), project);
 
-		status_bar.showMessage(tr("Project saved."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+        status_bar.showMessage(tr("Project saved."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
         project->set_changed(false);
         update_window_title();
-	}
+    }
 
-	void MainWindow::on_menu_project_close()
-	{
-		status_bar.showMessage(tr("Closing project..."));
+    void MainWindow::on_menu_project_close()
+    {
+        status_bar.showMessage(tr("Closing project..."));
 
         close_sub_windows();
 
-		if (project == nullptr)
-			return;
+        if (project == nullptr)
+            return;
 
-		if (project->is_changed())
-		{
-			QMessageBox msg_box(this);
-			msg_box.setText(tr("The project has been modified."));
-			msg_box.setInformativeText(tr("Do you want to save your changes ?"));
+        if (project->is_changed())
+        {
+            QMessageBox msg_box(this);
+            msg_box.setText(tr("The project has been modified."));
+            msg_box.setInformativeText(tr("Do you want to save your changes ?"));
             msg_box.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-			msg_box.setDefaultButton(QMessageBox::Save);
-			int ret = msg_box.exec();
+            msg_box.setDefaultButton(QMessageBox::Save);
+            int ret = msg_box.exec();
 
             switch (ret)
             {
@@ -594,27 +594,27 @@ namespace degate
                     return;
                     break;
             }
-		}
+        }
 
-		project.reset();
-		project = nullptr;
-		workspace->set_project(nullptr);
-		workspace->update_screen();
+        project.reset();
+        project = nullptr;
+        workspace->set_project(nullptr);
+        workspace->update_screen();
 
         update_window_title();
 
         update_status_bar_layer_info();
 
-		status_bar.showMessage(tr("Project closed."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-	}
+        status_bar.showMessage(tr("Project closed."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+    }
 
-	void MainWindow::on_menu_project_new()
-	{
+    void MainWindow::on_menu_project_new()
+    {
         on_menu_project_close();
 
-		status_bar.showMessage(tr("Creating a new project..."));
+        status_bar.showMessage(tr("Creating a new project..."));
 
-		QString dir = QFileDialog::getExistingDirectory(this, tr("Select the directory where the project will be created"));
+        QString dir = QFileDialog::getExistingDirectory(this, tr("Select the directory where the project will be created"));
 
         if (dir.isNull())
         {
@@ -623,7 +623,7 @@ namespace degate
             return;
         }
 
-		NewProjectDialog dialog(this);
+        NewProjectDialog dialog(this);
         auto res = dialog.exec();
 
         if (res == QDialog::Accepted)
@@ -663,19 +663,19 @@ namespace degate
         }
         else
             status_bar.showMessage(tr("New project creation operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-	}
+    }
 
-	void MainWindow::on_menu_project_create_subproject()
-	{
-		if (project == nullptr || !workspace->has_area_selection())
-			return;
+    void MainWindow::on_menu_project_create_subproject()
+    {
+        if (project == nullptr || !workspace->has_area_selection())
+            return;
 
-		boost::format f("subproject_%1%");
-		f % project->get_logic_model()->get_new_object_id();
+        boost::format f("subproject_%1%");
+        f % project->get_logic_model()->get_new_object_id();
 
-		SubProjectAnnotation_shptr new_annotation(new SubProjectAnnotation(workspace->get_safe_area_selection(), f.str()));
-		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
-		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
+        SubProjectAnnotation_shptr new_annotation(new SubProjectAnnotation(workspace->get_safe_area_selection(), f.str()));
+        new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
+        new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
         AnnotationEditDialog dialog(this, new_annotation);
         auto res = dialog.exec();
@@ -691,85 +691,85 @@ namespace degate
         }
         else
             new_annotation.reset();
-	}
+    }
 
-	void MainWindow::on_menu_edit_preferences()
-	{
-		PreferencesEditor dialog(this);
-		dialog.exec();
+    void MainWindow::on_menu_edit_preferences()
+    {
+        PreferencesEditor dialog(this);
+        dialog.exec();
 
-		workspace->update_grid();
-	}
+        workspace->update_grid();
+    }
 
     void MainWindow::on_menu_view_snap_to_grid(bool value)
     {
-	    Preferences new_preferences = PREFERENCES_HANDLER.get_preferences();
+        Preferences new_preferences = PREFERENCES_HANDLER.get_preferences();
         new_preferences.snap_to_grid = value;
 
-	    PREFERENCES_HANDLER.update(new_preferences);
+        PREFERENCES_HANDLER.update(new_preferences);
     }
 
     void MainWindow::on_menu_view_fullscreen(bool value)
     {
-	    if (value)
+        if (value)
             showFullScreen();
-	    else
-	        showNormal();
+        else
+            showNormal();
     }
 
-	void MainWindow::on_menu_layer_edit()
-	{
-		if (project == nullptr)
-			return;
+    void MainWindow::on_menu_layer_edit()
+    {
+        if (project == nullptr)
+            return;
 
-		LayersEditDialog layers_edit_dialog(this, project);
-		layers_edit_dialog.exec();
+        LayersEditDialog layers_edit_dialog(this, project);
+        layers_edit_dialog.exec();
 
         update_status_bar_layer_info();
 
-		workspace->update_screen();
+        workspace->update_screen();
 
         project_changed();
-	}
+    }
 
-	void MainWindow::on_menu_layer_import_background()
-	{
-		if (project == nullptr)
-		{
-			status_bar.showMessage(tr("Failed to import new background image : no project opened."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-			return;
-		}
+    void MainWindow::on_menu_layer_import_background()
+    {
+        if (project == nullptr)
+        {
+            status_bar.showMessage(tr("Failed to import new background image : no project opened."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            return;
+        }
 
-		status_bar.showMessage(tr("Importing a new background image for the layer..."));
+        status_bar.showMessage(tr("Importing a new background image for the layer..."));
 
-		QString res = QFileDialog::getOpenFileName(this, tr("Select the new background image"));
-		const std::string file_name = res.toStdString();
+        QString res = QFileDialog::getOpenFileName(this, tr("Select the new background image"));
+        const std::string file_name = res.toStdString();
 
-		if (res.isNull())
+        if (res.isNull())
         {
             status_bar.showMessage(tr("New background image import cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
             return;
         }
 
-		load_background_image(project->get_logic_model()->get_current_layer(), project->get_project_directory(), file_name);
+        load_background_image(project->get_logic_model()->get_current_layer(), project->get_project_directory(), file_name);
 
-		workspace->update_screen();
+        workspace->update_screen();
 
-		status_bar.showMessage(tr("Imported a new background image for the layer."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+        status_bar.showMessage(tr("Imported a new background image for the layer."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
         project_changed();
-	}
+    }
 
-	void MainWindow::on_menu_gate_new_gate_template()
-	{
-		if (project == nullptr || !workspace->has_area_selection())
-			return;
+    void MainWindow::on_menu_gate_new_gate_template()
+    {
+        if (project == nullptr || !workspace->has_area_selection())
+            return;
 
-		if (project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
-		{
-			QMessageBox::warning(this, tr("Warning"), tr("You can create a new gate only on a logic layer."));
-			return;
-		}
+        if (project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
+        {
+            QMessageBox::warning(this, tr("Warning"), tr("You can create a new gate only on a logic layer."));
+            return;
+        }
 
         auto new_gate_template = std::make_shared<GateTemplate>(workspace->get_safe_area_selection()
                                                                          .get_width(),
@@ -778,17 +778,17 @@ namespace degate
         grab_template_images(project->get_logic_model(),
                              new_gate_template,
                              workspace->get_safe_area_selection());
-		new_gate_template->set_object_id(project->get_logic_model()->get_new_object_id());
+        new_gate_template->set_object_id(project->get_logic_model()->get_new_object_id());
         new_gate_template->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
         new_gate_template->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
 
-		auto new_gate = std::make_shared<Gate>(workspace->get_area_selection());
-		new_gate->set_gate_template(new_gate_template);
-		new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
-		new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
-		new_gate->set_object_id(project->get_logic_model()->get_new_object_id());
+        auto new_gate = std::make_shared<Gate>(workspace->get_area_selection());
+        new_gate->set_gate_template(new_gate_template);
+        new_gate->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
+        new_gate->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
+        new_gate->set_object_id(project->get_logic_model()->get_new_object_id());
 
-		project->get_logic_model()->add_gate_template(new_gate_template);
+        project->get_logic_model()->add_gate_template(new_gate_template);
 
         GateInstanceEditDialog dialog(this, new_gate, project);
         auto res = dialog.exec();
@@ -808,32 +808,32 @@ namespace degate
             project->get_logic_model()->remove_gate_template(new_gate_template);
             new_gate_template.reset();
         }
-	}
+    }
 
-	void MainWindow::on_menu_gate_new_gate()
-	{
-		if (project == nullptr || !workspace->has_area_selection())
-			return;
+    void MainWindow::on_menu_gate_new_gate()
+    {
+        if (project == nullptr || !workspace->has_area_selection())
+            return;
 
-		if (project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
-		{
-			QMessageBox::warning(this, tr("Warning"), tr("You can create a new gate only on a logic layer."));
-			return;
-		}
+        if (project->get_logic_model()->get_current_layer()->get_layer_type() != Layer::LOGIC)
+        {
+            QMessageBox::warning(this, tr("Warning"), tr("You can create a new gate only on a logic layer."));
+            return;
+        }
 
-		SelectGateTemplateDialog select_dialog(this, project, true);
-		auto res = select_dialog.exec();
+        SelectGateTemplateDialog select_dialog(this, project, true);
+        auto res = select_dialog.exec();
 
         if (res == QDialog::Rejected)
             return;
 
-		GateTemplate_shptr gate_template = select_dialog.get_selected_gate();
+        GateTemplate_shptr gate_template = select_dialog.get_selected_gate();
 
-		if (gate_template == nullptr)
-		    return;
+        if (gate_template == nullptr)
+            return;
 
-		Gate_shptr new_gate(new Gate(workspace->get_safe_area_selection()));
-		new_gate->set_gate_template(gate_template);
+        Gate_shptr new_gate(new Gate(workspace->get_safe_area_selection()));
+        new_gate->set_gate_template(gate_template);
 
         GateInstanceEditDialog dialog(this, new_gate, project);
         res = dialog.exec();
@@ -853,36 +853,36 @@ namespace degate
         {
             new_gate.reset();
         }
-	}
+    }
 
-	void MainWindow::on_menu_gate_edit()
-	{
-		if (project == nullptr || !workspace->has_selection())
-			return;
+    void MainWindow::on_menu_gate_edit()
+    {
+        if (project == nullptr || !workspace->has_selection())
+            return;
 
-		if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_objects().back()))
-		{
-			GateInstanceEditDialog dialog(this, o, project);
-			dialog.exec();
+        if (Gate_shptr o = std::dynamic_pointer_cast<Gate>(workspace->get_selected_objects().back()))
+        {
+            GateInstanceEditDialog dialog(this, o, project);
+            dialog.exec();
 
-			project->get_logic_model()->update_ports(o);
-		}
+            project->get_logic_model()->update_ports(o);
+        }
 
-		workspace->update_screen();
+        workspace->update_screen();
 
         project_changed();
-	}
+    }
 
-	void MainWindow::on_menu_gate_library()
-	{
-		if (project == nullptr)
-			return;
+    void MainWindow::on_menu_gate_library()
+    {
+        if (project == nullptr)
+            return;
 
-		GateLibraryDialog dialog(this, project);
-		dialog.exec();
+        GateLibraryDialog dialog(this, project);
+        dialog.exec();
 
-		workspace->update_screen();
-	}
+        workspace->update_screen();
+    }
 
     void MainWindow::on_menu_gate_port_edit()
     {
@@ -904,14 +904,14 @@ namespace degate
         project_changed();
     }
 
-	void MainWindow::on_menu_annotation_create()
-	{
-		if (project == nullptr || !workspace->has_area_selection())
-			return;
+    void MainWindow::on_menu_annotation_create()
+    {
+        if (project == nullptr || !workspace->has_area_selection())
+            return;
 
-		Annotation_shptr new_annotation(new Annotation(workspace->get_safe_area_selection()));
-		new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
-		new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
+        Annotation_shptr new_annotation(new Annotation(workspace->get_safe_area_selection()));
+        new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
+        new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
         AnnotationEditDialog dialog(this, new_annotation);
         auto res = dialog.exec();
@@ -927,23 +927,23 @@ namespace degate
         }
         else
             new_annotation.reset();
-	}
+    }
 
-	void MainWindow::on_menu_annotation_edit()
-	{
-		if (project == nullptr || !workspace->has_selection())
-			return;
+    void MainWindow::on_menu_annotation_edit()
+    {
+        if (project == nullptr || !workspace->has_selection())
+            return;
 
-		if (Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(workspace->get_selected_objects().back()))
-		{
-			AnnotationEditDialog dialog(this, o);
-			dialog.exec();
+        if (Annotation_shptr o = std::dynamic_pointer_cast<Annotation>(workspace->get_selected_objects().back()))
+        {
+            AnnotationEditDialog dialog(this, o);
+            dialog.exec();
 
-			workspace->update_screen();
+            workspace->update_screen();
 
             project_changed();
-		}
-	}
+        }
+    }
 
     void MainWindow::on_menu_emarker_edit()
     {
@@ -977,8 +977,8 @@ namespace degate
         }
     }
 
-	void MainWindow::on_menu_logic_remove_selected_objects()
-	{
+    void MainWindow::on_menu_logic_remove_selected_objects()
+    {
         if (project == nullptr || !workspace->has_selection())
             return;
 
@@ -997,9 +997,9 @@ namespace degate
             modules_dialog->reload();
 
         project_changed();
-	}
+    }
 
-	void MainWindow::on_menu_logic_interconnect_selected_objects()
+    void MainWindow::on_menu_logic_interconnect_selected_objects()
     {
         if (project == nullptr || !workspace->has_selection() || workspace->get_selected_objects().size() < 2)
             return;
@@ -1235,20 +1235,20 @@ namespace degate
         project_changed();
     }
 
-	void MainWindow::on_menu_project_quit()
-	{
-		close();
-	}
+    void MainWindow::on_menu_project_quit()
+    {
+        close();
+    }
 
     void MainWindow::update_window_title()
     {
-	    if (project != nullptr)
+        if (project != nullptr)
         {
             QString window_title = tr("Degate : %1 project") + " [*]";
             setWindowTitle(window_title.arg(QString::fromStdString(project->get_name())));
             setWindowModified(project->is_changed());
         }
-	    else
+        else
             setWindowTitle("Degate");
     }
 
@@ -1276,37 +1276,37 @@ namespace degate
         }
     }
 
-	void MainWindow::on_tool_via_up()
-	{
-		if (project == nullptr)
-			return;
+    void MainWindow::on_tool_via_up()
+    {
+        if (project == nullptr)
+            return;
 
-		project->get_logic_model()->set_current_layer(get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
-
-        update_status_bar_layer_info();
-
-		workspace->update_screen();
-	}
-
-	void MainWindow::on_tool_via_down()
-	{
-		if (project == nullptr)
-			return;
-
-		project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
+        project->get_logic_model()->set_current_layer(get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
 
         update_status_bar_layer_info();
 
-		workspace->update_screen();
-	}
+        workspace->update_screen();
+    }
 
-	void MainWindow::open_project(const std::string& path)
-	{
+    void MainWindow::on_tool_via_down()
+    {
+        if (project == nullptr)
+            return;
+
+        project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
+
+        update_status_bar_layer_info();
+
+        workspace->update_screen();
+    }
+
+    void MainWindow::open_project(const std::string& path)
+    {
         on_menu_project_close();
 
-		status_bar.showMessage(tr("Importing project/subproject..."));
+        status_bar.showMessage(tr("Importing project/subproject..."));
 
-		ProjectImporter project_importer;
+        ProjectImporter project_importer;
 
         ProgressDialog progress_dialog(this, tr("Opening project"), nullptr);
 
@@ -1416,17 +1416,17 @@ namespace degate
         update_status_bar_layer_info();
 
         status_bar.showMessage(tr("Project/Subproject imported."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-	}
+    }
 
-	void MainWindow::change_status_bar_coords(int x, int y)
-	{
-		status_bar_coords.setText(tr("Coordinates") + " : " + QString::number(x) + "," + QString::number(y));
-	}
+    void MainWindow::change_status_bar_coords(int x, int y)
+    {
+        status_bar_coords.setText(tr("Coordinates") + " : " + QString::number(x) + "," + QString::number(y));
+    }
 
     void MainWindow::show_context_menu()
     {
-	    if (project == nullptr)
-	        return;
+        if (project == nullptr)
+            return;
 
         QMenu context_menu(tr("Context menu"), this);
 
@@ -1627,8 +1627,8 @@ namespace degate
 
     void MainWindow::goto_object(PlacedLogicModelObject_shptr& object)
     {
-	    if (object == nullptr || project == nullptr)
-	        return;
+        if (object == nullptr || project == nullptr)
+            return;
 
         const BoundingBox& bounding_box = object->get_bounding_box();
         Layer_shptr layer;
@@ -1702,8 +1702,8 @@ namespace degate
 
     void MainWindow::closeEvent(QCloseEvent* event)
     {
-	    // When the main window is closed, automatically close the rule violations dialog.
-	    // Since the dialog is modeless and not linked to this window, we have to force close.
+        // When the main window is closed, automatically close the rule violations dialog.
+        // Since the dialog is modeless and not linked to this window, we have to force close.
         close_sub_windows();
 
         QMainWindow::closeEvent(event);

@@ -38,35 +38,35 @@
 namespace degate
 {
 
-	/**
-	 * @class PreferencesEditor
-	 * @brief Dialog to edit preferences.
-	 *
-	 * @see QDialog
-	 */
-	class PreferencesEditor : public QDialog
-	{
-		Q_OBJECT
-		
-	public:
+    /**
+     * @class PreferencesEditor
+     * @brief Dialog to edit preferences.
+     *
+     * @see QDialog
+     */
+    class PreferencesEditor : public QDialog
+    {
+        Q_OBJECT
 
-		/**
-		 * Create the preferences editor dialog.
-		 *
-		 * @param parent : the parent of the dialog.
-		 */
-		explicit PreferencesEditor(QWidget* parent);
-		~PreferencesEditor() override;
+    public:
 
-	public slots:
-		/**
-		 * Save changes.
-		 */
-		void validate();
+        /**
+         * Create the preferences editor dialog.
+         *
+         * @param parent : the parent of the dialog.
+         */
+        explicit PreferencesEditor(QWidget* parent);
+        ~PreferencesEditor() override;
 
-		/**
-		 * Change page.
-		 */
+    public slots:
+        /**
+         * Save changes.
+         */
+        void validate();
+
+        /**
+         * Change page.
+         */
         void change_page(QListWidgetItem* current, QListWidgetItem* previous);
 
         /**
@@ -74,28 +74,28 @@ namespace degate
          */
         void reload_editor();
 
-	protected slots:
-	    /**
-	     * Insert a new page.
-	     *
-	     * @param name : the name of the page.
-	     * @param page : the associated PreferencesPage valid pointer.
-	     */
+    protected slots:
+        /**
+         * Insert a new page.
+         *
+         * @param name : the name of the page.
+         * @param page : the associated PreferencesPage valid pointer.
+         */
         void insert_page(const QString& name, PreferencesPage* page);
 
-	    /**
-	     * Create the list of pages.
-	     */
-	    void create_pages();
+        /**
+         * Create the list of pages.
+         */
+        void create_pages();
 
-	    /**
-	     * Insert pages into the editor.
-	     */
-	    void insert_pages();
+        /**
+         * Insert pages into the editor.
+         */
+        void insert_pages();
 
-	private:
-		QVBoxLayout layout;
-		Preferences preferences;
+    private:
+        QVBoxLayout layout;
+        Preferences preferences;
         QHBoxLayout content_layout;
         QScrollArea scroll_area;
 
@@ -104,14 +104,14 @@ namespace degate
         QVBoxLayout preferences_pages_layout;
         QStackedWidget preferences_pages;
 
-		// Validation buttons
-		QHBoxLayout buttons_layout;
-		QPushButton save_button;
-		QPushButton cancel_button;
-		
-		// Pages
-		std::vector<std::pair<QString, PreferencesPage*>> pages;
-	};
+        // Validation buttons
+        QHBoxLayout buttons_layout;
+        QPushButton save_button;
+        QPushButton cancel_button;
+
+        // Pages
+        std::vector<std::pair<QString, PreferencesPage*>> pages;
+    };
 }
 
 #endif

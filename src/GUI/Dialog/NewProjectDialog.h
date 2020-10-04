@@ -32,66 +32,66 @@
 namespace degate
 {
 
-	/**
-	 * @class NewProjectDialog
-	 * @brief Dialog for creating a new project.
-	 *
-	 * @see QDialog
-	 */
-	class NewProjectDialog : public QDialog
-	{
-		Q_OBJECT
+    /**
+     * @class NewProjectDialog
+     * @brief Dialog for creating a new project.
+     *
+     * @see QDialog
+     */
+    class NewProjectDialog : public QDialog
+    {
+        Q_OBJECT
 
-	public:
+    public:
 
-		/**
-		 * Create the new project dialog.
-		 *
-		 * @param parent : the parent of the dialog.
-		 */
-		explicit NewProjectDialog(QWidget* parent);
-		~NewProjectDialog() override = default;
+        /**
+         * Create the new project dialog.
+         *
+         * @param parent : the parent of the dialog.
+         */
+        explicit NewProjectDialog(QWidget* parent);
+        ~NewProjectDialog() override = default;
 
-		/**
-		 * Get the new project name.
-		 *
-		 * @return Returns the new project name.
-		 */
-		std::string get_project_name();
+        /**
+         * Get the new project name.
+         *
+         * @return Returns the new project name.
+         */
+        std::string get_project_name();
 
         /**
          * Get the height of the new project.
          *
          * @return Returns the height of the new project.
          */
-		unsigned get_height();
+        unsigned get_height();
 
-		/**
-		 * Get the width of the new project.
-		 *
-		 * @return Returns the width of the new project.
-		 */
-		unsigned get_width();
+        /**
+         * Get the width of the new project.
+         *
+         * @return Returns the width of the new project.
+         */
+        unsigned get_width();
 
-		/**
-		 * Get the new project layer count.
-		 *
-		 * @return Returns the number of layers of the new project.
-		 */
-		unsigned get_layer_count();
+        /**
+         * Get the new project layer count.
+         *
+         * @return Returns the number of layers of the new project.
+         */
+        unsigned get_layer_count();
 
-	private:
-		QSpinBox height;
-		QSpinBox width;
-		QSpinBox layer_count;
-		QLabel layer_label;
-		QLabel width_label;
-		QLabel height_label;
-		QLabel project_label;
-		QVBoxLayout main_layout;
-		QPushButton validate_button;
-		QLineEdit project_name;
-	};
+    private:
+        QSpinBox height;
+        QSpinBox width;
+        QSpinBox layer_count;
+        QLabel layer_label;
+        QLabel width_label;
+        QLabel height_label;
+        QLabel project_label;
+        QVBoxLayout main_layout;
+        QPushButton validate_button;
+        QLineEdit project_name;
+    };
 }
 
 #endif

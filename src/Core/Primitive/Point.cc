@@ -29,65 +29,65 @@ using namespace degate;
 
 Point::Point()
 {
-	x = y = 0;
+    x = y = 0;
 }
 
 Point::Point(float x, float y)
 {
-	this->x = x;
-	this->y = y;
+    this->x = x;
+    this->y = y;
 }
 
 bool Point::operator==(const Point& other) const
 {
-	return (x == other.x && y == other.y);
+    return (x == other.x && y == other.y);
 }
 
 bool Point::operator!=(const Point& other) const
 {
-	return !(*this == other);
+    return !(*this == other);
 }
 
 float Point::get_x() const
 {
-	return x;
+    return x;
 }
 
 float Point::get_y() const
 {
-	return y;
+    return y;
 }
 
 void Point::set_x(float x)
 {
-	this->x = x;
+    this->x = x;
 }
 
 void Point::set_y(float y)
 {
-	this->y = y;
+    this->y = y;
 }
 
 
 void Point::shift_y(float delta_y)
 {
-	y += delta_y;
+    y += delta_y;
 }
 
 void Point::shift_x(float delta_x)
 {
-	x += delta_x;
+    x += delta_x;
 }
 
 
 float Point::get_distance(Point const& p) const
 {
-	return sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y));
+    return sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y));
 }
 
 std::string Point::to_string() const
 {
-	boost::format f("point(%1%, %2%)");
-	f % x % y;
-	return f.str();
+    boost::format f("point(%1%, %2%)");
+    f % x % y;
+    return f.str();
 }

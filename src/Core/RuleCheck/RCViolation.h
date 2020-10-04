@@ -31,51 +31,51 @@
 
 namespace degate
 {
-	class RCViolation
-	{
+    class RCViolation
+    {
     Q_DECLARE_TR_FUNCTIONS(degate::RCViolation)
 
-	private:
+    private:
 
         PlacedLogicModelObject_shptr obj;
         std::string rc_violation_class;
         RC_SEVERITY severity;
 
-	public:
+    public:
 
-		/**
-		 * Create a new Rule Check violation.
-		 *
-		 * @param obj : the object, which is affected from the violation.
-		 * @param rc_violation_class : this is a unique technical name for a rc violation, that indicates the problem class.
-		 * @param severity : indicates the type of problem, actually if a rc violation is just a warning or a real error.
-		 */
+        /**
+         * Create a new Rule Check violation.
+         *
+         * @param obj : the object, which is affected from the violation.
+         * @param rc_violation_class : this is a unique technical name for a rc violation, that indicates the problem class.
+         * @param severity : indicates the type of problem, actually if a rc violation is just a warning or a real error.
+         */
         RCViolation(PlacedLogicModelObject_shptr obj,
                     std::string const& rc_violation_class,
                     RC_SEVERITY severity = RC_ERROR);
 
-		std::string get_problem_description() const;
+        std::string get_problem_description() const;
 
-		std::string get_rc_violation_class() const;
+        std::string get_rc_violation_class() const;
 
-		RC_SEVERITY get_severity() const;
+        RC_SEVERITY get_severity() const;
 
-		std::string get_severity_as_string() const;
+        std::string get_severity_as_string() const;
 
         std::string get_translated_severity_as_string() const;
 
-		static RC_SEVERITY get_severity_from_string(std::string const& str);
+        static RC_SEVERITY get_severity_from_string(std::string const& str);
 
-		bool matches_filter(std::string const& filter_pattern) const;
+        bool matches_filter(std::string const& filter_pattern) const;
 
-		PlacedLogicModelObject_shptr get_object() const;
+        PlacedLogicModelObject_shptr get_object() const;
 
-		/**
-		 * Check if two rc violations are conceptually equal.
-		 */
-		bool equals(RCViolation_shptr rcv) const;
+        /**
+         * Check if two rc violations are conceptually equal.
+         */
+        bool equals(RCViolation_shptr rcv) const;
 
-	};
+    };
 }
 
 #endif

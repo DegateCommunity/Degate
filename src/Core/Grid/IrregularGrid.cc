@@ -28,26 +28,26 @@ using namespace degate;
 
 int IrregularGrid::snap_to_grid(int pos) const
 {
-	if (pos <= grid_offsets.front()) return grid_offsets.front();
-	else if (pos >= grid_offsets.back()) return grid_offsets.back();
-	else
-	{
-		int last = grid_offsets.front();
-		for (grid_iter it = grid_offsets.begin(); it != grid_offsets.end(); ++it)
-		{
-			int current = *it;
-			if (current < pos) last = current;
-			else if (current >= pos)
-			{
-				int d1 = abs(pos - last);
-				int d2 = abs(current - pos);
-				return d1 < d2 ? last : current;
-			}
-		}
+    if (pos <= grid_offsets.front()) return grid_offsets.front();
+    else if (pos >= grid_offsets.back()) return grid_offsets.back();
+    else
+    {
+        int last = grid_offsets.front();
+        for (grid_iter it = grid_offsets.begin(); it != grid_offsets.end(); ++it)
+        {
+            int current = *it;
+            if (current < pos) last = current;
+            else if (current >= pos)
+            {
+                int d1 = abs(pos - last);
+                int d2 = abs(current - pos);
+                return d1 < d2 ? last : current;
+            }
+        }
 
-		// should not reach this line
-		assert(1 == 0);
+        // should not reach this line
+        assert(1 == 0);
 
-		return pos;
-	}
+        return pos;
+    }
 }

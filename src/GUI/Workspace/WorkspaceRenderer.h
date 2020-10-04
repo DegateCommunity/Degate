@@ -75,55 +75,55 @@ namespace degate
         WIRE
     };
 
-	/**
-	 * @class WorkspaceRenderer
-	 * @brief Hold all other workspace elements and draw the workspace.
-	 *
-	 * The workspace renderer use a lot of Qt functions (@see QOpenGLWidget and @see QOpenGLFunctions) and is directly connected to the main window.
-	 * Somehow the workspace renderer is the workspace widget.
-	 * This hold all other workspace elements (annotations, gates, background...), draw them and manage all related events.
-	 *
-	 * @warning The workspace renderer get his own OpenGL context (@see WorkspaceElement).
-	 */
-	class WorkspaceRenderer : public QOpenGLWidget, protected QOpenGLFunctions
-	{
-	Q_OBJECT
+    /**
+     * @class WorkspaceRenderer
+     * @brief Hold all other workspace elements and draw the workspace.
+     *
+     * The workspace renderer use a lot of Qt functions (@see QOpenGLWidget and @see QOpenGLFunctions) and is directly connected to the main window.
+     * Somehow the workspace renderer is the workspace widget.
+     * This hold all other workspace elements (annotations, gates, background...), draw them and manage all related events.
+     *
+     * @warning The workspace renderer get his own OpenGL context (@see WorkspaceElement).
+     */
+    class WorkspaceRenderer : public QOpenGLWidget, protected QOpenGLFunctions
+    {
+    Q_OBJECT
 
-	public:
+    public:
 
-		/**
-		 * Create a workspace renderer.
-		 *
-		 * @param parent : the parent widget pointer (usually the main window).
-		 */
-		explicit WorkspaceRenderer(QWidget* parent = nullptr);
-		~WorkspaceRenderer() override;
+        /**
+         * Create a workspace renderer.
+         *
+         * @param parent : the parent widget pointer (usually the main window).
+         */
+        explicit WorkspaceRenderer(QWidget* parent = nullptr);
+        ~WorkspaceRenderer() override;
 
-		/**
-	     * Update the screen (call all update_XXX functions).
-	     */
-		void update_screen();
+        /**
+         * Update the screen (call all update_XXX functions).
+         */
+        void update_screen();
 
-		/**
-	     * Set the project for the workspace (the screen will be updated).
-	     * 
-	     * @param new_project : the project to set.
-	     */
-		void set_project(const Project_shptr& new_project);
+        /**
+         * Set the project for the workspace (the screen will be updated).
+         *
+         * @param new_project : the project to set.
+         */
+        void set_project(const Project_shptr& new_project);
 
-		/**
-		 * Get the area selection state, if true there is a selection area otherwise not.
-		 *
-		 * @return Returns true if there is a area selection.
-		 */
-		bool has_area_selection();
+        /**
+         * Get the area selection state, if true there is a selection area otherwise not.
+         *
+         * @return Returns true if there is a area selection.
+         */
+        bool has_area_selection();
 
-		/**
-		 * Get the area selection bounding box.
-		 *
-		 * @return Returns the bounding box of the area selection.
-		 */
-		BoundingBox get_area_selection();
+        /**
+         * Get the area selection bounding box.
+         *
+         * @return Returns the bounding box of the area selection.
+         */
+        BoundingBox get_area_selection();
 
         /**
          * Get a safe area selection regarding project size (0 <= position <= max project size).
@@ -132,25 +132,25 @@ namespace degate
          * @return Returns the safe bounding box of the area selection.
          */
         BoundingBox get_safe_area_selection();
-		
-		/**
-		 * Get the vector of selected objects.
-		 *
-		 * @return Returns all selected objects.
-		 */
+
+        /**
+         * Get the vector of selected objects.
+         *
+         * @return Returns all selected objects.
+         */
         ObjectSet& get_selected_objects();
 
-		/**
-		 * Add an object to the selection list.
-		 *
-		 * @param object : the object to add.
-		 */
-		void add_object_to_selection(PlacedLogicModelObject_shptr& object);
+        /**
+         * Add an object to the selection list.
+         *
+         * @param object : the object to add.
+         */
+        void add_object_to_selection(PlacedLogicModelObject_shptr& object);
 
-		/**
-		 * Get the selection state, if true there is a selection otherwise not.
-		 */
-		bool has_selection();
+        /**
+         * Get the selection state, if true there is a selection otherwise not.
+         */
+        bool has_selection();
 
         /**
          * Get the mouse position relative to the widget with the y flipped (Qt 0,0 is on the upper left corner, we want it on the lower left corner, like OpenGL).
@@ -182,8 +182,8 @@ namespace degate
         WorkspaceTool get_current_tool() const;
 
         /**
-		 * Update an object of the workspace.
-		 */
+         * Update an object of the workspace.
+         */
         void update_object(PlacedLogicModelObject_shptr object);
 
         /**
@@ -193,106 +193,106 @@ namespace degate
          */
         void center_view(QPointF point);
 
-	protected:
-		/**
-		 * Destroy all OpenGL textures.
-		 */
-		void free_textures();
+    protected:
+        /**
+         * Destroy all OpenGL textures.
+         */
+        void free_textures();
 
         /**
          * Delete all opengl objects (called when QOpenGLContext::aboutToBeDestroyed signal is emitted).
          */
         void cleanup();
 
-		/* Qt OpenGL functions */
-		void initializeGL() override;
-		void paintGL() override;
-		void resizeGL(int w, int h) override;
+        /* Qt OpenGL functions */
+        void initializeGL() override;
+        void paintGL() override;
+        void resizeGL(int w, int h) override;
 
-		/* Qt mouse and keyboard events functions */
-		void mousePressEvent(QMouseEvent* event) override;
-		void mouseReleaseEvent(QMouseEvent* event) override;
-		void mouseMoveEvent(QMouseEvent* event) override;
-		void wheelEvent(QWheelEvent* event) override;
-		void keyPressEvent(QKeyEvent* event) override;
-		void keyReleaseEvent(QKeyEvent* event) override;
-		void mouseDoubleClickEvent(QMouseEvent* event) override;
+        /* Qt mouse and keyboard events functions */
+        void mousePressEvent(QMouseEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent* event) override;
+        void mouseMoveEvent(QMouseEvent* event) override;
+        void wheelEvent(QWheelEvent* event) override;
+        void keyPressEvent(QKeyEvent* event) override;
+        void keyReleaseEvent(QKeyEvent* event) override;
+        void mouseDoubleClickEvent(QMouseEvent* event) override;
 
-		/**
-		 * Set the new projection matrix with ortho operation.
-		 * 
-		 * @param scale_factor : NO_ZOOM, ZOOM_IN or ZOOM_OUT.
-		 * @param new_center_x : x value of the new center.
-		 * @param new_center_y : y value of the new center.
-		 */
-		void set_projection(float scale_factor, float new_center_x, float new_center_y);
+        /**
+         * Set the new projection matrix with ortho operation.
+         *
+         * @param scale_factor : NO_ZOOM, ZOOM_IN or ZOOM_OUT.
+         * @param new_center_x : x value of the new center.
+         * @param new_center_y : y value of the new center.
+         */
+        void set_projection(float scale_factor, float new_center_x, float new_center_y);
 
-	public slots:
-		/**
-		 * Zoom in.
-		 */
-		void zoom_in();
+    public slots:
+        /**
+         * Zoom in.
+         */
+        void zoom_in();
 
-		/**
-		 * Zoom out.
-		 */
-		void zoom_out();
+        /**
+         * Zoom out.
+         */
+        void zoom_out();
 
-		/**
-		 * Draw gates or not.
-		 *
-		 * @param value : if true then gates will be drawn, not otherwise.
-		 */
-		void show_gates(bool value);
-		
-		/**
-		 * Draw gates name or not.
-		 *
-		 * @param value : if true then gates name will be drawn, not otherwise.
-		 */
-		void show_gates_name(bool value);
-		
-		/**
-		 * Draw ports or not.
-		 *
-		 * @param value : if true then ports will be drawn, not otherwise.
-		 */
-		void show_ports(bool value);
+        /**
+         * Draw gates or not.
+         *
+         * @param value : if true then gates will be drawn, not otherwise.
+         */
+        void show_gates(bool value);
 
-		/**
-		 * Draw ports name or not.
-		 *
-		 * @param value : if true then ports name will be drawn, not otherwise.
-		 */
-		void show_ports_name(bool value);
+        /**
+         * Draw gates name or not.
+         *
+         * @param value : if true then gates name will be drawn, not otherwise.
+         */
+        void show_gates_name(bool value);
 
-		/**
-		 * Draw annotations or not.
-		 *
-		 * @param value : if true then annotations will be drawn, not otherwise.
-		 */
-		void show_annotations(bool value);
+        /**
+         * Draw ports or not.
+         *
+         * @param value : if true then ports will be drawn, not otherwise.
+         */
+        void show_ports(bool value);
 
-		/**
-		 * Draw annotations name or not.
-		 *
-		 * @param value : if true then annotations name will be drawn, not otherwise.
-		 */
-		void show_annotations_name(bool value);
+        /**
+         * Draw ports name or not.
+         *
+         * @param value : if true then ports name will be drawn, not otherwise.
+         */
+        void show_ports_name(bool value);
 
-		/**
-		 * Draw emarkers or not.
-		 *
-		 * @param value : if true then emarker will be drawn, not otherwise.
-		 */
-		void show_emarkers(bool value);
+        /**
+         * Draw annotations or not.
+         *
+         * @param value : if true then annotations will be drawn, not otherwise.
+         */
+        void show_annotations(bool value);
 
-		/**
-		 * Draw emarkers name or not.
-		 *
-		 * @param value : if true then emarker name will be drawn, not otherwise.
-		 */
-		void show_emarkers_name(bool value);
+        /**
+         * Draw annotations name or not.
+         *
+         * @param value : if true then annotations name will be drawn, not otherwise.
+         */
+        void show_annotations_name(bool value);
+
+        /**
+         * Draw emarkers or not.
+         *
+         * @param value : if true then emarker will be drawn, not otherwise.
+         */
+        void show_emarkers(bool value);
+
+        /**
+         * Draw emarkers name or not.
+         *
+         * @param value : if true then emarker name will be drawn, not otherwise.
+         */
+        void show_emarkers_name(bool value);
 
         /**
          * Draw vias or not.
@@ -333,8 +333,8 @@ namespace degate
         void reset_area_selection();
 
         /**
-		 * No more selection (clear the selected objects vector).
-		 */
+         * No more selection (clear the selected objects vector).
+         */
         void reset_selection();
 
         /**
@@ -352,21 +352,21 @@ namespace degate
          */
         void use_wire_tool();
 
-	signals:
-		/**
-		 * Signal for when the project need to be changed.
-		 *
-		 * @param path : the path of the new project.
-		 */
-		void project_changed(std::string path);
+    signals:
+        /**
+         * Signal for when the project need to be changed.
+         *
+         * @param path : the path of the new project.
+         */
+        void project_changed(std::string path);
 
-		/**
-		 * Signal for when the mouse coordinates changed.
-		 *
-		 * @param x : new x coordinate of the mouse.
-		 * @param y : new y coordinate of the mouse.
-		 */
-		void mouse_coords_changed(int x, int y);
+        /**
+         * Signal for when the mouse coordinates changed.
+         *
+         * @param x : new x coordinate of the mouse.
+         * @param y : new y coordinate of the mouse.
+         */
+        void mouse_coords_changed(int x, int y);
 
         /**
          * Signal emitted when the right mouse button is pressed.
@@ -378,7 +378,7 @@ namespace degate
          */
         void project_changed();
 
-	protected:
+    protected:
         /**
          * Get a safe position regarding project size (0 <= position <= max project size).
          * If values are out of bound it will set them to 0 or max project size.
@@ -391,7 +391,7 @@ namespace degate
 
         /**
          * Get a safe bounding box regarding project size (0 <= position <= max project size).
-	     * If values are out of bound it will set them to 0 or max project size.
+         * If values are out of bound it will set them to 0 or max project size.
          *
          * @param bounding_box : the bounding box to be secured.
          *
@@ -399,58 +399,58 @@ namespace degate
          */
         BoundingBox get_safe_bounding_box(BoundingBox bounding_box) const;
 
-	private:
-		// General
-		Project_shptr project = nullptr;
+    private:
+        // General
+        Project_shptr project = nullptr;
 
-		// View
-		QMatrix4x4 projection;
-		float scale = 1;
-		float center_x = 0, center_y = 0;
-		float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
+        // View
+        QMatrix4x4 projection;
+        float scale = 1;
+        float center_x = 0, center_y = 0;
+        float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
 
-		// Mouse
-		QPointF mouse_last_pos;
-		bool mouse_moved = false;
+        // Mouse
+        QPointF mouse_last_pos;
+        bool mouse_moved = false;
 
-		// Selection
+        // Selection
         HlObjectSet selected_objects;
 
-		// Background
-		WorkspaceBackground background;
+        // Background
+        WorkspaceBackground background;
 
-		// Gates
-		WorkspaceGates gates;
+        // Gates
+        WorkspaceGates gates;
 
-		// Annotations
-		WorkspaceAnnotations annotations;
+        // Annotations
+        WorkspaceAnnotations annotations;
 
-		// EMarkers
-		WorkspaceEMarkers emarkers;
+        // EMarkers
+        WorkspaceEMarkers emarkers;
 
-		// Vias
-		WorkspaceVias vias;
+        // Vias
+        WorkspaceVias vias;
 
-		// Wires
-		WorkspaceWires wires;
+        // Wires
+        WorkspaceWires wires;
 
-		// Selection tool
-		WorkspaceSelectionTool selection_tool;
+        // Selection tool
+        WorkspaceSelectionTool selection_tool;
 
-		// Wire tool
+        // Wire tool
         WorkspaceWireTool wire_tool;
 
         // Regular grid
         WorkspaceRegularGrid regular_grid;
         bool draw_grid = false;
 
-		// View parameters
-		bool draw_gates            = true;
-		bool draw_gates_name       = true;
-		bool draw_ports            = true;
-		bool draw_ports_name       = true;
-		bool draw_annotations      = true;
-		bool draw_annotations_name = true;
+        // View parameters
+        bool draw_gates            = true;
+        bool draw_gates_name       = true;
+        bool draw_ports            = true;
+        bool draw_ports_name       = true;
+        bool draw_annotations      = true;
+        bool draw_annotations_name = true;
         bool draw_emarkers         = true;
         bool draw_emarkers_name    = true;
         bool draw_vias             = true;
@@ -460,7 +460,7 @@ namespace degate
         // Used tool
         WorkspaceTool current_tool;
 
-	};
+    };
 }
 
 #endif

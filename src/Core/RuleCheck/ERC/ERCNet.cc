@@ -26,90 +26,90 @@
 using namespace degate;
 
 ERCNet::ERCNet() :
-	RCBase("Check for unusual net configs.", RC_ERROR)
+    RCBase("Check for unusual net configs.", RC_ERROR)
 {
 }
 
 void ERCNet::run(LogicModel_shptr lmodel)
 {
-	clear_rc_violations();
+    clear_rc_violations();
 
-	if (lmodel == nullptr) return;
+    if (lmodel == nullptr) return;
 
-	// iterate over nets
-	for (LogicModel::net_collection::iterator net_iter = lmodel->nets_begin();
-	     net_iter != lmodel->nets_end(); ++net_iter)
-	{
-		check_net(lmodel, (*net_iter).second);
-	}
+    // iterate over nets
+    for (LogicModel::net_collection::iterator net_iter = lmodel->nets_begin();
+         net_iter != lmodel->nets_end(); ++net_iter)
+    {
+        check_net(lmodel, (*net_iter).second);
+    }
 }
 
 void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net)
 {
-	unsigned int
-		in_ports = 0,
-		out_ports = 0,
-		inout_ports = 0;
+    unsigned int
+        in_ports = 0,
+        out_ports = 0,
+        inout_ports = 0;
 
-	// iterate over all objects from a net
-	for (Net::connection_iterator c_iter = net->begin();
-	     c_iter != net->end(); ++c_iter)
-	{
-		object_id_t oid = *c_iter;
+    // iterate over all objects from a net
+    for (Net::connection_iterator c_iter = net->begin();
+         c_iter != net->end(); ++c_iter)
+    {
+        object_id_t oid = *c_iter;
 
-		PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
+        PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
 
-		if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
-		{
-			assert(gate_port->has_template_port() == true); // can't happen
+        if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
+        {
+            assert(gate_port->has_template_port() == true); // can't happen
 
-			if (gate_port->has_template_port())
-			{
-				GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-				// Count in- and out-ports. Inout-ports must be counted first, because is_*port() will return true
-				// for inout-ports.
-				if (tmpl_port->is_inoutport()) inout_ports++;
-				if (tmpl_port->is_inport()) in_ports++;
-				else if (tmpl_port->is_outport()) out_ports++;
-				else
-				{
+            if (gate_port->has_template_port())
+            {
+                GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
+                // Count in- and out-ports. Inout-ports must be counted first, because is_*port() will return true
+                // for inout-ports.
+                if (tmpl_port->is_inoutport()) inout_ports++;
+                if (tmpl_port->is_inport()) in_ports++;
+                else if (tmpl_port->is_outport()) out_ports++;
+                else
+                {
                     add_rc_violation(std::make_shared<RCViolation>(gate_port,
                                                                    "net.undefined_port_direction",
                                                                    get_severity()));
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
-	if ((in_ports > 0 && out_ports == 0) || (out_ports > 1))
-	{
-		for (auto c_iter = net->begin();
-		     c_iter != net->end(); ++c_iter)
-		{
-			object_id_t oid = *c_iter;
-			PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
-			if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
-			{
-				GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
+    if ((in_ports > 0 && out_ports == 0) || (out_ports > 1))
+    {
+        for (auto c_iter = net->begin();
+             c_iter != net->end(); ++c_iter)
+        {
+            object_id_t oid = *c_iter;
+            PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
+            if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
+            {
+                GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
 
-				if (in_ports > 0 && out_ports == 0)
-				{
+                if (in_ports > 0 && out_ports == 0)
+                {
                     add_rc_violation(std::make_shared<RCViolation>(gate_port,
                                                                    "net.not_feeded",
                                                                    get_severity()));
                 }
-				else if (out_ports > 1)
-				{
-					if (tmpl_port->is_outport())
-					{
+                else if (out_ports > 1)
+                {
+                    if (tmpl_port->is_outport())
+                    {
                         add_rc_violation(std::make_shared<RCViolation>(gate_port,
                                                                        "net.outputs_connected",
                                                                        get_severity()));
                     }
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 }
 
 std::string ERCNet::generate_description(const RCViolation& violation)

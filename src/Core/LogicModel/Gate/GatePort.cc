@@ -39,40 +39,40 @@ using namespace degate;
 GatePort::GatePort(std::shared_ptr<Gate> gate,
                    std::shared_ptr<GateTemplatePort> gate_template_port,
                    unsigned int diameter) :
-	Circle(gate->get_min_x() +
+    Circle(gate->get_min_x() +
            gate->get_relative_x_position_within_gate(gate_template_port->get_x()),
            gate->get_min_y() +
            gate->get_relative_y_position_within_gate(gate_template_port->get_y()),
            diameter),
-	gate(gate),
-	gate_template_port(gate_template_port),
-	template_port_id(gate_template_port->get_object_id())
+    gate(gate),
+    gate_template_port(gate_template_port),
+    template_port_id(gate_template_port->get_object_id())
 {
 }
 
 
 GatePort::GatePort(std::shared_ptr<Gate> gate, unsigned int diameter) :
-	Circle(0, 0, diameter),
-	gate(gate),
-	template_port_id(0)
+    Circle(0, 0, diameter),
+    gate(gate),
+    template_port_id(0)
 {
-	//set_x(gate->get_min_x());
-	//set_y(gate->get_min_y());
+    //set_x(gate->get_min_x());
+    //set_y(gate->get_min_y());
 }
 
 DeepCopyable_shptr GatePort::clone_shallow() const
 {
-	auto clone = std::make_shared<GatePort>();
-	clone->template_port_id = template_port_id;
-	return clone;
+    auto clone = std::make_shared<GatePort>();
+    clone->template_port_id = template_port_id;
+    return clone;
 }
 
 void GatePort::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
-	auto clone = std::dynamic_pointer_cast<GatePort>(dest);
+    auto clone = std::dynamic_pointer_cast<GatePort>(dest);
 
-	clone->gate = std::dynamic_pointer_cast<Gate>(gate.lock()->clone_deep(oldnew));
-	clone->gate_template_port = std::dynamic_pointer_cast<GateTemplatePort>(gate_template_port->clone_deep(oldnew));
+    clone->gate = std::dynamic_pointer_cast<Gate>(gate.lock()->clone_deep(oldnew));
+    clone->gate_template_port = std::dynamic_pointer_cast<GateTemplatePort>(gate_template_port->clone_deep(oldnew));
 
     Circle::clone_deep_into(dest, oldnew);
     ConnectedLogicModelObject::clone_deep_into(dest, oldnew);
@@ -80,135 +80,135 @@ void GatePort::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 
 void GatePort::set_template_port_type_id(object_id_t template_port_id)
 {
-	this->template_port_id = template_port_id;
+    this->template_port_id = template_port_id;
 }
 
 
 object_id_t GatePort::get_template_port_type_id() const
 {
-	return template_port_id;
+    return template_port_id;
 }
 
 GateTemplatePort_shptr GatePort::get_template_port()
 {
-	return gate_template_port;
+    return gate_template_port;
 }
 
 const GateTemplatePort_shptr GatePort::get_template_port() const
 {
-	return gate_template_port;
+    return gate_template_port;
 }
 
 void GatePort::set_template_port(std::shared_ptr<GateTemplatePort> gate_template_port)
 {
-	this->gate_template_port = gate_template_port;
+    this->gate_template_port = gate_template_port;
 
-	/* If the gate port is added to a gate afterwards, this caluclation will
-	 be ignored. But if the port already belongs to a gate and a a template is
-	 set afterwards, this calculation is used.
-	*/
-	assert(gate.lock() != nullptr);
-	set_x(gate.lock()->get_min_x() +
-		gate.lock()->get_relative_x_position_within_gate(gate_template_port->get_x()));
-	set_y(gate.lock()->get_min_y() +
-		gate.lock()->get_relative_y_position_within_gate(gate_template_port->get_y()));
+    /* If the gate port is added to a gate afterwards, this caluclation will
+     be ignored. But if the port already belongs to a gate and a a template is
+     set afterwards, this calculation is used.
+    */
+    assert(gate.lock() != nullptr);
+    set_x(gate.lock()->get_min_x() +
+        gate.lock()->get_relative_x_position_within_gate(gate_template_port->get_x()));
+    set_y(gate.lock()->get_min_y() +
+        gate.lock()->get_relative_y_position_within_gate(gate_template_port->get_y()));
 }
 
 
 bool GatePort::has_template_port() const
 {
-	return gate_template_port != nullptr;
+    return gate_template_port != nullptr;
 }
 
 bool GatePort::is_assigned_to_a_gate() const
 {
-	return gate.lock() != nullptr;
+    return gate.lock() != nullptr;
 }
 
 
 std::shared_ptr<Gate> GatePort::get_gate()
 {
-	return gate.lock();
+    return gate.lock();
 }
 
 const std::string GatePort::get_descriptive_identifier() const
 {
-	if (has_template_port() && is_assigned_to_a_gate() &&
-		gate.lock()->has_template())
-	{
-		if (gate.lock()->has_name())
-		{
+    if (has_template_port() && is_assigned_to_a_gate() &&
+        gate.lock()->has_template())
+    {
+        if (gate.lock()->has_name())
+        {
             return QString("%1 : %2 (%3)").arg(QString::fromStdString(gate.lock()->get_name()))
                                           .arg(QString::fromStdString(gate_template_port->get_name()))
                                           .arg(QString::fromStdString(gate.lock()->get_gate_template()->get_name()))
                                           .toStdString();
-		}
-		else
-		{
+        }
+        else
+        {
             return QString("%1 (%2, %3=%4)").arg(QString::fromStdString(gate_template_port->get_name()))
                                             .arg(QString::fromStdString(gate.lock()->get_gate_template()->get_name()))
                                             .arg(tr("gate"))
                                             .arg(gate.lock()->get_object_id())
                                             .toStdString();
-		}
-	}
-	else
-	{
-		return QString("(%1)").arg(get_object_id()).toStdString();
-	}
+        }
+    }
+    else
+    {
+        return QString("(%1)").arg(get_object_id()).toStdString();
+    }
 }
 
 
 const std::string GatePort::get_object_type_name() const
 {
-	return tr("Gate port").toStdString();
+    return tr("Gate port").toStdString();
 }
 
 
 void GatePort::print(std::ostream& os, int n_tabs) const
 {
-	const GateTemplatePort_shptr tmpl_port = get_template_port();
+    const GateTemplatePort_shptr tmpl_port = get_template_port();
 
-	os
-		<< gen_tabs(n_tabs) << "Gate port name    : " << get_name() << std::endl
-		<< gen_tabs(n_tabs) << "Object ID         : " << get_object_id() << std::endl
-		<< gen_tabs(n_tabs) << "Template Port ID  : " <<
-		(has_template_port() ? tmpl_port->get_object_id() : 0) << std::endl
-		<< gen_tabs(n_tabs) << "Diameter          : " << get_diameter() << std::endl
-		<< gen_tabs(n_tabs) << "Port position     : " << get_x() << " / " << get_y() << std::endl
-		<< gen_tabs(n_tabs) << "Bounding box      : " << get_bounding_box().to_string() << std::endl
+    os
+        << gen_tabs(n_tabs) << "Gate port name    : " << get_name() << std::endl
+        << gen_tabs(n_tabs) << "Object ID         : " << get_object_id() << std::endl
+        << gen_tabs(n_tabs) << "Template Port ID  : " <<
+        (has_template_port() ? tmpl_port->get_object_id() : 0) << std::endl
+        << gen_tabs(n_tabs) << "Diameter          : " << get_diameter() << std::endl
+        << gen_tabs(n_tabs) << "Port position     : " << get_x() << " / " << get_y() << std::endl
+        << gen_tabs(n_tabs) << "Bounding box      : " << get_bounding_box().to_string() << std::endl
 
-		<< std::endl;;
+        << std::endl;;
 }
 
 
 void GatePort::set_x(float x)
 {
-	Circle::set_x(x);
-	notify_shape_change();
+    Circle::set_x(x);
+    notify_shape_change();
 }
 
 
 void GatePort::set_y(float y)
 {
-	Circle::set_y(y);
-	notify_shape_change();
+    Circle::set_y(y);
+    notify_shape_change();
 }
 
 void GatePort::shift_x(float delta_x)
 {
-	Circle::shift_x(delta_x);
-	notify_shape_change();
+    Circle::shift_x(delta_x);
+    notify_shape_change();
 }
 
 void GatePort::shift_y(float delta_y)
 {
-	Circle::shift_y(delta_y);
-	notify_shape_change();
+    Circle::shift_y(delta_y);
+    notify_shape_change();
 }
 
 void GatePort::set_diameter(unsigned int diameter)
 {
-	Circle::set_diameter(diameter);
-	notify_shape_change();
+    Circle::set_diameter(diameter);
+    notify_shape_change();
 }

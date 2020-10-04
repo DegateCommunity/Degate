@@ -30,88 +30,88 @@
 
 namespace degate
 {
-	/**
-	 * This class implements a logic model loader.
-	 */
-	class LogicModelImporter : public XMLImporter
-	{
-	private:
+    /**
+     * This class implements a logic model loader.
+     */
+    class LogicModelImporter : public XMLImporter
+    {
+    private:
 
-		unsigned int width, height;
-		GateLibrary_shptr gate_library;
+        unsigned int width, height;
+        GateLibrary_shptr gate_library;
 
-		std::list<Gate_shptr> gates;
+        std::list<Gate_shptr> gates;
 
-		void parse_logic_model_element(QDomElement const lm_element,
-		                               LogicModel_shptr lmodel);
+        void parse_logic_model_element(QDomElement const lm_element,
+                                       LogicModel_shptr lmodel);
 
-		void parse_gates_element(QDomElement const gates_element, LogicModel_shptr lmodel);
+        void parse_gates_element(QDomElement const gates_element, LogicModel_shptr lmodel);
 
-		void parse_vias_element(QDomElement const vias_element,
-		                        LogicModel_shptr lmodel);
+        void parse_vias_element(QDomElement const vias_element,
+                                LogicModel_shptr lmodel);
 
-		void parse_emarkers_element(QDomElement const emarkers_element,
-		                            LogicModel_shptr lmodel);
+        void parse_emarkers_element(QDomElement const emarkers_element,
+                                    LogicModel_shptr lmodel);
 
-		void parse_wires_element(QDomElement const wires_element,
-		                         LogicModel_shptr lmodel);
+        void parse_wires_element(QDomElement const wires_element,
+                                 LogicModel_shptr lmodel);
 
-		void parse_nets_element(QDomElement const nets_element,
-		                        LogicModel_shptr lmodel);
+        void parse_nets_element(QDomElement const nets_element,
+                                LogicModel_shptr lmodel);
 
-		void parse_annotations_element(QDomElement const annotations_element,
-		                               LogicModel_shptr lmodel);
+        void parse_annotations_element(QDomElement const annotations_element,
+                                       LogicModel_shptr lmodel);
 
-		std::list<Module_shptr> parse_modules_element(QDomElement const modules_element,
-		                                              LogicModel_shptr lmodel);
+        std::list<Module_shptr> parse_modules_element(QDomElement const modules_element,
+                                                      LogicModel_shptr lmodel);
 
-	public:
+    public:
 
-		/**
-		 * Create a logic model importer.
-		 * @param width The geometrical width of the logic model.
-		 * @param height The geometrical height of the logic model.
-		 * @param gate_library The gate library to resolve references to gate templates.
-		 *              The gate library is stored into the logic model. You should not set it by yourself.
-		 */
-		LogicModelImporter(unsigned int width, unsigned int height, GateLibrary_shptr gate_library) :
-			width(width),
-			height(height),
-			gate_library(gate_library)
-		{
-		}
-
-
-		/**
-		 * Create a logic model importer. The gate library is not used to resolve references.
-		 * @param width The geometrical width of the logic model.
-		 * @param height The geometrical height of the logic model.
-		 */
-		LogicModelImporter(unsigned int width, unsigned int height) :
-			width(width),
-			height(height)
-		{
-		}
+        /**
+         * Create a logic model importer.
+         * @param width The geometrical width of the logic model.
+         * @param height The geometrical height of the logic model.
+         * @param gate_library The gate library to resolve references to gate templates.
+         *              The gate library is stored into the logic model. You should not set it by yourself.
+         */
+        LogicModelImporter(unsigned int width, unsigned int height, GateLibrary_shptr gate_library) :
+            width(width),
+            height(height),
+            gate_library(gate_library)
+        {
+        }
 
 
-		/**
-		 * The destructor.
-		 */
-		~LogicModelImporter()
-		{
-		}
+        /**
+         * Create a logic model importer. The gate library is not used to resolve references.
+         * @param width The geometrical width of the logic model.
+         * @param height The geometrical height of the logic model.
+         */
+        LogicModelImporter(unsigned int width, unsigned int height) :
+            width(width),
+            height(height)
+        {
+        }
 
-		/**
-		 * import a logic model.
-		 */
-		LogicModel_shptr import(std::string const& filename);
+
+        /**
+         * The destructor.
+         */
+        ~LogicModelImporter()
+        {
+        }
+
+        /**
+         * import a logic model.
+         */
+        LogicModel_shptr import(std::string const& filename);
 
 
-		/**
-		 * Import a logic model that is stored in a XML file into an existing logic model.
-		 */
-		void import_into(LogicModel_shptr lmodel, std::string const& filename);
-	};
+        /**
+         * Import a logic model that is stored in a XML file into an existing logic model.
+         */
+        void import_into(LogicModel_shptr lmodel, std::string const& filename);
+    };
 }
 
 #endif

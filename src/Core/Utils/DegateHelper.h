@@ -29,32 +29,32 @@
 
 namespace degate
 {
-	/**
-	 * Calculate the next higher power of two for a value \p i with i > 0.
-	 */
-	template <typename IntegerType>
-	IntegerType next_power_of_two(IntegerType i)
-	{
-		IntegerType rval = 1;
-		while (rval < i) rval <<= 1;
-		return rval;
-	}
+    /**
+     * Calculate the next higher power of two for a value \p i with i > 0.
+     */
+    template <typename IntegerType>
+    IntegerType next_power_of_two(IntegerType i)
+    {
+        IntegerType rval = 1;
+        while (rval < i) rval <<= 1;
+        return rval;
+    }
 
-	/**
-	 * Tokenize a string.
-	 * @param str That is the string to tokenize, e.g.
-	 *    "hello world. \"foo bar\"". This would result
-	 *    in three tokens.
-	 */
-	std::vector<std::string> tokenize(std::string const& str);
+    /**
+     * Tokenize a string.
+     * @param str That is the string to tokenize, e.g.
+     *    "hello world. \"foo bar\"". This would result
+     *    in three tokens.
+     */
+    std::vector<std::string> tokenize(std::string const& str);
 
-	/**
-	 * Write a string to a file.
-	 * @param path Path to file.
-	 * @param content The file content.
-	 */
-	void write_string_to_file(std::string const& path,
-	                          std::string const& content);
+    /**
+     * Write a string to a file.
+     * @param path Path to file.
+     * @param content The file content.
+     */
+    void write_string_to_file(std::string const& path,
+                              std::string const& content);
 
 }
 

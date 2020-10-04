@@ -23,18 +23,18 @@
 
 namespace degate
 {
-	PreferencesHandler::PreferencesHandler() : settings(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIGURATION_FILE_NAME)), QSettings::IniFormat)
-	{
-	    ///////////
-	    // Appearance
-	    ///////////
+    PreferencesHandler::PreferencesHandler() : settings(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIGURATION_FILE_NAME)), QSettings::IniFormat)
+    {
+        ///////////
+        // Appearance
+        ///////////
 
-	    // Theme
-		QString theme = settings.value("theme", "native").toString();
+        // Theme
+        QString theme = settings.value("theme", "native").toString();
         preferences.theme = string_to_theme(theme.toStdString());
 
-		// Icon Theme
-		QString icon_theme = settings.value("icon_theme", "dark").toString();
+        // Icon Theme
+        QString icon_theme = settings.value("icon_theme", "dark").toString();
         preferences.icon_theme = string_to_icon_theme(icon_theme.toStdString());
 
         // Automatic icon theme
@@ -69,15 +69,15 @@ namespace degate
 
         // Snap to grid
         preferences.snap_to_grid = settings.value("snap_to_grid", false).toBool();
-	}
+    }
 
-	PreferencesHandler::~PreferencesHandler()
-	{
+    PreferencesHandler::~PreferencesHandler()
+    {
         save();
-	}
+    }
 
-	void PreferencesHandler::save()
-	{
+    void PreferencesHandler::save()
+    {
         ///////////
         // Appearance
         ///////////
@@ -104,11 +104,11 @@ namespace degate
         settings.setValue("max_grid_lines_count", preferences.max_grid_lines_count);
         settings.setValue("show_grid", preferences.show_grid);
         settings.setValue("snap_to_grid", preferences.snap_to_grid);
-	}
+    }
 
     void PreferencesHandler::update(const Preferences& updated_preferences)
     {
-	    if (preferences.theme != updated_preferences.theme)
+        if (preferences.theme != updated_preferences.theme)
         {
             preferences.theme = updated_preferences.theme;
             emit theme_changed();
@@ -136,7 +136,7 @@ namespace degate
 
     void PreferencesHandler::update_language()
     {
-	    if (translator != nullptr)
+        if (translator != nullptr)
             QApplication::removeTranslator(translator.get());
 
         if (qt_translator != nullptr)
@@ -169,6 +169,6 @@ namespace degate
 
     QSettings& PreferencesHandler::get_settings()
     {
-	    return settings;
+        return settings;
     }
 }

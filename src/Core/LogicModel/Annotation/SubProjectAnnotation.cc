@@ -27,24 +27,24 @@ using namespace degate;
 
 SubProjectAnnotation::SubProjectAnnotation(float min_x, float max_x, float min_y, float max_y,
                                            std::string const& subproject_path) :
-	Annotation(min_x, max_x, min_y, max_y, Annotation::SUBPROJECT)
+    Annotation(min_x, max_x, min_y, max_y, Annotation::SUBPROJECT)
 {
-	set_path(subproject_path);
+    set_path(subproject_path);
 }
 
 SubProjectAnnotation::SubProjectAnnotation(BoundingBox const& bbox,
                                            std::string const& subproject_path) :
-	Annotation(bbox, Annotation::SUBPROJECT)
+    Annotation(bbox, Annotation::SUBPROJECT)
 {
-	set_path(subproject_path);
+    set_path(subproject_path);
 }
 
 void SubProjectAnnotation::set_path(std::string const& subproject_path)
 {
-	Annotation::set_parameter("subproject-directory", subproject_path);
+    Annotation::set_parameter("subproject-directory", subproject_path);
 }
 
 std::string SubProjectAnnotation::get_path() const
 {
-	return Annotation::get_parameter<std::string>("subproject-directory");
+    return Annotation::get_parameter<std::string>("subproject-directory");
 }

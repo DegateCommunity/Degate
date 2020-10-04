@@ -31,45 +31,45 @@
 namespace degate
 {
 
-	/**
-	 * @class LayersEditDialog
-	 * @brief Dialog to edit all layers of a project.
-	 *
-	 * @see QDialog
-	 */
-	class LayersEditDialog : public QDialog
-	{
-		Q_OBJECT
-		
-	public:
+    /**
+     * @class LayersEditDialog
+     * @brief Dialog to edit all layers of a project.
+     *
+     * @see QDialog
+     */
+    class LayersEditDialog : public QDialog
+    {
+        Q_OBJECT
 
-		/**
-		 * Create the dialog, to show it call the exec function.
-		 *
-		 * @param parent : the parent of the dialog.
-		 * @param project : the current active project.
-		 *
-		 * @see QDialog
-		 */
-		LayersEditDialog(QWidget* parent, const Project_shptr& project);
-		~LayersEditDialog() override = default;
+    public:
 
-	public slots:
-		/**
-		 * Save all changes.
-		 */
-		void validate();
+        /**
+         * Create the dialog, to show it call the exec function.
+         *
+         * @param parent : the parent of the dialog.
+         * @param project : the current active project.
+         *
+         * @see QDialog
+         */
+        LayersEditDialog(QWidget* parent, const Project_shptr& project);
+        ~LayersEditDialog() override = default;
 
-	private:
-		Project_shptr project;
-		QVBoxLayout layout;
+    public slots:
+        /**
+         * Save all changes.
+         */
+        void validate();
 
-		LayersEditWidget layers;
-		QHBoxLayout buttons_layout;
-		QPushButton validate_button;
-		QPushButton cancel_button;
-		
-	};
+    private:
+        Project_shptr project;
+        QVBoxLayout layout;
+
+        LayersEditWidget layers;
+        QHBoxLayout buttons_layout;
+        QPushButton validate_button;
+        QPushButton cancel_button;
+
+    };
 }
 
 #endif

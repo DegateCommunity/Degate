@@ -38,138 +38,138 @@ ExternalMatching::ExternalMatching()
 
 void ExternalMatching::init(BoundingBox const& bounding_box, Project_shptr project)
 {
-	this->bounding_box = bounding_box;
+    this->bounding_box = bounding_box;
 
-	if (project == nullptr)
-		throw InvalidPointerException("Invalid pointer for parameter project.");
+    if (project == nullptr)
+        throw InvalidPointerException("Invalid pointer for parameter project.");
 
-	lmodel = project->get_logic_model();
-	assert(lmodel != nullptr); // always has a logic model
+    lmodel = project->get_logic_model();
+    assert(lmodel != nullptr); // always has a logic model
 
-	layer = lmodel->get_current_layer();
-	if (layer == nullptr) throw DegateRuntimeException("No current layer in project.");
+    layer = lmodel->get_current_layer();
+    if (layer == nullptr) throw DegateRuntimeException("No current layer in project.");
 
 
-	ScalingManager_shptr sm = layer->get_scaling_manager();
-	assert(sm != nullptr);
+    ScalingManager_shptr sm = layer->get_scaling_manager();
+    assert(sm != nullptr);
 
-	img = sm->get_image(1).second;
-	assert(img != nullptr);
+    img = sm->get_image(1).second;
+    assert(img != nullptr);
 }
 
 
 void ExternalMatching::set_command(std::string const& cmd)
 {
-	this->cmd = cmd;
+    this->cmd = cmd;
 }
 
 std::string ExternalMatching::get_command() const
 {
-	return cmd;
+    return cmd;
 }
 
 void ExternalMatching::run()
 {
-	// create a temp dir
-	std::string dir = create_temp_directory();
-	assert(is_directory(dir));
+    // create a temp dir
+    std::string dir = create_temp_directory();
+    assert(is_directory(dir));
 
-	std::string image_file = dir;
-	image_file.append("/image.tiff");
+    std::string image_file = dir;
+    image_file.append("/image.tiff");
 
-	std::string results_file = dir;
-	results_file.append("/results.dat");
+    std::string results_file = dir;
+    results_file.append("/results.dat");
 
-	save_part_of_image(image_file, img, bounding_box);
+    save_part_of_image(image_file, img, bounding_box);
 
-	boost::format f("%1% --image %2% --results %3% "
-		"--start-x %4% --start-y %5% --width %6% --height %7%");
-	f % cmd
-		% image_file
-		% results_file
-		% bounding_box.get_min_x()
-		% bounding_box.get_min_y()
-		% bounding_box.get_width()
-		% bounding_box.get_height();
+    boost::format f("%1% --image %2% --results %3% "
+        "--start-x %4% --start-y %5% --width %6% --height %7%");
+    f % cmd
+        % image_file
+        % results_file
+        % bounding_box.get_min_x()
+        % bounding_box.get_min_y()
+        % bounding_box.get_width()
+        % bounding_box.get_height();
 
 
-	debug(TM, "start external command: %s", f.str().c_str());
-	exit_code = system(f.str().c_str());
-	if (exit_code == -1)
-	{
-		debug(TM, "system() failed");
-	}
-	else
-	{
-		BOOST_FOREACH(PlacedLogicModelObject_shptr plo,
-		              parse_file(results_file))
-		{
-			lmodel->add_object(layer, plo);
-		}
-	}
+    debug(TM, "start external command: %s", f.str().c_str());
+    exit_code = system(f.str().c_str());
+    if (exit_code == -1)
+    {
+        debug(TM, "system() failed");
+    }
+    else
+    {
+        BOOST_FOREACH(PlacedLogicModelObject_shptr plo,
+                      parse_file(results_file))
+        {
+            lmodel->add_object(layer, plo);
+        }
+    }
 
-	// cleanup
-	remove_directory(dir);
+    // cleanup
+    remove_directory(dir);
 }
 
 std::list<PlacedLogicModelObject_shptr> ExternalMatching::parse_file(std::string const& filename) const
 {
-	std::list<PlacedLogicModelObject_shptr> list;
-	std::string line;
-	std::ifstream file(filename.c_str());
+    std::list<PlacedLogicModelObject_shptr> list;
+    std::string line;
+    std::ifstream file(filename.c_str());
 
-	if (file.is_open())
-	{
-		while (!file.eof())
-		{
-			getline(file, line);
+    if (file.is_open())
+    {
+        while (!file.eof())
+        {
+            getline(file, line);
 
-			PlacedLogicModelObject_shptr plo = parse_line(line);
-			if (plo != nullptr) list.push_back(plo);
-		}
-		file.close();
-	}
-	return list;
+            PlacedLogicModelObject_shptr plo = parse_line(line);
+            if (plo != nullptr) list.push_back(plo);
+        }
+        file.close();
+    }
+    return list;
 }
 
 PlacedLogicModelObject_shptr ExternalMatching::parse_line(std::string const& line) const
 {
-	std::vector<std::string> tokens = tokenize(line);
+    std::vector<std::string> tokens = tokenize(line);
 
-	PlacedLogicModelObject_shptr plo;
+    PlacedLogicModelObject_shptr plo;
 
-	if (tokens.size() == 0) return plo;
-	else if (tokens[0].at(0) == '#') return plo;
-	else if (tokens[0] == "wire" &&
-		tokens.size() >= 6
-	)
-	{
-		int
-			x1 = boost::lexical_cast<int>(tokens[1]),
-			y1 = boost::lexical_cast<int>(tokens[2]),
-			x2 = boost::lexical_cast<int>(tokens[3]),
-			y2 = boost::lexical_cast<int>(tokens[4]),
-			diameter = boost::lexical_cast<unsigned int>(tokens[5]);
+    if (tokens.size() == 0) return plo;
+    else if (tokens[0].at(0) == '#') return plo;
+    else if (tokens[0] == "wire" &&
+        tokens.size() >= 6
+    )
+    {
+        int
+            x1 = boost::lexical_cast<int>(tokens[1]),
+            y1 = boost::lexical_cast<int>(tokens[2]),
+            x2 = boost::lexical_cast<int>(tokens[3]),
+            y2 = boost::lexical_cast<int>(tokens[4]),
+            diameter = boost::lexical_cast<unsigned int>(tokens[5]);
 
-		return std::make_shared<Wire>(x1, y1, x2, y2, diameter);
-	}
-	else if (tokens[0] == "via" &&
-		tokens.size() >= 6
-	)
-	{
-		int
-			x = boost::lexical_cast<int>(tokens[1]),
-			y = boost::lexical_cast<int>(tokens[2]),
-			diameter = boost::lexical_cast<unsigned int>(tokens[3]);
+        return std::make_shared<Wire>(x1, y1, x2, y2, diameter);
+    }
+    else if (tokens[0] == "via" &&
+        tokens.size() >= 6
+    )
+    {
+        int
+            x = boost::lexical_cast<int>(tokens[1]),
+            y = boost::lexical_cast<int>(tokens[2]),
+            diameter = boost::lexical_cast<unsigned int>(tokens[3]);
 
-		Via::DIRECTION dir = tokens[4] == "up" ? Via::DIRECTION_UP : Via::DIRECTION_DOWN;
+        Via::DIRECTION dir = tokens[4] == "up" ? Via::DIRECTION_UP : Via::DIRECTION_DOWN;
 
-		return std::make_shared<Via>(x, y, diameter, dir);
-	}
+        return std::make_shared<Via>(x, y, diameter, dir);
+    }
 
-	else
-	{
-		std::string err("Can't parse line: ");
-		throw DegateRuntimeException(err + line);
-	}
+    else
+    {
+        std::string err("Can't parse line: ");
+        throw DegateRuntimeException(err + line);
+    }
 }

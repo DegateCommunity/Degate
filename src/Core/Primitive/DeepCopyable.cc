@@ -25,29 +25,29 @@
 
 namespace degate
 {
-	DeepCopyable_shptr DeepCopyable::clone_deep(oldnew_t* oldnew) const
-	{
-		auto _this = shared_from_this();
-		if (clone_once(_this, oldnew))
-		{
+    DeepCopyable_shptr DeepCopyable::clone_deep(oldnew_t* oldnew) const
+    {
+        auto _this = shared_from_this();
+        if (clone_once(_this, oldnew))
+        {
             clone_deep_into((*oldnew)[_this], oldnew);
-		}
-		return (*oldnew)[_this];
-	}
+        }
+        return (*oldnew)[_this];
+    }
 
-	bool DeepCopyable::clone_once(const c_DeepCopyable_shptr& o,
+    bool DeepCopyable::clone_once(const c_DeepCopyable_shptr& o,
                                   std::map<c_DeepCopyable_shptr, DeepCopyable_shptr>* oldnew)
-	{
-		assert(o.get() != nullptr);
+    {
+        assert(o.get() != nullptr);
 
-		std::map<c_DeepCopyable_shptr, DeepCopyable_shptr>& oldnew_ref = *oldnew;
-		if (oldnew_ref.count(o) > 0)
-		{
-			return false;
-		}
+        std::map<c_DeepCopyable_shptr, DeepCopyable_shptr>& oldnew_ref = *oldnew;
+        if (oldnew_ref.count(o) > 0)
+        {
+            return false;
+        }
 
-		DeepCopyable_shptr clone = o->clone_shallow();
+        DeepCopyable_shptr clone = o->clone_shallow();
         oldnew_ref[o] = clone;
-		return true;
-	}
+        return true;
+    }
 }

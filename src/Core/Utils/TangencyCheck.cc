@@ -27,232 +27,232 @@
  */
 bool get_line_function_for_wire(degate::Line_shptr l, float* m, float* n)
 {
-	assert(l != nullptr);
-	assert(m != nullptr);
-	assert(n != nullptr);
+    assert(l != nullptr);
+    assert(m != nullptr);
+    assert(n != nullptr);
 
-	float d_y = l->get_to_y() - l->get_from_y();
-	float d_x = l->get_to_x() - l->get_from_x();
+    float d_y = l->get_to_y() - l->get_from_y();
+    float d_x = l->get_to_x() - l->get_from_x();
 
-	if (abs(d_x) == 0) return false;
-	else
-	{
-		*m = d_y / d_x;
-		*n = l->get_from_y() - l->get_from_x() * (*m);
-		return true;
-	}
+    if (abs(d_x) == 0) return false;
+    else
+    {
+        *m = d_y / d_x;
+        *n = l->get_from_y() - l->get_from_x() * (*m);
+        return true;
+    }
 }
 
 
 bool degate::check_object_tangency(Circle_shptr o1,
                                    Circle_shptr o2)
 {
-	float dx = o1->get_x() - o1->get_x();
-	float dy = o2->get_y() - o1->get_y();
-	return (sqrt(dx * dx + dy * dy) <= static_cast<float>(o1->get_diameter() + o2->get_diameter()) / 2.0f);
+    float dx = o1->get_x() - o1->get_x();
+    float dy = o2->get_y() - o1->get_y();
+    return (sqrt(dx * dx + dy * dy) <= static_cast<float>(o1->get_diameter() + o2->get_diameter()) / 2.0f);
 }
 
 bool degate::check_object_tangency(Line_shptr o1,
                                    Line_shptr o2)
 {
-	float m1, n1, m2, n2;
-	bool ret1 = get_line_function_for_wire(o1, &m1, &n1);
-	bool ret2 = get_line_function_for_wire(o2, &m2, &n2);
+    float m1, n1, m2, n2;
+    bool ret1 = get_line_function_for_wire(o1, &m1, &n1);
+    bool ret2 = get_line_function_for_wire(o2, &m2, &n2);
 
-	if (ret1 && ret2)
-	{
-		float xi = - (n1 - n2) / (m1 - m2);
-		float yi = n1 + m1 * xi;
+    if (ret1 && ret2)
+    {
+        float xi = - (n1 - n2) / (m1 - m2);
+        float yi = n1 + m1 * xi;
 
-		return ((o1->get_from_x() - xi) * (xi - o1->get_to_x()) >= 0 &&
-			(o2->get_from_x() - xi) * (xi - o2->get_to_x()) >= 0 &&
-			(o1->get_from_y() - yi) * (yi - o1->get_to_y()) >= 0 &&
-			(o2->get_from_y() - yi) * (yi - o2->get_to_y()) >= 0);
-	}
-	else if (!ret1 && !ret2)
-	{
-		return o1->get_from_x() == o2->get_from_x();
-	}
-	else
-	{
-		Line_shptr v = ret1 ? o2 : o1;
-		Line_shptr l = ret1 ? o1 : o2;
+        return ((o1->get_from_x() - xi) * (xi - o1->get_to_x()) >= 0 &&
+            (o2->get_from_x() - xi) * (xi - o2->get_to_x()) >= 0 &&
+            (o1->get_from_y() - yi) * (yi - o1->get_to_y()) >= 0 &&
+            (o2->get_from_y() - yi) * (yi - o2->get_to_y()) >= 0);
+    }
+    else if (!ret1 && !ret2)
+    {
+        return o1->get_from_x() == o2->get_from_x();
+    }
+    else
+    {
+        Line_shptr v = ret1 ? o2 : o1;
+        Line_shptr l = ret1 ? o1 : o2;
 
-		BoundingBox const& b = v->get_bounding_box();
+        BoundingBox const& b = v->get_bounding_box();
 
-		if ((l->get_from_x() > b.get_max_x() &&
-				l->get_to_x() > b.get_max_x()) ||
-			// no intersection (line is to right of rectangle).
+        if ((l->get_from_x() > b.get_max_x() &&
+                l->get_to_x() > b.get_max_x()) ||
+            // no intersection (line is to right of rectangle).
 
-			(l->get_from_x() > b.get_min_x() &&
-				l->get_to_x() > b.get_min_x()) ||
-			// no intersection (line is to left of rectangle).
+            (l->get_from_x() > b.get_min_x() &&
+                l->get_to_x() > b.get_min_x()) ||
+            // no intersection (line is to left of rectangle).
 
-			(l->get_from_y() > b.get_min_y() &&
-				l->get_to_y() > b.get_min_y()) ||
-			// no intersection (line is above rectangle).
+            (l->get_from_y() > b.get_min_y() &&
+                l->get_to_y() > b.get_min_y()) ||
+            // no intersection (line is above rectangle).
 
-			(l->get_from_y() > b.get_max_y() &&
-				l->get_to_y() > b.get_max_y())
-				//no intersection (line is below rectangle).
-		)
-			return false;
-		else
-			return true;
-	}
+            (l->get_from_y() > b.get_max_y() &&
+                l->get_to_y() > b.get_max_y())
+                //no intersection (line is below rectangle).
+        )
+            return false;
+        else
+            return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool degate::check_object_tangency(Rectangle_shptr o1,
                                    Rectangle_shptr o2)
 {
-	return o1->get_bounding_box().intersects(o2->get_bounding_box());
+    return o1->get_bounding_box().intersects(o2->get_bounding_box());
 }
 
 bool degate::check_object_tangency(Circle_shptr o1,
                                    Line_shptr o2)
 {
-	BoundingBox const& b = o1->get_bounding_box();
+    BoundingBox const& b = o1->get_bounding_box();
 
-	Rectangle_shptr r(new Rectangle(b.get_min_x(), b.get_max_x(),
-	                                b.get_min_y(), b.get_max_y()));
+    Rectangle_shptr r(new Rectangle(b.get_min_x(), b.get_max_x(),
+                                    b.get_min_y(), b.get_max_y()));
 
-	return check_object_tangency(o2, r);
+    return check_object_tangency(o2, r);
 }
 
 bool degate::check_object_tangency(Circle_shptr o1,
                                    Rectangle_shptr o2)
 {
-	return o1->get_bounding_box().intersects(o2->get_bounding_box());
+    return o1->get_bounding_box().intersects(o2->get_bounding_box());
 }
 
 bool degate::check_object_tangency(Line_shptr l,
                                    Rectangle_shptr r)
 {
-	// http://stackoverflow.com/questions/99353/how-to-test-if-a-line-segment-intersects-an-axis-aligned-rectange-in-2d
+    // http://stackoverflow.com/questions/99353/how-to-test-if-a-line-segment-intersects-an-axis-aligned-rectange-in-2d
 
-	// Let the segment endpoints be p1=(x1 y1) and p2=(x2 y2).
-	// Let the rectangle's corners be (xBL yBL) and (xTR yTR).
+    // Let the segment endpoints be p1=(x1 y1) and p2=(x2 y2).
+    // Let the rectangle's corners be (xBL yBL) and (xTR yTR).
 
-	float x1, x2, y1, y2;
+    float x1, x2, y1, y2;
 
-	if (l->get_from_x() < l->get_to_x())
-	{
-		x1 = l->get_from_x();
-		y1 = l->get_from_y();
-		x2 = l->get_to_x();
-		y2 = l->get_to_y();
-	}
-	else
-	{
-		x2 = l->get_from_x();
-		y2 = l->get_from_y();
-		x1 = l->get_to_x();
-		y1 = l->get_to_y();
-	}
+    if (l->get_from_x() < l->get_to_x())
+    {
+        x1 = l->get_from_x();
+        y1 = l->get_from_y();
+        x2 = l->get_to_x();
+        y2 = l->get_to_y();
+    }
+    else
+    {
+        x2 = l->get_from_x();
+        y2 = l->get_from_y();
+        x1 = l->get_to_x();
+        y1 = l->get_to_y();
+    }
 
-	// F(x y) = (y2-y1)x + (x1-x2)y + (x2*y1-x1*y2)
+    // F(x y) = (y2-y1)x + (x1-x2)y + (x2*y1-x1*y2)
 
-	float dy = y2 - y1;
-	float dx = x1 - x2;
-	float i = x2 * y1 - x1 * y2;
+    float dy = y2 - y1;
+    float dx = x1 - x2;
+    float i = x2 * y1 - x1 * y2;
 
-	// Calculate F(x,y) for each corner of the rectangle.
-	// If any of the values f[i] is 0, the corner is on the line.
-	float f1 = dy * r->get_min_x() + dx * r->get_min_y() + i;
-	if (std::abs(f1) <= 0.0000001f) return true;
-	float f2 = dy * r->get_min_x() + dx * r->get_max_y() + i;
-	if (std::abs(f2) <= 0.0000001f) return true;
-	float f3 = dy * r->get_max_x() + dx * r->get_min_y() + i;
-	if (std::abs(f3) <= 0.0000001f) return true;
-	float f4 = dy * r->get_max_x() + dx * r->get_max_y() + i;
-	if (std::abs(f4) <= 0.0000001f) return true;
+    // Calculate F(x,y) for each corner of the rectangle.
+    // If any of the values f[i] is 0, the corner is on the line.
+    float f1 = dy * r->get_min_x() + dx * r->get_min_y() + i;
+    if (std::abs(f1) <= 0.0000001f) return true;
+    float f2 = dy * r->get_min_x() + dx * r->get_max_y() + i;
+    if (std::abs(f2) <= 0.0000001f) return true;
+    float f3 = dy * r->get_max_x() + dx * r->get_min_y() + i;
+    if (std::abs(f3) <= 0.0000001f) return true;
+    float f4 = dy * r->get_max_x() + dx * r->get_max_y() + i;
+    if (std::abs(f4) <= 0.0000001f) return true;
 
-	/* If all corners are "below" or "above" the line, the
-	   objects can't intersect. */
-	if ((f1 < 0.f && f2 < 0.f && f3 < 0.f && f4 < 0.f) ||
-		(f1 > 0.f && f2 > 0.f && f3 > 0.f && f4 > 0.f))
-	{
-		return false;
-	}
+    /* If all corners are "below" or "above" the line, the
+       objects can't intersect. */
+    if ((f1 < 0.f && f2 < 0.f && f3 < 0.f && f4 < 0.f) ||
+        (f1 > 0.f && f2 > 0.f && f3 > 0.f && f4 > 0.f))
+    {
+        return false;
+    }
 
-	/*
-	  Project the endpoint onto the x axis, and check if the
-	  segment's shadow intersects the polygon's shadow. Repeat on the y axis:
-	*/
-	if ((x1 > r->get_max_x() &&
-			x2 > r->get_max_x()) &&
-		// no intersection (line is to right of rectangle).
+    /*
+      Project the endpoint onto the x axis, and check if the
+      segment's shadow intersects the polygon's shadow. Repeat on the y axis:
+    */
+    if ((x1 > r->get_max_x() &&
+            x2 > r->get_max_x()) &&
+        // no intersection (line is to right of rectangle).
 
-		!(x1 > r->get_min_x() &&
-			x2 > r->get_min_x()) &&
-		// no intersection (line is to left of rectangle).
+        !(x1 > r->get_min_x() &&
+            x2 > r->get_min_x()) &&
+        // no intersection (line is to left of rectangle).
 
-		!(y1 > r->get_max_y() &&
-			y2 > r->get_max_y()) &&
-		// no intersection (line is above rectangle).
+        !(y1 > r->get_max_y() &&
+            y2 > r->get_max_y()) &&
+        // no intersection (line is above rectangle).
 
-		!(y1 < r->get_min_y() &&
-			y2 < r->get_min_y())
-			//no intersection (line is below rectangle).
-	)
-	{
-		return false;
-	}
+        !(y1 < r->get_min_y() &&
+            y2 < r->get_min_y())
+            //no intersection (line is below rectangle).
+    )
+    {
+        return false;
+    }
 
-	else // there is an intersection
-		return true;
+    else // there is an intersection
+        return true;
 }
 
 bool degate::check_object_tangency(PlacedLogicModelObject_shptr o1,
                                    PlacedLogicModelObject_shptr o2)
 {
-	if (o1 == nullptr || o2 == nullptr)
-		throw InvalidPointerException("You passed an invalid shared pointer.");
+    if (o1 == nullptr || o2 == nullptr)
+        throw InvalidPointerException("You passed an invalid shared pointer.");
 
-	if (!o1->get_bounding_box().intersects(o2->get_bounding_box()))
-		return false;
+    if (!o1->get_bounding_box().intersects(o2->get_bounding_box()))
+        return false;
 
-	Circle_shptr c1, c2;
-	Line_shptr l1, l2;
-	Rectangle_shptr r1, r2;
+    Circle_shptr c1, c2;
+    Line_shptr l1, l2;
+    Rectangle_shptr r1, r2;
 
-	c1 = std::dynamic_pointer_cast<Circle>(o1);
-	l1 = std::dynamic_pointer_cast<Line>(o1);
-	r1 = std::dynamic_pointer_cast<Rectangle>(o1);
-	c2 = std::dynamic_pointer_cast<Circle>(o2);
-	l2 = std::dynamic_pointer_cast<Line>(o2);
-	r2 = std::dynamic_pointer_cast<Rectangle>(o2);
+    c1 = std::dynamic_pointer_cast<Circle>(o1);
+    l1 = std::dynamic_pointer_cast<Line>(o1);
+    r1 = std::dynamic_pointer_cast<Rectangle>(o1);
+    c2 = std::dynamic_pointer_cast<Circle>(o2);
+    l2 = std::dynamic_pointer_cast<Line>(o2);
+    r2 = std::dynamic_pointer_cast<Rectangle>(o2);
 
-	if (c1 && c2)
-		return check_object_tangency(c1, c2);
-	else if (l1 && l2)
-	{
-		bool ret = check_object_tangency(l1, l2);
-		std::cout << "Check l1/l2: " << ret << std::endl;
-		return ret;
-	}
-	else if (r1 && r2)
-		return check_object_tangency(r1, r2);
+    if (c1 && c2)
+        return check_object_tangency(c1, c2);
+    else if (l1 && l2)
+    {
+        bool ret = check_object_tangency(l1, l2);
+        std::cout << "Check l1/l2: " << ret << std::endl;
+        return ret;
+    }
+    else if (r1 && r2)
+        return check_object_tangency(r1, r2);
 
-	else if (c1 && l2)
-		return check_object_tangency(c1, l2);
-	else if (l1 && c2)
-		return check_object_tangency(c2, l1);
+    else if (c1 && l2)
+        return check_object_tangency(c1, l2);
+    else if (l1 && c2)
+        return check_object_tangency(c2, l1);
 
-	else if (c1 && r2)
-		return check_object_tangency(c1, r2);
-	else if (r1 && c2)
-		return check_object_tangency(c2, r1);
+    else if (c1 && r2)
+        return check_object_tangency(c1, r2);
+    else if (r1 && c2)
+        return check_object_tangency(c2, r1);
 
 
-	else if (l1 && r2)
-		return check_object_tangency(l1, r2);
-	else if (r1 && l2)
-		return check_object_tangency(l2, r1);
+    else if (l1 && r2)
+        return check_object_tangency(l1, r2);
+    else if (r1 && l2)
+        return check_object_tangency(l2, r1);
 
-	assert(1==0);
+    assert(1==0);
 
-	return false;
+    return false;
 }

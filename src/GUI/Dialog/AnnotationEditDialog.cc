@@ -25,40 +25,40 @@ namespace degate
 {
     AnnotationEditDialog::AnnotationEditDialog(QWidget* parent, const Annotation_shptr& annotation)
             : QDialog(parent), annotation(annotation), fill_color(parent), frame_color(parent)
-	{
-		text_label.setText(tr("Text:"));
-		text.setText(QString::fromStdString(annotation->get_name()));
-		
-		fill_color_label.setText(tr("Fill color:"));
-		fill_color.set_color(annotation->get_fill_color());
-		
-		frame_color_label.setText(tr("Frame color:"));
-		frame_color.set_color(annotation->get_frame_color());
+    {
+        text_label.setText(tr("Text:"));
+        text.setText(QString::fromStdString(annotation->get_name()));
 
-		validate_button.setText(tr("Ok"));
-		cancel_button.setText(tr("Cancel"));
+        fill_color_label.setText(tr("Fill color:"));
+        fill_color.set_color(annotation->get_fill_color());
 
-		layout.addWidget(&text_label, 0, 0);
-		layout.addWidget(&text, 0, 1);
-		layout.addWidget(&fill_color_label, 1, 0);
-		layout.addWidget(&fill_color, 1, 1);
-		layout.addWidget(&frame_color_label, 2, 0);
-		layout.addWidget(&frame_color, 2, 1);
-		layout.addWidget(&validate_button, 3, 0);
-		layout.addWidget(&cancel_button, 3, 1);
+        frame_color_label.setText(tr("Frame color:"));
+        frame_color.set_color(annotation->get_frame_color());
 
-		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
-		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
+        validate_button.setText(tr("Ok"));
+        cancel_button.setText(tr("Cancel"));
 
-		setLayout(&layout);
-	}
+        layout.addWidget(&text_label, 0, 0);
+        layout.addWidget(&text, 0, 1);
+        layout.addWidget(&fill_color_label, 1, 0);
+        layout.addWidget(&fill_color, 1, 1);
+        layout.addWidget(&frame_color_label, 2, 0);
+        layout.addWidget(&frame_color, 2, 1);
+        layout.addWidget(&validate_button, 3, 0);
+        layout.addWidget(&cancel_button, 3, 1);
 
-	void AnnotationEditDialog::validate()
-	{
-		annotation->set_name(text.text().toStdString());
-		annotation->set_fill_color(fill_color.get_color());
-		annotation->set_frame_color(frame_color.get_color());
+        QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
+        QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
 
-		accept();
-	}
+        setLayout(&layout);
+    }
+
+    void AnnotationEditDialog::validate()
+    {
+        annotation->set_name(text.text().toStdString());
+        annotation->set_fill_color(fill_color.get_color());
+        annotation->set_frame_color(frame_color.get_color());
+
+        accept();
+    }
 }

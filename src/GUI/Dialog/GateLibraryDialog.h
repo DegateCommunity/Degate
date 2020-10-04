@@ -33,54 +33,54 @@
 namespace degate
 {
 
-	/**
-	 * @class GateLibraryDialog
-	 * @brief Dialog to show all gates of a project.
-	 *
-	 * It will show all gates template of the current active project.
-	 * It have a button to edit them individually.
-	 *
-	 * @see QDialog
-	 */
-	class GateLibraryDialog : public QDialog
-	{
-		Q_OBJECT
-		
-	public:
+    /**
+     * @class GateLibraryDialog
+     * @brief Dialog to show all gates of a project.
+     *
+     * It will show all gates template of the current active project.
+     * It have a button to edit them individually.
+     *
+     * @see QDialog
+     */
+    class GateLibraryDialog : public QDialog
+    {
+        Q_OBJECT
 
-		/**
-		 * Create the dialog, to show it call the exec function.
-		 *
-		 * @param parent : the parent of the dialog.
-		 * @param project : the current active project.
-		 *
-		 * @see QDialog
-		 */
-		GateLibraryDialog(QWidget* parent, const Project_shptr& project);
-		~GateLibraryDialog() override = default;
+    public:
 
-	public slots:
-		/**
-		 * Run a gate edit dialog on all the selected gates template (selected rows).
-		 */
-		void on_gate_edit_button();
+        /**
+         * Create the dialog, to show it call the exec function.
+         *
+         * @param parent : the parent of the dialog.
+         * @param project : the current active project.
+         *
+         * @see QDialog
+         */
+        GateLibraryDialog(QWidget* parent, const Project_shptr& project);
+        ~GateLibraryDialog() override = default;
 
-		/**
-		 * Remove a gate template and all derived gate instances.
-		 */
-		void on_gate_remove_button();
+    public slots:
+        /**
+         * Run a gate edit dialog on all the selected gates template (selected rows).
+         */
+        void on_gate_edit_button();
 
-	private:
-		Project_shptr project;
-		QVBoxLayout layout;
+        /**
+         * Remove a gate template and all derived gate instances.
+         */
+        void on_gate_remove_button();
 
-		QHBoxLayout buttons_layout;
-		GateTemplateListWidget list;
-		QPushButton edit_gate_button;
-		QPushButton remove_gate_button;
-		QPushButton validate_button;
-		
-	};
+    private:
+        Project_shptr project;
+        QVBoxLayout layout;
+
+        QHBoxLayout buttons_layout;
+        GateTemplateListWidget list;
+        QPushButton edit_gate_button;
+        QPushButton remove_gate_button;
+        QPushButton validate_button;
+
+    };
 }
 
 #endif

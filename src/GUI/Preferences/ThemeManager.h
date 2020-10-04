@@ -34,116 +34,116 @@
 namespace degate
 {
 
-	/**
-	 * @enum Theme
-	 * @brief Enum of supported themes.
-	 *
-	 * @see ThemeManager
-	 */
-	enum Theme
-	{
-		NATIVE_THEME = 0, /*!< Native (OS) theme. */
-		LIGHT_THEME = 1, /*!< Light theme. */
-		DARK_THEME   = 2 /*!< Dark theme. */
-	};
+    /**
+     * @enum Theme
+     * @brief Enum of supported themes.
+     *
+     * @see ThemeManager
+     */
+    enum Theme
+    {
+        NATIVE_THEME = 0, /*!< Native (OS) theme. */
+        LIGHT_THEME = 1, /*!< Light theme. */
+        DARK_THEME   = 2 /*!< Dark theme. */
+    };
 
-	/**
-	 * @enum IconTheme
-	 * @brief Enum of supported icon themes.
-	 *
-	 * @see ThemeManager
-	 */
-	enum IconTheme
-	{
-		LIGHT_ICON_THEME = 0, /*!< Light icon theme (use with dark theme) */
-		DARK_ICON_THEME = 1 /*!< Dark icon theme (use with light theme) */
-	};
+    /**
+     * @enum IconTheme
+     * @brief Enum of supported icon themes.
+     *
+     * @see ThemeManager
+     */
+    enum IconTheme
+    {
+        LIGHT_ICON_THEME = 0, /*!< Light icon theme (use with dark theme) */
+        DARK_ICON_THEME = 1 /*!< Dark icon theme (use with light theme) */
+    };
 
-	/**
-	 * @class ThemeManager
-	 * @brief Handle the current active theme and icon theme.
-	 *
-	 * @see SingletonBase
-	 */
-	class ThemeManager : public QObject, public SingletonBase<ThemeManager>
-	{
+    /**
+     * @class ThemeManager
+     * @brief Handle the current active theme and icon theme.
+     *
+     * @see SingletonBase
+     */
+    class ThemeManager : public QObject, public SingletonBase<ThemeManager>
+    {
         Q_OBJECT
 
-	public:
+    public:
 
-		/**
-		 * Create the theme manager.
-		 */
-		ThemeManager();
-		~ThemeManager();
+        /**
+         * Create the theme manager.
+         */
+        ThemeManager();
+        ~ThemeManager();
 
-		/**
-		 * Get the path of the icon following the theme used and his name.
-		 *
-		 * @param icon_name : the icon name.
-		 */
-		QString get_icon_path(const QString& icon_name);
+        /**
+         * Get the path of the icon following the theme used and his name.
+         *
+         * @param icon_name : the icon name.
+         */
+        QString get_icon_path(const QString& icon_name);
 
-	public slots:
-	    /**
-	     * Update the icon theme.
-	     * Will emit icon_theme_changed().
-	     */
+    public slots:
+        /**
+         * Update the icon theme.
+         * Will emit icon_theme_changed().
+         */
         void update_icon_theme();
 
-		/**
+        /**
          * Apply the current theme.
          */
-		void update_theme();
+        void update_theme();
 
     signals:
         /**
          * Emitted when the icon theme changed.
          */
         void icon_theme_changed();
-		
-	};
 
-	/**
-	 * Convert the theme to string.
-	 * e.g. DARK_THEME => "dark".
-	 *
-	 * @param theme : the theme to convert into string.
-	 *
-	 * @return Returns the theme converted into string.
-	 */
-	std::string theme_to_string(Theme theme);
+    };
 
-	/**
-	 * Convert a string to theme.
-	 * e.g. "dark" => DARK_THEME.
-	 *
-	 * @param theme : the string that handle the theme.
-	 *
-	 * @return Returns the theme from the string.
-	 */
-	Theme string_to_theme(const std::string& theme);
+    /**
+     * Convert the theme to string.
+     * e.g. DARK_THEME => "dark".
+     *
+     * @param theme : the theme to convert into string.
+     *
+     * @return Returns the theme converted into string.
+     */
+    std::string theme_to_string(Theme theme);
 
-	/**
-	 * Convert the icon theme to string.
-	 * e.g. DARK_ICON_THEME => "dark".
-	 *
-	 * @param theme : the icon theme to convert into string.
-	 *
-	 * @return Returns the icon theme converted into string.
-	 */
-	std::string icon_theme_to_string(IconTheme theme);
+    /**
+     * Convert a string to theme.
+     * e.g. "dark" => DARK_THEME.
+     *
+     * @param theme : the string that handle the theme.
+     *
+     * @return Returns the theme from the string.
+     */
+    Theme string_to_theme(const std::string& theme);
 
-	/**
-	 * Convert a string to icon theme.
-	 * e.g. "dark" => DARK_ICON_THEME.
-	 *
-	 * @param theme : the string that handle the icon theme.
-	 *
-	 * @return Returns the icon theme from the string.
-	 */
-	IconTheme string_to_icon_theme(const std::string& theme);
-	
+    /**
+     * Convert the icon theme to string.
+     * e.g. DARK_ICON_THEME => "dark".
+     *
+     * @param theme : the icon theme to convert into string.
+     *
+     * @return Returns the icon theme converted into string.
+     */
+    std::string icon_theme_to_string(IconTheme theme);
+
+    /**
+     * Convert a string to icon theme.
+     * e.g. "dark" => DARK_ICON_THEME.
+     *
+     * @param theme : the string that handle the icon theme.
+     *
+     * @return Returns the icon theme from the string.
+     */
+    IconTheme string_to_icon_theme(const std::string& theme);
+
 }
 
 /**

@@ -37,223 +37,223 @@
 namespace degate
 {
 
-	/**
-	 * @class LayerBackgroundSelectionButton
-	 * @brief Layer background file selection, on click open a selection window and hold the image path.
-	 *
-	 * It show the state, red if no background set, green otherwise.
-	 *
-	 * @see QPushButton
-	 */
-	class LayerBackgroundSelectionButton : public QPushButton
-	{
-		Q_OBJECT
-		
-	public:
-		/**
-		 * Specify the concerned layer to set the state of the button (if the layer already have a background image so the state will be true == green color).
-		 *
-		 * @param parent : the parent of the button.
-		 * @param layer : the concerned layer.
-		 */
-		LayerBackgroundSelectionButton(QWidget* parent, const Layer_shptr& layer);
+    /**
+     * @class LayerBackgroundSelectionButton
+     * @brief Layer background file selection, on click open a selection window and hold the image path.
+     *
+     * It show the state, red if no background set, green otherwise.
+     *
+     * @see QPushButton
+     */
+    class LayerBackgroundSelectionButton : public QPushButton
+    {
+        Q_OBJECT
 
-		/**
-		 * Create a layer background selection button from another one (copy).
-		 *
-		 * @param copy : the other layer background selection button to copy.
-		 */
-		LayerBackgroundSelectionButton(LayerBackgroundSelectionButton& copy);
-		~LayerBackgroundSelectionButton() override = default;
+    public:
+        /**
+         * Specify the concerned layer to set the state of the button (if the layer already have a background image so the state will be true == green color).
+         *
+         * @param parent : the parent of the button.
+         * @param layer : the concerned layer.
+         */
+        LayerBackgroundSelectionButton(QWidget* parent, const Layer_shptr& layer);
 
-		/**
-		 * Was the button clicked and a new image selected.
-		 *
-		 * @return Returns true if a new image had been selected.
-		 */
-		bool has_new_image();
+        /**
+         * Create a layer background selection button from another one (copy).
+         *
+         * @param copy : the other layer background selection button to copy.
+         */
+        LayerBackgroundSelectionButton(LayerBackgroundSelectionButton& copy);
+        ~LayerBackgroundSelectionButton() override = default;
 
-		/**
-		 * Get the image path, empty if no new image selected.
-		 * @see has_new_image()
-		 *
-		 * @return Returns the new image path (can be empty if no new image).
-		 */
-		std::string get_image_path();
+        /**
+         * Was the button clicked and a new image selected.
+         *
+         * @return Returns true if a new image had been selected.
+         */
+        bool has_new_image();
 
-		/**
-		 * Get the state of the button.
-		 *
-		 * @return Returns true if green (image set), false if red (not image set).
-		 */
-		bool get_state();
+        /**
+         * Get the image path, empty if no new image selected.
+         * @see has_new_image()
+         *
+         * @return Returns the new image path (can be empty if no new image).
+         */
+        std::string get_image_path();
 
-	private slots:
+        /**
+         * Get the state of the button.
+         *
+         * @return Returns true if green (image set), false if red (not image set).
+         */
+        bool get_state();
 
-		/**
-		 * The function is called when the button is clicked.
-		 * It will open a image selection window to select the new background.
-		 */
-		void on_button_clicked();
+    private slots:
 
-		/**
-		 * Change the button color.
-		 *
-		 * @param value : if true the color will turn green, if falser the color will turn red.
-		 */
-		void change_button_color(bool value);
+        /**
+         * The function is called when the button is clicked.
+         * It will open a image selection window to select the new background.
+         */
+        void on_button_clicked();
 
-	private:
-		std::string image_path;
-		bool new_image = false;
-		bool state;
-		
-	};
+        /**
+         * Change the button color.
+         *
+         * @param value : if true the color will turn green, if falser the color will turn red.
+         */
+        void change_button_color(bool value);
 
-	/**
-	 * @class LayerTypeSelectionBox
-	 * @brief Combo box to select the type of a layer.
-	 *
-	 * @see QComboBox
-	 */
-	class LayerTypeSelectionBox : public QComboBox
-	{
-		Q_OBJECT
-		
-	public:
+    private:
+        std::string image_path;
+        bool new_image = false;
+        bool state;
 
-		/**
-		 * Create the layer type selection box.
-		 *
-		 * @param type : the layer type.
-		 * @param parent : the parent of the combo box.
-		 */
-		LayerTypeSelectionBox(Layer::LAYER_TYPE type, QWidget* parent);
+    };
 
-		/**
-		 * Create the layer type selection box from another one (copy).
-		 *
-		 * @param copy : the other box to copy.
-		 */
-		LayerTypeSelectionBox(LayerTypeSelectionBox& copy);
-		~LayerTypeSelectionBox() override = default;
+    /**
+     * @class LayerTypeSelectionBox
+     * @brief Combo box to select the type of a layer.
+     *
+     * @see QComboBox
+     */
+    class LayerTypeSelectionBox : public QComboBox
+    {
+        Q_OBJECT
 
-		/**
-		 * Get the layer type.
-		 *
-		 * @return Returns the layer type of the attached layer.
-		 */
-		Layer::LAYER_TYPE get_layer_type();
+    public:
 
-		/**
-		 * Set the layer type.
-		 *
-		 * @param type : the new layer type.
-		 */
-		void set_layer_type(Layer::LAYER_TYPE type);
-		
-	private:
-		
-		Layer::LAYER_TYPE type;
+        /**
+         * Create the layer type selection box.
+         *
+         * @param type : the layer type.
+         * @param parent : the parent of the combo box.
+         */
+        LayerTypeSelectionBox(Layer::LAYER_TYPE type, QWidget* parent);
 
-		std::map<Layer::LAYER_TYPE, QString> types;
-		
-	};
+        /**
+         * Create the layer type selection box from another one (copy).
+         *
+         * @param copy : the other box to copy.
+         */
+        LayerTypeSelectionBox(LayerTypeSelectionBox& copy);
+        ~LayerTypeSelectionBox() override = default;
 
-	/**
-	 * @struct LayersEditRow
-	 * @brief Describe a row of the layer edit widget with all his elements.
-	 */
-	struct LayersEditRow
-	{
-		QTableWidgetItem* id; /*!< The item representing the id of the layer. */
-		QTableWidgetItem* enabled; /*!< The item representing the state of the layer. */
-		QTableWidgetItem* description; /*!< The item representing the description of the layer. */
-		LayerTypeSelectionBox* type; /*!< The box representing the type of the layer. */
-		LayerBackgroundSelectionButton* background; /*!< The background selection button of the layer. */
-	};
+        /**
+         * Get the layer type.
+         *
+         * @return Returns the layer type of the attached layer.
+         */
+        Layer::LAYER_TYPE get_layer_type();
 
-	/**
-	 * @enum RowMoveDirection
-	 * @brief Describe the rown move direction.
-	 */
-	enum RowMoveDirection
-	{
-		UP = 0, /*!< Move the row up. */
-		DOWN = 1 /*!< Move the row down. */
-	};
+        /**
+         * Set the layer type.
+         *
+         * @param type : the new layer type.
+         */
+        void set_layer_type(Layer::LAYER_TYPE type);
 
-	/**
-	 * @class LayersEditWidget
-	 * @brief Widget to edit all layers of a project.
-	 *
-	 * @warning The list is ordered !
-	 *
-	 * @see QWidget
-	 */
-	class LayersEditWidget : public QWidget
-	{
-		Q_OBJECT
-		
-	public:
-		
-		/**
-		 * Create a layers edit widget.
-		 *
-		 * @param parent : the parent of the widget.
-		 * @param project : the current active project.
-		 */
-		LayersEditWidget(QWidget* parent, const Project_shptr& project);
-		~LayersEditWidget() override = default;
-		
-	public slots:
-		/**
-		 * Add a new layer to the list.
-		 */
-		void on_layer_add();
+    private:
 
-		/**
-		 * Remove a layer of the list.
-		 */
-		void on_layer_remove();
+        Layer::LAYER_TYPE type;
 
-		/**
-		 * Move a layer up (the list is ordered).
-		 */
-		void on_layer_up();
+        std::map<Layer::LAYER_TYPE, QString> types;
 
-		/**
-		 * Move a layer down (the list is ordered).
-		 */
-		void on_layer_down();
+    };
 
-		/**
-		 * Validate all changes and apply them.
-		 */
-		void validate();
-		
-	private:
-		/**
-		 * Move the row.
-		 *
-		 * @param row_index : the index of the row to move.
-		 * @param direction : the direction to move the row (@see RowMoveDirection).
-		 */
-		void move_row(int row_index, RowMoveDirection direction);
+    /**
+     * @struct LayersEditRow
+     * @brief Describe a row of the layer edit widget with all his elements.
+     */
+    struct LayersEditRow
+    {
+        QTableWidgetItem* id; /*!< The item representing the id of the layer. */
+        QTableWidgetItem* enabled; /*!< The item representing the state of the layer. */
+        QTableWidgetItem* description; /*!< The item representing the description of the layer. */
+        LayerTypeSelectionBox* type; /*!< The box representing the type of the layer. */
+        LayerBackgroundSelectionButton* background; /*!< The background selection button of the layer. */
+    };
 
-		Project_shptr project;
-		QGridLayout layout;
+    /**
+     * @enum RowMoveDirection
+     * @brief Describe the rown move direction.
+     */
+    enum RowMoveDirection
+    {
+        UP = 0, /*!< Move the row up. */
+        DOWN = 1 /*!< Move the row down. */
+    };
 
-		// Layers
-		QLabel layers_label;
-		QTableWidget layers;
-		QHBoxLayout layers_add_remove_buttons_layout;
-		QPushButton layers_add_button;
-		QPushButton layers_remove_button;
-		QHBoxLayout layers_move_buttons_layout;
-		QPushButton layers_up_buttons;
-		QPushButton layers_down_buttons;
-	};
+    /**
+     * @class LayersEditWidget
+     * @brief Widget to edit all layers of a project.
+     *
+     * @warning The list is ordered !
+     *
+     * @see QWidget
+     */
+    class LayersEditWidget : public QWidget
+    {
+        Q_OBJECT
+
+    public:
+
+        /**
+         * Create a layers edit widget.
+         *
+         * @param parent : the parent of the widget.
+         * @param project : the current active project.
+         */
+        LayersEditWidget(QWidget* parent, const Project_shptr& project);
+        ~LayersEditWidget() override = default;
+
+    public slots:
+        /**
+         * Add a new layer to the list.
+         */
+        void on_layer_add();
+
+        /**
+         * Remove a layer of the list.
+         */
+        void on_layer_remove();
+
+        /**
+         * Move a layer up (the list is ordered).
+         */
+        void on_layer_up();
+
+        /**
+         * Move a layer down (the list is ordered).
+         */
+        void on_layer_down();
+
+        /**
+         * Validate all changes and apply them.
+         */
+        void validate();
+
+    private:
+        /**
+         * Move the row.
+         *
+         * @param row_index : the index of the row to move.
+         * @param direction : the direction to move the row (@see RowMoveDirection).
+         */
+        void move_row(int row_index, RowMoveDirection direction);
+
+        Project_shptr project;
+        QGridLayout layout;
+
+        // Layers
+        QLabel layers_label;
+        QTableWidget layers;
+        QHBoxLayout layers_add_remove_buttons_layout;
+        QPushButton layers_add_button;
+        QPushButton layers_remove_button;
+        QHBoxLayout layers_move_buttons_layout;
+        QPushButton layers_up_buttons;
+        QPushButton layers_down_buttons;
+    };
 }
 
 #endif

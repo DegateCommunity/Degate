@@ -28,32 +28,32 @@
 
 namespace degate
 {
-	class BoundingBox
-	{
-	private:
+    class BoundingBox
+    {
+    private:
         float min_x, max_x, min_y, max_y;
 
-	public:
-		BoundingBox();
+    public:
+        BoundingBox();
 
-		BoundingBox(float min_x, float max_x, float min_y, float max_y);
-		BoundingBox(float width, float height);
-		BoundingBox(const BoundingBox&);
+        BoundingBox(float min_x, float max_x, float min_y, float max_y);
+        BoundingBox(float width, float height);
+        BoundingBox(const BoundingBox&);
 
-		virtual ~BoundingBox();
+        virtual ~BoundingBox();
 
-		BoundingBox const& get_bounding_box() const;
-		bool in_shape(float x, float y, float max_distance = 0) const;
+        BoundingBox const& get_bounding_box() const;
+        bool in_shape(float x, float y, float max_distance = 0) const;
 
-		/**
-		 * Check if this bounding box is completly within the bounding box given as parameter.
-		 */
-		bool in_bounding_box(BoundingBox const& bbox) const;
-		bool operator==(const BoundingBox& other) const;
-		bool operator!=(const BoundingBox& other) const;
+        /**
+         * Check if this bounding box is completly within the bounding box given as parameter.
+         */
+        bool in_bounding_box(BoundingBox const& bbox) const;
+        bool operator==(const BoundingBox& other) const;
+        bool operator!=(const BoundingBox& other) const;
 
-		bool intersects(BoundingBox const& rect) const;
-		bool complete_within(BoundingBox const& rect) const;
+        bool intersects(BoundingBox const& rect) const;
+        bool complete_within(BoundingBox const& rect) const;
 
         float get_width() const;
         float get_height() const;
@@ -66,19 +66,19 @@ namespace degate
         float get_center_x() const;
         float get_center_y() const;
 
-		void set_min_x(float min_x);
-		void set_min_y(float min_y);
-		void set_max_x(float max_x);
-		void set_max_y(float max_y);
+        void set_min_x(float min_x);
+        void set_min_y(float min_y);
+        void set_max_x(float max_x);
+        void set_max_y(float max_y);
 
-		void set(float min_x, float max_x, float min_y, float max_y);
+        void set(float min_x, float max_x, float min_y, float max_y);
 
-		void shift_x(float delta_x);
-		void shift_y(float delta_y);
-		void shift(float delta_x, float delta_y);
+        void shift_x(float delta_x);
+        void shift_y(float delta_y);
+        void shift(float delta_x, float delta_y);
 
-		void print(std::ostream& os = std::cout, int n_tabs = 0) const;
-		std::string to_string() const;
-	};
+        void print(std::ostream& os = std::cout, int n_tabs = 0) const;
+        std::string to_string() const;
+    };
 }
 #endif

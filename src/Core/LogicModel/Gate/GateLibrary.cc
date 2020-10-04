@@ -35,133 +35,133 @@ GateLibrary::~GateLibrary()
 
 DeepCopyable_shptr GateLibrary::clone_shallow() const
 {
-	return std::make_shared<GateLibrary>();
+    return std::make_shared<GateLibrary>();
 }
 
 void GateLibrary::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
-	auto clone = std::dynamic_pointer_cast<GateLibrary>(dest);
-	std::for_each(templates.begin(), templates.end(), [&](const gate_lib_collection_t::value_type& v)
-	{
-		clone->templates[v.first] = std::dynamic_pointer_cast<GateTemplate>(v.second->clone_deep(oldnew));
-	});
+    auto clone = std::dynamic_pointer_cast<GateLibrary>(dest);
+    std::for_each(templates.begin(), templates.end(), [&](const gate_lib_collection_t::value_type& v)
+    {
+        clone->templates[v.first] = std::dynamic_pointer_cast<GateTemplate>(v.second->clone_deep(oldnew));
+    });
 }
 
 void GateLibrary::remove_template(GateTemplate_shptr gate_template)
 {
-	templates.erase(gate_template->get_object_id());
+    templates.erase(gate_template->get_object_id());
 }
 
 void GateLibrary::add_template(GateTemplate_shptr gate_template)
 {
-	if (gate_template == nullptr) throw InvalidPointerException();
-	if (!gate_template->has_valid_object_id())
-		throw InvalidObjectIDException("Can't add a gate template to the gate library, "
-			"if the template has no valid object ID.");
-	else
-		templates[gate_template->get_object_id()] = gate_template;
+    if (gate_template == nullptr) throw InvalidPointerException();
+    if (!gate_template->has_valid_object_id())
+        throw InvalidObjectIDException("Can't add a gate template to the gate library, "
+            "if the template has no valid object ID.");
+    else
+        templates[gate_template->get_object_id()] = gate_template;
 }
 
 bool GateLibrary::exists_template(object_id_t id) const
 {
-	return templates.find(id) != templates.end();
+    return templates.find(id) != templates.end();
 }
 
 
 GateTemplate_shptr GateLibrary::get_template(object_id_t id)
 {
-	if (id == 0)
-		throw InvalidObjectIDException("Error in get_template(): Can't lookup template with id == 0");
+    if (id == 0)
+        throw InvalidObjectIDException("Error in get_template(): Can't lookup template with id == 0");
 
-	template_iterator found = templates.find(id);
-	if (found == templates.end())
-	{
-		boost::format f("Error in get_template(): Can't lookup gate template with ID %1%");
-		f % id;
-		throw CollectionLookupException(f.str());
-	}
-	return found->second;
+    template_iterator found = templates.find(id);
+    if (found == templates.end())
+    {
+        boost::format f("Error in get_template(): Can't lookup gate template with ID %1%");
+        f % id;
+        throw CollectionLookupException(f.str());
+    }
+    return found->second;
 }
 
 
 bool GateLibrary::is_name_in_use(std::string const& name) const
 {
-	for (const_template_iterator iter = begin(); iter != end(); ++iter)
-	{
-		if ((*iter).second->has_name() && (*iter).second->get_name() == name)
-			return true;
-	}
+    for (const_template_iterator iter = begin(); iter != end(); ++iter)
+    {
+        if ((*iter).second->has_name() && (*iter).second->get_name() == name)
+            return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool GateLibrary::exists_template_port(object_id_t port_id)
 {
-	for (template_iterator iter = begin(); iter != end(); ++iter)
-	{
-		GateTemplate_shptr tmpl((*iter).second);
+    for (template_iterator iter = begin(); iter != end(); ++iter)
+    {
+        GateTemplate_shptr tmpl((*iter).second);
 
-		for (GateTemplate::port_iterator piter = tmpl->ports_begin();
-		     piter != tmpl->ports_end();
-		     piter++)
-		{
-			if ((*piter)->get_object_id() == port_id) return true;
-		}
-	}
+        for (GateTemplate::port_iterator piter = tmpl->ports_begin();
+             piter != tmpl->ports_end();
+             piter++)
+        {
+            if ((*piter)->get_object_id() == port_id) return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 
 GateTemplatePort_shptr GateLibrary::get_template_port(object_id_t port_id)
 {
-	for (template_iterator iter = begin(); iter != end(); ++iter)
-	{
-		GateTemplate_shptr tmpl((*iter).second);
+    for (template_iterator iter = begin(); iter != end(); ++iter)
+    {
+        GateTemplate_shptr tmpl((*iter).second);
 
-		for (GateTemplate::port_iterator piter = tmpl->ports_begin();
-		     piter != tmpl->ports_end();
-		     piter++)
-		{
-			if ((*piter)->get_object_id() == port_id) return *piter;
-		}
-	}
+        for (GateTemplate::port_iterator piter = tmpl->ports_begin();
+             piter != tmpl->ports_end();
+             piter++)
+        {
+            if ((*piter)->get_object_id() == port_id) return *piter;
+        }
+    }
 
-	std::ostringstream stm;
-	stm << "There is no template port with ID. " << port_id << " in the gate library.";
-	throw CollectionLookupException(stm.str());
+    std::ostringstream stm;
+    stm << "There is no template port with ID. " << port_id << " in the gate library.";
+    throw CollectionLookupException(stm.str());
 }
 
 GateLibrary::template_iterator GateLibrary::begin()
 {
-	return templates.begin();
+    return templates.begin();
 }
 
 
 GateLibrary::template_iterator GateLibrary::end()
 {
-	return templates.end();
+    return templates.end();
 }
 
 GateLibrary::const_template_iterator GateLibrary::begin() const
 {
-	return templates.begin();
+    return templates.begin();
 }
 
 
 GateLibrary::const_template_iterator GateLibrary::end() const
 {
-	return templates.end();
+    return templates.end();
 }
 
 
 void GateLibrary::print(std::ostream& os)
 {
-	for (template_iterator iter = begin(); iter != end(); ++iter)
-	{
-		GateTemplate_shptr tmpl = (*iter).second;
+    for (template_iterator iter = begin(); iter != end(); ++iter)
+    {
+        GateTemplate_shptr tmpl = (*iter).second;
 
-		tmpl->print(os);
-		os << std::endl;
-	}
+        tmpl->print(os);
+        os << std::endl;
+    }
 }

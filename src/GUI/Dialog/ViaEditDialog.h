@@ -36,11 +36,11 @@
 namespace degate
 {
     /**
-	 * @class ViaEditDialog
-	 * @brief Dialog to edit a via.
-	 *
-	 * @see QDialog
-	 */
+     * @class ViaEditDialog
+     * @brief Dialog to edit a via.
+     *
+     * @see QDialog
+     */
     class ViaEditDialog : public QDialog
     {
         Q_OBJECT
@@ -48,14 +48,14 @@ namespace degate
     public:
 
         /**
-		 * Create the dialog, to show it call the exec function.
-		 *
+         * Create the dialog, to show it call the exec function.
+         *
          * @param parent : the parent of the dialog.
-		 * @param via : the via to edit.
+         * @param via : the via to edit.
          * @param project : the current project.
-		 *
-		 * @see QDialog
-		 */
+         *
+         * @see QDialog
+         */
         ViaEditDialog(QWidget* parent, Via_shptr& via, Project_shptr& project);
         ~ViaEditDialog() override = default;
 

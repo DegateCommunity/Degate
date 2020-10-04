@@ -28,48 +28,48 @@
 
 namespace degate
 {
-	/**
-	 * Processor: Median filter a single channel image.
-	 */
-	template <typename ImageTypeIn, typename ImageTypeOut>
-	class IPMedianFilter : public ImageProcessorBase
-	{
-	private:
+    /**
+     * Processor: Median filter a single channel image.
+     */
+    template <typename ImageTypeIn, typename ImageTypeOut>
+    class IPMedianFilter : public ImageProcessorBase
+    {
+    private:
 
-		unsigned int median_filter_width;
+        unsigned int median_filter_width;
 
-	public:
+    public:
 
-		/**
-		 * The constructor.
-		 */
-		IPMedianFilter(unsigned int median_filter_width = 3) :
-			ImageProcessorBase("IPNormalize",
-			                   "Normalize an image.",
-			                   false,
-			                   typeid(typename ImageTypeIn::pixel_type),
-			                   typeid(typename ImageTypeOut::pixel_type)),
-			median_filter_width(median_filter_width)
-		{
-		}
+        /**
+         * The constructor.
+         */
+        IPMedianFilter(unsigned int median_filter_width = 3) :
+            ImageProcessorBase("IPNormalize",
+                               "Normalize an image.",
+                               false,
+                               typeid(typename ImageTypeIn::pixel_type),
+                               typeid(typename ImageTypeOut::pixel_type)),
+            median_filter_width(median_filter_width)
+        {
+        }
 
 
-		virtual ImageBase_shptr run(ImageBase_shptr in)
-		{
-			assert(in != nullptr);
+        virtual ImageBase_shptr run(ImageBase_shptr in)
+        {
+            assert(in != nullptr);
 
-			std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
+            std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
 
-			std::shared_ptr<ImageTypeOut> img_out(new ImageTypeOut(in->get_width(), in->get_height()));
+            std::shared_ptr<ImageTypeOut> img_out(new ImageTypeOut(in->get_width(), in->get_height()));
 
-			assert(img_in != nullptr);
-			assert(img_out != nullptr);
+            assert(img_in != nullptr);
+            assert(img_out != nullptr);
 
-			median_filter<ImageTypeOut, ImageTypeIn>(img_out, img_in, median_filter_width);
+            median_filter<ImageTypeOut, ImageTypeIn>(img_out, img_in, median_filter_width);
 
-			return img_out;
-		}
-	};
+            return img_out;
+        }
+    };
 }
 
 #endif

@@ -28,30 +28,30 @@
 using namespace degate;
 
 Rectangle::Rectangle() :
-	min_x(0),
-	max_x(0),
-	min_y(0),
-	max_y(0)
+    min_x(0),
+    max_x(0),
+    min_y(0),
+    max_y(0)
 {
-	calculate_bounding_box();
+    calculate_bounding_box();
 }
 
 Rectangle::Rectangle(float min_x, float max_x, float min_y, float max_y)
 {
-	this->min_x = std::min(min_x, max_x);
-	this->max_x = std::max(min_x, max_x);
-	this->min_y = std::min(min_y, max_y);
-	this->max_y = std::max(min_y, max_y);
-	calculate_bounding_box();
+    this->min_x = std::min(min_x, max_x);
+    this->max_x = std::max(min_x, max_x);
+    this->min_y = std::min(min_y, max_y);
+    this->max_y = std::max(min_y, max_y);
+    calculate_bounding_box();
 }
 
 Rectangle::Rectangle(const Rectangle& o)
 {
-	this->min_x = o.min_x;
-	this->max_x = o.max_x;
-	this->min_y = o.min_y;
-	this->max_y = o.max_y;
-	calculate_bounding_box();
+    this->min_x = o.min_x;
+    this->max_x = o.max_x;
+    this->min_y = o.min_y;
+    this->max_y = o.max_y;
+    calculate_bounding_box();
 }
 
 Rectangle::~Rectangle()
@@ -60,39 +60,39 @@ Rectangle::~Rectangle()
 
 void Rectangle::clone_deep_into(DeepCopyable_shptr dest, oldnew_t* oldnew) const
 {
-	auto clone = std::dynamic_pointer_cast<Rectangle>(dest);
-	clone->bounding_box = bounding_box;
-	clone->min_x = min_x;
-	clone->max_x = max_x;
-	clone->min_y = min_y;
-	clone->max_y = max_y;
+    auto clone = std::dynamic_pointer_cast<Rectangle>(dest);
+    clone->bounding_box = bounding_box;
+    clone->min_x = min_x;
+    clone->max_x = max_x;
+    clone->min_y = min_y;
+    clone->max_y = max_y;
 }
 
 bool Rectangle::in_shape(float x, float y, float max_distance) const
 {
-	return (x >= min_x - max_distance && x <= max_x + max_distance &&
-		       y >= min_y - max_distance && y <= max_y + max_distance)
-		       ? true
-		       : false;
+    return (x >= min_x - max_distance && x <= max_x + max_distance &&
+               y >= min_y - max_distance && y <= max_y + max_distance)
+               ? true
+               : false;
 }
 
 BoundingBox const& Rectangle::get_bounding_box() const
 {
-	return bounding_box;
+    return bounding_box;
 }
 
 
 bool Rectangle::operator==(const Rectangle& other) const
 {
-	return (min_x == other.min_x &&
-		max_x == other.max_x &&
-		min_y == other.min_y &&
-		max_y == other.max_y);
+    return (min_x == other.min_x &&
+        max_x == other.max_x &&
+        min_y == other.min_y &&
+        max_y == other.max_y);
 }
 
 bool Rectangle::operator!=(const Rectangle& other) const
 {
-	return !(*this == other);
+    return !(*this == other);
 }
 
 /**
@@ -101,18 +101,18 @@ bool Rectangle::operator!=(const Rectangle& other) const
 
 bool Rectangle::in_bounding_box(BoundingBox const& bbox) const
 {
-	return (bbox.get_min_x() <= min_x ||
-		bbox.get_max_x() >= max_x ||
-		bbox.get_min_y() <= min_y ||
-		bbox.get_max_y() >= max_y);
+    return (bbox.get_min_x() <= min_x ||
+        bbox.get_max_x() >= max_x ||
+        bbox.get_min_y() <= min_y ||
+        bbox.get_max_y() >= max_y);
 }
 
 bool Rectangle::intersects(Rectangle const& rect) const
 {
-	return !(rect.min_x > max_x ||
-		rect.max_x < min_x ||
-		rect.min_y > max_y ||
-		rect.max_y < min_y);
+    return !(rect.min_x > max_x ||
+        rect.max_x < min_x ||
+        rect.min_y > max_y ||
+        rect.max_y < min_y);
 }
 
 
@@ -122,105 +122,105 @@ bool Rectangle::intersects(Rectangle const& rect) const
 
 bool Rectangle::complete_within(Rectangle const& rect) const
 {
-	return (min_x <= rect.min_x &&
-		max_x >= rect.max_x &&
-		min_y <= rect.min_y &&
-		max_y >= rect.max_y);
+    return (min_x <= rect.min_x &&
+        max_x >= rect.max_x &&
+        min_y <= rect.min_y &&
+        max_y >= rect.max_y);
 }
 
 float Rectangle::get_width() const
 {
-	return max_x - min_x;
+    return max_x - min_x;
 }
 
 float Rectangle::get_height() const
 {
-	return max_y - min_y;
+    return max_y - min_y;
 }
 
 float Rectangle::get_min_x() const
 {
-	return min_x;
+    return min_x;
 }
 
 float Rectangle::get_max_x() const
 {
-	return max_x;
+    return max_x;
 }
 
 float Rectangle::get_min_y() const
 {
-	return min_y;
+    return min_y;
 }
 
 float Rectangle::get_max_y() const
 {
-	return max_y;
+    return max_y;
 }
 
 void Rectangle::set_min_x(float min_x)
 {
-	this->min_x = std::min(min_x, max_x);
-	this->max_x = std::max(min_x, max_x);
-	calculate_bounding_box();
+    this->min_x = std::min(min_x, max_x);
+    this->max_x = std::max(min_x, max_x);
+    calculate_bounding_box();
 }
 
 void Rectangle::set_min_y(float min_y)
 {
-	this->min_y = std::min(min_y, max_y);
-	this->max_y = std::max(min_y, max_y);
-	calculate_bounding_box();
+    this->min_y = std::min(min_y, max_y);
+    this->max_y = std::max(min_y, max_y);
+    calculate_bounding_box();
 }
 
 void Rectangle::set_max_x(float max_x)
 {
-	this->min_x = std::min(min_x, max_x);
-	this->max_x = std::max(min_x, max_x);
-	calculate_bounding_box();
+    this->min_x = std::min(min_x, max_x);
+    this->max_x = std::max(min_x, max_x);
+    calculate_bounding_box();
 }
 
 void Rectangle::set_max_y(float max_y)
 {
-	this->min_y = std::min(min_y, max_y);
-	this->max_y = std::max(min_y, max_y);
-	calculate_bounding_box();
+    this->min_y = std::min(min_y, max_y);
+    this->max_y = std::max(min_y, max_y);
+    calculate_bounding_box();
 }
 
 void Rectangle::shift_y(float delta_y)
 {
-	min_y += delta_y;
-	max_y += delta_y;
-	calculate_bounding_box();
+    min_y += delta_y;
+    max_y += delta_y;
+    calculate_bounding_box();
 }
 
 void Rectangle::shift_x(float delta_x)
 {
-	min_x += delta_x;
-	max_x += delta_x;
-	calculate_bounding_box();
+    min_x += delta_x;
+    max_x += delta_x;
+    calculate_bounding_box();
 }
 
 
 float Rectangle::get_center_x() const
 {
-	return min_x + get_width() / 2.0f;
+    return min_x + get_width() / 2.0f;
 }
 
 float Rectangle::get_center_y() const
 {
-	return min_y + get_height() / 2.0f;
+    return min_y + get_height() / 2.0f;
 }
 
 void Rectangle::set_position(float min_x, float max_x, float min_y, float max_y)
 {
-	this->min_x = std::min(min_x, max_x);
-	this->max_x = std::max(min_x, max_x);
-	this->min_y = std::min(min_y, max_y);
-	this->max_y = std::max(min_y, max_y);
-	calculate_bounding_box();
+    this->min_x = std::min(min_x, max_x);
+    this->max_x = std::max(min_x, max_x);
+    this->min_y = std::min(min_y, max_y);
+    this->max_y = std::max(min_y, max_y);
+    calculate_bounding_box();
 }
 
 void Rectangle::calculate_bounding_box()
 {
-	bounding_box = BoundingBox(min_x, max_x, min_y, max_y);
+    bounding_box = BoundingBox(min_x, max_x, min_y, max_y);
 }

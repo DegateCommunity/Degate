@@ -35,59 +35,59 @@
 
 namespace degate
 {
-	class EdgeDetection
-	{
-	private:
+    class EdgeDetection
+    {
+    private:
 
-		IPPipe pipe;
+        IPPipe pipe;
 
-		unsigned int min_x, max_x, min_y, max_y;
-		unsigned int median_filter_width;
+        unsigned int min_x, max_x, min_y, max_y;
+        unsigned int median_filter_width;
 
-		unsigned int blur_kernel_size, border;
-		double sigma;
+        unsigned int blur_kernel_size, border;
+        double sigma;
 
-		TileImage_GS_DOUBLE_shptr i1, i2; // edge images (x direction and y direction)
+        TileImage_GS_DOUBLE_shptr i1, i2; // edge images (x direction and y direction)
 
-		std::string directory; // path for storing debug images
-		bool has_path;
+        std::string directory; // path for storing debug images
+        bool has_path;
 
-	public:
+    public:
 
-		void setup_pipe();
-
-
-		unsigned int get_width() const;
-		unsigned int get_height() const;
-
-		void set_directory(std::string const& path);
-
-		std::string get_directory() const;
-
-		bool has_directory() const;
-
-		void run_edge_detection(ImageBase_shptr in);
-
-		TileImage_GS_DOUBLE_shptr get_horizontal_edges();
-		TileImage_GS_DOUBLE_shptr get_vertical_edges();
-
-		TileImage_GS_DOUBLE_shptr get_edge_magnitude_image(TileImage_GS_DOUBLE_shptr probability_map);
-
-		TileImage_GS_DOUBLE_shptr get_edge_image(TileImage_GS_DOUBLE_shptr probability_map);
+        void setup_pipe();
 
 
-	public:
+        unsigned int get_width() const;
+        unsigned int get_height() const;
 
-		EdgeDetection(unsigned int min_x, unsigned int max_x,
+        void set_directory(std::string const& path);
+
+        std::string get_directory() const;
+
+        bool has_directory() const;
+
+        void run_edge_detection(ImageBase_shptr in);
+
+        TileImage_GS_DOUBLE_shptr get_horizontal_edges();
+        TileImage_GS_DOUBLE_shptr get_vertical_edges();
+
+        TileImage_GS_DOUBLE_shptr get_edge_magnitude_image(TileImage_GS_DOUBLE_shptr probability_map);
+
+        TileImage_GS_DOUBLE_shptr get_edge_image(TileImage_GS_DOUBLE_shptr probability_map);
+
+
+    public:
+
+        EdgeDetection(unsigned int min_x, unsigned int max_x,
                       unsigned int min_y, unsigned int max_y,
                       unsigned int median_filter_width = 3,
                       unsigned int blur_kernel_size = 10,
                       double sigma = 0.5);
 
-		virtual ~EdgeDetection();
+        virtual ~EdgeDetection();
 
-		unsigned int get_border() const;
-	};
+        unsigned int get_border() const;
+    };
 }
 
 

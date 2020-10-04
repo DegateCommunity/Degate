@@ -37,93 +37,93 @@
 
 namespace degate
 {
-	/**
-	 * Representation of an electrically connectable marker object.
-	 */
-	class EMarker : public Circle, public ConnectedLogicModelObject, public RemoteObject
-	{
+    /**
+     * Representation of an electrically connectable marker object.
+     */
+    class EMarker : public Circle, public ConnectedLogicModelObject, public RemoteObject
+    {
     Q_DECLARE_TR_FUNCTIONS(degate::EMarker)
 
-	public:
+    public:
 
-		explicit EMarker()
-		{
-		};
-
-		/**
-		 * Constructor for a via object.
-		 */
-		EMarker(float x, float y, diameter_t diameter = 5, bool is_module_port = false);
-
-		/**
-		 * Destructor for a via object.
-		 */
-		virtual ~EMarker();
-
-		//@{
-		DeepCopyable_shptr clone_shallow() const;
-		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
-		//@}
-
-		/**
-		 * Get a human readable string that describes the whole
-		 * logic model object. The string should be unique in order
-		 * to let the user identify the concrete object. But that
-		 * is not a must.
-		 */
-		virtual const std::string get_descriptive_identifier() const;
-
-		/**
-		 * Get a human readable string that names the object type.
-		 * Here it is "EMarker".
-		 */
-		virtual const std::string get_object_type_name() const;
-
-		/**
-		 * Print the object.
-		 */
-		void print(std::ostream& os, int n_tabs) const;
-
-
-		void shift_x(float delta_x);
-		void shift_y(float delta_y);
-		void set_x(float x);
-		void set_y(float y);
-		void set_diameter(unsigned int diameter);
-
-		virtual bool in_bounding_box(BoundingBox const& bbox) const
-		{
-			return Circle::in_bounding_box(bbox);
-		}
-
-		virtual BoundingBox const& get_bounding_box() const
-		{
-			return Circle::get_bounding_box();
-		}
-
-		virtual bool in_shape(float x, float y, float max_distance = 0) const
-		{
-			return Circle::in_shape(x, y, max_distance);
-		}
-
-		bool is_module_port() const
+        explicit EMarker()
         {
-		    return module_port;
+        };
+
+        /**
+         * Constructor for a via object.
+         */
+        EMarker(float x, float y, diameter_t diameter = 5, bool is_module_port = false);
+
+        /**
+         * Destructor for a via object.
+         */
+        virtual ~EMarker();
+
+        //@{
+        DeepCopyable_shptr clone_shallow() const;
+        void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+        //@}
+
+        /**
+         * Get a human readable string that describes the whole
+         * logic model object. The string should be unique in order
+         * to let the user identify the concrete object. But that
+         * is not a must.
+         */
+        virtual const std::string get_descriptive_identifier() const;
+
+        /**
+         * Get a human readable string that names the object type.
+         * Here it is "EMarker".
+         */
+        virtual const std::string get_object_type_name() const;
+
+        /**
+         * Print the object.
+         */
+        void print(std::ostream& os, int n_tabs) const;
+
+
+        void shift_x(float delta_x);
+        void shift_y(float delta_y);
+        void set_x(float x);
+        void set_y(float y);
+        void set_diameter(unsigned int diameter);
+
+        virtual bool in_bounding_box(BoundingBox const& bbox) const
+        {
+            return Circle::in_bounding_box(bbox);
+        }
+
+        virtual BoundingBox const& get_bounding_box() const
+        {
+            return Circle::get_bounding_box();
+        }
+
+        virtual bool in_shape(float x, float y, float max_distance = 0) const
+        {
+            return Circle::in_shape(x, y, max_distance);
+        }
+
+        bool is_module_port() const
+        {
+            return module_port;
         }
 
         void set_module_port(bool is_module_port)
         {
-		    module_port = is_module_port;
+            module_port = is_module_port;
         }
 
-	protected:
+    protected:
 
-		virtual object_id_t push_object_to_server(std::string const& server_url);
+        virtual object_id_t push_object_to_server(std::string const& server_url);
 
-	private:
-	    bool module_port = false;
+    private:
+        bool module_port = false;
 
-	};
+    };
 }
 
 #endif

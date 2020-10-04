@@ -34,31 +34,31 @@ ERCOpenPorts::ERCOpenPorts()
 
 void ERCOpenPorts::run(LogicModel_shptr lmodel)
 {
-	clear_rc_violations();
+    clear_rc_violations();
 
-	if (lmodel == nullptr) return;
+    if (lmodel == nullptr) return;
 
-	// iterate over Gates
-	debug(TM, "\tRC: iterate over gates.");
+    // iterate over Gates
+    debug(TM, "\tRC: iterate over gates.");
 
-	for (LogicModel::gate_collection::iterator g_iter = lmodel->gates_begin();
-	     g_iter != lmodel->gates_end(); ++g_iter)
-	{
-		Gate_shptr gate = g_iter->second;
+    for (LogicModel::gate_collection::iterator g_iter = lmodel->gates_begin();
+         g_iter != lmodel->gates_end(); ++g_iter)
+    {
+        Gate_shptr gate = g_iter->second;
 
-		for (Gate::port_const_iterator p_iter = gate->ports_begin();
-		     p_iter != gate->ports_end(); ++p_iter)
-		{
-			GatePort_shptr port = *p_iter;
-			assert(port != nullptr);
+        for (Gate::port_const_iterator p_iter = gate->ports_begin();
+             p_iter != gate->ports_end(); ++p_iter)
+        {
+            GatePort_shptr port = *p_iter;
+            assert(port != nullptr);
 
-			Net_shptr net = port->get_net();
-			if (net == nullptr || net->size() <= 1)
-			{
+            Net_shptr net = port->get_net();
+            if (net == nullptr || net->size() <= 1)
+            {
                 add_rc_violation(std::make_shared<RCViolation>(port, "open_port", get_severity()));
             }
-		}
-	}
+        }
+    }
 }
 
 std::string ERCOpenPorts::generate_description(const RCViolation& violation)

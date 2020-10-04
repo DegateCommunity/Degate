@@ -30,29 +30,29 @@ namespace degate
 {
 
     /**
-	 * @class WorkspaceEMarkers
-	 * @brief Prepare and draw all emarkers of the active layer on the workspace.
-	 *
-	 * The parent vbo buffer will store all squares.
-	 *
-	 * @see WorkspaceElement
-	 */
+     * @class WorkspaceEMarkers
+     * @brief Prepare and draw all emarkers of the active layer on the workspace.
+     *
+     * The parent vbo buffer will store all squares.
+     *
+     * @see WorkspaceElement
+     */
     class WorkspaceEMarkers : public WorkspaceElement
     {
     public:
 
         /**
-		 * Create a WorkspaceEMarkers element.
-		 * This will only set the parent, real creation will start with init and update functions.
-		 *
-		 * @param parent : the parent widget pointer.
-		 */
+         * Create a WorkspaceEMarkers element.
+         * This will only set the parent, real creation will start with init and update functions.
+         *
+         * @param parent : the parent widget pointer.
+         */
         explicit WorkspaceEMarkers(QWidget* parent);
         ~WorkspaceEMarkers();
 
         /**
-		 * Init all OpenGL routine (buffers, shaders...).
-		 */
+         * Init all OpenGL routine (buffers, shaders...).
+         */
         void init() override;
 
         /**
@@ -85,11 +85,11 @@ namespace degate
 
     private:
         /**
-		 * Create an emarker in OpenGL buffers.
-		 *
-		 * @param emarker : the emarker object.
-		 * @param index : the index of the annotation for OpenGL buffers.
-		 */
+         * Create an emarker in OpenGL buffers.
+         *
+         * @param emarker : the emarker object.
+         * @param index : the index of the annotation for OpenGL buffers.
+         */
         void create_emarker(EMarker_shptr& emarker, unsigned index);
 
         Text text;

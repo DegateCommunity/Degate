@@ -31,34 +31,34 @@
 
 namespace degate
 {
-	/**
-	 * @class SelectGateTemplateDialog
-	 * @brief Dialog to list all gates template of the logic model and get the selected one.
-	 *
-	 * @see QDialog
-	 */
-	class SelectGateTemplateDialog : public QDialog
-	{
-		Q_OBJECT
-		
-	public:
+    /**
+     * @class SelectGateTemplateDialog
+     * @brief Dialog to list all gates template of the logic model and get the selected one.
+     *
+     * @see QDialog
+     */
+    class SelectGateTemplateDialog : public QDialog
+    {
+        Q_OBJECT
 
-		/**
-		 * Create the gate template selection dialog.
-		 *
-		 * @param parent : the parent of the dialog.
-		 * @param project : the current active project.
-		 * @param unique_selection : if true allow only one selection at a time.
-		 */
-		SelectGateTemplateDialog(QWidget* parent, Project_shptr project, bool unique_selection);
-		~SelectGateTemplateDialog() override = default;
+    public:
 
-		/**
-		 * Get the selected gate template.
-		 *
-		 * @return Returns the selected gate template.
-		 */
-		GateTemplate_shptr get_selected_gate();
+        /**
+         * Create the gate template selection dialog.
+         *
+         * @param parent : the parent of the dialog.
+         * @param project : the current active project.
+         * @param unique_selection : if true allow only one selection at a time.
+         */
+        SelectGateTemplateDialog(QWidget* parent, Project_shptr project, bool unique_selection);
+        ~SelectGateTemplateDialog() override = default;
+
+        /**
+         * Get the selected gate template.
+         *
+         * @return Returns the selected gate template.
+         */
+        GateTemplate_shptr get_selected_gate();
 
         /**
          * Get a vector of the selected gates template.
@@ -66,12 +66,12 @@ namespace degate
          * @return Returns a vector of selected gates template (can return an empty vector).
          */
         std::vector<GateTemplate_shptr> get_selected_gates();
-		
-	private:
-		GateTemplateListWidget list;
-		QVBoxLayout layout;
-		QPushButton validate_button;
-	};
+
+    private:
+        GateTemplateListWidget list;
+        QVBoxLayout layout;
+        QPushButton validate_button;
+    };
 }
 
 #endif

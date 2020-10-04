@@ -25,55 +25,55 @@ namespace degate
 {
     NewProjectDialog::NewProjectDialog(QWidget* parent)
             : QDialog(parent)
-	{
-		project_label.setText(tr("Project name:"));
-		layer_label.setText(tr("Layer count:"));
-		width_label.setText(tr("Project width:"));
-		height_label.setText(tr("Project height:"));
+    {
+        project_label.setText(tr("Project name:"));
+        layer_label.setText(tr("Layer count:"));
+        width_label.setText(tr("Project width:"));
+        height_label.setText(tr("Project height:"));
 
-		layer_count.setMinimum(0);
-		layer_count.setMaximum(50);
+        layer_count.setMinimum(0);
+        layer_count.setMaximum(50);
 
-		width.setMinimum(0);
-		width.setMaximum(1000000);
+        width.setMinimum(0);
+        width.setMaximum(1000000);
 
-		height.setMinimum(0);
-		height.setMaximum(1000000);
+        height.setMinimum(0);
+        height.setMaximum(1000000);
 
-		validate_button.setText(tr("Ok"));
+        validate_button.setText(tr("Ok"));
 
-		main_layout.addWidget(&project_label);
-		main_layout.addWidget(&project_name);
-		main_layout.addWidget(&layer_label);
-		main_layout.addWidget(&layer_count);
-		main_layout.addWidget(&width_label);
-		main_layout.addWidget(&width);
-		main_layout.addWidget(&height_label);
-		main_layout.addWidget(&height);
-		main_layout.addWidget(&validate_button);
+        main_layout.addWidget(&project_label);
+        main_layout.addWidget(&project_name);
+        main_layout.addWidget(&layer_label);
+        main_layout.addWidget(&layer_count);
+        main_layout.addWidget(&width_label);
+        main_layout.addWidget(&width);
+        main_layout.addWidget(&height_label);
+        main_layout.addWidget(&height);
+        main_layout.addWidget(&validate_button);
 
-		QObject::connect(&validate_button, SIGNAL(pressed()), this, SLOT(accept()));
+        QObject::connect(&validate_button, SIGNAL(pressed()), this, SLOT(accept()));
 
-		setLayout(&main_layout);
-	}
+        setLayout(&main_layout);
+    }
 
-	std::string NewProjectDialog::get_project_name()
-	{
-		return project_name.text().toStdString();
-	}
+    std::string NewProjectDialog::get_project_name()
+    {
+        return project_name.text().toStdString();
+    }
 
-	unsigned NewProjectDialog::get_height()
-	{
-		return height.value();
-	}
+    unsigned NewProjectDialog::get_height()
+    {
+        return height.value();
+    }
 
-	unsigned NewProjectDialog::get_width()
-	{
-		return width.value();
-	}
+    unsigned NewProjectDialog::get_width()
+    {
+        return width.value();
+    }
 
-	unsigned NewProjectDialog::get_layer_count()
-	{
-		return layer_count.value();
-	}
+    unsigned NewProjectDialog::get_layer_count()
+    {
+        return layer_count.value();
+    }
 }

@@ -23,33 +23,33 @@
 
 namespace degate
 {
-	WorkspaceElement::WorkspaceElement(QWidget* parent)
-	{
-		this->parent = parent;
-	}
+    WorkspaceElement::WorkspaceElement(QWidget* parent)
+    {
+        this->parent = parent;
+    }
 
-	WorkspaceElement::~WorkspaceElement()
-	{
-		if (program != nullptr)
-			delete program;
+    WorkspaceElement::~WorkspaceElement()
+    {
+        if (program != nullptr)
+            delete program;
 
-		if (QOpenGLContext::currentContext() == nullptr || context == nullptr)
-			return;
+        if (QOpenGLContext::currentContext() == nullptr || context == nullptr)
+            return;
 
         if (context->glIsBuffer(vbo) == GL_TRUE)
-		    context->glDeleteBuffers(1, &vbo);
-	}
+            context->glDeleteBuffers(1, &vbo);
+    }
 
-	void WorkspaceElement::set_project(const Project_shptr& new_project)
-	{
-		project = new_project;
-	}
+    void WorkspaceElement::set_project(const Project_shptr& new_project)
+    {
+        project = new_project;
+    }
 
-	void WorkspaceElement::init()
-	{
-		// The OpenGL context of a workspace element is always the current active context.
-		context = QOpenGLContext::currentContext()->functions();
+    void WorkspaceElement::init()
+    {
+        // The OpenGL context of a workspace element is always the current active context.
+        context = QOpenGLContext::currentContext()->functions();
 
-		context->glGenBuffers(1, &vbo);
-	}
+        context->glGenBuffers(1, &vbo);
+    }
 }

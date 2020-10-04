@@ -30,29 +30,29 @@ namespace degate
 {
 
     /**
-	 * @class WorkspaceEMarkers
-	 * @brief Prepare and draw all wires of the active layer on the workspace.
-	 *
-	 * The parent vbo buffer will store all squares.
-	 *
-	 * @see WorkspaceElement
-	 */
+     * @class WorkspaceEMarkers
+     * @brief Prepare and draw all wires of the active layer on the workspace.
+     *
+     * The parent vbo buffer will store all squares.
+     *
+     * @see WorkspaceElement
+     */
     class WorkspaceWires : public WorkspaceElement
     {
     public:
 
         /**
-		 * Create a WorkspaceWires element.
-		 * This will only set the parent, real creation will start with init and update functions.
-		 *
-		 * @param parent : the parent widget pointer.
-		 */
+         * Create a WorkspaceWires element.
+         * This will only set the parent, real creation will start with init and update functions.
+         *
+         * @param parent : the parent widget pointer.
+         */
         explicit WorkspaceWires(QWidget* parent);
         ~WorkspaceWires();
 
         /**
-		 * Init all OpenGL routine (buffers, shaders...).
-		 */
+         * Init all OpenGL routine (buffers, shaders...).
+         */
         void init() override;
 
         /**
@@ -79,11 +79,11 @@ namespace degate
 
     private:
         /**
-		 * Create an wire in OpenGL buffers.
-		 *
-		 * @param wire : the wire object.
-		 * @param index : the index of the annotation for OpenGL buffers.
-		 */
+         * Create an wire in OpenGL buffers.
+         *
+         * @param wire : the wire object.
+         * @param index : the index of the annotation for OpenGL buffers.
+         */
         void create_wire(Wire_shptr& wire, unsigned index);
 
         unsigned wires_count = 0;

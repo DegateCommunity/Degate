@@ -28,69 +28,69 @@
 
 namespace degate
 {
-	/**
-	 * This class represents a grid type with non equidistant spacing between grid lines.
-	 */
-	class IrregularGrid : public Grid
-	{
-	private:
-		grid_set grid_offsets;
+    /**
+     * This class represents a grid type with non equidistant spacing between grid lines.
+     */
+    class IrregularGrid : public Grid
+    {
+    private:
+        grid_set grid_offsets;
 
-	public:
+    public:
 
-		/**
-		 * The ctor to construct a new irregular grid.
-		 */
-		IrregularGrid(Grid::ORIENTATION orientation) : Grid(orientation)
-		{
-		}
+        /**
+         * The ctor to construct a new irregular grid.
+         */
+        IrregularGrid(Grid::ORIENTATION orientation) : Grid(orientation)
+        {
+        }
 
-		/**
-		 * The destructor.
-		 */
-		virtual ~IrregularGrid()
-		{
-		}
+        /**
+         * The destructor.
+         */
+        virtual ~IrregularGrid()
+        {
+        }
 
-		/**
-		 * Get an iterator to iterate over the offsets where the grid lines are.
-		 */
-		virtual grid_iter begin() const { return grid_offsets.begin(); }
+        /**
+         * Get an iterator to iterate over the offsets where the grid lines are.
+         */
+        virtual grid_iter begin() const { return grid_offsets.begin(); }
 
-		/**
-		 * Get an end marker for the iteration over grid line offsets.
-		 */
-		virtual grid_iter end() const { return grid_offsets.end(); }
+        /**
+         * Get an end marker for the iteration over grid line offsets.
+         */
+        virtual grid_iter end() const { return grid_offsets.end(); }
 
-		/**
-		 * Remove all grid lines.
-		 */
-		virtual void clear() { grid_offsets.clear(); }
+        /**
+         * Remove all grid lines.
+         */
+        virtual void clear() { grid_offsets.clear(); }
 
-		/**
-		 * Add a new grid line starting at an given offset.
-		 */
-		virtual void add_offset(int offset)
-		{
-			grid_offsets.push_back(offset);
-			grid_offsets.sort();
-		}
+        /**
+         * Add a new grid line starting at an given offset.
+         */
+        virtual void add_offset(int offset)
+        {
+            grid_offsets.push_back(offset);
+            grid_offsets.sort();
+        }
 
-		/**
-		 * Remove a grid line that is placed at an offset.
-		 */
-		virtual void remove_offset(int offset)
-		{
-			grid_offsets.remove(offset);
-		}
+        /**
+         * Remove a grid line that is placed at an offset.
+         */
+        virtual void remove_offset(int offset)
+        {
+            grid_offsets.remove(offset);
+        }
 
-		/**
-		 * Get the nearest offset where a grid line starts.
-		 */
-		virtual int snap_to_grid(int pos) const;
-	};
+        /**
+         * Get the nearest offset where a grid line starts.
+         */
+        virtual int snap_to_grid(int pos) const;
+    };
 
-	typedef std::shared_ptr<IrregularGrid> IrregularGrid_shptr;
+    typedef std::shared_ptr<IrregularGrid> IrregularGrid_shptr;
 }
 
 #endif

@@ -24,30 +24,30 @@
 
 namespace degate
 {
-	ThemeManager::ThemeManager()
-	{
-	    QObject::connect(&PreferencesHandler::get_instance(), SIGNAL(icon_theme_changed()), this, SLOT(update_icon_theme()));
+    ThemeManager::ThemeManager()
+    {
+        QObject::connect(&PreferencesHandler::get_instance(), SIGNAL(icon_theme_changed()), this, SLOT(update_icon_theme()));
         QObject::connect(&PreferencesHandler::get_instance(), SIGNAL(theme_changed()), this, SLOT(update_theme()));
 
         update_theme();
-	}
+    }
 
-	ThemeManager::~ThemeManager()
-	{
-	}
+    ThemeManager::~ThemeManager()
+    {
+    }
 
-	QString ThemeManager::get_icon_path(const QString& icon_name)
-	{
-		switch (PREFERENCES_HANDLER.get_preferences().icon_theme)
-		{
-		case LIGHT_ICON_THEME:
-			return ":/light/" + icon_name;
-		case DARK_ICON_THEME:
-			return ":/dark/" + icon_name;
-		default:
-			return ":/light/" + icon_name;
-		}
-	}
+    QString ThemeManager::get_icon_path(const QString& icon_name)
+    {
+        switch (PREFERENCES_HANDLER.get_preferences().icon_theme)
+        {
+        case LIGHT_ICON_THEME:
+            return ":/light/" + icon_name;
+        case DARK_ICON_THEME:
+            return ":/dark/" + icon_name;
+        default:
+            return ":/light/" + icon_name;
+        }
+    }
 
     void ThemeManager::update_icon_theme()
     {
@@ -105,54 +105,54 @@ namespace degate
         }
     }
 
-	std::string theme_to_string(Theme theme)
-	{
-		switch (theme)
-		{
-		case NATIVE_THEME:
-			return "native";
-		case LIGHT_THEME:
-			return "light";
-		case DARK_THEME:
-			return "dark";
-		default:
-			return "native";
-			break;
-		}
-	}
+    std::string theme_to_string(Theme theme)
+    {
+        switch (theme)
+        {
+        case NATIVE_THEME:
+            return "native";
+        case LIGHT_THEME:
+            return "light";
+        case DARK_THEME:
+            return "dark";
+        default:
+            return "native";
+            break;
+        }
+    }
 
-	Theme string_to_theme(const std::string& theme)
-	{
-		if (theme == "native")
-			return NATIVE_THEME;
-		else if (theme == "light")
-			return LIGHT_THEME;
-		else if (theme == "dark")
-			return DARK_THEME;
-		else
-			return NATIVE_THEME;
-	}
+    Theme string_to_theme(const std::string& theme)
+    {
+        if (theme == "native")
+            return NATIVE_THEME;
+        else if (theme == "light")
+            return LIGHT_THEME;
+        else if (theme == "dark")
+            return DARK_THEME;
+        else
+            return NATIVE_THEME;
+    }
 
-	std::string icon_theme_to_string(IconTheme theme)
-	{
-		switch (theme)
-		{
-		case LIGHT_ICON_THEME:
-			return "light";
-		case DARK_ICON_THEME:
-			return "dark";
-		default:
-			return "dark";
-		}
-	}
+    std::string icon_theme_to_string(IconTheme theme)
+    {
+        switch (theme)
+        {
+        case LIGHT_ICON_THEME:
+            return "light";
+        case DARK_ICON_THEME:
+            return "dark";
+        default:
+            return "dark";
+        }
+    }
 
-	IconTheme string_to_icon_theme(const std::string& theme)
-	{
-		if (theme == "light")
-			return LIGHT_ICON_THEME;
-		else if (theme == "dark")
-			return DARK_ICON_THEME;
-		else
-			return DARK_ICON_THEME;
-	}
+    IconTheme string_to_icon_theme(const std::string& theme)
+    {
+        if (theme == "light")
+            return LIGHT_ICON_THEME;
+        else if (theme == "dark")
+            return DARK_ICON_THEME;
+        else
+            return DARK_ICON_THEME;
+    }
 }

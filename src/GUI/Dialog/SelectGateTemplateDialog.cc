@@ -28,19 +28,19 @@ namespace degate
     SelectGateTemplateDialog::SelectGateTemplateDialog(QWidget* parent, Project_shptr project, bool unique_selection)
             : QDialog(parent), list(this, std::move(project), unique_selection)
     {
-		validate_button.setText(tr("Ok"));
-		layout.addWidget(&list);
-		layout.addWidget(&validate_button);
+        validate_button.setText(tr("Ok"));
+        layout.addWidget(&list);
+        layout.addWidget(&validate_button);
 
-		setLayout(&layout);
+        setLayout(&layout);
 
-		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(accept()));
-	}
+        QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(accept()));
+    }
 
-	GateTemplate_shptr SelectGateTemplateDialog::get_selected_gate()
-	{
-		return list.get_selected_gate();
-	}
+    GateTemplate_shptr SelectGateTemplateDialog::get_selected_gate()
+    {
+        return list.get_selected_gate();
+    }
 
     std::vector<GateTemplate_shptr> SelectGateTemplateDialog::get_selected_gates()
     {

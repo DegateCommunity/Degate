@@ -27,69 +27,69 @@
 
 namespace degate
 {
-	/**
-	 * Calculate the median of a vector.
-	 * @exception DegateRuntimeException This exception is thrown if
-	 *   vector's size is 0.
-	 */
-	template <typename T>
-	inline T median(std::vector<T>& v)
-	{
-		if (v.empty())
-			throw DegateRuntimeException("Error in median(): The vector is empty.");
+    /**
+     * Calculate the median of a vector.
+     * @exception DegateRuntimeException This exception is thrown if
+     *   vector's size is 0.
+     */
+    template <typename T>
+    inline T median(std::vector<T>& v)
+    {
+        if (v.empty())
+            throw DegateRuntimeException("Error in median(): The vector is empty.");
 
-		std::sort(v.begin(), v.end());
+        std::sort(v.begin(), v.end());
 
-		unsigned int center = static_cast<unsigned int>(v.size()) / 2;
+        unsigned int center = static_cast<unsigned int>(v.size()) / 2;
 
-		if (v.size() % 2 == 0)
-		{
-			return (v[center - 1] + v[center + 1]) / 2;
-		}
-		else
-			return v[center];
-	}
+        if (v.size() % 2 == 0)
+        {
+            return (v[center - 1] + v[center + 1]) / 2;
+        }
+        else
+            return v[center];
+    }
 
 
-	/**
-	 * Calculate the average of a vector.
-	 * @exception DegateRuntimeException This exception is thrown if
-	 *   vector's size is 0.
-	 */
-	template <typename T>
-	inline T average(std::vector<T> const& v)
-	{
-		if (v.empty())
-			throw DegateRuntimeException("Error in average(): The vector is empty.");
+    /**
+     * Calculate the average of a vector.
+     * @exception DegateRuntimeException This exception is thrown if
+     *   vector's size is 0.
+     */
+    template <typename T>
+    inline T average(std::vector<T> const& v)
+    {
+        if (v.empty())
+            throw DegateRuntimeException("Error in average(): The vector is empty.");
 
-		double sum = 0;
+        double sum = 0;
 
-		for (typename std::vector<T>::const_iterator iter = v.begin();
-		     iter != v.end(); ++iter)
+        for (typename std::vector<T>::const_iterator iter = v.begin();
+             iter != v.end(); ++iter)
             sum += *iter;
 
-		return sum / (double)v.size();
-	}
+        return sum / (double)v.size();
+    }
 
 
-	/**
-	 * Calculate the standard deviation of a vector.
-	 * @exception DegateRuntimeException This exception is thrown if
-	 *   vector's size is 0.
-	 */
-	template <typename T>
-	inline T standard_deviation(std::vector<T> const& v)
-	{
-		if (v.empty())
-			throw DegateRuntimeException("Error in standard_deviation(): The vector is empty.");
+    /**
+     * Calculate the standard deviation of a vector.
+     * @exception DegateRuntimeException This exception is thrown if
+     *   vector's size is 0.
+     */
+    template <typename T>
+    inline T standard_deviation(std::vector<T> const& v)
+    {
+        if (v.empty())
+            throw DegateRuntimeException("Error in standard_deviation(): The vector is empty.");
 
-		T avg = average<T>(v);
-		double sum = 0;
-		for (typename std::vector<T>::const_iterator iter = v.begin(); iter != v.end(); ++iter)
-			sum += pow(avg - *iter, 2);
+        T avg = average<T>(v);
+        double sum = 0;
+        for (typename std::vector<T>::const_iterator iter = v.begin(); iter != v.end(); ++iter)
+            sum += pow(avg - *iter, 2);
 
-		return sqrt(sum / (double)v.size());
-	}
+        return sqrt(sum / (double)v.size());
+    }
 }
 
 

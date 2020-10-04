@@ -27,40 +27,40 @@
 
 namespace degate
 {
-	class RuleChecker
-	{
-	private:
+    class RuleChecker
+    {
+    private:
 
-		std::list<RCBase_shptr> checks;
+        std::list<RCBase_shptr> checks;
         RCVContainer rc_violations;
 
-	public:
+    public:
 
-		RuleChecker()
-		{
-		    for (auto& e : ERC_REGISTER.get_erc_list())
+        RuleChecker()
+        {
+            for (auto& e : ERC_REGISTER.get_erc_list())
             {
                 checks.push_back(e);
             }
-		}
+        }
 
-		void run(LogicModel_shptr lmodel)
-		{
-			debug(TM, "run RC");
+        void run(LogicModel_shptr lmodel)
+        {
+            debug(TM, "run RC");
 
             rc_violations.clear();
 
-			BOOST_FOREACH(RCBase_shptr check, checks)
-			{
-				check->run(lmodel);
-				BOOST_FOREACH(RCViolation_shptr violation, check->get_rc_violations())
-				{
+            BOOST_FOREACH(RCBase_shptr check, checks)
+            {
+                check->run(lmodel);
+                BOOST_FOREACH(RCViolation_shptr violation, check->get_rc_violations())
+                {
                     rc_violations.push_back(violation);
-				}
-			}
+                }
+            }
 
-			debug(TM, "found %d rc violations.", rc_violations.size());
-		}
+            debug(TM, "found %d rc violations.", rc_violations.size());
+        }
 
         /**
          * Get the list of RC violations.
@@ -69,7 +69,7 @@ namespace degate
         {
             return rc_violations;
         }
-	};
+    };
 }
 
 #endif

@@ -162,17 +162,17 @@ namespace degate
     {
     public:
         /**
-		 * Call this once to init the font for a specific context (that will be used for every text).
+         * Call this once to init the font for a specific context (that will be used for every text).
          *
          * @param context : the (opengl) context.
-		 */
+         */
         static void init_context(QOpenGLContext* context = QOpenGLContext::currentContext());
 
         /**
-		 * Delete the font for a specific context.
+         * Delete the font for a specific context.
          *
          * @param context : the (opengl) context.
-		 */
+         */
         static void delete_context(QOpenGLContext* context = QOpenGLContext::currentContext());
 
         /**

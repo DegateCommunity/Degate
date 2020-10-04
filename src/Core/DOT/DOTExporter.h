@@ -32,80 +32,80 @@
 
 namespace degate
 {
-	/**
-	 * Base class for a .dot exporter.
-	 *
-	 * The dot language is a graph description language.
-	 *
-	 * @see http://en.wikipedia.org/wiki/DOT_language
-	 *
-	 */
-	class DOTExporter : public Exporter
-	{
-	private:
+    /**
+     * Base class for a .dot exporter.
+     *
+     * The dot language is a graph description language.
+     *
+     * @see http://en.wikipedia.org/wiki/DOT_language
+     *
+     */
+    class DOTExporter : public Exporter
+    {
+    private:
 
-		std::list<std::string> header_lines;
-		std::list<std::string> graph_setting_lines;
-		std::list<std::string> node_lines;
-		std::list<std::string> edge_lines;
+        std::list<std::string> header_lines;
+        std::list<std::string> graph_setting_lines;
+        std::list<std::string> node_lines;
+        std::list<std::string> edge_lines;
 
-	protected:
+    protected:
 
-		/**
-		 * Add a header line.
-		 *
-		 * Header lines begin with a hash mark ('#'). It is a comment
-		 * in the dot language. Header lines should be used to write
-		 * comments to the top of a dot file.
-		 * @param header_line A single comment line. You don't have to put the
-		 *     hash mark in front of the string. If you pass a multi line string,
-		 *     the hash marks for the additional lines are not added automatically.
-		 */
-		void add_header_line(std::string header_line);
+        /**
+         * Add a header line.
+         *
+         * Header lines begin with a hash mark ('#'). It is a comment
+         * in the dot language. Header lines should be used to write
+         * comments to the top of a dot file.
+         * @param header_line A single comment line. You don't have to put the
+         *     hash mark in front of the string. If you pass a multi line string,
+         *     the hash marks for the additional lines are not added automatically.
+         */
+        void add_header_line(std::string header_line);
 
-		/**
-		 * Add a setting for a graph
-		 */
-		void add_graph_setting(std::string line);
+        /**
+         * Add a setting for a graph
+         */
+        void add_graph_setting(std::string line);
 
-		/**
-		 * Add a node into the graph.
-		 */
-		void add_node(std::string node_id, std::string node_params);
+        /**
+         * Add a node into the graph.
+         */
+        void add_node(std::string node_id, std::string node_params);
 
-		/**
-		 * Add an edge into the graph.
-		 */
-		void add_edge(std::string from_node_id,
-		              std::string to_node_id,
-		              std::string edge_params);
+        /**
+         * Add an edge into the graph.
+         */
+        void add_edge(std::string from_node_id,
+                      std::string to_node_id,
+                      std::string edge_params);
 
-		/**
-		 * Dump the content as a string into a file.
-		 * If the file already exists, it will be overwritten.
-		 */
-		void dump_to_file(std::string const& filename) const;
+        /**
+         * Dump the content as a string into a file.
+         * If the file already exists, it will be overwritten.
+         */
+        void dump_to_file(std::string const& filename) const;
 
-		/**
-		 * Clear any internally stored data.
-		 */
-		void clear();
+        /**
+         * Clear any internally stored data.
+         */
+        void clear();
 
-	public:
+    public:
 
-		/**
-		 * Create a DOTExporter object.
-		 */
-		DOTExporter()
-		{
-		};
+        /**
+         * Create a DOTExporter object.
+         */
+        DOTExporter()
+        {
+        };
 
-		/**
-		 * Destroy the DOTExporter object.
-		 */
-		virtual ~DOTExporter()
-		{
-		};
-	};
+        /**
+         * Destroy the DOTExporter object.
+         */
+        virtual ~DOTExporter()
+        {
+        };
+    };
 }
 #endif

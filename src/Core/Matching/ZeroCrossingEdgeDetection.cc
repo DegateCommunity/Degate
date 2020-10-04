@@ -34,11 +34,11 @@ ZeroCrossingEdgeDetection::ZeroCrossingEdgeDetection(unsigned int min_x, unsigne
                                                      unsigned int max_d,
                                                      double edge_threshold,
                                                      double zero_threshold) :
-	EdgeDetection(min_x, max_x, min_y, max_y, median_filter_width, blur_kernel_size, sigma),
-	min_d(min_d),
-	max_d(max_d),
-	edge_threshold(edge_threshold),
-	zero_threshold(zero_threshold)
+    EdgeDetection(min_x, max_x, min_y, max_y, median_filter_width, blur_kernel_size, sigma),
+    min_d(min_d),
+    max_d(max_d),
+    edge_threshold(edge_threshold),
+    zero_threshold(zero_threshold)
 {
 }
 
@@ -46,41 +46,41 @@ TileImage_GS_DOUBLE_shptr
 ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in,
                                TileImage_GS_DOUBLE_shptr probability_map)
 {
-	run_edge_detection(img_in);
-	TileImage_GS_DOUBLE_shptr edge_image = get_edge_image(probability_map);
-	//TileImage_GS_DOUBLE_shptr edge_magnitude_image = get_edge_magnitude_image(probability_map);
+    run_edge_detection(img_in);
+    TileImage_GS_DOUBLE_shptr edge_image = get_edge_image(probability_map);
+    //TileImage_GS_DOUBLE_shptr edge_magnitude_image = get_edge_magnitude_image(probability_map);
 
-	TileImage_GS_DOUBLE_shptr zero_cross_img =
-		analyze_edge_image(edge_image, probability_map, min_d, max_d);
+    TileImage_GS_DOUBLE_shptr zero_cross_img =
+        analyze_edge_image(edge_image, probability_map, min_d, max_d);
 
-	TileImage_GS_DOUBLE_shptr zero_cross_img2(new TileImage_GS_DOUBLE(get_width(), get_height()));
+    TileImage_GS_DOUBLE_shptr zero_cross_img2(new TileImage_GS_DOUBLE(get_width(), get_height()));
 
-	morphological_close<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>
-		(zero_cross_img2, zero_cross_img, 3, 1, 3);
+    morphological_close<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>
+        (zero_cross_img2, zero_cross_img, 3, 1, 3);
 
-	thinning<TileImage_GS_DOUBLE>(zero_cross_img2);
+    thinning<TileImage_GS_DOUBLE>(zero_cross_img2);
 
-	return zero_cross_img2;
+    return zero_cross_img2;
 }
 
 TileImage_GS_DOUBLE_shptr ZeroCrossingEdgeDetection::run(ImageBase_shptr img_in,
                                                          TileImage_GS_DOUBLE_shptr probability_map,
                                                          std::string const& directory)
 {
-	set_directory(directory);
-	assert(img_in != nullptr);
-	TileImage_GS_DOUBLE_shptr zero_cross_img = run(img_in, probability_map);
-	assert(zero_cross_img != nullptr);
+    set_directory(directory);
+    assert(img_in != nullptr);
+    TileImage_GS_DOUBLE_shptr zero_cross_img = run(img_in, probability_map);
+    assert(zero_cross_img != nullptr);
 
-	save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "03_edge_zero_cross.tif"),
-	                                           zero_cross_img);
+    save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "03_edge_zero_cross.tif"),
+                                               zero_cross_img);
 
-	/*
-	overlay_result(zero_cross_img,
-		   std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(img_in),
-		   directory);
-	*/
-	return zero_cross_img;
+    /*
+    overlay_result(zero_cross_img,
+           std::dynamic_pointer_cast<TileImage_GS_DOUBLE>(img_in),
+           directory);
+    */
+    return zero_cross_img;
 }
 
 
@@ -94,87 +94,87 @@ bool ZeroCrossingEdgeDetection::trace(TileImage_GS_DOUBLE_shptr edge_image,
                                       double zero_threshold,
                                       unsigned int min_d, unsigned int max_d)
 {
-	if (start_x == nullptr || start_y == nullptr ||
-		stop_x == nullptr || stop_y == nullptr || mag == nullptr)
-		return false;
+    if (start_x == nullptr || start_y == nullptr ||
+        stop_x == nullptr || stop_y == nullptr || mag == nullptr)
+        return false;
 
-	enum STATE { BEFORE, POS_EDGE, NEG_EDGE, END };
-	STATE s = BEFORE;
+    enum STATE { BEFORE, POS_EDGE, NEG_EDGE, END };
+    STATE s = BEFORE;
 
-	int x1 = x, y1 = y;
-	double max_pix = 0, min_pix = 0;
+    int x1 = x, y1 = y;
+    double max_pix = 0, min_pix = 0;
 
-	while (s != END)
-	{
-		double p = edge_image->get_pixel(x1, y1);
+    while (s != END)
+    {
+        double p = edge_image->get_pixel(x1, y1);
 
-		if (s == BEFORE && p >= edge_threshold)
-		{
-			max_pix = p;
-			*start_x = x1;
-			*start_y = y1;
-			s = POS_EDGE;
-		}
+        if (s == BEFORE && p >= edge_threshold)
+        {
+            max_pix = p;
+            *start_x = x1;
+            *start_y = y1;
+            s = POS_EDGE;
+        }
 
-		else if (s == POS_EDGE)
-		{
-			if (p > max_pix)
-			{
-				*start_x = x1;
-				*start_y = y1;
-				max_pix = p;
-			}
-			if (p <= -edge_threshold)
-			{
-				*stop_x = x1;
-				*stop_y = y1;
-				min_pix = p;
-				s = NEG_EDGE;
-			}
-		}
-		else if (s == NEG_EDGE)
-		{
-			if (p < min_pix)
-			{
-				min_pix = p;
-				*stop_x = x1;
-				*stop_y = y1;
-			}
-			if (p >= 0 ||
+        else if (s == POS_EDGE)
+        {
+            if (p > max_pix)
+            {
+                *start_x = x1;
+                *start_y = y1;
+                max_pix = p;
+            }
+            if (p <= -edge_threshold)
+            {
+                *stop_x = x1;
+                *stop_y = y1;
+                min_pix = p;
+                s = NEG_EDGE;
+            }
+        }
+        else if (s == NEG_EDGE)
+        {
+            if (p < min_pix)
+            {
+                min_pix = p;
+                *stop_x = x1;
+                *stop_y = y1;
+            }
+            if (p >= 0 ||
                 x1 > *stop_x || y1 > *stop_y)
-			{
-				// that is at least one step beyond the maximum
+            {
+                // that is at least one step beyond the maximum
 
-				unsigned int
-					d_x = abs(*stop_x - *start_x),
-					d_y = abs(*stop_y - *start_y);
+                unsigned int
+                    d_x = abs(*stop_x - *start_x),
+                    d_y = abs(*stop_y - *start_y);
 
 
-				if (!((d_x > min_d && d_x < max_d) ||
-					(d_y > min_d && d_y < max_d)))
-					return false;
+                if (!((d_x > min_d && d_x < max_d) ||
+                    (d_y > min_d && d_y < max_d)))
+                    return false;
 
-				s = END; //
-				*mag = sqrt(pow(max_pix, 2) + pow(min_pix, 2));
+                s = END; //
+                *mag = sqrt(pow(max_pix, 2) + pow(min_pix, 2));
 
-				double p_center = edge_image->get_pixel(*start_x + (*stop_x - *start_x) / 2,
-				                                        *start_y + (*stop_y - *start_y) / 2);
+                double p_center = edge_image->get_pixel(*start_x + (*stop_x - *start_x) / 2,
+                                                        *start_y + (*stop_y - *start_y) / 2);
 
-				return fabs(p_center) < zero_threshold;
-			}
-		}
+                return fabs(p_center) < zero_threshold;
+            }
+        }
         x1 += inc_x;
         y1 += inc_y;
 
-		assert(x1 >= 0);
-		assert(y1 >= 0);
+        assert(x1 >= 0);
+        assert(y1 >= 0);
 
-		if (unsigned(x1) >= edge_image->get_width() ||
+        if (unsigned(x1) >= edge_image->get_width() ||
             unsigned(y1) >= edge_image->get_height() ||
             x1 == 0 || y1 == 0)
-			s = END;
-	}
-	return false;
+            s = END;
+    }
+    return false;
 }
 
 
@@ -183,78 +183,78 @@ ZeroCrossingEdgeDetection::analyze_edge_image(TileImage_GS_DOUBLE_shptr edge_ima
                                               TileImage_GS_DOUBLE_shptr probability_map,
                                               unsigned int min_d, unsigned int max_d)
 {
-	int start_x = 0, start_y = 0, stop_x = 0, stop_y = 0;
-	unsigned x, y;
-	double mag = 0;
+    int start_x = 0, start_y = 0, stop_x = 0, stop_y = 0;
+    unsigned x, y;
+    double mag = 0;
 
-	normalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(edge_image, edge_image, -1, 1);
+    normalize<TileImage_GS_DOUBLE, TileImage_GS_DOUBLE>(edge_image, edge_image, -1, 1);
 
-	TileImage_GS_DOUBLE_shptr out_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
+    TileImage_GS_DOUBLE_shptr out_image(new TileImage_GS_DOUBLE(get_width(), get_height()));
 
-	for (y = get_border(); y < edge_image->get_height() - get_border(); y++)
-	{
-		for (x = get_border(); x < edge_image->get_width() - get_border();)
-		{
-			if (trace(edge_image, x, y, 1, 0,
-			          &start_x, &stop_x, &start_y, &stop_y, &mag,
-			          edge_threshold, zero_threshold,
-			          min_d, max_d))
-			{
-				out_image->set_pixel(start_x + (stop_x - start_x) / 2, y, mag);
-				x += (stop_x > start_x + 1) ? stop_x - start_x - 1 : stop_x - start_x;
-			}
-			else x++;
-		}
-	}
+    for (y = get_border(); y < edge_image->get_height() - get_border(); y++)
+    {
+        for (x = get_border(); x < edge_image->get_width() - get_border();)
+        {
+            if (trace(edge_image, x, y, 1, 0,
+                      &start_x, &stop_x, &start_y, &stop_y, &mag,
+                      edge_threshold, zero_threshold,
+                      min_d, max_d))
+            {
+                out_image->set_pixel(start_x + (stop_x - start_x) / 2, y, mag);
+                x += (stop_x > start_x + 1) ? stop_x - start_x - 1 : stop_x - start_x;
+            }
+            else x++;
+        }
+    }
 
-	for (x = get_border(); x < edge_image->get_width() - get_border(); x++)
-	{
-		for (y = get_border(); y < edge_image->get_height() - get_border();)
-		{
-			if (trace(edge_image, x, y, 0, 1,
-			          &start_x, &stop_x, &start_y, &stop_y, &mag,
-			          edge_threshold, zero_threshold, min_d, max_d))
-			{
-				out_image->set_pixel(x, start_y + (stop_y - start_y) / 2, mag);
-				y += (stop_y > start_y + 1) ? stop_y - start_y - 1 : stop_y - start_y;
-			}
-			else y++;
-		}
-	}
+    for (x = get_border(); x < edge_image->get_width() - get_border(); x++)
+    {
+        for (y = get_border(); y < edge_image->get_height() - get_border();)
+        {
+            if (trace(edge_image, x, y, 0, 1,
+                      &start_x, &stop_x, &start_y, &stop_y, &mag,
+                      edge_threshold, zero_threshold, min_d, max_d))
+            {
+                out_image->set_pixel(x, start_y + (stop_y - start_y) / 2, mag);
+                y += (stop_y > start_y + 1) ? stop_y - start_y - 1 : stop_y - start_y;
+            }
+            else y++;
+        }
+    }
 
 
-	/*
-	for (x = get_border(); x < edge_image->get_width() - get_border(); x++) {
+    /*
+    for (x = get_border(); x < edge_image->get_width() - get_border(); x++) {
   for (y = get_border(); y < edge_image->get_height() - get_border(); y++) {
-	if (trace(edge_image, x, y, 1, 1,
-		 &start_x, &stop_x, &start_y, &stop_y, &mag,
-		 edge_threshold, zero_threshold, sqrt(2*min_d*min_d), sqrt(2*max_d*max_d))) {
-	  int
-		p_x = start_x + (stop_x - start_x)/2,
-		p_y = start_y + (stop_y - start_y)/2;
-	  if (p_x >= 0 && p_y >= 0 && p_x < out_image->get_width() && p_y < out_image->get_height())
-		out_image->set_pixel(p_x, p_y, mag);
-	}
+    if (trace(edge_image, x, y, 1, 1,
+         &start_x, &stop_x, &start_y, &stop_y, &mag,
+         edge_threshold, zero_threshold, sqrt(2*min_d*min_d), sqrt(2*max_d*max_d))) {
+      int
+        p_x = start_x + (stop_x - start_x)/2,
+        p_y = start_y + (stop_y - start_y)/2;
+      if (p_x >= 0 && p_y >= 0 && p_x < out_image->get_width() && p_y < out_image->get_height())
+        out_image->set_pixel(p_x, p_y, mag);
+    }
   }
-	}
+    }
 
 
-	for (x = get_border(); x < edge_image->get_width() - get_border(); x++) {
+    for (x = get_border(); x < edge_image->get_width() - get_border(); x++) {
   for (y = get_border(); y < edge_image->get_height() - get_border(); y++) {
-	if (trace(edge_image, x, y, -1, 1,
-		 &start_x, &stop_x, &start_y, &stop_y, &mag,
-		 edge_threshold, zero_threshold, sqrt(2*min_d*min_d), sqrt(2*max_d*max_d))) {
-	  int
-		p_x = start_x + (stop_x - start_x)/2,
-		p_y = start_y + (stop_y - start_y)/2;
-	  if (p_x >= 0 && p_y >= 0 && p_x < out_image->get_width() && p_y < out_image->get_height())
-		out_image->set_pixel(p_x, p_y, mag);
-	}
+    if (trace(edge_image, x, y, -1, 1,
+         &start_x, &stop_x, &start_y, &stop_y, &mag,
+         edge_threshold, zero_threshold, sqrt(2*min_d*min_d), sqrt(2*max_d*max_d))) {
+      int
+        p_x = start_x + (stop_x - start_x)/2,
+        p_y = start_y + (stop_y - start_y)/2;
+      if (p_x >= 0 && p_y >= 0 && p_x < out_image->get_width() && p_y < out_image->get_height())
+        out_image->set_pixel(p_x, p_y, mag);
+    }
   }
-	}
-	*/
+    }
+    */
 
-	return out_image;
+    return out_image;
 }
 
 void ZeroCrossingEdgeDetection::overlay_result(TileImage_GS_DOUBLE_shptr zc,
@@ -262,17 +262,17 @@ void ZeroCrossingEdgeDetection::overlay_result(TileImage_GS_DOUBLE_shptr zc,
                                                //TileImage_RGBA_shptr bg,
                                                std::string const& directory) const
 {
-	assert(bg != nullptr && zc != nullptr);
+    assert(bg != nullptr && zc != nullptr);
 
-	if (bg != nullptr && zc != nullptr)
-	{
-		for (unsigned int y = 0; y < get_height(); y++)
-			for (unsigned int x = 0; x < get_width(); x++)
-			{
-				if (zc->get_pixel(x, y) > 0)
-					bg->set_pixel(x, y, -1);
-			}
-		//save_image<TileImage_RGBA>(join_pathes(directory, "overlay.tif"),  bg);
-		save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "overlay.tif"), bg);
-	}
+    if (bg != nullptr && zc != nullptr)
+    {
+        for (unsigned int y = 0; y < get_height(); y++)
+            for (unsigned int x = 0; x < get_width(); x++)
+            {
+                if (zc->get_pixel(x, y) > 0)
+                    bg->set_pixel(x, y, -1);
+            }
+        //save_image<TileImage_RGBA>(join_pathes(directory, "overlay.tif"),  bg);
+        save_normalized_image<TileImage_GS_DOUBLE>(join_pathes(directory, "overlay.tif"), bg);
+    }
 }

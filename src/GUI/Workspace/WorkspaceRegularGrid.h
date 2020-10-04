@@ -54,25 +54,25 @@ namespace degate
         ~WorkspaceRegularGrid();
 
         /**
-		 * Init OpenGL routine (vbo and shaders).
-		 *
-		 * @warning Always call this parent init method in the child implementation.
-		 */
+         * Init OpenGL routine (vbo and shaders).
+         *
+         * @warning Always call this parent init method in the child implementation.
+         */
         void init() override;
 
         /**
-	     * Update the grid vbo.
+         * Update the grid vbo.
          *
          * Every time the viewport change this function should be called. Grid lines are drawn only on the viewport,
          * not on the whole project. So it needs to update line positions every time the viewport change (move/zoom).
-	     */
+         */
         void update() override;
 
         /**
-	     * Draw the grid.
-	     *
-	     * @param projection : the projection matrix to apply.
-	     */
+         * Draw the grid.
+         *
+         * @param projection : the projection matrix to apply.
+         */
         void draw(const QMatrix4x4& projection) override;
 
         /**

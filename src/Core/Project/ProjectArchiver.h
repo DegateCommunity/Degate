@@ -28,44 +28,44 @@
 
 namespace degate
 {
-	/**
-	 * Export a project directory as a ZIP archive.
-	 *
-	 */
+    /**
+     * Export a project directory as a ZIP archive.
+     *
+     */
 
-	/* Dropped archiver/zip support for the moment.
+    /* Dropped archiver/zip support for the moment.
 
-	class ProjectArchiver
-	{
-	private:
+    class ProjectArchiver
+    {
+    private:
 
-		void add_single_file(struct zip* zip_archive,
-		                     boost::filesystem::path const& archive_file,
-		                     boost::filesystem::path const& base_dir_path,
-		                     boost::filesystem::path const& file,
-		                     boost::filesystem::path const& prepend_dir) const;
+        void add_single_file(struct zip* zip_archive,
+                             boost::filesystem::path const& archive_file,
+                             boost::filesystem::path const& base_dir_path,
+                             boost::filesystem::path const& file,
+                             boost::filesystem::path const& prepend_dir) const;
 
 
-		void add_directory(struct zip* zip_archive,
-		                   boost::filesystem::path const& archive_file,
-		                   boost::filesystem::path const& base_dir_path,
-		                   boost::filesystem::path const& dir,
-		                   boost::filesystem::path const& prepend_dir) const;
+        void add_directory(struct zip* zip_archive,
+                           boost::filesystem::path const& archive_file,
+                           boost::filesystem::path const& base_dir_path,
+                           boost::filesystem::path const& dir,
+                           boost::filesystem::path const& prepend_dir) const;
 
-	public:
-		ProjectArchiver()
-		{
-		}
+    public:
+        ProjectArchiver()
+        {
+        }
 
-		~ProjectArchiver()
-		{
-		}
+        ~ProjectArchiver()
+        {
+        }
 
-		void export_data(boost::filesystem::path const& project_dir,
-		                 boost::filesystem::path const& archive_file,
-		                 boost::filesystem::path const& prepend_dir) const;
-	};
-	*/
+        void export_data(boost::filesystem::path const& project_dir,
+                         boost::filesystem::path const& archive_file,
+                         boost::filesystem::path const& prepend_dir) const;
+    };
+    */
 }
 
 #endif

@@ -28,56 +28,56 @@
 
 namespace degate
 {
-	/**
-	 * Processor: Normalize a single channel image.
-	 */
-	template <typename ImageTypeIn, typename ImageTypeOut>
-	class IPNormalize : public ImageProcessorBase
-	{
-	private:
-		double lower_bound;
-		double upper_bound;
+    /**
+     * Processor: Normalize a single channel image.
+     */
+    template <typename ImageTypeIn, typename ImageTypeOut>
+    class IPNormalize : public ImageProcessorBase
+    {
+    private:
+        double lower_bound;
+        double upper_bound;
 
-	public:
+    public:
 
-		/**
-		 * The constructor.
-		 */
-		IPNormalize(double lower_bound = 0, double upper_bound = 1) :
-			ImageProcessorBase("IPNormalize",
-			                   "Normalize an image.",
-			                   false,
-			                   typeid(typename ImageTypeIn::pixel_type),
-			                   typeid(typename ImageTypeOut::pixel_type)),
-			lower_bound(lower_bound),
-			upper_bound(upper_bound)
-		{
-		}
+        /**
+         * The constructor.
+         */
+        IPNormalize(double lower_bound = 0, double upper_bound = 1) :
+            ImageProcessorBase("IPNormalize",
+                               "Normalize an image.",
+                               false,
+                               typeid(typename ImageTypeIn::pixel_type),
+                               typeid(typename ImageTypeOut::pixel_type)),
+            lower_bound(lower_bound),
+            upper_bound(upper_bound)
+        {
+        }
 
-		/**
-		 * The destructor.
-		 */
-		virtual ~IPNormalize()
-		{
-		}
+        /**
+         * The destructor.
+         */
+        virtual ~IPNormalize()
+        {
+        }
 
 
-		virtual ImageBase_shptr run(ImageBase_shptr in)
-		{
-			assert(in != nullptr);
+        virtual ImageBase_shptr run(ImageBase_shptr in)
+        {
+            assert(in != nullptr);
 
-			std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
+            std::shared_ptr<ImageTypeIn> img_in = std::dynamic_pointer_cast<ImageTypeIn>(in);
 
-			std::shared_ptr<ImageTypeOut> img_out(new ImageTypeOut(in->get_width(), in->get_height()));
+            std::shared_ptr<ImageTypeOut> img_out(new ImageTypeOut(in->get_width(), in->get_height()));
 
-			assert(img_in != nullptr);
-			assert(img_out != nullptr);
+            assert(img_in != nullptr);
+            assert(img_out != nullptr);
 
-			normalize<ImageTypeOut, ImageTypeIn>(img_out, img_in, lower_bound, upper_bound);
+            normalize<ImageTypeOut, ImageTypeIn>(img_out, img_in, lower_bound, upper_bound);
 
-			return img_out;
-		}
-	};
+            return img_out;
+        }
+    };
 }
 
 #endif

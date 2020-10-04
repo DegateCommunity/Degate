@@ -66,44 +66,44 @@ namespace degate
         bool     snap_to_grid;
     };
 
-	/**
-	 * @class PreferencesHandler
-	 * @brief Handle preferences and load/write them from/in a config file.
-	 *
-	 * @see SingletonBase
-	 */
-	class PreferencesHandler : public QObject, public SingletonBase<PreferencesHandler>
-	{
+    /**
+     * @class PreferencesHandler
+     * @brief Handle preferences and load/write them from/in a config file.
+     *
+     * @see SingletonBase
+     */
+    class PreferencesHandler : public QObject, public SingletonBase<PreferencesHandler>
+    {
         Q_OBJECT
 
-	public:
+    public:
 
-		/**
-		 * Create the preferences handler.
-		 */
-		PreferencesHandler();
-		~PreferencesHandler() override;
+        /**
+         * Create the preferences handler.
+         */
+        PreferencesHandler();
+        ~PreferencesHandler() override;
 
-		/**
-		 * Save preferences in the configuration file.
-		 */
-		void save();
+        /**
+         * Save preferences in the configuration file.
+         */
+        void save();
 
-		/**
-		 * Update preferences.
-		 */
-		void update(const Preferences& updated_preferences);
+        /**
+         * Update preferences.
+         */
+        void update(const Preferences& updated_preferences);
 
-		/**
-		 * Update language regarding the language in the preferences.
-		 */
-		void update_language();
+        /**
+         * Update language regarding the language in the preferences.
+         */
+        void update_language();
 
-		/**
-		 * Get all stored preferences.
-		 *
-		 * @return Returns a const reference of all preferences.
-		 */
+        /**
+         * Get all stored preferences.
+         *
+         * @return Returns a const reference of all preferences.
+         */
         const Preferences& get_preferences();
 
         /**
@@ -113,29 +113,29 @@ namespace degate
          */
         QSettings& get_settings();
 
-	signals:
-	    /**
-	     * Emitted when the icon theme changed.
-	     */
-	    void icon_theme_changed();
+    signals:
+        /**
+         * Emitted when the icon theme changed.
+         */
+        void icon_theme_changed();
 
-	    /**
-	     * Emitted when the theme changed.
-	     */
-	    void theme_changed();
+        /**
+         * Emitted when the theme changed.
+         */
+        void theme_changed();
 
         /**
          * Emitted when the language changed.
          */
         void language_changed();
 
-	private:
+    private:
         QSettings settings;
         Preferences preferences;
         std::shared_ptr<QTranslator> translator = nullptr;
         std::shared_ptr<QTranslator> qt_translator = nullptr;
         std::shared_ptr<QTranslator> base_translator = nullptr;
-	};
+    };
 }
 
 /**

@@ -25,30 +25,30 @@ namespace degate
 {
     LayersEditDialog::LayersEditDialog(QWidget* parent, const Project_shptr& project)
             : QDialog(parent), project(project), layers(parent, project)
-	{
-		setWindowTitle(tr("Edit layers"));
-		resize(500, 400);
-		
-		validate_button.setText(tr("Ok"));
-		cancel_button.setText(tr("Cancel"));
+    {
+        setWindowTitle(tr("Edit layers"));
+        resize(500, 400);
+
+        validate_button.setText(tr("Ok"));
+        cancel_button.setText(tr("Cancel"));
 
         buttons_layout.addStretch(1);
-		buttons_layout.addWidget(&validate_button);
-		buttons_layout.addWidget(&cancel_button);
-		
-		layout.addWidget(&layers);
-		layout.addLayout(&buttons_layout);
+        buttons_layout.addWidget(&validate_button);
+        buttons_layout.addWidget(&cancel_button);
 
-		setLayout(&layout);
+        layout.addWidget(&layers);
+        layout.addLayout(&buttons_layout);
 
-		QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
-		QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
-	}
+        setLayout(&layout);
 
-	void LayersEditDialog::validate()
-	{
-		layers.validate();
+        QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
+        QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
+    }
 
-		accept();
-	}
+    void LayersEditDialog::validate()
+    {
+        layers.validate();
+
+        accept();
+    }
 }

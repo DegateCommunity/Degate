@@ -26,38 +26,38 @@
 
 namespace degate
 {
-	class Point
-	{
-	private:
-		float x, y;
+    class Point
+    {
+    private:
+        float x, y;
 
-	public:
+    public:
 
-		Point();
-		Point(float x, float y);
+        Point();
+        Point(float x, float y);
 
-		bool operator==(const Point& other) const;
-		bool operator!=(const Point& other) const;
+        bool operator==(const Point& other) const;
+        bool operator!=(const Point& other) const;
 
         float get_x() const;
         float get_y() const;
 
-		void set_x(float x);
-		void set_y(float y);
+        void set_x(float x);
+        void set_y(float y);
 
-		void shift_x(float delta_x);
-		void shift_y(float delta_y);
+        void shift_x(float delta_x);
+        void shift_y(float delta_y);
 
-		/**
-		 * Calculate the distance to another point.
-		 */
-		float get_distance(Point const& p) const;
+        /**
+         * Calculate the distance to another point.
+         */
+        float get_distance(Point const& p) const;
 
 
-		std::string to_string() const;
-	};
+        std::string to_string() const;
+    };
 
-	typedef std::shared_ptr<Point> Point_shptr;
+    typedef std::shared_ptr<Point> Point_shptr;
 }
 
 #endif

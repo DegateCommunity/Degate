@@ -35,11 +35,11 @@ namespace degate
 {
 
     /**
-	 * @class EMarkerEditDialog
-	 * @brief Dialog to edit an emarker.
-	 *
-	 * @see QDialog
-	 */
+     * @class EMarkerEditDialog
+     * @brief Dialog to edit an emarker.
+     *
+     * @see QDialog
+     */
     class EMarkerEditDialog : public QDialog
     {
     Q_OBJECT
@@ -47,13 +47,13 @@ namespace degate
     public:
 
         /**
-		 * Create the dialog, to show it call the exec function.
-		 *
+         * Create the dialog, to show it call the exec function.
+         *
          * @param parent : the parent of the dialog.
-		 * @param emarker : the emarker to edit.
-		 *
-		 * @see QDialog
-		 */
+         * @param emarker : the emarker to edit.
+         *
+         * @see QDialog
+         */
         EMarkerEditDialog(QWidget* parent, EMarker_shptr& emarker);
         ~EMarkerEditDialog() override = default;
 

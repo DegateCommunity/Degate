@@ -30,54 +30,54 @@
 
 namespace degate
 {
-	/**
-	 * This is the  base class for exporter classes.
-	 */
-	class Exporter
-	{
-	protected:
+    /**
+     * This is the  base class for exporter classes.
+     */
+    class Exporter
+    {
+    protected:
 
-		/**
-		 * Convert a number type to a human readable string.
-		 */
-		template <typename T>
-		std::string number_to_string(T num)
-		{
-			std::ostringstream stm;
-			stm << num;
-			return stm.str();
-		}
+        /**
+         * Convert a number type to a human readable string.
+         */
+        template <typename T>
+        std::string number_to_string(T num)
+        {
+            std::ostringstream stm;
+            stm << num;
+            return stm.str();
+        }
 
-		/**
-		 * Convert a RGBA color value into the common format of "#%2x%2x%2x%2x".
-		 */
-		std::string to_color_string(color_t col) const
-		{
-			char buf[100];
-			snprintf(buf, sizeof(buf), "#%02X%02X%02X%02X",
-			         MASK_R(col),
-			         MASK_G(col),
-			         MASK_B(col),
-			         MASK_A(col));
-			return std::string(buf);
-		}
+        /**
+         * Convert a RGBA color value into the common format of "#%2x%2x%2x%2x".
+         */
+        std::string to_color_string(color_t col) const
+        {
+            char buf[100];
+            snprintf(buf, sizeof(buf), "#%02X%02X%02X%02X",
+                     MASK_R(col),
+                     MASK_G(col),
+                     MASK_B(col),
+                     MASK_A(col));
+            return std::string(buf);
+        }
 
-	public:
+    public:
 
-		/**
-		 * The ctor for an exporter object.
-		 */
-		Exporter()
-		{
-		};
+        /**
+         * The ctor for an exporter object.
+         */
+        Exporter()
+        {
+        };
 
-		/**
-		 * The dtor for an exporter object.
-		 */
-		virtual ~Exporter()
-		{
-		};
-	};
+        /**
+         * The dtor for an exporter object.
+         */
+        virtual ~Exporter()
+        {
+        };
+    };
 }
 
 #endif

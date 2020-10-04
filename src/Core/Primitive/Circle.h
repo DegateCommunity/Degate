@@ -29,46 +29,46 @@
 
 namespace degate
 {
-	class Circle : public AbstractShape, public DeepCopyableBase
-	{
-	private:
+    class Circle : public AbstractShape, public DeepCopyableBase
+    {
+    private:
         float x, y;
-		unsigned int diameter = 5;
+        unsigned int diameter = 5;
 
-		BoundingBox bounding_box;
+        BoundingBox bounding_box;
 
-		void calculate_bounding_box();
+        void calculate_bounding_box();
 
-	public:
+    public:
 
-		Circle();
-		Circle(float x, float y, unsigned int diameter);
+        Circle();
+        Circle(float x, float y, unsigned int diameter);
 
-		virtual ~Circle()
-		{
-		}
+        virtual ~Circle()
+        {
+        }
 
-		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
+        void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const;
 
-		virtual bool in_shape(float x, float y, float max_distance = 0) const;
+        virtual bool in_shape(float x, float y, float max_distance = 0) const;
 
-		virtual bool in_bounding_box(BoundingBox const& bbox) const;
-		virtual BoundingBox const& get_bounding_box() const;
+        virtual bool in_bounding_box(BoundingBox const& bbox) const;
+        virtual BoundingBox const& get_bounding_box() const;
 
-		virtual bool operator==(const Circle& other) const;
-		virtual bool operator!=(const Circle& other) const;
+        virtual bool operator==(const Circle& other) const;
+        virtual bool operator!=(const Circle& other) const;
 
-		virtual float get_x() const;
-		virtual float get_y() const;
-		virtual unsigned int get_diameter() const;
+        virtual float get_x() const;
+        virtual float get_y() const;
+        virtual unsigned int get_diameter() const;
 
-		virtual void set_x(float x);
-		virtual void set_y(float y);
-		virtual void set_diameter(unsigned int diameter);
+        virtual void set_x(float x);
+        virtual void set_y(float y);
+        virtual void set_diameter(unsigned int diameter);
 
-		virtual void shift_x(float delta_x);
-		virtual void shift_y(float delta_y);
-	};
+        virtual void shift_x(float delta_x);
+        virtual void shift_y(float delta_y);
+    };
 }
 
 #endif

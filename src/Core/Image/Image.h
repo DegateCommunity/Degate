@@ -55,274 +55,274 @@
 
 namespace degate
 {
-	class ImageBase
-	{
-	private:
+    class ImageBase
+    {
+    private:
 
-		BoundingBox bounding_box;
+        BoundingBox bounding_box;
 
-	public:
+    public:
 
-		ImageBase(unsigned int width, unsigned int height) :
-			bounding_box(static_cast<float>(width), static_cast<float>(height))
-		{
-		}
+        ImageBase(unsigned int width, unsigned int height) :
+            bounding_box(static_cast<float>(width), static_cast<float>(height))
+        {
+        }
 
-		virtual ~ImageBase()
-		{
-		}
+        virtual ~ImageBase()
+        {
+        }
 
-		/**
-		 * Get the width of an image.
-		 */
-		inline unsigned int get_width() const
-		{
-			return static_cast<unsigned int>(bounding_box.get_width());
-		}
+        /**
+         * Get the width of an image.
+         */
+        inline unsigned int get_width() const
+        {
+            return static_cast<unsigned int>(bounding_box.get_width());
+        }
 
-		/**
-		 * Get the height of an image.
-		 */
-		inline unsigned int get_height() const
-		{
-			return static_cast<unsigned int>(bounding_box.get_height());
-		}
+        /**
+         * Get the height of an image.
+         */
+        inline unsigned int get_height() const
+        {
+            return static_cast<unsigned int>(bounding_box.get_height());
+        }
 
-		/**
-		 * Get the bounding box that represents the image.
-		 */
-		inline BoundingBox const& get_bounding_box() const
-		{
-			return bounding_box;
-		}
-	};
-
-
-	/**
-	 * The generic templated class for image objects.
-	 *
-	 * This class can be used with StoragePolicy_Memory and
-	 * StoragePolicy_TempFile.
-	 *
-	 * Every image constructor should have a two parameter
-	 * version. This is necessary for image processing plugins,
-	 * because plugins have to create temporary images. The two
-	 * parameter constructor should then make reasonable default
-	 * assumtions about storage. Temporary images are really always
-	 * temporary. This means that we can create empty images in
-	 * degate's temp directory. The constructor should only get
-	 * the width and height of an image.
-	 */
-	template <class PixelPolicy,
-	          template <class _PixelPolicy> class StoragePolicy>
-	class Image : public ImageBase,
-	              public StoragePolicy<PixelPolicy>
-	{
-	public:
-
-		/**
-		 * The constructor.
-		 */
-		Image(unsigned int width, unsigned int height) :
-			ImageBase(width, height),
-			StoragePolicy<PixelPolicy>(width, height)
-		{
-		}
-
-		/**
-		 * The destructor.
-		 */
-		virtual ~Image()
-		{
-		}
+        /**
+         * Get the bounding box that represents the image.
+         */
+        inline BoundingBox const& get_bounding_box() const
+        {
+            return bounding_box;
+        }
+    };
 
 
-		/**
-		 * Get pixel with conversion.
-		 */
-		template <typename PixelTypeDst>
-		inline PixelTypeDst get_pixel_as(unsigned int x, unsigned int y)
-		{
-			return convert_pixel<PixelTypeDst, typename PixelPolicy::pixel_type>(this->get_pixel(x, y));
-		}
+    /**
+     * The generic templated class for image objects.
+     *
+     * This class can be used with StoragePolicy_Memory and
+     * StoragePolicy_TempFile.
+     *
+     * Every image constructor should have a two parameter
+     * version. This is necessary for image processing plugins,
+     * because plugins have to create temporary images. The two
+     * parameter constructor should then make reasonable default
+     * assumtions about storage. Temporary images are really always
+     * temporary. This means that we can create empty images in
+     * degate's temp directory. The constructor should only get
+     * the width and height of an image.
+     */
+    template <class PixelPolicy,
+              template <class _PixelPolicy> class StoragePolicy>
+    class Image : public ImageBase,
+                  public StoragePolicy<PixelPolicy>
+    {
+    public:
 
-		/**
-		 * Set pixel with conversion.
-		 */
-		template <typename PixelTypeSrc>
-		inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p)
-		{
-			this->set_pixel(x, y,
-			                convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
-		}
-	};
+        /**
+         * The constructor.
+         */
+        Image(unsigned int width, unsigned int height) :
+            ImageBase(width, height),
+            StoragePolicy<PixelPolicy>(width, height)
+        {
+        }
 
-	typedef std::shared_ptr<ImageBase> ImageBase_shptr;
+        /**
+         * The destructor.
+         */
+        virtual ~Image()
+        {
+        }
 
-	/**
-	 * Partial template specialization for the storage policy StoragePolicy_PersistentFile.
-	 */
-	template <class PixelPolicy>
-	class Image<PixelPolicy, StoragePolicy_PersistentFile> :
-		public ImageBase,
-		public StoragePolicy_PersistentFile<PixelPolicy>
-	{
-	public:
 
-		/**
-		 * @todo The third parameter must be optional. Create a temp image instead.
-		 */
-		Image(unsigned int width,
-		      unsigned int height,
-		      std::string const& filename) :
-			ImageBase(width, height),
-			StoragePolicy_PersistentFile<PixelPolicy>(width,
+        /**
+         * Get pixel with conversion.
+         */
+        template <typename PixelTypeDst>
+        inline PixelTypeDst get_pixel_as(unsigned int x, unsigned int y)
+        {
+            return convert_pixel<PixelTypeDst, typename PixelPolicy::pixel_type>(this->get_pixel(x, y));
+        }
+
+        /**
+         * Set pixel with conversion.
+         */
+        template <typename PixelTypeSrc>
+        inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p)
+        {
+            this->set_pixel(x, y,
+                            convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
+        }
+    };
+
+    typedef std::shared_ptr<ImageBase> ImageBase_shptr;
+
+    /**
+     * Partial template specialization for the storage policy StoragePolicy_PersistentFile.
+     */
+    template <class PixelPolicy>
+    class Image<PixelPolicy, StoragePolicy_PersistentFile> :
+        public ImageBase,
+        public StoragePolicy_PersistentFile<PixelPolicy>
+    {
+    public:
+
+        /**
+         * @todo The third parameter must be optional. Create a temp image instead.
+         */
+        Image(unsigned int width,
+              unsigned int height,
+              std::string const& filename) :
+            ImageBase(width, height),
+            StoragePolicy_PersistentFile<PixelPolicy>(width,
                                                       height,
                                                       filename)
-		{
-		}
+        {
+        }
 
-		virtual ~Image()
-		{
-		}
-
-
-		/**
-		 * Get pixel with conversion.
-		 */
-		template <typename PixelTypeDst>
-		inline PixelTypeDst get_pixel_as(unsigned int x, unsigned int y)
-		{
-			return convert_pixel<PixelTypeDst, typename PixelPolicy::pixel_type>(this->get_pixel(x, y));
-		}
-
-		/**
-		 * Set pixel with conversion.
-		 */
-		template <typename PixelTypeSrc>
-		inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p)
-		{
-			this->set_pixel(x, y,
-			                convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
-		}
-	};
+        virtual ~Image()
+        {
+        }
 
 
-	/**
-	 * Partial template specialization for the storage policy StoragePolicy_Tile.
-	 */
-	template <class PixelPolicy>
-	class Image<PixelPolicy, StoragePolicy_Tile> :
-		public ImageBase,
-		public StoragePolicy_Tile<PixelPolicy>
-	{
-	public:
+        /**
+         * Get pixel with conversion.
+         */
+        template <typename PixelTypeDst>
+        inline PixelTypeDst get_pixel_as(unsigned int x, unsigned int y)
+        {
+            return convert_pixel<PixelTypeDst, typename PixelPolicy::pixel_type>(this->get_pixel(x, y));
+        }
 
-		/**
-		 * Constructor for temporary virtual images.
-		 */
-		Image(unsigned int width,
-		      unsigned int height,
-		      unsigned int tile_width_exp = 10) :
-			ImageBase(width, height),
-			StoragePolicy_Tile<PixelPolicy>(width, height,
+        /**
+         * Set pixel with conversion.
+         */
+        template <typename PixelTypeSrc>
+        inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p)
+        {
+            this->set_pixel(x, y,
+                            convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
+        }
+    };
+
+
+    /**
+     * Partial template specialization for the storage policy StoragePolicy_Tile.
+     */
+    template <class PixelPolicy>
+    class Image<PixelPolicy, StoragePolicy_Tile> :
+        public ImageBase,
+        public StoragePolicy_Tile<PixelPolicy>
+    {
+    public:
+
+        /**
+         * Constructor for temporary virtual images.
+         */
+        Image(unsigned int width,
+              unsigned int height,
+              unsigned int tile_width_exp = 10) :
+            ImageBase(width, height),
+            StoragePolicy_Tile<PixelPolicy>(width, height,
                                             create_temp_directory(),
                                             false,
                                             tile_width_exp)
-		{
-		}
+        {
+        }
 
-		/**
-		 * Constructor for persistent virtual images.
-		 */
-		Image(unsigned int width,
-		      unsigned int height,
-		      std::string const& directory,
-		      bool persistent = true,
-		      unsigned int tile_width_exp = 10) :
-			ImageBase(width, height),
-			StoragePolicy_Tile<PixelPolicy>(width, height,
+        /**
+         * Constructor for persistent virtual images.
+         */
+        Image(unsigned int width,
+              unsigned int height,
+              std::string const& directory,
+              bool persistent = true,
+              unsigned int tile_width_exp = 10) :
+            ImageBase(width, height),
+            StoragePolicy_Tile<PixelPolicy>(width, height,
                                             directory,
                                             persistent,
                                             tile_width_exp)
-		{
-		}
+        {
+        }
 
-		/**
-		 * The dtor.
-		 */
-		virtual ~Image()
-		{
-		}
+        /**
+         * The dtor.
+         */
+        virtual ~Image()
+        {
+        }
 
-		/**
-		 * Get pixel with conversion.
-		 */
-		template <typename PixelTypeDst>
-		inline PixelTypeDst get_pixel_as(unsigned int x, unsigned int y)
-		{
-			return convert_pixel<PixelTypeDst, typename PixelPolicy::pixel_type>(this->get_pixel(x, y));
-		}
+        /**
+         * Get pixel with conversion.
+         */
+        template <typename PixelTypeDst>
+        inline PixelTypeDst get_pixel_as(unsigned int x, unsigned int y)
+        {
+            return convert_pixel<PixelTypeDst, typename PixelPolicy::pixel_type>(this->get_pixel(x, y));
+        }
 
-		/**
-		 * Set pixel with conversion.
-		 */
-		template <typename PixelTypeSrc>
-		inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p)
-		{
-			this->set_pixel(x, y,
-			                convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
-		}
-	};
-
-
-	/**
-	 * Typedefs for common types of virtual images.
-	 */
-
-	typedef Image<PixelPolicy_RGBA, StoragePolicy_Tile> TileImage_RGBA;
-	typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_Tile> TileImage_GS_DOUBLE;
-	typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_Tile> TileImage_GS_BYTE;
-
-	typedef std::shared_ptr<TileImage_RGBA> TileImage_RGBA_shptr;
-	typedef std::shared_ptr<TileImage_GS_DOUBLE> TileImage_GS_DOUBLE_shptr;
-	typedef std::shared_ptr<TileImage_GS_BYTE> TileImage_GS_BYTE_shptr;
+        /**
+         * Set pixel with conversion.
+         */
+        template <typename PixelTypeSrc>
+        inline void set_pixel_as(unsigned int x, unsigned int y, PixelTypeSrc p)
+        {
+            this->set_pixel(x, y,
+                            convert_pixel<typename PixelPolicy::pixel_type, PixelTypeSrc>(p));
+        }
+    };
 
 
-	typedef Image<PixelPolicy_RGBA, StoragePolicy_Tile> BackgroundImage;
-	typedef std::shared_ptr<BackgroundImage> BackgroundImage_shptr;
+    /**
+     * Typedefs for common types of virtual images.
+     */
+
+    typedef Image<PixelPolicy_RGBA, StoragePolicy_Tile> TileImage_RGBA;
+    typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_Tile> TileImage_GS_DOUBLE;
+    typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_Tile> TileImage_GS_BYTE;
+
+    typedef std::shared_ptr<TileImage_RGBA> TileImage_RGBA_shptr;
+    typedef std::shared_ptr<TileImage_GS_DOUBLE> TileImage_GS_DOUBLE_shptr;
+    typedef std::shared_ptr<TileImage_GS_BYTE> TileImage_GS_BYTE_shptr;
 
 
-	typedef Image<PixelPolicy_RGBA, StoragePolicy_TempFile> TempImage_RGBA;
-	typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_TempFile> TempImage_GS_DOUBLE;
-	typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_TempFile> TempImage_GS_BYTE;
-
-	typedef std::shared_ptr<TempImage_RGBA> TempImage_RGBA_shptr;
-	typedef std::shared_ptr<TempImage_GS_DOUBLE> TempImage_GS_DOUBLE_shptr;
-	typedef std::shared_ptr<TempImage_GS_BYTE> TempImage_GS_BYTE_shptr;
+    typedef Image<PixelPolicy_RGBA, StoragePolicy_Tile> BackgroundImage;
+    typedef std::shared_ptr<BackgroundImage> BackgroundImage_shptr;
 
 
-	typedef Image<PixelPolicy_RGBA, StoragePolicy_PersistentFile> PersistentImage_RGBA;
-	typedef std::shared_ptr<PersistentImage_RGBA> PersistentImage_RGBA_shptr;
+    typedef Image<PixelPolicy_RGBA, StoragePolicy_TempFile> TempImage_RGBA;
+    typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_TempFile> TempImage_GS_DOUBLE;
+    typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_TempFile> TempImage_GS_BYTE;
+
+    typedef std::shared_ptr<TempImage_RGBA> TempImage_RGBA_shptr;
+    typedef std::shared_ptr<TempImage_GS_DOUBLE> TempImage_GS_DOUBLE_shptr;
+    typedef std::shared_ptr<TempImage_GS_BYTE> TempImage_GS_BYTE_shptr;
 
 
-	typedef Image<PixelPolicy_RGBA, StoragePolicy_Memory> MemoryImage;
-	typedef std::shared_ptr<MemoryImage> MemoryImage_shptr;
+    typedef Image<PixelPolicy_RGBA, StoragePolicy_PersistentFile> PersistentImage_RGBA;
+    typedef std::shared_ptr<PersistentImage_RGBA> PersistentImage_RGBA_shptr;
 
 
-	typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_Memory> MemoryImage_GS_BYTE;
-	typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_Memory> MemoryImage_GS_DOUBLE;
-	typedef Image<PixelPolicy_RGBA, StoragePolicy_Memory> MemoryImage_RGBA;
-	typedef std::shared_ptr<MemoryImage_GS_BYTE> MemoryImage_GS_BYTE_shptr;
-	typedef std::shared_ptr<MemoryImage_GS_DOUBLE> MemoryImage_GS_DOUBLE_shptr;
-	typedef std::shared_ptr<MemoryImage_RGBA> MemoryImage_shptr;
+    typedef Image<PixelPolicy_RGBA, StoragePolicy_Memory> MemoryImage;
+    typedef std::shared_ptr<MemoryImage> MemoryImage_shptr;
 
-	typedef MemoryImage RendererImage;
-	typedef MemoryImage_shptr RendererImage_shptr;
 
-	// typedef for the image format in which we store template images within memory
-	typedef MemoryImage GateTemplateImage;
-	typedef MemoryImage_shptr GateTemplateImage_shptr;
+    typedef Image<PixelPolicy_GS_BYTE, StoragePolicy_Memory> MemoryImage_GS_BYTE;
+    typedef Image<PixelPolicy_GS_DOUBLE, StoragePolicy_Memory> MemoryImage_GS_DOUBLE;
+    typedef Image<PixelPolicy_RGBA, StoragePolicy_Memory> MemoryImage_RGBA;
+    typedef std::shared_ptr<MemoryImage_GS_BYTE> MemoryImage_GS_BYTE_shptr;
+    typedef std::shared_ptr<MemoryImage_GS_DOUBLE> MemoryImage_GS_DOUBLE_shptr;
+    typedef std::shared_ptr<MemoryImage_RGBA> MemoryImage_shptr;
+
+    typedef MemoryImage RendererImage;
+    typedef MemoryImage_shptr RendererImage_shptr;
+
+    // typedef for the image format in which we store template images within memory
+    typedef MemoryImage GateTemplateImage;
+    typedef MemoryImage_shptr GateTemplateImage_shptr;
 }
 
 #endif

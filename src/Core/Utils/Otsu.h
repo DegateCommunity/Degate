@@ -26,25 +26,25 @@
 
 namespace degate
 {
-	/**
-	 * Otsu's algorithm for calculating a threshold for image binarysation:
-	 * https://en.wikipedia.org/wiki/Otsu's_method
-	 */
-	class Otsu
-	{
-	private:
+    /**
+     * Otsu's algorithm for calculating a threshold for image binarysation:
+     * https://en.wikipedia.org/wiki/Otsu's_method
+     */
+    class Otsu
+    {
+    private:
 
-		double otsu_threshold;
+        double otsu_threshold;
 
-	public:
+    public:
 
-		Otsu();
-		~Otsu();
+        Otsu();
+        ~Otsu();
 
-		double get_otsu_threshold();
+        double get_otsu_threshold();
 
-		void run(TileImage_GS_DOUBLE_shptr gray);
-	};
+        void run(TileImage_GS_DOUBLE_shptr gray);
+    };
 }
 
 #endif

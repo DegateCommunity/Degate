@@ -32,112 +32,112 @@
 
 namespace degate
 {
-	/**
-	 * The net class represents an electrical potential that is shared
-	 * between electrically adjacent objects.
-	 *
-	 * Why do methods in class Net work with object ID instead of
-	 * shared pointers? There is an automatism. A ConnectedLogicModelObject
-	 * adds itself to a net, if you set the net for the ConnectedLogicModelObject.
-	 * And it removes itself from a Net object, if it's destructor is called.
-	 * The problem is, that the ConnectedLogicModelObject itself only
-	 * has a \p this pointer. An object can't have a shared pointer to itself.
-	 * One could work with normal pointers, but this would somehow circumvent
-	 * shared pointer approach in libdegate. So we use loosely coupled
-	 * object IDs.
-	 *
-	 * @see ConnectedLogicModelObject::set_net()
-	 * @see ConnectedLogicModelObject::remove_net()
-	 */
-	class Net : public LogicModelObjectBase, public DeepCopyable
-	{
+    /**
+     * The net class represents an electrical potential that is shared
+     * between electrically adjacent objects.
+     *
+     * Why do methods in class Net work with object ID instead of
+     * shared pointers? There is an automatism. A ConnectedLogicModelObject
+     * adds itself to a net, if you set the net for the ConnectedLogicModelObject.
+     * And it removes itself from a Net object, if it's destructor is called.
+     * The problem is, that the ConnectedLogicModelObject itself only
+     * has a \p this pointer. An object can't have a shared pointer to itself.
+     * One could work with normal pointers, but this would somehow circumvent
+     * shared pointer approach in libdegate. So we use loosely coupled
+     * object IDs.
+     *
+     * @see ConnectedLogicModelObject::set_net()
+     * @see ConnectedLogicModelObject::remove_net()
+     */
+    class Net : public LogicModelObjectBase, public DeepCopyable
+    {
     Q_DECLARE_TR_FUNCTIONS(degate::Net)
 
-		friend class ConnectedLogicModelObject;
+        friend class ConnectedLogicModelObject;
 
-	private:
+    private:
 
-		std::set<object_id_t> connections;
+        std::set<object_id_t> connections;
 
-	protected:
+    protected:
 
-		/**
-		 * Add an object of type ConnectedLogicModelObject to the net.
-		 * It is silently ignored, if the object is already referenced
-		 * from the net.
-		 * @exception InvalidObjectIDException This exception is thrown
-		 *  if the object has an invalid object ID.
-		 */
-		virtual void add_object(ConnectedLogicModelObject_shptr o);
-
-
-		/**
-		 * Add an object to the net.
-		 * @see add_object()
-		 */
-		virtual void add_object(object_id_t oid);
+        /**
+         * Add an object of type ConnectedLogicModelObject to the net.
+         * It is silently ignored, if the object is already referenced
+         * from the net.
+         * @exception InvalidObjectIDException This exception is thrown
+         *  if the object has an invalid object ID.
+         */
+        virtual void add_object(ConnectedLogicModelObject_shptr o);
 
 
-		/**
-		 * Remove an object from a net.
-		 * @exception CollectionLookupException Indicates that the object
-		 *  is not referenced from the net.
-		 * @exception InvalidObjectIDException As in add_object().
-		 * @see add_object()
-		 */
-		virtual void remove_object(ConnectedLogicModelObject_shptr o);
-
-		/**
-		 * Remove object.
-		 * @see remove_object()
-		 */
-		virtual void remove_object(object_id_t o);
+        /**
+         * Add an object to the net.
+         * @see add_object()
+         */
+        virtual void add_object(object_id_t oid);
 
 
-	public:
+        /**
+         * Remove an object from a net.
+         * @exception CollectionLookupException Indicates that the object
+         *  is not referenced from the net.
+         * @exception InvalidObjectIDException As in add_object().
+         * @see add_object()
+         */
+        virtual void remove_object(ConnectedLogicModelObject_shptr o);
 
-		typedef std::set<object_id_t>::iterator connection_iterator;
-		typedef std::set<object_id_t>::iterator iterator;
-		typedef std::set<object_id_t>::const_iterator const_iterator;
-
-		/**
-		 * Construct a new net.
-		 */
-		Net();
-
-		/**
-		 * Destroy a net.
-		 * @see LogicModel::remove_net()
-		 */
-		~Net() override;
-
-		//@{
-		DeepCopyable_shptr clone_shallow() const override;
-		void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
-		//@}
-
-		/**
-		 * Get an iterator to iterate over all objects that are electrically connected with this net.
-		 * Be careful with iterator invalidation!
-		 */
-		virtual connection_iterator begin();
-
-		/**
-		 * Get an end marker.
-		 */
-		virtual connection_iterator end();
+        /**
+         * Remove object.
+         * @see remove_object()
+         */
+        virtual void remove_object(object_id_t o);
 
 
-		/**
-		 * Get  the number of objects that are connected with this net.
-		 */
-		virtual unsigned int size() const;
+    public:
 
-		/**
-		 * Get a human readable description for the object.
-		 */
-		const std::string get_descriptive_identifier() const override;
-	};
+        typedef std::set<object_id_t>::iterator connection_iterator;
+        typedef std::set<object_id_t>::iterator iterator;
+        typedef std::set<object_id_t>::const_iterator const_iterator;
+
+        /**
+         * Construct a new net.
+         */
+        Net();
+
+        /**
+         * Destroy a net.
+         * @see LogicModel::remove_net()
+         */
+        ~Net() override;
+
+        //@{
+        DeepCopyable_shptr clone_shallow() const override;
+        void clone_deep_into(DeepCopyable_shptr destination, oldnew_t* oldnew) const override;
+        //@}
+
+        /**
+         * Get an iterator to iterate over all objects that are electrically connected with this net.
+         * Be careful with iterator invalidation!
+         */
+        virtual connection_iterator begin();
+
+        /**
+         * Get an end marker.
+         */
+        virtual connection_iterator end();
+
+
+        /**
+         * Get  the number of objects that are connected with this net.
+         */
+        virtual unsigned int size() const;
+
+        /**
+         * Get a human readable description for the object.
+         */
+        const std::string get_descriptive_identifier() const override;
+    };
 }
 
 #endif

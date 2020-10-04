@@ -28,18 +28,18 @@ using namespace degate;
 
 void DOTExporter::add_header_line(std::string header_line)
 {
-	header_lines.push_back(std::string("# ") + header_line);
+    header_lines.push_back(std::string("# ") + header_line);
 }
 
 void DOTExporter::add_graph_setting(std::string line)
 {
-	graph_setting_lines.push_back(line);
+    graph_setting_lines.push_back(line);
 }
 
 
 void DOTExporter::add_node(std::string node_id, std::string node_params)
 {
-	node_lines.push_back(node_id + node_params);
+    node_lines.push_back(node_id + node_params);
 }
 
 
@@ -47,57 +47,57 @@ void DOTExporter::add_edge(std::string from_node_id,
                            std::string to_node_id,
                            std::string edge_params)
 {
-	std::string txt(from_node_id);
-	txt += std::string(" -- ");
-	txt += to_node_id;
-	txt += edge_params;
-	edge_lines.push_back(txt);
+    std::string txt(from_node_id);
+    txt += std::string(" -- ");
+    txt += to_node_id;
+    txt += edge_params;
+    edge_lines.push_back(txt);
 }
 
 
 void DOTExporter::dump_to_file(std::string const& filename) const
 {
-	std::ofstream dot_file;
+    std::ofstream dot_file;
 
-	dot_file.open(filename.c_str(), std::ios::trunc | std::ios::out);
+    dot_file.open(filename.c_str(), std::ios::trunc | std::ios::out);
 
-	// write header
+    // write header
 
-	for (std::list<std::string>::const_iterator iter = header_lines.begin();
-	     iter != header_lines.end(); ++iter)
-	{
-		dot_file << *iter << std::endl;
-	}
+    for (std::list<std::string>::const_iterator iter = header_lines.begin();
+         iter != header_lines.end(); ++iter)
+    {
+        dot_file << *iter << std::endl;
+    }
 
-	dot_file << "graph LogicModel {" << std::endl;
+    dot_file << "graph LogicModel {" << std::endl;
 
-	for (std::list<std::string>::const_iterator iter = graph_setting_lines.begin();
-	     iter != graph_setting_lines.end(); ++iter)
-	{
-		dot_file << "\t" << *iter << std::endl;
-	}
-
-
-	// nodes
-	for (std::list<std::string>::const_iterator iter = node_lines.begin();
-	     iter != node_lines.end(); ++iter)
-		dot_file << "\t" << *iter << std::endl;
-
-	// edges
-	for (std::list<std::string>::const_iterator iter = edge_lines.begin();
-	     iter != edge_lines.end(); ++iter)
-		dot_file << "\t" << *iter << std::endl;
+    for (std::list<std::string>::const_iterator iter = graph_setting_lines.begin();
+         iter != graph_setting_lines.end(); ++iter)
+    {
+        dot_file << "\t" << *iter << std::endl;
+    }
 
 
-	dot_file << "}" << std::endl;
+    // nodes
+    for (std::list<std::string>::const_iterator iter = node_lines.begin();
+         iter != node_lines.end(); ++iter)
+        dot_file << "\t" << *iter << std::endl;
 
-	dot_file.close();
+    // edges
+    for (std::list<std::string>::const_iterator iter = edge_lines.begin();
+         iter != edge_lines.end(); ++iter)
+        dot_file << "\t" << *iter << std::endl;
+
+
+    dot_file << "}" << std::endl;
+
+    dot_file.close();
 }
 
 void DOTExporter::clear()
 {
-	header_lines.clear();
-	graph_setting_lines.clear();
-	node_lines.clear();
-	edge_lines.clear();
+    header_lines.clear();
+    graph_setting_lines.clear();
+    node_lines.clear();
+    edge_lines.clear();
 }

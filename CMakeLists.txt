@@ -34,11 +34,11 @@ set(CMAKE_VERBOSE_MAKEFILE true)
 # Set flags
 #
 if (NOT MSVC)
-	add_definitions(-Wall -g -fno-inline -std=c++11 -DBOOST_NO_CXX11_SCOPED_ENUMS)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    add_definitions(-Wall -g -fno-inline -std=c++11 -DBOOST_NO_CXX11_SCOPED_ENUMS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 else()
-	add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+    add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 endif()
 
 #
@@ -87,11 +87,11 @@ set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml Qt5::OpenGL Qt5::Concu
 # Configuration
 #
 if (CMAKE_SIZEOF_VOID_P MATCHES 8) # if x64
-	message(STATUS "x64 configuration")
-	set(CONFIGURATION "x64")
+    message(STATUS "x64 configuration")
+    set(CONFIGURATION "x64")
 else() # if x86
-	message(STATUS "x86 configuration")
-	set(CONFIGURATION "x86")
+    message(STATUS "x86 configuration")
+    set(CONFIGURATION "x86")
 endif()
 
 #
@@ -103,35 +103,35 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake/ConfigureFiles.cmake)
 # Version command
 #
 add_custom_command(
-		OUTPUT "Degate version" # Not an error, we need a dummy output to force command execution for every build
-		COMMAND ${CMAKE_COMMAND} -DPROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}"
-								 -DCMAKE_SYSTEM_NAME="${CMAKE_SYSTEM_NAME}"
-								 -DCONFIGURATION="${CONFIGURATION}"
-								 -P "${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake/ConfigureFiles.cmake"
-		DEPENDS "${PROJECT_SOURCE_DIR}/VERSION"
+        OUTPUT "Degate version" # Not an error, we need a dummy output to force command execution for every build
+        COMMAND ${CMAKE_COMMAND} -DPROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}"
+                                 -DCMAKE_SYSTEM_NAME="${CMAKE_SYSTEM_NAME}"
+                                 -DCONFIGURATION="${CONFIGURATION}"
+                                 -P "${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake/ConfigureFiles.cmake"
+        DEPENDS "${PROJECT_SOURCE_DIR}/VERSION"
 )
 
 #
 # The source files
 #
 file(GLOB_RECURSE SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIRECTORIES false 
-	"src/*.cc"
-	"src/*.cpp"
-	"src/*.h"
-	"src/*.hpp"
+    "src/*.cc"
+    "src/*.cpp"
+    "src/*.h"
+    "src/*.hpp"
 )
 
 #
 # Translation
 #
 SET(TRANSLATION_FILES
-		degate_en.ts
-		degate_fr.ts
-		degate_de.ts
-		degate_ru.ts
-		degate_es.ts
-		degate_it.ts
-		degate_ko.ts
+        degate_en.ts
+        degate_fr.ts
+        degate_de.ts
+        degate_ru.ts
+        degate_es.ts
+        degate_it.ts
+        degate_ko.ts
 )
 
 list(TRANSFORM TRANSLATION_FILES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/res/languages/)
@@ -186,10 +186,10 @@ set_target_properties(Degate
 )
 
 set_target_properties(DegateCore
-	PROPERTIES
-	ARCHIVE_OUTPUT_DIRECTORY "out/lib"
-	LIBRARY_OUTPUT_DIRECTORY "out/lib"
-	RUNTIME_OUTPUT_DIRECTORY "out/bin"
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "out/lib"
+    LIBRARY_OUTPUT_DIRECTORY "out/lib"
+    RUNTIME_OUTPUT_DIRECTORY "out/bin"
 )
 
 #
@@ -197,7 +197,7 @@ set_target_properties(DegateCore
 #
 if(MSVC) # If using the VS compiler...
     set_target_properties(Degate PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Degate)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Degate)
 endif()
 
 #
@@ -212,14 +212,14 @@ add_subdirectory(tests)
 
 find_package(Doxygen QUIET)
 if(DOXYGEN_FOUND)
-	message(STATUS "Doxygen found")
+    message(STATUS "Doxygen found")
 
-	add_custom_target(Documentation ALL
-			COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/config/DoxyFile"
-			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-			COMMENT "Generating documentation with Doxygen."
-			SOURCES "Degate version")
+    add_custom_target(Documentation ALL
+            COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/config/DoxyFile"
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMENT "Generating documentation with Doxygen."
+            SOURCES "Degate version")
 
 else()
-	message(STATUS "Doxygen not found")
+    message(STATUS "Doxygen not found")
 endif()

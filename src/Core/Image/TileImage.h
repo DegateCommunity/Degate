@@ -30,157 +30,157 @@
 
 namespace degate
 {
-	/**
-	 * Storage policy for image objects that consists of tiles.
-	 *
-	 * This implementation uses a TileCache.
-	 */
-	template <class PixelPolicy>
-	class StoragePolicy_Tile : public StoragePolicy_Base<PixelPolicy>
-	{
-	public:
+    /**
+     * Storage policy for image objects that consists of tiles.
+     *
+     * This implementation uses a TileCache.
+     */
+    template <class PixelPolicy>
+    class StoragePolicy_Tile : public StoragePolicy_Base<PixelPolicy>
+    {
+    public:
 
-		typedef std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> MemoryMap_shptr;
+        typedef std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> MemoryMap_shptr;
 
-	private:
+    private:
 
-		// Do the underlying file resources have to be cleaned up on destruction?
-		const bool persistent;
+        // Do the underlying file resources have to be cleaned up on destruction?
+        const bool persistent;
 
-		// Exponent and a bitmask to calculate tile numbers.
-		const unsigned int tile_width_exp;
-		const unsigned int offset_bitmask;
+        // Exponent and a bitmask to calculate tile numbers.
+        const unsigned int tile_width_exp;
+        const unsigned int offset_bitmask;
 
-		// The place where we store the image data.
-		const std::string directory;
+        // The place where we store the image data.
+        const std::string directory;
 
-		// A helper class to load tiles.
-		mutable TileCache<PixelPolicy> tile_cache;
+        // A helper class to load tiles.
+        mutable TileCache<PixelPolicy> tile_cache;
 
-		unsigned int tiles_number;
+        unsigned int tiles_number;
 
-	private:
+    private:
 
 
-		/**
-		 * Get the minimum width or height of an tile based image, that
-		 * it at least requested_size pixel width / height.
-		 * @param requested_size The minimum size.
-		 * @param tile_width_exp The exponent (to base 2) that gives th
-		 * @return
-		 */
-		unsigned int calc_real_size(unsigned int requested_size,
-		                            unsigned int tile_width_exp) const
-		{
-			// we can't use the get_tile_size() method here, because we use
-			// this method during the base class constructor call.
-			unsigned int tile_size = (1 << tile_width_exp);
-			unsigned int remainder = requested_size % tile_size;
-			if (remainder == 0) return requested_size;
-			else return requested_size - remainder + tile_size;
-		}
+        /**
+         * Get the minimum width or height of an tile based image, that
+         * it at least requested_size pixel width / height.
+         * @param requested_size The minimum size.
+         * @param tile_width_exp The exponent (to base 2) that gives th
+         * @return
+         */
+        unsigned int calc_real_size(unsigned int requested_size,
+                                    unsigned int tile_width_exp) const
+        {
+            // we can't use the get_tile_size() method here, because we use
+            // this method during the base class constructor call.
+            unsigned int tile_size = (1 << tile_width_exp);
+            unsigned int remainder = requested_size % tile_size;
+            if (remainder == 0) return requested_size;
+            else return requested_size - remainder + tile_size;
+        }
 
-	public:
+    public:
 
-		/**
-		 * The constructor for a tile based image. The constructed image has at
-		 * least the size specified via the width and height parameter.
-		 * Because the image is splitted into equisized tiles the constructed
-		 * image might be larger than the requested size.
-		 *
-		 * @param width The minimum width of the image.
-		 * @param height The minimum height of the image.
-		 * @param directory A tile based image is stored in multiple
-		 *      files. This directory specifies the place where
-		 *      the files are stored. If the directory doen't exits, it is created.
-		 * @param persistent This boolean value indicates whether the image files
-		 *      are removed on object destruction.
-		 * @param tile_width_exp The width (and height) for image tiles. This
-		 *      value is specified as an exponent to the base 2. This means for
-		 *      example that if you want to use a width of 1024 pixel, you have
-		 *      to give a value of 10, because 2^10 is 1024.
-		 */
-		StoragePolicy_Tile(unsigned int width, unsigned int height,
+        /**
+         * The constructor for a tile based image. The constructed image has at
+         * least the size specified via the width and height parameter.
+         * Because the image is splitted into equisized tiles the constructed
+         * image might be larger than the requested size.
+         *
+         * @param width The minimum width of the image.
+         * @param height The minimum height of the image.
+         * @param directory A tile based image is stored in multiple
+         *      files. This directory specifies the place where
+         *      the files are stored. If the directory doen't exits, it is created.
+         * @param persistent This boolean value indicates whether the image files
+         *      are removed on object destruction.
+         * @param tile_width_exp The width (and height) for image tiles. This
+         *      value is specified as an exponent to the base 2. This means for
+         *      example that if you want to use a width of 1024 pixel, you have
+         *      to give a value of 10, because 2^10 is 1024.
+         */
+        StoragePolicy_Tile(unsigned int width, unsigned int height,
                            std::string const& directory,
                            bool persistent = false,
                            unsigned int tile_width_exp = 10) :
-			persistent(persistent),
-			tile_width_exp(tile_width_exp),
-			offset_bitmask((1 << tile_width_exp) - 1),
-			directory(directory),
-			tile_cache(directory, tile_width_exp, persistent)
-		{
-			if (!file_exists(directory)) create_directory(directory);
+            persistent(persistent),
+            tile_width_exp(tile_width_exp),
+            offset_bitmask((1 << tile_width_exp) - 1),
+            directory(directory),
+            tile_cache(directory, tile_width_exp, persistent)
+        {
+            if (!file_exists(directory)) create_directory(directory);
 
-			double temp_tile_size = 1 << tile_width_exp;
-			tiles_number = static_cast<unsigned>(ceil(static_cast<double>(width) / temp_tile_size)) * static_cast<unsigned>(ceil(static_cast<double>(height) / temp_tile_size));
-		}
+            double temp_tile_size = 1 << tile_width_exp;
+            tiles_number = static_cast<unsigned>(ceil(static_cast<double>(width) / temp_tile_size)) * static_cast<unsigned>(ceil(static_cast<double>(height) / temp_tile_size));
+        }
 
-		/**
-		 * The destructor.
-		 */
-		virtual ~StoragePolicy_Tile()
-		{
+        /**
+         * The destructor.
+         */
+        virtual ~StoragePolicy_Tile()
+        {
             tile_cache.release_memory();
-			if (persistent == false) remove_directory(directory);
-		}
+            if (persistent == false) remove_directory(directory);
+        }
 
-		inline unsigned int get_tiles_number() const
-		{
-			return tiles_number;
-		}
+        inline unsigned int get_tiles_number() const
+        {
+            return tiles_number;
+        }
 
-		/**
-		 * Get the width / height of a single tile. The size is a power of two.
-		 */
-		inline unsigned int get_tile_size() const
-		{
-			return (1 << tile_width_exp);
-		}
-
-
-		/**
-		 * Get the directory, where images are stored.
-		 */
-		std::string get_directory() const { return directory; }
-
-		/**
-		 * Check if the image is persistent.
-		 */
-		bool is_persistent() const { return persistent; }
+        /**
+         * Get the width / height of a single tile. The size is a power of two.
+         */
+        inline unsigned int get_tile_size() const
+        {
+            return (1 << tile_width_exp);
+        }
 
 
-		inline typename PixelPolicy::pixel_type get_pixel(unsigned int x, unsigned int y) const;
+        /**
+         * Get the directory, where images are stored.
+         */
+        std::string get_directory() const { return directory; }
 
-		inline void set_pixel(unsigned int x, unsigned int y, typename PixelPolicy::pixel_type new_val);
+        /**
+         * Check if the image is persistent.
+         */
+        bool is_persistent() const { return persistent; }
 
-		/**
-		 * Copy the raw data from an image tile that has its upper left corner at x,y into a buffer.
-		 */
-		void raw_copy(void* dst_buf, unsigned int src_x, unsigned int src_y) const
-		{
-			MemoryMap_shptr mem = tile_cache.get_tile(src_x, src_y);
-			mem->raw_copy(dst_buf);
-		}
-	};
 
-	template <class PixelPolicy>
-	inline typename PixelPolicy::pixel_type
-	StoragePolicy_Tile<PixelPolicy>::get_pixel(unsigned int x,
-	                                           unsigned int y) const
-	{
-		MemoryMap_shptr mem = tile_cache.get_tile(x, y);
-		return mem->get(x & offset_bitmask, y & offset_bitmask);
-	}
+        inline typename PixelPolicy::pixel_type get_pixel(unsigned int x, unsigned int y) const;
 
-	template <class PixelPolicy>
-	inline void
-	StoragePolicy_Tile<PixelPolicy>::set_pixel(unsigned int x, unsigned int y,
-	                                           typename PixelPolicy::pixel_type new_val)
-	{
-		MemoryMap_shptr mem = tile_cache.get_tile(x, y);
-		mem->set(x & offset_bitmask, y & offset_bitmask, new_val);
-	}
+        inline void set_pixel(unsigned int x, unsigned int y, typename PixelPolicy::pixel_type new_val);
+
+        /**
+         * Copy the raw data from an image tile that has its upper left corner at x,y into a buffer.
+         */
+        void raw_copy(void* dst_buf, unsigned int src_x, unsigned int src_y) const
+        {
+            MemoryMap_shptr mem = tile_cache.get_tile(src_x, src_y);
+            mem->raw_copy(dst_buf);
+        }
+    };
+
+    template <class PixelPolicy>
+    inline typename PixelPolicy::pixel_type
+    StoragePolicy_Tile<PixelPolicy>::get_pixel(unsigned int x,
+                                               unsigned int y) const
+    {
+        MemoryMap_shptr mem = tile_cache.get_tile(x, y);
+        return mem->get(x & offset_bitmask, y & offset_bitmask);
+    }
+
+    template <class PixelPolicy>
+    inline void
+    StoragePolicy_Tile<PixelPolicy>::set_pixel(unsigned int x, unsigned int y,
+                                               typename PixelPolicy::pixel_type new_val)
+    {
+        MemoryMap_shptr mem = tile_cache.get_tile(x, y);
+        mem->set(x & offset_bitmask, y & offset_bitmask, new_val);
+    }
 }
 
 

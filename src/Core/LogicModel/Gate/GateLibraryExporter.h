@@ -31,43 +31,43 @@
 
 namespace degate
 {
-	/**
-	 * The GateLibraryExporter exports a gate library. That is the file
-	 * gate_library.xml from your degate project.
-	 */
-	class GateLibraryExporter : public XMLExporter
-	{
-	private:
+    /**
+     * The GateLibraryExporter exports a gate library. That is the file
+     * gate_library.xml from your degate project.
+     */
+    class GateLibraryExporter : public XMLExporter
+    {
+    private:
 
-		void add_gates(QDomDocument& doc, QDomElement& templates_elem, GateLibrary_shptr gate_lib,
-		               std::string const& directory);
+        void add_gates(QDomDocument& doc, QDomElement& templates_elem, GateLibrary_shptr gate_lib,
+                       std::string const& directory);
 
-		void add_images(QDomDocument& doc, QDomElement& gate_elem, GateTemplate_shptr gate_tmpl,
-		                std::string const& directory);
+        void add_images(QDomDocument& doc, QDomElement& gate_elem, GateTemplate_shptr gate_tmpl,
+                        std::string const& directory);
 
-		void add_implementations(QDomDocument& doc, QDomElement& gate_elem, GateTemplate_shptr gate_tmpl,
-		                         std::string const& directory);
+        void add_implementations(QDomDocument& doc, QDomElement& gate_elem, GateTemplate_shptr gate_tmpl,
+                                 std::string const& directory);
 
-		void add_ports(QDomDocument& doc, QDomElement& gate_elem, GateTemplate_shptr gate_tmpl);
+        void add_ports(QDomDocument& doc, QDomElement& gate_elem, GateTemplate_shptr gate_tmpl);
 
-		ObjectIDRewriter_shptr oid_rewriter;
+        ObjectIDRewriter_shptr oid_rewriter;
 
-	public:
-		GateLibraryExporter(ObjectIDRewriter_shptr oid_rewriter) : oid_rewriter(oid_rewriter)
-		{
-		}
+    public:
+        GateLibraryExporter(ObjectIDRewriter_shptr oid_rewriter) : oid_rewriter(oid_rewriter)
+        {
+        }
 
-		~GateLibraryExporter()
-		{
-		}
+        ~GateLibraryExporter()
+        {
+        }
 
-		/**
-		 * @exception InvalidPathException
-		 * @exception InvalidPointerException
-		 * @exception std::runtime_error
-		 */
-		void export_data(std::string const& filename, GateLibrary_shptr gate_lib);
-	};
+        /**
+         * @exception InvalidPathException
+         * @exception InvalidPointerException
+         * @exception std::runtime_error
+         */
+        void export_data(std::string const& filename, GateLibrary_shptr gate_lib);
+    };
 }
 
 #endif

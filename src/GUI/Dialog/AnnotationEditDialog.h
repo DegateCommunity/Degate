@@ -34,50 +34,50 @@
 namespace degate
 {
 
-	/**
-	 * @class AnnotationEditDialog
-	 * @brief Dialog to edit an annotation.
-	 *
-	 * @see QDialog
-	 */
-	class AnnotationEditDialog : public QDialog
-	{
-		Q_OBJECT
-		
-	public:
+    /**
+     * @class AnnotationEditDialog
+     * @brief Dialog to edit an annotation.
+     *
+     * @see QDialog
+     */
+    class AnnotationEditDialog : public QDialog
+    {
+        Q_OBJECT
 
-		/**
-		 * Create the dialog, to show it call the exec function.
-		 *
-		 * @param parent : the parent of the dialog.
-		 * @param annotation : the annotation to edit.
-		 *
-		 * @see QDialog
-		 */
-		AnnotationEditDialog(QWidget* parent, const Annotation_shptr& annotation);
-		~AnnotationEditDialog() override = default;
+    public:
 
-	public slots:
+        /**
+         * Create the dialog, to show it call the exec function.
+         *
+         * @param parent : the parent of the dialog.
+         * @param annotation : the annotation to edit.
+         *
+         * @see QDialog
+         */
+        AnnotationEditDialog(QWidget* parent, const Annotation_shptr& annotation);
+        ~AnnotationEditDialog() override = default;
 
-		/**
-		 * Save all changes and close the dialog.
-		 */
-		void validate();
+    public slots:
 
-	private:
-		QGridLayout layout;
-		Annotation_shptr annotation;
-		
-		QLabel text_label;
-		QLineEdit text;
-		QLabel fill_color_label;
-		ColorSelectionButton fill_color;
-		QLabel frame_color_label;
-		ColorSelectionButton frame_color;
-		QPushButton validate_button;
-		QPushButton cancel_button;
-		
-	};
+        /**
+         * Save all changes and close the dialog.
+         */
+        void validate();
+
+    private:
+        QGridLayout layout;
+        Annotation_shptr annotation;
+
+        QLabel text_label;
+        QLineEdit text;
+        QLabel fill_color_label;
+        ColorSelectionButton fill_color;
+        QLabel frame_color_label;
+        ColorSelectionButton frame_color;
+        QPushButton validate_button;
+        QPushButton cancel_button;
+
+    };
 }
 
 #endif
