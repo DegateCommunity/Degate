@@ -70,13 +70,12 @@ void Annotation::set_class_id(Annotation::class_id_t class_id)
 
 const std::string Annotation::get_descriptive_identifier() const
 {
-    return QString("[%1] %2 (%3=%4,%5=%6)").arg(tr("Annotation"))
-                                           .arg(QString::fromStdString(get_name()))
-                                           .arg(tr("id"))
-                                           .arg(get_object_id())
-                                           .arg(tr("class"))
-                                           .arg(get_class_id())
-                                           .toStdString();
+    return QString("%1 (%2=%3,%4=%5)").arg(QString::fromStdString(get_name()))
+                                      .arg(tr("id"))
+                                      .arg(get_object_id())
+                                      .arg(tr("class"))
+                                      .arg(get_class_id())
+                                      .toStdString();
 }
 
 const std::string Annotation::get_object_type_name() const

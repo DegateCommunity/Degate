@@ -78,18 +78,17 @@
 <context>
     <name>degate::Annotation</name>
     <message>
-        <location filename="../../src/Core/LogicModel/Annotation/Annotation.cc" line="75"/>
+        <location filename="../../src/Core/LogicModel/Annotation/Annotation.cc" line="74"/>
         <source>id</source>
         <translation>id</translation>
     </message>
     <message>
-        <location filename="../../src/Core/LogicModel/Annotation/Annotation.cc" line="77"/>
+        <location filename="../../src/Core/LogicModel/Annotation/Annotation.cc" line="76"/>
         <source>class</source>
         <translation>classe</translation>
     </message>
     <message>
-        <location filename="../../src/Core/LogicModel/Annotation/Annotation.cc" line="73"/>
-        <location filename="../../src/Core/LogicModel/Annotation/Annotation.cc" line="84"/>
+        <location filename="../../src/Core/LogicModel/Annotation/Annotation.cc" line="83"/>
         <source>Annotation</source>
         <translation>Annotation</translation>
     </message>
@@ -178,49 +177,49 @@
 <context>
     <name>degate::ConnectionInspector</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="33"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="35"/>
         <source>Connection inspector</source>
         <translation>Inspecteur de connexion</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="36"/>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="112"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="38"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="114"/>
         <source>Current object:</source>
         <translation>Objet actuel :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="38"/>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="114"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="40"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="116"/>
         <source>Current object type:</source>
         <translation>Type de l&apos;objet actuel :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="52"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="54"/>
         <source>Previous</source>
         <translation>Précédent</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="53"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="55"/>
         <source>Current</source>
         <translation>Actuel</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="54"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="56"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="61"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="63"/>
         <source>Back</source>
         <translation>Retour</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="65"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="67"/>
         <source>Jump to object</source>
         <translation>Aller à l&apos;objet</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="69"/>
+        <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="71"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
@@ -228,9 +227,7 @@
 <context>
     <name>degate::EMarker</name>
     <message>
-        <location filename="../../src/Core/LogicModel/EMarker/EMarker.cc" line="56"/>
-        <location filename="../../src/Core/LogicModel/EMarker/EMarker.cc" line="63"/>
-        <location filename="../../src/Core/LogicModel/EMarker/EMarker.cc" line="69"/>
+        <location filename="../../src/Core/LogicModel/EMarker/EMarker.cc" line="66"/>
         <source>EMarker</source>
         <translation>Marqueur électrique</translation>
     </message>
@@ -320,11 +317,7 @@
 <context>
     <name>degate::Gate</name>
     <message>
-        <location filename="../../src/Core/LogicModel/Gate/Gate.cc" line="305"/>
-        <location filename="../../src/Core/LogicModel/Gate/Gate.cc" line="312"/>
-        <location filename="../../src/Core/LogicModel/Gate/Gate.cc" line="322"/>
-        <location filename="../../src/Core/LogicModel/Gate/Gate.cc" line="326"/>
-        <location filename="../../src/Core/LogicModel/Gate/Gate.cc" line="337"/>
+        <location filename="../../src/Core/LogicModel/Gate/Gate.cc" line="332"/>
         <source>Gate</source>
         <translation>Porte</translation>
     </message>
@@ -814,15 +807,12 @@
 <context>
     <name>degate::GatePort</name>
     <message>
-        <location filename="../../src/Core/LogicModel/Gate/GatePort.cc" line="156"/>
+        <location filename="../../src/Core/LogicModel/Gate/GatePort.cc" line="150"/>
         <source>gate</source>
         <translation>porte</translation>
     </message>
     <message>
-        <location filename="../../src/Core/LogicModel/Gate/GatePort.cc" line="141"/>
-        <location filename="../../src/Core/LogicModel/Gate/GatePort.cc" line="151"/>
-        <location filename="../../src/Core/LogicModel/Gate/GatePort.cc" line="163"/>
-        <location filename="../../src/Core/LogicModel/Gate/GatePort.cc" line="170"/>
+        <location filename="../../src/Core/LogicModel/Gate/GatePort.cc" line="164"/>
         <source>Gate port</source>
         <translation>Port de porte</translation>
     </message>
@@ -2305,9 +2295,7 @@ Those settings are independent (per project).</source>
 <context>
     <name>degate::Via</name>
     <message>
-        <location filename="../../src/Core/LogicModel/Via/Via.cc" line="86"/>
-        <location filename="../../src/Core/LogicModel/Via/Via.cc" line="93"/>
-        <location filename="../../src/Core/LogicModel/Via/Via.cc" line="99"/>
+        <location filename="../../src/Core/LogicModel/Via/Via.cc" line="96"/>
         <source>Via</source>
         <translation>Via</translation>
     </message>
@@ -2397,9 +2385,7 @@ Those settings are independent (per project).</source>
 <context>
     <name>degate::Wire</name>
     <message>
-        <location filename="../../src/Core/LogicModel/Wire/Wire.cc" line="63"/>
-        <location filename="../../src/Core/LogicModel/Wire/Wire.cc" line="70"/>
-        <location filename="../../src/Core/LogicModel/Wire/Wire.cc" line="76"/>
+        <location filename="../../src/Core/LogicModel/Wire/Wire.cc" line="73"/>
         <source>Wire</source>
         <translation>Câble</translation>
     </message>

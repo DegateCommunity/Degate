@@ -138,29 +138,23 @@ const std::string GatePort::get_descriptive_identifier() const
 	{
 		if (gate.lock()->has_name())
 		{
-            return QString("[%1] %2 : %3 (%4)").arg(tr("Gate port"))
-                                               .arg(QString::fromStdString(gate.lock()->get_name()))
-                                               .arg(QString::fromStdString(gate_template_port->get_name()))
-                                               .arg(QString::fromStdString(gate.lock()
-                                                                               ->get_gate_template()
-                                                                               ->get_name()))
-                                               .toStdString();
+            return QString("%1 : %2 (%3)").arg(QString::fromStdString(gate.lock()->get_name()))
+                                          .arg(QString::fromStdString(gate_template_port->get_name()))
+                                          .arg(QString::fromStdString(gate.lock()->get_gate_template()->get_name()))
+                                          .toStdString();
 		}
 		else
 		{
-            return QString("[%1] %2 (%3, %4=%5)").arg(tr("Gate port"))
-                                                 .arg(QString::fromStdString(gate_template_port->get_name()))
-                                                 .arg(QString::fromStdString(gate.lock()
-                                                                                 ->get_gate_template()
-                                                                                 ->get_name()))
-                                                 .arg(tr("gate"))
-                                                 .arg(gate.lock()->get_object_id())
-                                                 .toStdString();
+            return QString("%1 (%2, %3=%4)").arg(QString::fromStdString(gate_template_port->get_name()))
+                                            .arg(QString::fromStdString(gate.lock()->get_gate_template()->get_name()))
+                                            .arg(tr("gate"))
+                                            .arg(gate.lock()->get_object_id())
+                                            .toStdString();
 		}
 	}
 	else
 	{
-		return QString("[%1] (%2)").arg(tr("Gate port")).arg(get_object_id()).toStdString();
+		return QString("(%1)").arg(get_object_id()).toStdString();
 	}
 }
 

@@ -53,14 +53,11 @@ const std::string EMarker::get_descriptive_identifier() const
 {
 	if (has_name())
 	{
-        return QString("[%1] %2 (%3)").arg(tr("EMarker"))
-                                      .arg(QString::fromStdString(get_name()))
-                                      .arg(get_object_id())
-                                      .toStdString();
+        return QString("%1 (%2)").arg(QString::fromStdString(get_name())).arg(get_object_id()).toStdString();
 	}
 	else
 	{
-        return QString("[%1] (%2)").arg(tr("EMarker")).arg(get_object_id()).toStdString();
+        return QString("(%1)").arg(get_object_id()).toStdString();
 	}
 }
 

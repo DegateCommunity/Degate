@@ -23,6 +23,8 @@
 
 #include <utility>
 
+#define OBJECT_DESCRIPTION(object) QString::fromStdString("[" + object->get_object_type_name() + "] " + object->get_descriptive_identifier())
+
 namespace degate
 {
 
@@ -172,7 +174,7 @@ namespace degate
                 connections[connections_table.rowCount() - 1] = { nullptr, nullptr, nullptr };
 
                 // Current
-                auto current_item = new QTableWidgetItem(QString::fromStdString(object->get_descriptive_identifier()));
+                auto current_item = new QTableWidgetItem(OBJECT_DESCRIPTION(object));
                 current_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
                 connections_table.setItem(connections_table.rowCount() - 1, 1, current_item);
 
@@ -187,12 +189,12 @@ namespace degate
                     if (!gate_port->has_template_port() || tmpl_port->has_undefined_port_type())
                     {
                         // Previous
-                        auto previous_item = new QTableWidgetItem(QString::fromStdString(gate_port->get_descriptive_identifier()));
+                        auto previous_item = new QTableWidgetItem(OBJECT_DESCRIPTION(gate_port));
                         previous_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
                         connections_table.setItem(connections_table.rowCount() - 1, 0, previous_item);
 
                         // Next
-                        auto next_item = new QTableWidgetItem(QString::fromStdString(gate_port->get_descriptive_identifier()));
+                        auto next_item = new QTableWidgetItem(OBJECT_DESCRIPTION(gate_port));
                         next_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
                         connections_table.setItem(connections_table.rowCount() - 1, 2, next_item);
 
@@ -204,7 +206,7 @@ namespace degate
                         if (tmpl_port->is_inport())
                         {
                              // Next
-                            auto next_item = new QTableWidgetItem(QString::fromStdString(gate_port->get_descriptive_identifier()));
+                            auto next_item = new QTableWidgetItem(OBJECT_DESCRIPTION(gate_port));
                             next_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
                             connections_table.setItem(connections_table.rowCount() - 1, 2, next_item);
 
@@ -213,7 +215,7 @@ namespace degate
                         if (tmpl_port->is_outport())
                         {
                             // Previous
-                            auto previous_item = new QTableWidgetItem(QString::fromStdString(gate_port->get_descriptive_identifier()));
+                            auto previous_item = new QTableWidgetItem(OBJECT_DESCRIPTION(gate_port));
                             previous_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
                             connections_table.setItem(connections_table.rowCount() - 1, 0, previous_item);
 
@@ -224,12 +226,12 @@ namespace degate
                 else
                 {
                     // Previous
-                    auto previous_item = new QTableWidgetItem(QString::fromStdString(obj_ptr->get_descriptive_identifier()));
+                    auto previous_item = new QTableWidgetItem(OBJECT_DESCRIPTION(obj_ptr));
                     previous_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
                     connections_table.setItem(connections_table.rowCount() - 1, 0, previous_item);
 
                     // Next
-                    auto next_item = new QTableWidgetItem(QString::fromStdString(obj_ptr->get_descriptive_identifier()));
+                    auto next_item = new QTableWidgetItem(OBJECT_DESCRIPTION(obj_ptr));
                     next_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
                     connections_table.setItem(connections_table.rowCount() - 1, 2, next_item);
 
