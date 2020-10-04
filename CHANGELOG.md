@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - German translation from [Martin Schobert](https://github.com/nitram2342).
 - Added a connection inspector dialog.
 
+### Changed
+- Reworked rule violations dialog to allow translation of violations.
+
+### Fixed
+- Fixed subwindows text reload when language change.
+
 ## [2.0.0-alpha.3] - 2020-09-14
 ### Added
 - Added proper top menu options for many dialogs.
