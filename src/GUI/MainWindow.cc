@@ -513,6 +513,8 @@ namespace degate
         wire_tool->setText(tr("Wire tool"));
         rule_violations_action->setText(tr("Rule violations"));
         modules_action->setText(tr("Modules"));
+
+        close_sub_windows();
     }
 
 	void MainWindow::on_menu_project_importer()
