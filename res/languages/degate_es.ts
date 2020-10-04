@@ -269,6 +269,55 @@
     </message>
 </context>
 <context>
+    <name>degate::ERCNet</name>
+    <message>
+        <location filename="../../src/Core/RuleCheck/ERC/ERCNet.cc" line="119"/>
+        <source>For the corresponding gate template port of %1 the port direction is undefined.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/Core/RuleCheck/ERC/ERCNet.cc" line="125"/>
+        <source>In-Port %1 is not feeded.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/Core/RuleCheck/ERC/ERCNet.cc" line="131"/>
+        <source>Out-Port %1 is connected with other out-ports.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>degate::ERCOpenPorts</name>
+    <message>
+        <location filename="../../src/Core/RuleCheck/ERC/ERCOpenPorts.cc" line="66"/>
+        <source>Port %1 is unconnected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>degate::ERCRegister</name>
+    <message>
+        <location filename="../../src/Core/RuleCheck/ERCRegister.h" line="80"/>
+        <source>open_port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/Core/RuleCheck/ERCRegister.h" line="81"/>
+        <source>net.undefined_port_direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/Core/RuleCheck/ERCRegister.h" line="82"/>
+        <source>net.not_feeded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/Core/RuleCheck/ERCRegister.h" line="83"/>
+        <source>net.outputs_connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>degate::Gate</name>
     <message>
         <location filename="../../src/Core/LogicModel/Gate/Gate.cc" line="305"/>
@@ -2001,6 +2050,24 @@ Those settings are independent (per project).</source>
     <message>
         <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="53"/>
         <source>Default port diameter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>degate::RCViolation</name>
+    <message>
+        <location filename="../../src/Core/RuleCheck/RCViolation.cc" line="74"/>
+        <source>error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/Core/RuleCheck/RCViolation.cc" line="77"/>
+        <source>warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/Core/RuleCheck/RCViolation.cc" line="81"/>
+        <source>undefined</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

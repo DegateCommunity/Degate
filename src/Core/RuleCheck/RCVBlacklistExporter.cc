@@ -84,7 +84,6 @@ void RCVBlacklistExporter::add_rcv(QDomDocument& doc,
 	rcv_elem.setAttribute("object-id", QString::fromStdString(number_to_string<object_id_t>(new_oid)));
 	rcv_elem.setAttribute("rc-violation-class", QString::fromStdString(rcv->get_rc_violation_class()));
 	rcv_elem.setAttribute("severity", QString::fromStdString(rcv->get_severity_as_string()));
-	rcv_elem.setAttribute("description", QString::fromStdString(rcv->get_problem_description()));
 
 	root_elem.appendChild(rcv_elem);
 }

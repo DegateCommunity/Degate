@@ -86,11 +86,9 @@ void RCVBlacklistImporter::parse_list(QDomElement const elem,
 			object_id_t object_id = parse_number<object_id_t>(e, "object-id");
 
 			const std::string rcv_class(e.attribute("rc-violation-class").toStdString());
-			const std::string description(e.attribute("description").toStdString());
 			const std::string severity(e.attribute("severity").toStdString());
 
 			RCViolation_shptr rcv(new RCViolation(lmodel->get_object(object_id),
-                                                  description,
                                                   rcv_class,
                                                   RCViolation::get_severity_from_string(severity)));
 

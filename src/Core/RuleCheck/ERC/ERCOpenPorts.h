@@ -33,11 +33,15 @@ namespace degate
 	 */
 	class ERCOpenPorts : public RCBase
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::ERCOpenPorts)
+
 	public:
 
 		ERCOpenPorts();
 
-		void run(LogicModel_shptr lmodel);
+		void run(LogicModel_shptr lmodel) override;
+
+        std::string generate_description(const RCViolation& violation) override;
 	};
 }
 

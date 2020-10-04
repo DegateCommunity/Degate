@@ -19,17 +19,16 @@
  *
  */
 
+#include "ERCOpenPorts.h"
 #include "Core/RuleCheck/RCBase.h"
-#include "Core/RuleCheck/ERCOpenPorts.h"
-
 
 #include <memory>
 
 
 using namespace degate;
 
-ERCOpenPorts::ERCOpenPorts() :
-	RCBase("open_port", "Check for unconnected ports.", RC_WARNING)
+ERCOpenPorts::ERCOpenPorts()
+        : RCBase("Check for unconnected ports.", RC_WARNING)
 {
 }
 
@@ -56,12 +55,15 @@ void ERCOpenPorts::run(LogicModel_shptr lmodel)
 			Net_shptr net = port->get_net();
 			if (net == nullptr || net->size() <= 1)
 			{
-				boost::format f("Port %1% is unconnected.");
-				f % port->get_descriptive_identifier();
-
-				//debug(TM, "\tRC: found a violation.");
-                add_rc_violation(std::make_shared<RCViolation>(port, f.str(), get_rc_class_name(), get_severity()));
-			}
+                add_rc_violation(std::make_shared<RCViolation>(port, "open_port", get_severity()));
+            }
 		}
 	}
+}
+
+std::string ERCOpenPorts::generate_description(const RCViolation& violation)
+{
+    auto res = tr("Port %1 is unconnected.");
+
+    return res.arg(QString::fromStdString(violation.get_object()->get_descriptive_identifier())).toStdString();
 }

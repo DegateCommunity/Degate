@@ -53,12 +53,12 @@ namespace degate
         table.setItem(table.rowCount() - 1, 0, layer_item);
 
         // Class
-        auto class_item = new QTableWidgetItem(QString::fromStdString(violation->get_rc_violation_class()));
+        auto class_item = new QTableWidgetItem(QString::fromStdString(ERC_REGISTER.get_translated_violation_class(*violation)));
         class_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
         table.setItem(table.rowCount() - 1, 1, class_item);
 
         // Severity
-        auto severity_item = new QTableWidgetItem(QString::fromStdString(violation->get_severity_as_string()));
+        auto severity_item = new QTableWidgetItem(violation->get_translated_severity_as_string().c_str());
         severity_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
         table.setItem(table.rowCount() - 1, 2, severity_item);
 

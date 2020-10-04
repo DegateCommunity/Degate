@@ -48,11 +48,15 @@ namespace degate
 	 */
 	class ERCNet : public RCBase
 	{
+    Q_DECLARE_TR_FUNCTIONS(degate::ERCNet)
+
 	public:
 
 		ERCNet();
 
 		void run(LogicModel_shptr lmodel);
+
+        std::string generate_description(const RCViolation& violation) override;
 
 	private:
 

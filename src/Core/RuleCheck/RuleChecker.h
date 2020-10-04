@@ -23,43 +23,52 @@
 #define __RULECHECKER_H__
 
 #include "Core/RuleCheck/RCBase.h"
-#include "Core/RuleCheck/ERCOpenPorts.h"
-#include "Core/RuleCheck/ERCNet.h"
+#include "Core/RuleCheck/ERCRegister.h"
 
 namespace degate
 {
-	class RuleChecker : public RCBase
+	class RuleChecker
 	{
 	private:
 
 		std::list<RCBase_shptr> checks;
+        RCVContainer rc_violations;
 
 	public:
 
-		RuleChecker() : RCBase("rc-all", "A collection of all RCs.", RC_UNDEFINED)
+		RuleChecker()
 		{
-			checks.push_back(RCBase_shptr(new ERCOpenPorts()));
-			checks.push_back(RCBase_shptr(new ERCNet()));
+		    for (auto& e : ERC_REGISTER.get_erc_list())
+            {
+                checks.push_back(e);
+            }
 		}
 
 		void run(LogicModel_shptr lmodel)
 		{
 			debug(TM, "run RC");
 
-			clear_rc_violations();
+            rc_violations.clear();
 
 			BOOST_FOREACH(RCBase_shptr check, checks)
 			{
-				std::cout << "RC: " << check->get_rc_class_name() << std::endl;
 				check->run(lmodel);
 				BOOST_FOREACH(RCViolation_shptr violation, check->get_rc_violations())
 				{
-					add_rc_violation(violation);
+                    rc_violations.push_back(violation);
 				}
 			}
 
-			debug(TM, "found %d rc violations.", get_rc_violations().size());
+			debug(TM, "found %d rc violations.", rc_violations.size());
 		}
+
+        /**
+         * Get the list of RC violations.
+         */
+        RCVContainer get_rc_violations() const
+        {
+            return rc_violations;
+        }
 	};
 }
 

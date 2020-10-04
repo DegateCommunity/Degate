@@ -43,6 +43,7 @@ namespace degate
 
 	/**
 	 * Base class for Rule Checks.
+	 * When creating a new ERC you need to register it, with corresponding violation class, in the ERCRegister.h file.
 	 */
 	class RCBase
 	{
@@ -53,7 +54,6 @@ namespace degate
 
 	private:
 
-		std::string class_name;
 		std::string description;
 		RC_SEVERITY severity;
 
@@ -63,17 +63,12 @@ namespace degate
 
 		/**
 		 * The constructor.
-		 * @param class_name Short name for the RC class.
 		 * @param description A decription of what the RC basically checks.
 		 * @param severity This parameter indicates wheather this 
 		 *   RC violation container is for an error or just for a warning.
 		 */
-		RCBase(std::string const& class_name,
-		       std::string const& description,
-		       RC_SEVERITY severity = RC_ERROR) :
-                class_name(class_name),
-                description(description),
-                severity(severity)
+        RCBase(std::string const& description, RC_SEVERITY severity = RC_ERROR)
+                : description(description), severity(severity)
 		{
 		}
 
@@ -91,20 +86,21 @@ namespace degate
 		virtual void run(LogicModel_shptr lmodel) = 0;
 
 		/**
+		 * Generate the description for a violation regarding the tuple class + object.
+		 * A violation needs to be unique for that tuple.
+		 *
+		 * @param violation : the violation.
+		 *
+		 * @return Returns a translated and newly generated description for the violation.
+		 */
+		virtual std::string generate_description(const RCViolation& violation) = 0;
+
+		/**
 		 * Get the list of RC violations.
 		 */
 		container_type get_rc_violations() const
 		{
 			return rc_violations;
-		}
-
-		/**
-		 * Get the class name of a RC violation.
-		 * @return Returns the RC violation class name as a string.
-		 */
-		std::string get_rc_class_name() const
-		{
-			return class_name;
 		}
 
 		RC_SEVERITY get_severity() const

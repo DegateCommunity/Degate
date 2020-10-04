@@ -19,16 +19,14 @@
  *
  */
 
-#include "Core/RuleCheck/ERCNet.h"
-
+#include "ERCNet.h"
 
 #include <memory>
-
 
 using namespace degate;
 
 ERCNet::ERCNet() :
-	RCBase("net", "Check for unusual net configs.", RC_ERROR)
+	RCBase("Check for unusual net configs.", RC_ERROR)
 {
 }
 
@@ -75,12 +73,8 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net)
 				else if (tmpl_port->is_outport()) out_ports++;
 				else
 				{
-					boost::format f("For the corresponding gate template port of %1% the port "
-						"direction is undefined.");
-                    f % gate_port->get_descriptive_identifier();
                     add_rc_violation(std::make_shared<RCViolation>(gate_port,
-                                                                   f.str(),
-                                                                   "undef_port_dir",
+                                                                   "net.undefined_port_direction",
                                                                    get_severity()));
 				}
 			}
@@ -89,7 +83,7 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net)
 
 	if ((in_ports > 0 && out_ports == 0) || (out_ports > 1))
 	{
-		for (Net::connection_iterator c_iter = net->begin();
+		for (auto c_iter = net->begin();
 		     c_iter != net->end(); ++c_iter)
 		{
 			object_id_t oid = *c_iter;
@@ -97,30 +91,51 @@ void ERCNet::check_net(LogicModel_shptr lmodel, Net_shptr net)
 			if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
 			{
 				GateTemplatePort_shptr tmpl_port = gate_port->get_template_port();
-				std::string error_msg;
-				std::string rc_class;
 
 				if (in_ports > 0 && out_ports == 0)
 				{
-					boost::format f("In-Port %1% is not feeded. It is only connected "
-						"with %2% other in-ports.");
-					f % gate_port->get_descriptive_identifier() % (in_ports - 1);
-					error_msg = f.str();
-					rc_class = "net.not_feeded";
-                    add_rc_violation(std::make_shared<RCViolation>(gate_port, error_msg, rc_class, get_severity()));
-				}
+                    add_rc_violation(std::make_shared<RCViolation>(gate_port,
+                                                                   "net.not_feeded",
+                                                                   get_severity()));
+                }
 				else if (out_ports > 1)
 				{
 					if (tmpl_port->is_outport())
 					{
-						boost::format f("Out-Port %1% is connected with %2% other out-ports.");
-						f % gate_port->get_descriptive_identifier() % (out_ports - 1);
-						error_msg = f.str();
-						rc_class = "net.outputs_connected";
-						add_rc_violation(std::make_shared<RCViolation>(gate_port, error_msg, rc_class, get_severity()));
-					}
+                        add_rc_violation(std::make_shared<RCViolation>(gate_port,
+                                                                       "net.outputs_connected",
+                                                                       get_severity()));
+                    }
 				}
 			}
 		}
 	}
+}
+
+std::string ERCNet::generate_description(const RCViolation& violation)
+{
+    if (violation.get_rc_violation_class() == "net.undefined_port_direction")
+    {
+        auto res = tr("For the corresponding gate template port of %1 the port direction is undefined.");
+
+        return res.arg(QString::fromStdString(violation.get_object()->get_descriptive_identifier())).toStdString();
+    }
+    else if (violation.get_rc_violation_class() == "net.not_feeded")
+    {
+        auto res = tr("In-Port %1 is not feeded.");
+
+        return res.arg(QString::fromStdString(violation.get_object()->get_descriptive_identifier())).toStdString();
+    }
+    else if (violation.get_rc_violation_class() == "net.outputs_connected")
+    {
+        auto res = tr("Out-Port %1 is connected with other out-ports.");
+
+        return res.arg(QString::fromStdString(violation.get_object()->get_descriptive_identifier())).toStdString();
+    }
+
+    // Wrong registration, see ERCRegister.h, there is something wrong.
+    // It can also be a wrong typed class in this file.
+    assert(1 == 0);
+
+    return "";
 }
