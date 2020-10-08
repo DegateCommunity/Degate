@@ -15,14 +15,16 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [ ] Rework gate template matching.
 - [ ] Complete existing via matching (add more consistency).
 - [ ] Rework rule violations blacklist to add translations.
-- [ ] Search interface (by name or ID).
+- [ ] External matching support.
 
 ## For 2.0.0-alpha.4 *[next]*:
 
 - [ ] Bug fixes.
 - [x] Connection inspector dialog.
-- [ ] External matching support.
+- [x] Add automatic gate naming option.
 - [x] German language.
+- [ ] Automatic update checker.
+- [ ] Search interface (by name or ID).
 
 ## For 2.0.0-alpha.3 *[**current**]*:
 
