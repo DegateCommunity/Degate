@@ -50,13 +50,9 @@ namespace degate
         void run();
 
     private:
-        void rename_gates(std::vector<unsigned int> const& histogram,
-                          ORIENTATION orientation,
-                          std::list<int> const& scan_lines) const;
+        void rename_gates(std::vector<unsigned int> const& histogram, std::list<int> const& scan_lines) const;
 
-        void fill_histogram(LogicModel_shptr lmodel,
-                            std::vector<unsigned int>& histogram,
-                            ORIENTATION orientation) const;
+        void fill_histogram(LogicModel_shptr lmodel, std::vector<unsigned int>& histogram) const;
 
         std::list<int> scan_histogram(std::vector<unsigned int> const& histogram) const;
 

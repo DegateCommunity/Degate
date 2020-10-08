@@ -43,6 +43,7 @@
 #include "GUI/Dialog/RuleViolationsDialog.h"
 #include "GUI/Dialog/ModulesDialog.h"
 #include "GUI/Dialog/ConnectionInspector.h"
+#include "Core/LogicModel/Gate/AutoNameGates.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -193,6 +194,13 @@ namespace degate
          * Edit/Move the selected gate port.
          */
          void on_menu_gate_port_edit();
+
+         /**
+          * Auto name gates along rows or columns.
+          *
+          * @param orientation : auto name in rows or columns.
+          */
+         void on_menu_gate_automatic_naming(AutoNameGates::ORIENTATION orientation);
 
 
         /* Annotation menu */
@@ -446,6 +454,8 @@ namespace degate
         QAction* new_gate_template_action;
         QAction* new_gate_action;
         QAction* gate_library_action;
+        QAction* auto_name_gates_rows_action;
+        QAction* auto_name_gates_columns_action;
 
         // Annotation menu
         QMenu* annotation_menu;

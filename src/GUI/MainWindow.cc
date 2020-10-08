@@ -196,8 +196,23 @@ namespace degate
         QObject::connect(new_gate_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
 
         gate_menu->addSeparator();
+
         gate_library_action = gate_menu->addAction("");
         QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
+
+        gate_menu->addSeparator();
+
+        auto_name_gates_rows_action = gate_menu->addAction("");
+        QObject::connect(auto_name_gates_rows_action, &QAction::triggered, this, [this]()
+        {
+            on_menu_gate_automatic_naming(AutoNameGates::ORIENTATION::ALONG_ROWS);
+        });
+
+        auto_name_gates_columns_action = gate_menu->addAction("");
+        QObject::connect(auto_name_gates_columns_action, &QAction::triggered, this, [this]()
+        {
+            on_menu_gate_automatic_naming(AutoNameGates::ORIENTATION::ALONG_COLS);
+        });
 
 
         // Annotation menu
@@ -462,6 +477,8 @@ namespace degate
         new_gate_template_action->setText(tr("Create gate template from selection"));
         new_gate_action->setText(tr("Create gate from selection"));
         gate_library_action->setText(tr("Gate library"));
+        auto_name_gates_rows_action->setText(tr("Automatic naming along rows"));
+        auto_name_gates_columns_action->setText(tr("Automatic naming along columns"));
 
         // Annotation menu
         annotation_menu->setTitle(tr("Annotation"));
@@ -898,6 +915,29 @@ namespace degate
 
             project->get_logic_model()->update_ports(o->get_gate());
         }
+
+        workspace->update_screen();
+
+        project_changed();
+    }
+
+    void MainWindow::on_menu_gate_automatic_naming(AutoNameGates::ORIENTATION orientation)
+    {
+        if (project == nullptr)
+            return;
+
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this,
+                                      tr("Automatic naming"),
+                                      tr("The operation may destroy previously set names. "
+                                         "Are you sure you want to name all gates?"),
+                                      QMessageBox::Yes | QMessageBox::No);
+
+        if (reply == QMessageBox::No)
+            return;
+
+        AutoNameGates auto_name(project->get_logic_model(), orientation);
+        auto_name.run();
 
         workspace->update_screen();
 
