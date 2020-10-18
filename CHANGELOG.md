@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - German translation from [Martin Schobert](https://github.com/nitram2342).
 - Added a connection inspector dialog.
 - Added automatic gate naming option.
+- Added an annotation list dialog.
 
 ### Changed
 - Reworked rule violations dialog to allow translation of violations.

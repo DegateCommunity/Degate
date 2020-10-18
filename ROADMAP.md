@@ -23,6 +23,7 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [x] Automatic gate naming.
 - [x] German language.
 - [x] Rework rule violations blacklist to add translations.
+- [x] Annotation list dialog.
 - [ ] Automatic update checker.
 - [ ] Search interface (by name or ID).
 
