@@ -120,17 +120,20 @@ namespace degate
 
         // Refresh
         refresh_button.setText(tr("Refresh"));
+        refresh_button.setFocusPolicy(Qt::NoFocus);
         QObject::connect(&refresh_button, SIGNAL(clicked()), this, SLOT(run_checks()));
         control_layout.addWidget(&refresh_button, 1, 0);
 
         // Violations action button
         violations_action_button.setText(tr("Accept selected violation(s)"));
+        violations_action_button.setFocusPolicy(Qt::NoFocus);
         QObject::connect(&violations_action_button, SIGNAL(clicked()), this, SLOT(selected_violations_action()));
         control_layout.addWidget(&violations_action_button, 1, 1);
 
         // Filter
         filter_label.setText(tr("Filter:"));
         filter_reset_button.setText(tr("Reset"));
+        filter_reset_button.setFocusPolicy(Qt::NoFocus);
         control_layout.addWidget(&filter_label, 1, 2);
         control_layout.addWidget(&filter_edit, 1, 3);
         control_layout.addWidget(&filter_reset_button, 1, 4);
@@ -138,6 +141,7 @@ namespace degate
         // Goto button
         jump_to_button.setText(tr("Goto selected object"));
         control_layout.addWidget(&jump_to_button, 2, 0);
+        jump_to_button.setFocusPolicy(Qt::NoFocus);
         QObject::connect(&jump_to_button, SIGNAL(clicked()), this, SLOT(goto_button_clicked()));
 
         // Reset filter
@@ -264,11 +268,21 @@ namespace degate
 
         if (tabs.currentIndex() == 0)
         {
-            object = violations_tab.get_selection().front()->get_object();
+            auto list = violations_tab.get_selection();
+
+            if (list.empty())
+                return;
+
+            object = list.front()->get_object();
         }
         else if (tabs.currentIndex() == 1)
         {
-            object = accepted_violations_tab.get_selection().front()->get_object();
+            auto list = accepted_violations_tab.get_selection();
+
+            if (list.empty())
+                return;
+
+            object = list.front()->get_object();
         }
 
         if (object != nullptr)
