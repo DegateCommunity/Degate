@@ -44,6 +44,7 @@
 #include "GUI/Dialog/ModulesDialog.h"
 #include "GUI/Dialog/ConnectionInspector.h"
 #include "Core/LogicModel/Gate/AutoNameGates.h"
+#include "GUI/Dialog/AnnotationListDialog.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -214,6 +215,11 @@ namespace degate
          * Open the annotation edit dialog for the selected annotation.
          */
         void on_menu_annotation_edit();
+
+        /**
+         * Open/show a dialog that lists all annotations.
+         */
+        void on_menu_annotation_list();
 
 
         /* EMarker menu */
@@ -461,6 +467,7 @@ namespace degate
         QMenu* annotation_menu;
         QAction* edit_annotation_action;
         QAction* create_annotation_action;
+        QAction* annotation_list_action;
 
         // EMarker menu
         QMenu* emarker_menu;
@@ -509,6 +516,7 @@ namespace degate
         RuleViolationsDialog* rcv_dialog = nullptr;
         ModulesDialog* modules_dialog = nullptr;
         ConnectionInspector* connection_inspector_dialog = nullptr;
+        AnnotationListDialog* annotation_list_dialog = nullptr;
 
     };
 }

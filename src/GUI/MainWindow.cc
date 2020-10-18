@@ -224,6 +224,9 @@ namespace degate
         create_annotation_action = annotation_menu->addAction("");
         QObject::connect(create_annotation_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
 
+        annotation_list_action = annotation_menu->addAction("");
+        QObject::connect(annotation_list_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_list()));
+
 
         // EMarker menu
         emarker_menu = menu_bar.addMenu("");
@@ -484,6 +487,7 @@ namespace degate
         annotation_menu->setTitle(tr("Annotation"));
         edit_annotation_action->setText(tr("Edit selected"));
         create_annotation_action->setText(tr("Create from selection"));
+        annotation_list_action->setText(tr("Annotation list"));
 
         // EMarker menu
         emarker_menu->setTitle(tr("EMarker"));
@@ -983,6 +987,29 @@ namespace degate
 
             project_changed();
         }
+    }
+
+    void MainWindow::on_menu_annotation_list()
+    {
+        if (project == nullptr)
+            return;
+
+        if (project == nullptr)
+            return;
+
+        if (annotation_list_dialog == nullptr)
+        {
+            annotation_list_dialog = new AnnotationListDialog(this, project);
+            annotation_list_dialog->setWindowFlags(Qt::Window);
+
+            QObject::connect(annotation_list_dialog,
+                             SIGNAL(goto_object(PlacedLogicModelObject_shptr&)),
+                             this,
+                             SLOT(goto_object(PlacedLogicModelObject_shptr&)));
+        }
+
+        annotation_list_dialog->show();
+        annotation_list_dialog->clearFocus();
     }
 
     void MainWindow::on_menu_emarker_edit()
@@ -1776,6 +1803,15 @@ namespace degate
             delete connection_inspector_dialog;
 
             connection_inspector_dialog = nullptr;
+        }
+
+        if (annotation_list_dialog != nullptr)
+        {
+            annotation_list_dialog->close();
+
+            delete annotation_list_dialog;
+
+            annotation_list_dialog = nullptr;
         }
     }
 }
