@@ -103,9 +103,9 @@ namespace degate
             table.setItem(table.rowCount() - 1, 0, layer_item);
 
             // Content
-            auto class_item = new QTableWidgetItem(QString::fromStdString(annotation->get_name()));
-            class_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-            table.setItem(table.rowCount() - 1, 1, class_item);
+            auto content_item = new QTableWidgetItem(QString::fromStdString(annotation->get_name()));
+            content_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+            table.setItem(table.rowCount() - 1, 1, content_item);
 
             annotations[table.rowCount() - 1] = annotation;
         }

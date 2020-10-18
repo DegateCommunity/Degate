@@ -200,6 +200,9 @@ namespace degate
         gate_library_action = gate_menu->addAction("");
         QObject::connect(gate_library_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
+        gate_list_action = gate_menu->addAction("");
+        QObject::connect(gate_list_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_list()));
+
         gate_menu->addSeparator();
 
         auto_name_gates_rows_action = gate_menu->addAction("");
@@ -480,6 +483,7 @@ namespace degate
         new_gate_template_action->setText(tr("Create gate template from selection"));
         new_gate_action->setText(tr("Create gate from selection"));
         gate_library_action->setText(tr("Gate library"));
+        gate_list_action->setText(tr("Gate list"));
         auto_name_gates_rows_action->setText(tr("Automatic naming along rows"));
         auto_name_gates_columns_action->setText(tr("Automatic naming along columns"));
 
@@ -905,6 +909,26 @@ namespace degate
         workspace->update_screen();
     }
 
+    void MainWindow::on_menu_gate_list()
+    {
+        if (project == nullptr)
+            return;
+
+        if (gate_list_dialog == nullptr)
+        {
+            gate_list_dialog = new GateListDialog(this, project);
+            gate_list_dialog->setWindowFlags(Qt::Window);
+
+            QObject::connect(gate_list_dialog,
+                             SIGNAL(goto_object(PlacedLogicModelObject_shptr&)),
+                             this,
+                             SLOT(goto_object(PlacedLogicModelObject_shptr&)));
+        }
+
+        gate_list_dialog->show();
+        gate_list_dialog->clearFocus();
+    }
+
     void MainWindow::on_menu_gate_port_edit()
     {
         if (project == nullptr || !workspace->has_selection())
@@ -991,9 +1015,6 @@ namespace degate
 
     void MainWindow::on_menu_annotation_list()
     {
-        if (project == nullptr)
-            return;
-
         if (project == nullptr)
             return;
 
@@ -1812,6 +1833,15 @@ namespace degate
             delete annotation_list_dialog;
 
             annotation_list_dialog = nullptr;
+        }
+
+        if (gate_list_dialog != nullptr)
+        {
+            gate_list_dialog->close();
+
+            delete gate_list_dialog;
+
+            gate_list_dialog = nullptr;
         }
     }
 }

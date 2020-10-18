@@ -45,6 +45,7 @@
 #include "GUI/Dialog/ConnectionInspector.h"
 #include "Core/LogicModel/Gate/AutoNameGates.h"
 #include "GUI/Dialog/AnnotationListDialog.h"
+#include "GUI/Dialog/GateListDialog.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -190,6 +191,11 @@ namespace degate
          * Open the gate library window, this will list all gates template of the project.
          */
         void on_menu_gate_library();
+
+        /**
+          * Open/show a dialog that lists all gates.
+          */
+        void on_menu_gate_list();
 
         /**
          * Edit/Move the selected gate port.
@@ -460,6 +466,7 @@ namespace degate
         QAction* new_gate_template_action;
         QAction* new_gate_action;
         QAction* gate_library_action;
+        QAction* gate_list_action;
         QAction* auto_name_gates_rows_action;
         QAction* auto_name_gates_columns_action;
 
@@ -517,6 +524,7 @@ namespace degate
         ModulesDialog* modules_dialog = nullptr;
         ConnectionInspector* connection_inspector_dialog = nullptr;
         AnnotationListDialog* annotation_list_dialog = nullptr;
+        GateListDialog* gate_list_dialog = nullptr;
 
     };
 }
