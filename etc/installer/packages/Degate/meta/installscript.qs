@@ -69,6 +69,15 @@ Component.prototype.createOperations = function()
 			{
 				component.addOperation("CreateShortcut", "@TargetDir@/Degate.exe", "@StartMenuDir@/Degate.lnk", "workingDirectory=@TargetDir@", "iconPath=@TargetDir@/Degate.exe", "iconId=0", "description=Start Degate");
 			}
+			
+			if(systemInfo.currentCpuArchitecture.search("64") < 0) //x86
+			{
+				component.addElevatedOperation("Execute", "{0,1602,1638,3010}", "@TargetDir@/VC_redist.x86.exe", "/quiet", "/norestart");
+			} 
+			else //x64
+			{
+				component.addElevatedOperation("Execute", "{0,1602,1638,3010}", "@TargetDir@/VC_redist.x64.exe", "/quiet", "/norestart");
+			}
 		}
 	} catch(e) 
 	{

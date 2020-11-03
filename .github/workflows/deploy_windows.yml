@@ -1,12 +1,13 @@
 name: Windows deploy
 
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release # Change build type here.
 
 jobs:
   build:
+  
     runs-on: windows-latest # Change Windows version here.
 
     steps:
@@ -23,7 +24,7 @@ jobs:
       # Update the boost version here (see https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md to know latest supported Boost version).
       run: |
         cd build
-        cmake .. -DBOOST_ROOT=$BOOST_ROOT_1_72_0
+        cmake .. -DBOOST_ROOT=$BOOST_ROOT_1_72_0 -A x64
         cmake --build . --config $BUILD_TYPE
       
     - name: Prepare binaries
@@ -35,14 +36,17 @@ jobs:
     - name: Upload Degate binaries
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_Windows_binaries_x64
+        name: Degate_binaries_Windows_x64
         path: build/out/bin/${{ env.BUILD_TYPE }}/
       
     - name: Prepare installer
-      shell: bash
+      shell: cmd
+      continue-on-error: true # Robocopy exit code 1 on success.
       run: |
-        cd build/out/bin/$BUILD_TYPE
-        cp -R ./ ../../../../etc/installer/packages/Degate/data
+        cd build/out/bin/%BUILD_TYPE%
+        C:\msys64\usr\bin\wget.exe https://aka.ms/vs/16/release/vc_redist.x64.exe
+        del ..\..\..\..\etc\installer\packages\Degate\data\.keepme
+        ROBOCOPY .\ ..\..\..\..\etc\installer\packages\Degate\data /E
       
     - name: Create Degate installer
       shell: cmd
@@ -51,10 +55,29 @@ jobs:
         cd etc/installer
         C:\msys64\usr\bin\wget.exe https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ifw/qt.tools.ifw.32/3.2.2ifw-win-x86.7z
         7z.exe x 3.2.2ifw-win-x86.7z -y
-        .\Tools\QtInstallerFramework\3.2\bin\binarycreator.exe -c config\config.xml -p packages "Degate_Windows_installer_x64.exe"
+        .\Tools\QtInstallerFramework\3.2\bin\binarycreator.exe --offline-only -c config\config.xml -p packages "Degate_offline_installer_Windows_x64.exe"
+        .\Tools\QtInstallerFramework\3.2\bin\binarycreator.exe --online-only -c config\config.xml -p packages "Degate_online_installer_Windows_x64.exe"
       
-    - name: Upload Degate installer
+    - name: Upload Degate offline installer
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_Windows_installer_x64
-        path: etc/installer/Degate_Windows_installer_x64.exe
+        name: Degate_offline_installer_Windows_x64
+        path: etc/installer/Degate_offline_installer_Windows_x64.exe
+
+    - name: Upload Degate online installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: Degate_online_installer_Windows_x64
+        path: etc/installer/Degate_online_installer_Windows_x64.exe
+        
+    - name: Create Degate update
+      shell: cmd
+      run: |
+        cd etc/installer
+        .\Tools\QtInstallerFramework\3.2\bin\repogen.exe -p packages repository
+      
+    - name: Upload Degate update
+      uses: actions/upload-artifact@v2
+      with:
+        name: Degate_update_Windows_x64
+        path: etc/installer/repository

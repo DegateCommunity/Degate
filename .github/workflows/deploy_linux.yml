@@ -1,6 +1,6 @@
 name: Linux deploy
 
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release # Change build type here.
@@ -8,6 +8,7 @@ env:
 
 jobs:
   build:
+  
     runs-on: ubuntu-16.04 # Update Ubuntu version here (might be the oldest LTS for AppImage creation).
 
     steps:
@@ -41,13 +42,57 @@ jobs:
     - name: Create Degate AppImage
       shell: bash
       run: |
-        cd etc/linux_deploy/
+        cd etc/
         wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage Degate -appimage
+        ./linuxdeployqt-continuous-x86_64.AppImage ./linux_deploy/Degate -appimage
+        cd linux_deploy/
+        cp -R . ../installer/packages/Degate/data
+        rm ../installer/packages/Degate/data/.keepme
 
     - name: Upload Degate appimage
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_Linux_x64
-        path: etc/linux_deploy/Degate*.AppImage
+        name: Degate_appimage_Linux_x64
+        path: etc/Degate*.AppImage
+        
+    - name: Upload Degate binaries
+      uses: actions/upload-artifact@v2
+      with:
+        name: Degate_binaries_Linux_x64
+        path: etc/linux_deploy/
+        
+    - name: Create Degate installer
+      shell: bash
+      # Update the Qt Installer Framework (ifw) version here (by providing the exe download link and changing the exe name/path).
+      run: |
+        sudo apt install p7zip-full
+        cd etc/installer
+        wget https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/tools_ifw/qt.tools.ifw.32/3.2.2ifw-linux-x64.7z
+        7z x 3.2.2ifw-linux-x64.7z -y
+        ./Tools/QtInstallerFramework/3.2/bin/binarycreator --offline-only -c config/config.xml -p packages "Degate_offline_installer_Linux_x64"
+        ./Tools/QtInstallerFramework/3.2/bin/binarycreator --online-only -c config/config.xml -p packages "Degate_online_installer_Linux_x64"
+        
+    - name: Upload Degate offline installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: Degate_offline_installer_Linux_x64
+        path: etc/installer/Degate_offline_installer_Linux_x64
+
+    - name: Upload Degate online installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: Degate_online_installer_Linux_x64
+        path: etc/installer/Degate_online_installer_Linux_x64
+        
+    - name: Create Degate update
+      shell: bash
+      run: |
+        cd etc/installer
+        ./Tools/QtInstallerFramework/3.2/bin/repogen -p packages repository
+      
+    - name: Upload Degate update
+      uses: actions/upload-artifact@v2
+      with:
+        name: Degate_update_Linux_x64
+        path: etc/installer/repository

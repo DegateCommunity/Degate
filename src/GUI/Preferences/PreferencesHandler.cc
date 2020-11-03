@@ -52,6 +52,7 @@ namespace degate
         // Auto save
         preferences.auto_save_status = settings.value("auto_save_status", false).toBool();
         preferences.auto_save_interval = settings.value("auto_save_interval", 5).toUInt();
+        preferences.automatic_updates_check = settings.value("automatic_updates_check", true).toBool();
 
 
         ///////////
@@ -94,6 +95,7 @@ namespace degate
         settings.setValue("language", preferences.language);
         settings.setValue("auto_save_status", preferences.auto_save_status);
         settings.setValue("auto_save_interval", preferences.auto_save_interval);
+        settings.setValue("automatic_updates_check", preferences.automatic_updates_check);
 
 
         ///////////

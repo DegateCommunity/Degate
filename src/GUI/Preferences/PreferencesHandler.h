@@ -54,6 +54,7 @@ namespace degate
         QString      language;
         bool         auto_save_status;
         unsigned int auto_save_interval;
+        bool         automatic_updates_check;
 
 
         ///////////

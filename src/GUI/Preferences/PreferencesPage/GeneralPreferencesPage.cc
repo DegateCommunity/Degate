@@ -50,6 +50,8 @@ namespace degate
         auto_save_interval_edit.setEnabled(auto_save_status_edit.isChecked());
         QObject::connect(&auto_save_status_edit, SIGNAL(toggled(bool)), &auto_save_interval_edit, SLOT(setEnabled(bool)));
 
+        automatic_updates_check_edit.setChecked(PREFERENCES_HANDLER.get_preferences().automatic_updates_check);
+
         //////////
         // Layout creation
         //////////
@@ -59,12 +61,14 @@ namespace degate
 
         // Language
         PreferencesPage::add_widget(language_layout, tr("Language:"), &language_edit);
+        PreferencesPage::add_widget(language_layout, tr("Automatic check for updates:"), &automatic_updates_check_edit);
 
         // Auto save category
         auto auto_save_layout = PreferencesPage::add_category(tr("Auto save"));
 
         PreferencesPage::add_widget(auto_save_layout, tr("Auto save status:"), &auto_save_status_edit);
         PreferencesPage::add_widget(auto_save_layout, tr("Auto save interval (in minutes):"), &auto_save_interval_edit);
+        PreferencesPage::add_widget(auto_save_layout, tr("Auto save status:"), &auto_save_status_edit);
     }
 
     void GeneralPreferencesPage::apply(Preferences& preferences)
@@ -78,5 +82,6 @@ namespace degate
 
         preferences.auto_save_status = auto_save_status_edit.isChecked();
         preferences.auto_save_interval = auto_save_interval_edit.value();
+        preferences.automatic_updates_check = automatic_updates_check_edit.isChecked();
     }
 }

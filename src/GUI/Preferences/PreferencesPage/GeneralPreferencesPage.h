@@ -63,6 +63,7 @@ namespace degate
 
         QCheckBox auto_save_status_edit;
         QSpinBox auto_save_interval_edit;
+        QCheckBox automatic_updates_check_edit;
 
         std::map<QString, QString> languages;
 

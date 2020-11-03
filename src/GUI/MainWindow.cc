@@ -33,7 +33,7 @@
 
 namespace degate
 {
-    MainWindow::MainWindow(int width, int height) : status_bar(this), tools_group(this)
+    MainWindow::MainWindow(int width, int height) : status_bar(this), tools_group(this), updater(this)
     {
         if (width == 0 || height == 0)
             resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
@@ -290,6 +290,12 @@ namespace degate
         documentation_action = help_menu->addAction("");
         QObject::connect(documentation_action, SIGNAL(triggered()), this, SLOT(on_menu_help_documentation()));
 
+        check_updates_action = help_menu->addAction("");
+        QObject::connect(check_updates_action, &QAction::triggered, this, [this]()
+        {
+            on_menu_help_check_updates(true, false);
+        });
+
         about_action = help_menu->addAction("");
         about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
         QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
@@ -384,6 +390,12 @@ namespace degate
             this->topLevelWidget()->winId();
             QWindowsWindowFunctions::setHasBorderInFullScreen(this->topLevelWidget()->windowHandle(), true);
         #endif
+
+        // Check for updates.
+        if (PREFERENCES_HANDLER.get_preferences().automatic_updates_check)
+        {
+            QTimer::singleShot(0, [this](){ on_menu_help_check_updates(false, true); });
+        }
     }
 
     MainWindow::~MainWindow()
@@ -520,6 +532,7 @@ namespace degate
         help_menu->setTitle(tr("Help"));
         help_action->setText(tr("Help"));
         documentation_action->setText(tr("Documentation"));
+        check_updates_action->setText(tr("Check for updates"));
         about_action->setText(tr("About"));
 
         // Status bar
@@ -1300,6 +1313,11 @@ namespace degate
     void MainWindow::on_menu_help_documentation()
     {
         QDesktopServices::openUrl(QUrl("https://degate.readthedocs.io"));
+    }
+
+    void MainWindow::on_menu_help_check_updates(bool notify_no_update, bool ask_disabling_automatic_check)
+    {
+        updater.run(notify_no_update, ask_disabling_automatic_check);
     }
 
     void MainWindow::on_menu_help_about()

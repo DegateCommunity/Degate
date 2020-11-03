@@ -24,8 +24,8 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [x] German language.
 - [x] Rework rule violations blacklist to add translations.
 - [x] Annotation list dialog.
-- [ ] Automatic update checker.
-- [ ] Search interface (by name or ID).
+- [x] Automatic update checker.
+- [x] Search interface (by name or ID).
 
 ## For 2.0.0-alpha.3 *[**current**]*:
 

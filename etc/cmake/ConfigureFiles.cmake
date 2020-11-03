@@ -65,8 +65,35 @@ if(DEGATE_RELEASE_DATE MATCHES "Unreleased")
     set(DEGATE_RELEASE_DATE "${CURRENT_DATE}")
 endif()
 
-# Configure each file
+# Configure version file
 configure_file("${PROJECT_SOURCE_DIR}/etc/config/Version.config" "${PROJECT_SOURCE_DIR}/src/Core/Version.h")
+
+# Configure doxyfile
+configure_file("${PROJECT_SOURCE_DIR}/doc/config/Doxyfile.config" "${PROJECT_SOURCE_DIR}/doc/config/DoxyFile")
+
+# Format version to Qt compatible one
+string(REPLACE "alpha" "0" DEGATE_VERSION_STR "${DEGATE_VERSION}")
+string(REPLACE "beta" "1" DEGATE_VERSION_STR "${DEGATE_VERSION_STR}")
+string(REPLACE "rc" "2" DEGATE_VERSION_STR "${DEGATE_VERSION_STR}")
+
+# Skip some variables (Qt specific)
+set(ApplicationsDir "@ApplicationsDir@")
+
+# Set if the version is a nightly
+if("${DEGATE_VERSION}" MATCHES "(-)")
+	set(VERSION_TYPE "nightly")
+else()
+	set(VERSION_TYPE "release")
+	set(DEGATE_VERSION_STR "${DEGATE_VERSION_STR}-3.0")
+endif()
+
+# Set the platform variable
+if("${CMAKE_SYSTEM_NAME}" MATCHES "(Windows)")
+	set(PLATFORM "windows")
+elseif("${CMAKE_SYSTEM_NAME}" MATCHES "(Linux)")
+	set(PLATFORM "linux")
+endif()
+
+# Configure files
 configure_file("${PROJECT_SOURCE_DIR}/etc/installer/packages/Degate/meta/package.config" "${PROJECT_SOURCE_DIR}/etc/installer/packages/Degate/meta/package.xml")
 configure_file("${PROJECT_SOURCE_DIR}/etc/installer/config/config.config" "${PROJECT_SOURCE_DIR}/etc/installer/config/config.xml")
-configure_file("${PROJECT_SOURCE_DIR}/doc/config/Doxyfile.config" "${PROJECT_SOURCE_DIR}/doc/config/DoxyFile")

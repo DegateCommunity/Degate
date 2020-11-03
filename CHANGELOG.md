@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a connection inspector dialog.
 - Added automatic gate naming option.
 - Added an annotation list dialog.
+- Added an update checker.
+- Added an auto updater.
 
 ### Changed
 - Reworked rule violations dialog to allow translation of violations.

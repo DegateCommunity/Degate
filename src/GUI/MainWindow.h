@@ -46,6 +46,7 @@
 #include "Core/LogicModel/Gate/AutoNameGates.h"
 #include "GUI/Dialog/AnnotationListDialog.h"
 #include "GUI/Dialog/GateListDialog.h"
+#include "GUI/Utils/Updater.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -304,6 +305,14 @@ namespace degate
         void on_menu_help_documentation();
 
         /**
+         * Check for updates (it will only work if Degate was installed with an installer (need maintenance tool of Qt Ifw).
+         *
+         * @param notify_no_update : if true, will notify the user if no update is available.
+         * @param ask_disabling_automatic_check : if true, will ask if the user want to disable automatic check for updates.
+         */
+        void on_menu_help_check_updates(bool notify_no_update, bool ask_disabling_automatic_check);
+
+        /**
          * Create and open the about window.
          */
         void on_menu_help_about();
@@ -502,6 +511,7 @@ namespace degate
         QMenu* help_menu;
         QAction* help_action;
         QAction* documentation_action;
+        QAction* check_updates_action;
         QAction* about_action;
 
 
@@ -526,6 +536,7 @@ namespace degate
         AnnotationListDialog* annotation_list_dialog = nullptr;
         GateListDialog* gate_list_dialog = nullptr;
 
+        Updater updater;
     };
 }
 
