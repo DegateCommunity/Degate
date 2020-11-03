@@ -81,6 +81,7 @@ For the moment we have (as functionalities):
 - Light and dark theme support,
 - Rule checks,
 - Modules,
+- Connection inspector,
 - And much more...
 
 We dropped those functionalities from old Degate:
@@ -93,7 +94,6 @@ A lot of bugs were fixed in this newer version, and it should be a better base t
 There is still a lot to do in this new version, but all core functionalities (and even more) are implemented.
 
 Future functionalities remaining to implement (not limited):
-- Connection inspector (old feature),
 - Explicit full netlist exporter (new feature),
 - More languages (new feature),
 - Integrated gate analyzer (new feature).
