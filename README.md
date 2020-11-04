@@ -33,6 +33,7 @@ Degate is a multi-platform software for semi-automatic VLSI reverse engineering 
   - [Quick start](#quick-start)
     - [For Linux (debian-like)](#for-linux-debian-like)
     - [For Windows](#for-windows)
+    - [For MacOS](#for-macos)
 - [Demo projects](#demo-projects)
 - [Contributing](#contributing)
 - [Localization](#localization)
@@ -55,14 +56,14 @@ You can visit the initial project website to learn more:
 
 ## Current status
 
-This project aims to totally replace the old Degate, with a focus on Windows and Linux support, getting better stability and general modernization. To achieve this the aim was to drop GTK and move to Qt and merge the lib and the GUI part of the project. Another objective was to minimize the number of dependencies, for now it uses only Boost and Qt and the mid-term objective is to only keep Qt and remove Boost.
+This project aims to totally replace the old Degate, with a focus on Windows, Linux and MacOS support, getting better stability and general modernization. To achieve this the aim was to drop GTK and move to Qt and merge the lib and the GUI part of the project. Another objective was to minimize the number of dependencies, for now it uses only Boost and Qt and the mid-term objective is to only keep Qt and remove Boost.
 
 The stability was the main problem of the old Degate and the main reason why the community hadn't already united around it. Regarding that, we want to have fewer bugs as possible, even if some functionality needs to be dropped (for the moment).
 
 For the moment we have (as functionalities):
 - OpenGL 3 support (better performances and evolutive),
 - Qt (bunch of tools, open-source and easy cross-platform),
-- Multi-platform support (tested on Linux and Windows),
+- Multi-platform support (official support for Linux, Windows and MacOS),
 - Multi-language support (for now only English and French are implemented),
 - UTF-8 support for the workspace (the main area of the software, where you can work on high-definition chips images),
 - Backward compatibility of old Degate project format,
@@ -155,7 +156,7 @@ Binaries are in the 'build/out/bin' folder.
 
 Install dependencies:
 - CMake: https://cmake.org/download/
-- A compiler (for example MSVC): https://visualstudio.microsoft.com/fr/
+- A compiler (for example MSVC): https://visualstudio.microsoft.com/
 - Qt: https://www.qt.io/download-qt-installer
 - Boost: https://sourceforge.net/projects/boost/files/boost-binaries/
 
@@ -165,6 +166,23 @@ Build (in the 'build' folder, for example):
 > cmake --build .
 ```
 Binaries are in the 'build/out/bin' folder.
+
+### For MacOS
+
+Install dependencies (we will use [Homebrew](https://brew.sh) here) :
+- XCode: https://apps.apple.com/app/xcode/id497799835
+
+```console
+> brew install boost
+> brew install qt
+```
+
+Build (in the 'build' folder, for example):
+```console
+> cmake ..
+> cmake --build .
+```
+Binaries are in the 'build/out/bin' folder in the bundle ".app" format.
 
 # Demo projects
 
@@ -184,7 +202,7 @@ You can find .ts files (to use with Qt Linguist) in 'res/languages'.
 Languages:
 - English (100%),
 - French (100%).
-- German (100%),
+- German (80%),
 - Russian (0%),
 - Spanish (0%),
 - Italian (0%),
@@ -196,4 +214,4 @@ To add a new language opens a new issue.
 
 Degate is released under the GNU General Public License Version 3. See LICENSE.TXT for details.
 
-Degate is originally developed by Martin Schobert <martin@mailbeschleuniger.de>.
+Degate is currently administered by Dorian Bachelot <dorianb.dev@netc.fr> and originally developed by Martin Schobert <martin@mailbeschleuniger.de>.

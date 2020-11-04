@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an annotation list dialog.
 - Added an update checker.
 - Added an auto updater.
+- Added official MacOS support.
 
 ### Changed
 - Reworked rule violations dialog to allow translation of violations.

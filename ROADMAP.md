@@ -26,6 +26,7 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [x] Annotation list dialog.
 - [x] Automatic update checker.
 - [x] Search interface (by name or ID).
+- [x] Official MacOS support.
 
 ## For 2.0.0-alpha.3 *[**current**]*:
 
