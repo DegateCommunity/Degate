@@ -159,6 +159,18 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX "src" FILES ${SRC_FIL
 list(REMOVE_ITEM SRC_FILES "src/Main.cc")
 
 #
+# MacOS set icns icon.
+#
+set(MACOSX_BUNDLE_ICON_FILE "degate.icns")
+
+#
+# MacOS copy icns icon.
+#
+if (APPLE)
+    file(COPY ${PROJECT_SOURCE_DIR}/etc/icons/logo/degate.icns DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/out/bin/Degate.app/Contents/Resources/)
+endif ()
+
+#
 # Link DegateCore
 #
 add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "Degate version")
@@ -169,6 +181,11 @@ target_link_libraries(DegateCore ${LIBS})
 #
 add_executable(Degate "src/Main.cc" res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "res/resource.rc")
 target_link_libraries(Degate ${LIBS} DegateCore)
+
+#
+# Activate bundle for MacOS.
+#
+set_target_properties(Degate PROPERTIES MACOSX_BUNDLE TRUE)
 
 #
 # Installation specifications

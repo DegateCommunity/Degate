@@ -92,6 +92,8 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "(Windows)")
 	set(PLATFORM "windows")
 elseif("${CMAKE_SYSTEM_NAME}" MATCHES "(Linux)")
 	set(PLATFORM "linux")
+elseif("${CMAKE_SYSTEM_NAME}" MATCHES "(Darwin)")
+    set(PLATFORM "macos")
 endif()
 
 # Configure files

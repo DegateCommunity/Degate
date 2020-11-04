@@ -200,6 +200,25 @@
     </message>
 </context>
 <context>
+    <name>degate::CheckForUpdates</name>
+    <message>
+        <location filename="../../src/GUI/Utils/CheckForUpdates.cc" line="68"/>
+        <location filename="../../src/GUI/Utils/CheckForUpdates.cc" line="75"/>
+        <source>Check for updates</source>
+        <translation type="unfinished">Vérifier les mises à jour</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Utils/CheckForUpdates.cc" line="68"/>
+        <source>No update available.</source>
+        <translation type="unfinished">Aucune mise à jour disponible.</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Utils/CheckForUpdates.cc" line="76"/>
+        <source>A new update is available, install it now?</source>
+        <translation type="unfinished">Une nouvelle mise à jour est disponible, l&apos;installer maintenant ?</translation>
+    </message>
+</context>
+<context>
     <name>degate::ColorPickerDialog</name>
     <message>
         <location filename="../../src/GUI/Dialog/ColorPickerDialog.cc" line="65"/>

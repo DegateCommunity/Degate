@@ -23,6 +23,7 @@
 #define __DEGATEEXCEPTIONS_H__
 
 #include <stdexcept>
+#include <string>
 
 namespace degate
 {

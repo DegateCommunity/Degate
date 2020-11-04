@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   viewBox="140 355 343 343"
+   width="343pt"
+   height="343pt"
+   id="svg61"
+   sodipodi:docname="degate_logo.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:export-filename="C:\Users\Doria\Downloads\degate_16.png"
+   inkscape:export-xdpi="3.3586006"
+   inkscape:export-ydpi="3.3586006">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview63"
+     showgrid="false"
+     inkscape:zoom="1.8820737"
+     inkscape:cx="188.78434"
+     inkscape:cy="247.071"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg61" />
+  <metadata
+     id="metadata2">
+    <dc:date>2008-04-13 03:13Z</dc:date>
+    <!-- Produced by OmniGraffle Professional 4.1.2 -->
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs26">
+    <filter
+       id="Shadow"
+       filterUnits="userSpaceOnUse">
+      <feGaussianBlur
+         in="SourceAlpha"
+         result="blur"
+         stdDeviation="5.4646435"
+         id="feGaussianBlur4" />
+      <feOffset
+         in="blur"
+         result="offset"
+         dx="0"
+         dy="4"
+         id="feOffset6" />
+      <feFlood
+         flood-color="Black"
+         flood-opacity=".75"
+         result="flood"
+         id="feFlood8" />
+      <feComposite
+         in="flood"
+         in2="offset"
+         operator="in"
+         id="feComposite10" />
+    </filter>
+    <linearGradient
+       x1="0"
+       x2="1"
+       id="Gradient"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0"
+         stop-color="White"
+         id="stop13" />
+      <stop
+         offset="1"
+         stop-color="#8b8b8b"
+         id="stop15" />
+    </linearGradient>
+    <linearGradient
+       id="Obj_Gradient"
+       xlink:href="#Gradient"
+       gradientTransform="matrix(0,234,-234,0,290,367)" />
+    <font-face
+       font-size="36pt"
+       units-per-em="1000"
+       underline-position="-97.65625"
+       underline-thickness="78.125"
+       slope="0"
+       x-height="486.11111"
+       cap-height="763.8889"
+       ascent="1038.5742"
+       descent="-259.76562"
+       font-weight="600"
+       id="font-face19"
+       stemv="0"
+       stemh="0"
+       accent-height="0"
+       ideographic="0"
+       alphabetic="0"
+       mathematical="0"
+       hanging="0"
+       v-ideographic="0"
+       v-alphabetic="0"
+       v-mathematical="0"
+       v-hanging="0"
+       strikethrough-position="0"
+       strikethrough-thickness="0"
+       overline-position="0"
+       overline-thickness="0">
+      <!--{
+    NSCTFontTraitsAttribute = {
+        NSCTFontProportionTrait = 0; 
+        NSCTFontSlantTrait = 0; 
+        NSCTFontSymbolicTrait = -2147483648; 
+        NSCTFontWeightTrait = 0.23; 
+    }; 
+    NSFontNameAttribute = "Futura-Medium"; 
+    NSFontSizeAttribute = 36; 
+}-->
+      <font-face-src>
+        <font-face-name
+           name="Futura-Medium" />
+      </font-face-src>
+    </font-face>
+    <marker
+       orient="auto"
+       overflow="visible"
+       markerUnits="strokeWidth"
+       id="Ball_Marker"
+       viewBox="-7 -4 8 8"
+       markerWidth="8"
+       markerHeight="8"
+       style="color:#000000;overflow:visible">
+      <g
+         id="g23">
+        <circle
+           cx="-2.5999992"
+           cy="0"
+           r="2.599998"
+           id="circle21"
+           style="fill:none;stroke:currentColor;stroke-width:1" />
+      </g>
+    </marker>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#Gradient"
+       id="linearGradient898"
+       gradientTransform="matrix(0,234,-234,0,290,367)" />
+  </defs>
+  <g
+     id="g59"
+     style="fill:none;fill-opacity:1;stroke:none;stroke-dasharray:none;stroke-opacity:1"
+     transform="translate(0,41.135305)">
+    <title
+       id="title28">Canvas 1</title>
+    <g
+       id="g57">
+      <title
+         id="title30">Layer 1</title>
+      <g
+         id="g34">
+        <use
+           xlink:href="#id38_Graphic"
+           id="use32"
+           style="filter:url(#Shadow)"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <g
+         id="id38_Graphic">
+        <path
+           d="m 290,367 h 73 c 24.30054,0 44,19.69946 44,44 v 146 c 0,24.30054 -19.69946,44 -44,44 H 217 c -24.30052,0 -44,-19.69946 -44,-44 V 411 c 0,-24.30054 19.69948,-44 44,-44 z"
+           id="path36"
+           inkscape:connector-curvature="0"
+           style="fill:url(#linearGradient898)" />
+        <path
+           d="m 290,367 h 73 c 24.30054,0 44,19.69946 44,44 v 146 c 0,24.30054 -19.69946,44 -44,44 H 217 c -24.30052,0 -44,-19.69946 -44,-44 V 411 c 0,-24.30054 19.69948,-44 44,-44 z"
+           id="path38"
+           inkscape:connector-curvature="0"
+           style="stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round" />
+      </g>
+      <path
+         d="M 252.87497,551 H 294.75 c 41.87503,0 83.75006,-16.75 83.75006,-67 0,-50.25 -41.87503,-67 -83.75006,-67 h -57.75005 c -14.3594,0 -26,11.6406 -26,26 v 82 c 0,14.35938 11.6406,26 26,26 z"
+         id="path41"
+         inkscape:connector-curvature="0"
+         style="fill:#ff0000" />
+      <path
+         d="M 252.87497,551 H 294.75 c 41.87503,0 83.75006,-16.75 83.75006,-67 0,-50.25 -41.87503,-67 -83.75006,-67 h -57.75005 c -14.3594,0 -26,11.6406 -26,26 v 82 c 0,14.35938 11.6406,26 26,26 z"
+         id="path43"
+         inkscape:connector-curvature="0"
+         style="stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round" />
+      <text
+         id="text49"
+         x="205.4857"
+         y="456.72015"
+         style="fill:#ffffff">
+        <tspan
+           font-size="36pt"
+           x="226.87833"
+           y="493.72015"
+           id="tspan45"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:36px;font-family:Futura;-inkscape-font-specification:'Futura Bold';fill:#ffffff">degate</tspan>
+      </text>
+      <line
+         x1="395.60007"
+         y1="483.99997"
+         x2="479"
+         y2="483.99976"
+         id="line51"
+         style="stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#Ball_Marker)" />
+      <line
+         x1="144"
+         y1="450.5"
+         x2="209.49995"
+         y2="450.69449"
+         id="line53"
+         style="stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter" />
+      <line
+         x1="144.00002"
+         y1="517.5"
+         x2="211.00018"
+         y2="517.5"
+         id="line55"
+         style="stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter" />
+    </g>
+  </g>
+</svg>
