@@ -31,7 +31,6 @@
 #include "Core/Utils/TypeTraits.h"
 #include "Core/Image/StoragePolicies.h"
 #include "Core/Image/PixelPolicies.h"
-#include "Core/Image/ImageHelper.h"
 #include "Core/Utils/FileSystem.h"
 
 namespace degate

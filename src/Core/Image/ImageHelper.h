@@ -31,7 +31,6 @@
 
 #include <set>
 #include <boost/foreach.hpp>
-#include <QImageReader>
 
 namespace degate
 {
