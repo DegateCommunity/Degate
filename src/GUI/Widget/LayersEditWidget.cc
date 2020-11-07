@@ -23,6 +23,7 @@
 
 #include "Core/Image/ImageHelper.h"
 #include "Core/LogicModel/LogicModelHelper.h"
+#include "GUI/Dialog/ProgressDialog.h"
 
 #include <memory>
 #include <QtWidgets/QMessageBox>
@@ -301,7 +302,25 @@ namespace degate
             try
             {
                 if (background->has_new_image())
-                    load_background_image(layer, project->get_project_directory(), background->get_image_path());
+                {
+                    // Start progress dialog
+                    ProgressDialog progress_dialog(this->parentWidget(),
+                                                   tr("Importation and conversion of the new background image. "
+                                                      "This operation can take a lot of time, but will be performed only once."),
+                                                   nullptr);
+
+                    // Set the job to start the background loading.
+                    progress_dialog.set_job([&layer, &background, this]()
+                                            {
+                                                load_background_image(layer, project->get_project_directory(), background->get_image_path());
+                                            });
+
+                    // Start the process
+                    progress_dialog.exec();
+
+                    if (progress_dialog.was_canceled())
+                        debug(TM, "The background image importation and conversion operation has been canceled.");
+                }
             }
             catch (std::exception& e)
             {
