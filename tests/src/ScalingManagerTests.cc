@@ -21,7 +21,7 @@
 
 #include "Core/Image/Manipulation/ScalingManager.h"
 #include "Core/Image/Image.h"
-#include "Core/Image/TIFFReader.h"
+#include "Core/Image/ImageReader.h"
 
 #include "catch.hpp"
 
@@ -32,7 +32,7 @@ TEST_CASE("Test scaling manager", "[ScalingManager]")
     std::string image_file("tests_files/test_file.tif");
 
     // create an image
-    TIFFReader<BackgroundImage> tiff_reader(image_file);
+    ImageReader<BackgroundImage> tiff_reader(image_file);
     bool read_result = tiff_reader.read();
     REQUIRE(read_result == true);
 

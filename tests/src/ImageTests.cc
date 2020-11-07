@@ -21,9 +21,8 @@
 
 #include "Core/Image/Image.h"
 #include "Core/Image/TileImage.h"
-#include "Core/Image/TIFFReader.h"
 #include "Core/Image/TIFFWriter.h"
-#include "Core/Image/ImageReaderFactory.h"
+#include "Core/Image/ImageReader.h"
 
 #include "catch.hpp"
 
@@ -63,7 +62,7 @@ TEST_CASE("Test type traits", "[ImageTests]")
     REQUIRE(degate::is_pointer<TileImage_RGBA_shptr>::value == true);
 }
 
-TileImage_RGBA_shptr read_image(std::shared_ptr<degate::ImageReaderBase<degate::TileImage_RGBA>> reader,
+TileImage_RGBA_shptr read_image(std::shared_ptr<degate::ImageReader<degate::TileImage_RGBA>> reader,
                                 unsigned int tile_size_exp)
 {
     clock_t start_time = clock();
@@ -96,17 +95,8 @@ TEST_CASE("Test image reader", "[ImageTests]")
 {
     std::string image_file("tests_files/test_file.tif");
 
-    // create the image reader factory
-    ImageReaderFactory<TileImage_RGBA> ir_factory;
-
-    // check if the factory has at least one reader
-    file_format_collection const& file_formats = ir_factory.get_file_formats();
-
-    REQUIRE(file_formats.size() > 0);
-
     // get a tiff reader from the factory
-    std::shared_ptr<ImageReaderBase<TileImage_RGBA> > tiff_reader = ir_factory.get_reader(image_file);
-
+    auto tiff_reader = std::make_shared<ImageReader<TileImage_RGBA>>(image_file);
 
     // check filename
     REQUIRE(tiff_reader->get_filename() == image_file);
@@ -121,7 +111,6 @@ TEST_CASE("Test image reader", "[ImageTests]")
 
     REQUIRE(tiff_reader->get_width() > 0);
     REQUIRE(tiff_reader->get_height() > 0);
-
 
     read_image(tiff_reader, 8 /* tiles of size 256x256 */);
 

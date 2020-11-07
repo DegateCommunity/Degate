@@ -25,6 +25,7 @@
 #include <list>
 #include <memory>
 #include <QImageWriter>
+#include <QImage>
 
 #include "Globals.h"
 #include "Core/Utils/DegateExceptions.h"

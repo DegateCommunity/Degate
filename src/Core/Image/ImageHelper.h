@@ -22,16 +22,16 @@
 #ifndef __IMAGEHELPER_H__
 #define __IMAGEHELPER_H__
 
-#include "Core/Image/ImageReaderFactory.h"
-#include "Core/Image/ImageReaderBase.h"
 #include "Core/Image/ImageWriterBase.h"
 #include "Core/Image/TIFFWriter.h"
 #include "Core/Image/PixelPolicies.h"
 #include "Core/Image/StoragePolicies.h"
 #include "Core/Image/Image.h"
+#include "Core/Image/ImageReader.h"
 
 #include <set>
 #include <boost/foreach.hpp>
+#include <QImageReader>
 
 namespace degate
 {
@@ -55,26 +55,23 @@ namespace degate
             boost::format fmter("Error in load_image(): The image file %1% cannot be loaded.");
             fmter % path;
 
-            // get a reader
-            ImageReaderFactory<ImageType> ir_factory;
-            std::shared_ptr<ImageReaderBase<ImageType>> reader = ir_factory.get_reader(path);
-
-            if (reader->read() == false)
+            ImageReader<ImageType> reader(path);
+            if (!reader.read())
             {
+                debug(TM, "Failed to read meta data of image.");
                 throw DegateRuntimeException(fmter.str());
             }
-            else
-            {
-                debug(TM, "reading image file: %s", path.c_str());
 
-                // create an empty image
-                std::shared_ptr<ImageType> img(new ImageType(reader->get_width(),
-                                                             reader->get_height()));
-                if (reader->get_image(img) == true)
-                    return img;
-                else
-                    throw DegateRuntimeException(fmter.str());
+            // Create output image.
+            auto output_image = std::make_shared<ImageType>(reader.get_width(), reader.get_height());
+
+            if (!reader.get_image(output_image))
+            {
+                debug(TM, "Failed to read image.");
+                throw DegateRuntimeException(fmter.str());
             }
+
+            return output_image;
         }
     }
 
