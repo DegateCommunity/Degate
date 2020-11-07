@@ -66,7 +66,7 @@ namespace degate
 		if (project == nullptr)
 			return;
 
-		background.update();
+        background.update();
 		gates.update();
 		annotations.update();
         emarkers.update();
@@ -75,6 +75,136 @@ namespace degate
 
 		update();
 	}
+
+    void WorkspaceRenderer::update_objects()
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        gates.update();
+        emarkers.update();
+        vias.update();
+        wires.update();
+
+        update();
+    }
+
+    void WorkspaceRenderer::update_type(PlacedLogicModelObject_shptr& object)
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        if (std::dynamic_pointer_cast<Gate>(object) || std::dynamic_pointer_cast<GatePort>(object))
+        {
+            gates.update();
+        }
+        else if (std::dynamic_pointer_cast<Annotation>(object))
+        {
+            annotations.update();
+        }
+        else if (std::dynamic_pointer_cast<EMarker>(object))
+        {
+            emarkers.update();
+        }
+        else if (std::dynamic_pointer_cast<Via>(object))
+        {
+            vias.update();
+        }
+        else if (std::dynamic_pointer_cast<Wire>(object))
+        {
+            wires.update();
+        }
+
+        update();
+    }
+
+    void WorkspaceRenderer::update_background()
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        background.update();
+
+        update();
+    }
+
+    void WorkspaceRenderer::update_gates()
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        gates.update();
+
+        update();
+    }
+
+    void WorkspaceRenderer::update_annotations()
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        annotations.update();
+
+        update();
+    }
+
+    void WorkspaceRenderer::update_emarkers()
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        emarkers.update();
+
+        update();
+    }
+
+    void WorkspaceRenderer::update_vias()
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        vias.update();
+
+        update();
+    }
+
+    void WorkspaceRenderer::update_wires()
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        wires.update();
+
+        update();
+    }
+
+    void WorkspaceRenderer::update_regular_grid()
+    {
+        makeCurrent();
+
+        if (project == nullptr)
+            return;
+
+        regular_grid.update();
+
+        update();
+    }
 
 	void WorkspaceRenderer::set_project(const Project_shptr& new_project)
 	{
@@ -331,10 +461,10 @@ namespace degate
 
 		if (draw_annotations_name)
 			annotations.draw_name(projection);
-		
+
 		if (draw_gates)
 			gates.draw(projection);
-		
+
 		if (draw_gates_name)
 			gates.draw_gates_name(projection);
 
@@ -369,7 +499,7 @@ namespace degate
 	void WorkspaceRenderer::resizeGL(int w, int h)
 	{
 		makeCurrent();
-		
+
 		glViewport(0, 0, w, h);
 
 		set_projection(NO_ZOOM, center_x, center_y);
@@ -547,7 +677,7 @@ namespace degate
             // If no CTRL reset selection (single selection)
 			if (!selected_objects.empty() && !QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
 				reset_selection();
-			
+
 			if (plo != nullptr)
 			    add_object_to_selection(plo);
 		}
@@ -574,7 +704,7 @@ namespace degate
 
             emit project_changed();
 
-            update_screen();
+            update_wires();
         }
 
         // Area selection + CTRL
@@ -752,7 +882,7 @@ namespace degate
 			// Check if there is a gate or gate port on the logic layer
 			if (plo == nullptr)
 			{
-				try 
+				try
 				{
 					layer = get_first_logic_layer(lmodel);
 					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);

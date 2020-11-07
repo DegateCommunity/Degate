@@ -105,6 +105,53 @@ namespace degate
         void update_screen();
 
         /**
+         * Update all objects of the screen (all except Background and Annotations).
+         */
+        void update_objects();
+
+        /**
+         * Update the type of a specific object.
+         *
+         * @param object : the object.
+         */
+        void update_type(PlacedLogicModelObject_shptr& object);
+
+        /**
+         * Update background.
+         */
+        void update_background();
+
+        /**
+         * Update gates.
+         */
+        void update_gates();
+
+        /**
+         * Update annotations.
+         */
+        void update_annotations();
+
+        /**
+         * Update emarkers.
+         */
+        void update_emarkers();
+
+        /**
+         * Update vias.
+         */
+        void update_vias();
+
+        /**
+         * Update wires.
+         */
+        void update_wires();
+
+        /**
+         * Update regular grid.
+         */
+        void update_regular_grid();
+
+        /**
          * Set the project for the workspace (the screen will be updated).
          *
          * @param new_project : the project to set.

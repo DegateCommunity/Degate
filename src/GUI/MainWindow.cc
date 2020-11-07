@@ -791,7 +791,7 @@ namespace degate
 
         load_background_image(project->get_logic_model()->get_current_layer(), project->get_project_directory(), file_name);
 
-        workspace->update_screen();
+        workspace->update_background();
 
         status_bar.showMessage(tr("Imported a new background image for the layer."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
@@ -837,7 +837,7 @@ namespace degate
             project->get_logic_model()->update_ports(new_gate);
 
             workspace->reset_area_selection();
-            workspace->update_screen();
+            workspace->update_gates();
 
             project_changed();
         }
@@ -883,7 +883,7 @@ namespace degate
             project->get_logic_model()->update_ports(new_gate);
 
             workspace->reset_area_selection();
-            workspace->update_screen();
+            workspace->update_gates();
 
             project_changed();
         }
@@ -906,7 +906,7 @@ namespace degate
             project->get_logic_model()->update_ports(o);
         }
 
-        workspace->update_screen();
+        workspace->update_gates();
 
         project_changed();
     }
@@ -919,7 +919,7 @@ namespace degate
         GateLibraryDialog dialog(this, project);
         dialog.exec();
 
-        workspace->update_screen();
+        workspace->update_gates();
     }
 
     void MainWindow::on_menu_gate_list()
@@ -957,7 +957,7 @@ namespace degate
             project->get_logic_model()->update_ports(o->get_gate());
         }
 
-        workspace->update_screen();
+        workspace->update_gates();
 
         project_changed();
     }
@@ -980,7 +980,7 @@ namespace degate
         AutoNameGates auto_name(project->get_logic_model(), orientation);
         auto_name.run();
 
-        workspace->update_screen();
+        workspace->update_gates();
 
         project_changed();
     }
@@ -1002,7 +1002,7 @@ namespace degate
             project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
 
             workspace->reset_area_selection();
-            workspace->update_screen();
+            workspace->update_annotations();
 
             project_changed();
         }
@@ -1020,7 +1020,7 @@ namespace degate
             AnnotationEditDialog dialog(this, o);
             dialog.exec();
 
-            workspace->update_screen();
+            workspace->update_annotations();
 
             project_changed();
         }
@@ -1056,7 +1056,7 @@ namespace degate
             EMarkerEditDialog dialog(this, o);
             dialog.exec();
 
-            workspace->update_screen();
+            workspace->update_emarkers();
 
             project_changed();
         }
@@ -1072,7 +1072,7 @@ namespace degate
             ViaEditDialog dialog(this, o, project);
             dialog.exec();
 
-            workspace->update_screen();
+            workspace->update_vias();
 
             project_changed();
         }
@@ -1092,7 +1092,8 @@ namespace degate
                 project->get_logic_model()->remove_object(object);
         }
 
-        workspace->update_screen();
+        workspace->update_objects();
+        workspace->update_annotations();
 
         if (modules_dialog != nullptr)
             modules_dialog->reload();
@@ -1115,7 +1116,7 @@ namespace degate
 
         connect_objects(project->get_logic_model(), objects.begin(), objects.end());
 
-        workspace->update_screen();
+        workspace->update_objects();
 
         project_changed();
     }
@@ -1137,7 +1138,7 @@ namespace degate
                                                                           objects.begin(),
                                                                           objects.end());
 
-        workspace->update_screen();
+        workspace->update_objects();
 
         project_changed();
     }
@@ -1228,7 +1229,7 @@ namespace degate
         TemplateMatchingDialog template_matching_dialog(this, bounding_box, project, gate_template);
         template_matching_dialog.exec();
 
-        workspace->update_screen();
+        workspace->update_gates();
 
         project_changed();
     }
@@ -1248,7 +1249,7 @@ namespace degate
         ViaMatchingDialog via_matching_dialog(this, bounding_box, project);
         via_matching_dialog.exec();
 
-        workspace->update_screen();
+        workspace->update_vias();
 
         project_changed();
     }
@@ -1268,7 +1269,7 @@ namespace degate
         WireMatchingDialog wire_matching_dialog(this, bounding_box, project);
         wire_matching_dialog.exec();
 
-        workspace->update_screen();
+        workspace->update_wires();
 
         project_changed();
     }
@@ -1516,6 +1517,7 @@ namespace degate
             return;
         }
 
+        // Load project.
         workspace->set_project(project);
 
         update_window_title();
@@ -1666,7 +1668,7 @@ namespace degate
         {
             project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_emarker);
 
-            workspace->update_screen();
+            workspace->update_emarkers();
 
             project_changed();
         }
@@ -1690,7 +1692,7 @@ namespace degate
             project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(),
                                                    new_via);
 
-            workspace->update_screen();
+            workspace->update_vias();
 
             project_changed();
         }
@@ -1758,7 +1760,7 @@ namespace degate
         update_status_bar_layer_info();
 
         workspace->add_object_to_selection(object);
-        workspace->update_screen();
+        workspace->update_type(object);
     }
 
     void MainWindow::on_rule_violations_dialog()
