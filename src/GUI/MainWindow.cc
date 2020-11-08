@@ -652,50 +652,16 @@ namespace degate
 
         status_bar.showMessage(tr("Creating a new project..."));
 
-        QString dir = QFileDialog::getExistingDirectory(this, tr("Select the directory where the project will be created"));
-
-        if (dir.isNull())
-        {
-            status_bar.showMessage(tr("New project creation operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-
-            return;
-        }
-
         NewProjectDialog dialog(this);
         auto res = dialog.exec();
 
         if (res == QDialog::Accepted)
         {
-            std::string project_name = dialog.get_project_name();
-            unsigned layer_count = dialog.get_layer_count();
-            unsigned width = dialog.get_width();
-            unsigned height = dialog.get_height();
+            project = dialog.get_project();
 
-            if (layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
-            {
-                QMessageBox::warning(this, tr("Invalid values"), tr("The values you entered are invalid. Operation cancelled."));
+            workspace->set_project(project);
 
-                status_bar.showMessage(tr("New project creation operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-
-                return;
-            }
-            else
-            {
-                const std::string project_dir = dir.toStdString() + "/" + project_name;
-
-                if (!file_exists(project_dir))
-                    create_directory(project_dir);
-
-                project = std::make_shared<Project>(width, height, project_dir, layer_count);
-                project->set_name(project_name);
-
-                workspace->set_project(project);
-
-                LayersEditDialog layers_edit_dialog(this, project);
-                layers_edit_dialog.exec();
-
-                on_menu_project_save();
-            }
+            on_menu_project_save();
 
             status_bar.showMessage(tr("Created a new project."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
         }
@@ -1456,37 +1422,14 @@ namespace degate
                     if (project != nullptr)
                         on_menu_project_close();
 
-                    NewProjectDialog dialog(this);
+                    NewProjectDialog dialog(this, "", path);
                     auto res = dialog.exec();
 
                     if (res == QDialog::Accepted)
                     {
-                        std::string project_name = dialog.get_project_name();
-                        unsigned layer_count = dialog.get_layer_count();
-                        unsigned width = dialog.get_width();
-                        unsigned height = dialog.get_height();
-
-                        if (layer_count == 0 || width == 0 || height == 0 || project_name.length() < 1)
-                        {
-                            QMessageBox::warning(this, tr("Invalid values"), tr("The values you entered are invalid. Operation cancelled"));
-
-                            status_bar.showMessage(tr("New project/subproject operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
-
-                            return;
-                        }
-                        else
-                        {
-                            if (!file_exists(path))
-                                create_directory(path);
-
-                            project = std::make_shared<Project>(width, height, path, layer_count);
-                            project->set_name(project_name);
-
-                            LayersEditDialog layers_edit_dialog(this, project);
-                            layers_edit_dialog.exec();
+                            project = dialog.get_project();
 
                             on_menu_project_save();
-                        }
                     }
                     else
                     {

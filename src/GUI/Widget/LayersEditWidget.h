@@ -206,6 +206,25 @@ namespace degate
         LayersEditWidget(QWidget* parent, const Project_shptr& project);
         ~LayersEditWidget() override = default;
 
+        /**
+         * Set project.
+         */
+        void set_project(const Project_shptr& project);
+
+        /**
+         * Get layer count.
+         *
+         * @return Returns the number of layer.
+         */
+        unsigned int get_layer_count();
+
+        /**
+         * Get the minimal size that can contain all images.
+         *
+         * @return Returns the minimal size that can contain all images.
+         */
+        QSize get_max_size();
+
     public slots:
         /**
          * Add a new layer to the list.
@@ -245,12 +264,14 @@ namespace degate
         QGridLayout layout;
 
         // Layers
-        QLabel layers_label;
         QTableWidget layers;
-        QHBoxLayout layers_add_remove_buttons_layout;
+
+        // Layers control buttons
+        QGridLayout layers_control_buttons_layout;
+
         QPushButton layers_add_button;
         QPushButton layers_remove_button;
-        QHBoxLayout layers_move_buttons_layout;
+
         QPushButton layers_up_buttons;
         QPushButton layers_down_buttons;
     };

@@ -22,12 +22,18 @@
 #ifndef __NEWPROJECTDIALOG_H__
 #define __NEWPROJECTDIALOG_H__
 
+#include "GUI/Widget/LayersEditWidget.h"
+
 #include <QDialog>
 #include <QSpinBox>
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QGroupBox>
+#include <QGridLayout>
+#include <QVBoxLayout>
+#include <QCheckBox>
 
 namespace degate
 {
@@ -48,49 +54,63 @@ namespace degate
          * Create the new project dialog.
          *
          * @param parent : the parent of the dialog.
+         * @param project_name : the project name. Can be empty, it will let the user choose.
+         * @param project_path : the project path. If empty, it will open a file dialog to select it.
          */
-        explicit NewProjectDialog(QWidget* parent);
+        NewProjectDialog(QWidget* parent, const std::string& project_name = "", const std::string& project_path = "");
         ~NewProjectDialog() override = default;
 
         /**
-         * Get the new project name.
-         *
-         * @return Returns the new project name.
+         * Get the newly created project (if creation failed, return nullptr).
          */
-        std::string get_project_name();
+        Project_shptr get_project();
+
+    protected slots:
+        /**
+         * Validate and create the project.
+         */
+        void validate();
 
         /**
-         * Get the height of the new project.
-         *
-         * @return Returns the height of the new project.
+         * Called when the project directory path button is pressed.
          */
-        unsigned get_height();
-
-        /**
-         * Get the width of the new project.
-         *
-         * @return Returns the width of the new project.
-         */
-        unsigned get_width();
-
-        /**
-         * Get the new project layer count.
-         *
-         * @return Returns the number of layers of the new project.
-         */
-        unsigned get_layer_count();
+        void set_project_directory_path();
 
     private:
-        QSpinBox height;
-        QSpinBox width;
-        QSpinBox layer_count;
-        QLabel layer_label;
+        QVBoxLayout layout;
+        QGridLayout content_layout;
+
+        // Content
+
+        QGroupBox size_group;
+        QGridLayout size_group_layout;
+
+        QLabel automatic_size_label;
+        QCheckBox automatic_size_edit;
+
         QLabel width_label;
+        QSpinBox width;
+
         QLabel height_label;
-        QLabel project_label;
-        QVBoxLayout main_layout;
+        QSpinBox height;
+
+        QLabel project_name_label;
+        QLineEdit project_name_edit;
+
+        QLabel project_path_label;
+        QPushButton project_path_button;
+
+        QLabel layers_edit_label;
+        LayersEditWidget layers_edit_widget;
+
+        // Validation
+        QGridLayout control_layout;
         QPushButton validate_button;
-        QLineEdit project_name;
+
+        // Project
+        Project_shptr project = nullptr;
+        std::string project_directory;
+        bool user_selected_directory = false;
     };
 }
 

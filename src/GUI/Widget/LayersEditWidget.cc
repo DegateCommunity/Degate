@@ -24,6 +24,7 @@
 #include "Core/Image/ImageHelper.h"
 #include "Core/LogicModel/LogicModelHelper.h"
 #include "GUI/Dialog/ProgressDialog.h"
+#include "GUI/Preferences/ThemeManager.h"
 
 #include <memory>
 #include <QtWidgets/QMessageBox>
@@ -75,6 +76,13 @@ namespace degate
     void LayerBackgroundSelectionButton::on_button_clicked()
     {
         QString res = QFileDialog::getOpenFileName(this, tr("Select the background image"));
+
+        if (QImageReader::imageFormat(res).isEmpty())
+        {
+            QMessageBox::warning(this, tr("Invalid image"), tr("Wrong image type."));
+            return;
+        }
+
         image_path = res.toStdString();
 
         change_button_color(true);
@@ -84,9 +92,15 @@ namespace degate
     void LayerBackgroundSelectionButton::change_button_color(bool value)
     {
         if (value)
-            setStyleSheet("background-color: rgba(0, 150, 0, 255)");
+        {
+            setStyleSheet("background-color: rgba(0, 25, 0, 255)");
+            setText(tr("Image defined"));
+        }
         else
-            setStyleSheet("background-color: rgba(150, 0, 0, 255)");
+        {
+            setStyleSheet("background-color: rgba(25, 0, 0, 255)");
+            setText(tr("No Image defined"));
+        }
 
         state = value;
     }
@@ -141,9 +155,6 @@ namespace degate
     LayersEditWidget::LayersEditWidget(QWidget* parent, const Project_shptr& project)
             : QWidget(parent), project(project)
     {
-        // Label
-        layers_label.setText(tr("Layer config:"));
-
         // List
         layers.setColumnCount(5);
         QStringList list;
@@ -157,67 +168,112 @@ namespace degate
         layers.setSelectionMode(QTableView::SingleSelection);
 
         // Add/remove Buttons
-        layers_add_button.setText(tr("Add"));
-        layers_remove_button.setText(tr("Remove"));
-        layers_add_remove_buttons_layout.addWidget(&layers_add_button);
-        layers_add_remove_buttons_layout.addWidget(&layers_remove_button);
+        layers_add_button.setIcon(QIcon(GET_ICON_PATH("plus.png")));
+        layers_remove_button.setIcon(QIcon(GET_ICON_PATH("minus.png")));
+        layers_control_buttons_layout.addWidget(&layers_add_button, 0, 0);
+        layers_control_buttons_layout.addWidget(&layers_remove_button, 1, 0);
 
         // Up/Down buttons
-        layers_up_buttons.setText(tr("Up"));
-        layers_down_buttons.setText(tr("Down"));
-        layers_move_buttons_layout.addWidget(&layers_up_buttons);
-        layers_move_buttons_layout.addWidget(&layers_down_buttons);
+        layers_up_buttons.setIcon(QIcon(GET_ICON_PATH("layer_up.png")));
+        layers_down_buttons.setIcon(QIcon(GET_ICON_PATH("layer_down.png")));
+        layers_control_buttons_layout.addWidget(&layers_up_buttons, 2, 0);
+        layers_control_buttons_layout.addWidget(&layers_down_buttons, 3, 0);
+
+        layers_control_buttons_layout.setRowStretch(4, 1);
 
         // Layout
-        layout.addWidget(&layers_label, 0, 0);
-        layout.addWidget(&layers, 1, 0);
-        layout.addLayout(&layers_add_remove_buttons_layout, 2, 0);
-        layout.addLayout(&layers_move_buttons_layout, 3, 0);
+        layout.addWidget(&layers, 0, 0);
+        layout.addLayout(&layers_control_buttons_layout, 0, 1);
 
         setLayout(&layout);
 
         // Initialize the layer list
-        for (auto iter = project->get_logic_model()->layers_begin(); iter != project->get_logic_model()->layers_end(); ++iter)
+        if (project != nullptr)
         {
-            Layer_shptr layer = *iter;
+            for (auto iter = project->get_logic_model()->layers_begin(); iter != project->get_logic_model()->layers_end(); ++iter)
+            {
+                Layer_shptr layer = *iter;
 
-            if (layer == nullptr)
-                continue;
+                if (layer == nullptr)
+                    continue;
 
-            layers.insertRow(layers.rowCount());
+                layers.insertRow(layers.rowCount());
 
-            // Id
-            auto id_item = new QTableWidgetItem(QString::number(layer->get_layer_id()));
-            id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-            layers.setItem(layers.rowCount() - 1, 0, id_item);
+                // Id
+                auto id_item = new QTableWidgetItem(QString::number(layer->get_layer_id()));
+                id_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+                layers.setItem(layers.rowCount() - 1, 0, id_item);
 
-            // Enabled
-            auto enabled = new QTableWidgetItem();
-            enabled->setCheckState(layer->is_enabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
-            layers.setItem(layers.rowCount() - 1, 1, enabled);
+                // Enabled
+                auto enabled = new QTableWidgetItem();
+                enabled->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+                enabled->setCheckState(layer->is_enabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+                layers.setItem(layers.rowCount() - 1, 1, enabled);
 
-            // Description
-            layers.setItem(layers.rowCount() - 1, 2, new QTableWidgetItem(QString::fromStdString(layer->get_description())));
+                // Description
+                layers.setItem(layers.rowCount() - 1,
+                               2,
+                               new QTableWidgetItem(QString::fromStdString(layer->get_description())));
 
-            // Type
-            auto cb = new LayerTypeSelectionBox(layer->get_layer_type(), this);
-            layers.setCellWidget(layers.rowCount() - 1, 3, cb);
+                // Type
+                auto cb = new LayerTypeSelectionBox(layer->get_layer_type(), this);
+                layers.setCellWidget(layers.rowCount() - 1, 3, cb);
 
-            // Background
-            auto bb = new LayerBackgroundSelectionButton(this, layer);
-            layers.setCellWidget(layers.rowCount() - 1, 4, bb);
+                // Background
+                auto bb = new LayerBackgroundSelectionButton(this, layer);
+                layers.setCellWidget(layers.rowCount() - 1, 4, bb);
+            }
         }
 
         auto header_view = static_cast<QHeaderView*>(layers.horizontalHeader());
         header_view->setSectionResizeMode(QHeaderView::Stretch);
 
-        layers.resizeColumnsToContents();
-        layers.resizeRowsToContents();
-
         QObject::connect(&layers_add_button, SIGNAL(clicked()), this, SLOT(on_layer_add()));
         QObject::connect(&layers_remove_button, SIGNAL(clicked()), this, SLOT(on_layer_remove()));
         QObject::connect(&layers_up_buttons, SIGNAL(clicked()), this, SLOT(on_layer_up()));
         QObject::connect(&layers_down_buttons, SIGNAL(clicked()), this, SLOT(on_layer_down()));
+    }
+
+    void LayersEditWidget::set_project(const Project_shptr& project)
+    {
+        this->project = project;
+    }
+
+    unsigned int LayersEditWidget::get_layer_count()
+    {
+        return static_cast<unsigned int>(layers.rowCount());
+    }
+
+    QSize LayersEditWidget::get_max_size()
+    {
+        QSize max{0, 0};
+        for (unsigned int i = 0; i < static_cast<unsigned int>(layers.rowCount()); i++)
+        {
+            LayerBackgroundSelectionButton* background = dynamic_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(i, 4));
+
+            if (!is_file(background->get_image_path()))
+                continue;
+
+            if (QImageReader::imageFormat(background->get_image_path().c_str()).isEmpty())
+                continue;
+
+            QImageReader reader(background->get_image_path().c_str());
+            QSize size = reader.size();
+
+            if (!size.isValid())
+            {
+                debug(TM, "can't read size of %s\n", background->get_image_path().c_str());
+                continue;
+            }
+
+            if (size.width() > max.width())
+                max.setWidth(size.width());
+
+            if (size.height() > max.height())
+                max.setHeight(size.height());
+        }
+
+        return max;
     }
 
     void LayersEditWidget::on_layer_add()
@@ -231,6 +287,7 @@ namespace degate
 
         // Enabled
         auto enabled = new QTableWidgetItem();
+        enabled->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
         enabled->setCheckState(Qt::CheckState::Checked);
         layers.setItem(layers.rowCount() - 1, 1, enabled);
 
@@ -266,6 +323,9 @@ namespace degate
 
     void LayersEditWidget::validate()
     {
+        if (project == nullptr)
+            return;
+
         LogicModel::layer_collection layer_collection;
 
         for (unsigned int i = 0; i < static_cast<unsigned int>(layers.rowCount()); i++)
