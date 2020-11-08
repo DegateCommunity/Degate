@@ -27,6 +27,8 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [x] Automatic update checker.
 - [x] Search interface (by name or ID).
 - [x] Official MacOS support.
+- [x] Improve dark theme.
+- [x] Rework the project creation dialog.
 
 ## For 2.0.0-alpha.3 *[**current**]*:
 
