@@ -36,7 +36,7 @@ jobs:
     - name: Upload Degate binaries
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_binaries_Mac_x64.zip
+        name: Degate_binaries_Mac_x64
         path: build/out/bin/
         
     - name: Create Degate installer
@@ -55,13 +55,13 @@ jobs:
     - name: Upload Degate offline installer
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_offline_installer_Mac_x64.zip
+        name: Degate_offline_installer_Mac_x64
         path: etc/installer/mac_deploy_offline/
 
     - name: Upload Degate online installer
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_online_installer_Mac_x64.zip
+        name: Degate_online_installer_Mac_x64
         path: etc/installer/mac_deploy_online/
         
     - name: Create Degate update
@@ -73,5 +73,5 @@ jobs:
     - name: Upload Degate update
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_update_Mac_x64.zip
+        name: Degate_update_Mac_x64
         path: etc/installer/repository
