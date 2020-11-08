@@ -16,9 +16,12 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [ ] Complete existing via matching (add more consistency).
 - [ ] External matching support.
 
-## For 2.0.0-alpha.4 *[next]*:
+## For 2.0.0-beta.1 *[next]*:
+- [ ] General optimization.
 
-- [ ] Bug fixes.
+## For 2.0.0-alpha.4 *[**current**]*:
+
+- [x] Bug fixes.
 - [x] Connection inspector dialog.
 - [x] Automatic gate naming.
 - [x] German language.
@@ -30,7 +33,7 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [x] Improve dark theme.
 - [x] Rework the project creation dialog.
 
-## For 2.0.0-alpha.3 *[**current**]*:
+## For 2.0.0-alpha.3:
 
 - [x] Bug fixes.
 - [x] Module dialog.
