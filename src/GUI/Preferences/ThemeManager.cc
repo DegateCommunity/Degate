@@ -94,7 +94,19 @@ namespace degate
                 theme_palette.setColor(QPalette::Link, QColor(42, 130, 218));
                 theme_palette.setColor(QPalette::Highlight, QColor(42, 130, 218));
                 theme_palette.setColor(QPalette::HighlightedText, Qt::black);
-                theme_palette.setColor(QPalette::Disabled, QPalette::Button, Qt::black);
+
+                theme_palette.setColor(QPalette::Disabled, QPalette::Window, theme_palette.window().color().lighter());
+                theme_palette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(128, 128, 128));
+                theme_palette.setColor(QPalette::Disabled, QPalette::Base, theme_palette.base().color().lighter());
+                theme_palette.setColor(QPalette::Disabled, QPalette::AlternateBase, theme_palette.alternateBase().color().lighter());
+                theme_palette.setColor(QPalette::Disabled, QPalette::Text, QColor(128, 128, 128));
+                theme_palette.setColor(QPalette::Disabled, QPalette::Button, theme_palette.button().color().lighter());
+                theme_palette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(128, 128, 128));
+                theme_palette.setColor(QPalette::Disabled, QPalette::BrightText, QColor(53, 53, 53));
+                theme_palette.setColor(QPalette::Disabled, QPalette::Link, theme_palette.link().color().lighter());
+                theme_palette.setColor(QPalette::Disabled, QPalette::Highlight, theme_palette.highlight().color().lighter());
+                theme_palette.setColor(QPalette::Disabled, QPalette::HighlightedText, QColor(128, 128, 128));
+
                 qApp->setPalette(theme_palette);
 
                 qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #191919; border: 1px solid white; } QToolBar { border: none; }");
