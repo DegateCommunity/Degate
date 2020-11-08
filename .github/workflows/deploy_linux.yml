@@ -45,21 +45,22 @@ jobs:
         cd etc/
         wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage ./linux_deploy/Degate -appimage
+        ./linuxdeployqt-continuous-x86_64.AppImage ./linux_deploy/Degate -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so
         cd linux_deploy/
+        rm AppRun
         cp -R . ../installer/packages/Degate/data
         rm ../installer/packages/Degate/data/.keepme
 
     - name: Upload Degate appimage
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_appimage_Linux_x64
+        name: Degate_appimage_Linux_x64.zip
         path: etc/Degate*.AppImage
         
     - name: Upload Degate binaries
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_binaries_Linux_x64
+        name: Degate_binaries_Linux_x64.zip
         path: etc/linux_deploy/
         
     - name: Create Degate installer
@@ -76,13 +77,13 @@ jobs:
     - name: Upload Degate offline installer
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_offline_installer_Linux_x64
+        name: Degate_offline_installer_Linux_x64.zip
         path: etc/installer/Degate_offline_installer_Linux_x64
 
     - name: Upload Degate online installer
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_online_installer_Linux_x64
+        name: Degate_online_installer_Linux_x64.zip
         path: etc/installer/Degate_online_installer_Linux_x64
         
     - name: Create Degate update
@@ -94,5 +95,5 @@ jobs:
     - name: Upload Degate update
       uses: actions/upload-artifact@v2
       with:
-        name: Degate_update_Linux_x64
+        name: Degate_update_Linux_x64.zip
         path: etc/installer/repository
