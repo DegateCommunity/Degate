@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Reworked rule violations dialog to allow translation of violations.
+- Reworked the project creation dialog.
+- Improved dark theme.
 
 ### Fixed
 - Fixed subwindows text reload when language change.
