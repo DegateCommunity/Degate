@@ -341,11 +341,6 @@ namespace degate
 
         tool_bar->addSeparator();
 
-        tool_gate_library = tool_bar->addAction("");
-        QObject::connect(tool_gate_library, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
-
-        tool_bar->addSeparator();
-
         area_selection_tool = tools_group.addAction("");
         QObject::connect(area_selection_tool, SIGNAL(triggered()), workspace, SLOT(use_area_selection_tool()));
         area_selection_tool->setCheckable(true);
@@ -359,6 +354,9 @@ namespace degate
         tool_bar->addActions(tools_group.actions());
 
         tool_bar->addSeparator();
+
+        tool_gate_library = tool_bar->addAction("");
+        QObject::connect(tool_gate_library, SIGNAL(triggered()), this, SLOT(on_menu_gate_library()));
 
         rule_violations_action = tool_bar->addAction("");
         QObject::connect(rule_violations_action, SIGNAL(triggered()), this, SLOT(on_rule_violations_dialog()));
