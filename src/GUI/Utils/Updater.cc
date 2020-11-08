@@ -57,7 +57,7 @@ namespace degate
         QString path = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath(tool_name);
 
         QStringList args;
-        args.append("--checkupdates");
+        args.append("ch");
 
         process.start(path, args);
     }
@@ -68,7 +68,7 @@ namespace degate
 
         QByteArray data = process.readAllStandardOutput();
 
-        if(exit_code == 1)
+        if(!data.contains("<updates>"))
         {
             if (notify_no_update)
             {
@@ -113,7 +113,7 @@ namespace degate
 
         if (reply == QMessageBox::Yes)
         {
-            QStringList args("--updater");
+            QStringList args("up");
             bool success = QProcess::startDetached(tool_name, args);
 
             if (success)
