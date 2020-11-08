@@ -118,7 +118,7 @@ namespace degate
 
         // Size
         if (parent != nullptr)
-            resize(500, parent->size().height() * 0.70);
+            resize(600, parent->size().height() * 0.70);
     }
 
     Project_shptr NewProjectDialog::get_project()

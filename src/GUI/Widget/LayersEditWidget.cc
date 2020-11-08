@@ -93,12 +93,12 @@ namespace degate
     {
         if (value)
         {
-            setStyleSheet("background-color: rgba(0, 25, 0, 255)");
+            setStyleSheet("background-color: rgba(0, 150, 0, 255)");
             setText(tr("Image defined"));
         }
         else
         {
-            setStyleSheet("background-color: rgba(25, 0, 0, 255)");
+            setStyleSheet("background-color: rgba(150, 0, 0, 255)");
             setText(tr("No Image defined"));
         }
 
