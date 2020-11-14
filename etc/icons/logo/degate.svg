@@ -13,11 +13,11 @@
    width="343pt"
    height="343pt"
    id="svg61"
-   sodipodi:docname="degate_logo.svg"
+   sodipodi:docname="degate.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   inkscape:export-filename="C:\Users\Doria\Downloads\degate_16.png"
-   inkscape:export-xdpi="3.3586006"
-   inkscape:export-ydpi="3.3586006">
+   inkscape:export-filename="C:\Users\Doria\Downloads\degate.png"
+   inkscape:export-xdpi="859.80176"
+   inkscape:export-ydpi="859.80176">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -31,13 +31,35 @@
      inkscape:window-height="1017"
      id="namedview63"
      showgrid="false"
-     inkscape:zoom="1.8820737"
-     inkscape:cx="188.78434"
-     inkscape:cy="247.071"
-     inkscape:window-x="-8"
+     inkscape:zoom="2.8284272"
+     inkscape:cx="178.06657"
+     inkscape:cy="214.90674"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg61" />
+     inkscape:current-layer="svg61"
+     showguides="true">
+    <sodipodi:guide
+       position="-19.125,173.24999"
+       orientation="0.51342775,0"
+       id="guide863"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-19.125,172.86492"
+       orientation="0,477.50001"
+       id="guide865"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="339,172.86492"
+       orientation="-0.51342775,0"
+       id="guide867"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="339,173.24999"
+       orientation="0,-477.50001"
+       id="guide869"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
   <metadata
      id="metadata2">
     <dc:date>2008-04-13 03:13Z</dc:date>
@@ -48,7 +70,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -202,7 +224,7 @@
          d="M 252.87497,551 H 294.75 c 41.87503,0 83.75006,-16.75 83.75006,-67 0,-50.25 -41.87503,-67 -83.75006,-67 h -57.75005 c -14.3594,0 -26,11.6406 -26,26 v 82 c 0,14.35938 11.6406,26 26,26 z"
          id="path41"
          inkscape:connector-curvature="0"
-         style="fill:#ff0000" />
+         style="fill:#e63829;fill-opacity:1;stroke-width:2.64566929;stroke-miterlimit:4;stroke-dasharray:none;stroke:none;opacity:1" />
       <path
          d="M 252.87497,551 H 294.75 c 41.87503,0 83.75006,-16.75 83.75006,-67 0,-50.25 -41.87503,-67 -83.75006,-67 h -57.75005 c -14.3594,0 -26,11.6406 -26,26 v 82 c 0,14.35938 11.6406,26 26,26 z"
          id="path43"
@@ -210,15 +232,16 @@
          style="stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round" />
       <text
          id="text49"
-         x="205.4857"
-         y="456.72015"
+         x="216.96545"
+         y="454.92834"
          style="fill:#ffffff">
         <tspan
            font-size="36pt"
-           x="226.87833"
-           y="493.72015"
+           x="238.35808"
+           y="491.92834"
            id="tspan45"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:36px;font-family:Futura;-inkscape-font-specification:'Futura Bold';fill:#ffffff">degate</tspan>
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1;font-family:Futura;-inkscape-font-specification:'Futura Bold';letter-spacing:-0.0975px;fill:#ffffff"
+           dx="0">degate</tspan>
       </text>
       <line
          x1="395.60007"
