@@ -214,4 +214,4 @@ To add a new language opens a new issue.
 
 Degate is released under the GNU General Public License Version 3. See LICENSE.TXT for details.
 
-Degate is currently administered by Dorian Bachelot <dorianb.dev@netc.fr> and originally developed by Martin Schobert <martin@mailbeschleuniger.de>.
+Degate is currently administered by Dorian Bachelot <dev@dorianb.net> and originally developed by Martin Schobert <martin@mailbeschleuniger.de>.
