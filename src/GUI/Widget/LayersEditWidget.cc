@@ -372,7 +372,7 @@ namespace degate
                     // Set the job to start the background loading.
                     progress_dialog.set_job([&layer, &background, this]()
                                             {
-                                                load_background_image(layer, project->get_project_directory(), background->get_image_path());
+                                                load_new_background_image(layer, project->get_project_directory(), background->get_image_path());
                                             });
 
                     // Start the process

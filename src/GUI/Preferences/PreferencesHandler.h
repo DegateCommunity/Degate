@@ -61,10 +61,19 @@ namespace degate
         // Grid
         ///////////
 
-        color_t  grid_color;
-        unsigned max_grid_lines_count;
-        bool     show_grid;
-        bool     snap_to_grid;
+        color_t      grid_color;
+        unsigned int max_grid_lines_count;
+        bool         show_grid;
+        bool         snap_to_grid;
+
+
+        ///////////
+        // Performances
+        ///////////
+
+        unsigned int cache_size;
+        unsigned int image_importer_cache_size;
+
     };
 
     /**

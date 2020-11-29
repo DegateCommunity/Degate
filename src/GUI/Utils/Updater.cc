@@ -135,6 +135,17 @@ namespace degate
     {
         switch (error)
         {
+            case QProcess::Crashed:
+                break;
+            case QProcess::Timedout:
+                break;
+            case QProcess::ReadError:
+                break;
+            case QProcess::WriteError:
+                break;
+            case QProcess::UnknownError:
+                break;
+
             case QProcess::FailedToStart :
 
                 // The maintenance tool is not usable.

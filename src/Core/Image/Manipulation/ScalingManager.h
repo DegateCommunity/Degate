@@ -99,7 +99,7 @@ namespace degate
 
         /**
          * Destroy a scaling manager. This will destroy images anf their files
-         * and directories if the imag is not persistent.
+         * and directories if the image is not persistent.
          */
         ~ScalingManager()
         {
@@ -197,6 +197,16 @@ namespace degate
 
             //debug(TM, "return normal image");
             return image_map_element(1, images[1]);
+        }
+
+        /**
+         * Get the image list.
+         *
+         * @return Returns the image list.
+         */
+        image_map get_images()
+        {
+            return images;
         }
     };
 

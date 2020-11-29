@@ -36,6 +36,13 @@
 
 #include <chrono>
 
+#include <mutex>
+
+/**
+ * Minimum size (in Mb) of the cache.
+ */
+#define MINIMUM_CACHE_SIZE uint_fast64_t(256)
+
 static void get_clock(struct timespec* ts)
 {
     assert(ts != nullptr);
@@ -83,10 +90,10 @@ namespace degate
 
     private:
 
-        size_t max_cache_memory;
-        size_t allocated_memory;
+        uint_fast64_t max_cache_memory;
+        uint_fast64_t allocated_memory;
 
-        typedef std::pair<struct timespec, size_t> cache_entry_t;
+        typedef std::pair<struct timespec, uint_fast64_t> cache_entry_t;
         typedef std::map<TileCacheBase *, cache_entry_t> cache_t;
 
         cache_t cache;
@@ -96,7 +103,11 @@ namespace degate
         GlobalTileCache() : allocated_memory(0)
         {
             Configuration& conf = Configuration::get_instance();
-            max_cache_memory = conf.get_max_tile_cache_size() * 1024 * 1024;
+
+            if (conf.get_max_tile_cache_size() < MINIMUM_CACHE_SIZE)
+                max_cache_memory = MINIMUM_CACHE_SIZE * uint_fast64_t(1024) * uint_fast64_t(1024);
+            else
+                max_cache_memory = conf.get_max_tile_cache_size() * uint_fast64_t(1024) * uint_fast64_t(1024);
         }
 
         void remove_oldest()
@@ -158,7 +169,7 @@ namespace degate
             std::cout << "\n";
         }
 
-        bool request_cache_memory(TileCacheBase* requestor, size_t amount)
+        bool request_cache_memory(TileCacheBase* requestor, uint_fast64_t amount)
         {
 #ifdef TILECACHE_DEBUG
       debug(TM, "Local cache %p requests %d bytes.", requestor, amount);
@@ -202,7 +213,7 @@ namespace degate
             return false;
         }
 
-        void release_cache_memory(TileCacheBase* requestor, size_t amount)
+        void release_cache_memory(TileCacheBase* requestor, uint_fast64_t amount)
         {
 #ifdef TILECACHE_DEBUG
       debug(TM, "Local cache %p releases %d bytes.", requestor, amount);
@@ -247,6 +258,21 @@ namespace degate
                 }
             }
         }
+
+        inline uint_fast64_t get_max_cache_memory() const
+        {
+            return max_cache_memory;
+        }
+
+        inline uint_fast64_t get_allocated_memory() const
+        {
+            return allocated_memory;
+        }
+
+        inline bool is_full(uint_fast64_t amount) const
+        {
+            return allocated_memory + amount > max_cache_memory;
+        }
     };
 
 
@@ -283,6 +309,8 @@ namespace degate
         mutable unsigned curr_tile_num_x;
         mutable unsigned curr_tile_num_y;
 
+        std::mutex mutex;
+
 
     public:
 
@@ -314,6 +342,8 @@ namespace degate
         {
             if (cache.size() > 0)
             {
+                std::lock_guard<std::mutex> lock(mutex);
+
                 GlobalTileCache& gtc = GlobalTileCache::get_instance();
                 gtc.release_cache_memory(this, cache.size() * get_image_size());
                 current_tile.reset();
@@ -336,6 +366,94 @@ namespace degate
             }
         }
 
+        inline void cache_around(unsigned int min_x,
+                                 unsigned int max_x,
+                                 unsigned int min_y,
+                                 unsigned int max_y,
+                                 unsigned int max_size_x,
+                                 unsigned int max_size_y,
+                                 unsigned int radius)
+        {
+            unsigned int tile_num_min_x = min_x >> tile_width_exp;
+            unsigned int tile_num_max_x = max_x >> tile_width_exp;
+            unsigned int tile_num_min_y = min_y >> tile_width_exp;
+            unsigned int tile_num_max_y = max_y >> tile_width_exp;
+
+            unsigned int tile_num_max_size_x = max_size_x >> tile_width_exp;
+            unsigned int tile_num_max_size_y = max_size_y >> tile_width_exp;
+
+            unsigned int cache_min_x = radius > tile_num_min_x ? 0 : tile_num_min_x - radius;
+            unsigned int cache_max_x = radius + tile_num_max_x > tile_num_max_size_x ? tile_num_max_size_x : tile_num_max_x + radius;
+            unsigned int cache_min_y = radius > tile_num_min_y ? 0 : tile_num_min_y - radius;
+            unsigned int cache_max_y = radius + tile_num_max_y > tile_num_max_size_y ? tile_num_max_size_y : tile_num_max_y + radius;
+
+            if (static_cast<uint_fast64_t>(cache_max_x - cache_min_x) *
+                static_cast<uint_fast64_t>(cache_max_y - cache_min_y) *
+                static_cast<uint_fast64_t>(get_image_size()) *
+                static_cast<uint_fast64_t>(sizeof(typename PixelPolicy::pixel_type)) > GlobalTileCache::get_instance().get_max_cache_memory())
+            {
+                debug(TM, "Cache too small to cache around");
+
+                return;
+            }
+
+            for (unsigned int y = cache_min_y; y <= cache_max_y; y++)
+            {
+                for (unsigned int x = cache_min_x; x <= cache_max_x; x++)
+                {
+                    //if (y >= tile_num_min_y && y <= tile_num_max_y && x >= tile_num_min_x && x <= tile_num_max_x)
+                        //continue;
+
+                    load_tile(x, y);
+                }
+            }
+        }
+
+        inline void load_tile(unsigned int x, unsigned int y, bool update_current = false)
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+
+            // create a file name from tile number
+            char filename[PATH_MAX];
+            snprintf(filename, sizeof(filename), "%d_%d.dat", x, y);
+
+            // if filename/ object is not in cache, load the tile
+            typename cache_type::const_iterator iter = cache.find(filename);
+
+            if (iter == cache.end())
+            {
+                GlobalTileCache& gtc = GlobalTileCache::get_instance();
+
+                bool ok = gtc.request_cache_memory(this, get_image_size());
+                assert(ok == true);
+                struct timespec now{};
+                GET_CLOCK(now);
+
+                cache[filename] = std::make_pair(load(filename), now);
+
+                //debug(TM, "Cache size : %d/%d", gtc.get_allocated_memory(), gtc.get_max_cache_memory());
+
+                #ifdef TILECACHE_DEBUG
+                gtc.print_table();
+                #endif
+            }
+
+            // Get current time
+            struct timespec now{};
+            GET_CLOCK(now);
+
+            // Update entry
+            auto entry = cache[filename];
+            entry.second = now;
+
+            if (update_current)
+            {
+                current_tile = entry.first;
+                curr_tile_num_x = x;
+                curr_tile_num_y = y;
+            }
+        }
+
         /**
          * Get a tile. If the tile is not in the cache, the tile is loaded.
          *
@@ -353,32 +471,7 @@ namespace degate
                 tile_num_x == curr_tile_num_x &&
                 tile_num_y == curr_tile_num_y))
             {
-                // create a file name from tile number
-                char filename[PATH_MAX];
-                snprintf(filename, sizeof(filename), "%d_%d.dat", tile_num_x, tile_num_y);
-                //debug(TM, "filename is: [%s]", filename);
-
-                // if filename/ object is not in cache, load the tile
-                typename cache_type::const_iterator iter = cache.find(filename);
-
-                if (iter == cache.end())
-                {
-                    //cleanup_cache();
-                    GlobalTileCache& gtc = GlobalTileCache::get_instance();
-                    bool ok = gtc.request_cache_memory(this, get_image_size());
-                    assert(ok == true);
-                    struct timespec now;
-                    GET_CLOCK(now);
-
-                    cache[filename] = std::make_pair(load(filename), now);
-#ifdef TILECACHE_DEBUG
-      gtc.print_table();
-#endif
-                }
-
-                current_tile = cache[filename].first;
-                curr_tile_num_x = tile_num_x;
-                curr_tile_num_y = tile_num_y;
+                load_tile(tile_num_x, tile_num_y, true);
             }
 
             return current_tile;
@@ -426,9 +519,9 @@ namespace degate
         /**
          * Get image size in bytes.
          */
-        size_t get_image_size() const
+        uint_fast64_t get_image_size() const
         {
-            return sizeof(typename PixelPolicy::pixel_type) * (uint64_t(1) << tile_width_exp) * (uint64_t(1) << tile_width_exp);
+            return sizeof(typename PixelPolicy::pixel_type) * (uint_fast64_t(1) << tile_width_exp) * (uint_fast64_t(1) << tile_width_exp);
         }
 
         /**
@@ -441,8 +534,8 @@ namespace degate
         {
             //debug(TM, "directory: [%s] file: [%s]", directory.c_str(), filename.c_str());
             MemoryMap_shptr mem(new MemoryMap<typename PixelPolicy::pixel_type>
-                (1 << tile_width_exp,
-                 1 << tile_width_exp,
+                (uint_fast64_t(1) << tile_width_exp,
+                 uint_fast64_t(1) << tile_width_exp,
                  MAP_STORAGE_TYPE_PERSISTENT_FILE,
                  join_pathes(directory, filename)));
 

@@ -70,6 +70,17 @@ namespace degate
 
         // Snap to grid
         preferences.snap_to_grid = settings.value("snap_to_grid", false).toBool();
+
+
+        ///////////
+        // Performances
+        ///////////
+
+        // Cache size
+        preferences.cache_size = settings.value("cache_size", 256).toUInt();
+
+        // Image importer cache size
+        preferences.image_importer_cache_size = settings.value("image_importer_cache_size", 256).toUInt();
     }
 
     PreferencesHandler::~PreferencesHandler()
@@ -106,6 +117,14 @@ namespace degate
         settings.setValue("max_grid_lines_count", preferences.max_grid_lines_count);
         settings.setValue("show_grid", preferences.show_grid);
         settings.setValue("snap_to_grid", preferences.snap_to_grid);
+
+
+        ///////////
+        // Performances
+        ///////////
+
+        settings.setValue("cache_size", preferences.cache_size);
+        settings.setValue("image_importer_cache_size", preferences.image_importer_cache_size);
     }
 
     void PreferencesHandler::update(const Preferences& updated_preferences)

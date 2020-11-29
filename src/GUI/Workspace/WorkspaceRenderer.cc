@@ -582,6 +582,8 @@ namespace degate
 		viewport_max_x = center_x + (static_cast<float>(width()) * scale) / 2.0;
 		viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
 
+        background.update_viewport(viewport_min_x, viewport_max_x, viewport_min_y, viewport_max_y, static_cast<float>(width()), static_cast<float>(height()));
+
         regular_grid.viewport_update(BoundingBox(viewport_min_x, viewport_max_x, viewport_min_y, viewport_max_y));
 
         if (draw_grid)
@@ -838,7 +840,6 @@ namespace degate
 		event->angleDelta().y() < 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
 
 		event->accept();
-		//Todo: update_screen(); after fixed the scaling manager (in the background class).
 		update();
 	}
 

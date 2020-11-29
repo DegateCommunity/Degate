@@ -1992,6 +1992,44 @@
     </message>
 </context>
 <context>
+    <name>degate::PerformancesPreferencesPage</name>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="39"/>
+        <source>Cache</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="42"/>
+        <source>Cache size (in Mb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="48"/>
+        <source>Image importer cache size (in Mb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="54"/>
+        <source>Degate static cache:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="55"/>
+        <source>Clear cache</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="68"/>
+        <source>Preferences</source>
+        <translation type="unfinished">Einstellungen</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="68"/>
+        <source>You must restart Degate for some changes to take effect.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>degate::PortPlacementDialog</name>
     <message>
         <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="32"/>
@@ -2052,6 +2090,11 @@
         <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="165"/>
         <source>Grid</source>
         <translation>Raster</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="166"/>
+        <source>Performances</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2427,7 +2470,7 @@ Those settings are independent (per project).</source>
         <location filename="../../src/GUI/Utils/Updater.cc" line="80"/>
         <location filename="../../src/GUI/Utils/Updater.cc" line="97"/>
         <location filename="../../src/GUI/Utils/Updater.cc" line="109"/>
-        <location filename="../../src/GUI/Utils/Updater.cc" line="155"/>
+        <location filename="../../src/GUI/Utils/Updater.cc" line="166"/>
         <source>Check for updates</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2449,17 +2492,17 @@ Those settings are independent (per project).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Utils/Updater.cc" line="149"/>
+        <location filename="../../src/GUI/Utils/Updater.cc" line="160"/>
         <source>We cannot check for updates, your installation is either broken or has not been installed with a proper installer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Utils/Updater.cc" line="151"/>
+        <location filename="../../src/GUI/Utils/Updater.cc" line="162"/>
         <source>Please visit %1 page.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Utils/Updater.cc" line="158"/>
+        <location filename="../../src/GUI/Utils/Updater.cc" line="169"/>
         <source>this</source>
         <comment>... please see this page.</comment>
         <translation type="unfinished">dieser</translation>

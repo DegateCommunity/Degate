@@ -171,6 +171,12 @@ namespace degate
          *   chunk is heap and not file based, an empty string is returned.
          */
         std::string const& get_filename() const { return filename; }
+
+        /**
+         * Get data (can be null).
+         * @return Returns data.
+         */
+        T* data() { return mem_view; };
     };
 
     template <typename T>

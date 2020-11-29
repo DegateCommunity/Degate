@@ -26,6 +26,8 @@
 
 #include <vector>
 
+#include <QFuture>
+
 namespace degate
 {
 
@@ -68,6 +70,18 @@ namespace degate
          */
         void free_textures();
 
+        /**
+         * Update the viewport.
+         *
+         * @param min_x : viewport min x.
+         * @param max_x : viewport max x.
+         * @param min_y : viewport min y.
+         * @param max_y : viewport max x.
+         * @param width : render area width.
+         * @param height : render area height.
+         */
+        void update_viewport(float min_x, float max_x, float min_y, float max_y, float width, float height);
+
     private:
         /**
          * Create a background tile (OpenGL texture and vertices).
@@ -83,6 +97,14 @@ namespace degate
 
         std::vector<GLuint> background_textures;
         BackgroundImage_shptr background_image = nullptr;
+
+        float scale = 1;
+        float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
+        float virtual_width = 0, virtual_height = 0;
+
+        unsigned int tile_count = 0;
+
+        QFutureWatcher<void> future;
     };
 }
 

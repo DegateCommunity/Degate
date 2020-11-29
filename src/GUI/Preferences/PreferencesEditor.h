@@ -26,6 +26,7 @@
 #include "GUI/Preferences/PreferencesPage/AppearancePreferencesPage.h"
 #include "GUI/Preferences/PreferencesPage/GeneralPreferencesPage.h"
 #include "GUI/Preferences/PreferencesPage/GridPreferencesPage.h"
+#include "GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.h"
 #include "PreferencesHandler.h"
 
 #include <QDialog>

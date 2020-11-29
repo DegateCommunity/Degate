@@ -167,13 +167,13 @@ namespace degate
             }
 
             // Base conversion.
-            image.convertTo(QImage::Format_ARGB32);
+            //image.convertTo(QImage::Format_ARGB32);
 
             debug(TM, "Image read\n");
 
             // Fill image (can be long with big images).
             static QRgb rgb;
-            for (unsigned int y = 0; y < img->get_height(); y++) //TODO: Optimize this.
+            for (unsigned int y = 0; y < img->get_height(); y++)
             {
                 for (unsigned int x = 0; x < img->get_width(); x++)
                 {

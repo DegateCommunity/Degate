@@ -336,6 +336,17 @@ namespace degate
                                std::string const& image_file);
 
     /**
+     * Load a new background image (optimized version).
+     *
+     * @param layer : the concerned layer.
+     * @param project_dir : the project directory path.
+     * @param image_file : the image file path.
+     */
+    void load_new_background_image(Layer_shptr layer,
+                                   std::string const& project_dir,
+                                   std::string const& image_file);
+
+    /**
      * Clear the logic model for a layer.
      * @exception InvalidPointerException If you pass an invalid shared pointer for
      *   \p lmodel or \p layer, then this exception is raised.

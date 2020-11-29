@@ -59,6 +59,9 @@ namespace degate
 
         unsigned int tiles_number;
 
+        unsigned int width;
+        unsigned int height;
+
     private:
 
 
@@ -108,7 +111,9 @@ namespace degate
             tile_width_exp(tile_width_exp),
             offset_bitmask((1 << tile_width_exp) - 1),
             directory(directory),
-            tile_cache(directory, tile_width_exp, persistent)
+            tile_cache(directory, tile_width_exp, persistent),
+            width(width),
+            height(height)
         {
             if (!file_exists(directory)) create_directory(directory);
 
@@ -138,6 +143,11 @@ namespace degate
             return (1 << tile_width_exp);
         }
 
+        inline unsigned int get_tile_width_exp() const
+        {
+            return tile_width_exp;
+        }
+
 
         /**
          * Get the directory, where images are stored.
@@ -161,6 +171,42 @@ namespace degate
         {
             MemoryMap_shptr mem = tile_cache.get_tile(src_x, src_y);
             mem->raw_copy(dst_buf);
+        }
+
+        /**
+         * Get raw data from an image tile that has its upper left corner at x,y into a buffer (can be null).
+         * @return Returns data.
+         */
+        void* data(unsigned int src_x, unsigned int src_y)
+        {
+            return tile_cache.get_tile(src_x, src_y)->data();
+        }
+
+        /**
+         * Cache the tile around a rectangle.
+         *
+         * @param min_x : The minimum x coordinate of the rectangle.
+         * @param max_x : The maximum x coordinate of the rectangle.
+         * @param min_y : The minimum y coordinate of the rectangle.
+         * @param max_y : The maximum y coordinate of the rectangle.
+         * @param radius : The radius around the rectangle where to cache tiles.
+         *
+         */
+        void cache(unsigned int min_x,
+                   unsigned int max_x,
+                   unsigned int min_y,
+                   unsigned int max_y,
+                   unsigned int radius)
+        {
+            tile_cache.cache_around(min_x, max_x, min_y, max_y, width, height, radius);
+        }
+
+        /**
+         * Release the cache memory.
+         */
+        void release_memory()
+        {
+            tile_cache.release_memory();
         }
     };
 

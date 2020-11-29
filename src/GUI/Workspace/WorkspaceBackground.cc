@@ -21,6 +21,10 @@
 
 #include "WorkspaceBackground.h"
 
+#include <algorithm>
+
+#include <QtConcurrent/QtConcurrent>
+
 namespace degate
 {
     struct BackgroundVertex2D
@@ -28,6 +32,22 @@ namespace degate
         QVector2D pos;
         QVector2D texCoord;
     };
+
+    /**
+     * Calculate the lower offset to top or left for a tile.
+     */
+    unsigned int to_lower_tile_offset(unsigned int pos, unsigned int tile_width)
+    {
+        return (pos & ~(tile_width - 1));
+    }
+
+    /**
+     * Calculate the upper offset to top or left for a tile.
+     */
+    unsigned int to_upper_tile_offset(unsigned int pos, unsigned int tile_width)
+    {
+        return (pos & ~(tile_width - 1)) + (tile_width - 1);
+    }
 
     WorkspaceBackground::WorkspaceBackground(QWidget* parent) : WorkspaceElement(parent)
     {
@@ -76,7 +96,7 @@ namespace degate
         program->link();
     }
 
-    void WorkspaceBackground::update()
+    void WorkspaceBackground::update() //TODO: this is slow, try to have a thread that do that work
     {
         free_textures();
 
@@ -85,35 +105,55 @@ namespace degate
 
         assert(context->glGetError() == GL_NO_ERROR);
 
-        ScalingManager_shptr smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
+        auto smgr = project->get_logic_model()->get_current_layer()->get_scaling_manager();
 
         if (smgr == nullptr)
             return;
 
-        ScalingManager<BackgroundImage>::image_map_element elem = smgr->get_image(1/*scale*/); //Todo: fix scaling manager
+        auto elem = smgr->get_image(scale);
 
         background_image = elem.second;
-        if (background_image == nullptr)
-            return;
+        assert(background_image != nullptr);
+
+        float pre_scale = static_cast<float>(elem.first);
+
+        unsigned int // scaled coordinates
+        min_x = to_lower_tile_offset(std::max<int>(std::floor(viewport_min_x / pre_scale), 0), background_image->get_tile_size()),
+        max_x = to_upper_tile_offset(std::min<int>(std::max<int>(std::ceil(viewport_max_x / pre_scale), 0), std::ceil(project->get_logic_model()->get_width() / pre_scale)), background_image->get_tile_size()),
+        min_y = to_lower_tile_offset(std::max<int>(std::floor(viewport_min_y) / pre_scale, 0), background_image->get_tile_size()),
+        max_y = to_upper_tile_offset(std::min<int>(std::max<int>(std::ceil(viewport_max_y / pre_scale), 0), std::ceil(project->get_logic_model()->get_height() / pre_scale)), background_image->get_tile_size());
+
+        tile_count = std::ceil((max_x - min_x) / static_cast<float>(background_image->get_tile_size())) *
+                     std::ceil((max_y - min_y) / static_cast<float>(background_image->get_tile_size()));
 
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        context->glBufferData(GL_ARRAY_BUFFER, background_image->get_tiles_number() * 6 * sizeof(BackgroundVertex2D), nullptr, GL_STATIC_DRAW);
+        context->glBufferData(GL_ARRAY_BUFFER, tile_count * 6 * sizeof(BackgroundVertex2D), nullptr, GL_STATIC_DRAW);
 
         unsigned index = 0;
-        for (unsigned int x = 0; x < background_image->get_width(); x += background_image->get_tile_size())
+        for (unsigned int x = min_x; x < max_x; x += background_image->get_tile_size())
         {
-            for (unsigned int y = 0; y < background_image->get_height(); y += background_image->get_tile_size())
+            for (unsigned int y = min_y; y < max_y; y += background_image->get_tile_size())
             {
-                background_textures.push_back(create_background_tile(x, y, 1/*elem.first*/, index)); //Todo: fix scaling manager
+                background_textures.push_back(create_background_tile(x, y, elem.first, index));
 
                 index++;
             }
         }
 
+        assert(index == tile_count);
+
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         assert(context->glGetError() == GL_NO_ERROR);
+
+        if (!future.isFinished())
+            return;
+
+        future.setFuture(QtConcurrent::run([this, min_x, max_x, min_y, max_y]()
+        {
+            background_image->cache(min_x, max_x, min_y, max_y, 1);
+        }));
     }
 
     void WorkspaceBackground::draw(const QMatrix4x4& projection)
@@ -161,10 +201,29 @@ namespace degate
         background_textures.clear();
     }
 
+    void WorkspaceBackground::update_viewport(float min_x, float max_x, float min_y, float max_y, float width, float height)
+    {
+        this->scale = (max_x - min_x) / width;
+
+        viewport_min_x = min_x;
+        viewport_max_x = max_x;
+        viewport_min_y = min_y;
+        viewport_max_y = max_y;
+
+        virtual_width = width;
+        virtual_height = height;
+
+        update();
+    }
+
     GLuint WorkspaceBackground::create_background_tile(unsigned x, unsigned y, float pre_scaling, unsigned index)
     {
         assert(project != nullptr);
         assert(background_image != nullptr);
+
+        auto data = background_image->data(x, y);
+
+        assert(data != nullptr);
 
         const unsigned int tile_width = background_image->get_tile_size();
 
@@ -176,12 +235,6 @@ namespace degate
 
 
         // Texture
-
-        auto data = new GLuint[tile_width * tile_width];
-        assert(data != nullptr);
-
-        memset(data, 0, tile_width * tile_width * sizeof(GLuint));
-        background_image->raw_copy(data, x, y);
 
         GLuint texture = 0;
 
@@ -215,8 +268,6 @@ namespace degate
                      GL_UNSIGNED_BYTE,
                      data);
         assert(context->glGetError() == GL_NO_ERROR);
-
-        delete[] data;
 
         context->glBindTexture(GL_TEXTURE_2D, 0);
 

@@ -39,11 +39,9 @@ namespace degate {
 
     /**
      * Get the cache size for image tiles in MB.
-     * @return If the environment variable DEGATE_CACHE_SIZE is set,
-     *   its value. Else the default cache size is returned.
-     *   That is 256 MB.
+     * @return Returns the maximum cache size (in Mb) from the preferences.
      */
-    size_t get_max_tile_cache_size() const;
+    uint_fast64_t get_max_tile_cache_size() const;
 
 
     /**

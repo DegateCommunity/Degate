@@ -256,8 +256,15 @@ void Layer::unset_image()
         return;
 
     if (scaling_manager == nullptr) throw DegateLogicException("There is no scaling manager.");
+
+    // Release (cache) memory
+    auto images = scaling_manager->get_images();
+    for (auto& image : images)
+        image.second->release_memory();
+
     std::string img_dir = get_image_filename();
     scaling_manager.reset();
+
     debug(TM, "remove directory: %s", img_dir.c_str());
     remove_directory(img_dir);
 }

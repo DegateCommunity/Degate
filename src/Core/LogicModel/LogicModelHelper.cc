@@ -23,9 +23,14 @@
 #include "Core/LogicModel/LogicModelHelper.h"
 #include "Core/LogicModel/LogicModelObjectBase.h"
 #include "Core/Utils/TangencyCheck.h"
+#include "GUI/Preferences/PreferencesHandler.h"
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+#include <boost/range/counting_range.hpp>
+
+#include <QMutex>
+#include <QtConcurrent/QtConcurrent>
 
 using namespace degate;
 
@@ -218,6 +223,302 @@ void degate::load_background_image(Layer_shptr layer,
 
     debug(TM, "Load image %s", image_file.c_str());
     load_image<BackgroundImage>(image_file, bg_image);
+
+    debug(TM, "Set image to layer.");
+    layer->set_image(bg_image);
+    debug(TM, "Done.");
+}
+
+
+void load_tile(QImage& image_data,
+               unsigned int tile_size,
+               unsigned int tile_index,
+               const std::string& path,
+               QSize local_size,
+               unsigned int global_tile_x,
+               unsigned int global_tile_y,
+               unsigned int tile_count_x)
+{
+    assert(image_data.size() == local_size);
+
+    unsigned int local_tile_x = tile_index % tile_count_x;
+    unsigned int local_tile_y = tile_index / tile_count_x;
+
+    ////////////////
+    unsigned int tile_x = global_tile_x + local_tile_x;
+    unsigned int tile_y = global_tile_y + local_tile_y;
+
+    // Create a file name from tile number.
+    char filename[PATH_MAX];
+    snprintf(filename, sizeof(filename), "%d_%d.dat", tile_x, tile_y);
+
+    auto data = new BackgroundImage::pixel_type[tile_size * tile_size];
+    memset(data, 0, tile_size * tile_size * sizeof(BackgroundImage::pixel_type));
+
+    unsigned int min_x = tile_size * local_tile_x;
+    unsigned int min_y = tile_size * local_tile_y;
+
+    unsigned int default_max_x = min_x + tile_size;
+    unsigned int default_max_y = min_y + tile_size;
+
+    unsigned int max_x = default_max_x > static_cast<unsigned int>(local_size.width()) ?
+                         static_cast<unsigned int>(local_size.width()) : default_max_x;
+    unsigned int max_y = default_max_y > static_cast<unsigned int>(local_size.height()) ?
+                         static_cast<unsigned int>(local_size.height()) : default_max_y;
+
+    const auto rba_data = reinterpret_cast<const QRgb*>(&image_data.constBits()[0]);
+
+    // Fill image (can be long with big images).
+    static QRgb rgb;
+    for (unsigned int y = min_y; y < max_y; y++)
+    {
+        for (unsigned int x = min_x; x < max_x; x++)
+        {
+            rgb = rba_data[y * local_size.width() + x];
+            data[(y - min_y) * tile_size + (x - min_x)] = MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), qAlpha(rgb));
+        }
+    }
+
+    assert(!file_exists(path + "/" + filename));
+
+    auto file = std::fstream(path + "/" + filename, std::ios::out | std::ios::binary);
+
+    file.write(reinterpret_cast<const char*>(&data[0]), tile_size * tile_size * sizeof(BackgroundImage::pixel_type));
+
+    file.close();
+
+    delete[] data;
+}
+
+
+void create_scaled_background_image(const std::string& dir, const BackgroundImage_shptr& bg_image, QSize scaled_size, unsigned int tile_image_size, QImageReader& reader)
+{
+    QSize read_size{0, 0};
+
+    // Start image conversion and loading
+    while (true)
+    {
+        QSize reading_size{static_cast<int>(tile_image_size), static_cast<int>(tile_image_size)};
+
+        // Check width
+        if (reading_size.width() + read_size.width() > scaled_size.width())
+            reading_size.setWidth(scaled_size.width() - read_size.width());
+
+        // Check height
+        if (reading_size.height() + read_size.height() > scaled_size.height())
+            reading_size.setHeight(scaled_size.height() - read_size.height());
+
+        reader.device()->seek(0);
+
+        QImageReader current_reader(reader.device(), reader.format());
+
+        QRect rect(read_size.width(), read_size.height(), reading_size.width(), reading_size.height());
+
+        current_reader.setScaledSize(scaled_size);
+        current_reader.setScaledClipRect(rect);
+        QImage img = current_reader.read();
+        if (img.isNull())
+        {
+            debug(TM, "can't create %s (can't read image)\n", bg_image->get_directory().c_str());
+        }
+
+        //////////////////// Process start ///////////////////////////
+
+        unsigned int global_tile_x = static_cast<unsigned int>(read_size.width()) >> bg_image->get_tile_width_exp();
+        unsigned int global_tile_y = static_cast<unsigned int>(read_size.height()) >> bg_image->get_tile_width_exp();
+
+        auto tile_count_x = static_cast<unsigned int>(std::ceil(static_cast<double>(reading_size.width()) / static_cast<double>(bg_image->get_tile_size())));
+        auto tile_count_y = static_cast<unsigned int>(std::ceil(static_cast<double>(reading_size.height()) / static_cast<double>(bg_image->get_tile_size())));
+
+        // Multi-threaded function
+        std::function<void(const unsigned int& y)> function = [&img, &bg_image, &dir, &reading_size, &global_tile_x, &global_tile_y, &tile_count_x](const unsigned int& i)
+        {
+            load_tile(img, bg_image->get_tile_size(), i, dir, reading_size, global_tile_x, global_tile_y, tile_count_x);
+        };
+
+        // Start multithreading
+        const auto& it = boost::counting_range<unsigned int>(0, tile_count_x * tile_count_y);
+        QtConcurrent::blockingMap(it, function);
+
+        /////////////////////////////////////////////////////////////
+
+        read_size.setWidth(read_size.width() + reading_size.width());
+
+        if (read_size.width() >= scaled_size.width())
+        {
+            read_size.setWidth(0);
+            read_size.setHeight(read_size.height() + reading_size.height());
+        }
+
+        debug(TM, "New scaled image loading step.");
+
+        if (read_size.height() >= scaled_size.height())
+            break;
+    }
+}
+
+
+void create_scaled_background_images(const BackgroundImage_shptr& bg_image, unsigned int tile_image_size, QImageReader& reader, QSize default_size)
+{
+    auto w = static_cast<unsigned int>(default_size.width());
+    auto h = static_cast<unsigned int>(default_size.height());
+    unsigned int min_size = bg_image->get_tile_size();
+
+    for (int i = 2; ((h > min_size) || (w > min_size)) && (i < static_cast<int>(1u << 24u)); i *= 2) // max 24 scaling levels
+    {
+        w >>= 1u;
+        h >>= 1u;
+
+        // create a new image
+        char dir_name[PATH_MAX];
+        snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
+        std::string dir_path = join_pathes(bg_image->get_directory(), std::string(dir_name));
+        create_directory(dir_path);
+
+        reader.device()->seek(0);
+
+        create_scaled_background_image(dir_path, bg_image, QSize(static_cast<int>(w), static_cast<int>(h)), tile_image_size, reader);
+    }
+}
+
+
+void degate::load_new_background_image(Layer_shptr layer, std::string const& project_dir, std::string const& image_file)
+{
+    if (layer == nullptr)
+        throw InvalidPointerException("Error: you passed an invalid pointer to load_background_image()");
+
+    // Loading cache size (in mb)
+    static const unsigned int loading_cache_size = PREFERENCES_HANDLER.get_preferences().image_importer_cache_size;
+    ///////
+
+    // Maximum image tile size for reading, regarding the maximum allowed loading cache size.
+    unsigned int tile_image_size = std::floor<unsigned int>((std::sqrt<unsigned int>(loading_cache_size) * std::sqrt<unsigned int>(1024 * 1024)) / sizeof(BackgroundImage::pixel_type));
+
+    // Layer directory
+    boost::format fmter("layer_%1%.dimg");
+    fmter % layer->get_layer_id(); // was get_layer_pos()
+
+    std::string dir(join_pathes(project_dir, fmter.str()));
+
+    // Remove old background image
+    if (layer->has_background_image())
+        layer->unset_image();
+
+    // Create background image
+    debug(TM, "Create background image in %s", dir.c_str());
+    BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(static_cast<unsigned int>(layer->get_width()),
+                                                                       static_cast<unsigned int>(layer->get_height()),
+                                                                       dir);
+
+    // Adjust image size to be a multiple of tile size.
+    tile_image_size = (tile_image_size / bg_image->get_tile_size()) * bg_image->get_tile_size();
+
+    debug(TM, "%d", tile_image_size);
+
+    if (tile_image_size < bg_image->get_tile_size())
+        tile_image_size = bg_image->get_tile_size();
+
+    //////////////// Convert new image to Degate internal format.
+
+    // Create reader
+    QImageReader reader(image_file.c_str());
+
+    // If the image is a multi-page/multi-res, we take the page with the biggest resolution.
+    int best_image_number = -1;
+    if (reader.imageCount() > 1)
+    {
+        QSize best_size{0, 0};
+        for (int i = 0; i < reader.imageCount(); i++)
+        {
+            if (best_size.width() < reader.size().width() || best_size.height() < reader.size().height())
+            {
+                best_size = reader.size();
+                best_image_number = reader.currentImageNumber();
+            }
+
+            reader.jumpToNextImage();
+        }
+
+        reader.jumpToImage(best_image_number);
+    }
+
+    // Size
+    QSize size = reader.size();
+    if (!size.isValid())
+    {
+        debug(TM, "can't read size of %s\n", image_file.c_str());
+        return;
+    }
+
+    QSize read_size{0, 0};
+
+    // Start image conversion and loading
+    while (true)
+    {
+        QSize reading_size{static_cast<int>(tile_image_size), static_cast<int>(tile_image_size)};
+
+        // Check width
+        if (reading_size.width() + read_size.width() > size.width())
+            reading_size.setWidth(size.width() - read_size.width());
+
+        // Check height
+        if (reading_size.height() + read_size.height() > size.height())
+            reading_size.setHeight(size.height() - read_size.height());
+
+        reader.device()->seek(0);
+
+        QImageReader current_reader(reader.device(), reader.format());
+
+        QRect rect(read_size.width(), read_size.height(), reading_size.width(), reading_size.height());
+
+        current_reader.setClipRect(rect);
+        QImage img = current_reader.read();
+        if (img.isNull())
+        {
+            debug(TM, "can't read %s\n", image_file.c_str());
+        }
+
+        //////////////////// Process start ///////////////////////////
+
+        unsigned int global_tile_x = static_cast<unsigned int>(read_size.width()) >> bg_image->get_tile_width_exp();
+        unsigned int global_tile_y = static_cast<unsigned int>(read_size.height()) >> bg_image->get_tile_width_exp();
+
+        auto tile_count_x = static_cast<unsigned int>(std::ceil(static_cast<double>(reading_size.width()) / static_cast<double>(bg_image->get_tile_size())));
+        auto tile_count_y = static_cast<unsigned int>(std::ceil(static_cast<double>(reading_size.height()) / static_cast<double>(bg_image->get_tile_size())));
+
+        // Multi-threaded function
+        std::function<void(const unsigned int& y)> function = [&img, &bg_image, &dir, &reading_size, &global_tile_x, &global_tile_y, &tile_count_x](const unsigned int& i)
+        {
+            load_tile(img, bg_image->get_tile_size(), i, dir, reading_size, global_tile_x, global_tile_y, tile_count_x);
+        };
+
+        // Start multithreading
+        const auto& it = boost::counting_range<unsigned int>(0, tile_count_x * tile_count_y);
+        QtConcurrent::blockingMap(it, function);
+
+        /////////////////////////////////////////////////////////////
+
+        read_size.setWidth(read_size.width() + reading_size.width());
+
+        if (read_size.width() >= size.width())
+        {
+            read_size.setWidth(0);
+            read_size.setHeight(read_size.height() + reading_size.height());
+        }
+
+        debug(TM, "New image loading step.");
+
+        if (read_size.height() >= size.height())
+            break;
+    }
+
+    ///////////////
+
+    debug(TM, "Create scaled images.");
+    create_scaled_background_images(bg_image, tile_image_size, reader, size);
+    debug(TM, "Finished creating scaled images.");
+
+    ///////////////
 
     debug(TM, "Set image to layer.");
     layer->set_image(bg_image);

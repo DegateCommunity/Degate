@@ -23,6 +23,7 @@
 
 #include "Core/Configuration.h"
 #include "Core/Utils/FileSystem.h"
+#include "GUI/Preferences/PreferencesHandler.h"
 
 #include <boost/lexical_cast.hpp>
 
@@ -32,11 +33,9 @@ Configuration::Configuration()
 {
 }
 
-size_t Configuration::get_max_tile_cache_size() const
+uint_fast64_t Configuration::get_max_tile_cache_size() const
 {
-    char* cs = getenv("DEGATE_CACHE_SIZE");
-    if (cs == nullptr) return 256;
-    return boost::lexical_cast<size_t>(cs);
+    return static_cast<uint_fast64_t>(PREFERENCES_HANDLER.get_preferences().cache_size);
 }
 
 std::string Configuration::get_servers_uri_pattern() const

@@ -1992,6 +1992,44 @@
     </message>
 </context>
 <context>
+    <name>degate::PerformancesPreferencesPage</name>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="39"/>
+        <source>Cache</source>
+        <translation>Cache</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="42"/>
+        <source>Cache size (in Mb):</source>
+        <translation>Taille du cache (en Mo) :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="48"/>
+        <source>Image importer cache size (in Mb):</source>
+        <translation>Taille du cache d&apos;importation d&apos;images (en Mo) :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="54"/>
+        <source>Degate static cache:</source>
+        <translation>Cache statique de Degate :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="55"/>
+        <source>Clear cache</source>
+        <translation>Nettoyer le cache</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="68"/>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="68"/>
+        <source>You must restart Degate for some changes to take effect.</source>
+        <translation>Vous devez redémarrer Degate pour que certaines modifications puissent prendre effet.</translation>
+    </message>
+</context>
+<context>
     <name>degate::PortPlacementDialog</name>
     <message>
         <location filename="../../src/GUI/Dialog/PortPlacementDialog.cc" line="32"/>
@@ -2052,6 +2090,11 @@
         <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="165"/>
         <source>Grid</source>
         <translation>Grille</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="166"/>
+        <source>Performances</source>
+        <translation>Performances</translation>
     </message>
 </context>
 <context>
@@ -2427,7 +2470,7 @@ Those settings are independent (per project).</source>
         <location filename="../../src/GUI/Utils/Updater.cc" line="80"/>
         <location filename="../../src/GUI/Utils/Updater.cc" line="97"/>
         <location filename="../../src/GUI/Utils/Updater.cc" line="109"/>
-        <location filename="../../src/GUI/Utils/Updater.cc" line="155"/>
+        <location filename="../../src/GUI/Utils/Updater.cc" line="166"/>
         <source>Check for updates</source>
         <translation>Vérifier les mises à jour</translation>
     </message>
@@ -2449,17 +2492,17 @@ Those settings are independent (per project).</source>
         <translation>(Non désactivera la vérification automatique des mises à jour)</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Utils/Updater.cc" line="149"/>
+        <location filename="../../src/GUI/Utils/Updater.cc" line="160"/>
         <source>We cannot check for updates, your installation is either broken or has not been installed with a proper installer.</source>
         <translation>Nous ne pouvons pas vérifier les mises à jour, votre installation est défectueuse ou n&apos;a pas été installée avec un installateur approprié.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Utils/Updater.cc" line="151"/>
+        <location filename="../../src/GUI/Utils/Updater.cc" line="162"/>
         <source>Please visit %1 page.</source>
         <translation>Veuillez visiter %1 page.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Utils/Updater.cc" line="158"/>
+        <location filename="../../src/GUI/Utils/Updater.cc" line="169"/>
         <source>this</source>
         <comment>... please see this page.</comment>
         <translation>cette</translation>
