@@ -4,73 +4,72 @@
 <context>
     <name>degate::AboutDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="40"/>
-        <source>Welcome to Degate version %1</source>
-        <translation>Bienvenue dans Degate version %1</translation>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="42"/>
+        <source>Unreleased version.</source>
+        <translation>Version non publiée.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="41"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="44"/>
+        <source>Version released on %1.</source>
+        <comment>... released on dd/mm/yy</comment>
+        <translation>Version publiée le %1.</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="52"/>
         <source>The current project maintainer is %2.</source>
         <comment>... maintainer is NAME.</comment>
         <translation>Le responsable actuel du projet est %2.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="42"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="53"/>
         <source>This project is a forked version of Degate and is still under development, if you find a bug please report it %3.</source>
         <comment>... report it here.</comment>
         <translation>Ce projet est un fork de Degate et est toujours en cours de développement, si vous trouvez un bogue, veuillez le signaler %3.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="43"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="54"/>
         <source>You can also help us by adding new languages, see the Localization section of the README.md file, available %4.</source>
         <comment>... available here.</comment>
         <translation>Vous pouvez également nous aider en ajoutant de nouvelles langues, voir la section Localization du fichier README.md, disponible %4.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="45"/>
-        <source>To obtain the latest update of Degate, please see %5 page.</source>
-        <comment>... please see this page.</comment>
-        <translation>Pour obtenir la dernière mise à jour de Degate, veuillez consulter %5 page.</translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="47"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="56"/>
         <source>This software is released under the GNU General Public License Version 3.</source>
         <translation>Ce logiciel est distribué sous la licence GNU General Public License version 3.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="51"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="60"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="59"/>
         <source>Roadmap</source>
         <translation>Feuille de route</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="52"/>
-        <source>Original website</source>
-        <translation>Site web original</translation>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="38"/>
+        <source>Nightly version.</source>
+        <translation>Version anticipée.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="57"/>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="58"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
+        <source>Welcome to Degate version %1.</source>
+        <translation>Bienvenue dans Degate version %1.</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="65"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="66"/>
         <source>here</source>
         <translation>ici</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="59"/>
-        <source>this</source>
-        <comment>... please see this page.</comment>
-        <translation>cette</translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="83"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="77"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="84"/>
         <source>Changelog</source>
         <translation>Journal des modifications</translation>
     </message>
@@ -1557,7 +1556,7 @@
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="760"/>
         <source>Importation and conversion of the new background image. This operation can take a lot of time, but will be performed only once.</source>
-        <translation type="unfinished">Importation et conversion de la nouvelle image de fond. Cette opération peut prendre beaucoup de temps, mais ne sera effectuée qu&apos;une seule fois.</translation>
+        <translation>Importation et conversion de la nouvelle image de fond. Cette opération peut prendre beaucoup de temps, mais ne sera effectuée qu&apos;une seule fois.</translation>
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="778"/>

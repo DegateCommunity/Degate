@@ -4,73 +4,72 @@
 <context>
     <name>degate::AboutDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="40"/>
-        <source>Welcome to Degate version %1</source>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="42"/>
+        <source>Unreleased version.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="41"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="44"/>
+        <source>Version released on %1.</source>
+        <comment>... released on dd/mm/yy</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="52"/>
         <source>The current project maintainer is %2.</source>
         <comment>... maintainer is NAME.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="42"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="53"/>
         <source>This project is a forked version of Degate and is still under development, if you find a bug please report it %3.</source>
         <comment>... report it here.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="43"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="54"/>
         <source>You can also help us by adding new languages, see the Localization section of the README.md file, available %4.</source>
         <comment>... available here.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="45"/>
-        <source>To obtain the latest update of Degate, please see %5 page.</source>
-        <comment>... please see this page.</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="47"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="56"/>
         <source>This software is released under the GNU General Public License Version 3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="51"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="60"/>
         <source>Documentation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="59"/>
         <source>Roadmap</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="52"/>
-        <source>Original website</source>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="38"/>
+        <source>Nightly version.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="57"/>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="58"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="50"/>
+        <source>Welcome to Degate version %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="65"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="66"/>
         <source>here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="59"/>
-        <source>this</source>
-        <comment>... please see this page.</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="83"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="77"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="84"/>
         <source>Changelog</source>
         <translation type="unfinished"></translation>
     </message>
