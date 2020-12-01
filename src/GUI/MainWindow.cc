@@ -1443,9 +1443,9 @@ namespace degate
 
                     if (res == QDialog::Accepted)
                     {
-                            project = dialog.get_project();
+                        project = dialog.get_project();
 
-                            on_menu_project_save();
+                        on_menu_project_save();
                     }
                     else
                     {
