@@ -755,7 +755,23 @@ namespace degate
             return;
         }
 
-        load_background_image(project->get_logic_model()->get_current_layer(), project->get_project_directory(), file_name);
+        // Start progress dialog
+        ProgressDialog progress_dialog(this,
+                                       tr("Importation and conversion of the new background image. "
+                                          "This operation can take a lot of time, but will be performed only once."),
+                                       nullptr);
+
+        // Set the job to start the background loading.
+        progress_dialog.set_job([file_name, this]()
+                                {
+                                    load_new_background_image(project->get_logic_model()->get_current_layer(), project->get_project_directory(), file_name);
+                                });
+
+        // Start the process
+        progress_dialog.exec();
+
+        if (progress_dialog.was_canceled())
+            debug(TM, "The background image importation and conversion operation has been canceled.");
 
         workspace->update_background();
 
