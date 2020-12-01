@@ -657,6 +657,8 @@ namespace degate
         {
             project = dialog.get_project();
 
+            project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
+
             workspace->set_project(project);
 
             on_menu_project_save();
