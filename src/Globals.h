@@ -30,6 +30,8 @@
 #include <cassert>
 #include "Core/Utils/DegateExceptions.h"
 
+#include <QStandardPaths>
+
 /**
  * If 1 will print debug information (will allow/block all debug print).
  */
@@ -53,12 +55,12 @@
 /**
  * Default degate configuration directory path.
  */
-#define DEGATE_CONFIGURATION_PATH ".degate/"
+#define DEGATE_CONFIGURATION_PATH QStandardPaths::writableLocation(QStandardPaths::HomeLocation).toStdString() + "/.degate/"
 
 /**
  * Concatenate a path (std::string) with the degate configuration path.
  */
-#define DEGATE_IN_CONFIGURATION(path) std::string(DEGATE_CONFIGURATION_PATH) + std::string(path)
+#define DEGATE_IN_CONFIGURATION(path) DEGATE_CONFIGURATION_PATH + std::string(path)
 
 /**
  * Default degate cache path.
