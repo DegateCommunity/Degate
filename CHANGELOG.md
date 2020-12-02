@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Huge overall optimization.
 - Improved new background image import.
 - Improved the about dialog.
+- Changed the path of the '.degate' configuration directory (in the home directory now).
 
 ### Fixed
 - Fixed layer selection after project creation.
