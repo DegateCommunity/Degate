@@ -26,6 +26,7 @@
 #include "Core/LogicModel/LogicModelExporter.h"
 #include "Core/LogicModel/Gate/GateLibraryExporter.h"
 #include "Core/RuleCheck/RCVBlacklistExporter.h"
+#include "Core/Version.h"
 
 #include <cerrno>
 #include <iostream>
@@ -183,7 +184,7 @@ void ProjectExporter::set_project_node_attributes(QDomDocument& doc,
                                                   QDomElement& prj_elem,
                                                   Project_shptr prj)
 {
-    prj_elem.setAttribute("degate-version", QString::fromStdString(prj->get_degate_version()));
+    prj_elem.setAttribute("degate-version", DEGATE_VERSION);
     prj_elem.setAttribute("name", QString::fromStdString(prj->get_name()));
     prj_elem.setAttribute("description", QString::fromStdString(prj->get_description()));
     prj_elem.setAttribute("width", QString::fromStdString(number_to_string<int>(prj->get_width())));
