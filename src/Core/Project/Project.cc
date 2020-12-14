@@ -102,12 +102,31 @@ BoundingBox const& Project::get_bounding_box() const
 
 unsigned int Project::get_width() const
 {
-    return bounding_box.get_width();
+    return static_cast<unsigned int>(std::ceil(bounding_box.get_width()));
 }
 
 unsigned int Project::get_height() const
 {
-    return bounding_box.get_height();
+    return static_cast<unsigned int>(std::ceil(bounding_box.get_height()));
+}
+
+bool Project::update_size(unsigned int width, unsigned int height)
+{
+    bool res = false;
+
+    if (width > static_cast<unsigned int>(std::ceil(bounding_box.get_width())))
+    {
+        bounding_box.set_max_x(static_cast<float>(width));
+        res = true;
+    }
+
+    if (height > static_cast<unsigned int>(std::ceil(bounding_box.get_height())))
+    {
+        bounding_box.set_max_y(static_cast<float>(height));
+        res = true;
+    }
+
+    return res;
 }
 
 LogicModel_shptr Project::get_logic_model()

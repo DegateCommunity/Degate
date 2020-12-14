@@ -155,9 +155,21 @@ namespace degate
         unsigned int get_width() const;
 
         /**
-         * get the height of a project.
+         * Get the height of a project.
          */
         unsigned int get_height() const;
+
+        /**
+         * Update the project size.
+         * It needs to be equal or bigger as the previous one.
+         * Also, it needs a project reopen.
+         *
+         * @param width : the new width of the project.
+         * @param height : the new height of the project.
+         *
+         * @return Returns true if the size was updated, false otherwise.
+         */
+        bool update_size(unsigned int width, unsigned int height);
 
         /**
          * Get the logic model. The logic model should be present all time. This means

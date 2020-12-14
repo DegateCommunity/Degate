@@ -729,11 +729,18 @@ namespace degate
         LayersEditDialog layers_edit_dialog(this, project);
         layers_edit_dialog.exec();
 
-        update_status_bar_layer_info();
+        if (!layers_edit_dialog.project_need_reopen())
+        {
+            update_status_bar_layer_info();
 
-        workspace->update_screen();
+            workspace->update_screen();
 
-        project_changed();
+            project_changed();
+        }
+        else
+        {
+            reopen_project();
+        }
     }
 
     void MainWindow::on_menu_layer_import_background()
@@ -773,11 +780,21 @@ namespace degate
         if (progress_dialog.was_canceled())
             debug(TM, "The background image importation and conversion operation has been canceled.");
 
-        workspace->update_background();
+        // Create reader (to get image size).
+        QImageReader reader(file_name.c_str());
 
-        status_bar.showMessage(tr("Imported a new background image for the layer."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+        if (!project->update_size(reader.size().width(), reader.size().height()))
+        {
+            workspace->update_background();
 
-        project_changed();
+            status_bar.showMessage(tr("Imported a new background image for the layer."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+
+            project_changed();
+        }
+        else
+        {
+            reopen_project();
+        }
     }
 
     void MainWindow::on_menu_gate_new_gate_template()
@@ -1765,6 +1782,24 @@ namespace degate
         modules_dialog->clearFocus();
 
         project_changed();
+    }
+
+    void MainWindow::reopen_project()
+    {
+        if (project == nullptr)
+            return;
+
+        // Get project directory.
+        auto project_directory = project->get_project_directory();
+
+        // Save project.
+        on_menu_project_save();
+
+        // Close project.
+        on_menu_project_close();
+
+        // Reopen the project.
+        open_project(project_directory);
     }
 
     void MainWindow::closeEvent(QCloseEvent* event)

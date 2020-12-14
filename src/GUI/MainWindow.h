@@ -406,6 +406,11 @@ namespace degate
          */
         void on_modules_dialog();
 
+        /**
+         * Reopen the project.
+         */
+        void reopen_project();
+
     protected:
         void closeEvent(QCloseEvent* event) override;
 

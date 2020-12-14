@@ -33,11 +33,15 @@ namespace degate
         setWindowFlags(Qt::Window);
         setWindowTitle(tr("New project creation"));
 
+        // Project setup group
+        project_group.setLayout(&project_group_layout);
+        project_group.setTitle(tr("Project setup:"));
+
         project_directory = project_path;
 
         // Project name
         project_name_label.setText(tr("Project name:"));
-        if (project_name != "")
+        if (!project_name.empty())
         {
             project_name_edit.setText(project_name.c_str());
             project_name_edit.setDisabled(true);
@@ -47,50 +51,18 @@ namespace degate
         project_path_label.setText(tr("Project directory path:"));
         project_path_button.setText(tr("Set project directory path"));
 
-        // Size group
-        size_group.setLayout(&size_group_layout);
-        size_group.setTitle(tr("You will not be able to change the dimensions of the project after its creation."));
-
-        // Automatic size
-        automatic_size_label.setText(tr("Automatic size (will use layers image sizes):"));
-        automatic_size_edit.setCheckState(Qt::Checked);
-        QObject::connect(&automatic_size_edit, SIGNAL(toggled(bool)), &width, SLOT(setDisabled(bool)));
-        QObject::connect(&automatic_size_edit, SIGNAL(toggled(bool)), &height, SLOT(setDisabled(bool)));
-
-        // Width
-        width_label.setText(tr("Project width:"));
-        width.setMinimum(0);
-        width.setMaximum(std::numeric_limits<int>::max());
-        width.setValue(0);
-        width.setDisabled(true);
-
-        // Height
-        height_label.setText(tr("Project height:"));
-        height.setMinimum(0);
-        height.setMaximum(std::numeric_limits<int>::max());
-        height.setValue(0);
-        height.setDisabled(true);
-
-        // Size group layout
-        size_group_layout.addWidget(&automatic_size_label, 0, 0);
-        size_group_layout.addWidget(&automatic_size_edit, 0, 1);
-        size_group_layout.addWidget(&width_label, 1, 0);
-        size_group_layout.addWidget(&width, 1, 1);
-        size_group_layout.addWidget(&height_label, 2, 0);
-        size_group_layout.addWidget(&height, 2, 1);
-
         // Validate button
         validate_button.setText(tr("Ok"));
 
         // Content layout
-        content_layout.addWidget(&project_name_label, 0, 0);
-        content_layout.addWidget(&project_name_edit, 0, 1);
+        project_group_layout.addWidget(&project_name_label, 0, 0);
+        project_group_layout.addWidget(&project_name_edit, 0, 1);
 
         // Check if the project directory is empty, if true will enable path selection (with a dialog)
-        if (project_directory == "")
+        if (project_directory.empty())
         {
-            content_layout.addWidget(&project_path_label, 1, 0);
-            content_layout.addWidget(&project_path_button, 1, 1);
+            project_group_layout.addWidget(&project_path_label, 1, 0);
+            project_group_layout.addWidget(&project_path_button, 1, 1);
             QObject::connect(&project_path_button, SIGNAL(pressed()), this, SLOT(set_project_directory_path()));
             user_selected_directory = true;
         }
@@ -103,9 +75,7 @@ namespace degate
         layers_edit_label.setText(tr("Create project layers:"));
 
         // General layout
-        layout.addLayout(&content_layout);
-        layout.addItem(new QSpacerItem(0, 20));
-        layout.addWidget(&size_group);
+        layout.addWidget(&project_group);
         layout.addItem(new QSpacerItem(0, 20));
         layout.addWidget(&layers_edit_label);
         layout.addWidget(&layers_edit_widget);
@@ -128,32 +98,35 @@ namespace degate
 
     void NewProjectDialog::validate()
     {
-        // If automatic size
-        if (automatic_size_edit.isChecked())
-        {
-            QSize size = layers_edit_widget.get_max_size();
-
-            width.setValue(size.width());
-            height.setValue(size.height());
-        }
+        QSize size = layers_edit_widget.get_max_size();
 
         // Check values
-        if (layers_edit_widget.get_layer_count() == 0 || width.value() == 0 || height.value() == 0 || project_name_edit.text().length() < 1)
+        if (layers_edit_widget.get_layer_count() == 0 || size.width() == 0 || size.height() == 0 || project_name_edit.text().length() < 1)
         {
-            QMessageBox::warning(this, tr("Invalid values"), tr("The values you entered are invalid."));
+            QMessageBox::warning(this, tr("Invalid values"), tr("The values you entered are invalid. You need at least one layer with a valid image."));
             return;
         }
 
         // Check if user selected directory, if true add project name to the path
+        std::string temp_project_directory = project_directory;
         if (user_selected_directory)
-            project_directory += project_name_edit.text().toStdString();
+            temp_project_directory += project_name_edit.text().toStdString();
+
+        // Check directory
+        if (file_exists(temp_project_directory) && !QDir(temp_project_directory.c_str()).isEmpty())
+        {
+            QMessageBox::warning(this, tr("Invalid values"), tr("The selected project directory isn't empty."));
+            return;
+        }
+
+        project_directory = temp_project_directory;
 
         // Create the project directory
         if (!file_exists(project_directory))
             create_directory(project_directory);
 
         // Create the project
-        project = std::make_shared<Project>(width.value(), height.value(), project_directory, layers_edit_widget.get_layer_count());
+        project = std::make_shared<Project>(size.width(), size.height(), project_directory, layers_edit_widget.get_layer_count());
         project->set_name(project_name_edit.text().toStdString());
 
         // Create each layer

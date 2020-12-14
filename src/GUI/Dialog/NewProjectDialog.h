@@ -78,21 +78,11 @@ namespace degate
 
     private:
         QVBoxLayout layout;
-        QGridLayout content_layout;
 
         // Content
 
-        QGroupBox size_group;
-        QGridLayout size_group_layout;
-
-        QLabel automatic_size_label;
-        QCheckBox automatic_size_edit;
-
-        QLabel width_label;
-        QSpinBox width;
-
-        QLabel height_label;
-        QSpinBox height;
+        QGroupBox project_group;
+        QGridLayout project_group_layout;
 
         QLabel project_name_label;
         QLineEdit project_name_edit;

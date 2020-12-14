@@ -45,9 +45,21 @@ namespace degate
         QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
     }
 
+    bool LayersEditDialog::project_need_reopen() const
+    {
+        return need_reopen;
+    }
+
     void LayersEditDialog::validate()
     {
         layers.validate();
+
+        // Size changed.
+        auto size = layers.get_max_size();
+        if (project->update_size(size.width(), size.height()))
+        {
+            need_reopen = true;
+        }
 
         accept();
     }

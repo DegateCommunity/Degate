@@ -54,6 +54,13 @@ namespace degate
         LayersEditDialog(QWidget* parent, const Project_shptr& project);
         ~LayersEditDialog() override = default;
 
+        /**
+         * Function to know if the project need a reopen.
+         *
+         * @return Returns true if the project need a reopen, false otherwise.
+         */
+        bool project_need_reopen() const;
+
     public slots:
         /**
          * Save all changes.
@@ -68,6 +75,8 @@ namespace degate
         QHBoxLayout buttons_layout;
         QPushButton validate_button;
         QPushButton cancel_button;
+
+        bool need_reopen = false;
 
     };
 }
