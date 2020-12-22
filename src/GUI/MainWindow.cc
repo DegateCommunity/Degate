@@ -303,7 +303,7 @@ namespace degate
 
         // Status bar
 
-        status_bar.setStyleSheet("QStatusBar::item { border: none; } ""QStatusBar QLabel { border: 1px solid black; border-radius: 3px; }");
+        status_bar.setStyleSheet("QStatusBar::item { border: none; } ""QStatusBar QLabel { border: 3px solid black; border-radius: 0px; padding: 2px; }");
         setStatusBar(&status_bar);
         status_bar.showMessage(tr("Initialization..."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
