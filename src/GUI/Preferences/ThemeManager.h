@@ -44,7 +44,8 @@ namespace degate
     {
         NATIVE_THEME = 0, /*!< Native (OS) theme. */
         LIGHT_THEME = 1, /*!< Light theme. */
-        DARK_THEME   = 2 /*!< Dark theme. */
+        DARK_THEME = 2, /*!< Dark theme. */
+        BLUE_DARK_THEME = 3 /*!< Blue dark theme. */
     };
 
     /**

@@ -173,13 +173,13 @@ endif ()
 #
 # Link DegateCore
 #
-add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "Degate version")
+add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "Degate version")
 target_link_libraries(DegateCore ${LIBS})
 
 #
 # Link main (Degate)
 #
-add_executable(Degate "src/Main.cc" res/resources.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "res/resource.rc")
+add_executable(Degate "src/Main.cc" res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "res/resource.rc")
 target_link_libraries(Degate ${LIBS} DegateCore)
 
 #

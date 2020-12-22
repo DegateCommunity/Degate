@@ -35,6 +35,7 @@ namespace degate
         themes[NATIVE_THEME] = tr("Native");
         themes[LIGHT_THEME] = tr("Light");
         themes[DARK_THEME] = tr("Dark");
+        themes[BLUE_DARK_THEME] = tr("Blue dark");
 
         QStringList theme_list;
         for (auto& e : themes)

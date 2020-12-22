@@ -57,7 +57,13 @@ namespace degate
         QTextBrowser about;
 
         // Second tab
+        QTextBrowser tools;
+
+        // Third tab
         QTextBrowser changelog;
+
+        // Fourth tab
+        QTextBrowser license;
 
     };
 }

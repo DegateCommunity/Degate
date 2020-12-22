@@ -43,6 +43,16 @@
         <translation>Dokumentation</translation>
     </message>
     <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="73"/>
+        <source>Tools used:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="76"/>
+        <source>Themes used:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="59"/>
         <source>Roadmap</source>
         <translation>Roadmap</translation>
@@ -64,14 +74,29 @@
         <translation>hier</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="83"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="77"/>
+        <source>Blue dark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="113"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="84"/>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="115"/>
         <source>Changelog</source>
         <translation>Änderungshistorie</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="116"/>
+        <source>License</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="114"/>
+        <source>Tools</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -167,33 +192,38 @@
     </message>
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="36"/>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="47"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="48"/>
         <source>Light</source>
         <translation>Hell</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="37"/>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="48"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="49"/>
         <source>Dark</source>
         <translation>Dunkel</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="71"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="38"/>
+        <source>Blue dark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="72"/>
         <source>Theme</source>
         <translation>Farbschema</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="74"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="75"/>
         <source>Theme:</source>
         <translation>Schema</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="77"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="78"/>
         <source>Automatic icon theme:</source>
         <translation>Automatisches Icon-Theme</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="80"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="81"/>
         <source>Icon theme:</source>
         <translation>Icon-Theme</translation>
     </message>

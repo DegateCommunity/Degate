@@ -22,6 +22,9 @@
 #include "ThemeManager.h"
 #include "PreferencesHandler.h"
 
+#include <QFile>
+#include <QTextStream>
+
 namespace degate
 {
     ThemeManager::ThemeManager()
@@ -61,6 +64,10 @@ namespace degate
 
         // Reset style sheet
         qApp->setStyleSheet("");
+
+        // File
+        QFile* file = nullptr;
+        QTextStream* text_stream = nullptr;
 
         // Default icon theme
         QPalette theme_palette;
@@ -112,6 +119,27 @@ namespace degate
                 qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #191919; border: 1px solid white; } QToolBar { border: none; }");
 
                 break;
+            case BLUE_DARK_THEME:
+
+                file = new QFile(":/themes/blue_dark.qss");
+                if (!file->open(QFile::ReadOnly | QFile::Text))
+                {
+                    throw std::runtime_error("Can't open the theme file.");
+                }
+
+                text_stream = new QTextStream(file);
+                qApp->setStyleSheet(text_stream->readAll());
+
+                theme_palette.setColor(QPalette::Link, QColor(42, 130, 218));
+                theme_palette.setColor(QPalette::LinkVisited, theme_palette.link().color().lighter());
+
+                qApp->setPalette(theme_palette);
+
+                file->close();
+                delete text_stream;
+                delete file;
+
+                break;
             default:
                 break;
         }
@@ -127,6 +155,8 @@ namespace degate
             return "light";
         case DARK_THEME:
             return "dark";
+        case BLUE_DARK_THEME:
+            return "blue_dark";
         default:
             return "native";
             break;
@@ -141,6 +171,8 @@ namespace degate
             return LIGHT_THEME;
         else if (theme == "dark")
             return DARK_THEME;
+        else if (theme == "blue_dark")
+            return BLUE_DARK_THEME;
         else
             return NATIVE_THEME;
     }
