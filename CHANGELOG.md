@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the path of the '.degate' configuration directory (in the home directory now).
 - Removed the fixed project size constraint (after project creation).
 - Updated the installer version.
+- Improved status bar design.
 
 ### Fixed
 - Fixed layer selection after project creation.
