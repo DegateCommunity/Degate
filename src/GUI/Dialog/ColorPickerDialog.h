@@ -82,6 +82,14 @@ namespace degate
          */
         void on_color_changed(const QColor& color);
 
+    protected:
+        /**
+         * Update the Widget background color.
+         *
+         * @param color : the new color.
+         */
+        void update_color(const color_t& color);
+
     private:
         QVBoxLayout layout;
         QDialogButtonBox button_box;

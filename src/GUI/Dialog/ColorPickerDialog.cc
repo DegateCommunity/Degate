@@ -84,9 +84,7 @@ namespace degate
         QObject::connect(&button_box, SIGNAL(accepted()), this, SLOT(validate()));
 
         // Color preview
-        QPalette palette;
-        palette.setColor(QPalette::Window, to_qt_color(color));
-        color_preview.setPalette(palette);
+        update_color(color);
         color_preview.setMinimumSize(100, 100);
         color_preview.setAutoFillBackground(true);
 
@@ -106,9 +104,7 @@ namespace degate
         color_dialog.setCurrentColor(to_qt_color(color));
 
         // Update preview color
-        QPalette palette;
-        palette.setColor(QPalette::Window, to_qt_color(color));
-        color_preview.setPalette(palette);
+        update_color(color);
     }
 
     void ColorPickerDialog::validate()
@@ -124,9 +120,13 @@ namespace degate
         this->color = to_degate_color(color);
 
         // Update preview color
-        QPalette palette;
-        palette.setColor(QPalette::Window, color);
-        color_preview.setPalette(palette);
+        update_color(this->color);
+    }
+
+    void ColorPickerDialog::update_color(const color_t& color)
+    {
+        QString style = "QWidget { background-color: rgba(%1, %2, %3, %4); border: none; }";
+        color_preview.setStyleSheet(style.arg(MASK_R(color)).arg(MASK_G(color)).arg(MASK_B(color)).arg(MASK_A(color)));
     }
 
     color_t ColorPickerDialog::get_color() const
@@ -151,9 +151,8 @@ namespace degate
         this->color = color;
 
         // Update color
-        QPalette palette;
-        palette.setColor(QPalette::Button, to_qt_color(color));
-        setPalette(palette);
+        QString style = "QPushButton { background-color: rgba(%1, %2, %3, %4); border: none; }";
+        setStyleSheet(style.arg(MASK_R(color)).arg(MASK_G(color)).arg(MASK_B(color)).arg(MASK_A(color)));
     }
 
     color_t ColorSelectionButton::get_color() const
@@ -169,8 +168,6 @@ namespace degate
         color = color_picker.get_color();
 
         // Update color
-        QPalette palette;
-        palette.setColor(QPalette::Button, to_qt_color(color));
-        setPalette(palette);
+        set_color(color);
     }
 }
