@@ -113,7 +113,7 @@ namespace degate
 
         if (reply == QMessageBox::Yes)
         {
-            QStringList args("up");
+            QStringList args("--su");
             bool success = QProcess::startDetached(tool_name, args);
 
             if (success)
