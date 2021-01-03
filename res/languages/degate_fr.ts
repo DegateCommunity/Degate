@@ -969,7 +969,6 @@
     </message>
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesPage/GeneralPreferencesPage.cc" line="69"/>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/GeneralPreferencesPage.cc" line="71"/>
         <source>Auto save status:</source>
         <translation>Statut de la sauvegarde automatique :</translation>
     </message>

@@ -68,7 +68,6 @@ namespace degate
 
         PreferencesPage::add_widget(auto_save_layout, tr("Auto save status:"), &auto_save_status_edit);
         PreferencesPage::add_widget(auto_save_layout, tr("Auto save interval (in minutes):"), &auto_save_interval_edit);
-        PreferencesPage::add_widget(auto_save_layout, tr("Auto save status:"), &auto_save_status_edit);
     }
 
     void GeneralPreferencesPage::apply(Preferences& preferences)
