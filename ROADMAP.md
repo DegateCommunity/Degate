@@ -8,7 +8,7 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [ ] Improved modules.
 - [ ] Integrated gate analyzer.
 
-## For 2.1.0-x:
+## For 2.1.0-x *[next]*:
 
 - [ ] Irregular grid.
 - [ ] Rewrite completely wire matching.
@@ -16,11 +16,11 @@ Welcome to the Degate roadmap. This roadmap list every feature that is planned t
 - [ ] Complete existing via matching (add more consistency).
 - [ ] External matching support.
 
-## For 2.0.0-beta.1 *[next]*:
+## For 2.0.0-beta.1 *[**current**]*:
 - [x] General optimization.
-- [ ] General improvements.
+- [x] General improvements.
 
-## For 2.0.0-alpha.4 *[**current**]*:
+## For 2.0.0-alpha.4:
 
 - [x] Bug fixes.
 - [x] Connection inspector dialog.
