@@ -928,15 +928,15 @@ bool TemplateMatchingInCols::get_next_pos(struct search_state* state,
             state->y = 1;
         }
 
-        unsigned int dist_y = layer_insert->get_distance_to_gate_boundary(state->x + state->search_area.get_min_x(),
-                                                                          state->y + state->search_area.get_min_y(),
+        unsigned int dist_y = layer_insert->get_distance_to_gate_boundary(state->x + static_cast<unsigned int>(state->search_area.get_min_x()),
+                                                                          state->y + static_cast<unsigned int>(state->search_area.get_min_y()),
                                                                           false, tmpl_w, tmpl_h);
 
         if (dist_y > 0)
         {
-            debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d vertical pixels",
-                  state->x + state->search_area.get_min_x(),
-                  state->y + state->search_area.get_min_y(),
+            debug(TM, "In the window starting at %f,%f there is already a gate. Skipping %d vertical pixels",
+                  static_cast<float>(state->x) + state->search_area.get_min_x(),
+                  static_cast<float>(state->y) + state->search_area.get_min_y(),
                   dist_y);
             state->y += dist_y;
             there_was_a_gate = true;
