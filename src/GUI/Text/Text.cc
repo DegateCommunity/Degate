@@ -339,12 +339,19 @@ namespace degate
         glyph_painter.setFont(scaled_font);
 
         // Glyph draw
-        glyph_painter.drawText(QPointF(font_data->padding * font_data->scale, scaled_font_metric.ascent() + font_data->padding * font_data->scale), glyph);
+        QPointF painter_point(static_cast<qreal>(font_data->padding) * static_cast<qreal>(font_data->scale),
+                              scaled_font_metric.ascent() +
+                              static_cast<qreal>(font_data->padding) * static_cast<qreal>(font_data->scale));
+        glyph_painter.drawText(painter_point, glyph);
 
         font_data->last_generated_glyph_image = dfg.generate_distance_field(temp_glyph_image);
 
         // Distance field conversion
-        painter.drawImage(QPointF((glyph_data->atlas_position % font_data->atlas_glyph_per_line) * (font_data->glyph_width), (glyph_data->atlas_position / font_data->atlas_glyph_per_line) * (font_data->glyph_height)), *font_data->last_generated_glyph_image);
+        QPointF point(static_cast<qreal>(glyph_data->atlas_position % font_data->atlas_glyph_per_line) *
+                      static_cast<qreal>(font_data->glyph_width),
+                      static_cast<qreal>(glyph_data->atlas_position / font_data->atlas_glyph_per_line) *
+                      static_cast<qreal>(font_data->glyph_height));
+        painter.drawImage(point, *font_data->last_generated_glyph_image);
 
         font_data->as_changed = true;
 
@@ -863,7 +870,8 @@ namespace degate
 
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        return {pixel_size, font_context_data.lock()->font_data->glyph_height * size_factor};
+        return {pixel_size,
+                static_cast<qreal>(font_context_data.lock()->font_data->glyph_height) * static_cast<qreal>(size_factor)};
     }
 
     void Text::draw(const QMatrix4x4 &projection)

@@ -864,9 +864,9 @@ bool TemplateMatchingInRows::get_next_pos(struct search_state* state,
 
         if (dist_x > 0)
         {
-            debug(TM, "In the window starting at %d,%d there is already a gate. Skipping %d horizontal pixels",
-                  state->x + state->search_area.get_min_x(),
-                  state->y + state->search_area.get_min_y(),
+            debug(TM, "In the window starting at %f,%f there is already a gate. Skipping %d horizontal pixels",
+                  static_cast<float>(state->x) + state->search_area.get_min_x(),
+                  static_cast<float>(state->y) + state->search_area.get_min_y(),
                   dist_x);
             state->x += dist_x;
             there_was_a_gate = true;

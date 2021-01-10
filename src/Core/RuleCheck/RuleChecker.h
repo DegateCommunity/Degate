@@ -59,7 +59,7 @@ namespace degate
                 }
             }
 
-            debug(TM, "found %d rc violations.", rc_violations.size());
+            debug(TM, "found %lu rc violations.", rc_violations.size());
         }
 
         /**

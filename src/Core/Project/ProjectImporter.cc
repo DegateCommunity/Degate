@@ -84,10 +84,9 @@ Project_shptr ProjectImporter::import_all(std::string const& directory)
         */
 
         debug(TM, "Check if we have template images.");
-        for (GateLibrary::template_iterator iter = gate_lib->begin();
-             iter != gate_lib->end(); ++iter)
+        for (auto iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
         {
-            debug(TM, "Will grab template image for gate template ID: %d", iter->first);
+            debug(TM, "Will grab template image for gate template ID: %llu", iter->first);
             GateTemplate_shptr tmpl = iter->second;
             assert(tmpl != nullptr);
 

@@ -373,12 +373,12 @@ void LogicModel::add_object(int layer_pos, PlacedLogicModelObject_shptr o)
 
 void LogicModel::remove_remote_object(object_id_t remote_id)
 {
-    debug(TM, "Should remove object with remote ID %d from lmodel.", remote_id);
+    debug(TM, "Should remove object with remote ID %llu from lmodel.", remote_id);
 
     if (remote_id == 0)
         throw InvalidObjectIDException("Parameter passed to remove_remote_object() is invalid.");
 
-    debug(TM, "Should remove object with remote ID %d from lmodel - 2.", remote_id);
+    debug(TM, "Should remove object with remote ID %llu from lmodel - 2.", remote_id);
 
     BOOST_FOREACH(object_collection::value_type const& p, objects)
     {
@@ -389,13 +389,11 @@ void LogicModel::remove_remote_object(object_id_t remote_id)
         {
             object_id_t local_id = plo->get_object_id();
 
-            debug(TM, "found remote object with remote ID %d and local ID = %d.",
-                  ro->get_remote_object_id(), local_id);
+            debug(TM, "found remote object with remote ID %llu and local ID = %llu.", ro->get_remote_object_id(), local_id);
 
             if (ro->get_remote_object_id() == remote_id)
             {
-                debug(TM, "Removed object with remote ID %d and local ID = %d from lmodel.",
-                      remote_id, local_id);
+                debug(TM, "Removed object with remote ID %llu and local ID = %llu from lmodel.", remote_id, local_id);
                 remove_object(plo, false);
 
                 object_collection::iterator found = objects.find(local_id);
@@ -545,7 +543,7 @@ void LogicModel::update_ports(Gate_shptr gate)
 
     GateTemplate_shptr gate_template = gate->get_gate_template();
 
-    debug(TM, "update ports on gate %d", gate->get_object_id());
+    debug(TM, "update ports on gate %llu", gate->get_object_id());
 
     // in a first iteration over all template ports from the corresponding template
     // we check if there are gate ports to add
@@ -553,7 +551,7 @@ void LogicModel::update_ports(Gate_shptr gate)
     {
         // iterate over template ports from the corresponding template
 
-        debug(TM, "compare ports for gate with oid=%d with corresponding template (oid=%d)", gate->get_object_id(),
+        debug(TM, "compare ports for gate with oid=%llu with corresponding template (oid=%llu)", gate->get_object_id(),
               gate_template->get_object_id());
 
         for (GateTemplate::port_iterator tmpl_port_iter = gate_template->ports_begin();
@@ -564,7 +562,7 @@ void LogicModel::update_ports(Gate_shptr gate)
 
             if (!gate->has_template_port(tmpl_port) && gate->has_orientation())
             {
-                debug(TM, "adding a new port to gate, because the gate has no reference to the gate port template %d.",
+                debug(TM, "adding a new port to gate, because the gate has no reference to the gate port template %llu.",
                       tmpl_port->get_object_id());
                 GatePort_shptr new_gate_port(new GatePort(gate, tmpl_port, port_diameter));
                 new_gate_port->set_object_id(get_new_object_id());
@@ -614,14 +612,14 @@ void LogicModel::update_ports(Gate_shptr gate)
                 // unset port coordinates
             else
             {
-                debug(TM, "should remove port with oid=%d from gate with oid %d", gate_port->get_object_id(),
+                debug(TM, "should remove port with oid=%llu from gate with oid %llu", gate_port->get_object_id(),
                       gate->get_object_id());
                 ports_to_remove.push_back(gate_port);
             }
         }
         else
         {
-            debug(TM, "should remove port with oid=%d from gate with oid=%d, because gate has no template",
+            debug(TM, "should remove port with oid=%llu from gate with oid=%llu, because gate has no template",
                   gate_port->get_object_id(), gate->get_object_id());
             ports_to_remove.push_back(gate_port);
         }
@@ -649,7 +647,7 @@ void LogicModel::update_ports(GateTemplate_shptr gate_template)
         Gate_shptr gate = (*g_iter).second;
         if (gate->get_gate_template() == gate_template)
         {
-            debug(TM, "update ports on gate with id %d", gate->get_object_id());
+            debug(TM, "update ports on gate with id %llu", gate->get_object_id());
             update_ports(gate);
         }
     }

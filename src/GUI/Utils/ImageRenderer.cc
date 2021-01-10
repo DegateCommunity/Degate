@@ -59,7 +59,9 @@ namespace degate
 
         // Texture
 
-        auto data = new GLuint[image->get_width() * image->get_height() * sizeof(GLuint)];
+        auto data = new GLuint[static_cast<std::size_t>(image->get_width()) *
+                               static_cast<std::size_t>(image->get_height()) *
+                               sizeof(GLuint)];
         image->raw_copy(data);
 
         glGenTextures(1, &texture);

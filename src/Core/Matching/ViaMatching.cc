@@ -141,7 +141,7 @@ void ViaMatching::run()
         }
     }
 
-    debug(TM, "via matching: size of vias_down=%d vias_up=%d", vias_down.size(), vias_up.size());
+    debug(TM, "via matching: size of vias_down=%lu vias_up=%lu", vias_down.size(), vias_up.size());
 
     // calculate the mean-image
     MemoryImage_shptr via_up = merge_images(vias_up);

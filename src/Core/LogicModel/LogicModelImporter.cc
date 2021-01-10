@@ -163,7 +163,7 @@ void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
                         if (placed_object == nullptr)
                         {
                             debug(TM,
-                                  "Failed to lookup logic model object %d. Can't connect it to net %d.",
+                                  "Failed to lookup logic model object %llu. Can't connect it to net %llu.",
                                   object_id, net_id);
                         }
                         else
@@ -176,15 +176,15 @@ void LogicModelImporter::parse_nets_element(QDomElement const nets_element,
                             }
                             else
                             {
-                                debug(TM, "Failed to dynamic_cast<> a logic model object with ID %d", object_id);
+                                debug(TM, "Failed to dynamic_cast<> a logic model object with ID %llu", object_id);
                             }
                         }
                     }
                     catch (CollectionLookupException const&)
                     {
                         debug(TM,
-                              "Failed to insert a connection for net %d into the logic layer. "
-                              "Can't lookup logic model object %d that should be connected to that net.",
+                              "Failed to insert a connection for net %llu into the logic layer. "
+                              "Can't lookup logic model object %llu that should be connected to that net.",
                               net_id, object_id);
                         throw; // rethrow
                     }

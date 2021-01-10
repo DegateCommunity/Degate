@@ -253,7 +253,11 @@ void load_tile(QImage& image_data,
     snprintf(filename, sizeof(filename), "%d_%d.dat", tile_x, tile_y);
 
     auto data = new BackgroundImage::pixel_type[tile_size * tile_size];
-    memset(data, 0, tile_size * tile_size * sizeof(BackgroundImage::pixel_type));
+    memset(data,
+           0,
+           static_cast<std::size_t>(tile_size) *
+           static_cast<std::size_t>(tile_size) *
+           sizeof(BackgroundImage::pixel_type));
 
     unsigned int min_x = tile_size * local_tile_x;
     unsigned int min_y = tile_size * local_tile_y;
@@ -283,7 +287,10 @@ void load_tile(QImage& image_data,
 
     auto file = std::fstream(path + "/" + filename, std::ios::out | std::ios::binary);
 
-    file.write(reinterpret_cast<const char*>(&data[0]), tile_size * tile_size * sizeof(BackgroundImage::pixel_type));
+    file.write(reinterpret_cast<const char*>(&data[0]),
+               static_cast<std::size_t>(tile_size) *
+               static_cast<std::size_t>(tile_size) *
+               sizeof(BackgroundImage::pixel_type));
 
     file.close();
 

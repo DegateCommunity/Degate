@@ -158,7 +158,7 @@ namespace degate
         const std::shared_ptr<ImageType> img = images.front();
 
         unsigned int w = img->get_width(), h = img->get_height();
-        std::vector<double> i_tmp(4 * w * h);
+        std::vector<double> i_tmp(4 * static_cast<std::size_t>(w) * static_cast<std::size_t>(h));
 
         BOOST_FOREACH(const std::shared_ptr<ImageType> i, images)
         {

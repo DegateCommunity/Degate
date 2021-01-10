@@ -305,11 +305,11 @@ namespace degate
 
         assert(is_mem());
 
-        mem_view = (T*)malloc(width * height * sizeof(T));
+        mem_view = (T*)malloc(static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * sizeof(T));
         assert(mem_view != nullptr);
         if (mem_view == nullptr) return RET_MALLOC_FAILED;
 
-        memset(mem_view, 0, width * height * sizeof(T));
+        memset(mem_view, 0, static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * sizeof(T));
 
         return RET_OK;
     }
@@ -463,7 +463,7 @@ namespace degate
     void MemoryMap<T>::raw_copy(void* buf) const
     {
         assert(mem_view != nullptr);
-        memcpy(buf, mem_view, width * height * sizeof(T));
+        memcpy(buf, mem_view, static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * sizeof(T));
     }
 
 

@@ -49,7 +49,7 @@ void Otsu::run(TileImage_GS_DOUBLE_shptr gray)
             hist_data[h]++;
         }
 
-    unsigned long total = gray->get_height() * gray->get_width();
+    unsigned long total = static_cast<unsigned long>(gray->get_height()) * static_cast<unsigned long>(gray->get_width());
 
     double sum = 0;
     for (int t = 0; t < 256; t++)

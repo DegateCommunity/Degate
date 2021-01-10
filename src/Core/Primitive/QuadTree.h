@@ -313,7 +313,7 @@ namespace degate
             return RET_OK;
         }
 
-        debug(TM, "Failed to split a quadtree node of width %d and height %d that is %sa leave",
+        debug(TM, "Failed to split a quadtree node of width %f and height %f that is %sa leave",
               box.get_width(),
               box.get_height(),
               is_leave() ? "" : "not ");

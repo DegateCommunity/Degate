@@ -57,8 +57,7 @@ namespace degate
 
         void print()
         {
-            debug(TM, "%d,%d --- %d,%d : %d",
-                  get_from_x(), get_from_y(), get_to_x(), get_to_y(), get_length());
+            debug(TM, "%f,%f --- %f,%f : %f", get_from_x(), get_from_y(), get_to_x(), get_to_y(), get_length());
         }
     };
 
@@ -248,7 +247,7 @@ namespace degate
 
             while (running)
             {
-                debug(TM, "#segments: %d", lines.size());
+                debug(TM, "#segments: %lu", lines.size());
                 running = false;
 
                 LineSegment_shptr ls = lines.front();
