@@ -61,11 +61,12 @@ set(CMAKE_AUTORCC ON)
 #
 # Group Qt files
 #
-source_group("qt" REGULAR_EXPRESSION "(resources.qrc|moc.*.cpp|qrc_resources.cpp)")
-source_group("qt\\languages" REGULAR_EXPRESSION "(.*.qm|translations.qrc)")
+source_group("qt" REGULAR_EXPRESSION "(translations.qrc|style.qrc|resources.qrc)")
+source_group("qt\\moc" REGULAR_EXPRESSION "(moc.*.cpp|qrc_resources.cpp|Degate.version|qrc_.*.cpp)")
+source_group("qt\\languages" REGULAR_EXPRESSION "(.*.qm|degate_.*.ts)")
 source_group("res" REGULAR_EXPRESSION "(resource.rc)")
 set_property(GLOBAL PROPERTY AUTOGEN_TARGETS_FOLDER "Moc")
-set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "qt")
+set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "qt\\moc")
 
 ############# Boost
 set(Boost_USE_STATIC_LIBS ON)
