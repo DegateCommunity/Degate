@@ -8,7 +8,19 @@ A pull request template is provided. If you add code to the Degate core, try to 
 
 ## Style guide
 
-There is currently no written style guide for Degate. In the meantime, you can read code to understand the philosophy.
+You can find a .clang-format file (to use with clang-format) describing the project code style in the root folder of the repository. Also, you can find a .clang-tidy file (to use with clang-tidy)  to help you with good coding practices with the project.
+
+The naming convention is:
+
+| Element           | Case          |
+| ----------------- | ------------- |
+| Class/Struct/Enum | CamelCase     |
+| Variable          | lower_case    |
+| Function          | lower_case    |
+| Parameter         | lower_case    |
+| Enum constant     | UPPER_CASE    |
+| Macro             | UPPER_CASE    |
+| Namespace         | lower_case    |
 
 ## Documentation
 
