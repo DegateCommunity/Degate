@@ -34,6 +34,10 @@ namespace degate
         name_label.setText(tr("Name:"));
         name_edit.setText(QString::fromStdString(via->get_name()));
 
+        // Description
+        description_label.setText(tr("Description:"));
+        description_edit.setText(QString::fromStdString(via->get_description()));
+
         // Fill color
         fill_color_label.setText(tr("Fill color:"));
         fill_color_edit.set_color(via->get_fill_color());
@@ -89,6 +93,7 @@ namespace degate
     void ViaEditDialog::validate()
     {
         via->set_name(name_edit.text().toStdString());
+        via->set_description(description_edit.text().toStdString());
         via->set_fill_color(fill_color_edit.get_color());
         via->set_diameter(static_cast<unsigned int>(diameter_edit.value()));
 

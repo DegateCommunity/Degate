@@ -85,6 +85,10 @@ namespace degate
         QLabel name_label;
         QLineEdit name_edit;
 
+        // Description
+        QLabel description_label;
+        QLineEdit description_edit;
+
         // Fill color
         QLabel fill_color_label;
         ColorSelectionButton fill_color_edit;
