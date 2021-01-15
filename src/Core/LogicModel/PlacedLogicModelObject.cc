@@ -74,10 +74,10 @@ std::shared_ptr<Layer> PlacedLogicModelObject::get_layer()
     return layer.lock();
 }
 
-void PlacedLogicModelObject::notify_shape_change()
+void PlacedLogicModelObject::notify_shape_change(const BoundingBox& old_bb)
 {
     if (layer.lock() != nullptr && has_valid_object_id())
     {
-        layer.lock()->notify_shape_change(get_object_id());
+        layer.lock()->notify_shape_change(get_object_id(), old_bb);
     }
 }

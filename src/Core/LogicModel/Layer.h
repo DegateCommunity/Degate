@@ -99,6 +99,18 @@ namespace degate
          */
         void remove_object(std::shared_ptr<PlacedLogicModelObject> o);
 
+        /**
+         * Get the object corresponding to the object_id.
+         *
+         * @exception CollectionLookupException This exception is thrown if
+         *    there is no object in the layer, that has this object ID.
+         * @exception InvalidObjectIDException Is raised, if \p object_id
+         *    has an invalid ID.
+         *
+         * @param object_id : the object id.
+         */
+        std::shared_ptr<PlacedLogicModelObject> get_object(object_id_t object_id);
+
     public:
 
 
@@ -267,12 +279,18 @@ namespace degate
         /**
          * Notify the layer that a shape of a logic model object changed.
          * This will adjust the quadtree.
+         *
+         * It will use the old bounding box to remove the object and the actual one (the new one) to insert it back.
+         *
          * @exception CollectionLookupException This exception is thrown if
-         *    thetre is no object in the layer, that has this object ID.
+         *    there is no object in the layer, that has this object ID.
          * @exception InvalidObjectIDException Is raised, if \p object_id
          *    has an invalid ID.
+         *
+         * @param object : the object.
+         * @param old_bb : the old bounding box of the object.
          */
-        void notify_shape_change(object_id_t object_id);
+        void notify_shape_change(object_id_t object_id, const BoundingBox& old_bb);
 
         /**
          * Get an object at a specific position.
@@ -296,7 +314,15 @@ namespace degate
          *   it is returned. If there is no object, then a nullptr pointer representation
          *   is returned.
          */
-        PlacedLogicModelObject_shptr get_object_at_position(float x, float y, float max_distance = 0, bool ignore_annotations = false, bool ignore_gates = false, bool ignore_ports = false, bool ignore_emarkers = false, bool ignore_vias = false, bool ignore_wires = false);
+        PlacedLogicModelObject_shptr get_object_at_position(float x,
+                                                            float y,
+                                                            float max_distance = 0,
+                                                            bool ignore_annotations = false,
+                                                            bool ignore_gates = false,
+                                                            bool ignore_ports = false,
+                                                            bool ignore_emarkers = false,
+                                                            bool ignore_vias = false,
+                                                            bool ignore_wires = false);
 
         /**
          * Check for placed objects in a region of type given by template param.

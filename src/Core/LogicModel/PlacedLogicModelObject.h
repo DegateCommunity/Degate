@@ -65,9 +65,13 @@ namespace degate
     protected:
 
         /**
-         * Ajust the position in the quadtree.
+         * Adjust the position in the quadtree.
+         *
+         * It will use the old bounding box to remove the object and the actual one (the new one) to insert it back.
+         *
+         * @param old_bb : the old bounding box of the object.
          */
-        void notify_shape_change();
+        void notify_shape_change(const BoundingBox& old_bb);
 
     public:
 

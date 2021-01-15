@@ -146,12 +146,37 @@ namespace degate
          */
         ret_t remove(T object);
 
+        /**
+         * Insert an object with the specified bounding box.
+         *
+         * @param object : the object.
+         * @param bounding_box : the bounding box to use.
+         */
+        ret_t insert(T object, const BoundingBox& bounding_box);
+
+        /**
+         * Remove an object with the specified bounding box.
+         *
+         * @param object : the object.
+         * @param bounding_box : the bounding box to use.
+         */
+        ret_t remove(T object, const BoundingBox& bounding_box);
+
+        /**
+         * Get the bounding box of an object.
+         */
+        BoundingBox get_object_bb(T object);
 
         /**
          * Notify that the bounding box of an object changed.
-         * It might be neccessary to adjust the objects position in the quadtree.
+         * It might be necessary to adjust the objects position in the quadtree.
+         *
+         * It will use the old bounding box to remove the object and the actual one (the new one) to insert it back.
+         *
+         * @param object : the object.
+         * @param old_bb : the old bounding box of the object.
          */
-        void notify_shape_change(T object);
+        void notify_shape_change(T object, const BoundingBox& old_bb);
 
         /**
          * Get the number of objects that are stored in a quadtree node and in all child nodes.
@@ -354,20 +379,47 @@ namespace degate
         // Reinsert all objects
         for (auto& e : objects)
         {
-            tree->insert(e);
+            if (RET_IS_NOT_OK(tree->insert(e)))
+            {
+                debug(TM, "Failed to insert object to quadtree.");
+                throw std::runtime_error("Failed to insert object to quadtree.");
+            }
         }
 
         return RET_OK;
     }
 
     template <typename T>
-    ret_t QuadTree<T>::insert(T object)
+    inline BoundingBox QuadTree<T>::get_object_bb(T object)
+    {
+        return get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(object);
+    }
+
+    template <typename T>
+    void QuadTree<T>::notify_shape_change(T object, const BoundingBox& old_bb)
+    {
+        remove(object, old_bb);
+        insert(object);
+    }
+
+    template <typename T>
+    inline ret_t QuadTree<T>::insert(T object)
+    {
+        return insert(object, get_object_bb(object));
+    }
+
+    template <typename T>
+    inline ret_t QuadTree<T>::remove(T object)
+    {
+        return remove(object, get_object_bb(object));
+    }
+
+    template <typename T>
+    ret_t QuadTree<T>::insert(T object, const BoundingBox& bounding_box)
     {
         ret_t ret;
-        const BoundingBox& bbox =
-            get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(object);
 
-        QuadTree<T>* found = traverse_downto_bounding_box(bbox);
+        QuadTree<T>* found = traverse_downto_bounding_box(bounding_box);
         assert(found != nullptr);
 
         if (found != nullptr)
@@ -389,22 +441,14 @@ namespace degate
     }
 
     template <typename T>
-    void QuadTree<T>::notify_shape_change(T object)
+    ret_t QuadTree<T>::remove(T object, const BoundingBox& bounding_box)
     {
-        remove(object);
-        insert(object);
-    }
-
-    template <typename T>
-    ret_t QuadTree<T>::remove(T object)
-    {
-        const BoundingBox& bbox =
-            get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(object);
-
-        QuadTree<T>* found = traverse_downto_bounding_box(bbox);
+        QuadTree<T>* found = traverse_downto_bounding_box(bounding_box);
         assert(found != nullptr);
         if (found != nullptr)
         {
+            if (std::find(found->children.begin(), found->children.end(), object) == found->children.end())
+                debug(TM, "Quadtree can't remove, object not found.");
             found->children.remove(object);
 
             if (!found->is_leave() &&
@@ -413,7 +457,7 @@ namespace degate
                 found->subtree_nodes[SW].children.size() == 0 &&
                 found->subtree_nodes[SE].children.size() == 0)
             {
-                reinsert_all_objects(found);
+                return reinsert_all_objects(found);
             }
 
             return RET_OK;
@@ -431,7 +475,8 @@ namespace degate
     template <typename T>
     QuadTree<T>* QuadTree<T>::traverse_downto_bounding_box(BoundingBox const& box)
     {
-        if (is_leave()) return this;
+        if (is_leave())
+            return this;
 
         for (typename std::vector<QuadTree<T>>::iterator it = subtree_nodes.begin();
              it != subtree_nodes.end();

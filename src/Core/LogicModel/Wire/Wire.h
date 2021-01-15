@@ -82,14 +82,16 @@ namespace degate
 
         void shift_x(float delta_x)
         {
+            auto bb = get_bounding_box();
             Line::shift_x(delta_x);
-            notify_shape_change();
+            notify_shape_change(bb);
         }
 
         void shift_y(float delta_y)
         {
+            auto bb = get_bounding_box();
             Line::shift_y(delta_y);
-            notify_shape_change();
+            notify_shape_change(bb);
         }
 
         virtual bool in_bounding_box(BoundingBox const& bbox) const

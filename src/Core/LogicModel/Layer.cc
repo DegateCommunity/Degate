@@ -59,6 +59,18 @@ void Layer::remove_object(std::shared_ptr<PlacedLogicModelObject> o)
     objects.erase(o->get_object_id());
 }
 
+std::shared_ptr<PlacedLogicModelObject> Layer::get_object(object_id_t object_id)
+{
+    if (!object_id)
+        throw InvalidObjectIDException("Invalid object ID in Layer::notify_shape_change()");
+
+    auto iter = objects.find(object_id);
+    if (iter == objects.end())
+        throw CollectionLookupException("Error in Layer::notify_shape_change(): The object is not in the layer.");
+
+    return (*iter).second;
+}
+
 Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE layer_type) :
     quadtree(bbox, 100),
     layer_type(layer_type),
@@ -288,17 +300,9 @@ void Layer::print(std::ostream& os)
     quadtree.print(os);
 }
 
-void Layer::notify_shape_change(object_id_t object_id)
+void Layer::notify_shape_change(object_id_t object_id, const BoundingBox& old_bb)
 {
-    if (!object_id)
-        throw InvalidObjectIDException("Invalid object ID in Layer::notify_shape_change()");
-
-    object_collection::iterator iter = objects.find(object_id);
-    if (iter == objects.end())
-        throw CollectionLookupException("Error in Layer::notify_shape_change(): "
-            "The object is not in the layer.");
-
-    quadtree.notify_shape_change((*iter).second);
+    quadtree.notify_shape_change(get_object(object_id), old_bb);
 }
 
 
