@@ -81,16 +81,19 @@ namespace degate
         QPushButton validate_button;
         QPushButton cancel_button;
 
-        // Elements
+        // Name
         QLabel name_label;
         QLineEdit name_edit;
 
+        // Fill color
         QLabel fill_color_label;
         ColorSelectionButton fill_color_edit;
 
+        // Direction
         QLabel direction_label;
         QComboBox direction_edit;
 
+        // Diameter
         QLabel diameter_label;
         QSpinBox diameter_edit;
 

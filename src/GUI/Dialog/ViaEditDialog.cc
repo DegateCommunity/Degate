@@ -30,12 +30,15 @@ namespace degate
           via(via),
           fill_color_edit(parent)
     {
+        // Name
         name_label.setText(tr("Name:"));
         name_edit.setText(QString::fromStdString(via->get_name()));
 
+        // Fill color
         fill_color_label.setText(tr("Fill color:"));
         fill_color_edit.set_color(via->get_fill_color());
 
+        // Directions
         directions[Via::DIRECTION_UP] = tr("Up");
         directions[Via::DIRECTION_DOWN] = tr("Down");
         directions[Via::DIRECTION_UNDEFINED] = tr("Undefined");
@@ -47,18 +50,22 @@ namespace degate
 
         direction_edit.setCurrentText(directions[via->get_direction()]);
 
+        // Diameter
         diameter_label.setText(tr("Via diameter:"));
         diameter_edit.setMinimum(1);
         diameter_edit.setMaximum(100000);
         diameter_edit.setValue(static_cast<int>(via->get_diameter()));
 
+        // Buttons
         validate_button.setText(tr("Ok"));
         cancel_button.setText(tr("Cancel"));
         buttons_layout.addStretch(1);
 
+        // Buttons layout
         buttons_layout.addWidget(&validate_button);
         buttons_layout.addWidget(&cancel_button);
 
+        // Layout
         layout.addWidget(&name_label, 0, 0);
         layout.addWidget(&name_edit, 0, 1);
         layout.addWidget(&fill_color_label, 1, 0);
