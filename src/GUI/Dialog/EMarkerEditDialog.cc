@@ -43,6 +43,12 @@ namespace degate
         fill_color_label.setText(tr("Fill color:"));
         fill_color.set_color(emarker->get_fill_color());
 
+        // Diameter
+        diameter_label.setText(tr("Diameter:"));
+        diameter_edit.setMinimum(1);
+        diameter_edit.setMaximum(100000);
+        diameter_edit.setValue(static_cast<int>(emarker->get_diameter()));
+
         // Buttons
         validate_button.setText(tr("Ok"));
         cancel_button.setText(tr("Cancel"));
@@ -68,9 +74,13 @@ namespace degate
         layout.addWidget(&fill_color_label, 3, 0);
         layout.addWidget(&fill_color, 3, 1);
 
+        // Diameter
+        layout.addWidget(&diameter_label, 4, 0);
+        layout.addWidget(&diameter_edit, 4, 1);
+
         // Buttons
-        layout.addWidget(&validate_button, 4, 0);
-        layout.addWidget(&cancel_button, 4, 1);
+        layout.addWidget(&validate_button, 5, 0);
+        layout.addWidget(&cancel_button, 5, 1);
 
         QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
         QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
@@ -82,8 +92,9 @@ namespace degate
     {
         emarker->set_name(name.text().toStdString());
         emarker->set_description(description.text().toStdString());
-        emarker->set_module_port(is_module_port.checkState() == Qt::Checked ? true : false);
+        emarker->set_module_port(is_module_port.checkState() == Qt::Checked);
         emarker->set_fill_color(fill_color.get_color());
+        emarker->set_diameter(static_cast<unsigned int>(diameter_edit.value()));
 
         accept();
     }

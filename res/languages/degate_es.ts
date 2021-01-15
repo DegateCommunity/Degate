@@ -318,11 +318,16 @@
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/EMarkerEditDialog.cc" line="47"/>
+        <source>Diameter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/EMarkerEditDialog.cc" line="53"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/EMarkerEditDialog.cc" line="48"/>
+        <location filename="../../src/GUI/Dialog/EMarkerEditDialog.cc" line="54"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2543,47 +2548,47 @@ Those settings are independent (per project).</source>
 <context>
     <name>degate::ViaEditDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="33"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="34"/>
         <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="36"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="38"/>
         <source>Fill color:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="39"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="42"/>
         <source>Up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="40"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="43"/>
         <source>Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="41"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="44"/>
         <source>Undefined</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="43"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="46"/>
         <source>Via direction:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="50"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="54"/>
         <source>Via diameter:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="55"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="60"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="56"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="61"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>

@@ -22,14 +22,15 @@
 #ifndef __EMARKEREDITDIALOG_H__
 #define __EMARKEREDITDIALOG_H__
 
+#include "Core/LogicModel/EMarker/EMarker.h"
+#include "GUI/Dialog/ColorPickerDialog.h"
+
+#include <QCheckBox>
 #include <QDialog>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QCheckBox>
-
-#include "GUI/Dialog/ColorPickerDialog.h"
-#include "Core/LogicModel/EMarker/EMarker.h"
+#include <QSpinBox>
 
 namespace degate
 {
@@ -42,10 +43,9 @@ namespace degate
      */
     class EMarkerEditDialog : public QDialog
     {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-
         /**
          * Create the dialog, to show it call the exec function.
          *
@@ -84,10 +84,14 @@ namespace degate
         QLabel fill_color_label;
         ColorSelectionButton fill_color;
 
+        // Diameter
+        QLabel diameter_label;
+        QSpinBox diameter_edit;
+
         // Buttons
         QPushButton validate_button;
         QPushButton cancel_button;
     };
-}
+} // namespace degate
 
 #endif //__EMARKEREDITDIALOG_H__
