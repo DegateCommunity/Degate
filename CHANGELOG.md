@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New diameter option for the via edit dialog.
 - New diameter option for the emarker edit dialog.
+- New description option for the via edit dialog.
+- Newly created wires will now automatically interconnect.
+- Added new actions to the context menu.
+
+### Changed
+- Improved the French translation.
 
 ### Fixed
 - Fixed updater.
