@@ -15,6 +15,12 @@
         <img src="https://img.shields.io/github/contributors/DegateCommunity/Degate" /></a>
 </p>
 
+<p align="center">
+        <img src="https://github.com/DegateCommunity/Degate/workflows/Windows%20build%20&%20tests/badge.svg?branch=develop" />
+        <img src="https://github.com/DegateCommunity/Degate/workflows/Linux%20build%20&%20tests/badge.svg?branch=develop" />
+        <img src="https://github.com/DegateCommunity/Degate/workflows/Mac%20build%20&%20tests/badge.svg?branch=develop" />
+</p>
+
 &nbsp;
 
 Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project, the final goal is to replace it. For more please visit our [wiki](https://github.com/DegateCommunity/Degate/wiki) page and, if you want to chat, visit our [Gitter](https://gitter.im/DegateCommunity/Degate). The current project maintainer is [Dorian Bachelot](https://github.com/DorianBDev).
