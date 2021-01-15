@@ -36,7 +36,7 @@ namespace degate
         description.setText(QString::fromStdString(emarker->get_description()));
 
         // Is module port
-        is_module_port_label.setText(tr("Is a module port:"));
+        is_module_port_label.setText(tr("Is a module port?:"));
         is_module_port.setCheckState(emarker->is_module_port() ? Qt::Checked : Qt::Unchecked);
 
         // Fill color
