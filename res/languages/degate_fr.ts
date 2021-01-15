@@ -2543,42 +2543,47 @@ Those settings are independent (per project).</source>
 <context>
     <name>degate::ViaEditDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="30"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="33"/>
         <source>Name:</source>
         <translation>Nom :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="33"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="36"/>
         <source>Fill color:</source>
         <translation>Couleur de remplissage :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="36"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="39"/>
         <source>Up</source>
         <translation>Haut</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="37"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="40"/>
         <source>Down</source>
         <translation>Bas</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="38"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="41"/>
         <source>Undefined</source>
         <translation>Indéfinie</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="40"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="43"/>
         <source>Via direction:</source>
         <translation>Direction du via :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="47"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="50"/>
+        <source>Via diameter:</source>
+        <translation>Diamètre du via :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="55"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="48"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="56"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>

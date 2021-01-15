@@ -22,16 +22,17 @@
 #ifndef __VIAEDITDIALOG_H__
 #define __VIAEDITDIALOG_H__
 
-#include "GUI/Dialog/ColorPickerDialog.h"
 #include "Core/LogicModel/Via/Via.h"
 #include "Core/Project/Project.h"
+#include "GUI/Dialog/ColorPickerDialog.h"
 
-#include <map>
+#include <QComboBox>
 #include <QDialog>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QComboBox>
+#include <QSpinBox>
+#include <map>
 
 namespace degate
 {
@@ -46,7 +47,6 @@ namespace degate
         Q_OBJECT
 
     public:
-
         /**
          * Create the dialog, to show it call the exec function.
          *
@@ -91,8 +91,11 @@ namespace degate
         QLabel direction_label;
         QComboBox direction_edit;
 
+        QLabel diameter_label;
+        QSpinBox diameter_edit;
+
         std::map<Via::DIRECTION, QString> directions;
     };
-}
+} // namespace degate
 
 #endif //__VIAEDITDIALOG_H__

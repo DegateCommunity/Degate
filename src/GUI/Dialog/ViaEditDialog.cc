@@ -25,7 +25,10 @@ namespace degate
 {
 
     ViaEditDialog::ViaEditDialog(QWidget* parent, Via_shptr& via, Project_shptr& project)
-            : QDialog(parent), project(project), via(via), fill_color_edit(parent)
+        : QDialog(parent),
+          project(project),
+          via(via),
+          fill_color_edit(parent)
     {
         name_label.setText(tr("Name:"));
         name_edit.setText(QString::fromStdString(via->get_name()));
@@ -44,6 +47,11 @@ namespace degate
 
         direction_edit.setCurrentText(directions[via->get_direction()]);
 
+        diameter_label.setText(tr("Via diameter:"));
+        diameter_edit.setMinimum(1);
+        diameter_edit.setMaximum(100000);
+        diameter_edit.setValue(static_cast<int>(via->get_diameter()));
+
         validate_button.setText(tr("Ok"));
         cancel_button.setText(tr("Cancel"));
         buttons_layout.addStretch(1);
@@ -57,11 +65,16 @@ namespace degate
         layout.addWidget(&fill_color_edit, 1, 1);
         layout.addWidget(&direction_label, 2, 0);
         layout.addWidget(&direction_edit, 2, 1);
-        layout.addLayout(&buttons_layout, 3, 0);
+        layout.addWidget(&diameter_label, 3, 0);
+        layout.addWidget(&diameter_edit, 3, 1);
+        layout.addLayout(&buttons_layout, 4, 0);
 
         QObject::connect(&validate_button, SIGNAL(clicked()), this, SLOT(validate()));
         QObject::connect(&cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
-        QObject::connect(&direction_edit, SIGNAL(currentTextChanged(const QString&)), this, SLOT(direction_changed(void)));
+        QObject::connect(&direction_edit,
+                         SIGNAL(currentTextChanged(const QString&)),
+                         this,
+                         SLOT(direction_changed(void)));
 
         setLayout(&layout);
     }
@@ -70,6 +83,7 @@ namespace degate
     {
         via->set_name(name_edit.text().toStdString());
         via->set_fill_color(fill_color_edit.get_color());
+        via->set_diameter(static_cast<unsigned int>(diameter_edit.value()));
 
         for (auto& e : directions)
         {
@@ -87,4 +101,4 @@ namespace degate
         else if (direction_edit.currentText() == directions[Via::DIRECTION_DOWN])
             fill_color_edit.set_color(project->get_default_color(DEFAULT_COLOR_VIA_DOWN));
     }
-}
+} // namespace degate
