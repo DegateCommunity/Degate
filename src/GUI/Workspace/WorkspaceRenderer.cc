@@ -274,6 +274,7 @@ namespace degate
     void WorkspaceRenderer::reset_wire_tool()
     {
         wire_tool.reset_line_drawing();
+        last_created_wire = nullptr;
 
         update();
     }
@@ -696,13 +697,28 @@ namespace degate
         {
             wire_tool.end_line_drawing();
 
+            // Create wire
             Wire_shptr new_wire(new Wire(wire_tool.get_line()));
             new_wire->set_fill_color(project->get_default_color(DEFAULT_COLOR_WIRE));
             new_wire->set_diameter(project->get_default_wire_diameter());
 
+            // Registre wire
             project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_wire);
 
+            // Restart line drawing
             wire_tool.start_line_drawing(wire_tool.get_line().get_to_x(), wire_tool.get_line().get_to_y());
+
+            // Connect to previous wire
+            if (last_created_wire != nullptr)
+            {
+                ObjectSet set;
+                set.add(last_created_wire);
+                set.add(new_wire);
+
+                connect_objects(project->get_logic_model(), set.begin(), set.end());
+            }
+
+            last_created_wire = new_wire;
 
             emit project_changed();
 

@@ -507,6 +507,9 @@ namespace degate
         // Used tool
         WorkspaceTool current_tool;
 
+        // Last create wire created with the wire tool
+        Wire_shptr last_created_wire = nullptr;
+
     };
 }
 
