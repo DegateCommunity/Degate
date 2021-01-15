@@ -1518,14 +1518,14 @@ namespace degate
         QAction annotation_create_context_action(tr("Create new annotation"), this);
         QAction gate_template_create_context_action(tr("Create new gate template"), this);
         QAction gate_create_context_action(tr("Create new gate"), this);
-        QAction emarker_create_context_action(tr("Create new EMarker"), this);
+        QAction emarker_create_context_action(tr("Create new emarker"), this);
         QAction via_create_context_action(tr("Create new via"), this);
 
         // Edit
         QAction annotation_edit_context_action(tr("Edit selected annotation"), this);
         QAction gate_edit_context_action(tr("Edit selected gate"), this);
-        QAction gate_port_edit_context_action(tr("Move selected port"), this);
-        QAction emarker_edit_context_action(tr("Edit selected EMarker"), this);
+        QAction gate_port_edit_context_action(tr("Move selected gate port"), this);
+        QAction emarker_edit_context_action(tr("Edit selected emarker"), this);
         QAction via_edit_context_action(tr("Edit selected via"), this);
 
         // Via
@@ -1542,6 +1542,15 @@ namespace degate
 
         // Inspect selected object
         QAction inspect_selected_object_context_action(tr("Inspect selected object"), this);
+
+        // Interconnect selected objects
+        QAction interconnect_selected_objects_context_action(tr("Interconnect selected objects"), this);
+
+        // Isolate selected object(s)
+        QAction isolate_selected_objects_context_action(tr("Isolate selected object(s)"), this);
+
+        // Move selected gate(s) into a specific module.
+        QAction move_selected_gates_into_module_context_action(tr("Move selected gate(s) into a module"), this);
 
         // Get current opengl mouse position
         context_menu_mouse_position = workspace->get_safe_opengl_mouse_position();
@@ -1566,22 +1575,25 @@ namespace degate
         {
             PlacedLogicModelObject_shptr object = workspace->get_selected_objects().back();
 
-            if (Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(object))
+            if (is_of_object_type<Annotation>(object))
             {
                 connect(&annotation_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_edit()));
                 context_menu.addAction(&annotation_edit_context_action);
             }
-            else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
+            else if (is_of_object_type<Gate>(object))
             {
                 connect(&gate_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
                 context_menu.addAction(&gate_edit_context_action);
+
+                connect(&move_selected_gates_into_module_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_move_selected_gates_into_module()));
+                context_menu.addAction(&move_selected_gates_into_module_context_action);
             }
-            else if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(object))
+            else if (is_of_object_type<GatePort>(object))
             {
                 connect(&gate_port_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_port_edit()));
                 context_menu.addAction(&gate_port_edit_context_action);
             }
-            else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(object))
+            else if (is_of_object_type<EMarker>(object))
             {
                 connect(&emarker_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_emarker_edit()));
                 context_menu.addAction(&emarker_edit_context_action);
@@ -1606,8 +1618,22 @@ namespace degate
             connect(&delete_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
             context_menu.addAction(&delete_context_action);
 
-            connect(&inspect_selected_object_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_inspect_selected_object()));
-            context_menu.addAction(&inspect_selected_object_context_action);
+            if (workspace->get_selected_objects().check_for_all(&is_interconnectable))
+            {
+                connect(&inspect_selected_object_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_inspect_selected_object()));
+                context_menu.addAction(&inspect_selected_object_context_action);
+
+                context_menu.addSeparator();
+
+                if (workspace->get_selected_objects().size() >= 2)
+                {
+                    connect(&interconnect_selected_objects_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
+                    context_menu.addAction(&interconnect_selected_objects_context_action);
+                }
+
+                connect(&isolate_selected_objects_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_isolate_selected_objects()));
+                context_menu.addAction(&isolate_selected_objects_context_action);
+            }
         }
         else
         {

@@ -263,7 +263,7 @@ namespace degate
         void on_menu_logic_isolate_selected_objects();
 
         /**
-         * Move selected gates into a specific module.
+         * Move selected gate(s) into a specific module.
          * It will open a module selector dialog.
          */
         void on_menu_logic_move_selected_gates_into_module();

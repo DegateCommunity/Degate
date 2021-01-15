@@ -308,7 +308,7 @@
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/EMarkerEditDialog.cc" line="39"/>
-        <source>Is a module port:</source>
+        <source>Is a module port?:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1360,6 +1360,7 @@
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="517"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1547"/>
         <source>Interconnect selected objects</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1448,6 +1449,31 @@
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="549"/>
         <source>Wire tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1521"/>
+        <source>Create new emarker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1527"/>
+        <source>Move selected gate port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1528"/>
+        <source>Edit selected emarker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1550"/>
+        <source>Isolate selected object(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1553"/>
+        <source>Move selected gate(s) into a module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1777,11 +1803,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1521"/>
-        <source>Create new EMarker</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../src/GUI/MainWindow.cc" line="1522"/>
         <source>Create new via</source>
         <translation type="unfinished"></translation>
@@ -1794,16 +1815,6 @@
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="1526"/>
         <source>Edit selected gate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1527"/>
-        <source>Move selected port</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1528"/>
-        <source>Edit selected EMarker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2554,41 +2565,46 @@ Those settings are independent (per project).</source>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="38"/>
-        <source>Fill color:</source>
+        <source>Description:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="42"/>
-        <source>Up</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="43"/>
-        <source>Down</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="44"/>
-        <source>Undefined</source>
+        <source>Fill color:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="46"/>
+        <source>Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="47"/>
+        <source>Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="48"/>
+        <source>Undefined</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="50"/>
         <source>Via direction:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="54"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="58"/>
         <source>Via diameter:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="60"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="64"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="61"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="65"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>

@@ -308,8 +308,8 @@
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/EMarkerEditDialog.cc" line="39"/>
-        <source>Is a module port:</source>
-        <translation>Est un port de module :</translation>
+        <source>Is a module port?:</source>
+        <translation>Est un port de module ? :</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/EMarkerEditDialog.cc" line="43"/>
@@ -1340,6 +1340,7 @@
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="517"/>
+        <location filename="../../src/GUI/MainWindow.cc" line="1547"/>
         <source>Interconnect selected objects</source>
         <translation>Interconnecter les objets sélectionnés</translation>
     </message>
@@ -1389,6 +1390,31 @@
         <location filename="../../src/GUI/MainWindow.cc" line="534"/>
         <source>About</source>
         <translation>À propos</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1521"/>
+        <source>Create new emarker</source>
+        <translation>Créer un nouveau marqueur électrique</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1527"/>
+        <source>Move selected gate port</source>
+        <translation>Déplacer le port de porte sélectionné</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1528"/>
+        <source>Edit selected emarker</source>
+        <translation>Éditer le marqueur électrique sélectionné</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1550"/>
+        <source>Isolate selected object(s)</source>
+        <translation>Isoler le ou les objet(s) sélectionné(s)</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="1553"/>
+        <source>Move selected gate(s) into a module</source>
+        <translation>Déplacer la ou les porte(s) sélectionnée(s) dans un module</translation>
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="308"/>
@@ -1454,12 +1480,12 @@
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="518"/>
         <source>Isolate selected objects</source>
-        <translation>Isoler les objetcs sélectionnés</translation>
+        <translation>Isoler le ou les objet(s) sélectionné(s)</translation>
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="520"/>
         <source>Move selected gates into module</source>
-        <translation>Déplacer les portes sélectionnées dans un module</translation>
+        <translation>Déplacer la ou les porte(s) sélectionnée(s) dans un module</translation>
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="544"/>
@@ -1777,11 +1803,6 @@
         <translation>Nouvelle porte</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1521"/>
-        <source>Create new EMarker</source>
-        <translation>Nouveau marqueur électrique</translation>
-    </message>
-    <message>
         <location filename="../../src/GUI/MainWindow.cc" line="1522"/>
         <source>Create new via</source>
         <translation>Nouveau via</translation>
@@ -1795,16 +1816,6 @@
         <location filename="../../src/GUI/MainWindow.cc" line="1526"/>
         <source>Edit selected gate</source>
         <translation>Éditer la porte sélectionnée</translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1527"/>
-        <source>Move selected port</source>
-        <translation>Déplacer le port sélectionné</translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="1528"/>
-        <source>Edit selected EMarker</source>
-        <translation>Éditer le marqueur électrique sélectionné</translation>
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="1529"/>
@@ -2554,41 +2565,46 @@ Those settings are independent (per project).</source>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="38"/>
+        <source>Description:</source>
+        <translation>Description :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="42"/>
         <source>Fill color:</source>
         <translation>Couleur de remplissage :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="42"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="46"/>
         <source>Up</source>
         <translation>Haut</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="43"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="47"/>
         <source>Down</source>
         <translation>Bas</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="44"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="48"/>
         <source>Undefined</source>
         <translation>Indéfinie</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="46"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="50"/>
         <source>Via direction:</source>
         <translation>Direction du via :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="54"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="58"/>
         <source>Via diameter:</source>
         <translation>Diamètre du via :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="60"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="64"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="61"/>
+        <location filename="../../src/GUI/Dialog/ViaEditDialog.cc" line="65"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
