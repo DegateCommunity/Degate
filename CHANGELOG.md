@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New description option for the via edit dialog.
 - Newly created wires will now automatically interconnect.
 - Added new actions to the context menu.
+- Added a new lambda option to the project settings.
+- Added a new pixel(s) per micrometer option to the project settings.
 
 ### Changed
 - Improved the French translation.
