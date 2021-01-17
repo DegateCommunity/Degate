@@ -22,6 +22,7 @@
 #include "MainWindow.h"
 #include "GUI/Dialog/ProgressDialog.h"
 #include "GUI/Dialog/AboutDialog.h"
+#include "Core/Version.h"
 
 #ifdef SYS_WINDOWS
 #include <QtPlatformHeaders/QWindowsWindowFunctions>
@@ -1312,7 +1313,10 @@ namespace degate
 
     void MainWindow::on_menu_help_documentation()
     {
-        QDesktopServices::openUrl(QUrl("https://degate.readthedocs.io"));
+        if (std::string(DEGATE_VERSION_TYPE) == "release")
+            QDesktopServices::openUrl(QUrl("https://degate.readthedocs.io"));
+        else
+            QDesktopServices::openUrl(QUrl("https://degate.readthedocs.io/en/nightly/"));
     }
 
     void MainWindow::on_menu_help_check_updates(bool notify_no_update, bool ask_disabling_automatic_check)
