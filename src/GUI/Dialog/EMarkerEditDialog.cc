@@ -46,7 +46,7 @@ namespace degate
         // Diameter
         diameter_label.setText(tr("Diameter:"));
         diameter_edit.setMinimum(1);
-        diameter_edit.setMaximum(100000);
+        diameter_edit.setMaximum(std::numeric_limits<int>::max());
         diameter_edit.setValue(static_cast<int>(emarker->get_diameter()));
 
         // Buttons
