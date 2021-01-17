@@ -96,7 +96,7 @@ namespace degate
         // Max step size for search after scaling
         max_step_label.setText(tr("Max step size for search after scaling (in pixel):"));
         max_step_edit.setMinimum(0);
-        max_step_edit.setValue(3);
+        max_step_edit.setValue(std::max((length_t)1, project->get_lambda() >> 1u));
         content_layout.addWidget(&max_step_label, 3, 0);
         content_layout.addWidget(&max_step_edit, 3, 1);
 
@@ -181,11 +181,9 @@ namespace degate
         matching->set_threshold_hc(hill_climbing_threshold_edit.get_value());
         matching->set_threshold_detection(threshold_edit.get_value());
         matching->set_max_step_size(max_step_edit.value());
-        matching->set_scaling_factor(image_scale_factor_edit.currentText()
-                                                            .toUInt());
+        matching->set_scaling_factor(image_scale_factor_edit.currentText().toUInt());
         matching->set_templates(std::list<GateTemplate_shptr>(gate_templates.begin(), gate_templates.end()));
-        matching->set_layers(project->get_logic_model()
-                                    ->get_current_layer(),
+        matching->set_layers(project->get_logic_model()->get_current_layer(),
                              get_first_logic_layer(project->get_logic_model()));
 
         // Set orientations
@@ -221,11 +219,10 @@ namespace degate
         ProgressDialog progress_dialog(this->parentWidget(), tr("Template matching"), matching);
 
         // Set the job to start the template matching (will run in another thread)
-        progress_dialog.set_job([matching, this]()
-                                {
-                                    matching->init(bounding_box, project);
-                                    matching->run();
-                                });
+        progress_dialog.set_job([matching, this]() {
+            matching->init(bounding_box, project);
+            matching->run();
+        });
 
         // Close this dialog
         accept();
