@@ -23,7 +23,7 @@
 
 &nbsp;
 
-Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project, the final goal is to replace it. For more please visit our [wiki](https://github.com/DegateCommunity/Degate/wiki) page and, if you want to chat, visit our [Gitter](https://gitter.im/DegateCommunity/Degate). The current project maintainer is [Dorian Bachelot](https://github.com/DorianBDev).
+Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project, the final goal is to replace it. For more please visit our [wiki](https://github.com/DegateCommunity/Degate/wiki) page and, if you want to chat, visit our [Gitter](https://gitter.im/DegateCommunity/Degate). The current main maintainer of Degate is [Dorian Bachelot](https://github.com/DorianBDev).
 
 &nbsp;
 
@@ -220,4 +220,4 @@ To add a new language opens a new issue.
 
 Degate is released under the GNU General Public License Version 3. See LICENSE.TXT for details.
 
-Degate is currently administered by Dorian Bachelot <dev@dorianb.net> and originally developed by Martin Schobert <martin@mailbeschleuniger.de>.
+The current main maintainer of Degate is **Dorian Bachelot** <dev@dorianb.net> and the original Degate maintainer is **Martin Schobert** <martin@mailbeschleuniger.de>.
