@@ -2153,106 +2153,120 @@
 <context>
     <name>degate::ProjectSettingsColorsTab</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="86"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="112"/>
         <source>Wire default color:</source>
-        <translation>Leiterbahnstandardfarbe:</translation>
+        <translation type="unfinished">Leiterbahnstandardfarbe:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="91"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="118"/>
         <source>Via up default color:</source>
-        <translation>Durchkontaktierungsstandardfarbe (nach oben):</translation>
+        <translation type="unfinished">Durchkontaktierungsstandardfarbe (nach oben):</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="96"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="124"/>
         <source>Via down default color:</source>
-        <translation>Durchkontaktierungsstandardfarbe (nach unten):</translation>
+        <translation type="unfinished">Durchkontaktierungsstandardfarbe (nach unten):</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="101"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="130"/>
         <source>Annotation default color:</source>
-        <translation>Annotationsstandardfarbe:</translation>
+        <translation type="unfinished">Annotationsstandardfarbe:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="106"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="136"/>
         <source>Annotation frame default color:</source>
-        <translation>Annotationsstandardrahmenfarbe:</translation>
+        <translation type="unfinished">Annotationsstandardrahmenfarbe:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="111"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="142"/>
         <source>Gate default color:</source>
-        <translation>Logikgatterstandardfarbe:</translation>
+        <translation type="unfinished">Logikgatterstandardfarbe:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="116"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="148"/>
         <source>Gate frame default color:</source>
-        <translation>Logikgatterstandardrahmenfarbe:</translation>
+        <translation type="unfinished">Logikgatterstandardrahmenfarbe:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="121"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="154"/>
         <source>Gate port default color:</source>
-        <translation>Schnittstellenstandardfarbe:</translation>
+        <translation type="unfinished">Schnittstellenstandardfarbe:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="126"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="160"/>
         <source>EMarker default color:</source>
-        <translation>E-Marker-Standardfarbe</translation>
+        <translation type="unfinished">E-Marker-Standardfarbe</translation>
     </message>
 </context>
 <context>
     <name>degate::ProjectSettingsDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="150"/>
-        <source>Change here all project settings like project name or colors.
-Those settings are independent (per project).</source>
-        <translation>Ändere hier alle Projekteinstellungen wie Projektname oder Farben. Diese Einstellungen gelten für ein einzelnes Projekt.</translation>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="184"/>
+        <source>Change here all project settings like project name or colors. Those settings are independent (per project).</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="153"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="187"/>
         <source>General</source>
-        <translation>Allgemein</translation>
+        <translation type="unfinished">Allgemein</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="154"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="188"/>
         <source>Colors</source>
-        <translation>Farben</translation>
+        <translation type="unfinished">Farben</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="156"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="190"/>
         <source>Apply</source>
-        <translation>Anwenden</translation>
+        <translation type="unfinished">Anwenden</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="157"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="191"/>
         <source>Close</source>
-        <translation>Schließen</translation>
+        <translation type="unfinished">Schließen</translation>
     </message>
 </context>
 <context>
     <name>degate::ProjectSettingsGeneralTab</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="31"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="32"/>
         <source>Project name:</source>
         <translation>Projektname:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="36"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="38"/>
         <source>Project description:</source>
         <translation>Projektbeschreibung:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="41"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="44"/>
         <source>Default wire diameter:</source>
         <translation>Leiterbahnenstandarddurchmesser:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="47"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="51"/>
         <source>Default via diameter:</source>
         <translation>Durchkontaktierungsstandarddurchmesser:</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="53"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="58"/>
         <source>Default port diameter:</source>
         <translation>Schnittstellenstandarddurchmesser:</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="65"/>
+        <source>Lambda (in pixel(s)):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="66"/>
+        <source>It indicates how many pixels two electrically conductive objects may be apart from each other so that they are still considered to be connected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="75"/>
+        <source>Pixel(s) per μm:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2395,7 +2409,7 @@ Those settings are independent (per project).</source>
     <name>degate::TemplateMatchingDialog</name>
     <message>
         <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="42"/>
-        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="221"/>
+        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="219"/>
         <source>Template matching</source>
         <translation>Templates finden</translation>
     </message>
@@ -2486,12 +2500,12 @@ Those settings are independent (per project).</source>
         <translation>Eines der ausgewählten Logikgatter-Templates ist größer als der Suchbereich.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="241"/>
+        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="238"/>
         <source>Template matching results</source>
         <translation>Ergebnisse der Template-Suche</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="242"/>
+        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="239"/>
         <source>Found %1 match(es).</source>
         <translation>%1 Treffer gefunden.</translation>
     </message>

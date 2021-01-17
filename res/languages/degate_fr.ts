@@ -2153,47 +2153,47 @@
 <context>
     <name>degate::ProjectSettingsColorsTab</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="86"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="112"/>
         <source>Wire default color:</source>
         <translation>Couleur par défaut des câbles :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="91"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="118"/>
         <source>Via up default color:</source>
         <translation>Couleur par défaut des via montant :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="96"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="124"/>
         <source>Via down default color:</source>
         <translation>Couleur par défaut des via descendant :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="101"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="130"/>
         <source>Annotation default color:</source>
         <translation>Couleur par défaut des annotations :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="106"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="136"/>
         <source>Annotation frame default color:</source>
         <translation>Couleur par défaut du contour des annotations :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="111"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="142"/>
         <source>Gate default color:</source>
         <translation>Couleur par défaut des portes :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="116"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="148"/>
         <source>Gate frame default color:</source>
         <translation>Couleur par défaut du contour des portes :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="121"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="154"/>
         <source>Gate port default color:</source>
         <translation>Couleur par défaut des ports :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="126"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="160"/>
         <source>EMarker default color:</source>
         <translation>Couleur par défaut des marqueurs électriques :</translation>
     </message>
@@ -2201,28 +2201,27 @@
 <context>
     <name>degate::ProjectSettingsDialog</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="150"/>
-        <source>Change here all project settings like project name or colors.
-Those settings are independent (per project).</source>
-        <translation>Vous pouvez changer ici tous les paramètres du projet actuel, comme le nom du projet ou les couleurs. Ces paramètres sont indépendants (par projet).</translation>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="184"/>
+        <source>Change here all project settings like project name or colors. Those settings are independent (per project).</source>
+        <translation>Modifiez ici tous les paramètres du projet comme le nom du projet ou les couleurs par défaut. Ces paramètres sont indépendants (par projet).</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="153"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="187"/>
         <source>General</source>
         <translation>Général</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="154"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="188"/>
         <source>Colors</source>
         <translation>Couleurs</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="156"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="190"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="157"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="191"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
@@ -2230,29 +2229,44 @@ Those settings are independent (per project).</source>
 <context>
     <name>degate::ProjectSettingsGeneralTab</name>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="31"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="32"/>
         <source>Project name:</source>
         <translation>Nom du projet :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="36"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="38"/>
         <source>Project description:</source>
         <translation>Description du projet :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="41"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="44"/>
         <source>Default wire diameter:</source>
         <translation>Diamètre par défaut des câbles :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="47"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="51"/>
         <source>Default via diameter:</source>
         <translation>Diamètre par défaut des via :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="53"/>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="58"/>
         <source>Default port diameter:</source>
         <translation>Diamètre par défaut des ports :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="65"/>
+        <source>Lambda (in pixel(s)):</source>
+        <translation>Lambda (en pixel(s)) :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="66"/>
+        <source>It indicates how many pixels two electrically conductive objects may be apart from each other so that they are still considered to be connected.</source>
+        <translation>Cette valeur correspond au nombre maximum de pixels pour lequel deux objets électriquement conducteurs puissent être considérés comme connectés.</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Dialog/ProjectSettingsDialog.cc" line="75"/>
+        <source>Pixel(s) per μm:</source>
+        <translation>Pixel(s) par μm :</translation>
     </message>
 </context>
 <context>
@@ -2395,7 +2409,7 @@ Those settings are independent (per project).</source>
     <name>degate::TemplateMatchingDialog</name>
     <message>
         <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="42"/>
-        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="221"/>
+        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="219"/>
         <source>Template matching</source>
         <translation>Reconnaissance de modèles de porte</translation>
     </message>
@@ -2486,12 +2500,12 @@ Those settings are independent (per project).</source>
         <translation>L&apos;un des modèle de porte sélectionnés est plus grand que la zone de recherche.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="241"/>
+        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="238"/>
         <source>Template matching results</source>
         <translation>Résultats de correspondance du (ou des) modèle(s) de portes</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="242"/>
+        <location filename="../../src/GUI/Dialog/TemplateMatchingDialog.cc" line="239"/>
         <source>Found %1 match(es).</source>
         <translation>%1 résultat(s).</translation>
     </message>

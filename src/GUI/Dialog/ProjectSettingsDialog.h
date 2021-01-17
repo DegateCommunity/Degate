@@ -25,14 +25,15 @@
 #include "Core/Project/Project.h"
 #include "GUI/Dialog/ColorPickerDialog.h"
 
+#include <QDoubleSpinBox>
 #include <QDialog>
-#include <QVBoxLayout>
+#include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QWidget>
-#include <QTabWidget>
-#include <QGridLayout>
 #include <QSpinBox>
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include <QWidget>
 
 namespace degate
 {
@@ -79,6 +80,16 @@ namespace degate
         QLabel port_diameter_label;
         QSpinBox port_diameter_edit;
 
+        // Lambda (in pixel(s)).
+        //
+        // It indicates how many pixels two electrically conductive objects may be apart
+        // from each other so that they are still considered to be connected.
+        QLabel lambda_label;
+        QSpinBox lambda_edit;
+
+        // Pixels per micrometer.
+        QLabel pixels_per_micrometer_label;
+        QDoubleSpinBox pixels_per_micrometer_edit;
     };
 
     /**
