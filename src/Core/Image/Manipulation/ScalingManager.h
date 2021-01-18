@@ -130,7 +130,6 @@ namespace degate
          * master image is stored.
          * @throw InvalidPathException This exception is thrown, if the
          *   \p directory (ctor param) doesn't exists.
-         * @todo If the image was already scaled, do not do it again. Maybe we need a force option.
          */
         void create_scalings()
         {

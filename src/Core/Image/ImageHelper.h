@@ -90,7 +90,6 @@ namespace degate
     /**
      * Store an image in a common file format.
      * Only the tiff file format is supported.
-     * @todo We should use a factory for writer objects.
      * @exception DegateRuntimeException This exception is thrown, if the writer failed to save the image.
      * @exception InvalidPointerException This exception is thrown, if parameter \p img represents an invalid pointer.
      */

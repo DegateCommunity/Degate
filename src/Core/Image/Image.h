@@ -169,9 +169,6 @@ namespace degate
     {
     public:
 
-        /**
-         * @todo The third parameter must be optional. Create a temp image instead.
-         */
         Image(unsigned int width,
               unsigned int height,
               std::string const& filename) :
