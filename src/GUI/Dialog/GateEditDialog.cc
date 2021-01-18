@@ -199,7 +199,7 @@ namespace degate
 		gate->set_frame_color(frame_color.get_color());
 	}
 
-	void GateEditEntityTab::add_port() // Todo: even with cancel modifications will persist
+	void GateEditEntityTab::add_port()
 	{
 		validate();
 
@@ -213,7 +213,7 @@ namespace degate
 		update_ports_list();
 	}
 
-	void GateEditEntityTab::remove_port() // Todo: even with cancel modifications will persist
+	void GateEditEntityTab::remove_port()
 	{
 		validate();
 
@@ -284,7 +284,7 @@ namespace degate
 		frame_color.set_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
 	}
 
-	void GateEditEntityTab::on_port_place()  // Todo: even with cancel modifications will persist
+	void GateEditEntityTab::on_port_place()
 	{
 		validate();
 
