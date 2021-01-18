@@ -30,7 +30,6 @@ namespace degate
 
         // Base settings
         setWindowTitle(tr("Preferences"));
-        //setBaseSize(parent->size() * 0.5);
 
         // Get preferences
         preferences = PREFERENCES_HANDLER.get_preferences();
@@ -151,7 +150,7 @@ namespace degate
 
     void PreferencesEditor::insert_page(const QString& name, PreferencesPage* page)
     {
-        pages.push_back(std::pair<QString, PreferencesPage*>(name, page));
+        pages.emplace_back(name, page);
     }
 
     void PreferencesEditor::create_pages()
