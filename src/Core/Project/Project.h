@@ -269,28 +269,6 @@ namespace degate
         void print_all(std::ostream&);
 
         /**
-         * Set server url.
-         */
-        void set_server_url(std::string const& server_url);
-
-        /**
-         * Get server url.
-         */
-        std::string get_server_url() const;
-
-
-        /**
-         * Get the last pulled transaction ID.
-         */
-        transaction_id_t get_last_pulled_tid() const;
-
-        /**
-         * Set last pulled transaction ID.
-         */
-        void set_last_pulled_tid(transaction_id_t tid);
-
-
-        /**
          * Get the ratio of pixels per micrometer.
          */
         double get_pixel_per_um() const;

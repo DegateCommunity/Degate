@@ -43,17 +43,6 @@ namespace degate {
      */
     static uint_fast64_t get_max_tile_cache_size();
 
-
-    /**
-     * Get the URI address pattern for the collaboration server.
-     * It is a pattern, because it holds a placeholder for the channel ID.
-     * This channel ID identifies a shared project. The pattern is a
-     * format string for boost::format.
-     * @return If the environment variable DEGATE_SERVER_URI_PATTERN is set,
-     *   its value. Else the default URI pattern is returned.
-     */
-    static std::string get_servers_uri_pattern();
-
   };
 
 }

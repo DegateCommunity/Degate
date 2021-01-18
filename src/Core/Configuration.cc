@@ -35,10 +35,3 @@ uint_fast64_t Configuration::get_max_tile_cache_size()
 {
     return static_cast<uint_fast64_t>(PREFERENCES_HANDLER.get_preferences().cache_size);
 }
-
-std::string Configuration::get_servers_uri_pattern()
-{
-    char* uri_pattern = getenv("DEGATE_SERVER_URI_PATTERN");
-    if (uri_pattern == nullptr) return "http://localhost/cgi-bin/test.pl?channel=%1%";
-    return uri_pattern;
-}

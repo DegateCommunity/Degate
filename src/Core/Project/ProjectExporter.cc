@@ -202,16 +202,12 @@ void ProjectExporter::set_project_node_attributes(QDomDocument& doc,
     prj_elem.setAttribute("template-dimension",
                           QString::fromStdString(number_to_string<int>(prj->get_template_dimension())));
     prj_elem.setAttribute("font-size", QString::fromStdString(number_to_string<unsigned int>(prj->get_font_size())));
-
-    prj_elem.setAttribute("server-url", QString::fromStdString(prj->get_server_url()));
-    prj_elem.setAttribute("last-pulled-transaction-id",
-                          QString::fromStdString(number_to_string<transaction_id_t>(prj->get_last_pulled_tid())));
 }
 
 
 void ProjectExporter::add_layers(QDomDocument& doc,
                                  QDomElement& prj_elem,
-                                 LogicModel_shptr lmodel,
+                                 const LogicModel_shptr& lmodel,
                                  std::string const& project_dir)
 {
     if (lmodel == nullptr) throw InvalidPointerException();

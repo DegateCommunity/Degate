@@ -438,13 +438,6 @@ void ProjectImporter::parse_project_element(Project_shptr parent_prj,
     parent_prj->set_name(project_elem.attribute("name").toStdString());
     parent_prj->set_description(project_elem.attribute("description").toStdString());
 
-    if (project_elem.attribute("server-url") != nullptr)
-        parent_prj->set_server_url(project_elem.attribute("server-url").toStdString());
-
-    if (project_elem.attribute("last-pulled-transaction-id") != nullptr)
-        parent_prj->set_last_pulled_tid(parse_number<transaction_id_t>(project_elem,
-                                                                       "last-pulled-transaction-id"));
-
     parent_prj->set_lambda(parse_number<length_t>(project_elem, "lambda"));
     parent_prj->set_default_via_diameter(parse_number<diameter_t>(project_elem, "pin-diameter"));
     parent_prj->set_default_wire_diameter(parse_number<diameter_t>(project_elem, "wire-diameter"));

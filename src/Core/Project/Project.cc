@@ -324,41 +324,7 @@ void Project::init_default_values()
     regular_vertical_grid = std::make_shared<RegularGrid>(Grid::VERTICAL);
     irregular_horizontal_grid = std::make_shared<IrregularGrid>(Grid::HORIZONTAL);
     irregular_vertical_grid = std::make_shared<IrregularGrid>(Grid::VERTICAL);
-
-    // Generate a server URL
-
-    srand(time(nullptr));
-    std::string channel_ident;
-    while (channel_ident.size() <= 20)
-        channel_ident += static_cast<char>('a' + static_cast<int>(26.0 * rand() / (RAND_MAX + 1.0)));
-
-
-    boost::format f(Configuration::get_servers_uri_pattern());
-    f % channel_ident;
-    server_url = f.str();
 }
-
-
-void Project::set_server_url(std::string const& server_url)
-{
-    this->server_url = server_url;
-}
-
-std::string Project::get_server_url() const
-{
-    return server_url;
-}
-
-transaction_id_t Project::get_last_pulled_tid() const
-{
-    return last_transaction_id;
-}
-
-void Project::set_last_pulled_tid(transaction_id_t tid)
-{
-    last_transaction_id = tid;
-}
-
 
 void Project::set_default_color(ENTITY_COLOR e, color_t c)
 {
