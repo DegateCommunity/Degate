@@ -35,7 +35,7 @@
 using namespace std;
 using namespace degate;
 
-std::string ProjectImporter::get_project_filename(std::string const& dir) const
+std::string ProjectImporter::get_project_filename(std::string const& dir)
 {
     if (is_directory(dir))
         return join_pathes(dir, "project.xml");
@@ -84,10 +84,10 @@ Project_shptr ProjectImporter::import_all(std::string const& directory)
         */
 
         debug(TM, "Check if we have template images.");
-        for (auto iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
+        for (auto& iter : *gate_lib)
         {
-            debug(TM, "Will grab template image for gate template ID: %llu", iter->first);
-            GateTemplate_shptr tmpl = iter->second;
+            debug(TM, "Will grab template image for gate template ID: %llu", iter.first);
+            GateTemplate_shptr tmpl = iter.second;
             assert(tmpl != nullptr);
 
             BoundingBox const& bbox = tmpl->get_bounding_box();
@@ -156,7 +156,7 @@ Project_shptr ProjectImporter::import(std::string const& directory)
 }
 
 
-void ProjectImporter::parse_layers_element(QDomElement const layers_elem, Project_shptr prj)
+void ProjectImporter::parse_layers_element(QDomElement const& layers_elem, const Project_shptr& prj)
 {
     debug(TM, "parsing layers");
 
@@ -171,11 +171,11 @@ void ProjectImporter::parse_layers_element(QDomElement const layers_elem, Projec
             const std::string image_filename(layer_elem.attribute("image-filename").toStdString());
             const std::string layer_type_str(layer_elem.attribute("type").toStdString());
             const std::string layer_description(layer_elem.attribute("description").toStdString());
-            unsigned int position = parse_number<unsigned int>(layer_elem, "position");
+            auto position = parse_number<unsigned int>(layer_elem, "position");
             const std::string layer_enabled_str = layer_elem.attribute("enabled").toStdString();
 
             Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
-            layer_id_t layer_id = parse_number<layer_id_t>(layer_elem, "id", 0);
+            auto layer_id = parse_number<layer_id_t>(layer_elem, "id", 0);
 
             Layer_shptr new_layer = std::make_shared<Layer>(prj->get_bounding_box(), layer_type);
             LogicModel_shptr lmodel = prj->get_logic_model();
@@ -184,7 +184,7 @@ void ProjectImporter::parse_layers_element(QDomElement const layers_elem, Projec
                   layer_type_str.c_str(), Layer::get_layer_type_as_string(layer_type).c_str(), image_filename.c_str());
 
             bool layer_enabled = true;
-            if (layer_enabled_str.size() != 0)
+            if (!layer_enabled_str.empty())
                 layer_enabled = parse_bool(layer_enabled_str);
             new_layer->set_enabled(layer_enabled);
 
@@ -198,9 +198,9 @@ void ProjectImporter::parse_layers_element(QDomElement const layers_elem, Projec
     }
 }
 
-void ProjectImporter::load_background_image(Layer_shptr layer,
+void ProjectImporter::load_background_image(const Layer_shptr& layer,
                                             std::string const& image_filename,
-                                            Project_shptr prj)
+                                            const Project_shptr& prj)
 {
     debug(TM, "try to load image [%s]", image_filename.c_str());
     if (!image_filename.empty())
@@ -295,7 +295,7 @@ void ProjectImporter::load_background_image(Layer_shptr layer,
 }
 
 
-void ProjectImporter::parse_port_colors_element(QDomElement const port_colors_elem, Project_shptr prj)
+void ProjectImporter::parse_port_colors_element(QDomElement const& port_colors_elem, const Project_shptr& prj)
 {
     const QDomNodeList color_list = port_colors_elem.elementsByTagName("port-color");
 
@@ -318,8 +318,8 @@ void ProjectImporter::parse_port_colors_element(QDomElement const port_colors_el
     }
 }
 
-void ProjectImporter::parse_colors_element(QDomElement const port_colors_elem,
-                                           Project_shptr prj)
+void ProjectImporter::parse_colors_element(QDomElement const& port_colors_elem,
+                                           const Project_shptr& prj)
 {
     const QDomNodeList color_list = port_colors_elem.elementsByTagName("color");
 
@@ -333,17 +333,28 @@ void ProjectImporter::parse_colors_element(QDomElement const port_colors_elem,
             const std::string color_str(color_elem.attribute("color").toStdString());
             ENTITY_COLOR o;
 
-            if (!object_name.compare("wire")) o = DEFAULT_COLOR_WIRE;
-            else if (!object_name.compare("via-up")) o = DEFAULT_COLOR_VIA_UP;
-            else if (!object_name.compare("via-down")) o = DEFAULT_COLOR_VIA_DOWN;
-            else if (!object_name.compare("grid")) o = DEFAULT_COLOR_GRID;
-            else if (!object_name.compare("annotation")) o = DEFAULT_COLOR_ANNOTATION;
-            else if (!object_name.compare("annotation-frame")) o = DEFAULT_COLOR_ANNOTATION_FRAME;
-            else if (!object_name.compare("gate")) o = DEFAULT_COLOR_GATE;
-            else if (!object_name.compare("gate-frame")) o = DEFAULT_COLOR_GATE_FRAME;
-            else if (!object_name.compare("gate-port")) o = DEFAULT_COLOR_GATE_PORT;
-            else if (!object_name.compare("text")) o = DEFAULT_COLOR_TEXT;
-            else if (!object_name.compare("emarker")) o = DEFAULT_COLOR_EMARKER;
+            if (object_name == "wire")
+                o = DEFAULT_COLOR_WIRE;
+            else if (object_name == "via-up")
+                o = DEFAULT_COLOR_VIA_UP;
+            else if (object_name == "via-down")
+                o = DEFAULT_COLOR_VIA_DOWN;
+            else if (object_name == "grid")
+                o = DEFAULT_COLOR_GRID;
+            else if (object_name == "annotation")
+                o = DEFAULT_COLOR_ANNOTATION;
+            else if (object_name == "annotation-frame")
+                o = DEFAULT_COLOR_ANNOTATION_FRAME;
+            else if (object_name == "gate")
+                o = DEFAULT_COLOR_GATE;
+            else if (object_name == "gate-frame")
+                o = DEFAULT_COLOR_GATE_FRAME;
+            else if (object_name == "gate-port")
+                o = DEFAULT_COLOR_GATE_PORT;
+            else if (object_name == "text")
+                o = DEFAULT_COLOR_TEXT;
+            else if (object_name == "emarker")
+                o = DEFAULT_COLOR_EMARKER;
             else
             {
                 boost::format f("Can't parse object type. '%1%'");
@@ -355,7 +366,7 @@ void ProjectImporter::parse_colors_element(QDomElement const port_colors_elem,
     }
 }
 
-void ProjectImporter::parse_grids_element(QDomElement const grids_elem, Project_shptr prj)
+void ProjectImporter::parse_grids_element(QDomElement const& grids_elem, const Project_shptr& prj)
 {
     const QDomNodeList regular_grid_list = grids_elem.elementsByTagName("regular-grid");
     const QDomNodeList irregular_grid_list = grids_elem.elementsByTagName("irregular-grid");
@@ -368,17 +379,18 @@ void ProjectImporter::parse_grids_element(QDomElement const grids_elem, Project_
         {
             const std::string orientation(regular_grid_elem.attribute("orientation").toStdString());
 
-            RegularGrid_shptr reg_grid = (orientation == "horizontal")
-                                             ? prj->get_regular_horizontal_grid()
-                                             : prj->get_regular_vertical_grid();
+            RegularGrid_shptr reg_grid = (orientation == "horizontal") ? prj->get_regular_horizontal_grid() :
+                                                                         prj->get_regular_vertical_grid();
 
             reg_grid->set_distance(parse_number<unsigned int>(regular_grid_elem, "distance", 50));
             reg_grid->set_enabled(parse_bool(regular_grid_elem.attribute("enabled").toStdString()));
 
             if (orientation == "horizontal")
-                reg_grid->set_range(parse_number<unsigned int>(regular_grid_elem, "offset", 0), prj->get_width());
+                reg_grid->set_range(parse_number<unsigned int>(regular_grid_elem, "offset", 0),
+                                    static_cast<int>(prj->get_width()));
             else
-                reg_grid->set_range(parse_number<unsigned int>(regular_grid_elem, "offset", 0), prj->get_height());
+                reg_grid->set_range(parse_number<unsigned int>(regular_grid_elem, "offset", 0),
+                                    static_cast<int>(prj->get_height()));
         }
     }
 
@@ -421,11 +433,11 @@ void ProjectImporter::parse_grids_element(QDomElement const grids_elem, Project_
 }
 
 
-void ProjectImporter::parse_project_element(Project_shptr parent_prj,
-                                            QDomElement const project_elem)
+void ProjectImporter::parse_project_element(const Project_shptr& parent_prj,
+                                            QDomElement const& project_elem)
 {
-    int w = parent_prj->get_width();
-    int h = parent_prj->get_height();
+    int w = static_cast<int>(parent_prj->get_width());
+    int h = static_cast<int>(parent_prj->get_height());
 
     // Use geometry information to set up regular grid ranges.
     // The RegularGrid implementation might be changed in order to avoid this setup.

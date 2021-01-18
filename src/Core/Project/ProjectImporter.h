@@ -42,23 +42,23 @@ namespace degate
     {
     private:
 
-        void parse_project_element(Project_shptr parent_prj, QDomElement const project_node);
-        void parse_grids_element(QDomElement const project_node, Project_shptr prj);
-        void parse_layers_element(QDomElement const layers_node, Project_shptr prj);
-        void parse_port_colors_element(QDomElement const port_colors_elem, Project_shptr prj);
+        void parse_project_element(const Project_shptr& parent_prj, QDomElement const& project_node);
+        void parse_grids_element(QDomElement const& project_node, const Project_shptr& prj);
+        void parse_layers_element(QDomElement const& layers_node, const Project_shptr& prj);
+        void parse_port_colors_element(QDomElement const& port_colors_elem, const Project_shptr& prj);
 
-        void parse_colors_element(QDomElement const port_colors_elem, Project_shptr prj);
+        void parse_colors_element(QDomElement const& port_colors_elem, const Project_shptr& prj);
 
-        std::string get_project_filename(std::string const& dir) const;
+        static std::string get_project_filename(std::string const& dir) ;
 
         /**
          * Load a background image and set it to the layer. In case of a conversion
          * from old  single file images to tile based images, the new image is stored
          * in the project directory.
          */
-        void load_background_image(Layer_shptr layer,
+        void load_background_image(const Layer_shptr& layer,
                                    std::string const& image_filename,
-                                   Project_shptr prj);
+                                   const Project_shptr& prj);
 
     public:
         ProjectImporter()
