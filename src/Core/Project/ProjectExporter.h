@@ -36,22 +36,22 @@ namespace degate
     {
     private:
 
-        void set_project_node_attributes(QDomDocument& doc, QDomElement& prj_elem, Project_shptr prj);
+        void set_project_node_attributes(QDomDocument& doc, QDomElement& prj_elem, const Project_shptr& prj);
 
-        void add_grids(QDomDocument& doc, QDomElement& prj_elem, Project_shptr prj);
+        void add_grids(QDomDocument& doc, QDomElement& prj_elem, const Project_shptr& prj);
 
-        void add_regular_grid(QDomDocument& doc, QDomElement& grids_elem, const RegularGrid_shptr grid,
+        void add_regular_grid(QDomDocument& doc, QDomElement& grids_elem, const RegularGrid_shptr& grid,
                               std::string const& grid_orientation);
 
-        void add_irregular_grid(QDomDocument& doc, QDomElement& grids_elem, const IrregularGrid_shptr grid,
+        void add_irregular_grid(QDomDocument& doc, QDomElement& grids_elem, const IrregularGrid_shptr& grid,
                                 std::string const& grid_orientation);
 
-        void add_layers(QDomDocument& doc, QDomElement& prj_elem, LogicModel_shptr lmodel,
+        void add_layers(QDomDocument& doc, QDomElement& prj_elem, const LogicModel_shptr& lmodel,
                         std::string const& project_dir);
 
-        void add_port_colors(QDomDocument& doc, QDomElement& prj_elem, PortColorManager_shptr port_color_manager);
+        void add_port_colors(QDomDocument& doc, QDomElement& prj_elem, const PortColorManager_shptr& port_color_manager);
 
-        void add_colors(QDomDocument& doc, QDomElement& prj_elem, Project_shptr prj);
+        void add_colors(QDomDocument& doc, QDomElement& prj_elem, const Project_shptr& prj);
 
     public:
         ProjectExporter()
@@ -67,14 +67,14 @@ namespace degate
          * @exception InvalidPointerException
          * @exception std::runtime_error
          */
-        void export_data(std::string const& filename, Project_shptr prj);
+        void export_data(std::string const& filename, const Project_shptr& prj);
 
         /**
          * @exception InvalidPathException
          * @exception InvalidPointerException
          * @exception std::runtime_error
          */
-        void export_all(std::string const& project_directory, Project_shptr prj,
+        void export_all(std::string const& project_directory, const Project_shptr& prj,
                         bool enable_oid_rewrite = true,
                         std::string const& project_file = "project.xml",
                         std::string const& lmodel_file = "lmodel.xml",

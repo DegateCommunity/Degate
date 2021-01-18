@@ -37,7 +37,7 @@
 using namespace std;
 using namespace degate;
 
-void ProjectExporter::export_all(std::string const& project_directory, Project_shptr prj,
+void ProjectExporter::export_all(std::string const& project_directory, const Project_shptr& prj,
                                  bool enable_oid_rewrite,
                                  std::string const& project_file,
                                  std::string const& lmodel_file,
@@ -76,7 +76,7 @@ void ProjectExporter::export_all(std::string const& project_directory, Project_s
     }
 }
 
-void ProjectExporter::export_data(std::string const& filename, Project_shptr prj)
+void ProjectExporter::export_data(std::string const& filename, const Project_shptr& prj)
 {
     if (prj == nullptr) throw InvalidPointerException("Project pointer is nullptr.");
 
@@ -118,7 +118,7 @@ void ProjectExporter::export_data(std::string const& filename, Project_shptr prj
     }
 }
 
-void ProjectExporter::add_grids(QDomDocument& doc, QDomElement& prj_elem, Project_shptr prj)
+void ProjectExporter::add_grids(QDomDocument& doc, QDomElement& prj_elem, const Project_shptr& prj)
 {
     QDomElement grids_elem = doc.createElement("grids");
 
@@ -135,7 +135,7 @@ void ProjectExporter::add_grids(QDomDocument& doc, QDomElement& prj_elem, Projec
 
 void ProjectExporter::add_regular_grid(QDomDocument& doc,
                                        QDomElement& grids_elem,
-                                       const RegularGrid_shptr grid,
+                                       const RegularGrid_shptr& grid,
                                        std::string const& grid_orientation)
 {
     QDomElement grid_elem = doc.createElement("regular-grid");
@@ -151,7 +151,7 @@ void ProjectExporter::add_regular_grid(QDomDocument& doc,
 
 void ProjectExporter::add_irregular_grid(QDomDocument& doc,
                                          QDomElement& grids_elem,
-                                         const IrregularGrid_shptr grid,
+                                         const IrregularGrid_shptr& grid,
                                          std::string const& grid_orientation)
 {
     QDomElement grid_elem = doc.createElement("irregular-grid");
@@ -163,13 +163,12 @@ void ProjectExporter::add_irregular_grid(QDomDocument& doc,
     QDomElement offsets_elem = doc.createElement("offsets");
     if (offsets_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-    for (IrregularGrid::grid_iter iter = grid->begin();
-         iter != grid->end(); ++iter)
+    for (auto offset : *grid)
     {
         QDomElement offset_elem = doc.createElement("offset-entry");
         if (offset_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-        offset_elem.setAttribute("offset", QString::fromStdString(number_to_string<int>(*iter)));
+        offset_elem.setAttribute("offset", QString::fromStdString(number_to_string<int>(offset)));
 
         offsets_elem.appendChild(offset_elem);
     }
@@ -182,7 +181,7 @@ void ProjectExporter::add_irregular_grid(QDomDocument& doc,
 
 void ProjectExporter::set_project_node_attributes(QDomDocument& doc,
                                                   QDomElement& prj_elem,
-                                                  Project_shptr prj)
+                                                  const Project_shptr& prj)
 {
     prj_elem.setAttribute("degate-version", DEGATE_VERSION);
     prj_elem.setAttribute("name", QString::fromStdString(prj->get_name()));
@@ -215,7 +214,7 @@ void ProjectExporter::add_layers(QDomDocument& doc,
     QDomElement layers_elem = doc.createElement("layers");
     if (layers_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-    for (LogicModel::layer_collection::iterator layer_iter = lmodel->layers_begin();
+    for (auto layer_iter = lmodel->layers_begin();
          layer_iter != lmodel->layers_end(); ++layer_iter)
     {
         QDomElement layer_elem = doc.createElement("layer");
@@ -224,8 +223,8 @@ void ProjectExporter::add_layers(QDomDocument& doc,
         Layer_shptr layer = *layer_iter;
         assert(layer->has_valid_layer_id());
 
-        layer_elem.setAttribute(
-            "position", QString::fromStdString(number_to_string<layer_position_t>(layer->get_layer_pos())));
+        layer_elem.setAttribute("position",
+                                QString::fromStdString(number_to_string<layer_position_t>(layer->get_layer_pos())));
         layer_elem.setAttribute("id", QString::fromStdString(number_to_string<layer_id_t>(layer->get_layer_id())));
         layer_elem.setAttribute("type", QString::fromStdString(layer->get_layer_type_as_string()));
         layer_elem.setAttribute("description", QString::fromStdString(layer->get_description()));
@@ -245,14 +244,14 @@ void ProjectExporter::add_layers(QDomDocument& doc,
 
 void ProjectExporter::add_port_colors(QDomDocument& doc,
                                       QDomElement& prj_elem,
-                                      PortColorManager_shptr port_color_manager)
+                                      const PortColorManager_shptr& port_color_manager)
 {
     if (port_color_manager == nullptr) throw InvalidPointerException();
 
     QDomElement port_colors_elem = doc.createElement("port-colors");
     if (port_colors_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
-    for (PortColorManager::port_color_collection::iterator iter = port_color_manager->begin();
+    for (auto iter = port_color_manager->begin();
          iter != port_color_manager->end(); ++iter)
     {
         const std::string port_name = (*iter).first;
@@ -271,7 +270,7 @@ void ProjectExporter::add_port_colors(QDomDocument& doc,
     prj_elem.appendChild(port_colors_elem);
 }
 
-void ProjectExporter::add_colors(QDomDocument& doc, QDomElement& prj_elem, Project_shptr prj)
+void ProjectExporter::add_colors(QDomDocument& doc, QDomElement& prj_elem, const Project_shptr& prj)
 {
     if (prj == nullptr) throw InvalidPointerException();
 
@@ -279,7 +278,7 @@ void ProjectExporter::add_colors(QDomDocument& doc, QDomElement& prj_elem, Proje
     if (colors_elem.isNull()) throw(std::runtime_error("Failed to create node."));
 
     default_colors_t default_colors = prj->get_default_colors();
-    BOOST_FOREACH(default_colors_t::value_type const& p, default_colors)
+    for(const auto& p : default_colors)
     {
         QDomElement color_elem = doc.createElement("color");
         if (color_elem.isNull()) throw(std::runtime_error("Failed to create node."));
