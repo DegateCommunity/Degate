@@ -333,7 +333,7 @@ void Project::init_default_values()
         channel_ident += static_cast<char>('a' + static_cast<int>(26.0 * rand() / (RAND_MAX + 1.0)));
 
 
-    boost::format f(Configuration::get_instance().get_servers_uri_pattern());
+    boost::format f(Configuration::get_servers_uri_pattern());
     f % channel_ident;
     server_url = f.str();
 }

@@ -102,12 +102,10 @@ namespace degate
 
         GlobalTileCache() : allocated_memory(0)
         {
-            Configuration& conf = Configuration::get_instance();
-
-            if (conf.get_max_tile_cache_size() < MINIMUM_CACHE_SIZE)
+            if (Configuration::get_max_tile_cache_size() < MINIMUM_CACHE_SIZE)
                 max_cache_memory = MINIMUM_CACHE_SIZE * uint_fast64_t(1024) * uint_fast64_t(1024);
             else
-                max_cache_memory = conf.get_max_tile_cache_size() * uint_fast64_t(1024) * uint_fast64_t(1024);
+                max_cache_memory = Configuration::get_max_tile_cache_size() * uint_fast64_t(1024) * uint_fast64_t(1024);
         }
 
         void remove_oldest()

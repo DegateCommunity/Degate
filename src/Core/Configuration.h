@@ -41,7 +41,7 @@ namespace degate {
      * Get the cache size for image tiles in MB.
      * @return Returns the maximum cache size (in Mb) from the preferences.
      */
-    uint_fast64_t get_max_tile_cache_size() const;
+    static uint_fast64_t get_max_tile_cache_size();
 
 
     /**
@@ -52,7 +52,7 @@ namespace degate {
      * @return If the environment variable DEGATE_SERVER_URI_PATTERN is set,
      *   its value. Else the default URI pattern is returned.
      */
-    std::string get_servers_uri_pattern() const;
+    static std::string get_servers_uri_pattern();
 
   };
 
