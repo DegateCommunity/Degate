@@ -54,8 +54,6 @@ namespace degate
      *
      * Note: This class is central in degate. So it tends to be somehow bloated.
      * Convenience methods should go into LogicModelHelper.h
-     *
-     * @todo implement a move_object
      */
     class LogicModel : public DeepCopyable
     {
@@ -281,7 +279,6 @@ namespace degate
         /**
          * Remove a generic logic model object from the logic model.
          * @param o A shared pointer to the object.
-         * @todo fix it
          */
         void remove_object(PlacedLogicModelObject_shptr o);
 
@@ -404,7 +401,6 @@ namespace degate
          * Remove a layer from the logic model.
          * A layer contains logical objects. These object are referred in other parts
          * of the logic model. References in other parts must be cleaned as well.
-         * @todo Implement this.
          */
         void remove_layer(Layer_shptr layer);
 

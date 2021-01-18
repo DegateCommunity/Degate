@@ -2100,12 +2100,12 @@
 <context>
     <name>degate::PreferencesEditor</name>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="163"/>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="162"/>
         <source>General</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="164"/>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="163"/>
         <source>Appearance</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2115,24 +2115,24 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="47"/>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="123"/>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="46"/>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="122"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="51"/>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="124"/>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="50"/>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="123"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="165"/>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="164"/>
         <source>Grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="166"/>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="165"/>
         <source>Performances</source>
         <translation type="unfinished"></translation>
     </message>
