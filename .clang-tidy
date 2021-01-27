@@ -1,102 +1,30 @@
-Checks:
-  clang-analyzer-core.CallAndMessage
-  clang-analyzer-core.DivideZero
-  clang-analyzer-core.DynamicTypePropagation
-  clang-analyzer-core.NonNullParamChecker
-  clang-analyzer-core.NullDereference
-  clang-analyzer-core.StackAddressEscape
-  clang-analyzer-core.UndefinedBinaryOperatorResult
-  clang-analyzer-core.VLASize
-  clang-analyzer-core.builtin.BuiltinFunctions
-  clang-analyzer-core.builtin.NoReturnFunctions
-  clang-analyzer-core.uninitialized.ArraySubscript
-  clang-analyzer-core.uninitialized.Assign
-  clang-analyzer-core.uninitialized.Branch
-  clang-analyzer-core.uninitialized.CapturedBlockVariable
-  clang-analyzer-core.uninitialized.UndefReturn
-  clang-analyzer-cplusplus.NewDelete
-  clang-analyzer-cplusplus.NewDeleteLeaks
-  clang-analyzer-deadcode.DeadStores
-  clang-analyzer-llvm.Conventions
-  clang-analyzer-osx.API
-  clang-analyzer-osx.SecKeychainAPI
-  clang-analyzer-osx.cocoa.AtSync
-  clang-analyzer-osx.cocoa.ClassRelease
-  clang-analyzer-osx.cocoa.IncompatibleMethodTypes
-  clang-analyzer-osx.cocoa.Loops
-  clang-analyzer-osx.cocoa.MissingSuperCall
-  clang-analyzer-osx.cocoa.NSAutoreleasePool
-  clang-analyzer-osx.cocoa.NSError
-  clang-analyzer-osx.cocoa.NilArg
-  clang-analyzer-osx.cocoa.NonNilReturnValue
-  clang-analyzer-osx.cocoa.RetainCount
-  clang-analyzer-osx.cocoa.SelfInit
-  clang-analyzer-osx.cocoa.UnusedIvars
-  clang-analyzer-osx.cocoa.VariadicMethodTypes
-  clang-analyzer-osx.coreFoundation.CFError
-  clang-analyzer-osx.coreFoundation.CFNumber
-  clang-analyzer-osx.coreFoundation.CFRetainRelease
-  clang-analyzer-osx.coreFoundation.containers.OutOfBounds
-  clang-analyzer-osx.coreFoundation.containers.PointerSizedValues
-  clang-analyzer-security.FloatLoopCounter
-  clang-analyzer-security.insecureAPI.UncheckedReturn
-  clang-analyzer-security.insecureAPI.getpw
-  clang-analyzer-security.insecureAPI.gets
-  clang-analyzer-security.insecureAPI.mkstemp
-  clang-analyzer-security.insecureAPI.mktemp
-  clang-analyzer-security.insecureAPI.rand
-  clang-analyzer-security.insecureAPI.strcpy
-  clang-analyzer-security.insecureAPI.vfork
-  clang-analyzer-unix.API
-  clang-analyzer-unix.Malloc
-  clang-analyzer-unix.MallocSizeof
-  clang-analyzer-unix.MismatchedDeallocator
-  clang-analyzer-unix.cstring.BadSizeArg
-  clang-analyzer-unix.cstring.NullArg
-  google-build-explicit-make-pair
-  google-build-namespaces
-  google-build-using-namespace
-  google-explicit-constructor
-  google-readability-braces-around-statements
-  google-readability-casting
-  google-readability-function
-  google-readability-function-size
-  google-readability-namespace-comments
-  google-readability-redundant-smartptr-get
-  google-readability-todo
-  google-runtime-int
-  google-runtime-member-string-references
-  google-runtime-memset
-  google-runtime-operator
-  llvm-namespace-comment
-  llvm-twine-local
-  misc-argument-comment
-  misc-bool-pointer-implicit-conversion
-  misc-swapped-arguments
-  misc-undelegated-constructor
-  misc-uniqueptr-reset-release
-  misc-unused-raii
-  misc-use-override
-  readability-braces-around-statements
-  readability-function-size
-  readability-redundant-smartptr-get
-  readability-identifier-naming
+---
+Checks: >
+  *,
+  -abseil*,
+  -google*,
+  -fuchsia*,
+  -llvmlibc*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-magic-numbers,
+WarningsAsErrors:  ''
 CheckOptions:
-  - key: readability-identifier-naming.ClassCase
-    value: CamelCase
-  - key: readability-identifier-naming.StructCase
-    value: CamelCase
-  - key: readability-identifier-naming.EnumCase
-    value: CamelCase
-  - key: readability-identifier-naming.VariableCase
-    value: lower_case
-  - key: readability-identifier-naming.FunctionCase
-    value: lower_case
-  - key: readability-identifier-naming.ParameterCase
-    value: lower_case
-  - key: readability-identifier-naming.EnumConstantCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.MacroDefinitionCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.NamespaceCase
-    value: lower_case
+  - key:    readability-identifier-naming.ClassCase
+    value:  'CamelCase'
+  - key:    readability-identifier-naming.StructCase
+    value:  'CamelCase'
+  - key:    readability-identifier-naming.EnumCase
+    value:  'CamelCase'
+  - key:    readability-identifier-naming.VariableCase
+    value:  'lower_case'
+  - key:    readability-identifier-naming.FunctionCase
+    value:  'lower_case'
+  - key:    readability-identifier-naming.ParameterCase
+    value:  'lower_case'
+  - key:    readability-identifier-naming.EnumConstantCase
+    value:  'UPPER_CASE'
+  - key:    readability-identifier-naming.MacroDefinitionCase
+    value:  'UPPER_CASE'
+  - key:    readability-identifier-naming.NamespaceCase
+    value:  'lower_case'
+...
