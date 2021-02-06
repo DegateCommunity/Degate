@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed updater.
 - Fixed general preferences page.
+- Fixed issue #2: 8-bit depth JPEG loading.
 
 ## [2.0.0-beta.1] - 2021-01-03
 ### Added
