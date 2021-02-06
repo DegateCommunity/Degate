@@ -323,10 +323,17 @@ void create_scaled_background_image(const std::string& dir, const BackgroundImag
 
         current_reader.setScaledSize(scaled_size);
         current_reader.setScaledClipRect(rect);
+
         QImage img = current_reader.read();
         if (img.isNull())
         {
             debug(TM, "can't create %s (can't read image)\n", bg_image->get_directory().c_str());
+        }
+
+        // Convert to good format
+        if (img.format() != QImage::Format_ARGB32 && img.format() != QImage::Format_RGB32)
+        {
+            img = img.convertToFormat(QImage::Format_ARGB32);
         }
 
         //////////////////// Process start ///////////////////////////
@@ -483,6 +490,12 @@ void degate::load_new_background_image(Layer_shptr layer, std::string const& pro
         if (img.isNull())
         {
             debug(TM, "can't read %s\n", image_file.c_str());
+        }
+
+        // Convert to good format
+        if (img.format() != QImage::Format_ARGB32 && img.format() != QImage::Format_RGB32)
+        {
+            img = img.convertToFormat(QImage::Format_ARGB32);
         }
 
         //////////////////// Process start ///////////////////////////
