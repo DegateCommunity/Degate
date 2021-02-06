@@ -7,6 +7,18 @@ Checks: >
   -llvmlibc*,
   -cppcoreguidelines-avoid-magic-numbers,
   -readability-magic-numbers,
+  -modernize-use-trailing-return-type,
+  -hicpp-braces-around-statements,
+  -readability-braces-around-statements,
+  -misc-unused-parameters,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -llvm-header-guard,
+  -hicpp-signed-bitwise,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-special-member-functions,
+  -hicpp-special-member-functions,
+  -modernize-use-nodiscard,
 WarningsAsErrors:  ''
 CheckOptions:
   - key:    readability-identifier-naming.ClassCase
