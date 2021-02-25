@@ -21,6 +21,10 @@
 
 #include "PreferencesHandler.h"
 
+#include <fstream>
+
+#define RECENT_PROJECTS_LIST_FILE "recent.config"
+
 namespace degate
 {
     PreferencesHandler::PreferencesHandler() : settings(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIGURATION_FILE_NAME)), QSettings::IniFormat)
@@ -81,11 +85,15 @@ namespace degate
 
         // Image importer cache size
         preferences.image_importer_cache_size = settings.value("image_importer_cache_size", 256).toUInt();
+
+
+        load_recent_projects();
     }
 
     PreferencesHandler::~PreferencesHandler()
     {
         save();
+        save_recent_projects();
     }
 
     void PreferencesHandler::save()
@@ -191,5 +199,123 @@ namespace degate
     QSettings& PreferencesHandler::get_settings()
     {
         return settings;
+    }
+
+    std::vector<std::pair<std::string, std::string>> PreferencesHandler::get_recent_projects()
+    {
+        remove_invalid_recent_projects();
+
+        return recent_projects;
+    }
+
+    void PreferencesHandler::add_recent_project(const Project_shptr& project)
+    {
+        insert_recent_project(project->get_name(), project->get_project_directory());
+    }
+
+    void PreferencesHandler::remove_invalid_recent_projects()
+    {
+        std::vector<std::pair<std::string, std::string>> elements;
+
+        for (auto& e : recent_projects)
+        {
+            if (is_directory(e.second))
+                elements.push_back(std::move(e));
+        }
+
+        recent_projects = std::move(elements);
+    }
+
+    void PreferencesHandler::load_recent_projects()
+    {
+        recent_projects.clear();
+
+        if (!file_exists(DEGATE_IN_CONFIGURATION(RECENT_PROJECTS_LIST_FILE)))
+            return;
+
+        std::string project_name;
+        std::string project_path;
+
+        std::fstream file;
+        file.open(DEGATE_IN_CONFIGURATION(RECENT_PROJECTS_LIST_FILE), std::fstream::in);
+
+        if (!file.is_open())
+        {
+            debug(TM, "Can't open recent projects list file.");
+            return;
+        }
+
+        std::string buffer;
+        if (!std::getline(file, buffer))
+        {
+            debug(TM, "Can't read recent projects list file.");
+            return;
+        }
+
+        int projects_count = std::stoi(buffer);
+
+        if (projects_count <= 0)
+        {
+            debug(TM, "No project in the recent projects list.");
+            return;
+        }
+
+        for (int i = 0; i < projects_count; i++)
+        {
+            if (!std::getline(file, project_name))
+            {
+                debug(TM, "Can't read project name for recent projects list file.");
+                return;
+            }
+
+            if (!std::getline(file, project_path))
+            {
+                debug(TM, "Can't read project path for recent projects list file.");
+                return;
+            }
+
+            insert_recent_project(project_name, project_path);
+        }
+
+        remove_invalid_recent_projects();
+    }
+
+    void PreferencesHandler::save_recent_projects()
+    {
+        std::fstream file;
+        file.open(DEGATE_IN_CONFIGURATION(RECENT_PROJECTS_LIST_FILE), std::fstream::out | std::fstream::trunc);
+
+        if (!file.is_open())
+        {
+            debug(TM, "Can't open recent projects file list.");
+            return;
+        }
+
+        file << recent_projects.size();
+        file << std::endl;
+
+        for (const auto& e : recent_projects)
+        {
+            file << e.first;
+            file << std::endl;
+
+            file << e.second;
+            file << std::endl;
+        }
+    }
+
+    void PreferencesHandler::insert_recent_project(const std::string& project_name, const std::string& project_path)
+    {
+        for (auto it = recent_projects.begin(); it != recent_projects.end(); it++)
+        {
+            if ((*it).second == project_path)
+            {
+                recent_projects.erase(it);
+
+                break;
+            }
+        }
+
+        recent_projects.emplace_back(project_name, project_path);
     }
 }

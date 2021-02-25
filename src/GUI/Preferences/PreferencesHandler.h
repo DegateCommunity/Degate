@@ -26,6 +26,7 @@
 #include "GUI/Preferences/ThemeManager.h"
 #include "Core/XML/XMLExporter.h"
 #include "Core/XML/XMLImporter.h"
+#include "Core/Project/Project.h"
 
 #include <QObject>
 
@@ -123,6 +124,51 @@ namespace degate
          */
         QSettings& get_settings();
 
+        /**
+         * Get the list of recent projects.
+         *
+         * The first element is the project name.
+         * The second element is the project path.
+         *
+         * If a path is not reachable during loading, it will remove it from the list.
+         *
+         * The list is inverted, the most recently used project is at the back of the vector.
+         *
+         * @return Returns the list of recent projects.
+         */
+        std::vector<std::pair<std::string, std::string>> get_recent_projects();
+
+        /**
+         * Add a new project to the recent project list.
+         *
+         * @param project : The new project to add.
+         */
+        void add_recent_project(const Project_shptr& project);
+
+    protected:
+        /**
+         * Remove invalid recent projects (that are not reachable).
+         */
+        void remove_invalid_recent_projects();
+
+        /**
+         * Load recent projects.
+         */
+        void load_recent_projects();
+
+        /**
+         * Save recent projects.
+         */
+        void save_recent_projects();
+
+        /**
+         * Insert a project in the recent projects list.
+         *
+         * @param project_name : The name of the project to insert.
+         * @param project_path : The path of the project to insert.
+         */
+        void insert_recent_project(const std::string& project_name, const std::string& project_path);
+
     signals:
         /**
          * Emitted when the icon theme changed.
@@ -145,6 +191,7 @@ namespace degate
         std::shared_ptr<QTranslator> translator = nullptr;
         std::shared_ptr<QTranslator> qt_translator = nullptr;
         std::shared_ptr<QTranslator> base_translator = nullptr;
+        std::vector<std::pair<std::string /* Project name */, std::string /* Project path */>> recent_projects;
     };
 }
 

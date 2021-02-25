@@ -420,6 +420,11 @@ namespace degate
          */
         void close_sub_windows();
 
+        /**
+         * Reload the recent projects list of the 'Project' menu.
+         */
+        void reload_recent_projects_list();
+
     private:
         QMenuBar menu_bar;
         QToolBar* tool_bar = nullptr;
@@ -442,6 +447,7 @@ namespace degate
         QAction* project_new_action;
         QAction* project_import_action;
         QAction* project_export_action;
+        QMenu* project_recent_projects_submenu;
         QAction* project_close_action;
         QAction* project_create_subproject_action;
         QAction* project_settings_action;

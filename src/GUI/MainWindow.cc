@@ -68,6 +68,8 @@ namespace degate
         project_export_action->setShortcut(Qt::CTRL + Qt::Key_S);
         QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_save()));
 
+        project_recent_projects_submenu = project_menu->addMenu("");
+
         project_close_action = project_menu->addAction("");
         QObject::connect(project_close_action, SIGNAL(triggered()), this, SLOT(on_menu_project_close()));
 
@@ -395,6 +397,8 @@ namespace degate
         {
             QTimer::singleShot(0, [this](){ on_menu_help_check_updates(false, true); });
         }
+
+        reload_recent_projects_list();
     }
 
     MainWindow::~MainWindow()
@@ -456,6 +460,7 @@ namespace degate
         project_new_action->setText(tr("New"));
         project_import_action->setText(tr("Open"));
         project_export_action->setText(tr("Save"));
+        project_recent_projects_submenu->setTitle(tr("Recent projects"));
         project_close_action->setText(tr("Close"));
         project_create_subproject_action->setText(tr("Create subproject from selection"));
         project_settings_action->setText(tr("Project settings"));
@@ -641,6 +646,9 @@ namespace degate
         update_window_title();
 
         update_status_bar_layer_info();
+
+
+        reload_recent_projects_list();
 
         status_bar.showMessage(tr("Project closed."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
     }
@@ -1503,6 +1511,9 @@ namespace degate
         update_window_title();
         update_status_bar_layer_info();
 
+        PREFERENCES_HANDLER.add_recent_project(project);
+        reload_recent_projects_list();
+
         status_bar.showMessage(tr("Project/Subproject imported."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
     }
 
@@ -1886,6 +1897,24 @@ namespace degate
             delete gate_list_dialog;
 
             gate_list_dialog = nullptr;
+        }
+    }
+
+    void MainWindow::reload_recent_projects_list()
+    {
+        project_recent_projects_submenu->clear();
+
+        const auto& list = PREFERENCES_HANDLER.get_recent_projects();
+
+        for (auto it = list.rbegin(); it != list.rend(); it++)
+        {
+            auto element = *it;
+            auto* action = project_recent_projects_submenu->addAction(QString::fromStdString(element.first + " (" + element.second + ")"));
+
+            QObject::connect(action, &QAction::triggered, this, [=]()
+            {
+                 open_project(element.second);
+            });
         }
     }
 }
