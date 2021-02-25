@@ -148,6 +148,60 @@ void degate::remove_directory(std::string const& path)
     }
 }
 
+void degate::clear_directory(std::string const& path, std::vector<std::string> const& exclusion_list, std::string const& base_directory_path)
+{
+    if (path.empty())
+        return;
+
+    // Set base directory
+    std::string base_directory = base_directory_path;
+    if (base_directory_path.empty())
+        base_directory = path;
+
+    boost::filesystem::directory_iterator end_itr;
+    for(boost::filesystem::directory_iterator it(path); it != end_itr; it++)
+    {
+        // If no exclusion list
+        if (exclusion_list.empty())
+        {
+            if (boost::filesystem::is_directory(it->path()))
+                remove_directory(it->path().string());
+            else
+                remove_file(it->path().string());
+        }
+
+        // Prepare element (stripped for relative)
+        const auto& stripped_element = strip_path(it->path().string(), base_directory).string();
+        const auto& element = it->path().string();
+
+        // Check exclusion list
+        bool skip = false;
+        for (const auto& excluded_element : exclusion_list)
+        {
+            try
+            {
+                if (boost::filesystem::equivalent(boost::filesystem::path(element), boost::filesystem::path(excluded_element)) || stripped_element == excluded_element)
+                    skip = true;
+            }
+            catch (const std::exception&)
+            {}
+        }
+
+        // If in exclusion list, skip the element clear
+        if (skip)
+            continue;
+
+        // Recursive call
+        if (boost::filesystem::is_directory(it->path()))
+            clear_directory(it->path().string(), exclusion_list, base_directory);
+        else
+            remove_file(it->path().string());
+
+        // Finally, remove the current directory
+        remove_directory(it->path().string());
+    }
+}
+
 void degate::move_file(std::string const& old_path, std::string const& new_path)
 {
     boost::filesystem::rename(old_path, new_path);

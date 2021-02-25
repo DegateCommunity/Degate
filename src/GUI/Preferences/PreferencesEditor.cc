@@ -163,6 +163,7 @@ namespace degate
         insert_page(tr("Appearance"), new AppearancePreferencesPage(this));
         insert_page(tr("Grid"), new GridPreferencesPage(this));
         insert_page(tr("Performances"), new PerformancesPreferencesPage(this));
+        insert_page(tr("Configuration"), new ConfigurationPreferencesPage(this));
     }
 
     void PreferencesEditor::insert_pages()

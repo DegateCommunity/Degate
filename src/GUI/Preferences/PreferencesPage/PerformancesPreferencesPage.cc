@@ -49,15 +49,6 @@ namespace degate
         image_importer_cache_size_edit.setMinimum(MINIMUM_CACHE_SIZE);
         image_importer_cache_size_edit.setMaximum(std::numeric_limits<int>::max());
         image_importer_cache_size_edit.setValue(PREFERENCES_HANDLER.get_preferences().image_importer_cache_size);
-
-        // Clear cache button
-        PreferencesPage::add_widget(theme_layout, tr("Degate static cache:"), &clear_cache_edit);
-        clear_cache_edit.setText(tr("Clear cache"));
-
-        QObject::connect(&clear_cache_edit, &QPushButton::clicked, this, [this]()
-        {
-            remove_directory(DEGATE_CACHE_PATH);
-        });
     }
 
     void PerformancesPreferencesPage::apply(Preferences& preferences)

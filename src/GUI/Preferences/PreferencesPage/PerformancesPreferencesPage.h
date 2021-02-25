@@ -26,7 +26,6 @@
 #include "GUI/Preferences/PreferencesPage/PreferencesPage.h"
 
 #include <QSpinBox>
-#include <QPushButton>
 
 namespace degate
 {
@@ -59,7 +58,6 @@ namespace degate
     private:
         QSpinBox cache_size_edit;
         QSpinBox image_importer_cache_size_edit;
-        QPushButton clear_cache_edit;
 
     };
 }

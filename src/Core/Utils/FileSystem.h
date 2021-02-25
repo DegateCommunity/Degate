@@ -117,6 +117,15 @@ namespace degate
     void remove_directory(std::string const& path);
 
     /**
+     * Clear a directory with an optional exclusion list (of files and/or directories that will be ignored).
+     *
+     * @param path : the directory path to clear (will not remove this directory).
+     * @param exclusion_list : the exclusion list (relative or full path).
+     * @param base_directory_path : the base directory path (to resolve relative path, if not set, will use the path).
+     */
+    void clear_directory(std::string const& path, std::vector<std::string> const& exclusion_list, std::string const& base_directory_path = "");
+
+    /**
      * Move a file.
      */
     void move_file(std::string const& old_path, std::string const& new_path);

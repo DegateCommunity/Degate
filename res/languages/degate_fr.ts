@@ -237,6 +237,36 @@
     </message>
 </context>
 <context>
+    <name>degate::ConfigurationPreferencesPage</name>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="35"/>
+        <source>Configuration</source>
+        <translation>Configuration</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="38"/>
+        <source>Clear configuration:</source>
+        <translation>Nettoyer la configuration :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="47"/>
+        <source>Clear static cache:</source>
+        <translation>Nettoyer le cache statique :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="57"/>
+        <source>Clear files (remove the &apos;.degate&apos; configuration/cache directory):</source>
+        <translation>Nettoyer les fichiers (supprimer le dossier de configuration/cache &apos;.degate&apos;) :</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="39"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="48"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="58"/>
+        <source>Clear</source>
+        <translation>Nettoyer</translation>
+    </message>
+</context>
+<context>
     <name>degate::ConnectionInspector</name>
     <message>
         <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="35"/>
@@ -2054,22 +2084,12 @@
         <translation>Taille du cache d&apos;importation d&apos;images (en Mo) :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="54"/>
-        <source>Degate static cache:</source>
-        <translation>Cache statique de Degate :</translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="55"/>
-        <source>Clear cache</source>
-        <translation>Nettoyer le cache</translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="68"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="59"/>
         <source>Preferences</source>
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="68"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="59"/>
         <source>You must restart Degate for some changes to take effect.</source>
         <translation>Vous devez redémarrer Degate pour que certaines modifications puissent prendre effet.</translation>
     </message>
@@ -2140,6 +2160,11 @@
         <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="165"/>
         <source>Performances</source>
         <translation>Performances</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="166"/>
+        <source>Configuration</source>
+        <translation>Configuration</translation>
     </message>
 </context>
 <context>

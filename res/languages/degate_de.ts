@@ -237,6 +237,36 @@
     </message>
 </context>
 <context>
+    <name>degate::ConfigurationPreferencesPage</name>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="35"/>
+        <source>Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="38"/>
+        <source>Clear configuration:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="47"/>
+        <source>Clear static cache:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="57"/>
+        <source>Clear files (remove the &apos;.degate&apos; configuration/cache directory):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="39"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="48"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/ConfigurationPreferencesPage.cc" line="58"/>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>degate::ConnectionInspector</name>
     <message>
         <location filename="../../src/GUI/Dialog/ConnectionInspector.cc" line="35"/>
@@ -2054,22 +2084,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="54"/>
-        <source>Degate static cache:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="55"/>
-        <source>Clear cache</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="68"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="59"/>
         <source>Preferences</source>
         <translation type="unfinished">Einstellungen</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="68"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/PerformancesPreferencesPage.cc" line="59"/>
         <source>You must restart Degate for some changes to take effect.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2139,6 +2159,11 @@
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="165"/>
         <source>Performances</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesEditor.cc" line="166"/>
+        <source>Configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
