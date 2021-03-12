@@ -24,14 +24,21 @@ jobs:
 
     - name: Install Boost
       shell: bash
+      # Change Boost version here (see https://github.com/actions/boost-versions/releases).
+      # See https://github.com/actions/virtual-environments/issues/2667#issue-804635858.
       run: |
-        sudo apt-get install -y libboost-all-dev
+        $url = "https://github.com/actions/boost-versions/releases/download/1.72.0-20200608.4/boost-1.72.0-linux-16.04-gcc-x64.tar.gz"
+        (New-Object System.Net.WebClient).DownloadFile($url, "/tmp/boost.tar.gz")
+        mkdir "/tmp/boost"
+        tar -xzf "/tmp/boost.tar.gz" -C "/tmp/boost"
+        Push-Location -Path "/tmp/boost"
+        Invoke-Expression "bash ./setup.sh"
 
     - name: Build
       shell: bash
       run: |
         cd build
-        cmake ..
+        cmake .. -DBOOST_ROOT="/opt/hostedtoolcache/boost/1.72.0/x64"
         cmake --build . --config $BUILD_TYPE
 
     - name: Tests
