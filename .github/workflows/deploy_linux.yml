@@ -20,7 +20,7 @@ jobs:
         aqtversion: '>=0.9.7'
 
     - name: Install Boost
-      shell: bash
+      shell: pwsh
       # Change Boost version here (see https://github.com/actions/boost-versions/releases).
       # See https://github.com/actions/virtual-environments/issues/2667#issue-804635858.
       run: |
