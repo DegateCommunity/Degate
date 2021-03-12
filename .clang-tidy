@@ -19,6 +19,7 @@ Checks: >
   -cppcoreguidelines-special-member-functions,
   -hicpp-special-member-functions,
   -modernize-use-nodiscard,
+  -readability-simplify-boolean-expr,
 WarningsAsErrors:  ''
 CheckOptions:
   - key:    readability-identifier-naming.ClassCase
