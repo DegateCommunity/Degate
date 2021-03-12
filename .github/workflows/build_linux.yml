@@ -4,11 +4,14 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release # Change build type here.
-  BOOST_ROOT: /opt/hostedtoolcache/boost/1.72.0/x64 # Update Boost version here (See https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md to know latest supported Boost version).
 
 jobs:
   build:
-    runs-on: ubuntu-18.04 # Update Ubuntu version here.
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-16.04, ubuntu-18.04, ubuntu-20.04 ]
 
     steps:
     - uses: actions/checkout@v2
@@ -18,6 +21,11 @@ jobs:
       with:
         version: 5.15.2 # Update Qt version here.
         aqtversion: '>=0.9.7'
+
+    - name: Install Boost
+      shell: bash
+      run: |
+        sudo apt-get install -y libboost-all-dev
 
     - name: Build
       shell: bash

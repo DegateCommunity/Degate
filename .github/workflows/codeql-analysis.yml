@@ -2,7 +2,6 @@ name: "CodeQL"
 
 env:
   BUILD_TYPE: Release # Change build type here.
-  BOOST_ROOT: /opt/hostedtoolcache/boost/1.72.0/x64 # Update Boost version here (See https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md to know latest supported Boost version).
 
 on:
   push:
@@ -58,6 +57,11 @@ jobs:
       with:
         version: 5.15.2 # Update Qt version here.
         aqtversion: '>=0.9.7'
+
+    - name: Install Boost
+      shell: bash
+      run: |
+        sudo apt-get install -y libboost-all-dev
 
     - name: Build
       shell: bash

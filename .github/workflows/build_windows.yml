@@ -18,12 +18,20 @@ jobs:
         version: 5.15.2 # Update Qt version here.
         aqtversion: '>=0.9.7'
 
+    - name: Install Boost
+      shell: pwsh
+      # Change Boost version here (see https://sourceforge.net/projects/boost/files/boost-binaries/).
+      run: |
+        $Url = "https://sourceforge.net/projects/boost/files/boost-binaries/1.72.0/boost_1_72_0-msvc-14.2-64.exe"
+        (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost.exe")
+        Start-Process -Wait -FilePath "$env:TEMP\boost.exe" "/SILENT","/SP-","/SUPPRESSMSGBOXES","/DIR=C:\hostedtoolcache\windows\Boost\1.72.0\x86_64"
+
     - name: Build
       shell: bash
-      # Update the boost version here (see https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md to know latest supported Boost version).
+      # Don't forget to update Boost path.
       run: |
         cd build
-        cmake .. -DBOOST_ROOT=$BOOST_ROOT_1_72_0
+        cmake .. -DBOOST_ROOT="C:\hostedtoolcache\windows\Boost\1.72.0\x86_64"
         cmake --build . --config $BUILD_TYPE
 
     - name: Tests
