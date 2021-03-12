@@ -23,6 +23,7 @@
 #include "GUI/Dialog/ProgressDialog.h"
 #include "GUI/Dialog/AboutDialog.h"
 #include "Core/Version.h"
+#include "Core/Utils/CrashReport.h"
 
 #ifdef SYS_WINDOWS
 #include <QtPlatformHeaders/QWindowsWindowFunctions>
@@ -293,11 +294,28 @@ namespace degate
         documentation_action = help_menu->addAction("");
         QObject::connect(documentation_action, SIGNAL(triggered()), this, SLOT(on_menu_help_documentation()));
 
+        help_menu->addSeparator();
+
         check_updates_action = help_menu->addAction("");
         QObject::connect(check_updates_action, &QAction::triggered, this, [this]()
         {
             on_menu_help_check_updates(true, false);
         });
+
+        help_menu->addSeparator();
+
+        if (file_exists(DEGATE_IN_CONFIGURATION(ERROR_FILE_NAME)))
+        {
+            open_error_file_action = help_menu->addAction("");
+            QObject::connect(open_error_file_action, SIGNAL(triggered()), this, SLOT(on_menu_help_open_error_file()));
+        }
+        else
+            open_error_file_action = nullptr;
+
+        bug_report_action = help_menu->addAction("");
+        QObject::connect(bug_report_action, SIGNAL(triggered()), this, SLOT(on_menu_help_bug_report()));
+
+        help_menu->addSeparator();
 
         about_action = help_menu->addAction("");
         about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
@@ -537,6 +555,9 @@ namespace degate
         help_action->setText(tr("Help"));
         documentation_action->setText(tr("Documentation"));
         check_updates_action->setText(tr("Check for updates"));
+        if (open_error_file_action != nullptr)
+            open_error_file_action->setText(tr("Open error file location"));
+        bug_report_action->setText(tr("Bug report"));
         about_action->setText(tr("About"));
 
         // Status bar
@@ -1330,6 +1351,16 @@ namespace degate
     void MainWindow::on_menu_help_check_updates(bool notify_no_update, bool ask_disabling_automatic_check)
     {
         updater.run(notify_no_update, ask_disabling_automatic_check);
+    }
+
+    void MainWindow::on_menu_help_open_error_file()
+    {
+        QDesktopServices::openUrl(QUrl(QString::fromStdString(DEGATE_CONFIGURATION_PATH)));
+    }
+
+    void MainWindow::on_menu_help_bug_report()
+    {
+        QDesktopServices::openUrl(QUrl("https://github.com/DegateCommunity/Degate/issues/new?template=bug_report.md"));
     }
 
     void MainWindow::on_menu_help_about()

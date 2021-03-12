@@ -313,6 +313,16 @@ namespace degate
         void on_menu_help_check_updates(bool notify_no_update, bool ask_disabling_automatic_check);
 
         /**
+         * Open error file.
+         */
+        void on_menu_help_open_error_file();
+
+        /**
+         * Redirect to the Degate's bug reporting platform.
+         */
+        void on_menu_help_bug_report();
+
+        /**
          * Create and open the about window.
          */
         void on_menu_help_about();
@@ -523,6 +533,8 @@ namespace degate
         QAction* help_action;
         QAction* documentation_action;
         QAction* check_updates_action;
+        QAction* open_error_file_action;
+        QAction* bug_report_action;
         QAction* about_action;
 
 
