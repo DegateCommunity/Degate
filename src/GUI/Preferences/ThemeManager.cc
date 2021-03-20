@@ -140,6 +140,30 @@ namespace degate
                 delete file;
 
                 break;
+            case STYLE_SHEET_THEME:
+
+                file = new QFile(QString::fromStdString(STYLE_SHEET_PATH));
+                if (!file->open(QFile::ReadOnly | QFile::Text))
+                {
+                    // Fallback
+                    auto preferences = PREFERENCES_HANDLER.get_preferences();
+                    preferences.theme = LIGHT_THEME;
+                    preferences.icon_theme = DARK_ICON_THEME;
+                    PREFERENCES_HANDLER.update(preferences);
+
+                    return;
+                }
+
+                // Set style
+                text_stream = new QTextStream(file);
+                qApp->setStyleSheet(text_stream->readAll());
+
+                // Clean
+                file->close();
+                delete text_stream;
+                delete file;
+
+                break;
             default:
                 break;
         }
@@ -157,9 +181,10 @@ namespace degate
             return "dark";
         case BLUE_DARK_THEME:
             return "blue_dark";
+        case STYLE_SHEET_THEME:
+            return "style_sheet";
         default:
             return "native";
-            break;
         }
     }
 
@@ -173,6 +198,8 @@ namespace degate
             return DARK_THEME;
         else if (theme == "blue_dark")
             return BLUE_DARK_THEME;
+        else if (theme == "style_sheet")
+            return STYLE_SHEET_THEME;
         else
             return NATIVE_THEME;
     }

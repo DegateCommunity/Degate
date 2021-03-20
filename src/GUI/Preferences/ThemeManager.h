@@ -31,6 +31,9 @@
 #include <QMainWindow>
 #include <QCommonStyle>
 
+// Path of the style sheet when using the STYLE_SHEET_THEME
+#define STYLE_SHEET_PATH DEGATE_IN_CONFIGURATION("style.qss")
+
 namespace degate
 {
 
@@ -42,10 +45,11 @@ namespace degate
      */
     enum Theme
     {
-        NATIVE_THEME = 0, /*!< Native (OS) theme. */
-        LIGHT_THEME = 1, /*!< Light theme. */
-        DARK_THEME = 2, /*!< Dark theme. */
-        BLUE_DARK_THEME = 3 /*!< Blue dark theme. */
+        NATIVE_THEME = 0,     /*!< Native (OS) theme. */
+        LIGHT_THEME = 1,      /*!< Light theme. */
+        DARK_THEME = 2,       /*!< Dark theme. */
+        BLUE_DARK_THEME = 3,  /*!< Blue dark theme. */
+        STYLE_SHEET_THEME = 4 /*!< Style sheet theme. */
     };
 
     /**
@@ -57,7 +61,7 @@ namespace degate
     enum IconTheme
     {
         LIGHT_ICON_THEME = 0, /*!< Light icon theme (use with dark theme) */
-        DARK_ICON_THEME = 1 /*!< Dark icon theme (use with light theme) */
+        DARK_ICON_THEME = 1   /*!< Dark icon theme (use with light theme) */
     };
 
     /**

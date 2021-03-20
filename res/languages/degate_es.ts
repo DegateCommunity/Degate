@@ -182,48 +182,54 @@
     <name>degate::AppearancePreferencesPage</name>
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="32"/>
-        <source>You can change appearance preferences here, like theme and icon theme.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="35"/>
-        <source>Native</source>
+        <source>You can change appearance preferences here, like theme and icon theme.
+For the style sheet, a file called &apos;style.qss&apos; needs to exist in the &apos;.degate&apos; directory.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="36"/>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="48"/>
-        <source>Light</source>
+        <source>Native</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="37"/>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="49"/>
-        <source>Dark</source>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="50"/>
+        <source>Light</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="38"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="51"/>
+        <source>Dark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="39"/>
         <source>Blue dark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="72"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="40"/>
+        <source>Style sheet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="74"/>
         <source>Theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="75"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="77"/>
         <source>Theme:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="78"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="80"/>
         <source>Automatic icon theme:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="81"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="83"/>
         <source>Icon theme:</source>
         <translation type="unfinished"></translation>
     </message>

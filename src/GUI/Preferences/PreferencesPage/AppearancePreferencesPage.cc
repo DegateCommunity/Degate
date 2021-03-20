@@ -29,13 +29,15 @@ namespace degate
         // Widgets creation
         //////////
 
-        introduction_label.setText(tr("You can change appearance preferences here, like theme and icon theme."));
+        introduction_label.setText(tr("You can change appearance preferences here, like theme and icon theme.\n"
+                                      "For the style sheet, a file called 'style.qss' needs to exist in the '.degate' directory."));
 
         // Theme
         themes[NATIVE_THEME] = tr("Native");
         themes[LIGHT_THEME] = tr("Light");
         themes[DARK_THEME] = tr("Dark");
         themes[BLUE_DARK_THEME] = tr("Blue dark");
+        themes[STYLE_SHEET_THEME] = tr("Style sheet");
 
         QStringList theme_list;
         for (auto& e : themes)
@@ -83,15 +85,30 @@ namespace degate
 
     void AppearancePreferencesPage::apply(Preferences& preferences)
     {
-        // Theme
+        bool change_theme = true;
+        Theme selected_theme = preferences.theme;
+
+        // Get selected theme
         for (auto& e : themes)
         {
             if (e.second == theme_box.currentText())
-                preferences.theme = e.first;
+                selected_theme = e.first;
+        }
+
+        // Check if the style sheet exists
+        if (selected_theme == STYLE_SHEET_THEME && !file_exists(STYLE_SHEET_PATH))
+        {
+            change_theme = false;
+        }
+
+        // Theme
+        if (change_theme)
+        {
+            preferences.theme = selected_theme;
         }
 
         // Icon theme
-        if (automatic_check_box.isChecked())
+        if (automatic_check_box.isChecked() && change_theme)
         {
             if (preferences.theme == NATIVE_THEME)
             {

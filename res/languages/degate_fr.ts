@@ -182,48 +182,54 @@
     <name>degate::AppearancePreferencesPage</name>
     <message>
         <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="32"/>
-        <source>You can change appearance preferences here, like theme and icon theme.</source>
-        <translation>Vous pouvez changer les préférences d&apos;apparence ici, comme le thème ou le thème des icônes.</translation>
+        <source>You can change appearance preferences here, like theme and icon theme.
+For the style sheet, a file called &apos;style.qss&apos; needs to exist in the &apos;.degate&apos; directory.</source>
+        <translation>Vous pouvez modifier les préférences d&apos;apparence ici, comme le thème et le thème des icônes.\nPour la feuille de style, un fichier appelé &apos;style.qss&apos; doit exister dans le répertoire &apos;.degate&apos;.</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="35"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="36"/>
         <source>Native</source>
         <translation>Natif</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="36"/>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="48"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="37"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="50"/>
         <source>Light</source>
         <translation>Clair</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="37"/>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="49"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="38"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="51"/>
         <source>Dark</source>
         <translation>Sombre</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="38"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="39"/>
         <source>Blue dark</source>
         <translation>Bleu foncé</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="72"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="40"/>
+        <source>Style sheet</source>
+        <translation>Feuille de style</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="74"/>
         <source>Theme</source>
         <translation>Thème</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="75"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="77"/>
         <source>Theme:</source>
         <translation>Thème :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="78"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="80"/>
         <source>Automatic icon theme:</source>
         <translation>Choix du thème d&apos;icônes automatique :</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="81"/>
+        <location filename="../../src/GUI/Preferences/PreferencesPage/AppearancePreferencesPage.cc" line="83"/>
         <source>Icon theme:</source>
         <translation>Thème d&apos;icônes :</translation>
     </message>
@@ -1450,14 +1456,9 @@
         <translation>Vérifier les mises à jour</translation>
     </message>
     <message>
-        <location filename="../../src/GUI/MainWindow.cc" line="559"/>
-        <source>Open error file</source>
-        <translation>Ouvrir l&apos;emplacement du fichier d&apos;erreur</translation>
-    </message>
-    <message>
         <location filename="../../src/GUI/MainWindow.cc" line="560"/>
         <source>Bug report</source>
-        <translation>Signaler le bug</translation>
+        <translation>Signaler un bug</translation>
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="561"/>
@@ -1665,6 +1666,11 @@
         <location filename="../../src/GUI/MainWindow.cc" line="696"/>
         <source>Created a new project.</source>
         <translation>Création d&apos;un nouveau projet.</translation>
+    </message>
+    <message>
+        <location filename="../../src/GUI/MainWindow.cc" line="559"/>
+        <source>Open error file location</source>
+        <translation>Ouvrir l&apos;emplacement du fichier d&apos;erreur</translation>
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="780"/>
