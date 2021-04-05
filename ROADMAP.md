@@ -2,19 +2,13 @@
 
 Welcome to the Degate roadmap. This roadmap list every feature that is planned to be released for a specific version. The order can change, this is not frozen in time. To see real programming tasks see repository issues and project tabs on github. All checked tasks are completed. If a version doesn't appear on the roadmap then it will only be a bug fixes update and not a feature update (for example release candidate version are only bug fixes update, they will not appear here or only for major bugs).
 
-## For 2.2.0-x:
+## For 2.2.0:
 
-- [ ] Explicit full net-list exporter.
-- [ ] Improved modules.
-- [ ] Integrated gate analyzer.
+See plans for the 2.2.0 version [here](https://github.com/DegateCommunity/Degate/projects/2).
 
-## For 2.1.0-x *[next]*:
+## For 2.1.0 *[next]*:
 
-- [ ] Irregular grid.
-- [ ] Rewrite completely wire matching.
-- [ ] Rework gate template matching.
-- [ ] Complete existing via matching (add more consistency).
-- [ ] External matching support.
+See plans for the 2.1.0 version [here](https://github.com/DegateCommunity/Degate/projects/1).
 
 ## For 2.0.0-beta.1 *[**current**]*:
 - [x] General optimization.
