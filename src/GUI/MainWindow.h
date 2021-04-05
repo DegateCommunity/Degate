@@ -323,6 +323,11 @@ namespace degate
         void on_menu_help_bug_report();
 
         /**
+         * Redirect to the Degate's website.
+         */
+        void on_menu_help_degate_website();
+
+        /**
          * Create and open the about window.
          */
         void on_menu_help_about();
@@ -535,6 +540,7 @@ namespace degate
         QAction* check_updates_action;
         QAction* open_error_file_action;
         QAction* bug_report_action;
+        QAction* degate_website_action;
         QAction* about_action;
 
 

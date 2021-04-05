@@ -317,6 +317,9 @@ namespace degate
 
         help_menu->addSeparator();
 
+        degate_website_action = help_menu->addAction("");
+        QObject::connect(degate_website_action, SIGNAL(triggered()), this, SLOT(on_menu_help_degate_website()));
+
         about_action = help_menu->addAction("");
         about_action->setIcon(style()->standardIcon(QStyle::SP_MessageBoxQuestion));
         QObject::connect(about_action, SIGNAL(triggered()), this, SLOT(on_menu_help_about()));
@@ -558,6 +561,7 @@ namespace degate
         if (open_error_file_action != nullptr)
             open_error_file_action->setText(tr("Open error file location"));
         bug_report_action->setText(tr("Bug report"));
+        degate_website_action->setText(tr("Degate's website"));
         about_action->setText(tr("About"));
 
         // Status bar
@@ -1361,6 +1365,11 @@ namespace degate
     void MainWindow::on_menu_help_bug_report()
     {
         QDesktopServices::openUrl(QUrl("https://github.com/DegateCommunity/Degate/issues/new?template=bug_report.md"));
+    }
+
+    void MainWindow::on_menu_help_degate_website()
+    {
+        QDesktopServices::openUrl(QUrl("https://degatecommunity.github.io"));
     }
 
     void MainWindow::on_menu_help_about()
