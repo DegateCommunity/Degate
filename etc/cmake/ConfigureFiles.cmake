@@ -79,8 +79,8 @@ configure_file("${PROJECT_SOURCE_DIR}/etc/config/Version.config" "${PROJECT_SOUR
 # Configure doxyfile
 configure_file("${PROJECT_SOURCE_DIR}/doc/config/Doxyfile.config" "${PROJECT_SOURCE_DIR}/doc/config/DoxyFile")
 
-# If the release date is "Unreleased" then take the current date (build date)
-if(DEGATE_RELEASE_DATE MATCHES "Unreleased")
+# If the release date is "unreleased" then take the current date (build date)
+if(DEGATE_RELEASE_DATE MATCHES "unreleased")
     set(DEGATE_RELEASE_DATE "${CURRENT_DATE}")
 endif()
 

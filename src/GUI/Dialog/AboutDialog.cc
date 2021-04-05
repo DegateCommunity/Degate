@@ -38,7 +38,7 @@ namespace degate
             version_type = "<span style='color:darkred;'>" + tr("Nightly version.") + "</span><br><br>";
 
         QString release_date;
-        if (QString(DEGATE_RELEASE_DATE) == QString("Unreleased"))
+        if (QString(DEGATE_RELEASE_DATE) == QString("unreleased"))
             release_date = "<span style='color:darkred;'>" + tr("Unreleased version.") + "</span>";
         else
             release_date = tr("Version released on %1.", "... released on dd/mm/yy").arg(DEGATE_RELEASE_DATE);
