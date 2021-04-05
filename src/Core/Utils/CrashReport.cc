@@ -89,7 +89,9 @@ namespace degate
                           "Pretty product name: '%8'\n"
                           "Product version: '%9'\n"
                           "Degate version: '%10'\n"
-                          "An unexpected error occurred. Error message:\n\n'%11'\n\n";
+                          "Degate version type: '%11'\n"
+                          "Degate release date: '%12'\n"
+                          "An unexpected error occurred. Error message:\n\n'%13'\n\n";
 
         message = message.arg(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"))
                           .arg(QSysInfo::buildAbi())
@@ -101,6 +103,8 @@ namespace degate
                           .arg(QSysInfo::prettyProductName())
                           .arg(QSysInfo::productVersion())
                           .arg(DEGATE_VERSION)
+                          .arg(DEGATE_VERSION_TYPE)
+                          .arg(DEGATE_RELEASE_DATE)
                           .arg(QString::fromStdString(error));
 
         std::ofstream log_file;
