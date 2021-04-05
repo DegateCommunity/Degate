@@ -13,14 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new actions to the context menu.
 - Added a new lambda option to the project settings.
 - Added a new pixel(s) per micrometer option to the project settings.
+- Added a crash report dialog.
+- Added support to user-defined style (.qss file in .degate directory).
+- Added new options to the preferences editor (e.g., clear configuration).
+- Added a new "recent projects" submenu.
 
 ### Changed
 - Improved the French translation.
+- Wire matching system now use the old 2013 version of the algorithm.
 
 ### Fixed
 - Fixed updater.
 - Fixed general preferences page.
 - Fixed issue #2: 8-bit depth JPEG loading.
+- Vertical wires can now be matched.
 
 ## [2.0.0-beta.1] - 2021-01-03
 ### Added
