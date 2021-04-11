@@ -19,6 +19,8 @@
 #
 #####################################################################
 
+cmake_policy(SET CMP0007 NEW)
+
 # Read version file
 file(READ "${PROJECT_SOURCE_DIR}/VERSION" VERSION_FILE_CONTENT)
 string(TIMESTAMP CURRENT_DATE "%Y-%m-%d")
