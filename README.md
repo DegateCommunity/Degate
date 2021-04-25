@@ -40,6 +40,7 @@ Degate is a multi-platform software for semi-automatic VLSI reverse engineering 
     - [For Linux (debian-like)](#for-linux-debian-like)
     - [For Windows](#for-windows)
     - [For MacOS](#for-macos)
+  - [Troubleshooting](#troubleshooting)
 - [Demo projects](#demo-projects)
 - [Contributing](#contributing)
 - [Localization](#localization)
@@ -195,13 +196,31 @@ Binaries are in the 'build/out/bin' folder in the bundle ".app" format.
 - `Could NOT find Boost (missing: filesystem system thread) (found version "1.71.0")`
 
   This message may be caused by default options which force to use static and multithreaded version of the Boost library.
-  For example, this is a problem when installing Boost with **MacPorts** on MacOS because the installed version [does not provide a static version by default](https://gitter.im/DegateCommunity/Degate?at=6085183db6a4714a29e65fbb).
+  For example, this is a problem when installing Boost with [MacPorts](https://gitter.im/DegateCommunity/Degate?at=6085523d06e2e024e8752da5) on MacOS because the installed version [does not provide a static version by default](https://gitter.im/DegateCommunity/Degate?at=6085183db6a4714a29e65fbb).
   To change these default options, you can use these two commands when calling cmake (ON/OFF):
   ```console
   > cmake .. -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=OFF
   ```
   
   On Windows this can also be caused by an installed version of Boost that does not match your installed compiler.
+
+- `/etc/cmake/ConfigureFiles.cmake:25 (file): file failed to open for reading (No such file or directory): .../VERSION`
+
+  This message can appear for MacOS users. The problem comes from spaces in directory names, this is a bug from CMake.
+  Simply move your Degate folder to a file tree without spaces in directory names.
+  
+- `Artifacts in newly imported images`
+
+  This can occur when you import new images using a Degate version built in "Debug" mode.
+  The solution is to compile Degate in "Release" mode, or using [prebuilt binaries](https://github.com/DegateCommunity/Degate/releases). 
+  After importing the images, you can return with the Degate version with the "Debug" mode (artifacts are only appearing during image importation in "Debug" mode).
+  To do that you could have two build folders, like such : "build/debug" and "build/release", and using these commands:
+  ```console
+  # For build/debug
+  > cmake ../.. -DCMAKE_BUILD_TYPE=Debug
+  # For build/release
+  > cmake ../.. -DCMAKE_BUILD_TYPE=Release
+  ```
 
 # Demo projects
 
