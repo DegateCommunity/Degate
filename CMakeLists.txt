@@ -69,8 +69,18 @@ set_property(GLOBAL PROPERTY AUTOGEN_TARGETS_FOLDER "Moc")
 set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "qt\\moc")
 
 ############# Boost
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
+if (NOT DEFINED Boost_USE_STATIC_LIBS)
+    set(Boost_USE_STATIC_LIBS ON)
+endif()
+
+message(STATUS "Boost static libs: ${Boost_USE_STATIC_LIBS}")
+
+if (NOT DEFINED Boost_USE_MULTITHREADED)
+    set(Boost_USE_MULTITHREADED ON)
+endif()
+
+message(STATUS "Boost multithreaded libs: ${Boost_USE_MULTITHREADED}")
+
 find_package(Boost COMPONENTS filesystem system thread REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 set(LIBS ${Boost_LIBRARIES})

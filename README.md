@@ -190,6 +190,19 @@ Build (in the 'build' folder, for example):
 ```
 Binaries are in the 'build/out/bin' folder in the bundle ".app" format.
 
+## Troubleshooting
+
+- `Could NOT find Boost (missing: filesystem system thread) (found version "1.71.0")`
+
+  This message may be caused by default options which force to use static and multithreaded version of the Boost library.
+  For example, this is a problem when installing Boost with **MacPorts** on MacOS because the installed version [does not provide a static version by default](https://gitter.im/DegateCommunity/Degate?at=6085183db6a4714a29e65fbb).
+  To change these default options, you can use these two commands when calling cmake (ON/OFF):
+  ```console
+  > cmake .. -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=OFF
+  ```
+  
+  On Windows this can also be caused by an installed version of Boost that does not match your installed compiler.
+
 # Demo projects
 
 You can find demo projects [here](https://github.com/DegateCommunity/DegateDemoProjects).
