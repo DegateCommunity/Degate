@@ -208,19 +208,6 @@ Binaries are in the 'build/out/bin' folder in the bundle ".app" format.
 
   This message can appear for MacOS users. The problem comes from spaces in directory names, this is a bug from CMake.
   Simply move your Degate folder to a file tree without spaces in directory names.
-  
-- `Artifacts in newly imported images`
-
-  This can occur when you import new images using a Degate version built in "Debug" mode.
-  The solution is to compile Degate in "Release" mode, or using [prebuilt binaries](https://github.com/DegateCommunity/Degate/releases). 
-  After importing the images, you can return with the Degate version with the "Debug" mode (artifacts are only appearing during image importation in "Debug" mode).
-  To do that you could have two build folders, like such : "build/debug" and "build/release", and using these commands:
-  ```console
-  # For build/debug
-  > cmake ../.. -DCMAKE_BUILD_TYPE=Debug
-  # For build/release
-  > cmake ../.. -DCMAKE_BUILD_TYPE=Release
-  ```
 
 # Demo projects
 
