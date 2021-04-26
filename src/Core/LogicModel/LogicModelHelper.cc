@@ -230,7 +230,7 @@ void degate::load_background_image(Layer_shptr layer,
 }
 
 
-void load_tile(QImage& image_data,
+void load_tile(const QRgb* rba_data,
                unsigned int tile_size,
                unsigned int tile_index,
                const std::string& path,
@@ -239,8 +239,6 @@ void load_tile(QImage& image_data,
                unsigned int global_tile_y,
                unsigned int tile_count_x)
 {
-    assert(image_data.size() == local_size);
-
     unsigned int local_tile_x = tile_index % tile_count_x;
     unsigned int local_tile_y = tile_index / tile_count_x;
 
@@ -270,10 +268,8 @@ void load_tile(QImage& image_data,
     unsigned int max_y = default_max_y > static_cast<unsigned int>(local_size.height()) ?
                          static_cast<unsigned int>(local_size.height()) : default_max_y;
 
-    const auto rba_data = reinterpret_cast<const QRgb*>(&image_data.constBits()[0]);
-
     // Fill image (can be long with big images).
-    static QRgb rgb;
+    QRgb rgb;
     for (unsigned int y = min_y; y < max_y; y++)
     {
         for (unsigned int x = min_x; x < max_x; x++)
@@ -344,10 +340,12 @@ void create_scaled_background_image(const std::string& dir, const BackgroundImag
         auto tile_count_x = static_cast<unsigned int>(std::ceil(static_cast<double>(reading_size.width()) / static_cast<double>(bg_image->get_tile_size())));
         auto tile_count_y = static_cast<unsigned int>(std::ceil(static_cast<double>(reading_size.height()) / static_cast<double>(bg_image->get_tile_size())));
 
+        const auto *rgb_data = reinterpret_cast<const QRgb*>(&img.constBits()[0]);
+
         // Multi-threaded function
-        std::function<void(const unsigned int& y)> function = [&img, &bg_image, &dir, &reading_size, &global_tile_x, &global_tile_y, &tile_count_x](const unsigned int& i)
+        std::function<void(const unsigned int& y)> function = [&rgb_data, &bg_image, &dir, &reading_size, &global_tile_x, &global_tile_y, &tile_count_x](const unsigned int& i)
         {
-            load_tile(img, bg_image->get_tile_size(), i, dir, reading_size, global_tile_x, global_tile_y, tile_count_x);
+            load_tile(rgb_data, bg_image->get_tile_size(), i, dir, reading_size, global_tile_x, global_tile_y, tile_count_x);
         };
 
         // Start multithreading
@@ -506,10 +504,12 @@ void degate::load_new_background_image(Layer_shptr layer, std::string const& pro
         auto tile_count_x = static_cast<unsigned int>(std::ceil(static_cast<double>(reading_size.width()) / static_cast<double>(bg_image->get_tile_size())));
         auto tile_count_y = static_cast<unsigned int>(std::ceil(static_cast<double>(reading_size.height()) / static_cast<double>(bg_image->get_tile_size())));
 
+        const auto *rgb_data = reinterpret_cast<const QRgb*>(&img.constBits()[0]);
+
         // Multi-threaded function
-        std::function<void(const unsigned int& y)> function = [&img, &bg_image, &dir, &reading_size, &global_tile_x, &global_tile_y, &tile_count_x](const unsigned int& i)
+        std::function<void(const unsigned int& y)> function = [&rgb_data, &bg_image, &dir, &reading_size, &global_tile_x, &global_tile_y, &tile_count_x](const unsigned int& i)
         {
-            load_tile(img, bg_image->get_tile_size(), i, dir, reading_size, global_tile_x, global_tile_y, tile_count_x);
+            load_tile(rgb_data, bg_image->get_tile_size(), i, dir, reading_size, global_tile_x, global_tile_y, tile_count_x);
         };
 
         // Start multithreading
