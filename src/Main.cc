@@ -33,6 +33,14 @@ int main(int argc, char* argv[])
 {
     int ret = 0;
 
+    // Set OpenGL 3.3 Core Profile as default
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    format.setStencilBufferSize(8);
+    format.setVersion(3, 3);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    QSurfaceFormat::setDefaultFormat(format);
+
     // Create Qt application
     QApplication a(argc, argv);
 

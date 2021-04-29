@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <QtConcurrent/QtConcurrent>
+#include <QOpenGLFunctions>
 
 namespace degate
 {
@@ -46,9 +47,18 @@ namespace degate
     {
         this->context = context;
 
+        QOpenGLContext *ctx = QOpenGLContext::currentContext();
+        QSurfaceFormat sf = ctx->format();
+        printf("Major: %d\n", sf.majorVersion());
+        printf("Minor: %d\n", sf.minorVersion());
+        printf("Profile: %d\n", sf.profile());
+
+        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
+        printf("GLSL version: %s", glFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION));
+
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
-                "#version 130\n"
+                "#version 330\n"
                 "in vec2 pos;\n"
                 "in vec2 uv;\n"
                 "in vec3 color;\n"
@@ -69,7 +79,7 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
-                "#version 130\n"
+                "#version 330\n"
                 "uniform sampler2DArray texture_array;\n"
                 "in vec2 TexCoords;\n"
                 "in vec4 out_color;\n"

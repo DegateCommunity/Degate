@@ -65,6 +65,7 @@ namespace degate
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
+            "#version 330\n"
             "attribute vec2 pos;\n"
             "attribute vec2 texCoord;\n"
             "uniform mat4 mvp;\n"
@@ -78,6 +79,7 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
+            "#version 330\n"
             "uniform sampler2D texture;\n"
             "varying vec2 texCoord0;\n"
             "void main(void)\n"
