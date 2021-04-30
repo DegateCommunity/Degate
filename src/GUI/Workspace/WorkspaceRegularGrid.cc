@@ -47,26 +47,27 @@ namespace degate
         WorkspaceElement::init();
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
-        const char* vsrc =
-                             "attribute vec2 pos;\n"
-                             "attribute vec3 color;\n"
-                             "attribute float alpha;\n"
-                             "uniform mat4 mvp;\n"
-                             "varying vec4 out_color;\n"
-                             "void main(void)\n"
-                             "{\n"
-                             "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
-                             "    out_color = vec4(color, alpha);\n"
-                             "}\n";
+        const char* vsrc = "#version 330 core\n"
+                           "in vec2 pos;\n"
+                           "in vec3 color;\n"
+                           "in float alpha;\n"
+                           "uniform mat4 mvp;\n"
+                           "out vec4 out_color;\n"
+                           "void main(void)\n"
+                           "{\n"
+                           "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
+                           "    out_color = vec4(color, alpha);\n"
+                           "}\n";
         vshader->compileSourceCode(vsrc);
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
-        const char* fsrc  =
-                             "varying vec4 out_color;\n"
-                             "void main(void)\n"
-                             "{\n"
-                             "    gl_FragColor = out_color;\n"
-                             "}\n";
+        const char* fsrc = "#version 330 core\n"
+                           "in vec4 out_color;\n"
+                           "out vec4 color;\n"
+                           "void main(void)\n"
+                           "{\n"
+                           "    color = out_color;\n"
+                           "}\n";
         fshader->compileSourceCode(fsrc);
 
         program = new QOpenGLShaderProgram;
@@ -121,6 +122,7 @@ namespace degate
             new_height_count = static_cast<unsigned int>(std::ceil(viewport.get_height() / distance_y)) + 1;
         }
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         // If the number of lines is the same as before, skip buffer update
@@ -185,6 +187,7 @@ namespace degate
         }
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         assert(context->glGetError() == GL_NO_ERROR);
     }
@@ -198,6 +201,7 @@ namespace degate
 
         program->setUniformValue("mvp", projection);
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         program->enableAttributeArray("pos");
@@ -212,6 +216,7 @@ namespace degate
         context->glDrawArrays(GL_LINES, 0, 2 * (width_count + height_count));
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
     }
 
     void WorkspaceRegularGrid::viewport_update(const BoundingBox& viewport)

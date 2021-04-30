@@ -39,6 +39,7 @@ int main(int argc, char* argv[])
     format.setStencilBufferSize(8);
     format.setVersion(3, 3);
     format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setRenderableType(QSurfaceFormat::OpenGL);
     QSurfaceFormat::setDefaultFormat(format);
 
     // Create Qt application

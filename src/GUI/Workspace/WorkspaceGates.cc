@@ -57,11 +57,12 @@ namespace degate
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
-            "attribute vec2 pos;\n"
-            "attribute vec3 color;\n"
-            "attribute float alpha;\n"
+            "#version 330 core\n"
+            "in vec2 pos;\n"
+            "in vec3 color;\n"
+            "in float alpha;\n"
             "uniform mat4 mvp;\n"
-            "varying vec4 out_color;\n"
+            "out vec4 out_color;\n"
             "void main(void)\n"
             "{\n"
             "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
@@ -71,10 +72,12 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
-            "varying vec4 out_color;\n"
+            "#version 330 core\n"
+            "in vec4 out_color;\n"
+            "out vec4 color;\n"
             "void main(void)\n"
             "{\n"
-            "    gl_FragColor = out_color;\n"
+            "    color = out_color;\n"
             "}\n";
         fshader->compileSourceCode(fsrc);
 
@@ -100,6 +103,7 @@ namespace degate
 
         assert(context->glGetError() == GL_NO_ERROR);
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         context->glBufferData(GL_ARRAY_BUFFER, project->get_logic_model()->get_gates_count() * 6 * sizeof(GatesVertex2D), nullptr, GL_STATIC_DRAW);
@@ -143,6 +147,7 @@ namespace degate
         context->glBufferData(GL_ARRAY_BUFFER, ports_count * 9 * sizeof(GatesVertex2D), nullptr, GL_STATIC_DRAW);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         unsigned gate_template_name_text_offset = 0;
         unsigned port_name_text_offset = 0;
@@ -213,6 +218,7 @@ namespace degate
 
         program->setUniformValue("mvp", projection);
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         program->enableAttributeArray("pos");
@@ -240,6 +246,7 @@ namespace degate
         context->glDrawArrays(GL_LINES, 0, project->get_logic_model()->get_gates_count() * 8);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         program->release();
     }
@@ -261,6 +268,7 @@ namespace degate
 
         program->setUniformValue("mvp", projection);
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
         program->enableAttributeArray("pos");
@@ -275,6 +283,7 @@ namespace degate
         context->glDrawArrays(GL_TRIANGLES, 0, ports_count * 9);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         program->release();
     }
@@ -292,6 +301,7 @@ namespace degate
         if (gate == nullptr)
             return;
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 
@@ -360,6 +370,7 @@ namespace degate
         context->glBufferSubData(GL_ARRAY_BUFFER, index * 8 * sizeof(GatesVertex2D) + 7 * sizeof(GatesVertex2D), sizeof(GatesVertex2D), &temp);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
     }
 
     void draw_port_in_out(QOpenGLFunctions* context, float x, float y, unsigned size, QVector3D color, float alpha, unsigned offset)
@@ -478,6 +489,7 @@ namespace degate
         if (port == nullptr)
             return;
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
         GateTemplatePort_shptr tmpl_port = port->get_template_port();
@@ -505,10 +517,12 @@ namespace degate
         }
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
     }
 
     void WorkspaceGates::create_ports(Gate_shptr& gate, unsigned index)
     {
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, port_vbo);
 
         for (Gate::port_iterator iter = gate->ports_begin(); iter != gate->ports_end(); ++iter)
@@ -544,5 +558,6 @@ namespace degate
         }
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
     }
 }

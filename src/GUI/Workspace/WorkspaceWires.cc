@@ -46,11 +46,12 @@ namespace degate
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
-                "attribute vec2 pos;\n"
-                "attribute vec3 color;\n"
-                "attribute float alpha;\n"
+                "#version 330 core\n"
+                "in vec2 pos;\n"
+                "in vec3 color;\n"
+                "in float alpha;\n"
                 "uniform mat4 mvp;\n"
-                "varying vec4 out_color;\n"
+                "out vec4 out_color;\n"
                 "void main(void)\n"
                 "{\n"
                 "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
@@ -60,10 +61,12 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
-                "varying vec4 out_color;\n"
+                "#version 330 core\n"
+                "in vec4 out_color;\n"
+                "out vec4 color;\n"
                 "void main(void)\n"
                 "{\n"
-                "    gl_FragColor = out_color;\n"
+                "    color = out_color;\n"
                 "}\n";
         fshader->compileSourceCode(fsrc);
 
@@ -103,11 +106,13 @@ namespace degate
         if (wires_count == 0)
             return;
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         context->glBufferData(GL_ARRAY_BUFFER, wires_count * 6 * sizeof(WiresVertex2D), nullptr, GL_STATIC_DRAW);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         unsigned index = 0;
         for (auto& e : wires)
@@ -137,6 +142,7 @@ namespace degate
 
         program->setUniformValue("mvp", projection);
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         program->enableAttributeArray("pos");
@@ -151,6 +157,7 @@ namespace degate
         context->glDrawArrays(GL_TRIANGLES, 0, wires_count * 6);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         program->release();
     }
@@ -160,6 +167,7 @@ namespace degate
         if (wire == nullptr)
             return;
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         // Vertices and colors
@@ -202,5 +210,6 @@ namespace degate
         context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(WiresVertex2D) + 5 * sizeof(WiresVertex2D), sizeof(WiresVertex2D), &temp);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
     }
 }

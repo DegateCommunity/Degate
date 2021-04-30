@@ -299,6 +299,7 @@ namespace degate
         std::shared_ptr<FontContext> font_context = nullptr;
         QWidget* parent = nullptr;
         GLuint vbo = 0;
+        QOpenGLVertexArrayObject vao;
         unsigned total_size = 0;
         Font font;
         std::weak_ptr<FontContextData> font_context_data;

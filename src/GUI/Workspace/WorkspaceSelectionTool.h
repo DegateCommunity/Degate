@@ -137,6 +137,8 @@ namespace degate
         GLuint vbo = 0;
         GLuint line_vbo = 0;
 
+        QOpenGLVertexArrayObject vao;
+
         BoundingBox selection_box;
         QPointF origin;
 

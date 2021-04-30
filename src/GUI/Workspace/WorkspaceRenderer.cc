@@ -224,6 +224,8 @@ namespace degate
         wire_tool.set_project(new_project);
         regular_grid.set_project(new_project);
 
+        makeCurrent();
+
         regular_grid.viewport_update(BoundingBox(viewport_min_x, viewport_max_x, viewport_min_y, viewport_max_y));
         regular_grid.update();
 
@@ -399,6 +401,7 @@ namespace degate
     {
         if (draw_grid == true)
         {
+            makeCurrent();
             regular_grid.update();
             update();
         }
@@ -442,6 +445,15 @@ namespace degate
 		wires.init();
         wire_tool.init();
         regular_grid.init();
+
+        // Get and print OpenGL version
+        QOpenGLContext *ctx = QOpenGLContext::currentContext();
+        QSurfaceFormat sf = ctx->format();
+        debug(TM, "OpenGL version: %d.%d.%d", sf.majorVersion(), sf.minorVersion(), sf.profile());
+
+        // Get and print GLSL version
+        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
+        debug(TM, "GLSL version: %s", glFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION));
 
         connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &WorkspaceRenderer::cleanup);
 	}
@@ -951,6 +963,7 @@ namespace degate
 					AnnotationEditDialog dialog(this, annotation);
 					dialog.exec();
 
+                    makeCurrent();
 					annotations.update();
 					update();
 
@@ -961,6 +974,7 @@ namespace degate
                     EMarkerEditDialog dialog(this, emarker);
                     dialog.exec();
 
+                    makeCurrent();
                     emarkers.update();
                     update();
 
@@ -971,6 +985,7 @@ namespace degate
                     ViaEditDialog dialog(this, via, project);
                     dialog.exec();
 
+                    makeCurrent();
                     vias.update();
                     update();
 

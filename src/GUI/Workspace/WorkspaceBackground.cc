@@ -65,11 +65,11 @@ namespace degate
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
-            "#version 330\n"
-            "attribute vec2 pos;\n"
-            "attribute vec2 texCoord;\n"
+            "#version 330 core\n"
+            "in vec2 pos;\n"
+            "in vec2 texCoord;\n"
             "uniform mat4 mvp;\n"
-            "varying vec2 texCoord0;\n"
+            "out vec2 texCoord0;\n"
             "void main(void)\n"
             "{\n"
             "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
@@ -79,12 +79,13 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
-            "#version 330\n"
-            "uniform sampler2D texture;\n"
-            "varying vec2 texCoord0;\n"
+            "#version 330 core\n"
+            "uniform sampler2D u_texture;\n"
+            "in vec2 texCoord0;\n"
+            "out vec4 color;\n"
             "void main(void)\n"
             "{\n"
-            "    gl_FragColor = texture2D(texture, texCoord0);\n"
+            "    color = texture(u_texture, texCoord0);\n"
             "}\n";
         fshader->compileSourceCode(fsrc);
 
@@ -128,6 +129,7 @@ namespace degate
         tile_count = std::ceil((max_x - min_x) / static_cast<float>(background_image->get_tile_size())) *
                      std::ceil((max_y - min_y) / static_cast<float>(background_image->get_tile_size()));
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         context->glBufferData(GL_ARRAY_BUFFER, tile_count * 6 * sizeof(BackgroundVertex2D), nullptr, GL_STATIC_DRAW);
@@ -146,6 +148,7 @@ namespace degate
         assert(index == tile_count);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         assert(context->glGetError() == GL_NO_ERROR);
 
@@ -164,10 +167,10 @@ namespace degate
             return;
 
         program->bind();
-        context->glEnable(GL_TEXTURE_2D);
 
         program->setUniformValue("mvp", projection);
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         program->enableAttributeArray("pos");
@@ -186,10 +189,10 @@ namespace degate
         }
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         context->glBindTexture(GL_TEXTURE_2D, 0);
 
-        context->glDisable(GL_TEXTURE_2D);
         program->release();
     }
 
@@ -258,7 +261,7 @@ namespace degate
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         assert(context->glGetError() == GL_NO_ERROR);
 
-        context->glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
+        //context->glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
         assert(context->glGetError() == GL_NO_ERROR);
 
         context->glTexImage2D(GL_TEXTURE_2D,

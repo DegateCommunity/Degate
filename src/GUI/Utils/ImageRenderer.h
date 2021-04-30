@@ -135,7 +135,9 @@ namespace degate
          */
         QPointF get_opengl_mouse_position() const;
 
+        // Protected members
         QMatrix4x4 projection;
+        QOpenGLVertexArrayObject vao;
 
     private:
         float scale = 1;

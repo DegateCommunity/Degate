@@ -50,11 +50,12 @@ namespace degate
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
-                "attribute vec2 pos;\n"
-                "attribute vec3 color;\n"
-                "attribute float alpha;\n"
+                "#version 330 core\n"
+                "in vec2 pos;\n"
+                "in vec3 color;\n"
+                "in float alpha;\n"
                 "uniform mat4 mvp;\n"
-                "varying vec4 out_color;\n"
+                "out vec4 out_color;\n"
                 "void main(void)\n"
                 "{\n"
                 "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
@@ -64,10 +65,12 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
-                "varying vec4 out_color;\n"
+                "#version 330 core\n"
+                "in vec4 out_color;\n"
+                "out vec4 color;\n"
                 "void main(void)\n"
                 "{\n"
-                "    gl_FragColor = out_color;\n"
+                "    color = out_color;\n"
                 "}\n";
         fshader->compileSourceCode(fsrc);
 
@@ -107,11 +110,13 @@ namespace degate
         if (vias_count == 0)
             return;
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         context->glBufferData(GL_ARRAY_BUFFER, vias_count * 24 * sizeof(ViasVertex2D), nullptr, GL_STATIC_DRAW);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         unsigned text_size = 0;
 
@@ -158,6 +163,7 @@ namespace degate
 
         program->setUniformValue("mvp", projection);
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         program->enableAttributeArray("pos");
@@ -172,6 +178,7 @@ namespace degate
         context->glDrawArrays(GL_TRIANGLES, 0, vias_count * 24);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         program->release();
     }
@@ -189,6 +196,7 @@ namespace degate
         if (via == nullptr)
             return;
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         const float hole_radius = via->get_diameter() / 4.0;
@@ -297,5 +305,6 @@ namespace degate
         context->glBufferSubData(GL_ARRAY_BUFFER, index * 24 * sizeof(ViasVertex2D) + 23 * sizeof(ViasVertex2D), sizeof(ViasVertex2D), &temp);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
     }
 }

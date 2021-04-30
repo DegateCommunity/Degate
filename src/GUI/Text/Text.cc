@@ -47,18 +47,9 @@ namespace degate
     {
         this->context = context;
 
-        QOpenGLContext *ctx = QOpenGLContext::currentContext();
-        QSurfaceFormat sf = ctx->format();
-        printf("Major: %d\n", sf.majorVersion());
-        printf("Minor: %d\n", sf.minorVersion());
-        printf("Profile: %d\n", sf.profile());
-
-        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-        printf("GLSL version: %s", glFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION));
-
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
-                "#version 330\n"
+                "#version 330 core\n"
                 "in vec2 pos;\n"
                 "in vec2 uv;\n"
                 "in vec3 color;\n"
@@ -79,7 +70,7 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
-                "#version 330\n"
+                "#version 330 core\n"
                 "uniform sampler2DArray texture_array;\n"
                 "in vec2 TexCoords;\n"
                 "in vec4 out_color;\n"
@@ -210,7 +201,8 @@ namespace degate
             assert(this->context->functions()->glGetError() == GL_NO_ERROR);
         }
 
-        this->context->functions()->glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_GENERATE_MIPMAP, GL_TRUE);
+        //this->context->functions()->glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_GENERATE_MIPMAP, GL_TRUE);
+        this->context->functions()->glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
         assert(this->context->functions()->glGetError() == GL_NO_ERROR);
 
         this->context->functions()->glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -756,6 +748,9 @@ namespace degate
     {
         if (font_context->context->functions()->glIsBuffer(vbo) == GL_TRUE)
             font_context->context->functions()->glDeleteBuffers(1, &vbo);
+
+        if (vao.isCreated())
+            vao.destroy();
     }
 
     void Text::init()
@@ -764,13 +759,16 @@ namespace degate
         font_context_data = font_context->get_font(font);
 
         font_context->context->functions()->glGenBuffers(1, &vbo);
+        vao.create();
     }
 
     void Text::update(unsigned int total_size)
     {
+        vao.bind();
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, vbo);
         font_context->context->functions()->glBufferData(GL_ARRAY_BUFFER, total_size * 6 * sizeof(TextVertex2D), nullptr, GL_DYNAMIC_DRAW);
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         this->total_size = total_size;
     }
@@ -826,6 +824,7 @@ namespace degate
 
         // Fill vbo
 
+        vao.bind();
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         TextVertex2D temp;
@@ -879,6 +878,7 @@ namespace degate
         }
 
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         return {pixel_size,
                 static_cast<qreal>(font_context_data.lock()->font_data->glyph_height) * static_cast<qreal>(size_factor)};
@@ -889,6 +889,7 @@ namespace degate
         font_context->program.bind();
         font_context->program.setUniformValue("mvp", projection);
 
+        vao.bind();
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         font_context->program.enableAttributeArray("pos");
@@ -913,6 +914,8 @@ namespace degate
         font_context->context->functions()->glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 
         font_context->context->functions()->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
+
         font_context->program.release();
     }
 }
