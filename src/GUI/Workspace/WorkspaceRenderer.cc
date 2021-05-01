@@ -863,12 +863,16 @@ namespace degate
 	{
         makeCurrent();
 
-		QOpenGLWidget::wheelEvent(event);
+        QPoint wheel_delta = event->angleDelta();
 
-		event->angleDelta().y() < 0 ? set_projection(ZOOM_OUT, center_x, center_y) : set_projection(ZOOM_IN, center_x, center_y);
+        if (wheel_delta.y() < 0)
+            zoom_out();
+        else if (wheel_delta.y() > 0)
+            zoom_in();
+        else
+            QOpenGLWidget::wheelEvent(event);
 
 		event->accept();
-		update();
 	}
 
 	void WorkspaceRenderer::keyPressEvent(QKeyEvent* event)
