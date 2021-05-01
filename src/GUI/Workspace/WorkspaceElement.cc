@@ -38,6 +38,9 @@ namespace degate
 
         if (context->glIsBuffer(vbo) == GL_TRUE)
             context->glDeleteBuffers(1, &vbo);
+
+        if (vao.isCreated())
+            vao.destroy();
     }
 
     void WorkspaceElement::set_project(const Project_shptr& new_project)
@@ -51,5 +54,6 @@ namespace degate
         context = QOpenGLContext::currentContext()->functions();
 
         context->glGenBuffers(1, &vbo);
+        vao.create();
     }
 }

@@ -69,6 +69,7 @@ namespace degate
     {
         makeCurrent();
 
+        vao.bind();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(PortVertex2D), nullptr, GL_STATIC_DRAW);
@@ -76,6 +77,7 @@ namespace degate
         create_port(port);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         port_name_text.update(static_cast<unsigned int>(port->get_name().length()));
         port_name_text.add_sub_text(0, pos.get_x(), pos.get_y() + DEFAULT_PORT_SIZE / 2.0 + TEXT_PADDING, port->get_name(), 5, QVector3D(255, 255, 255), 1, true, false);
@@ -116,11 +118,12 @@ namespace degate
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
-            "attribute vec2 pos;\n"
-            "attribute vec3 color;\n"
-            "attribute float alpha;\n"
+            "#version 330 core\n"
+            "in vec2 pos;\n"
+            "in vec3 color;\n"
+            "in float alpha;\n"
             "uniform mat4 mvp;\n"
-            "varying vec4 out_color;\n"
+            "out vec4 out_color;\n"
             "void main(void)\n"
             "{\n"
             "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
@@ -130,10 +133,12 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
-            "varying vec4 out_color;\n"
+            "#version 330 core\n"
+            "in vec4 out_color;\n"
+            "out vec4 color;\n"
             "void main(void)\n"
             "{\n"
-            "    gl_FragColor = out_color;\n"
+            "    color = out_color;\n"
             "}\n";
         fshader->compileSourceCode(fsrc);
 
@@ -163,6 +168,7 @@ namespace degate
 
         program->setUniformValue("mvp", projection);
 
+        vao.bind();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         program->enableAttributeArray("pos");
@@ -177,6 +183,7 @@ namespace degate
         glDrawArrays(GL_TRIANGLES, 0, 9);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         program->release();
 

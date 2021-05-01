@@ -87,6 +87,7 @@ namespace degate
         QOpenGLShaderProgram* program = nullptr;
         GLuint vbo = 0;
         QOpenGLFunctions* context = nullptr;
+        QOpenGLVertexArrayObject vao;
     };
 }
 

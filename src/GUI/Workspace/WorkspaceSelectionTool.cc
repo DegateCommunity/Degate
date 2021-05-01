@@ -49,6 +49,9 @@ namespace degate
 
         if (context->glIsBuffer(line_vbo) == GL_TRUE)
             context->glDeleteBuffers(1, &line_vbo);
+
+        if (vao.isCreated())
+            vao.destroy();
     }
 
     void WorkspaceSelectionTool::init()
@@ -57,11 +60,12 @@ namespace degate
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
         const char* vsrc =
-            "attribute vec2 pos;\n"
-            "attribute vec3 color;\n"
-            "attribute float alpha;\n"
+            "#version 330 core\n"
+            "in vec2 pos;\n"
+            "in vec3 color;\n"
+            "in float alpha;\n"
             "uniform mat4 mvp;\n"
-            "varying vec4 out_color;\n"
+            "out vec4 out_color;\n"
             "void main(void)\n"
             "{\n"
             "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
@@ -71,10 +75,12 @@ namespace degate
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
         const char* fsrc =
-            "varying vec4 out_color;\n"
+            "#version 330 core\n"
+            "in vec4 out_color;\n"
+            "out vec4 color;\n"
             "void main(void)\n"
             "{\n"
-            "    gl_FragColor = out_color;\n"
+            "    color = out_color;\n"
             "}\n";
         fshader->compileSourceCode(fsrc);
 
@@ -91,7 +97,9 @@ namespace degate
 
         context->glGenBuffers(1, &vbo);
         context->glGenBuffers(1, &line_vbo);
+        vao.create();
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
         context->glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(SelectionToolVertex2D), nullptr, GL_STATIC_DRAW);
 
@@ -99,6 +107,7 @@ namespace degate
         context->glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(SelectionToolVertex2D), nullptr, GL_STATIC_DRAW);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
     }
 
     void WorkspaceSelectionTool::update(float x, float y)
@@ -135,6 +144,7 @@ namespace degate
         }
 
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 
@@ -200,6 +210,7 @@ namespace degate
         context->glBufferSubData(GL_ARRAY_BUFFER, 7 * sizeof(SelectionToolVertex2D), sizeof(SelectionToolVertex2D), &temp);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
     }
 
     void WorkspaceSelectionTool::draw(const QMatrix4x4& projection)
@@ -211,6 +222,7 @@ namespace degate
 
         program->setUniformValue("mvp", projection);
 
+        vao.bind();
         context->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         program->enableAttributeArray("pos");
@@ -238,6 +250,7 @@ namespace degate
         context->glDrawArrays(GL_LINES, 0, 8);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vao.release();
 
         program->release();
     }

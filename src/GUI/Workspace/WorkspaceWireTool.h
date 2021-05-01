@@ -126,6 +126,7 @@ namespace degate
         QWidget* parent = nullptr;
         QOpenGLShaderProgram* program = nullptr;
         GLuint vbo = 0;
+        QOpenGLVertexArrayObject vao;
         QOpenGLFunctions* context = nullptr;
         bool started = false;
         bool ended = false;
