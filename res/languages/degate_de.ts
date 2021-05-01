@@ -18,19 +18,19 @@
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="52"/>
         <source>The current project maintainer is %2.</source>
         <comment>... maintainer is NAME.</comment>
-        <translation type="unfinished">Der aktuelle Projekt-Maintainer ist %2. {4.?} {2.?}</translation>
+        <translation type="unfinished">Der aktuelle Projekt-Maintainer ist %2.</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="53"/>
         <source>This project is a forked version of Degate and is still under development, if you find a bug please report it %3.</source>
         <comment>... report it here.</comment>
-        <translation type="unfinished">Dieses Projekt ist ein Fork von Degate und ist im Entwicklungsstadium. Bitte berichten Sie festgestellte Fehler %3. {5.?} {3.?}</translation>
+        <translation type="unfinished">Dieses Projekt ist ein Fork von Degate und ist im Entwicklungsstadium. Bitte berichten Sie festgestellte Fehler %3.</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="54"/>
         <source>You can also help us by adding new languages, see the Localization section of the README.md file, available %4.</source>
         <comment>... available here.</comment>
-        <translation type="unfinished">Sie können ebenfalls beim Hinzufügen weiterer Übersetzungen helfen. Bitte schauen Sie dazu im Abschnitt &quot;Localization&quot; in der README.md nach, welche unter %4 verfügbar ist. {6.?} {4.?}</translation>
+        <translation type="unfinished">Sie können ebenfalls beim Hinzufügen weiterer Übersetzungen helfen. Bitte schauen Sie dazu im Abschnitt &quot;Localization&quot; in der README.md nach, welche unter %4 verfügbar ist.</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/AboutDialog.cc" line="56"/>
@@ -707,7 +707,7 @@ For the style sheet, a file called &apos;style.qss&apos; needs to exist in the &
     <message>
         <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="67"/>
         <source>Generic combinational logic</source>
-        <translation>Generische kombinatorisches Logikgatter</translation>
+        <translation>Generisches kombinatorisches Logikgatter</translation>
     </message>
     <message>
         <location filename="../../src/GUI/Dialog/GateEditDialog.cc" line="68"/>
@@ -1350,7 +1350,7 @@ For the style sheet, a file called &apos;style.qss&apos; needs to exist in the &
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="518"/>
         <source>Gate</source>
-        <translation>Logkgatter</translation>
+        <translation>Logikgatter</translation>
     </message>
     <message>
         <location filename="../../src/GUI/MainWindow.cc" line="519"/>
