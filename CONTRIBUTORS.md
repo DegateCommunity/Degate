@@ -12,6 +12,7 @@ Here you will find all the people who have contributed to Degate.
 
 ## Contributors
 
+- [Maxim Poliakovski](https://github.com/maximumspatium)
 - [Epifanov Ivan](https://github.com/isage)
 - [Thomas Roth](https://github.com/nezza)
 - [Kim Taekgwan](https://github.com/xorrhks0216)
