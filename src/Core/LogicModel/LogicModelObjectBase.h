@@ -136,19 +136,28 @@ namespace degate
         virtual const std::string get_object_type_name() const;
     };
 
-    typedef std::shared_ptr<LogicModelObjectBase> LogicModelObjectBase_shptr;
-
+    /**
+     * @class LMOCompare
+     * @brief Helper to compare LogicModelObjectBase.
+     *
+     * Used with std::set.
+     */
     class LMOCompare
     {
     public:
         template <typename T>
         bool operator()(const T& a, const T& b) const
         {
+            static_assert(std::is_base_of<LogicModelObjectBase, T>::value, "T must inherit from LogicModelObjectBase.");
+
             return a.get_object_id() < b.get_object_id();
         }
+
         template <typename T>
         bool operator()(const std::shared_ptr<T>& a, const std::shared_ptr<T>& b) const
         {
+            static_assert(std::is_base_of<LogicModelObjectBase, T>::value, "T must inherit from LogicModelObjectBase.");
+
             return this->operator()(*a, *b);
         }
     };
