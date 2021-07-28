@@ -141,8 +141,16 @@ namespace degate
     class LMOCompare
     {
     public:
-        bool operator()(const LogicModelObjectBase& a, const LogicModelObjectBase& b) const;
-        bool operator()(const LogicModelObjectBase_shptr& a, const LogicModelObjectBase_shptr& b) const;
+        template <typename T>
+        bool operator()(const T& a, const T& b) const
+        {
+            return a.get_object_id() < b.get_object_id();
+        }
+        template <typename T>
+        bool operator()(const std::shared_ptr<T>& a, const std::shared_ptr<T>& b) const
+        {
+            return this->operator()(*a, *b);
+        }
     };
 }
 

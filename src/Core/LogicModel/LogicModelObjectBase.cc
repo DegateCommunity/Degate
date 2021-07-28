@@ -121,14 +121,3 @@ const std::string LogicModelObjectBase::get_object_type_name() const
 {
     return tr("Generic object").toStdString();
 }
-
-
-bool LMOCompare::operator()(const LogicModelObjectBase& a, const LogicModelObjectBase& b) const
-{
-    return a.get_object_id() < b.get_object_id();
-}
-
-bool LMOCompare::operator()(const LogicModelObjectBase_shptr& a, const LogicModelObjectBase_shptr& b) const
-{
-    return this->operator()(*a, *b);
-}
