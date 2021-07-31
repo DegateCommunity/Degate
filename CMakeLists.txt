@@ -34,12 +34,11 @@ set(CMAKE_VERBOSE_MAKEFILE true)
 # Set flags
 #
 if (NOT MSVC)
-    add_definitions(-Wall -g -fno-inline -std=c++11 -DBOOST_NO_CXX11_SCOPED_ENUMS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -fno-inline -std=c++11")
 else()
-    add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 endif()
+add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
 
 #
 # Property for folders
