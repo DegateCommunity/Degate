@@ -324,7 +324,9 @@ namespace degate
                   unsigned int min_cache_tiles = 4) :
             directory(directory),
             tile_width_exp(tile_width_exp),
-            persistent(persistent)
+            persistent(persistent),
+            curr_tile_num_x(0),
+            curr_tile_num_y(0)
         {
         }
 
