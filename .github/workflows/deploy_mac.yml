@@ -68,7 +68,7 @@ jobs:
       shell: bash
       run: |
         cd etc/installer
-        ./Tools/QtInstallerFramework/4.0/bin/repogen -p packages repository
+        ./Tools/QtInstallerFramework/4.2/bin/repogen -p packages repository
       
     - name: Upload Degate update
       uses: actions/upload-artifact@v2
