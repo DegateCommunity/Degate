@@ -8,7 +8,7 @@ env:
 jobs:
   build:
   
-    runs-on: ubuntu-16.04 # Update Ubuntu version here (might be the oldest LTS for AppImage creation).
+    runs-on: ubuntu-18.04 # Update Ubuntu version here (might be the oldest LTS for AppImage creation).
 
     steps:
     - uses: actions/checkout@v2
@@ -24,7 +24,7 @@ jobs:
       # Change Boost version here (see https://github.com/actions/boost-versions/releases).
       # See https://github.com/actions/virtual-environments/issues/2667#issue-804635858.
       run: |
-        $url = "https://github.com/actions/boost-versions/releases/download/1.72.0-20200608.4/boost-1.72.0-linux-16.04-gcc-x64.tar.gz"
+        $url = "https://github.com/actions/boost-versions/releases/download/1.72.0-20200608.4/boost-1.72.0-linux-18.04-gcc-x64.tar.gz"
         (New-Object System.Net.WebClient).DownloadFile($url, "/tmp/boost.tar.gz")
         mkdir "/tmp/boost"
         tar -xzf "/tmp/boost.tar.gz" -C "/tmp/boost"
