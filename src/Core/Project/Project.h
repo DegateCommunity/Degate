@@ -51,6 +51,32 @@ namespace degate
 
 namespace degate
 {
+    /**
+     * Transform a string to ProjectType enum element.
+     */
+    inline ProjectType to_project_type(std::string string_type)
+    {
+        if (string_type == "Normal")
+            return ProjectType::Normal;
+        else if (string_type == "Attached")
+            return ProjectType::Attached;
+        else
+            return ProjectType::Normal;
+    }
+
+    /**
+     * Transform a ProjectType enum element to string.
+     */
+    inline std::string from_project_type(ProjectType type)
+    {
+        switch (type)
+        {
+            case ProjectType::Normal: return "Normal";
+            case ProjectType::Attached: return "Attached";
+            default: return "Normal";
+        }
+    }
+
     struct ProjectSnapshot
     {
         boost::posix_time::ptime datetime;
@@ -105,6 +131,9 @@ namespace degate
         RCBase::container_type rcv_blacklist;
 
         unsigned int font_size;
+
+        ProjectType project_type;
+
     private:
 
         void init_default_values();
@@ -115,13 +144,13 @@ namespace degate
          * Create a new and empty project.
          * It will create an empty logic model as well.
          */
-        Project(length_t width, length_t height);
+        Project(length_t width, length_t height, ProjectType project_type = ProjectType::Normal);
 
         /**
          * Create a new and empty project.
          * It will create an empty logic model as well.
          */
-        Project(length_t width, length_t height, std::string const& directory, unsigned int layers = 0);
+        Project(length_t width, length_t height, std::string const& directory, ProjectType project_type = ProjectType::Normal, unsigned int layers = 0);
 
 
         /**
@@ -303,6 +332,11 @@ namespace degate
          * Get a list of blacklisted Rule Check violations.
          */
         RCBase::container_type& get_rcv_blacklist();
+
+        /**
+         * Get the type of the project (attached or normal).
+         */
+        ProjectType get_project_type() const;
     };
 }
 

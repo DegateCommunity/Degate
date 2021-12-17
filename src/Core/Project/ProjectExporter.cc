@@ -201,6 +201,7 @@ void ProjectExporter::set_project_node_attributes(QDomDocument& doc,
     prj_elem.setAttribute("template-dimension",
                           QString::fromStdString(number_to_string<int>(prj->get_template_dimension())));
     prj_elem.setAttribute("font-size", QString::fromStdString(number_to_string<unsigned int>(prj->get_font_size())));
+    prj_elem.setAttribute("type", QString::fromStdString(from_project_type(prj->get_project_type())));
 }
 
 
@@ -231,9 +232,17 @@ void ProjectExporter::add_layers(QDomDocument& doc,
         layer_elem.setAttribute("enabled", QString::fromStdString(layer->is_enabled() ? "true" : "false"));
 
         if (layer->has_background_image())
-            layer_elem.setAttribute("image-filename",
-                                    QString::fromStdString(
-                                        get_relative_path(layer->get_image_filename(), project_dir)));
+        {
+            // Regarding the project type, set just the filename or the full path
+            if (layer->get_project_type() == ProjectType::Normal)
+            {
+                layer_elem.setAttribute("image-filename", QString::fromStdString(get_relative_path(layer->get_image_filename(), project_dir)));
+            }
+            else
+            {
+                layer_elem.setAttribute("image-path", QString::fromStdString(layer->get_image_filename()));
+            }
+        }
 
         layers_elem.appendChild(layer_elem);
     }

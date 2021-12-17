@@ -46,6 +46,6 @@ TEST_CASE("Test scaling manager", "[ScalingManager]")
     bool state = tiff_reader.get_image(img);
     REQUIRE(state == true);
 
-    ScalingManager<BackgroundImage> sm(img, img->get_directory(), 256);
+    ScalingManager<BackgroundImage> sm(img, img->get_path(), ProjectType::Normal, 256);
     sm.create_scalings();
 }

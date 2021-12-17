@@ -35,23 +35,29 @@
 using namespace std;
 using namespace degate;
 
-Project::Project(length_t width, length_t height) :
+Project::Project(length_t width, length_t height, ProjectType project_type) :
     bounding_box(width, height),
     degate_version(DEGATE_VERSION),
-    logic_model(new LogicModel(width, height)),
-    port_color_manager(new PortColorManager())
+    logic_model(new LogicModel(width, height, project_type)),
+    port_color_manager(new PortColorManager()),
+    project_type(project_type)
 {
+    TileCacheFactory::get_instance().set_project_type(project_type);
+
     init_default_values();
 }
 
 
-Project::Project(length_t width, length_t height, std::string const& directory, unsigned int layers) :
+Project::Project(length_t width, length_t height, std::string const& directory, ProjectType project_type, unsigned int layers) :
     bounding_box(width, height),
     degate_version(DEGATE_VERSION),
     directory(directory),
-    logic_model(new LogicModel(width, height, layers)),
-    port_color_manager(new PortColorManager())
+    logic_model(new LogicModel(width, height, project_type, layers)),
+    port_color_manager(new PortColorManager()),
+    project_type(project_type)
 {
+    TileCacheFactory::get_instance().set_project_type(project_type);
+
     init_default_values();
 }
 
@@ -378,4 +384,9 @@ unsigned int Project::get_font_size() const
 RCBase::container_type& Project::get_rcv_blacklist()
 {
     return rcv_blacklist;
+}
+
+ProjectType Project::get_project_type() const
+{
+    return project_type;
 }

@@ -87,9 +87,9 @@ void LogicModelImporter::import_into(LogicModel_shptr lmodel,
     }
 }
 
-LogicModel_shptr LogicModelImporter::import(std::string const& filename)
+LogicModel_shptr LogicModelImporter::import(std::string const& filename, ProjectType project_type)
 {
-    LogicModel_shptr lmodel(new LogicModel(width, height));
+    LogicModel_shptr lmodel(new LogicModel(width, height, project_type));
     assert(lmodel != nullptr);
 
     import_into(lmodel, filename);

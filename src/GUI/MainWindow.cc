@@ -45,7 +45,6 @@ namespace degate
         setWindowTitle("Degate");
         setWindowIcon(QIcon(":/degate_logo.png"));
 
-
         // Workspace
 
         workspace = new WorkspaceRenderer(this);
@@ -665,6 +664,7 @@ namespace degate
 
         project.reset();
         project = nullptr;
+
         workspace->set_project(nullptr);
         workspace->update_screen();
 
@@ -685,7 +685,16 @@ namespace degate
         status_bar.showMessage(tr("Creating a new project..."));
 
         NewProjectDialog dialog(this);
-        auto res = dialog.exec();
+
+        int res;
+        try
+        {
+            res = dialog.exec();
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
 
         if (res == QDialog::Accepted)
         {
@@ -700,7 +709,9 @@ namespace degate
             status_bar.showMessage(tr("Created a new project."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
         }
         else
+        {
             status_bar.showMessage(tr("New project creation operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+        }
     }
 
     void MainWindow::on_menu_project_create_subproject()

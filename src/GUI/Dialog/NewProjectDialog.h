@@ -90,6 +90,9 @@ namespace degate
         QLabel project_path_label;
         QPushButton project_path_button;
 
+        QLabel attached_mode_label;
+        QCheckBox attached_mode_box;
+
         QLabel layers_edit_label;
         LayersEditWidget layers_edit_widget;
 

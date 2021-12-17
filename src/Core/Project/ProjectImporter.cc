@@ -141,7 +141,10 @@ Project_shptr ProjectImporter::import(std::string const& directory)
         int w = parse_number<length_t>(root_elem, "width");
         int h = parse_number<length_t>(root_elem, "height");
 
-        Project_shptr prj(new Project(w, h, get_basedir(filename)));
+        // parse type
+        ProjectType type = to_project_type(root_elem.attribute("type", QString::fromStdString(from_project_type(ProjectType::Normal))).toStdString());
+
+        Project_shptr prj(new Project(w, h, get_basedir(filename), type));
         assert(prj->get_project_directory().length() != 0);
 
         parse_project_element(prj, root_elem);
@@ -168,7 +171,15 @@ void ProjectImporter::parse_layers_element(QDomElement const& layers_elem, const
 
         if (!layer_elem.isNull())
         {
-            const std::string image_filename(layer_elem.attribute("image-filename").toStdString());
+            // Regarding the type of the project, get just the file name (Normal)
+            // or the full image base path (Attached)
+            // TODO: need a way to ask for new image path if wrong (like the image moved)
+            std::string image_path;
+            if (prj->get_project_type() == ProjectType::Normal)
+                image_path = layer_elem.attribute("image-filename").toStdString();
+            else
+                image_path = layer_elem.attribute("image-path").toStdString();
+
             const std::string layer_type_str(layer_elem.attribute("type").toStdString());
             const std::string layer_description(layer_elem.attribute("description").toStdString());
             auto position = parse_number<unsigned int>(layer_elem, "position");
@@ -177,11 +188,11 @@ void ProjectImporter::parse_layers_element(QDomElement const& layers_elem, const
             Layer::LAYER_TYPE layer_type = Layer::get_layer_type_from_string(layer_type_str);
             auto layer_id = parse_number<layer_id_t>(layer_elem, "id", 0);
 
-            Layer_shptr new_layer = std::make_shared<Layer>(prj->get_bounding_box(), layer_type);
+            Layer_shptr new_layer = std::make_shared<Layer>(prj->get_bounding_box(), prj->get_project_type(), layer_type);
             LogicModel_shptr lmodel = prj->get_logic_model();
 
             debug(TM, "Parsed a layer entry for type %s. This is a %s layer. Background image is %s",
-                  layer_type_str.c_str(), Layer::get_layer_type_as_string(layer_type).c_str(), image_filename.c_str());
+                  layer_type_str.c_str(), Layer::get_layer_type_as_string(layer_type).c_str(), image_path.c_str());
 
             bool layer_enabled = true;
             if (!layer_enabled_str.empty())
@@ -193,7 +204,7 @@ void ProjectImporter::parse_layers_element(QDomElement const& layers_elem, const
 
             lmodel->add_layer(position, new_layer);
 
-            load_background_image(new_layer, image_filename, prj);
+            load_background_image(new_layer, image_path, prj);
         }
     }
 }
@@ -205,6 +216,17 @@ void ProjectImporter::load_background_image(const Layer_shptr& layer,
     debug(TM, "try to load image [%s]", image_filename.c_str());
     if (!image_filename.empty())
     {
+        // If attached project mode, just create the background image (no loading)
+        // Require just the right path (to the base image full path) and project dimension
+        // And then, just have to set the layer base image (scaling default = 1)
+        if (prj->get_project_type() == ProjectType::Attached)
+        {
+            BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(layer->get_width(), layer->get_height(), image_filename);
+            layer->set_image(bg_image);
+
+            return;
+        }
+
         assert(prj->get_project_directory().length() != 0);
 
         std::string image_path_to_load = join_pathes(prj->get_project_directory(), image_filename);

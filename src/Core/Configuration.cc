@@ -22,10 +22,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include "Core/Configuration.h"
-#include "Core/Utils/FileSystem.h"
 #include "GUI/Preferences/PreferencesHandler.h"
-
-#include <boost/lexical_cast.hpp>
 
 using namespace degate;
 

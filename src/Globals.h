@@ -197,6 +197,15 @@ namespace degate
         RET_MATH_ERR = 5,
         RET_CANCEL = 6
     };
+
+    /**
+     * Project type enum. Default is Normal.
+     */
+    enum ProjectType
+    {
+        Normal,
+        Attached
+    };
 }
 
 #endif

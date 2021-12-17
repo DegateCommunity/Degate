@@ -217,30 +217,57 @@ namespace degate
 
         /**
          * Constructor for temporary virtual images.
+         * 
+         * @param width : the width of the image.
+         * @param height : the height of the image.
+         * @param scale : the scale to apply when loading the image (e.g. scale = 2
+         *      will load the image with final size of width/2 and height/2). 
+         *      @see ScalingManager.
+         * @param tile_width_exp : the width (and height) for image tiles. This
+         *      value is specified as an exponent to the base 2. This means for
+         *      example that if you want to use a width of 1024 pixel, you have
+         *      to give a value of 10, because 2^10 is 1024.
          */
         Image(unsigned int width,
               unsigned int height,
+              unsigned int scale = 1,
               unsigned int tile_width_exp = 10) :
             ImageBase(width, height),
             StoragePolicy_Tile<PixelPolicy>(width, height,
                                             create_temp_directory(),
                                             false,
+                                            scale,
                                             tile_width_exp)
         {
         }
 
         /**
          * Constructor for persistent virtual images.
+         * 
+         * @param width : the width of the image.
+         * @param height : the height of the image.
+         * @param path : the path of the image, can be a directory (store mode) or
+         *      a file path (attached mode). @see TileCache.
+         * @param persistent : if true, will persist on the disk.
+         * @param scale : the scale to apply when loading the image (e.g. scale = 2
+         *      will load the image with final size of width/2 and height/2). 
+         *      @see ScalingManager.
+         * @param tile_width_exp : the width (and height) for image tiles. This
+         *      value is specified as an exponent to the base 2. This means for
+         *      example that if you want to use a width of 1024 pixel, you have
+         *      to give a value of 10, because 2^10 is 1024.
          */
         Image(unsigned int width,
               unsigned int height,
-              std::string const& directory,
+              std::string const& path,
               bool persistent = true,
+              unsigned int scale = 1,
               unsigned int tile_width_exp = 10) :
             ImageBase(width, height),
             StoragePolicy_Tile<PixelPolicy>(width, height,
-                                            directory,
+                                            path,
                                             persistent,
+                                            scale,
                                             tile_width_exp)
         {
         }

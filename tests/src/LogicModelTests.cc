@@ -54,7 +54,7 @@ TEST_CASE("Test shared ptr casts", "[LogicModel]")
 
 TEST_CASE("Test add layer", "[LogicModel]")
 {
-    LogicModel_shptr lmodel(new LogicModel(100, 100));
+    LogicModel_shptr lmodel(new LogicModel(100, 100, ProjectType::Normal));
     lmodel->add_layer(0);
     lmodel->add_layer(1);
     lmodel->add_layer(2);
@@ -70,7 +70,7 @@ TEST_CASE("Test add layer", "[LogicModel]")
 
 TEST_CASE("Test add and retrieve placed logic model", "[LogicModel]")
 {
-    LogicModel_shptr lmodel(new LogicModel(100, 100));
+    LogicModel_shptr lmodel(new LogicModel(100, 100, ProjectType::Normal));
     REQUIRE(lmodel != nullptr);
 
     PlacedLogicModelObject_shptr plo(new Gate(0, 10, 0, 10));
@@ -86,7 +86,7 @@ TEST_CASE("Test add and retrieve placed logic model", "[LogicModel]")
 
 TEST_CASE("Test add and retrieve wire", "[LogicModel]")
 {
-    LogicModel_shptr lmodel(new LogicModel(100, 100));
+    LogicModel_shptr lmodel(new LogicModel(100, 100, ProjectType::Normal));
 
     Wire_shptr w(new Wire(20, 21, 30, 31, 5));
     REQUIRE(w->has_valid_object_id() == false);

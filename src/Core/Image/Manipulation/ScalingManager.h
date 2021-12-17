@@ -54,6 +54,8 @@ namespace degate
 
         unsigned int min_size;
 
+        ProjectType project_type;
+
     private:
 
         unsigned long get_nearest_power_of_two(unsigned int value)
@@ -78,21 +80,24 @@ namespace degate
         /**
          * Create a new ScalingManager object for an image.
          * @param img The background image.
-         * @param base_directory A directory where all files can be stored. You
-         *  can use the directory of the master image for that. Make
-         *  sure that the directory exist. if you compile libdegate
-         *  with DEBUG=1 the existence is assert()ed.
+         * @param base_directory A path where all files can be stored. You
+         *  can use the path of the master image for that. Make
+         *  sure that the path exist. Not used if attached mode.
+         * @param project_type The type of the project (normal or attached).
          * @param min_size Create down scalings until the edge length
          *  is becomes less than \p min_size.
          */
         ScalingManager(std::shared_ptr<ImageType> img,
                        std::string const& base_directory,
+                       ProjectType project_type,
                        int min_size = 1024)
         {
             assert(img != nullptr);
             this->base_directory = base_directory;
             images[1] = img;
             this->min_size = min_size;
+
+            this->project_type = project_type;
 
             assert(file_exists(base_directory));
         }
@@ -125,53 +130,72 @@ namespace degate
 
         /**
          * Create the scaled images.
+         * 
          * Created prescaled images that have the same peristence state as the
-         * master image. The files are written into the directory, where the
+         * master image. The files are written into the path, where the
          * master image is stored.
+         * 
+         * This have no other effect than creating virtually the base image in multi 
+         * scale for the attached mode (real loading is dynamic).
+         * 
          * @throw InvalidPathException This exception is thrown, if the
-         *   \p directory (ctor param) doesn't exists.
+         *   \p path (ctor param) doesn't exists.
          */
         void create_scalings()
         {
-            if (!(file_exists(base_directory) && is_directory(base_directory)))
-                throw InvalidPathException("The directory for prescaled images must exist. but it is not there.");
+            // If normal mode, then check if directory exists
+            if (!(file_exists(base_directory) && is_directory(base_directory)) && project_type == ProjectType::Normal)
+                throw InvalidPathException("The path for prescaled images must exist. But it is not there.");
 
             std::shared_ptr<ImageType> last_img = images[1];
             unsigned int w = last_img->get_width();
             unsigned int h = last_img->get_height();
 
-            for (int i = 2; ((h > min_size) || (w > min_size)) &&
-                 (i < (1 << 24)); // max 24 scaling levels
+            // Create scalings
+            for (int i = 2; ((h > min_size) || (w > min_size)) && (i < (1 << 24)); // max 24 scaling levels
                  i *= 2)
             {
                 w >>= 1;
                 h >>= 1;
 
-                // create a new image
-                char dir_name[PATH_MAX];
-                snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
-                std::string dir_path = join_pathes(images[1]->get_directory(), std::string(dir_name));
+                std::string path;
 
-                debug(TM, "create scaled image in %s for scaling factor %d?", dir_path.c_str(), i);
-                if (!file_exists(dir_path))
+                // Get the path to use
+                if (project_type == ProjectType::Normal)
+                {
+                    // Create a new image directory name.
+                    char dir_name[PATH_MAX];
+                    snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
+
+                    path = join_pathes(images[1]->get_path(), std::string(dir_name));
+                }
+                else
+                    path = images[1]->get_path();
+
+                // Create the scaling if needed
+                debug(TM, "create scaled image in %s for scaling factor %d?", path.c_str(), i);
+                if (!file_exists(path) && project_type == ProjectType::Normal)
                 {
                     debug(TM, "yes");
-                    create_directory(dir_path);
+                    create_directory(path);
 
-                    std::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
-                                                                     images[1]->is_persistent()));
+                    // Load the base image
+                    std::shared_ptr<ImageType> new_img(new ImageType(w, h, path, images[1]->is_persistent(), i));
 
+                    // Scale down
                     scale_down_by_2<ImageType, ImageType>(new_img, last_img);
                     last_img = new_img;
                 }
                 else
                 {
                     debug(TM, "no");
-                    std::shared_ptr<ImageType> new_img(new ImageType(w, h, dir_path,
-                                                                     images[1]->is_persistent()));
+
+                    // Load the image
+                    std::shared_ptr<ImageType> new_img(new ImageType(w, h, path, images[1]->is_persistent(), i));
 
                     last_img = new_img;
                 }
+
                 images[i] = last_img;
             }
         }
@@ -190,7 +214,6 @@ namespace degate
                                   (unsigned long)lrint(images.rbegin()->first));
                 typename image_map::iterator found = images.find(factor);
                 assert(found != images.end());
-                //debug(TM, "requested scaling is %f. nearest scaling is %d. found image with scaling %f", request_scaling, factor, found->first);
                 return *found;
             }
 

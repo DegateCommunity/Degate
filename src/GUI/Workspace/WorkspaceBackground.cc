@@ -152,13 +152,17 @@ namespace degate
 
         assert(context->glGetError() == GL_NO_ERROR);
 
-        if (!future.isFinished())
-            return;
+        // What follow was removed since the performance impact
+        // needs to be evaluated. Also, that don't fit well with
+        // the attached mode tile cache.
 
-        future.setFuture(QtConcurrent::run([this, min_x, max_x, min_y, max_y]()
-        {
-            background_image->cache(min_x, max_x, min_y, max_y, 1);
-        }));
+        //if (!future.isFinished())
+            //return;
+
+        //future.setFuture(QtConcurrent::run([this, min_x, max_x, min_y, max_y]()
+        //{
+            //background_image->cache(min_x, max_x, min_y, max_y, 4);
+        //}));
     }
 
     void WorkspaceBackground::draw(const QMatrix4x4& projection)

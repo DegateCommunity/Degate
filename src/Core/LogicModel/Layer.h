@@ -81,6 +81,8 @@ namespace degate
 
         layer_id_t layer_id;
 
+        ProjectType project_type;
+
     protected:
 
         /**
@@ -117,13 +119,12 @@ namespace degate
         /**
          * Create a new logic model layer.
          */
-        Layer(BoundingBox const& bbox, LAYER_TYPE layer_type = Layer::UNDEFINED);
+        Layer(BoundingBox const& bbox, ProjectType project_type, LAYER_TYPE layer_type = Layer::UNDEFINED);
 
         /**
          * Create a new logic model layer.
          */
-        Layer(BoundingBox const& bbox, LAYER_TYPE layer_type,
-              BackgroundImage_shptr img);
+        Layer(BoundingBox const& bbox, ProjectType project_type, LAYER_TYPE layer_type, BackgroundImage_shptr img);
 
         /**
          * Destruct a layer.
@@ -238,7 +239,7 @@ namespace degate
         BackgroundImage_shptr get_image();
 
         /**
-         * Get the directory name for the image, that represents the
+         * Get the path name for the image, that represents the
          * background image of the layer.
          * @exception DegateLogicException If you did not set the background image, then this
          *   exception is thrown.
@@ -402,6 +403,11 @@ namespace degate
          * Check if the layer has a valid layer ID.
          */
         virtual bool has_valid_layer_id() const { return layer_id != 0; }
+
+        /**
+         * Get project type.
+         */
+        inline ProjectType get_project_type() const { return project_type; };
     };
 }
 

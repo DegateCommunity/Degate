@@ -51,6 +51,10 @@ namespace degate
         project_path_label.setText(tr("Project directory path:"));
         project_path_button.setText(tr("Set project directory path"));
 
+        // Attached mode
+        attached_mode_label.setText(tr("Attached mode?"));
+        attached_mode_box.setChecked(false);
+
         // Validate button
         validate_button.setText(tr("Ok"));
 
@@ -66,6 +70,9 @@ namespace degate
             QObject::connect(&project_path_button, SIGNAL(pressed()), this, SLOT(set_project_directory_path()));
             user_selected_directory = true;
         }
+
+        project_group_layout.addWidget(&attached_mode_label, 2, 0);
+        project_group_layout.addWidget(&attached_mode_box, 2, 1);
 
         // Control layout
         control_layout.addWidget(&validate_button, 0, 1);
@@ -126,7 +133,7 @@ namespace degate
             create_directory(project_directory);
 
         // Create the project
-        project = std::make_shared<Project>(size.width(), size.height(), project_directory, layers_edit_widget.get_layer_count());
+        project = std::make_shared<Project>(size.width(), size.height(), project_directory, attached_mode_box.isChecked() ? ProjectType::Attached : ProjectType::Normal, layers_edit_widget.get_layer_count());
         project->set_name(project_name_edit.text().toStdString());
 
         // Create each layer

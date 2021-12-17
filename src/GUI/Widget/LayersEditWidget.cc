@@ -337,7 +337,7 @@ namespace degate
             if (text_id == '?')
             {
                 // New layer
-                layer = std::make_shared<Layer>(BoundingBox(project->get_logic_model()->get_width(), project->get_logic_model()->get_height()));
+                layer = std::make_shared<Layer>(BoundingBox(project->get_logic_model()->get_width(), project->get_logic_model()->get_height()), project->get_project_type());
                 layer->set_layer_id(project->get_logic_model()->get_new_layer_id());
             }
             else
@@ -359,37 +359,51 @@ namespace degate
             // Image
             LayerBackgroundSelectionButton* background = dynamic_cast<LayerBackgroundSelectionButton*>(layers.cellWidget(i, 4));
 
-            try
+
+            if (project->get_project_type() == ProjectType::Normal)
             {
-                if (background->has_new_image())
+                // If Normal project type, then just load the new image background
+                // This can take a very long time
+
+                try
                 {
-                    // Start progress dialog
-                    ProgressDialog progress_dialog(this->parentWidget(),
-                                                   tr("Importation and conversion of the new background image. "
-                                                      "This operation can take a lot of time, but will be performed only once."),
-                                                   nullptr);
+                    if (background->has_new_image())
+                    {
+                        // Start progress dialog
+                        ProgressDialog progress_dialog(this->parentWidget(),
+                                                    tr("Importation and conversion of the new background image. "
+                                                        "This operation can take a lot of time, but will be performed only once."),
+                                                    nullptr);
 
-                    // Set the job to start the background loading.
-                    progress_dialog.set_job([&layer, &background, this]()
-                                            {
-                                                load_new_background_image(layer, project->get_project_directory(), background->get_image_path());
-                                            });
+                        // Set the job to start the background loading.
+                        progress_dialog.set_job([&layer, &background, this]()
+                                                {
+                                                    load_new_background_image(layer, project->get_project_directory(), background->get_image_path());
+                                                });
 
-                    // Start the process
-                    progress_dialog.exec();
+                        // Start the process
+                        progress_dialog.exec();
 
-                    if (progress_dialog.was_canceled())
-                        debug(TM, "The background image importation and conversion operation has been canceled.");
+                        if (progress_dialog.was_canceled())
+                            debug(TM, "The background image importation and conversion operation has been canceled.");
+                    }
+                }
+                catch (std::exception& e)
+                {
+                    QMessageBox::critical(this,
+                                        tr("Error"),
+                                        tr("Can't import the background image.") + "\n" + tr("Error:") + " " +
+                                        QString::fromStdString(e.what()));
+
+                    return;
                 }
             }
-            catch (std::exception& e)
+            else
             {
-                QMessageBox::critical(this,
-                                      tr("Error"),
-                                      tr("Can't import the background image.") + "\n" + tr("Error:") + " " +
-                                      QString::fromStdString(e.what()));
+                // If attached project type, then just create the background image without loading
 
-                return;
+                BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(layer->get_width(), layer->get_height(), background->get_image_path());
+                layer->set_image(bg_image);
             }
 
 

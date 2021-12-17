@@ -109,10 +109,11 @@ object_id_t LogicModel::get_new_object_id()
 }
 
 
-LogicModel::LogicModel(unsigned int width, unsigned int height, unsigned int layers) :
+LogicModel::LogicModel(unsigned int width, unsigned int height, ProjectType project_type, unsigned int layers) :
     bounding_box(static_cast<float>(width), static_cast<float>(height)),
     main_module(new Module("main_module", "", true)),
-    object_id_counter(0)
+    object_id_counter(0),
+    project_type(project_type)
 {
     gate_library = std::make_shared<GateLibrary>();
 
@@ -680,7 +681,7 @@ void LogicModel::add_layer(layer_position_t pos, Layer_shptr new_layer)
 
 void LogicModel::add_layer(layer_position_t pos)
 {
-    Layer_shptr new_layer(new Layer(bounding_box));
+    Layer_shptr new_layer(new Layer(bounding_box, project_type));
     add_layer(pos, new_layer);
 }
 

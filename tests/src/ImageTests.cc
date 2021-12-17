@@ -71,7 +71,7 @@ TileImage_RGBA_shptr read_image(std::shared_ptr<degate::ImageReader<degate::Tile
                                                 reader->get_height(),
                                                 tile_size_exp));
 
-    REQUIRE(img->get_directory().size() > 0);
+    REQUIRE(img->get_path().size() > 0);
 
     bool state = reader->get_image(img);
 
@@ -86,7 +86,7 @@ TileImage_RGBA_shptr read_image(std::shared_ptr<degate::ImageReader<degate::Tile
     REQUIRE(state == true);
 
     // At least after reading data there should be a temp directory
-    REQUIRE(is_directory(img->get_directory()));
+    REQUIRE(is_directory(img->get_path()));
 
     return img;
 }
