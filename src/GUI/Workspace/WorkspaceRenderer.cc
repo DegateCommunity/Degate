@@ -23,6 +23,7 @@
 #include "GUI/Dialog/GateEditDialog.h"
 #include "GUI/Dialog/AnnotationEditDialog.h"
 #include "GUI/Preferences/PreferencesHandler.h"
+#include "GUI/Workspace/WorkspaceNotifier.h"
 
 namespace degate
 {
@@ -414,6 +415,8 @@ namespace degate
 
     void WorkspaceRenderer::cleanup()
     {
+        WorkspaceNotifier::get_instance().undefine(WorkspaceTarget::Workspace);
+
         makeCurrent();
 
         // Delete opengl objects here
@@ -456,6 +459,11 @@ namespace degate
         debug(TM, "GLSL version: %s", glFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION));
 
         connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &WorkspaceRenderer::cleanup);
+
+        // Define the draw notification for the workspace (renderer), just a repaint
+        WorkspaceNotifier::get_instance().define(WorkspaceTarget::Workspace, WorkspaceNotification::Draw, [=](){
+            this->repaint();
+        });
 	}
 
 	void WorkspaceRenderer::paintGL()

@@ -26,6 +26,7 @@
 #include "Core/Image/GlobalTileCache.h"
 #include "Core/Utils/FileSystem.h"
 #include "Core/Utils/MemoryMap.h"
+#include "GUI/Workspace/WorkspaceNotifier.h"
 
 #include <QtConcurrent/QtConcurrent>
 #include <QImageReader>
@@ -139,6 +140,8 @@ namespace degate
                     auto data = std::make_pair(load(x, y), now);
                     TileCache<PixelPolicy>::mutex.lock();
                     TileCache<PixelPolicy>::cache[filename] = data;
+                    WorkspaceNotifier::get_instance().notify(WorkspaceTarget::WorkspaceBackground, WorkspaceNotification::Update);
+                    WorkspaceNotifier::get_instance().notify(WorkspaceTarget::Workspace, WorkspaceNotification::Draw);
                     TileCache<PixelPolicy>::mutex.unlock();
                 });
 
@@ -175,8 +178,6 @@ namespace degate
         std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>
         load(unsigned int x, unsigned int y)
         {
-            debug(TM, "load(%d, %d)", x, y);
-
             // Prepare sizes
             QSize reading_size{static_cast<int>(tile_size), static_cast<int>(tile_size)};
             QSize read_size{static_cast<int>(x) * static_cast<int>(tile_size), static_cast<int>(y) * static_cast<int>(tile_size)};
@@ -238,8 +239,6 @@ namespace degate
                     mem->set(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), qAlpha(rgb)));
                 }
             }
-
-            debug(TM, "finished load(%d, %d)", x, y);
 
             return mem;
         }

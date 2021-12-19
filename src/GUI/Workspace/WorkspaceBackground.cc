@@ -20,6 +20,7 @@
  */
 
 #include "WorkspaceBackground.h"
+#include "GUI/Workspace/WorkspaceNotifier.h"
 
 #include <algorithm>
 
@@ -56,6 +57,7 @@ namespace degate
 
     WorkspaceBackground::~WorkspaceBackground()
     {
+        WorkspaceNotifier::get_instance().undefine(WorkspaceTarget::WorkspaceBackground);
         free_textures();
     }
 
@@ -97,9 +99,13 @@ namespace degate
         delete fshader;
 
         program->link();
+
+        WorkspaceNotifier::get_instance().define(WorkspaceTarget::WorkspaceBackground, WorkspaceNotification::Update, std::bind(&WorkspaceBackground::update, this));
     }
 
-    void WorkspaceBackground::update() //TODO: this is slow, try to have a thread that do that work
+    // TODO: Full update on each call, should now what changed and update only what's needed.
+    //       Like save elem and compare, and {min,max}* : compare to know if something need to update.
+    void WorkspaceBackground::update()
     {
         free_textures();
 
