@@ -47,22 +47,27 @@ namespace degate
          * @param scale : the scale to apply when loading the image (e.g. scale = 2
          *      will load the image with final size of width/2 and height/2). 
          *      @see ScalingManager.
+         * @param loading_type : the loading type to use when loading a new tile.
+         * @param notification_list : the list of workspace notification(s) to notify
+         *      after a new loading finished. This is done only if async loading type.
          */
         template<typename PixelPolicy>
         inline std::shared_ptr<TileCache<PixelPolicy>> generate(std::string path,
                                                                 unsigned int tile_width_exp,
-                                                                unsigned int scale = 1)
+                                                                unsigned int scale,
+                                                                TileLoadingType loading_type, 
+                                                                const WorkspaceNotificationList& notification_list)
         {
             switch (project_type)
             {
                 case ProjectType::Normal:
-                    return std::make_shared<TileCacheStore<PixelPolicy>>(path, tile_width_exp, scale);
+                    return std::make_shared<TileCacheStore<PixelPolicy>>(path, tile_width_exp, scale, loading_type, notification_list);
                     break;
                 case ProjectType::Attached:
-                    return std::make_shared<TileCacheAttached<PixelPolicy>>(path, tile_width_exp, scale);
+                    return std::make_shared<TileCacheAttached<PixelPolicy>>(path, tile_width_exp, scale, loading_type, notification_list);
                     break;
                 default:
-                    return std::make_shared<TileCacheStore<PixelPolicy>>(path, tile_width_exp);
+                    return std::make_shared<TileCacheStore<PixelPolicy>>(path, tile_width_exp, scale, loading_type, notification_list);
                     break;
             }
         }

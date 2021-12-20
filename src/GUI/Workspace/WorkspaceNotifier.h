@@ -29,6 +29,8 @@
 #include <QCoreApplication>
 
 #include <map>
+#include <vector>
+#include <initializer_list>
 
 namespace degate
 {
@@ -51,6 +53,16 @@ namespace degate
         Update,
         Draw
     };
+
+    /**
+     * A type that define a workspace notification list.
+     */
+    using WorkspaceNotificationVector = std::vector<std::pair<WorkspaceTarget, WorkspaceNotification>>;
+
+    /**
+     * A type that define init values for a workspace notification list.
+     */
+    using WorkspaceNotificationList = std::initializer_list<std::pair<WorkspaceTarget, WorkspaceNotification>>;
 
     /**
      * @class WorkspaceNotifier

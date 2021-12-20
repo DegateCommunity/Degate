@@ -25,9 +25,20 @@
 #include "Core/Image/TileImage.h"
 #include "Core/Image/TileCacheBase.h"
 #include "Core/Image/GlobalTileCache.h"
+#include "GUI/Workspace/WorkspaceNotifier.h"
 
 namespace degate
 {
+    /**
+     * @enum TileLoadingType
+     * @brief Defines the different tile loading types.
+     */
+    enum class TileLoadingType
+    {
+        Sync,
+        Async
+    };
+
     /**
      * @class TileCache
      * @brief Tile cache base class (interface).
@@ -50,11 +61,20 @@ namespace degate
          * @param scale : the scale to apply when loading the image (e.g. scale = 2
          *      will load the image with final size of width/2 and height/2). 
          *      @see ScalingManager.
+         * @param loading_type : the loading type to use when loading a new tile.
+         * @param notification_list : the list of workspace notification(s) to notify
+         *      after a new loading finished. This is done only if async loading type.
          */
-        inline TileCache(std::string path, unsigned int tile_width_exp, unsigned int scale)
+        inline TileCache(std::string path, 
+                         unsigned int tile_width_exp, 
+                         unsigned int scale, 
+                         TileLoadingType loading_type, 
+                         const WorkspaceNotificationList& notification_list)
             : path(std::move(path)),
               tile_width_exp(tile_width_exp),
-              scale(scale)
+              scale(scale),
+              loading_type(loading_type),
+              notification_list(notification_list)
         {
         }
 
@@ -237,9 +257,18 @@ namespace degate
         /**
          * Get image size in bytes.
          */
-        uint_fast64_t get_image_size() const
+        inline uint_fast64_t get_image_size() const
         {
             return sizeof(typename PixelPolicy::pixel_type) * (uint_fast64_t(1) << tile_width_exp) * (uint_fast64_t(1) << tile_width_exp);
+        }
+
+        /**
+         * Send all notifications regarding the notification list.
+         */
+        inline void notify()
+        {
+            for (auto notification : notification_list)
+                WorkspaceNotifier::get_instance().notify(notification.first, notification.second);
         }
 
     protected:
@@ -262,6 +291,9 @@ namespace degate
         unsigned int scale;
 
         std::mutex mutex;
+
+        TileLoadingType loading_type;
+        WorkspaceNotificationVector notification_list;
     };
 } // namespace degate
 

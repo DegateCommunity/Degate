@@ -227,17 +227,24 @@ namespace degate
          *      value is specified as an exponent to the base 2. This means for
          *      example that if you want to use a width of 1024 pixel, you have
          *      to give a value of 10, because 2^10 is 1024.
+         * @param loading_type : the loading type to use when loading a new tile.
+         * @param notification_list : the list of workspace notification(s) to notify
+         *      after a new loading finished. This is done only if async loading type.
          */
         Image(unsigned int width,
               unsigned int height,
               unsigned int scale = 1,
-              unsigned int tile_width_exp = 10) :
+              unsigned int tile_width_exp = 10,
+              TileLoadingType loading_type = TileLoadingType::Sync, 
+              const WorkspaceNotificationList& notification_list = {}) :
             ImageBase(width, height),
             StoragePolicy_Tile<PixelPolicy>(width, height,
                                             create_temp_directory(),
                                             false,
                                             scale,
-                                            tile_width_exp)
+                                            tile_width_exp,
+                                            loading_type,
+                                            notification_list)
         {
         }
 
@@ -256,19 +263,26 @@ namespace degate
          *      value is specified as an exponent to the base 2. This means for
          *      example that if you want to use a width of 1024 pixel, you have
          *      to give a value of 10, because 2^10 is 1024.
+         * @param loading_type : the loading type to use when loading a new tile.
+         * @param notification_list : the list of workspace notification(s) to notify
+         *      after a new loading finished. This is done only if async loading type.
          */
         Image(unsigned int width,
               unsigned int height,
               std::string const& path,
               bool persistent = true,
               unsigned int scale = 1,
-              unsigned int tile_width_exp = 10) :
+              unsigned int tile_width_exp = 10,
+              TileLoadingType loading_type = TileLoadingType::Sync,
+              const WorkspaceNotificationList& notification_list = {}) :
             ImageBase(width, height),
             StoragePolicy_Tile<PixelPolicy>(width, height,
                                             path,
                                             persistent,
                                             scale,
-                                            tile_width_exp)
+                                            tile_width_exp,
+                                            loading_type,
+                                            notification_list)
         {
         }
 

@@ -168,32 +168,45 @@ namespace degate
                     snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
 
                     path = join_pathes(images[1]->get_path(), std::string(dir_name));
+
+                    // Check if need to create scaled images
+                    debug(TM, "create scaled image in %s for scaling factor %d?", path.c_str(), i);
+                    if (!file_exists(path))
+                    {
+                        debug(TM, "yes");
+                        create_directory(path);
+
+                        // Load the base image
+                        std::shared_ptr<ImageType> new_img = std::make_shared<ImageType>(w, h, path, images[1]->is_persistent(), i);
+
+                        // Scale down
+                        scale_down_by_2<ImageType, ImageType>(new_img, last_img);
+                        last_img = new_img;
+                    }
+                    else
+                    {
+                        debug(TM, "no");
+
+                        // Load the scaled image
+                        last_img = std::make_shared<ImageType>(w, h, path, images[1]->is_persistent(), i);
+                    }
                 }
                 else
+                {
                     path = images[1]->get_path();
 
-                // Create the scaling if needed
-                debug(TM, "create scaled image in %s for scaling factor %d?", path.c_str(), i);
-                if (!file_exists(path) && project_type == ProjectType::Normal)
-                {
-                    debug(TM, "yes");
-                    create_directory(path);
-
-                    // Load the base image
-                    std::shared_ptr<ImageType> new_img(new ImageType(w, h, path, images[1]->is_persistent(), i));
-
-                    // Scale down
-                    scale_down_by_2<ImageType, ImageType>(new_img, last_img);
-                    last_img = new_img;
-                }
-                else
-                {
-                    debug(TM, "no");
-
-                    // Load the image
-                    std::shared_ptr<ImageType> new_img(new ImageType(w, h, path, images[1]->is_persistent(), i));
-
-                    last_img = new_img;
+                    // If attached, load async and notify workspace + background
+                    last_img = std::make_shared<ImageType>(
+                            w,
+                            h,
+                            path,
+                            images[1]->is_persistent(),
+                            i,
+                            10,
+                            TileLoadingType::Async,
+                            WorkspaceNotificationList{
+                                    {WorkspaceTarget::WorkspaceBackground, WorkspaceNotification::Update},
+                                    {WorkspaceTarget::Workspace, WorkspaceNotification::Draw}});
                 }
 
                 images[i] = last_img;

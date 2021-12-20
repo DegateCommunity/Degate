@@ -221,7 +221,18 @@ void ProjectImporter::load_background_image(const Layer_shptr& layer,
         // And then, just have to set the layer base image (scaling default = 1)
         if (prj->get_project_type() == ProjectType::Attached)
         {
-            BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(layer->get_width(), layer->get_height(), image_filename);
+            BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(
+                    layer->get_width(),
+                    layer->get_height(),
+                    image_filename,
+                    true,
+                    1,
+                    10,
+                    TileLoadingType::Async,
+                    WorkspaceNotificationList{{WorkspaceTarget::WorkspaceBackground, WorkspaceNotification::Update},
+                                              {WorkspaceTarget::Workspace, WorkspaceNotification::Draw}});
+            
+            // Set the image to the layer
             layer->set_image(bg_image);
 
             return;

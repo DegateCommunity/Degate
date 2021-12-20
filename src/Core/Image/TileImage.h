@@ -26,7 +26,6 @@
 #include "Globals.h"
 #include "PixelPolicies.h"
 #include "StoragePolicies.h"
-#include "TileCacheStore.h"
 #include "Core/Image/TileCacheFactory.h"
 
 namespace degate
@@ -105,18 +104,23 @@ namespace degate
          *      value is specified as an exponent to the base 2. This means for
          *      example that if you want to use a width of 1024 pixel, you have
          *      to give a value of 10, because 2^10 is 1024.
+         * @param loading_type : the loading type to use when loading a new tile.
+         * @param notification_list : the list of workspace notification(s) to notify
+         *      after a new loading finished. This is done only if async loading type.
          */
         StoragePolicy_Tile(unsigned int width,
                            unsigned int height,
                            std::string const& path,
                            bool persistent = false,
                            unsigned int scale = 1,
-                           unsigned int tile_width_exp = 10)
+                           unsigned int tile_width_exp = 10,
+                           TileLoadingType loading_type = TileLoadingType::Sync, 
+                           const WorkspaceNotificationList& notification_list = {})
             : persistent(persistent),
               tile_width_exp(tile_width_exp),
               offset_bitmask((1 << tile_width_exp) - 1),
               path(path),
-              tile_cache(TileCacheFactory::get_instance().generate<PixelPolicy>(path, tile_width_exp, scale)),
+              tile_cache(TileCacheFactory::get_instance().generate<PixelPolicy>(path, tile_width_exp, scale, loading_type, notification_list)),
               width(width),
               height(height)
         {

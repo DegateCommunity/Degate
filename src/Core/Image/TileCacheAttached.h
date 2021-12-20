@@ -26,7 +26,7 @@
 #include "Core/Image/GlobalTileCache.h"
 #include "Core/Utils/FileSystem.h"
 #include "Core/Utils/MemoryMap.h"
-#include "GUI/Workspace/WorkspaceNotifier.h"
+#include "Core/Image/TileCache.h"
 
 #include <QtConcurrent/QtConcurrent>
 #include <QImageReader>
@@ -56,13 +56,26 @@ namespace degate
          * @param scale : the scale to apply when loading the image (e.g. scale = 2
          *      will load the image with final size of width/2 and height/2). 
          *      @see ScalingManager.
+         * @param loading_type : the loading type to use when loading a new tile.
+         * @param notification_list : the list of workspace notification(s) to notify
+         *      after a new loading finished. This is done only if async loading type.
          */
-        inline TileCacheAttached(std::string path, unsigned int tile_width_exp, unsigned int scale = 1)
-            : TileCache<PixelPolicy>(path, tile_width_exp, scale),
+        inline TileCacheAttached(std::string path, 
+                                 unsigned int tile_width_exp, 
+                                 unsigned int scale, 
+                                 TileLoadingType loading_type, 
+                                 const WorkspaceNotificationList& notification_list)
+            : TileCache<PixelPolicy>(path, tile_width_exp, scale, loading_type, notification_list),
               tile_size(1 << tile_width_exp),
               path(path)
         {
             QImageReader reader(path.c_str());
+            if (reader.canRead() == false)
+            {
+                debug(TM, "Degate image format: %s", path.c_str());
+                degate_image_format = true;
+                return;
+            }
 
             // If the image is a multi-page/multi-res, we take the page with the biggest resolution.
             if (reader.imageCount() > 1)
@@ -125,32 +138,51 @@ namespace degate
                 struct timespec now{};
                 GET_CLOCK(now);
 
-                // If update_current, then update and set a black loading tile
-                if (update_current)
+                if (degate_image_format == false)
                 {
-                    TileCache<PixelPolicy>::cache[filename] = std::make_pair(loading_tile, now);;
-                    TileCache<PixelPolicy>::current_tile = loading_tile;
-                    TileCache<PixelPolicy>::curr_tile_num_x = x;
-                    TileCache<PixelPolicy>::curr_tile_num_y = y;
-                }
+                    // Check loading type
+                    if (TileCache<PixelPolicy>::loading_type == TileLoadingType::Async)
+                    {
+                        // If update_current, then update and set a black loading tile
+                        if (update_current)
+                        {
+                            TileCache<PixelPolicy>::cache[filename] = std::make_pair(loading_tile, now);;
+                            TileCache<PixelPolicy>::current_tile = loading_tile;
+                            TileCache<PixelPolicy>::curr_tile_num_x = x;
+                            TileCache<PixelPolicy>::curr_tile_num_y = y;
+                        }
 
-                // Run in another thread the loading phase of the new tile
-                QtConcurrent::run([=]()
+                        // Run in another thread the loading phase of the new tile
+                        QtConcurrent::run([=]()
+                        {
+                            // Convert to cache type
+                            auto data = std::make_pair(load(x, y), now);
+
+                            // Register the new entry and send notifications
+                            TileCache<PixelPolicy>::mutex.lock();
+                            TileCache<PixelPolicy>::cache[filename] = data;
+                            TileCache<PixelPolicy>::notify();
+                            TileCache<PixelPolicy>::mutex.unlock();
+                        });
+
+                        // Show the loading tile while waiting for the next update to try to load the real tile image
+                        return;
+                    }
+                    else
+                    {
+                        // If sync
+                        TileCache<PixelPolicy>::cache[filename] = std::make_pair(load(x, y), now);
+                    }
+                }
+                else
                 {
-                    auto data = std::make_pair(load(x, y), now);
-                    TileCache<PixelPolicy>::mutex.lock();
-                    TileCache<PixelPolicy>::cache[filename] = data;
-                    WorkspaceNotifier::get_instance().notify(WorkspaceTarget::WorkspaceBackground, WorkspaceNotification::Update);
-                    WorkspaceNotifier::get_instance().notify(WorkspaceTarget::Workspace, WorkspaceNotification::Draw);
-                    TileCache<PixelPolicy>::mutex.unlock();
-                });
+                    // Async loading not supported for degate image format (memory map)
+                    TileCache<PixelPolicy>::cache[filename] = std::make_pair(load_degate_image_format(filename), now);
+                }
 
                 #ifdef TILECACHE_DEBUG
                 gtc.print_table();
                 #endif
-
-                // Show the loading tile while waiting for the next update to try to load the real tile image
-                return;
             }
 
             // Get current time
@@ -243,6 +275,27 @@ namespace degate
             return mem;
         }
 
+        /**
+         * Load image in degate internal format.
+         * 
+         * @param filename : just the name of the file to load. The filename is
+         *     relative to the path.
+         */
+        inline
+        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>
+        load_degate_image_format(std::string const& filename)
+        {
+            std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> mem(
+                    new MemoryMap<typename PixelPolicy::pixel_type>(
+                            uint_fast64_t(1) << TileCache<PixelPolicy>::tile_width_exp,
+                            uint_fast64_t(1) << TileCache<PixelPolicy>::tile_width_exp,
+                            MAP_STORAGE_TYPE_PERSISTENT_FILE,
+                            join_pathes(TileCache<PixelPolicy>::path, filename)));
+
+            return mem;
+        }
+
+
     private:
 
         QSize size;
@@ -250,6 +303,7 @@ namespace degate
         unsigned int tile_size;
         std::string path;
         int best_image_number = -1;
+        bool degate_image_format = false;
 
         std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> loading_tile;
     };
