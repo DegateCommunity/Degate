@@ -25,6 +25,9 @@
 #include "Core/RuleCheck/RCVBlacklistImporter.h"
 #include "Core/LogicModel/LogicModelHelper.h"
 
+#include <QFileDialog>
+#include <QMessageBox>
+
 #include <cerrno>
 #include <iostream>
 #include <memory>
@@ -221,6 +224,53 @@ void ProjectImporter::load_background_image(const Layer_shptr& layer,
         // And then, just have to set the layer base image (scaling default = 1)
         if (prj->get_project_type() == ProjectType::Attached)
         {
+            bool can_load = true;
+
+            // Check if the image exists
+            if (!file_exists(image_filename))
+                can_load = false;
+
+            // Check if the image is readeable
+            QImageReader reader(image_filename.c_str());
+            if (!reader.canRead())
+                can_load = false;
+
+            // If cannot load/read
+            if (!can_load)
+            {
+                if (qApp->thread() != QThread::currentThread())
+                    throw std::runtime_error("Can't find this image path for project with attached mode: '" + image_filename + "'.");
+
+                // Convert old filename
+                auto old_filename = QString::fromStdString(image_filename);
+
+                // Show error
+                auto title = QCoreApplication::translate("ProjectImporter", "An image path was not found.");
+                auto warning = QCoreApplication::translate("ProjectImporter",
+                                                           "You are loading a project with attached mode, and a background "
+                                                           "image path was not found, please select the new path for: ",
+                                                           "... [old path]") +
+                               "'" + old_filename + "'";
+                auto res = QMessageBox::warning(nullptr, title, warning, QMessageBox::Ok | QMessageBox::Cancel);
+
+                // If cancel, just throw
+                if (res == QMessageBox::Cancel)
+                    throw std::runtime_error("Can't find this image path for project with attached mode: '" + image_filename + "'.");
+
+                // Show file picked
+                auto text =
+                        QCoreApplication::translate("ProjectImporter", "Select the new path for: ", "... [old path]") +
+                        "'" + old_filename + "'";
+                std::string filepath = QFileDialog::getOpenFileName(nullptr, text).toStdString();
+
+                // Re-enter this function
+                load_background_image(layer, filepath, prj);
+
+                // Finish here
+                return;
+            }
+
+            // Create the image
             BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(
                     layer->get_width(),
                     layer->get_height(),
@@ -235,6 +285,7 @@ void ProjectImporter::load_background_image(const Layer_shptr& layer,
             // Set the image to the layer
             layer->set_image(bg_image);
 
+            // Finish here
             return;
         }
 

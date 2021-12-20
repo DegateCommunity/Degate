@@ -1485,6 +1485,8 @@ namespace degate
         try
         {
             std::shared_ptr<Project> imported_project = nullptr;
+
+            // First try, in worker thread
             progress_dialog.set_job([&]
             {
                 try
@@ -1501,9 +1503,18 @@ namespace degate
             });
             progress_dialog.exec();
 
+            // Second try, in the main thread
             if (error)
             {
-                throw std::runtime_error(error_message.c_str());
+                try
+                {
+                    imported_project = project_importer.import_all(path);
+                }
+                catch (const std::exception& e)
+                {
+                    // If fail, just throw and cancel project opening
+                    throw std::runtime_error(error_message.c_str());
+                }
             }
 
             if (imported_project == nullptr)
