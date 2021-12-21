@@ -143,13 +143,32 @@ namespace degate
          */
         void create_scalings()
         {
-            // If normal mode, then check if directory exists
-            if (!(file_exists(base_directory) && is_directory(base_directory)) && project_type == ProjectType::Normal)
-                throw InvalidPathException("The path for prescaled images must exist. But it is not there.");
-
+            // Get base image
             std::shared_ptr<ImageType> last_img = images[1];
-            unsigned int w = last_img->get_width();
-            unsigned int h = last_img->get_height();
+            unsigned int w = 0;
+            unsigned int h = 0;
+
+            // If normal mode, then check if directory exists
+            if (project_type == ProjectType::Normal)
+            {
+                if (!(file_exists(base_directory) && is_directory(base_directory)))
+                    throw InvalidPathException("The path for prescaled images must exist. But it is not there.");
+
+                w = last_img->get_width();
+                h = last_img->get_height();
+            }
+            else
+            {
+                QImageReader reader(last_img->get_path().c_str());
+
+                // Size
+                auto size = reader.size();
+                if (!size.isValid())
+                    throw std::runtime_error("Can't read size of " + last_img->get_path());
+
+                w = size.width();
+                h = size.height();
+            }
 
             // Create scalings
             for (int i = 2; ((h > min_size) || (w > min_size)) && (i < (1 << 24)); // max 24 scaling levels
@@ -193,6 +212,8 @@ namespace degate
                 }
                 else
                 {
+                    // If attached, pass the image path directly
+                    // @see TileCache to understand
                     path = images[1]->get_path();
 
                     // If attached, load async and notify workspace + background
