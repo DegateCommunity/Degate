@@ -23,17 +23,17 @@
 #define __TILEIMAGE_H__
 
 #include "Core/Utils/FileSystem.h"
+#include "Core/Image/TileCache.h"
 #include "Globals.h"
 #include "PixelPolicies.h"
 #include "StoragePolicies.h"
-#include "Core/Image/TileCacheFactory.h"
 
 namespace degate
 {
     /**
      * Storage policy for image objects that consists of tiles.
      *
-     * This implementation uses a TileCacheStore.
+     * This implementation uses a TileCache.
      */
     template <class PixelPolicy>
     class StoragePolicy_Tile : public StoragePolicy_Base<PixelPolicy>
@@ -93,6 +93,10 @@ namespace degate
          * least the size specified via the width and height parameter.
          * Because the image is splitted into equisized tiles the constructed
          * image might be larger than the requested size.
+         * 
+         * It supports two types of tile loading depending on the type of the image.
+         * This is the main point of difference between Attached and Normal project modes.
+         * @see TileCache.
          *
          * @param width The minimum width of the image.
          * @param height The minimum height of the image.
@@ -120,7 +124,7 @@ namespace degate
               tile_width_exp(tile_width_exp),
               offset_bitmask((1 << tile_width_exp) - 1),
               path(path),
-              tile_cache(TileCacheFactory::get_instance().generate<PixelPolicy>(path, tile_width_exp, scale, loading_type, notification_list)),
+              tile_cache(std::make_shared<TileCache<PixelPolicy>>(path, tile_width_exp, scale, loading_type, notification_list)),
               width(width),
               height(height)
         {

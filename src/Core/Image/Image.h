@@ -218,6 +218,10 @@ namespace degate
         /**
          * Constructor for temporary virtual images.
          * 
+         * It supports two types of tile loading depending on the type of the image.
+         * This is the main point of difference between Attached and Normal project modes.
+         * @see TileCache.
+         * 
          * @param width : the width of the image.
          * @param height : the height of the image.
          * @param scale : the scale to apply when loading the image (e.g. scale = 2
@@ -250,6 +254,10 @@ namespace degate
 
         /**
          * Constructor for persistent virtual images.
+         * 
+         * It supports two types of tile loading depending on the type of the image.
+         * This is the main point of difference between Attached and Normal project modes.
+         * @see TileCache.
          * 
          * @param width : the width of the image.
          * @param height : the height of the image.

@@ -42,8 +42,6 @@ Project::Project(length_t width, length_t height, ProjectType project_type) :
     port_color_manager(new PortColorManager()),
     project_type(project_type)
 {
-    TileCacheFactory::get_instance().set_project_type(project_type);
-
     init_default_values();
 }
 
@@ -56,8 +54,6 @@ Project::Project(length_t width, length_t height, std::string const& directory, 
     port_color_manager(new PortColorManager()),
     project_type(project_type)
 {
-    TileCacheFactory::get_instance().set_project_type(project_type);
-
     init_default_values();
 }
 
