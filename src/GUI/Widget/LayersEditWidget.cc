@@ -400,16 +400,28 @@ namespace degate
             }
             else
             {
-                // If attached project type, then just create the background image without loading
+                if (background->has_new_image())
+                {
+                    debug(TM, "Background image path: %s", background->get_image_path());
 
-                BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(layer->get_width(), layer->get_height(), background->get_image_path());
-                layer->set_image(bg_image);
+                    // If attached project type, then just create the background image without loading
+                    BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(
+                            layer->get_width(),
+                            layer->get_height(),
+                            background->get_image_path(),
+                            true,
+                            1,
+                            10,
+                            TileLoadingType::Async,
+                            WorkspaceNotificationList{{WorkspaceTarget::WorkspaceBackground, WorkspaceNotification::Update},
+                                                    {WorkspaceTarget::Workspace, WorkspaceNotification::Draw}});
+
+                    // Set the image to the layer
+                    layer->set_image(bg_image);
+                }
             }
 
-
-            // Position
             layer->set_layer_pos(i);
-
             layer_collection.push_back(layer);
         }
 
