@@ -1,6 +1,0 @@
-{
-    "cmake.configureArgs": [
-        "-DBOOST_ROOT=\"C:\\local\\boost_1_73_0\"",
-        "-DCMAKE_PREFIX_PATH=\"C:\\Qt\\5.15.1\\msvc2019_64\\lib\\cmake\\Qt5\""
-    ]
-}
