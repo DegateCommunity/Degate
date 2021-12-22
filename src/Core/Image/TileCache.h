@@ -55,7 +55,7 @@ namespace degate
      * This is the main point of difference between Attached and Normal project modes.
      */
     template<class PixelPolicy>
-    class TileCache : public TileCacheBase, public QObject
+    class TileCache : public TileCacheBase
     {
         friend class GlobalTileCache<PixelPolicy>;
 
@@ -581,7 +581,7 @@ namespace degate
             });
 
             // Create a new watcher and add it to the list of watchers
-            watchers.push_back(new QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>(this));
+            watchers.push_back(new QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>(nullptr));
             auto* watcher = watchers.back();
 
             // Called when loading finished and if the watcher object is still valid (not destroyed).
