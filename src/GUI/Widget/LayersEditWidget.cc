@@ -402,8 +402,6 @@ namespace degate
             {
                 if (background->has_new_image())
                 {
-                    debug(TM, "Background image path: %s", background->get_image_path());
-
                     // If attached project type, then just create the background image without loading
                     BackgroundImage_shptr bg_image = std::make_shared<BackgroundImage>(
                             layer->get_width(),
