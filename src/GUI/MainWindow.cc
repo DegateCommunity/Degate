@@ -1513,7 +1513,7 @@ namespace degate
                 catch (const std::exception& e)
                 {
                     // If fail, just throw and cancel project opening
-                    throw std::runtime_error(error_message.c_str());
+                    throw std::runtime_error(e.what());
                 }
             }
 
