@@ -55,7 +55,7 @@ namespace degate
      * This is the main point of difference between Attached and Normal project modes.
      */
     template<class PixelPolicy>
-    class TileCache : public TileCacheBase
+    class TileCache : public TileCacheBase, public QObject
     {
         friend class GlobalTileCache<PixelPolicy>;
 
@@ -145,6 +145,14 @@ namespace degate
          */
         inline ~TileCache()
         {
+            std::lock_guard<std::mutex> lock(mtx);
+
+            // Delete and clear watchers
+            for (auto* watcher : watchers)
+                delete watcher;
+            watchers.clear();
+
+            // Release memory
             release_memory();
         }
 
@@ -154,6 +162,8 @@ namespace degate
         inline void cleanup_cache() override
         {
             if (cache.size() == 0) return;
+
+            std::lock_guard<std::mutex> lock(mtx);
 
             // Initialize a clock to store the oldest
             struct timespec oldest_clock_val;
@@ -198,7 +208,7 @@ namespace degate
         {
             if (cache.size() > 0)
             {
-                std::lock_guard<std::mutex> lock(mutex);
+                std::lock_guard<std::mutex> lock(mtx);
 
                 // Release the global tile cache (by removing all the used virtual memory by this)
                 GlobalTileCache<PixelPolicy>& gtc = GlobalTileCache<PixelPolicy>::get_instance();
@@ -312,6 +322,8 @@ namespace degate
          */
         inline void load_tile(unsigned int x, unsigned int y, bool update_current = false)
         {
+            std::lock_guard<std::mutex> lock(mtx);
+
             // Check if tile is included in the base image
             // Otherwise return loading tile
             if (!is_included(x, y))
@@ -355,7 +367,7 @@ namespace degate
                         // If update_current, then update and set a black loading tile
                         if (update_current)
                         {
-                            cache[filename] = std::make_pair(loading_tile, now);;
+                            cache[filename] = std::make_pair(loading_tile, now);
                             current_tile = loading_tile;
                             curr_tile_num_x = x;
                             curr_tile_num_y = y;
@@ -363,17 +375,7 @@ namespace degate
                         }
 
                         // Run in another thread the loading phase of the new tile
-                        QtConcurrent::run([=]()
-                        {
-                            // Convert to cache type
-                            auto data = std::make_pair(load(x, y), now);
-
-                            // Register the new entry and send notifications
-                            mutex.lock();
-                            cache[filename] = data;
-                            notify();
-                            mutex.unlock();
-                        });
+                        load_async(x, y, now, filename);
 
                         // Show the loading tile while waiting for the next update to try to load the real tile image
                         return;
@@ -381,7 +383,14 @@ namespace degate
                     else
                     {
                         // If sync
-                        cache[filename] = std::make_pair(load(x, y), now);
+                        auto temp = load(x, y, tile_size, scaled_size, path, best_image_number);
+
+                        // Prevent overflow
+                        if (temp == nullptr)
+                            temp = loading_tile;
+
+                        // Update cache
+                        cache[filename] = std::make_pair(temp, now);
                     }
                 }
                 else
@@ -436,8 +445,13 @@ namespace degate
          * @return Returns the new memory map (here, for attached mod, just memory).
          */
         inline
-        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>
-        load(unsigned int tile_x, unsigned int tile_y)
+        static
+        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> load(unsigned int tile_x,
+                                                                          unsigned int tile_y,
+                                                                          unsigned int tile_size,
+                                                                          QSize scaled_size,
+                                                                          std::string path,
+                                                                          int best_image_number)
         {
             // Prepare sizes
             QSize reading_size{static_cast<int>(tile_size), static_cast<int>(tile_size)};
@@ -453,7 +467,7 @@ namespace degate
 
             // Check overflow
             if (reading_size.width() <= 0 || reading_size.height() <= 0)
-                return loading_tile;
+                return nullptr;
 
             // Create reader
             QImageReader current_reader(path.c_str());
@@ -556,6 +570,44 @@ namespace degate
             return true;
         }
 
+        /**
+         * Run load() async, take into account this Tile Cache possible destruction before getting the result.
+         */
+        inline void load_async(unsigned int x, unsigned int y, struct timespec now, std::string filename)
+        {
+            // Run the load() function (static) async
+            auto future = QtConcurrent::run([=](){
+                return load(x, y, tile_size, scaled_size, path, best_image_number);
+            });
+
+            // Create a new watcher and add it to the list of watchers
+            watchers.push_back(new QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>(this));
+            auto* watcher = watchers.back();
+
+            // Called when loading finished and if the watcher object is still valid (not destroyed).
+            QObject::connect(watcher, &QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>::finished, [=]() {
+                // Get the load result (if this lambda was called, then watcher is valid/not destroyed)
+                auto temp = watcher->future().result();
+
+                // Prevent overflow
+                if (temp == nullptr)
+                    temp = loading_tile;
+
+                // Convert to cache type
+                auto data = std::make_pair(temp, now);
+
+                // Register the new entry and send notifications (if this lambda was called, then this is valid/not destroyed)
+                cache[filename] = data;
+                notify();
+
+                // Remove and delete watcher
+                watchers.erase(std::remove(watchers.begin(), watchers.end(), watcher), watchers.end());
+                delete watcher;
+            });
+
+            watcher->setFuture(future);
+        }
+
     private:
         const std::string path;
         const unsigned int tile_width_exp;
@@ -576,7 +628,7 @@ namespace degate
 
         unsigned int scale;
 
-        std::mutex mutex;
+        std::mutex mtx;
 
         TileLoadingType loading_type;
         WorkspaceNotificationVector notification_list;
@@ -588,6 +640,8 @@ namespace degate
         bool degate_image_format = false;
 
         std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> loading_tile;
+
+        std::vector<QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>*> watchers;
     };
 } // namespace degate
 
