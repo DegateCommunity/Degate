@@ -170,13 +170,14 @@ namespace degate
                 h = size.height();
             }
 
+            // First scaling possibility
+            w >>= 1;
+            h >>= 1;
+
             // Create scalings
-            for (int i = 2; ((h > min_size) || (w > min_size)) && (i < (1 << 24)); // max 24 scaling levels
+            for (int i = 2; ((h > min_size) && (w > min_size)) && (i < (1 << 24)); // max 24 scaling levels
                  i *= 2)
             {
-                w >>= 1;
-                h >>= 1;
-
                 std::string path;
 
                 // Get the path to use
@@ -231,6 +232,9 @@ namespace degate
                 }
 
                 images[i] = last_img;
+
+                w >>= 1;
+                h >>= 1;
             }
         }
 
