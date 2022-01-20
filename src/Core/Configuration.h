@@ -45,6 +45,11 @@ namespace degate
          * @return Returns the maximum cache size (in Mb) from the preferences.
          */
         static uint_fast64_t get_max_tile_cache_size();
+
+        /**
+         * Get the maximum number of threads allowed to run concurrently.
+         */
+        static unsigned int get_max_concurrent_thread_count();
     };
 
 } // namespace degate

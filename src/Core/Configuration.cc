@@ -32,3 +32,14 @@ uint_fast64_t Configuration::get_max_tile_cache_size()
 {
     return static_cast<uint_fast64_t>(PREFERENCES_HANDLER.get_preferences().cache_size);
 }
+
+unsigned int Configuration::get_max_concurrent_thread_count()
+{
+    const auto& pref = PREFERENCES_HANDLER.get_preferences();
+
+    // Check default value (0 = use ideal thread count)
+    if (pref.max_concurrent_thread_count == 0) 
+        return QThread::idealThreadCount();
+
+    return pref.max_concurrent_thread_count;
+}

@@ -74,6 +74,7 @@ namespace degate
 
         unsigned int cache_size;
         unsigned int image_importer_cache_size;
+        unsigned int max_concurrent_thread_count;
 
     };
 

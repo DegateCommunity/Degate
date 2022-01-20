@@ -405,6 +405,8 @@ namespace degate
 
         QObject::connect(&auto_save_timer, SIGNAL(timeout()), this, SLOT(auto_save()));
 
+        QThreadPool::globalInstance()->setMaxThreadCount(Configuration::get_max_concurrent_thread_count());
+
         // Workaround for a bug on Windows that occurs when using QOpenGLWidget + fullscreen mode.
         // See: https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows.
         #ifdef SYS_WINDOWS
