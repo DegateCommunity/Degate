@@ -98,10 +98,6 @@ namespace degate
             QImageReader reader(this->path.c_str());
             if (reader.canRead() == false)
             {
-                if (!is_directory(this->path))
-                    throw std::runtime_error("Unsupported image format for image: " + this->path);
-
-                //debug(TM, "Degate image format: %s", this->path.c_str());
                 degate_image_format = true;
                 return;
             }
