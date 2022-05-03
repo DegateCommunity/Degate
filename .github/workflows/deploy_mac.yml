@@ -47,10 +47,10 @@ jobs:
         brew install p7zip
         cp -R build/out/bin/ etc/installer/packages/Degate/data
         cd etc/installer
-        wget https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/tools_ifw/qt.tools.ifw.42/4.2.0-0-202111080927ifw-mac-x64.7z
-        7z x 4.2.0-0-202111080927ifw-mac-x64.7z -y
-        ./Tools/QtInstallerFramework/4.2/bin/binarycreator --offline-only -c config/config.xml -p packages "mac_deploy_offline/Degate_offline_installer_Mac_x64"
-        ./Tools/QtInstallerFramework/4.2/bin/binarycreator --online-only -c config/config.xml -p packages "mac_deploy_online/Degate_online_installer_Mac_x64"
+        wget https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/tools_ifw/qt.tools.ifw.43/4.3.0-0-202202240619ifw-mac-x64.7z
+        7z x 4.3.0-0-202202240619ifw-mac-x64.7z -y
+        ./Tools/QtInstallerFramework/4.3/bin/binarycreator --offline-only -c config/config.xml -p packages "mac_deploy_offline/Degate_offline_installer_Mac_x64"
+        ./Tools/QtInstallerFramework/4.3/bin/binarycreator --online-only -c config/config.xml -p packages "mac_deploy_online/Degate_online_installer_Mac_x64"
         
     - name: Upload Degate offline installer
       uses: actions/upload-artifact@v2
@@ -68,7 +68,7 @@ jobs:
       shell: bash
       run: |
         cd etc/installer
-        ./Tools/QtInstallerFramework/4.2/bin/repogen -p packages repository
+        ./Tools/QtInstallerFramework/4.3/bin/repogen -p packages repository
       
     - name: Upload Degate update
       uses: actions/upload-artifact@v2
