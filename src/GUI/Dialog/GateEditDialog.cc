@@ -28,6 +28,9 @@
 #include "GateEditDialog.h"
 #include "TerminalDialog.h"
 
+#include <QFileDialog>
+#include <QMessageBox>
+
 namespace degate
 {
 	// Entity tab
