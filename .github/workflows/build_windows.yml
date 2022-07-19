@@ -32,12 +32,14 @@ jobs:
       # Don't forget to update Boost path.
       run: |
         cd build
-        cmake .. -DBOOST_ROOT="C:\hostedtoolcache\windows\Boost\1.72.0\x86_64"
-        cmake --build . --config $BUILD_TYPE
+        cmake .. -DBOOST_ROOT="C:\hostedtoolcache\windows\Boost\1.72.0\x86_64" -A x64
+        cmake --build . --config $BUILD_TYPE --target Degate
 
     - name: Tests
       shell: bash
       run: |
-        cd build/tests/out/bin/$BUILD_TYPE
+        cd build
+        cmake --build . --config $BUILD_TYPE --target DegateTests
+        cd tests/out/bin/$BUILD_TYPE
         $Qt5_Dir/bin/windeployqt.exe ./
         ./DegateTests.exe
