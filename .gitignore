@@ -1,6 +1,8 @@
 build/*
 !build/.keepme
 .idea/
+.vs/
+.vscode/
 
 etc/installer/packages/Degate/data/*
 !etc/installer/packages/Degate/data/.keepme
