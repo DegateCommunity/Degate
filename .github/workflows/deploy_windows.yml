@@ -33,7 +33,7 @@ jobs:
       run: |
         cd build
         cmake .. -DBOOST_ROOT="C:\hostedtoolcache\windows\Boost\1.72.0\x86_64" -A x64
-        cmake --build . --config $BUILD_TYPE
+        cmake --build . --config $BUILD_TYPE --target Degate
       
     - name: Prepare binaries
       shell: bash
@@ -61,10 +61,10 @@ jobs:
       # Update the Qt Installer Framework (ifw) version here (by providing the exe download link and changing the exe name/path).
       run: |
         cd etc/installer
-        C:\msys64\usr\bin\wget.exe https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ifw/qt.tools.ifw.43/4.3.0-0-202202240618ifw-win-x86.7z
-        7z.exe x 4.3.0-0-202202240618ifw-win-x86.7z -y
-        .\Tools\QtInstallerFramework\4.3\bin\binarycreator.exe --offline-only -c config\config.xml -p packages "Degate_offline_installer_Windows_x64.exe"
-        .\Tools\QtInstallerFramework\4.3\bin\binarycreator.exe --online-only -c config\config.xml -p packages "Degate_online_installer_Windows_x64.exe"
+        C:\msys64\usr\bin\wget.exe https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ifw/qt.tools.ifw.44/4.4.1-0-202206210642ifw-win-x86.7z
+        7z.exe x 4.4.1-0-202206210642ifw-win-x86.7z -y
+        .\Tools\QtInstallerFramework\4.4\bin\binarycreator.exe --offline-only -c config\config.xml -p packages "Degate_offline_installer_Windows_x64.exe"
+        .\Tools\QtInstallerFramework\4.4\bin\binarycreator.exe --online-only -c config\config.xml -p packages "Degate_online_installer_Windows_x64.exe"
       
     - name: Upload Degate offline installer
       uses: actions/upload-artifact@v2
@@ -82,7 +82,7 @@ jobs:
       shell: cmd
       run: |
         cd etc/installer
-        .\Tools\QtInstallerFramework\4.3\bin\repogen.exe -p packages repository
+        .\Tools\QtInstallerFramework\4.4\bin\repogen.exe -p packages repository
       
     - name: Upload Degate update
       uses: actions/upload-artifact@v2
