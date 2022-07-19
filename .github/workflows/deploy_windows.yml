@@ -33,7 +33,7 @@ jobs:
       run: |
         cd build
         cmake .. -DBOOST_ROOT="C:\hostedtoolcache\windows\Boost\1.72.0\x86_64" -A x64
-        cmake --build . --config $BUILD_TYPE
+        cmake --build . --config $BUILD_TYPE --target Degate
       
     - name: Prepare binaries
       shell: bash
