@@ -38,6 +38,8 @@ jobs:
     - name: Tests
       shell: bash
       run: |
-        cd build/tests/out/bin/$BUILD_TYPE
+        cd build
+        cmake --build . --config $BUILD_TYPE --target DegateTests
+        cd tests/out/bin/$BUILD_TYPE
         $Qt5_Dir/bin/windeployqt.exe ./
         ./DegateTests.exe

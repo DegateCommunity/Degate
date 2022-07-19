@@ -36,7 +36,7 @@ jobs:
       run: |
         cd build
         cmake .. -DBOOST_ROOT="/opt/hostedtoolcache/boost/1.72.0/x64"
-        cmake --build . --config $BUILD_TYPE
+        cmake --build . --config $BUILD_TYPE --target Degate
 
     - name: Prepare Degate AppImage
       shell: bash

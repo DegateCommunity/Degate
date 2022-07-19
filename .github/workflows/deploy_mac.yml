@@ -25,7 +25,7 @@ jobs:
         brew install boost
         cd build
         cmake ..
-        cmake --build . --config $BUILD_TYPE
+        cmake --build . --config $BUILD_TYPE --target Degate
 
     - name: Prepare binaries
       shell: bash

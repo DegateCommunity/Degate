@@ -28,10 +28,12 @@ jobs:
         brew install boost
         cd build
         cmake ..
-        cmake --build . --config $BUILD_TYPE
+        cmake --build . --config $BUILD_TYPE --target Degate
 
     - name: Tests
       shell: bash
       run: |
-        cd build/tests/out/bin
+        cd build
+        cmake --build . --config $BUILD_TYPE --target DegateTests
+        cd tests/out/bin
         ./DegateTests
