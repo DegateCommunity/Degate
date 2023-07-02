@@ -142,6 +142,7 @@ SET(TRANSLATION_FILES
         degate_es.ts
         degate_it.ts
         degate_ko.ts
+        degate_zhcn.ts
 )
 
 list(TRANSFORM TRANSLATION_FILES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/res/languages/)

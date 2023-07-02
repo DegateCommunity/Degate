@@ -7,5 +7,6 @@
         <file>degate_es.qm</file>
         <file>degate_it.qm</file>
         <file>degate_ko.qm</file>
+        <file>degate_zhcn.qm</file>
     </qresource>
 </RCC>
