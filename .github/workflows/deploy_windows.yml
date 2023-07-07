@@ -39,7 +39,7 @@ jobs:
       shell: bash
       run: |
         cd build/out/bin/$BUILD_TYPE
-        $Qt5_Dir/bin/windeployqt.exe ./
+        $Qt6_DIR/bin/windeployqt.exe ./
         
     - name: Upload Degate binaries
       uses: actions/upload-artifact@v2

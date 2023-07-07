@@ -41,5 +41,5 @@ jobs:
         cd build
         cmake --build . --config $BUILD_TYPE --target DegateTests
         cd tests/out/bin/$BUILD_TYPE
-        $Qt5_Dir/bin/windeployqt.exe ./
+        $Qt6_DIR/bin/windeployqt.exe ./
         ./DegateTests.exe
