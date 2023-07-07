@@ -21,6 +21,8 @@
 
 #include "GateLibraryDialog.h"
 
+#include <QMessageBox>
+
 namespace degate
 {
     GateLibraryDialog::GateLibraryDialog(QWidget* parent, const Project_shptr& project)

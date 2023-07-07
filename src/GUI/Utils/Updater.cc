@@ -33,7 +33,7 @@ namespace degate
             : parent(parent)
     {
         connect(&process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(process_finished(int, QProcess::ExitStatus)));
-        connect(&process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(process_error(QProcess::ProcessError)));
+        connect(&process, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(process_error(QProcess::ProcessError)));
 
         #if defined(Q_OS_WIN)
             tool_name = "maintenancetool.exe";

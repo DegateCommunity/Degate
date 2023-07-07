@@ -26,6 +26,7 @@
 #include "Core/Project/Project.h"
 
 #include <QtOpenGL>
+#include <QtOpenGLWidgets/QOpenGLWidget>
 
 /**
  * This define the zoom out factor (zoom *= zoom_out).

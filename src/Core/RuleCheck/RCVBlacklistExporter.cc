@@ -59,7 +59,7 @@ void RCVBlacklistExporter::export_data(std::string const& filename,
         }
 
         QTextStream stream(&file);
-        stream.setCodec("UTF-8");
+        stream.setEncoding(QStringConverter::Utf8);
         stream << doc.toString();
 
         file.close();

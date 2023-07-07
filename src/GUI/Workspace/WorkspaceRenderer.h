@@ -40,6 +40,7 @@
 #include "GUI/Workspace/WorkspaceRegularGrid.h"
 
 #include <QtOpenGL/QtOpenGL>
+#include <QtOpenGLWidgets/QtOpenGLWidgets>
 #include <list>
 #include <tuple>
 
