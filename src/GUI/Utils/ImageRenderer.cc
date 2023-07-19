@@ -42,7 +42,7 @@ namespace degate
     {
         makeCurrent();
 
-        // Use cleanup function for opengl objects destruction
+        this->cleanup();
 
         if (vao.isCreated())
             vao.destroy();
@@ -217,8 +217,6 @@ namespace degate
 
         if (update_on_gl_initialize)
             update_screen();
-
-        connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &ImageRenderer::cleanup);
     }
 
     void ImageRenderer::paintGL()

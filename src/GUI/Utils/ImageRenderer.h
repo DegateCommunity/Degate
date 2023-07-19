@@ -98,7 +98,7 @@ namespace degate
         void free_texture();
 
         /**
-         * Delete all opengl objects (called when QOpenGLContext::aboutToBeDestroyed signal is emitted).
+         * Delete all opengl objects.
          */
         void cleanup();
 

@@ -50,7 +50,7 @@ namespace degate
 	{
 		makeCurrent();
 
-        // Use cleanup function for opengl objects destruction
+        this->cleanup();
 
 		doneCurrent();
 
@@ -454,8 +454,6 @@ namespace degate
         // Get and print GLSL version
         QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
         debug(TM, "GLSL version: %s", glFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-        connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &WorkspaceRenderer::cleanup);
 	}
 
 	void WorkspaceRenderer::paintGL()
