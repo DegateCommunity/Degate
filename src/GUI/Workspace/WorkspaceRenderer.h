@@ -450,6 +450,7 @@ namespace degate
     private:
         // General
         Project_shptr project = nullptr;
+        bool initialized = false;
 
         // View
         QMatrix4x4 projection;

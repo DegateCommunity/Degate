@@ -153,6 +153,10 @@ namespace degate
 
     void ImageRenderer::cleanup()
     {
+        // Prevent cleanup if OpenGL functions wheren't initialized
+        if (!initialized)
+            return;
+
         makeCurrent();
 
         // Delete opengl objects here
@@ -171,6 +175,8 @@ namespace degate
         makeCurrent();
 
         initializeOpenGLFunctions();
+
+        initialized = true;
 
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glEnable(GL_BLEND);

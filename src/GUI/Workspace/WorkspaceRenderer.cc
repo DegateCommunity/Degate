@@ -48,6 +48,10 @@ namespace degate
 
 	WorkspaceRenderer::~WorkspaceRenderer()
 	{
+        // Prevent cleanup if OpenGL functions wheren't initialized
+        if (!initialized)
+            return;
+
 		makeCurrent();
 
         this->cleanup();
@@ -392,6 +396,7 @@ namespace degate
 
         if (draw_grid == true)
         {
+            makeCurrent();
             regular_grid.update();
             update();
         }
@@ -425,6 +430,8 @@ namespace degate
 		makeCurrent();
 
 		initializeOpenGLFunctions();
+
+        initialized = true;
 
 		Text::init_context();
 
@@ -543,6 +550,8 @@ namespace degate
     {
         if (object == nullptr)
             return;
+
+        makeCurrent();
 
         if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
         {

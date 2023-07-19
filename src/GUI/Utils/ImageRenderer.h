@@ -141,6 +141,7 @@ namespace degate
         QOpenGLVertexArrayObject vao;
 
     private:
+        bool initialized = false;
         float scale = 1;
         float center_x = 0, center_y = 0;
         float viewport_min_x = 0, viewport_min_y = 0, viewport_max_x = 0, viewport_max_y = 0;
