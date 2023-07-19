@@ -81,10 +81,10 @@ jobs:
       run: |
         sudo apt install p7zip-full
         cd etc/installer
-        wget https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/tools_ifw/qt.tools.ifw.44/4.4.1-0-202206210640ifw-linux-x64.7z
-        7z x 4.4.1-0-202206210640ifw-linux-x64.7z -y
-        ./Tools/QtInstallerFramework/4.4/bin/binarycreator --offline-only -c config/config.xml -p packages "Degate_offline_installer_Linux_x64"
-        ./Tools/QtInstallerFramework/4.4/bin/binarycreator --online-only -c config/config.xml -p packages "Degate_online_installer_Linux_x64"
+        wget https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/tools_ifw/qt.tools.ifw.46/4.6.0-0-202305221011ifw-linux-x64.7z
+        7z x 4.6.0-0-202305221011ifw-linux-x64.7 -y
+        ./Tools/QtInstallerFramework/4.6/bin/binarycreator --offline-only -c config/config.xml -p packages "Degate_offline_installer_Linux_x64"
+        ./Tools/QtInstallerFramework/4.6/bin/binarycreator --online-only -c config/config.xml -p packages "Degate_online_installer_Linux_x64"
         
     - name: Upload Degate offline installer
       uses: actions/upload-artifact@v2
@@ -102,7 +102,7 @@ jobs:
       shell: bash
       run: |
         cd etc/installer
-        ./Tools/QtInstallerFramework/4.4/bin/repogen -p packages repository
+        ./Tools/QtInstallerFramework/4.6/bin/repogen -p packages repository
       
     - name: Upload Degate update
       uses: actions/upload-artifact@v2
