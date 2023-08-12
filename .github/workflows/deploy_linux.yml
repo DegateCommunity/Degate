@@ -8,7 +8,7 @@ env:
 jobs:
   build:
   
-    runs-on: ubuntu-18.04 # Update Ubuntu version here (might be the oldest LTS for AppImage creation).
+    runs-on: ubuntu-20.04 # Update Ubuntu version here (might be the oldest LTS for AppImage creation).
 
     steps:
     - uses: actions/checkout@v2
