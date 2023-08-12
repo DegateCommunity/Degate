@@ -25,8 +25,10 @@
 #include "Core/Version.h"
 #include "Core/Utils/CrashReport.h"
 
+#include <QScreen>
+
 #ifdef SYS_WINDOWS
-#include <QtPlatformHeaders/QWindowsWindowFunctions>
+#include <windows.h>
 #endif
 
 #include <memory>
@@ -38,7 +40,7 @@ namespace degate
     MainWindow::MainWindow(int width, int height) : status_bar(this), tools_group(this), updater(this)
     {
         if (width == 0 || height == 0)
-            resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+            resize(QGuiApplication::screenAt(this->pos())->availableGeometry().size() * 0.7);
         else
             resize(width, height);
 
@@ -408,10 +410,10 @@ namespace degate
         QThreadPool::globalInstance()->setMaxThreadCount(Configuration::get_max_concurrent_thread_count());
 
         // Workaround for a bug on Windows that occurs when using QOpenGLWidget + fullscreen mode.
-        // See: https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows.
+        // See: https://doc.qt.io/qt-6/windows-issues.html#fullscreen-opengl-based-windows.
         #ifdef SYS_WINDOWS
-            this->topLevelWidget()->winId();
-            QWindowsWindowFunctions::setHasBorderInFullScreen(this->topLevelWidget()->windowHandle(), true);
+            HWND handle = reinterpret_cast<HWND>(window()->winId());
+            SetWindowLongPtr(handle, GWL_STYLE, GetWindowLongPtr(handle, GWL_STYLE) | WS_BORDER);
         #endif
 
         // Check for updates.

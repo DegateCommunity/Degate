@@ -25,6 +25,7 @@
 #include "GUI/Widget/PortPlacementWidget.h"
 
 #include <QDialog>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 namespace degate

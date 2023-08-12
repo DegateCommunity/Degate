@@ -33,7 +33,7 @@
 include(CMakeParseArguments)
 
 # redefine this function because of a bug (it originally parse all boost files, and make the build VERY slow)
-function(QT5_CREATE_TRANSLATION _qm_files)
+function(QT6_CREATE_TRANSLATION _qm_files)
     set(options)
     set(oneValueArgs)
     set(multiValueArgs OPTIONS)
@@ -82,7 +82,7 @@ function(QT5_CREATE_TRANSLATION _qm_files)
         get_source_file_property(_qm_output_location ${_ts_file} OUTPUT_LOCATION)
 
         add_custom_command(OUTPUT ${_tmpts_file}
-            COMMAND ${Qt5_LUPDATE_EXECUTABLE}
+            COMMAND ${Qt6_LUPDATE_EXECUTABLE}
             ARGS ${_lupdate_options} "@${_ts_lst_file}" -ts ${_ts_file}
             COMMAND ${CMAKE_COMMAND} -E copy ${_ts_file} ${_tmpts_file}
             DEPENDS ${_my_sources}
@@ -93,6 +93,6 @@ function(QT5_CREATE_TRANSLATION _qm_files)
  		endif()
 
     endforeach()
-    qt5_add_translation(${_qm_files} ${_my_temptsfiles})
+    qt6_add_translation(${_qm_files} ${_my_temptsfiles})
     set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
 endfunction()

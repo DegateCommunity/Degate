@@ -42,7 +42,7 @@ namespace degate
     {
         makeCurrent();
 
-        // Use cleanup function for opengl objects destruction
+        this->cleanup();
 
         if (vao.isCreated())
             vao.destroy();
@@ -153,6 +153,10 @@ namespace degate
 
     void ImageRenderer::cleanup()
     {
+        // Prevent cleanup if OpenGL functions wheren't initialized
+        if (!initialized)
+            return;
+
         makeCurrent();
 
         // Delete opengl objects here
@@ -171,6 +175,8 @@ namespace degate
         makeCurrent();
 
         initializeOpenGLFunctions();
+
+        initialized = true;
 
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glEnable(GL_BLEND);
@@ -217,8 +223,6 @@ namespace degate
 
         if (update_on_gl_initialize)
             update_screen();
-
-        connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &ImageRenderer::cleanup);
     }
 
     void ImageRenderer::paintGL()

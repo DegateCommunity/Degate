@@ -550,7 +550,7 @@ namespace degate
         font_data->font = font;
 
         QTextStream font_config_file_stream(&font_config_file);
-        font_config_file_stream.setCodec("UTF-8");
+        font_config_file_stream.setEncoding(QStringConverter::Utf8);
 
         if (font_config_file_stream.readLine().toUInt() != font_data->font.font_size || font_config_file_stream.readLine().toStdString() != font_data->font.font_family_name)
         {
@@ -703,7 +703,7 @@ namespace degate
         }
 
         QTextStream font_config_file_stream(&font_config_file);
-        font_config_file_stream.setCodec("UTF-8");
+        font_config_file_stream.setEncoding(QStringConverter::Utf8);
 
         font_config_file_stream << font_data->font.font_size << Qt::endl;
         font_config_file_stream << QString::fromStdString(font_data->font.font_family_name) << Qt::endl;

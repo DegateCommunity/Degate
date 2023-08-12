@@ -130,7 +130,7 @@ void LogicModelExporter::export_data(std::string const& filename, LogicModel_shp
         }
 
         QTextStream stream(&file);
-        stream.setCodec("UTF-8");
+        stream.setEncoding(QStringConverter::Utf8);
         stream << doc.toString();
 
         file.close();

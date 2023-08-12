@@ -45,7 +45,7 @@ namespace degate
 
         // ID Filter
         id_filter_label.setText(tr("ID filter:"));
-        id_filter_edit.setValidator(new QRegExpValidator(QRegExp("[0-9]*"), this));
+        id_filter_edit.setValidator(new QRegularExpressionValidator(QRegularExpression("[0-9]*"), this));
 
         // Gate template name filter
         gate_template_name_filter_label.setText(tr("Gate template filter:"));

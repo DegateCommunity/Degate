@@ -17,10 +17,11 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
-        version: 5.15.2 # Update Qt version here.
+        version: 6.2.4 # Update Qt version here.
         aqtversion: '>=0.9.7'
+        modules: 'qtimageformats'
 
     - name: Install Boost
       shell: bash

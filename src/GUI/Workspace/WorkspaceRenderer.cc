@@ -49,9 +49,13 @@ namespace degate
 
 	WorkspaceRenderer::~WorkspaceRenderer()
 	{
+        // Prevent cleanup if OpenGL functions wheren't initialized
+        if (!initialized)
+            return;
+
 		makeCurrent();
 
-        // Use cleanup function for opengl objects destruction
+        this->cleanup();
 
 		doneCurrent();
 
@@ -416,6 +420,7 @@ namespace degate
 
         if (draw_grid == true)
         {
+            makeCurrent();
             regular_grid.update();
             update();
         }
@@ -452,6 +457,8 @@ namespace degate
 
 		initializeOpenGLFunctions();
 
+        initialized = true;
+
 		Text::init_context();
 
         //QColor color = QApplication::palette().color(QWidget::backgroundRole());
@@ -480,8 +487,6 @@ namespace degate
         // Get and print GLSL version
         QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
         debug(TM, "GLSL version: %s", glFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-        connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &WorkspaceRenderer::cleanup);
 
         // Define the draw notification for the workspace (renderer), just a repaint
         WorkspaceNotifier::get_instance().define(WorkspaceTarget::Workspace, WorkspaceNotification::Draw, [=](){
@@ -576,6 +581,8 @@ namespace degate
     {
         if (object == nullptr)
             return;
+
+        makeCurrent();
 
         if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(object))
         {

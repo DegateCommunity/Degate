@@ -33,6 +33,7 @@
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QLineEdit>
+#include <QTextEdit>
 #include <QComboBox>
 #include <QPushButton>
 #include <QColorDialog>
