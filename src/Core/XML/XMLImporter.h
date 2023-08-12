@@ -49,7 +49,7 @@ namespace degate
 
             const QString attribute = node.attribute(QString::fromStdString(attribute_str), 0);
 
-            if (attribute == 0)
+            if (attribute.isNull())
             {
                 throw XMLAttributeMissingException(std::string("attribute is not present: ") + attribute_str);
             }
@@ -69,7 +69,7 @@ namespace degate
 
             const QString attribute = node.attribute(QString::fromStdString(attribute_str), 0);
 
-            if (attribute == 0) return default_value;
+            if (attribute.isNull()) return default_value;
             else return parse_number<T>(attribute.toStdString());
         }
 

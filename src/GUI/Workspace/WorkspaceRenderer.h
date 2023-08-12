@@ -40,6 +40,7 @@
 #include "GUI/Workspace/WorkspaceRegularGrid.h"
 
 #include <QtOpenGL/QtOpenGL>
+#include <QtOpenGLWidgets/QtOpenGLWidgets>
 #include <list>
 #include <tuple>
 
@@ -247,7 +248,7 @@ namespace degate
         void free_textures();
 
         /**
-         * Delete all opengl objects (called when QOpenGLContext::aboutToBeDestroyed signal is emitted).
+         * Delete all opengl objects.
          */
         void cleanup();
 
@@ -449,6 +450,7 @@ namespace degate
     private:
         // General
         Project_shptr project = nullptr;
+        bool initialized = false;
 
         // View
         QMatrix4x4 projection;

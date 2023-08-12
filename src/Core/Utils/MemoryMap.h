@@ -409,8 +409,17 @@ namespace degate
                 return RET_ERR;
             }
 
+#ifdef SYS_APPLE
+
+            struct stat inf;
+            if (fstat(file, &inf) < 0)
+
+#else
+
             struct stat64 inf;
             if (fstat64(file, &inf) < 0)
+
+#endif
             {
                 debug(TM, "can't get the size of file: %s", filename.c_str());
                 return RET_ERR;

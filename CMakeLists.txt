@@ -34,7 +34,7 @@ set(CMAKE_VERBOSE_MAKEFILE true)
 # Set flags
 #
 if (NOT MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -fno-inline -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -fno-inline")
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 endif()
@@ -85,8 +85,8 @@ include_directories(${Boost_INCLUDE_DIRS})
 set(LIBS ${Boost_LIBRARIES})
 
 ############# Qt
-find_package(Qt5 COMPONENTS Core Widgets Gui Xml OpenGL Concurrent LinguistTools REQUIRED)
-set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml Qt5::OpenGL Qt5::Concurrent)
+find_package(Qt6 COMPONENTS Core Widgets Gui Xml OpenGL OpenGLWidgets Concurrent LinguistTools REQUIRED)
+set(LIBS ${LIBS} Qt6::Widgets Qt6::Gui Qt6::Core Qt6::Xml Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Concurrent)
 
 
 ############################################################################
@@ -96,12 +96,12 @@ set(LIBS ${LIBS} Qt5::Widgets Qt5::Gui Qt5::Core Qt5::Xml Qt5::OpenGL Qt5::Concu
 #
 # Configuration
 #
-if (CMAKE_SIZEOF_VOID_P MATCHES 8) # if x64
-    message(STATUS "x64 configuration")
-    set(CONFIGURATION "x64")
-else() # if x86
-    message(STATUS "x86 configuration")
-    set(CONFIGURATION "x86")
+if (CMAKE_SIZEOF_VOID_P MATCHES 8) # if 64-bits
+    message(STATUS "64 bits configuration")
+    set(CONFIGURATION "BUILD_64")
+else() # if 32-bits
+    message(STATUS "32 bits configuration")
+    set(CONFIGURATION "BUILD_32")
 endif()
 
 #
@@ -147,10 +147,15 @@ SET(TRANSLATION_FILES
 
 list(TRANSFORM TRANSLATION_FILES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/res/languages/)
 
-# Redefine "qt5_create_translation" function because of a bug (it originally parse all boost files, and make the build VERY slow)
-include(${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake/Qt5LinguistToolsMacros.cmake)
+# Redefine "qt6_create_translation" function because of a bug (it originally parse all boost files, and make the build VERY slow)
+include(${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake/Qt6LinguistToolsMacros.cmake)
 
-qt5_create_translation(QM_FILES ${SRC_FILES} ${TRANSLATION_FILES} OPTIONS -no-obsolete)
+# TODO: Figure out why this is needed.
+if (WIN32)
+	qt6_create_translation(QM_FILES ${SRC_FILES} ${TRANSLATION_FILES})
+else ()
+	qt6_create_translation(QM_FILES ${SRC_FILES} ${TRANSLATION_FILES} OPTIONS "-no-obsolete")
+endif ()
 
 configure_file(res/languages/translations.qrc ${CMAKE_BINARY_DIR} COPYONLY)
 
