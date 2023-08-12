@@ -82,7 +82,7 @@ jobs:
         sudo apt install p7zip-full
         cd etc/installer
         wget https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/tools_ifw/qt.tools.ifw.46/4.6.0-0-202305221011ifw-linux-x64.7z
-        7z x 4.6.0-0-202305221011ifw-linux-x64.7 -y
+        7z x 4.6.0-0-202305221011ifw-linux-x64.7z -y
         ./Tools/QtInstallerFramework/4.6/bin/binarycreator --offline-only -c config/config.xml -p packages "Degate_offline_installer_Linux_x64"
         ./Tools/QtInstallerFramework/4.6/bin/binarycreator --online-only -c config/config.xml -p packages "Degate_online_installer_Linux_x64"
         
