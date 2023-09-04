@@ -19,11 +19,11 @@
  *
  */
 
-#include "MainWindow.h"
-#include "GUI/Dialog/ProgressDialog.h"
-#include "GUI/Dialog/AboutDialog.h"
-#include "Core/Version.h"
 #include "Core/Utils/CrashReport.h"
+#include "Core/Version.h"
+#include "GUI/Dialog/AboutDialog.h"
+#include "GUI/Dialog/ProgressDialog.h"
+#include "MainWindow.h"
 
 #include <QScreen>
 
@@ -39,10 +39,22 @@ namespace degate
 {
     MainWindow::MainWindow(int width, int height) : status_bar(this), tools_group(this), updater(this)
     {
-        if (width == 0 || height == 0)
-            resize(QGuiApplication::screenAt(this->pos())->availableGeometry().size() * 0.7);
-        else
+        auto* current_window_screen = QGuiApplication::screenAt(this->pos());
+        if (width > 0 && height > 0)
+        {
             resize(width, height);
+        }
+        else if (current_window_screen != nullptr)
+        {
+            resize(current_window_screen->availableGeometry().size() * 0.7);
+        }
+        else
+        {
+            width = (width <= 0) ? 800 : width;
+            height = (height <= 0) ? 600 : height;
+
+            resize(width, height);
+        }
 
         setWindowTitle("Degate");
         setWindowIcon(QIcon(":/degate_logo.png"));
@@ -68,7 +80,7 @@ namespace degate
         QObject::connect(project_import_action, SIGNAL(triggered()), this, SLOT(on_menu_project_importer()));
 
         project_export_action = project_menu->addAction("");
-        project_export_action->setShortcut(Qt::CTRL + Qt::Key_S);
+        project_export_action->setShortcut(Qt::CTRL | Qt::Key_S);
         QObject::connect(project_export_action, SIGNAL(triggered()), this, SLOT(on_menu_project_save()));
 
         project_recent_projects_submenu = project_menu->addMenu("");
@@ -78,7 +90,10 @@ namespace degate
 
         project_menu->addSeparator();
         project_create_subproject_action = project_menu->addAction("");
-        QObject::connect(project_create_subproject_action, SIGNAL(triggered()), this, SLOT(on_menu_project_create_subproject()));
+        QObject::connect(project_create_subproject_action,
+                         SIGNAL(triggered()),
+                         this,
+                         SLOT(on_menu_project_create_subproject()));
 
         project_menu->addSeparator();
         project_settings_action = project_menu->addAction("");
@@ -126,7 +141,10 @@ namespace degate
         show_annotations_name_view_action = view_menu->addAction("");
         show_annotations_name_view_action->setCheckable(true);
         show_annotations_name_view_action->setChecked(true);
-        QObject::connect(show_annotations_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_annotations_name(bool)));
+        QObject::connect(show_annotations_name_view_action,
+                         SIGNAL(toggled(bool)),
+                         workspace,
+                         SLOT(show_annotations_name(bool)));
 
         show_emarkers_view_action = view_menu->addAction("");
         show_emarkers_view_action->setCheckable(true);
@@ -136,7 +154,10 @@ namespace degate
         show_emarkers_name_view_action = view_menu->addAction("");
         show_emarkers_name_view_action->setCheckable(true);
         show_emarkers_name_view_action->setChecked(true);
-        QObject::connect(show_emarkers_name_view_action, SIGNAL(toggled(bool)), workspace, SLOT(show_emarkers_name(bool)));
+        QObject::connect(show_emarkers_name_view_action,
+                         SIGNAL(toggled(bool)),
+                         workspace,
+                         SLOT(show_emarkers_name(bool)));
 
         show_vias_view_action = view_menu->addAction("");
         show_vias_view_action->setCheckable(true);
@@ -212,14 +233,12 @@ namespace degate
         gate_menu->addSeparator();
 
         auto_name_gates_rows_action = gate_menu->addAction("");
-        QObject::connect(auto_name_gates_rows_action, &QAction::triggered, this, [this]()
-        {
+        QObject::connect(auto_name_gates_rows_action, &QAction::triggered, this, [this]() {
             on_menu_gate_automatic_naming(AutoNameGates::ORIENTATION::ALONG_ROWS);
         });
 
         auto_name_gates_columns_action = gate_menu->addAction("");
-        QObject::connect(auto_name_gates_columns_action, &QAction::triggered, this, [this]()
-        {
+        QObject::connect(auto_name_gates_columns_action, &QAction::triggered, this, [this]() {
             on_menu_gate_automatic_naming(AutoNameGates::ORIENTATION::ALONG_COLS);
         });
 
@@ -256,29 +275,46 @@ namespace degate
 
         remove_objects_action = logic_menu->addAction("");
         remove_objects_action->setShortcut(Qt::Key_Delete);
-        QObject::connect(remove_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_remove_selected_objects()));
+        QObject::connect(remove_objects_action,
+                         SIGNAL(triggered()),
+                         this,
+                         SLOT(on_menu_logic_remove_selected_objects()));
 
         interconnect_objects_action = logic_menu->addAction("");
-        interconnect_objects_action->setShortcut(Qt::CTRL + Qt::Key_C);
-        QObject::connect(interconnect_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
+        interconnect_objects_action->setShortcut(Qt::CTRL | Qt::Key_C);
+        QObject::connect(interconnect_objects_action,
+                         SIGNAL(triggered()),
+                         this,
+                         SLOT(on_menu_logic_interconnect_selected_objects()));
 
         isolate_objects_action = logic_menu->addAction("");
-        isolate_objects_action->setShortcut(Qt::CTRL + Qt::Key_X);
-        QObject::connect(isolate_objects_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_isolate_selected_objects()));
+        isolate_objects_action->setShortcut(Qt::CTRL | Qt::Key_X);
+        QObject::connect(isolate_objects_action,
+                         SIGNAL(triggered()),
+                         this,
+                         SLOT(on_menu_logic_isolate_selected_objects()));
 
         move_selected_gates_into_module = logic_menu->addAction("");
-        QObject::connect(move_selected_gates_into_module, SIGNAL(triggered()), this, SLOT(on_menu_logic_move_selected_gates_into_module()));
+        QObject::connect(move_selected_gates_into_module,
+                         SIGNAL(triggered()),
+                         this,
+                         SLOT(on_menu_logic_move_selected_gates_into_module()));
 
         inspect_selected_object_action = logic_menu->addAction("");
-        QObject::connect(inspect_selected_object_action, SIGNAL(triggered()), this, SLOT(
-                on_menu_logic_inspect_selected_object()));
+        QObject::connect(inspect_selected_object_action,
+                         SIGNAL(triggered()),
+                         this,
+                         SLOT(on_menu_logic_inspect_selected_object()));
 
 
         // Matching menu
         matching_menu = menu_bar.addMenu("");
 
         template_matching_action = matching_menu->addAction("");
-        QObject::connect(template_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_template_matching()));
+        QObject::connect(template_matching_action,
+                         SIGNAL(triggered()),
+                         this,
+                         SLOT(on_menu_matching_template_matching()));
 
         via_matching_action = matching_menu->addAction("");
         QObject::connect(via_matching_action, SIGNAL(triggered()), this, SLOT(on_menu_matching_via_matching()));
@@ -299,8 +335,7 @@ namespace degate
         help_menu->addSeparator();
 
         check_updates_action = help_menu->addAction("");
-        QObject::connect(check_updates_action, &QAction::triggered, this, [this]()
-        {
+        QObject::connect(check_updates_action, &QAction::triggered, this, [this]() {
             on_menu_help_check_updates(true, false);
         });
 
@@ -329,7 +364,8 @@ namespace degate
 
         // Status bar
 
-        status_bar.setStyleSheet("QStatusBar::item { border: none; } QStatusBar QLabel { border: 3px solid black; border-radius: 0px; padding: 2px; }");
+        status_bar.setStyleSheet("QStatusBar::item { border: none; } QStatusBar QLabel { border: 3px solid black; "
+                                 "border-radius: 0px; padding: 2px; }");
         setStatusBar(&status_bar);
         status_bar.showMessage(tr("Initialization..."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
@@ -338,7 +374,10 @@ namespace degate
 
         status_bar.addPermanentWidget(&status_bar_coords);
         change_status_bar_coords(0, 0);
-        QObject::connect(workspace, SIGNAL(mouse_coords_changed(int, int)), this, SLOT(change_status_bar_coords(int, int)));
+        QObject::connect(workspace,
+                         SIGNAL(mouse_coords_changed(int, int)),
+                         this,
+                         SLOT(change_status_bar_coords(int, int)));
 
         update_status_bar_layer_info();
 
@@ -408,17 +447,19 @@ namespace degate
 
         QObject::connect(&auto_save_timer, SIGNAL(timeout()), this, SLOT(auto_save()));
 
-        // Workaround for a bug on Windows that occurs when using QOpenGLWidget + fullscreen mode.
-        // See: https://doc.qt.io/qt-6/windows-issues.html#fullscreen-opengl-based-windows.
-        #ifdef SYS_WINDOWS
-            HWND handle = reinterpret_cast<HWND>(window()->winId());
-            SetWindowLongPtr(handle, GWL_STYLE, GetWindowLongPtr(handle, GWL_STYLE) | WS_BORDER);
-        #endif
+// Workaround for a bug on Windows that occurs when using QOpenGLWidget + fullscreen mode.
+// See: https://doc.qt.io/qt-6/windows-issues.html#fullscreen-opengl-based-windows.
+#ifdef SYS_WINDOWS
+        HWND handle = reinterpret_cast<HWND>(window()->winId());
+        SetWindowLongPtr(handle, GWL_STYLE, GetWindowLongPtr(handle, GWL_STYLE) | WS_BORDER);
+#endif
 
         // Check for updates.
         if (PREFERENCES_HANDLER.get_preferences().automatic_updates_check)
         {
-            QTimer::singleShot(0, [this](){ on_menu_help_check_updates(false, true); });
+            QTimer::singleShot(0, [this]() {
+                on_menu_help_check_updates(false, true);
+            });
         }
 
         reload_recent_projects_list();
@@ -693,7 +734,8 @@ namespace degate
         {
             project = dialog.get_project();
 
-            project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
+            project->get_logic_model()->set_current_layer(
+                    get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
 
             workspace->set_project(project);
 
@@ -702,7 +744,8 @@ namespace degate
             status_bar.showMessage(tr("Created a new project."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
         }
         else
-            status_bar.showMessage(tr("New project creation operation cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("New project creation operation cancelled."),
+                                   SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
     }
 
     void MainWindow::on_menu_project_create_subproject()
@@ -713,7 +756,8 @@ namespace degate
         boost::format f("subproject_%1%");
         f % project->get_logic_model()->get_new_object_id();
 
-        SubProjectAnnotation_shptr new_annotation(new SubProjectAnnotation(workspace->get_safe_area_selection(), f.str()));
+        SubProjectAnnotation_shptr new_annotation(
+                new SubProjectAnnotation(workspace->get_safe_area_selection(), f.str()));
         new_annotation->set_fill_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION));
         new_annotation->set_frame_color(project->get_default_color(DEFAULT_COLOR_ANNOTATION_FRAME));
 
@@ -722,7 +766,8 @@ namespace degate
 
         if (res == QDialog::Accepted)
         {
-            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(),
+                                                   new_annotation);
 
             workspace->reset_area_selection();
             workspace->update_screen();
@@ -783,7 +828,8 @@ namespace degate
     {
         if (project == nullptr)
         {
-            status_bar.showMessage(tr("Failed to import new background image : no project opened."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("Failed to import new background image : no project opened."),
+                                   SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
             return;
         }
 
@@ -794,7 +840,8 @@ namespace degate
 
         if (res.isNull())
         {
-            status_bar.showMessage(tr("New background image import cancelled."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("New background image import cancelled."),
+                                   SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
             return;
         }
 
@@ -805,10 +852,11 @@ namespace degate
                                        nullptr);
 
         // Set the job to start the background loading.
-        progress_dialog.set_job([file_name, this]()
-                                {
-                                    load_new_background_image(project->get_logic_model()->get_current_layer(), project->get_project_directory(), file_name);
-                                });
+        progress_dialog.set_job([file_name, this]() {
+            load_new_background_image(project->get_logic_model()->get_current_layer(),
+                                      project->get_project_directory(),
+                                      file_name);
+        });
 
         // Start the process
         progress_dialog.exec();
@@ -823,7 +871,8 @@ namespace degate
         {
             workspace->update_background();
 
-            status_bar.showMessage(tr("Imported a new background image for the layer."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
+            status_bar.showMessage(tr("Imported a new background image for the layer."),
+                                   SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
             project_changed();
         }
@@ -844,13 +893,9 @@ namespace degate
             return;
         }
 
-        auto new_gate_template = std::make_shared<GateTemplate>(workspace->get_safe_area_selection()
-                                                                         .get_width(),
-                                                                workspace->get_safe_area_selection()
-                                                                         .get_height());
-        grab_template_images(project->get_logic_model(),
-                             new_gate_template,
-                             workspace->get_safe_area_selection());
+        auto new_gate_template = std::make_shared<GateTemplate>(workspace->get_safe_area_selection().get_width(),
+                                                                workspace->get_safe_area_selection().get_height());
+        grab_template_images(project->get_logic_model(), new_gate_template, workspace->get_safe_area_selection());
         new_gate_template->set_object_id(project->get_logic_model()->get_new_object_id());
         new_gate_template->set_fill_color(project->get_default_color(DEFAULT_COLOR_GATE));
         new_gate_template->set_frame_color(project->get_default_color(DEFAULT_COLOR_GATE_FRAME));
@@ -868,7 +913,8 @@ namespace degate
 
         if (res == QDialog::Accepted)
         {
-            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_gate);
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(),
+                                                   new_gate);
             project->get_logic_model()->update_ports(new_gate);
 
             workspace->reset_area_selection();
@@ -1034,7 +1080,8 @@ namespace degate
 
         if (res == QDialog::Accepted)
         {
-            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_annotation);
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(),
+                                                   new_annotation);
 
             workspace->reset_area_selection();
             workspace->update_annotations();
@@ -1145,7 +1192,9 @@ namespace degate
 
         if (!objects.check_for_all(&is_interconnectable))
         {
-            QMessageBox::warning(this, tr("Error during interconnect"), tr("One of the objects you selected cannot have connections at all."));
+            QMessageBox::warning(this,
+                                 tr("Error during interconnect"),
+                                 tr("One of the objects you selected cannot have connections at all."));
             return;
         }
 
@@ -1165,7 +1214,9 @@ namespace degate
 
         if (!objects.check_for_all(&is_interconnectable))
         {
-            QMessageBox::warning(this, tr("Error during interconnect"), tr("One of the objects you selected cannot have connections at all."));
+            QMessageBox::warning(this,
+                                 tr("Error during interconnect"),
+                                 tr("One of the objects you selected cannot have connections at all."));
             return;
         }
 
@@ -1311,13 +1362,12 @@ namespace degate
 
     void MainWindow::on_menu_help_open_help()
     {
-        static auto add_shortcut = [](const QString& shortcut, const QString& text){
+        static auto add_shortcut = [](const QString& shortcut, const QString& text) {
             return "<tr><td><strong>" + shortcut + "</strong></td><td>" + text + "</td></tr>";
         };
 
         const QString help_message =
-                "<html><center><strong>" +
-                tr("Shortcuts:") + "</strong><br><table cellpadding=\"5\">" +
+                "<html><center><strong>" + tr("Shortcuts:") + "</strong><br><table cellpadding=\"5\">" +
 
                 add_shortcut(tr("LEFT click:"), tr("Object selection")) +
                 add_shortcut(tr("RIGHT click:"), tr("Context menu")) +
@@ -1329,14 +1379,7 @@ namespace degate
 
                 "</table></center></html>";
 
-        QMessageBox help(tr("Degate help"),
-                         help_message,
-                         QMessageBox::Icon::NoIcon,
-                         QMessageBox::Button::Ok,
-                         QMessageBox::Button::NoButton,
-                         QMessageBox::Button::NoButton,
-                         this
-                        );
+        QMessageBox help(QMessageBox::NoIcon, tr("Degate help"), help_message, QMessageBox::StandardButton::Ok, this);
 
         auto* about_layout = help.findChild<QGridLayout*>();
         QMargins about_margins = about_layout->contentsMargins();
@@ -1414,21 +1457,19 @@ namespace degate
 
     void MainWindow::update_status_bar_layer_info()
     {
-        std::map<Layer::LAYER_TYPE, QString> types = {
-                {Layer::UNDEFINED,  tr("Undefined")},
-                {Layer::TRANSISTOR, tr("Transistor")},
-                {Layer::LOGIC,      tr("Logic")},
-                {Layer::METAL,      tr("Metal")}
-        };
+        std::map<Layer::LAYER_TYPE, QString> types = {{Layer::UNDEFINED, tr("Undefined")},
+                                                      {Layer::TRANSISTOR, tr("Transistor")},
+                                                      {Layer::LOGIC, tr("Logic")},
+                                                      {Layer::METAL, tr("Metal")}};
 
         if (project != nullptr)
         {
             QString status_bar_message = tr("Layer: %1/%2 (%3)");
 
-            status_bar_layer.setText(status_bar_message
-                    .arg(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1)
-                    .arg(project->get_logic_model()->get_num_layers())
-                    .arg(types[project->get_logic_model()->get_current_layer()->get_layer_type()]));
+            status_bar_layer.setText(
+                    status_bar_message.arg(project->get_logic_model()->get_current_layer()->get_layer_pos() + 1)
+                            .arg(project->get_logic_model()->get_num_layers())
+                            .arg(types[project->get_logic_model()->get_current_layer()->get_layer_type()]));
         }
         else
         {
@@ -1441,7 +1482,8 @@ namespace degate
         if (project == nullptr)
             return;
 
-        project->get_logic_model()->set_current_layer(get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
+        project->get_logic_model()->set_current_layer(
+                get_next_enabled_layer(project->get_logic_model())->get_layer_pos());
 
         update_status_bar_layer_info();
 
@@ -1453,7 +1495,8 @@ namespace degate
         if (project == nullptr)
             return;
 
-        project->get_logic_model()->set_current_layer(get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
+        project->get_logic_model()->set_current_layer(
+                get_prev_enabled_layer(project->get_logic_model())->get_layer_pos());
 
         update_status_bar_layer_info();
 
@@ -1476,8 +1519,7 @@ namespace degate
         try
         {
             std::shared_ptr<Project> imported_project = nullptr;
-            progress_dialog.set_job([&]
-            {
+            progress_dialog.set_job([&] {
                 try
                 {
                     imported_project = project_importer.import_all(path);
@@ -1500,7 +1542,8 @@ namespace degate
             if (imported_project == nullptr)
             {
                 QMessageBox::StandardButton reply;
-                reply = QMessageBox::question(this, tr("Subproject"),
+                reply = QMessageBox::question(this,
+                                              tr("Subproject"),
                                               tr("The project/subproject do not exist, do you want to create it?"),
                                               QMessageBox::Yes | QMessageBox::No);
 
@@ -1540,8 +1583,8 @@ namespace degate
         {
             QMessageBox::warning(this,
                                  tr("Project/Subproject import failed"),
-                                 tr("The project/subproject cannot be imported (maybe corrupted).") + "\n\n"
-                                 + tr("Error") + ": " + QString::fromStdString(error_message));
+                                 tr("The project/subproject cannot be imported (maybe corrupted).") + "\n\n" +
+                                         tr("Error") + ": " + QString::fromStdString(error_message));
             status_bar.showMessage(tr("Project/Subproject import failed."), SECOND(DEFAULT_STATUS_MESSAGE_DURATION));
 
             return;
@@ -1617,7 +1660,10 @@ namespace degate
             connect(&annotation_create_context_action, SIGNAL(triggered()), this, SLOT(on_menu_annotation_create()));
             context_menu.addAction(&annotation_create_context_action);
 
-            connect(&gate_template_create_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate_template()));
+            connect(&gate_template_create_context_action,
+                    SIGNAL(triggered()),
+                    this,
+                    SLOT(on_menu_gate_new_gate_template()));
             context_menu.addAction(&gate_template_create_context_action);
 
             connect(&gate_create_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_new_gate()));
@@ -1642,7 +1688,10 @@ namespace degate
                 connect(&gate_edit_context_action, SIGNAL(triggered()), this, SLOT(on_menu_gate_edit()));
                 context_menu.addAction(&gate_edit_context_action);
 
-                connect(&move_selected_gates_into_module_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_move_selected_gates_into_module()));
+                connect(&move_selected_gates_into_module_context_action,
+                        SIGNAL(triggered()),
+                        this,
+                        SLOT(on_menu_logic_move_selected_gates_into_module()));
                 context_menu.addAction(&move_selected_gates_into_module_context_action);
             }
             else if (is_of_object_type<GatePort>(object))
@@ -1677,18 +1726,27 @@ namespace degate
 
             if (workspace->get_selected_objects().check_for_all(&is_interconnectable))
             {
-                connect(&inspect_selected_object_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_inspect_selected_object()));
+                connect(&inspect_selected_object_context_action,
+                        SIGNAL(triggered()),
+                        this,
+                        SLOT(on_menu_logic_inspect_selected_object()));
                 context_menu.addAction(&inspect_selected_object_context_action);
 
                 context_menu.addSeparator();
 
                 if (workspace->get_selected_objects().size() >= 2)
                 {
-                    connect(&interconnect_selected_objects_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_interconnect_selected_objects()));
+                    connect(&interconnect_selected_objects_context_action,
+                            SIGNAL(triggered()),
+                            this,
+                            SLOT(on_menu_logic_interconnect_selected_objects()));
                     context_menu.addAction(&interconnect_selected_objects_context_action);
                 }
 
-                connect(&isolate_selected_objects_context_action, SIGNAL(triggered()), this, SLOT(on_menu_logic_isolate_selected_objects()));
+                connect(&isolate_selected_objects_context_action,
+                        SIGNAL(triggered()),
+                        this,
+                        SLOT(on_menu_logic_isolate_selected_objects()));
                 context_menu.addAction(&isolate_selected_objects_context_action);
             }
         }
@@ -1717,7 +1775,8 @@ namespace degate
         if (project == nullptr)
             return;
 
-        EMarker_shptr new_emarker = std::make_shared<EMarker>(context_menu_mouse_position.x(), context_menu_mouse_position.y());
+        EMarker_shptr new_emarker =
+                std::make_shared<EMarker>(context_menu_mouse_position.x(), context_menu_mouse_position.y());
         new_emarker->set_fill_color(project->get_default_color(DEFAULT_COLOR_EMARKER));
 
         EMarkerEditDialog dialog(this, new_emarker);
@@ -1725,7 +1784,8 @@ namespace degate
 
         if (res == QDialog::Accepted)
         {
-            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_emarker);
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(),
+                                                   new_emarker);
 
             workspace->update_emarkers();
 
@@ -1740,7 +1800,9 @@ namespace degate
         if (project == nullptr)
             return;
 
-        Via_shptr new_via = std::make_shared<Via>(context_menu_mouse_position.x(), context_menu_mouse_position.y(), Via::DIRECTION_UNDEFINED);
+        Via_shptr new_via = std::make_shared<Via>(context_menu_mouse_position.x(),
+                                                  context_menu_mouse_position.y(),
+                                                  Via::DIRECTION_UNDEFINED);
         new_via->set_diameter(project->get_default_via_diameter());
 
         ViaEditDialog dialog(this, new_via, project);
@@ -1951,12 +2013,12 @@ namespace degate
         for (auto it = list.rbegin(); it != list.rend(); it++)
         {
             auto element = *it;
-            auto* action = project_recent_projects_submenu->addAction(QString::fromStdString(element.first + " (" + element.second + ")"));
+            auto* action = project_recent_projects_submenu->addAction(
+                    QString::fromStdString(element.first + " (" + element.second + ")"));
 
-            QObject::connect(action, &QAction::triggered, this, [=]()
-            {
-                 open_project(element.second);
+            QObject::connect(action, &QAction::triggered, this, [=]() {
+                open_project(element.second);
             });
         }
     }
-}
+} // namespace degate

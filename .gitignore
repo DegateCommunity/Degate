@@ -17,3 +17,5 @@ etc/installer/packages/Degate/meta/package.xml
 doc/build/*
 !doc/build/.keepme
 doc/config/DoxyFile
+
+.cache
