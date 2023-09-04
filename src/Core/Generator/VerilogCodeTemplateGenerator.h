@@ -56,7 +56,7 @@ namespace degate
         virtual std::string generate_port_definition() const;
 
         virtual std::string generate_module(std::string const& entity_name,
-                                            std::string const& port_description = "") const;
+                                            std::string const& port_description) const;
 
 
         virtual std::string generate_impl(std::string const& logic_class = "") const;
