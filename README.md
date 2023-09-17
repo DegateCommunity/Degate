@@ -9,8 +9,6 @@
         <img src="https://img.shields.io/github/issues/DegateCommunity/Degate" /></a>
     <a href="https://github.com/DegateCommunity/Degate/commits/develop" alt="Last Commit">
         <img src="https://img.shields.io/github/last-commit/DegateCommunity/Degate/develop" /></a>
-    <a href="https://github.com/DegateCommunity/Degate/releases" alt="Last Release">
-        <img src="https://img.shields.io/github/release-date-pre/DegateCommunity/Degate" /></a>
     <a href="https://github.com/DegateCommunity/Degate/graphs/contributors" alt="Contributors">
         <img src="https://img.shields.io/github/contributors/DegateCommunity/Degate" /></a>
 </p>
@@ -23,7 +21,7 @@
 
 &nbsp;
 
-Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This project is a fork of the initial Degate project, the final goal is to replace it. For more please visit our [wiki](https://github.com/DegateCommunity/Degate/wiki) page and, if you want to chat, visit our [Gitter](https://gitter.im/DegateCommunity/Degate). The current main maintainer of Degate is [Dorian Bachelot](https://github.com/DorianBDev).
+Degate is a multi-platform software for semi-automatic VLSI reverse engineering of digital logic in chips. This repository is a continuation of the original Degate project, with major changes and a new maintainer. For more please visit our [wiki](https://github.com/DegateCommunity/Degate/wiki) page and, if you want to chat, visit our [Gitter](https://gitter.im/DegateCommunity/Degate). The current main maintainer of Degate is [Dorian Bachelot](https://github.com/DorianBDev).
 
 &nbsp;
 
@@ -53,17 +51,17 @@ Degate is a multi-platform software for semi-automatic VLSI reverse engineering 
 
 ## Little history
 
-Degate was actively developed by Martin Schobert, during his thesis, from 2008 to 2011. For now, the project is inactive and only get some small fixes since 2011. The project is composed of a library (libGate) and a GUI interface (Degate).
+Degate was actively developed by Martin Schobert, during his thesis, from 2008 to 2011. From 2013 to 2018, the project was mainly inactive and only got some small fixes over the years. At this time, the project was composed of a library (libGate) and a GUI interface (Degate).
 
-Degate has definitely a great potential, mainly because it is the only free and open-source software for hardware reverse engineering of chips, but never knew how to impose itself in the community. One possible reason for that is because Degate was known to be unstable and have impacting bugs in a first place. 
+Degate has definitely a great potential, mainly because it is the only free and open-source software for hardware reverse engineering of chips, but never knew how to impose itself in the community. One possible reason for that is that Degate was known to be unstable and have impacting bugs in a first place. 
 
-You can visit the initial project website to learn more:
+You can browse the old Degate code [here](https://github.com/DegateCommunity/Degate/tree/old-degate) and the old repository here:
 
-  http://degate.org
+https://github.com/nitram2342/degate
 
 ## Current status
 
-This project aims to totally replace the old Degate, with a focus on Windows, Linux and MacOS support, getting better stability and general modernization. To achieve this the aim was to drop GTK and move to Qt and merge the lib and the GUI part of the project. Another objective was to minimize the number of dependencies, for now it uses only Boost and Qt and the mid-term objective is to only keep Qt and remove Boost.
+This project replace the old Degate, with a focus on Windows, Linux and MacOS support, getting better stability and general modernization. To achieve this the first step was to drop GTK, move to Qt and merge the lib and the GUI part of the project. Another objective was to minimize the number of dependencies, for now it uses only Boost and Qt and the mid-term objective is to only keep Qt and remove Boost.
 
 The stability was the main problem of the old Degate and the main reason why the community hadn't already united around it. Regarding that, we want to have fewer bugs as possible, even if some functionality needs to be dropped (for the moment).
 
@@ -233,7 +231,7 @@ Languages:
 - Italian (0%),
 - Korean (0%).
 
-To add a new language opens a new issue.
+To add a new language opens a new issue, or use our Crowdin project: https://crowdin.com/project/degate.
 
 # License
 

@@ -12,6 +12,8 @@ Here you will find all the people who have contributed to Degate.
 
 ## Contributors
 
+- [Wouter Visser](https://github.com/Fusion86)
+- [Alessandro Gatti](https://github.com/agatti)
 - [Maxim Poliakovski](https://github.com/maximumspatium)
 - [Epifanov Ivan](https://github.com/isage)
 - [Thomas Roth](https://github.com/nezza)
