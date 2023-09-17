@@ -24,9 +24,7 @@
 #include "Core/LogicModel/Gate/Gate.h"
 #include "Core/LogicModel/Via/Via.h"
 
-
 #include <memory>
-
 
 using namespace degate;
 
@@ -71,22 +69,24 @@ std::shared_ptr<PlacedLogicModelObject> Layer::get_object(object_id_t object_id)
     return (*iter).second;
 }
 
-Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE layer_type) :
+Layer::Layer(BoundingBox const& bbox, ProjectType project_type, Layer::LAYER_TYPE layer_type) :
     quadtree(bbox, 100),
     layer_type(layer_type),
     layer_pos(0),
     enabled(true),
-    layer_id(0)
+    layer_id(0),
+    project_type(project_type)
 {
 }
 
-Layer::Layer(BoundingBox const& bbox, Layer::LAYER_TYPE layer_type,
+Layer::Layer(BoundingBox const& bbox, ProjectType project_type, Layer::LAYER_TYPE layer_type,
              BackgroundImage_shptr img) :
     quadtree(bbox, 100),
     layer_type(layer_type),
     layer_pos(0),
     enabled(true),
-    layer_id(0)
+    layer_id(0),
+    project_type(project_type)
 {
     set_image(img);
 }
@@ -101,7 +101,7 @@ Layer::~Layer()
  */
 DeepCopyable_shptr Layer::clone_shallow() const
 {
-    auto clone = std::make_shared<Layer>(quadtree.get_bounding_box(), layer_type);
+    auto clone = std::make_shared<Layer>(quadtree.get_bounding_box(), project_type, layer_type);
     clone->layer_pos = layer_pos;
     clone->enabled = enabled;
     clone->description = description;
@@ -224,9 +224,7 @@ Layer::qt_region_iterator Layer::region_end()
 
 void Layer::set_image(BackgroundImage_shptr img)
 {
-    scaling_manager =
-        std::make_shared<ScalingManager<BackgroundImage>>
-        (img, img->get_directory());
+    scaling_manager = std::make_shared<ScalingManager<BackgroundImage>>(img, img->get_path(), project_type);
 
     scaling_manager->create_scalings();
 }
@@ -247,11 +245,10 @@ std::string Layer::get_image_filename() const
         throw DegateLogicException("There is no scaling manager.");
     else
     {
-        const ScalingManager<BackgroundImage>::image_map_element p =
-            scaling_manager->get_image(1);
+        const ScalingManager<BackgroundImage>::image_map_element p = scaling_manager->get_image(1);
 
         if (p.second != nullptr)
-            return p.second->get_directory();
+            return p.second->get_path();
         else
             throw DegateLogicException("The scaling manager failed to return an image pointer.");
     }

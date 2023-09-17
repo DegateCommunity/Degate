@@ -22,11 +22,11 @@
 #ifndef __TILEIMAGE_H__
 #define __TILEIMAGE_H__
 
+#include "Core/Utils/FileSystem.h"
+#include "Core/Image/TileCache.h"
 #include "Globals.h"
 #include "PixelPolicies.h"
 #include "StoragePolicies.h"
-#include "Core/Utils/FileSystem.h"
-#include "TileCache.h"
 
 namespace degate
 {
@@ -52,10 +52,10 @@ namespace degate
         const unsigned int offset_bitmask;
 
         // The place where we store the image data.
-        const std::string directory;
+        const std::string path;
 
         // A helper class to load tiles.
-        mutable TileCache<PixelPolicy> tile_cache;
+        std::shared_ptr<TileCache<PixelPolicy>> tile_cache;
 
         unsigned int tiles_number;
 
@@ -69,7 +69,10 @@ namespace degate
          * Get the minimum width or height of an tile based image, that
          * it at least requested_size pixel width / height.
          * @param requested_size The minimum size.
-         * @param tile_width_exp The exponent (to base 2) that gives th
+         * @param tile_width_exp he width (and height) for image tiles. This
+         *      value is specified as an exponent to the base 2. This means for
+         *      example that if you want to use a width of 1024 pixel, you have
+         *      to give a value of 10, because 2^10 is 1024.
          * @return
          */
         unsigned int calc_real_size(unsigned int requested_size,
@@ -90,32 +93,43 @@ namespace degate
          * least the size specified via the width and height parameter.
          * Because the image is splitted into equisized tiles the constructed
          * image might be larger than the requested size.
+         * 
+         * It supports two types of tile loading depending on the type of the image.
+         * This is the main point of difference between Attached and Normal project modes.
+         * @see TileCache.
          *
          * @param width The minimum width of the image.
          * @param height The minimum height of the image.
-         * @param directory A tile based image is stored in multiple
-         *      files. This directory specifies the place where
-         *      the files are stored. If the directory doen't exits, it is created.
+         * @param path Can be a path with all the tile image (store mode)
+         *      or also directly an image path (attached mode).
          * @param persistent This boolean value indicates whether the image files
          *      are removed on object destruction.
          * @param tile_width_exp The width (and height) for image tiles. This
          *      value is specified as an exponent to the base 2. This means for
          *      example that if you want to use a width of 1024 pixel, you have
          *      to give a value of 10, because 2^10 is 1024.
+         * @param loading_type : the loading type to use when loading a new tile.
+         * @param notification_list : the list of workspace notification(s) to notify
+         *      after a new loading finished. This is done only if async loading type.
          */
-        StoragePolicy_Tile(unsigned int width, unsigned int height,
-                           std::string const& directory,
+        StoragePolicy_Tile(unsigned int width,
+                           unsigned int height,
+                           std::string const& path,
                            bool persistent = false,
-                           unsigned int tile_width_exp = 10) :
-            persistent(persistent),
-            tile_width_exp(tile_width_exp),
-            offset_bitmask((1 << tile_width_exp) - 1),
-            directory(directory),
-            tile_cache(directory, tile_width_exp, persistent),
-            width(width),
-            height(height)
+                           unsigned int scale = 1,
+                           unsigned int tile_width_exp = 10,
+                           TileLoadingType loading_type = TileLoadingType::Sync, 
+                           const WorkspaceNotificationList& notification_list = {})
+            : persistent(persistent),
+              tile_width_exp(tile_width_exp),
+              offset_bitmask((1 << tile_width_exp) - 1),
+              path(path),
+              tile_cache(std::make_shared<TileCache<PixelPolicy>>(path, tile_width_exp, scale, loading_type, notification_list)),
+              width(width),
+              height(height)
         {
-            if (!file_exists(directory)) create_directory(directory);
+            if (!file_exists(path))
+                create_directory(path);
 
             double temp_tile_size = 1 << tile_width_exp;
             tiles_number = static_cast<unsigned>(ceil(static_cast<double>(width) / temp_tile_size)) * static_cast<unsigned>(ceil(static_cast<double>(height) / temp_tile_size));
@@ -126,8 +140,10 @@ namespace degate
          */
         virtual ~StoragePolicy_Tile()
         {
-            tile_cache.release_memory();
-            if (persistent == false) remove_directory(directory);
+            tile_cache->release_memory();
+
+            if (persistent == false && is_directory(path))
+                remove_directory(path);
         }
 
         inline unsigned int get_tiles_number() const
@@ -148,17 +164,15 @@ namespace degate
             return tile_width_exp;
         }
 
-
         /**
-         * Get the directory, where images are stored.
+         * Either where images are stored or the image path.
          */
-        std::string get_directory() const { return directory; }
+        std::string get_path() const { return path; }
 
         /**
          * Check if the image is persistent.
          */
         bool is_persistent() const { return persistent; }
-
 
         inline typename PixelPolicy::pixel_type get_pixel(unsigned int x, unsigned int y) const;
 
@@ -169,7 +183,7 @@ namespace degate
          */
         void raw_copy(void* dst_buf, unsigned int src_x, unsigned int src_y) const
         {
-            MemoryMap_shptr mem = tile_cache.get_tile(src_x, src_y);
+            MemoryMap_shptr mem = tile_cache->get_tile(src_x, src_y);
             mem->raw_copy(dst_buf);
         }
 
@@ -179,7 +193,7 @@ namespace degate
          */
         void* data(unsigned int src_x, unsigned int src_y)
         {
-            return tile_cache.get_tile(src_x, src_y)->data();
+            return tile_cache->get_tile(src_x, src_y)->data();
         }
 
         /**
@@ -198,7 +212,7 @@ namespace degate
                    unsigned int max_y,
                    unsigned int radius)
         {
-            tile_cache.cache_around(min_x, max_x, min_y, max_y, width, height, radius);
+            tile_cache->cache_around(min_x, max_x, min_y, max_y, width, height, radius);
         }
 
         /**
@@ -206,7 +220,7 @@ namespace degate
          */
         void release_memory()
         {
-            tile_cache.release_memory();
+            tile_cache->release_memory();
         }
     };
 
@@ -215,7 +229,7 @@ namespace degate
     StoragePolicy_Tile<PixelPolicy>::get_pixel(unsigned int x,
                                                unsigned int y) const
     {
-        MemoryMap_shptr mem = tile_cache.get_tile(x, y);
+        MemoryMap_shptr mem = tile_cache->get_tile(x, y);
         return mem->get(x & offset_bitmask, y & offset_bitmask);
     }
 
@@ -224,7 +238,7 @@ namespace degate
     StoragePolicy_Tile<PixelPolicy>::set_pixel(unsigned int x, unsigned int y,
                                                typename PixelPolicy::pixel_type new_val)
     {
-        MemoryMap_shptr mem = tile_cache.get_tile(x, y);
+        MemoryMap_shptr mem = tile_cache->get_tile(x, y);
         mem->set(x & offset_bitmask, y & offset_bitmask, new_val);
     }
 }

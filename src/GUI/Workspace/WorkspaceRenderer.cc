@@ -23,6 +23,7 @@
 #include "GUI/Dialog/GateEditDialog.h"
 #include "GUI/Dialog/AnnotationEditDialog.h"
 #include "GUI/Preferences/PreferencesHandler.h"
+#include "GUI/Workspace/WorkspaceNotifier.h"
 
 namespace degate
 {
@@ -233,9 +234,32 @@ namespace degate
         regular_grid.viewport_update(BoundingBox(viewport_min_x, viewport_max_x, viewport_min_y, viewport_max_y));
         regular_grid.update();
 
-		set_projection(1, width() / 2.0, height() / 2.0);
+        // Reset scale
+        scale = 1.0;
 
-		update_screen();
+        // If project set, then center view and max zoom out
+        if (project != nullptr)
+        {
+            if (width() < height())
+            {
+                set_projection(static_cast<float>(project->get_width()) / static_cast<float>(width()),
+                               project->get_width() / 2.0,
+                               project->get_height() / 2.0);
+            }
+            else
+            {
+                set_projection(static_cast<float>(project->get_height()) / static_cast<float>(height()),
+                               project->get_width() / 2.0,
+                               project->get_height() / 2.0);
+            }
+        }
+        else
+        {
+            // Otherwise, just center the view
+            center_view(QPointF{width() / 2.0, height() / 2.0});
+        }
+            
+        update_screen();
 	}
 
 	bool WorkspaceRenderer::has_area_selection()
@@ -419,6 +443,8 @@ namespace degate
 
     void WorkspaceRenderer::cleanup()
     {
+        WorkspaceNotifier::get_instance().undefine(WorkspaceTarget::Workspace);
+
         makeCurrent();
 
         // Delete opengl objects here
@@ -461,6 +487,11 @@ namespace degate
         // Get and print GLSL version
         QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
         debug(TM, "GLSL version: %s", glFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+        // Define the draw notification for the workspace (renderer), just a repaint
+        WorkspaceNotifier::get_instance().define(WorkspaceTarget::Workspace, WorkspaceNotification::Draw, [=](){
+            this->repaint();
+        });
 	}
 
 	void WorkspaceRenderer::paintGL()

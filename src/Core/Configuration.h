@@ -25,26 +25,33 @@
 #include "Globals.h"
 #include "Core/Primitive/SingletonBase.h"
 
-namespace degate {
-
-  class Configuration : public SingletonBase<Configuration> {
-
-    friend class SingletonBase<Configuration>;
-
-  private:
-
-    Configuration();
-
-  public:
-
+namespace degate
+{
     /**
-     * Get the cache size for image tiles in MB.
-     * @return Returns the maximum cache size (in Mb) from the preferences.
+     * @class Configuration
+     * @brief Singleton class to store important parameters needed everywhere.
      */
-    static uint_fast64_t get_max_tile_cache_size();
+    class Configuration : public SingletonBase<Configuration>
+    {
 
-  };
+        friend class SingletonBase<Configuration>;
 
-}
+    private:
+        Configuration();
+
+    public:
+        /**
+         * Get the cache size for image tiles in MB.
+         * @return Returns the maximum cache size (in Mb) from the preferences.
+         */
+        static uint_fast64_t get_max_tile_cache_size();
+
+        /**
+         * Get the maximum number of threads allowed to run concurrently.
+         */
+        static unsigned int get_max_concurrent_thread_count();
+    };
+
+} // namespace degate
 
 #endif

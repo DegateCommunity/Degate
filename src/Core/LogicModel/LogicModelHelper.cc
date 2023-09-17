@@ -200,36 +200,6 @@ void degate::grab_template_images(LogicModel_shptr lmodel,
     }
 }
 
-
-void degate::load_background_image(Layer_shptr layer,
-                                   std::string const& project_dir,
-                                   std::string const& image_file)
-{
-    if (layer == nullptr)
-        throw InvalidPointerException("Error: you passed an invalid pointer to load_background_image()");
-
-    boost::format fmter("layer_%1%.dimg");
-    fmter % layer->get_layer_id(); // was get_layer_pos()
-
-    std::string dir(join_pathes(project_dir, fmter.str()));
-
-    if (layer->has_background_image())
-        layer->unset_image();
-
-    debug(TM, "Create background image in %s", dir.c_str());
-    BackgroundImage_shptr bg_image(new BackgroundImage(layer->get_width(),
-                                                       layer->get_height(),
-                                                       dir));
-
-    debug(TM, "Load image %s", image_file.c_str());
-    load_image<BackgroundImage>(image_file, bg_image);
-
-    debug(TM, "Set image to layer.");
-    layer->set_image(bg_image);
-    debug(TM, "Done.");
-}
-
-
 void load_tile(const QRgb* rba_data,
                unsigned int tile_size,
                unsigned int tile_index,
@@ -323,7 +293,7 @@ void create_scaled_background_image(const std::string& dir, const BackgroundImag
         QImage img = current_reader.read();
         if (img.isNull())
         {
-            debug(TM, "can't create %s (can't read image)\n", bg_image->get_directory().c_str());
+            debug(TM, "can't create %s (can't read image)\n", bg_image->get_path().c_str());
         }
 
         // Convert to good format
@@ -384,7 +354,7 @@ void create_scaled_background_images(const BackgroundImage_shptr& bg_image, unsi
         // create a new image
         char dir_name[PATH_MAX];
         snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
-        std::string dir_path = join_pathes(bg_image->get_directory(), std::string(dir_name));
+        std::string dir_path = join_pathes(bg_image->get_path(), std::string(dir_name));
         create_directory(dir_path);
 
         reader.device()->seek(0);

@@ -29,6 +29,44 @@
 #include "Core/Version.h"
 #include "Core/Utils/CrashReport.h"
 
+/**
+ * @class Degate
+ * @brief Implementation of QApplication.
+ * 
+ * Useful to catch exceptions.
+ */
+class Degate final : public QApplication
+{
+public:
+
+    /**
+     * Constructor, @see QApplication.
+     * 
+     * Only one QApplication can exist, accessible through QApplication::.
+     */
+    Degate(int& argc, char** argv) : QApplication(argc, argv)
+    {
+    }
+
+    /**
+     * Reimplement notify() to catch exceptions.
+     */
+    virtual bool notify(QObject* receiver, QEvent* event) override
+    {
+        try
+        {
+            return QApplication::notify(receiver, event);
+        }
+        catch (const std::exception& e)
+        {
+            degate::crash_report(e.what());
+            exit(EXIT_FAILURE);
+        }
+
+        return false;
+    }
+};
+
 int main(int argc, char* argv[])
 {
     int ret = 0;
@@ -43,25 +81,28 @@ int main(int argc, char* argv[])
     QSurfaceFormat::setDefaultFormat(format);
 
     // Create Qt application
-    QApplication a(argc, argv);
+    Degate app(argc, argv);
 
     // Bind signals
     std::signal(SIGSEGV, [](int signal) {
         std::string error = "A SIGSEGV occurred (" + std::to_string(signal) + ").";
         degate::crash_report(error);
         QApplication::closeAllWindows();
+        exit(EXIT_FAILURE);
     });
 
     std::signal(SIGFPE, [](int signal) {
         std::string error = "A SIGFPE occurred (" + std::to_string(signal) + ").";
         degate::crash_report(error);
         QApplication::closeAllWindows();
+        exit(EXIT_FAILURE);
     });
 
     std::signal(SIGILL, [](int signal) {
         std::string error = "A SIGILL occurred (" + std::to_string(signal) + ").";
         degate::crash_report(error);
         QApplication::closeAllWindows();
+        exit(EXIT_FAILURE);
     });
 
     try

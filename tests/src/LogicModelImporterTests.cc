@@ -38,7 +38,7 @@ TEST_CASE("Test import", "[LogicModelImporter]")
 
     LogicModelImporter lm_importer(500, 500, glib);
     std::string filename("tests_files/test_project/lmodel.xml");
-    LogicModel_shptr lmodel(lm_importer.import(filename));
+    LogicModel_shptr lmodel(lm_importer.import(filename, ProjectType::Normal));
 
     // If this fail, need to add the 'tests_files' folder beside the tests executable.
     REQUIRE(lmodel != nullptr);
@@ -54,6 +54,6 @@ TEST_CASE("Test import", "[LogicModelImporter]")
     }
 
     // try to reuse the importer
-    LogicModel_shptr lmodel2(lm_importer.import(filename));
+    LogicModel_shptr lmodel2(lm_importer.import(filename, ProjectType::Normal));
     REQUIRE(lmodel2 != nullptr);
 }

@@ -20,6 +20,7 @@
  */
 
 #include "WorkspaceBackground.h"
+#include "GUI/Workspace/WorkspaceNotifier.h"
 
 #include <algorithm>
 
@@ -56,6 +57,7 @@ namespace degate
 
     WorkspaceBackground::~WorkspaceBackground()
     {
+        WorkspaceNotifier::get_instance().undefine(WorkspaceTarget::WorkspaceBackground);
         free_textures();
     }
 
@@ -97,9 +99,13 @@ namespace degate
         delete fshader;
 
         program->link();
+
+        WorkspaceNotifier::get_instance().define(WorkspaceTarget::WorkspaceBackground, WorkspaceNotification::Update, std::bind(&WorkspaceBackground::update, this));
     }
 
-    void WorkspaceBackground::update() //TODO: this is slow, try to have a thread that do that work
+    // TODO: Full update on each call, should now what changed and update only what's needed.
+    //       Like save elem and compare, and {min,max}* : compare to know if something need to update.
+    void WorkspaceBackground::update()
     {
         free_textures();
 
@@ -152,13 +158,17 @@ namespace degate
 
         assert(context->glGetError() == GL_NO_ERROR);
 
-        if (!future.isFinished())
-            return;
+        // What follow was removed since the performance impact
+        // needs to be evaluated. Also, that don't fit well with
+        // the attached mode tile cache.
 
-        future.setFuture(QtConcurrent::run([this, min_x, max_x, min_y, max_y]()
-        {
-            background_image->cache(min_x, max_x, min_y, max_y, 1);
-        }));
+        //if (!future.isFinished())
+            //return;
+
+        //future.setFuture(QtConcurrent::run([this, min_x, max_x, min_y, max_y]()
+        //{
+            //background_image->cache(min_x, max_x, min_y, max_y, 4);
+        //}));
     }
 
     void WorkspaceBackground::draw(const QMatrix4x4& projection)

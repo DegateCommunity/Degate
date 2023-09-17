@@ -112,6 +112,8 @@ namespace degate
 
         diameter_t port_diameter = 5;
 
+        ProjectType project_type;
+
     private:
 
         /**
@@ -215,7 +217,7 @@ namespace degate
         /**
          * The constructor for the logic model.
          */
-        LogicModel(unsigned int width, unsigned int height, unsigned int layers = 0);
+        LogicModel(unsigned int width, unsigned int height, ProjectType project_type, unsigned int layers = 0);
 
 
         /**

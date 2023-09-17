@@ -2,7 +2,7 @@
  * This file is part of the IC reverse engineering tool Degate.
  *
  * Copyright 2008, 2009, 2010 by Martin Schobert
- * Copyright 2019-2020 Dorian Bachelot
+ * Copyright 2021 Dorian Bachelot
  *
  * Degate is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,348 +22,229 @@
 #ifndef __TILECACHE_H__
 #define __TILECACHE_H__
 
-#include "Core/Utils/MemoryMap.h"
+#include "Core/Image/TileImage.h"
+#include "Core/Image/TileCacheBase.h"
+#include "Core/Image/GlobalTileCache.h"
+#include "GUI/Workspace/WorkspaceNotifier.h"
 #include "Core/Utils/FileSystem.h"
-#include "Core/Configuration.h"
+#include "Core/Utils/MemoryMap.h"
 
-#include <string>
-#include <map>
-#include <memory>
-#include <ctime>
-#include <utility> // for make_pair
-#include <iostream>
-#include <iomanip>
-
-#include <chrono>
-
-#include <mutex>
-
-/**
- * Minimum size (in Mb) of the cache.
- */
-#define MINIMUM_CACHE_SIZE uint_fast64_t(256)
-
-static void get_clock(struct timespec* ts)
-{
-    assert(ts != nullptr);
-
-    std::chrono::steady_clock::time_point tp = std::chrono::steady_clock::now();
-
-    auto secs = std::chrono::time_point_cast<std::chrono::seconds>(tp);
-    auto ns = std::chrono::time_point_cast<std::chrono::nanoseconds>(tp) - std::chrono::time_point_cast<std::chrono::
-        nanoseconds>(secs);
-
-    ts->tv_sec = secs.time_since_epoch().count();
-    ts->tv_nsec = static_cast<long>(ns.count());
-}
-
-#define GET_CLOCK(dst_variable) \
-      get_clock(&dst_variable);
-
-
-// #define TILECACHE_DEBUG
-
-/**
- * Overloaded comparison operator for timespec-structs.
- * @return Returns true, if \p a is completely before \p b. Else
- *   false is returned.
- */
-static bool operator<(struct timespec const& a, struct timespec const& b)
-{
-    if (a.tv_sec < b.tv_sec) return true;
-    else if (a.tv_sec == b.tv_sec && a.tv_nsec < b.tv_nsec) return true;
-    else return false;
-}
+#include <QtConcurrent/QtConcurrent>
+#include <QImageReader>
+#include <cmath>
 
 namespace degate
 {
-    class TileCacheBase
+    /**
+     * @enum TileLoadingType
+     * @brief Defines the different tile loading types.
+     */
+    enum class TileLoadingType
     {
-    public:
-        virtual void cleanup_cache() = 0;
-        virtual void print() const = 0;
+        Sync,
+        Async
     };
-
-    class GlobalTileCache : public SingletonBase<GlobalTileCache>
-    {
-        friend class SingletonBase<GlobalTileCache>;
-
-    private:
-
-        uint_fast64_t max_cache_memory;
-        uint_fast64_t allocated_memory;
-
-        typedef std::pair<struct timespec, uint_fast64_t> cache_entry_t;
-        typedef std::map<TileCacheBase *, cache_entry_t> cache_t;
-
-        cache_t cache;
-
-    private:
-
-        GlobalTileCache() : allocated_memory(0)
-        {
-            if (Configuration::get_max_tile_cache_size() < MINIMUM_CACHE_SIZE)
-                max_cache_memory = MINIMUM_CACHE_SIZE * uint_fast64_t(1024) * uint_fast64_t(1024);
-            else
-                max_cache_memory = Configuration::get_max_tile_cache_size() * uint_fast64_t(1024) * uint_fast64_t(1024);
-        }
-
-        void remove_oldest()
-        {
-            struct timespec now;
-            GET_CLOCK(now);
-
-            TileCacheBase* oldest = nullptr;
-
-            for (cache_t::iterator iter = cache.begin(); iter != cache.end(); ++iter)
-            {
-                cache_entry_t& entry = iter->second;
-                if (entry.first < now)
-                {
-                    now.tv_sec = entry.first.tv_sec;
-                    now.tv_nsec = entry.first.tv_nsec;
-                    oldest = iter->first;
-                }
-            }
-
-            if (oldest)
-            {
-#ifdef TILECACHE_DEBUG
-    debug(TM, "Will call cleanup on %p", oldest);
-#endif
-                oldest->cleanup_cache();
-            }
-            else
-            {
-#ifdef TILECACHE_DEBUG
-    debug(TM, "there is nothing to free.");
-    print_table();
-#endif
-            }
-        }
-
-    public:
-
-        void print_table() const
-        {
-            std::cout << "Global Image Tile Cache:\n"
-                << "Used memory : " << allocated_memory << " bytes\n"
-                << "Max memory  : " << max_cache_memory << " bytes\n\n"
-                << "Holder           | Last access (sec,nsec)    | Amount of memory\n"
-                << "-----------------+---------------------------+------------------------------------\n";
-
-            for (cache_t::const_iterator iter = cache.begin(); iter != cache.end(); ++iter)
-            {
-                cache_entry_t const& entry = iter->second;
-                std::cout << std::setw(16) << std::hex << static_cast<void*>(iter->first);
-                std::cout << " | ";
-                std::cout << std::setw(12) << entry.first.tv_sec;
-                std::cout << ".";
-                std::cout << std::setw(12) << entry.first.tv_nsec;
-                std::cout << " | ";
-                std::cout << entry.second / (1024 * 1024) << " M (" << entry.second << " bytes)\n";
-                iter->first->print();
-            }
-            std::cout << "\n";
-        }
-
-        bool request_cache_memory(TileCacheBase* requestor, uint_fast64_t amount)
-        {
-#ifdef TILECACHE_DEBUG
-      debug(TM, "Local cache %p requests %d bytes.", requestor, amount);
-#endif
-            while (allocated_memory + amount > max_cache_memory)
-            {
-#ifdef TILECACHE_DEBUG
-    debug(TM, "Try to free memory");
-#endif
-                remove_oldest();
-            }
-
-            if (allocated_memory + amount <= max_cache_memory)
-            {
-                struct timespec now;
-                GET_CLOCK(now);
-
-                cache_t::iterator found = cache.find(requestor);
-                if (found == cache.end())
-                {
-                    cache[requestor] = std::make_pair(now, amount);
-                }
-                else
-                {
-                    cache_entry_t& entry = found->second;
-                    entry.first.tv_sec = now.tv_sec;
-                    entry.first.tv_nsec = now.tv_nsec;
-                    entry.second += amount;
-                }
-
-                allocated_memory += amount;
-#ifdef TILECACHE_DEBUG
-    print_table();
-#endif
-                return true;
-            }
-
-            debug(TM, "Can't free memory.");
-
-            print_table();
-            return false;
-        }
-
-        void release_cache_memory(TileCacheBase* requestor, uint_fast64_t amount)
-        {
-#ifdef TILECACHE_DEBUG
-      debug(TM, "Local cache %p releases %d bytes.", requestor, amount);
-#endif
-
-            cache_t::iterator found = cache.find(requestor);
-
-            if (found == cache.end())
-            {
-                debug(TM, "Unknown memory should be released.");
-                print_table();
-                assert(1==0);
-            }
-            else
-            {
-                cache_entry_t& entry = found->second;
-
-                if (entry.second >= amount)
-                {
-                    entry.second -= amount;
-                    assert(allocated_memory >= amount);
-                    if (allocated_memory >= amount) allocated_memory -= amount;
-                    else
-                    {
-                        debug(TM, "More mem to release than available.");
-                        print_table();
-                        assert(1==0);
-                    }
-                }
-                else
-                {
-                    print_table();
-                    assert(entry.second >= amount); // will break
-                }
-
-                if (entry.second == 0)
-                {
-#ifdef TILECACHE_DEBUG
-      debug(TM, "Memory completely released. Remove entry from global cache.");
-#endif
-                    cache.erase(found);
-                }
-            }
-        }
-
-        inline uint_fast64_t get_max_cache_memory() const
-        {
-            return max_cache_memory;
-        }
-
-        inline uint_fast64_t get_allocated_memory() const
-        {
-            return allocated_memory;
-        }
-
-        inline bool is_full(uint_fast64_t amount) const
-        {
-            return allocated_memory + amount > max_cache_memory;
-        }
-    };
-
 
     /**
-     * The TileCache class handles caching of image tiles.
-     *
-     * The implementation keeps track how old the cached tile is.
-     * If new tiles become loaded, old tiles are removed from the
-     * cache. You can control the numer of cached tiles via the
-     * constructor parameter \p _min_cache_tiles. The memory
-     * requirement is around
-     * \p _min_cache_tiles*sizeof(PixelPolicy::pixel_type)*(2^_tile_width_exp)^2 ,
-     * where \p sizeof(PixelPolicy::pixel_type) is the size of a pixel.
+     * @class TileCache
+     * @brief Tile cache class.
+     * 
+     * It supports two types of tile loading depending on the type of the image.
+     * If it's in Degate's internal format, then it will use memory mapping from
+     * file. Otherwise, it will dynamically load tiles in memory.
+     * This is the main point of difference between Attached and Normal project modes.
      */
-    template <class PixelPolicy>
+    template<class PixelPolicy>
     class TileCache : public TileCacheBase
     {
-        friend class GlobalTileCache;
-
-    private:
-
-        typedef std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> MemoryMap_shptr;
-        typedef std::map<std::string, // filename
-                         std::pair<MemoryMap_shptr, struct timespec>> cache_type;
-
-        const std::string directory;
-        const unsigned int tile_width_exp;
-        const bool persistent;
-
-        cache_type cache;
-
-        // Used for caching the working tile.
-        mutable MemoryMap_shptr current_tile;
-        mutable unsigned curr_tile_num_x;
-        mutable unsigned curr_tile_num_y;
-
-        std::mutex mutex;
-
+        friend class GlobalTileCache<PixelPolicy>;
 
     public:
 
         /**
-         * Create a TileCache object.
-         * @param directory The directory where all the tiles are for a TileImage.
-         * @param tile_width_exp
-         * @param persistent
+         * Create a new tile cache.
+         * 
+         * It supports two types of tile loading depending on the type of the image.
+         * If it's in Degate's internal format, then it will use memory mapping from
+         * file. Otherwise, it will dynamically load tiles in memory.
+         * This is the main point of difference between Attached and Normal project modes.
+         * 
+         * @param path : the path to the image (can be to a file or a path for example).
+         * @param tile_width_exp : the width (and height) for image tiles. This
+         *      value is specified as an exponent to the base 2. This means for
+         *      example that if you want to use a width of 1024 pixel, you have
+         *      to give a value of 10, because 2^10 is 1024.
+         * @param scale : the scale to apply when loading the image (e.g. scale = 2
+         *      will load the image with final size of width/2 and height/2). 
+         *      @see ScalingManager.
+         * @param loading_type : the loading type to use when loading a new tile.
+         *      If using Degate's image format, only sync is supported.
+         * @param notification_list : the list of workspace notification(s) to notify
+         *      after a new loading finished. This is done only if async loading type.
          */
-        TileCache(std::string const& directory,
-                  unsigned int tile_width_exp,
-                  bool persistent,
-                  unsigned int min_cache_tiles = 4) :
-            directory(directory),
-            tile_width_exp(tile_width_exp),
-            persistent(persistent)
+        inline TileCache(std::string path, 
+                         unsigned int tile_width_exp, 
+                         unsigned int scale, 
+                         TileLoadingType loading_type, 
+                         const WorkspaceNotificationList& notification_list)
+            : path(std::move(path)),
+              tile_width_exp(tile_width_exp),
+              scale(scale),
+              loading_type(loading_type),
+              notification_list(notification_list),
+              tile_size(1 << tile_width_exp)
         {
+            // Check if Degate's image format
+            QImageReader reader(this->path.c_str());
+            if (reader.canRead() == false)
+            {
+                degate_image_format = true;
+                return;
+            }
+
+            // If the image is a multi-page/multi-res, we take the page with the biggest resolution.
+            if (reader.imageCount() > 1)
+            {
+                QSize best_size{0, 0};
+                for (int i = 0; i < reader.imageCount(); i++)
+                {
+                    if (best_size.width() < reader.size().width() || best_size.height() < reader.size().height())
+                    {
+                        best_size = reader.size();
+                        best_image_number = reader.currentImageNumber();
+                    }
+
+                    reader.jumpToNextImage();
+                }
+
+                reader.jumpToImage(best_image_number);
+            }
+
+            // Size
+            size = reader.size();
+            if (!size.isValid())
+            {
+                debug(TM, "Can't read size of %s.\n", this->path.c_str());
+                return;
+            }
+
+            // Scaled size conversion
+            auto h = static_cast<unsigned int>(round(log(scale) / log(2)));
+            scaled_size = QSize{size.width() >> h, size.height() >> h};
+
+            // Create loading tile
+            loading_tile = std::make_shared<MemoryMap<typename PixelPolicy::pixel_type>>(tile_size, tile_size);
         }
 
         /**
-         * Destroy a TileCache object.
+         * Release memory on destroy.
          */
-        ~TileCache()
+        inline ~TileCache()
         {
+            std::lock_guard<std::mutex> lock(mtx);
+
+            // Delete and clear watchers
+            for (auto* watcher : watchers)
+                delete watcher;
+            watchers.clear();
+
+            // Release memory
             release_memory();
         }
 
-        void release_memory()
+        /**
+         * Cleanup the cache by removing the oldest entry.
+         */
+        inline void cleanup_cache() override
+        {
+            if (cache.size() == 0) return;
+
+            std::lock_guard<std::mutex> lock(mtx);
+
+            // Initialize a clock to store the oldest
+            struct timespec oldest_clock_val;
+            GET_CLOCK(oldest_clock_val);
+
+            auto oldest = cache.begin();
+
+            // Search for oldest entry
+            for (auto iter = cache.begin();
+                 iter != cache.end(); ++iter)
+            {
+                struct timespec clock_val = (*iter).second.second;
+                if (clock_val < oldest_clock_val)
+                {
+                    oldest_clock_val.tv_sec = clock_val.tv_sec;
+                    oldest_clock_val.tv_nsec = clock_val.tv_nsec;
+                    oldest = iter;
+                }
+            }
+
+            assert(oldest != cache.end());
+
+            // Release memory
+            (*oldest).second.first.reset(); // explicit reset of smart pointer
+
+            // Clean the cache entry
+            cache.erase(oldest);
+
+#ifdef TILECACHE_DEBUG
+            debug(TM, "local cache: %d entries after remove\n", cache.size());
+#endif
+
+            // Update the global tile cache (release the virtual memory)
+            GlobalTileCache<PixelPolicy>& gtc = GlobalTileCache<PixelPolicy>::get_instance();
+            gtc.release_cache_memory(this, get_image_size());
+        }
+
+        /**
+         * Release all the memory.
+         */
+        inline void release_memory()
         {
             if (cache.size() > 0)
             {
-                std::lock_guard<std::mutex> lock(mutex);
+                std::lock_guard<std::mutex> lock(mtx);
 
-                GlobalTileCache& gtc = GlobalTileCache::get_instance();
+                // Release the global tile cache (by removing all the used virtual memory by this)
+                GlobalTileCache<PixelPolicy>& gtc = GlobalTileCache<PixelPolicy>::get_instance();
                 gtc.release_cache_memory(this, cache.size() * get_image_size());
+
+                // Release the memory
                 current_tile.reset();
                 cache.clear();
             }
         }
 
-        void print() const override
+        /**
+         * Print this cache info.
+         */
+        inline void print() const override
         {
             for (typename cache_type::const_iterator iter = cache.begin();
                  iter != cache.end(); ++iter)
             {
                 std::cout << "\t+ "
-                    << directory << "/"
-                    << (*iter).first << " "
-                    << (*iter).second.second.tv_sec
-                    << "/"
-                    << (*iter).second.second.tv_nsec
-                    << std::endl;
+                          << path << "/"
+                          << (*iter).first << " "
+                          << (*iter).second.second.tv_sec
+                          << "/"
+                          << (*iter).second.second.tv_nsec
+                          << std::endl;
             }
         }
 
+        /**
+         * Cache all tile around a rect (in a radius).
+         * 
+         * @param min_x : lower left x coordinate of the rect.
+         * @param max_x : upper right x cooredinate of the rect.
+         * @param min_y : lower left y coordinate of the rect.
+         * @param max_y : upper right y coordinate of the rect.
+         * @param max_size_x : max possible x coordinate for the rect.
+         * @param max_size_y : max possible y coordinate for the rect.
+         * @param radius : radius around the rect to cache (in number of tile unit).
+         */
         inline void cache_around(unsigned int min_x,
                                  unsigned int max_x,
                                  unsigned int min_y,
@@ -386,9 +267,9 @@ namespace degate
             unsigned int cache_max_y = radius + tile_num_max_y > tile_num_max_size_y ? tile_num_max_size_y : tile_num_max_y + radius;
 
             if (static_cast<uint_fast64_t>(cache_max_x - cache_min_x) *
-                static_cast<uint_fast64_t>(cache_max_y - cache_min_y) *
-                static_cast<uint_fast64_t>(get_image_size()) *
-                static_cast<uint_fast64_t>(sizeof(typename PixelPolicy::pixel_type)) > GlobalTileCache::get_instance().get_max_cache_memory())
+                        static_cast<uint_fast64_t>(cache_max_y - cache_min_y) *
+                        static_cast<uint_fast64_t>(get_image_size()) *
+                        static_cast<uint_fast64_t>(sizeof(typename PixelPolicy::pixel_type)) > GlobalTileCache<PixelPolicy>::get_instance().get_max_cache_memory())
             {
                 debug(TM, "Cache too small to cache around");
 
@@ -400,55 +281,10 @@ namespace degate
                 for (unsigned int x = cache_min_x; x <= cache_max_x; x++)
                 {
                     //if (y >= tile_num_min_y && y <= tile_num_max_y && x >= tile_num_min_x && x <= tile_num_max_x)
-                        //continue;
+                    //continue;
 
                     load_tile(x, y);
                 }
-            }
-        }
-
-        inline void load_tile(unsigned int x, unsigned int y, bool update_current = false)
-        {
-            std::lock_guard<std::mutex> lock(mutex);
-
-            // create a file name from tile number
-            char filename[PATH_MAX];
-            snprintf(filename, sizeof(filename), "%d_%d.dat", x, y);
-
-            // if filename/ object is not in cache, load the tile
-            typename cache_type::const_iterator iter = cache.find(filename);
-
-            if (iter == cache.end())
-            {
-                GlobalTileCache& gtc = GlobalTileCache::get_instance();
-
-                bool ok = gtc.request_cache_memory(this, get_image_size());
-                assert(ok == true);
-                struct timespec now{};
-                GET_CLOCK(now);
-
-                cache[filename] = std::make_pair(load(filename), now);
-
-                //debug(TM, "Cache size : %d/%d", gtc.get_allocated_memory(), gtc.get_max_cache_memory());
-
-                #ifdef TILECACHE_DEBUG
-                gtc.print_table();
-                #endif
-            }
-
-            // Get current time
-            struct timespec now{};
-            GET_CLOCK(now);
-
-            // Update entry
-            auto entry = cache[filename];
-            entry.second = now;
-
-            if (update_current)
-            {
-                current_tile = entry.first;
-                curr_tile_num_x = x;
-                curr_tile_num_y = y;
             }
         }
 
@@ -465,9 +301,7 @@ namespace degate
             unsigned int tile_num_x = x >> tile_width_exp;
             unsigned int tile_num_y = y >> tile_width_exp;
 
-            if (!(current_tile != nullptr &&
-                tile_num_x == curr_tile_num_x &&
-                tile_num_y == curr_tile_num_y))
+            if (!(current_tile != nullptr && tile_num_x == curr_tile_num_x && tile_num_y == curr_tile_num_y) || current_tile_is_loading)
             {
                 load_tile(tile_num_x, tile_num_y, true);
             }
@@ -475,71 +309,336 @@ namespace degate
             return current_tile;
         }
 
-    protected:
-
         /**
-         * Remove the oldest entry from the cache.
+         * Load a new tile and update the cache.
+         * 
+         * @param x : the x index of the tile (not the real coordinate).
+         * @param y : the y index of the tile (not the real coordinate).
+         * @param update_current : if true, will update the current_tile pointer, otherwise not.
          */
-        void cleanup_cache() override
+        inline void load_tile(unsigned int x, unsigned int y, bool update_current = false)
         {
-            if (cache.size() == 0) return;
+            std::lock_guard<std::mutex> lock(mtx);
 
-            struct timespec oldest_clock_val;
-            GET_CLOCK(oldest_clock_val);
-
-            typename cache_type::iterator oldest = cache.begin();
-
-            for (typename cache_type::iterator iter = cache.begin();
-                 iter != cache.end(); ++iter)
+            // Check if tile is included in the base image
+            // Otherwise return loading tile
+            if (!is_included(x, y))
             {
-                struct timespec clock_val = (*iter).second.second;
-                if (clock_val < oldest_clock_val)
+                if (update_current)
                 {
-                    oldest_clock_val.tv_sec = clock_val.tv_sec;
-                    oldest_clock_val.tv_nsec = clock_val.tv_nsec;
-                    oldest = iter;
+                    current_tile = loading_tile;
+                    curr_tile_num_x = x;
+                    curr_tile_num_y = y;
+                    current_tile_is_loading = false;
                 }
+
+                return;
             }
 
-            assert(oldest != cache.end());
-            (*oldest).second.first.reset(); // explicit reset of smart pointer
-            cache.erase(oldest);
-#ifdef TILECACHE_DEBUG
-      debug(TM, "local cache: %d entries after remove\n", cache.size());
-#endif
-            GlobalTileCache& gtc = GlobalTileCache::get_instance();
-            gtc.release_cache_memory(this, get_image_size());
+            // Get time
+            struct timespec now{};
+            GET_CLOCK(now);
+
+            // Create a file name from tile number
+            char filename[PATH_MAX];
+            snprintf(filename, sizeof(filename), "%d_%d.dat", x, y);
+
+            // If filename/object is not in cache, load the tile
+            typename cache_type::const_iterator iter = cache.find(filename);
+
+            // If the tile was not found in the cache, then load it
+            if (iter == cache.end())
+            {
+                GlobalTileCache<PixelPolicy>& gtc = GlobalTileCache<PixelPolicy>::get_instance();
+
+                // Allocate memory (global tile cache)
+                bool ok = gtc.request_cache_memory(this, get_image_size());
+                assert(ok == true);
+
+                if (degate_image_format == false)
+                {
+                    // Check loading type
+                    if (loading_type == TileLoadingType::Async)
+                    {
+                        // If update_current, then update and set a black loading tile
+                        if (update_current)
+                        {
+                            cache[filename] = std::make_pair(loading_tile, now);
+                            current_tile = loading_tile;
+                            curr_tile_num_x = x;
+                            curr_tile_num_y = y;
+                            current_tile_is_loading = true;
+                        }
+
+                        // Run in another thread the loading phase of the new tile
+                        load_async(x, y, now, filename);
+
+                        // Show the loading tile while waiting for the next update to try to load the real tile image
+                        return;
+                    }
+                    else
+                    {
+                        // If sync
+                        auto temp = load(x, y, tile_size, scaled_size, path, best_image_number);
+
+                        // Prevent overflow
+                        if (temp == nullptr)
+                            temp = loading_tile;
+
+                        // Update cache
+                        cache[filename] = std::make_pair(temp, now);
+                    }
+                }
+                else
+                {
+                    // Async loading not supported for degate image format (memory map)
+                    cache[filename] = std::make_pair(load_degate_image_format(filename), now);
+                }
+
+                #ifdef TILECACHE_DEBUG
+                gtc.print_table();
+                #endif
+            }
+
+            // Update entry
+            auto entry = cache[filename];
+            entry.second = now;
+
+            if (update_current)
+            {
+                current_tile = entry.first;
+                curr_tile_num_x = x;
+                curr_tile_num_y = y;
+                current_tile_is_loading = false;
+            }
         }
 
-
-    private:
+    protected:
 
         /**
          * Get image size in bytes.
          */
-        uint_fast64_t get_image_size() const
+        inline uint_fast64_t get_image_size() const
         {
             return sizeof(typename PixelPolicy::pixel_type) * (uint_fast64_t(1) << tile_width_exp) * (uint_fast64_t(1) << tile_width_exp);
         }
 
         /**
-         * Load a tile from an image file.
-         * @param filename Just the name of the file to load. The filename is
-         *     relative to the \p directory.
+         * Send all notifications regarding the notification list.
          */
-        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>
-        load(std::string const& filename) const
+        inline void notify()
         {
-            //debug(TM, "directory: [%s] file: [%s]", directory.c_str(), filename.c_str());
-            MemoryMap_shptr mem(new MemoryMap<typename PixelPolicy::pixel_type>
-                (uint_fast64_t(1) << tile_width_exp,
-                 uint_fast64_t(1) << tile_width_exp,
-                 MAP_STORAGE_TYPE_PERSISTENT_FILE,
-                 join_pathes(directory, filename)));
+            for (auto notification : notification_list)
+                WorkspaceNotifier::get_instance().notify(notification.first, notification.second);
+        }
+
+        /**
+         * Load a tile (attached mode/on degate's image format).
+         * 
+         * @param tile_x : the tile first coordinate (first index).
+         * @param tile_y : the tile second coordinate (second index).
+         * 
+         * @return Returns the new memory map (here, for attached mod, just memory).
+         */
+        inline
+        static
+        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> load(unsigned int tile_x,
+                                                                          unsigned int tile_y,
+                                                                          unsigned int tile_size,
+                                                                          QSize scaled_size,
+                                                                          std::string path,
+                                                                          int best_image_number)
+        {
+            // Prepare sizes
+            QSize reading_size{static_cast<int>(tile_size), static_cast<int>(tile_size)};
+            const QSize read_size{static_cast<int>(tile_x) * static_cast<int>(tile_size), static_cast<int>(tile_y) * static_cast<int>(tile_size)};
+
+            // Check width
+            if (reading_size.width() + read_size.width() > scaled_size.width())
+                reading_size.setWidth(scaled_size.width() - read_size.width());
+
+            // Check height
+            if (reading_size.height() + read_size.height() > scaled_size.height())
+                reading_size.setHeight(scaled_size.height() - read_size.height());
+
+            // Check overflow
+            if (reading_size.width() <= 0 || reading_size.height() <= 0)
+                return nullptr;
+
+            // Create reader
+            QImageReader current_reader(path.c_str());
+
+            // Create reading rect
+            QRect rect(read_size.width(), read_size.height(), reading_size.width(), reading_size.height());
+
+            // If the image is a multi-page/multi-res, we take the page with the biggest resolution
+            if (current_reader.imageCount() > 1)
+                current_reader.jumpToImage(best_image_number);
+
+            // Scaled read
+            current_reader.setScaledSize(scaled_size);
+            current_reader.setScaledClipRect(rect);
+
+            // Set reader reading rect
+            QImage img = current_reader.read();
+            if (img.isNull())
+            {
+                debug(TM, "can't read image file when loading a new tile\n");
+            }
+
+            // Convert to good format
+            if (img.format() != QImage::Format_ARGB32 && img.format() != QImage::Format_RGB32)
+            {
+                img = img.convertToFormat(QImage::Format_ARGB32);
+            }
+
+            // Get data
+            const auto *rgb_data = reinterpret_cast<const QRgb*>(&img.constBits()[0]);
+
+            // Create memory map
+            auto mem = std::make_shared<MemoryMap<typename PixelPolicy::pixel_type>>(tile_size, tile_size);
+
+            // Prevent overflows
+            unsigned int max_x = tile_size > static_cast<unsigned int>(reading_size.width()) ?
+                                static_cast<unsigned int>(reading_size.width()) : tile_size;
+            unsigned int max_y = tile_size > static_cast<unsigned int>(reading_size.height()) ?
+                                static_cast<unsigned int>(reading_size.height()) : tile_size;
+
+            // Fill data
+            QRgb rgb;
+            for (unsigned int y = 0; y < max_y; y++)
+            {
+                for (unsigned int x = 0; x < max_x; x++)
+                {
+                    rgb = rgb_data[y * reading_size.width() + x];
+                    mem->set(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), qAlpha(rgb)));
+                }
+            }
 
             return mem;
         }
-    }; // end of class TileCache
-}
 
-#endif
+        /**
+         * Load image in degate internal format.
+         * 
+         * @param filename : just the name of the file to load. The filename is
+         *     relative to the path.
+         * 
+         * @return Returns a memory map (mapped to the corresponding tile file).
+         */
+        inline
+        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>
+        load_degate_image_format(std::string const& filename)
+        {
+            std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> mem(
+                    new MemoryMap<typename PixelPolicy::pixel_type>(
+                            uint_fast64_t(1) << tile_width_exp,
+                            uint_fast64_t(1) << tile_width_exp,
+                            MAP_STORAGE_TYPE_PERSISTENT_FILE,
+                            join_pathes(path, filename)));
+
+            return mem;
+        }
+
+        /**
+         * Check if the tile(x,y) is included in the base image (don't work for degate image format).
+         * 
+         * @param tile_x : the tile first coordinate (first index).
+         * @param tile_y : the tile second coordinate (second index).
+         */
+        inline bool is_included(unsigned int tile_x, unsigned int tile_y)
+        {
+            // For historic reasons, Degate's image format will take the project
+            // size as image size (even if the real size is less). Also, the 
+            // project size is equal to the biggest image size, so no overflow
+            // possible. Therefore, always return true in this case.
+            if (degate_image_format)
+                return true;
+
+            // Check width
+            if (static_cast<int>(tile_x) * static_cast<int>(tile_size) >= scaled_size.width())
+                return false;
+
+            // Check height
+            if (static_cast<int>(tile_y) * static_cast<int>(tile_size) >= scaled_size.height())
+                return false;
+
+            return true;
+        }
+
+        /**
+         * Run load() async, take into account this Tile Cache possible destruction before getting the result.
+         */
+        inline void load_async(unsigned int x, unsigned int y, struct timespec now, std::string filename)
+        {
+            // Run the load() function (static) async
+            auto future = QtConcurrent::run([=](){
+                return load(x, y, tile_size, scaled_size, path, best_image_number);
+            });
+
+            // Create a new watcher and add it to the list of watchers
+            watchers.push_back(new QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>(nullptr));
+            auto* watcher = watchers.back();
+
+            // Called when loading finished and if the watcher object is still valid (not destroyed).
+            QObject::connect(watcher, &QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>::finished, [=]() {
+                // Get the load result (if this lambda was called, then watcher is valid/not destroyed)
+                auto temp = watcher->future().result();
+
+                // Prevent overflow
+                if (temp == nullptr)
+                    temp = loading_tile;
+
+                // Convert to cache type
+                auto data = std::make_pair(temp, now);
+
+                // Register the new entry and send notifications (if this lambda was called, then this is valid/not destroyed)
+                cache[filename] = data;
+                notify();
+
+                // Remove and delete watcher
+                watchers.erase(std::remove(watchers.begin(), watchers.end(), watcher), watchers.end());
+                delete watcher;
+            });
+
+            watcher->setFuture(future);
+        }
+
+    private:
+        const std::string path;
+        const unsigned int tile_width_exp;
+
+        // Cache types.
+        typedef std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> MemoryMap_shptr;
+        typedef std::map<std::string, // filename
+                         std::pair<MemoryMap_shptr, struct timespec>>
+                cache_type;
+
+        cache_type cache;
+
+        // Used for caching the working tile.
+        MemoryMap_shptr current_tile;
+        unsigned curr_tile_num_x = 0;
+        unsigned curr_tile_num_y = 0;
+        bool current_tile_is_loading = false;
+
+        unsigned int scale;
+
+        std::mutex mtx;
+
+        TileLoadingType loading_type;
+        WorkspaceNotificationVector notification_list;
+
+        QSize size;
+        QSize scaled_size;
+        unsigned int tile_size;
+        int best_image_number = -1;
+        bool degate_image_format = false;
+
+        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> loading_tile;
+
+        std::vector<QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>*> watchers;
+    };
+} // namespace degate
+
+#endif //__TILECACHE_H__

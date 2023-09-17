@@ -47,7 +47,7 @@ TEST_CASE("Test export", "[LogicModelDOTExporter]")
      */
     LogicModelImporter lm_importer(500, 500, glib);
     std::string filename("tests_files/test_project/lmodel.xml");
-    LogicModel_shptr lmodel(lm_importer.import(filename));
+    LogicModel_shptr lmodel(lm_importer.import(filename, ProjectType::Normal));
 
     // If this fail, need to add the 'tests_files' folder beside the tests executable.
     REQUIRE(lmodel != nullptr);

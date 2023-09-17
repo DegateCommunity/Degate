@@ -86,6 +86,9 @@ namespace degate
         // Image importer cache size
         preferences.image_importer_cache_size = settings.value("image_importer_cache_size", 256).toUInt();
 
+        // Max concurrent thread count
+        preferences.max_concurrent_thread_count = settings.value("max_concurrent_thread_count", 0).toUInt();
+
 
         load_recent_projects();
     }
@@ -133,6 +136,7 @@ namespace degate
 
         settings.setValue("cache_size", preferences.cache_size);
         settings.setValue("image_importer_cache_size", preferences.image_importer_cache_size);
+        settings.setValue("max_concurrent_thread_count", preferences.max_concurrent_thread_count);
     }
 
     void PreferencesHandler::update(const Preferences& updated_preferences)
@@ -161,6 +165,9 @@ namespace degate
         }
 
         preferences = updated_preferences;
+
+        // Update max thread count on preference update
+        QThreadPool::globalInstance()->setMaxThreadCount(Configuration::get_max_concurrent_thread_count());
     }
 
     void PreferencesHandler::update_language()

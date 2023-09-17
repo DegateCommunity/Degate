@@ -33,7 +33,8 @@
 #include <QGroupBox>
 #include <QGridLayout>
 #include <QVBoxLayout>
-#include <QCheckBox>
+#include <QRadioButton>
+#include <QGroupBox>
 
 namespace degate
 {
@@ -79,17 +80,25 @@ namespace degate
     private:
         QVBoxLayout layout;
 
-        // Content
-
+        // Layout
         QGroupBox project_group;
         QGridLayout project_group_layout;
 
+        // Project name
         QLabel project_name_label;
         QLineEdit project_name_edit;
 
+        // Project path
         QLabel project_path_label;
         QPushButton project_path_button;
 
+        // Project mode
+        QGroupBox project_mode_box;
+        QLabel project_mode_label;
+        QRadioButton normal_project_mode_button;
+        QRadioButton attached_project_mode_button;
+
+        // Layers edit widget
         QLabel layers_edit_label;
         LayersEditWidget layers_edit_widget;
 

@@ -59,7 +59,6 @@ namespace degate
         setWindowTitle("Degate");
         setWindowIcon(QIcon(":/degate_logo.png"));
 
-
         // Workspace
 
         workspace = new WorkspaceRenderer(this);
@@ -447,6 +446,8 @@ namespace degate
 
         QObject::connect(&auto_save_timer, SIGNAL(timeout()), this, SLOT(auto_save()));
 
+        QThreadPool::globalInstance()->setMaxThreadCount(Configuration::get_max_concurrent_thread_count());
+
 // Workaround for a bug on Windows that occurs when using QOpenGLWidget + fullscreen mode.
 // See: https://doc.qt.io/qt-6/windows-issues.html#fullscreen-opengl-based-windows.
 #ifdef SYS_WINDOWS
@@ -708,6 +709,7 @@ namespace degate
 
         project.reset();
         project = nullptr;
+
         workspace->set_project(nullptr);
         workspace->update_screen();
 
@@ -728,7 +730,16 @@ namespace degate
         status_bar.showMessage(tr("Creating a new project..."));
 
         NewProjectDialog dialog(this);
-        auto res = dialog.exec();
+
+        int res;
+        try
+        {
+            res = dialog.exec();
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
 
         if (res == QDialog::Accepted)
         {
@@ -1519,6 +1530,7 @@ namespace degate
         try
         {
             std::shared_ptr<Project> imported_project = nullptr;
+            // First try, in worker thread
             progress_dialog.set_job([&] {
                 try
                 {
@@ -1534,9 +1546,18 @@ namespace degate
             });
             progress_dialog.exec();
 
+            // Second try, in the main thread
             if (error)
             {
-                throw std::runtime_error(error_message.c_str());
+                try
+                {
+                    imported_project = project_importer.import_all(path);
+                }
+                catch (const std::exception& e)
+                {
+                    // If fail, just throw and cancel project opening
+                    throw std::runtime_error(e.what());
+                }
             }
 
             if (imported_project == nullptr)

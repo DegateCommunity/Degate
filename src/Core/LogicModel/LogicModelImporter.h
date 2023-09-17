@@ -104,7 +104,7 @@ namespace degate
         /**
          * import a logic model.
          */
-        LogicModel_shptr import(std::string const& filename);
+        LogicModel_shptr import(std::string const& filename, ProjectType project_type);
 
 
         /**

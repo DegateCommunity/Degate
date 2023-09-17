@@ -322,19 +322,6 @@ namespace degate
                                         Layer_shptr layer,
                                         BoundingBox const& search_bbox);
 
-
-    /**
-     * Load an image in a common image format as background image for a layer.
-     * If there is already a background image, it will be unset and removed from
-     * the project directory.
-     * @exception InvalidPointerException If you pass an invalid shared pointer for
-     *   \p layer, then this exception is raised.
-     *
-     */
-    void load_background_image(Layer_shptr layer,
-                               std::string const& project_dir,
-                               std::string const& image_file);
-
     /**
      * Load a new background image (optimized version).
      *

@@ -3,6 +3,7 @@ build/*
 .idea/
 .vs/
 .vscode/
+.cache/
 
 etc/installer/packages/Degate/data/*
 !etc/installer/packages/Degate/data/.keepme
@@ -17,5 +18,4 @@ etc/installer/packages/Degate/meta/package.xml
 doc/build/*
 !doc/build/.keepme
 doc/config/DoxyFile
-
 .cache

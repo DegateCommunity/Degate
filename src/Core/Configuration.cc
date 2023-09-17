@@ -22,10 +22,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include "Core/Configuration.h"
-#include "Core/Utils/FileSystem.h"
 #include "GUI/Preferences/PreferencesHandler.h"
-
-#include <boost/lexical_cast.hpp>
 
 using namespace degate;
 
@@ -34,4 +31,15 @@ Configuration::Configuration() = default;
 uint_fast64_t Configuration::get_max_tile_cache_size()
 {
     return static_cast<uint_fast64_t>(PREFERENCES_HANDLER.get_preferences().cache_size);
+}
+
+unsigned int Configuration::get_max_concurrent_thread_count()
+{
+    const auto& pref = PREFERENCES_HANDLER.get_preferences();
+
+    // Check default value (0 = use ideal thread count)
+    if (pref.max_concurrent_thread_count == 0) 
+        return QThread::idealThreadCount();
+
+    return pref.max_concurrent_thread_count;
 }

@@ -56,8 +56,10 @@ namespace degate
         void apply(Preferences& preferences) override;
 
     private:
+        QLabel introduction_label;
         QSpinBox cache_size_edit;
         QSpinBox image_importer_cache_size_edit;
+        QSpinBox max_concurrent_thread_count_edit;
 
     };
 }

@@ -21,14 +21,20 @@
 
 #include "NewProjectDialog.h"
 
-#include <QMessageBox>
+#include "Globals.h"
+
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QSpacerItem>
+#include <qmessagebox.h>
 
 namespace degate
 {
-    NewProjectDialog::NewProjectDialog(QWidget* parent, const std::string& project_name, const std::string& project_path)
-            : QDialog(parent), layers_edit_widget(this, nullptr)
+    NewProjectDialog::NewProjectDialog(QWidget* parent,
+                                       const std::string& project_name,
+                                       const std::string& project_path)
+        : QDialog(parent),
+          layers_edit_widget(this, nullptr)
     {
         setWindowFlags(Qt::Window);
         setWindowTitle(tr("New project creation"));
@@ -51,6 +57,19 @@ namespace degate
         project_path_label.setText(tr("Project directory path:"));
         project_path_button.setText(tr("Set project directory path"));
 
+        // Project mode
+        project_mode_label.setText(tr("Project mode:"));
+        normal_project_mode_button.setChecked(true);
+        normal_project_mode_button.setText(tr("Normal"));
+        attached_project_mode_button.setText(tr("[BETA] Attached"));
+
+        // Project mode layout
+        QVBoxLayout* vbox = new QVBoxLayout;
+        vbox->addWidget(&normal_project_mode_button);
+        vbox->addWidget(&attached_project_mode_button);
+        vbox->addStretch();
+        project_mode_box.setLayout(vbox);
+
         // Validate button
         validate_button.setText(tr("Ok"));
 
@@ -66,6 +85,9 @@ namespace degate
             QObject::connect(&project_path_button, SIGNAL(pressed()), this, SLOT(set_project_directory_path()));
             user_selected_directory = true;
         }
+
+        project_group_layout.addWidget(&project_mode_label, 2, 0);
+        project_group_layout.addWidget(&project_mode_box, 2, 1);
 
         // Control layout
         control_layout.addWidget(&validate_button, 0, 1);
@@ -101,9 +123,13 @@ namespace degate
         QSize size = layers_edit_widget.get_max_size();
 
         // Check values
-        if (layers_edit_widget.get_layer_count() == 0 || size.width() == 0 || size.height() == 0 || project_name_edit.text().length() < 1)
+        if (layers_edit_widget.get_layer_count() == 0 || size.width() == 0 || size.height() == 0 ||
+            project_name_edit.text().length() < 1)
         {
-            QMessageBox::warning(this, tr("Invalid values"), tr("The values you entered are invalid. You need at least one layer with a valid image."));
+            QMessageBox::warning(
+                    this,
+                    tr("Invalid values"),
+                    tr("The values you entered are invalid. You need at least one layer with a valid image."));
             return;
         }
 
@@ -125,8 +151,28 @@ namespace degate
         if (!file_exists(project_directory))
             create_directory(project_directory);
 
+        // Confirm project type
+        ProjectType project_type = ProjectType::Normal;
+        if (attached_project_mode_button.isChecked())
+        {
+            auto reply = QMessageBox::question(
+                    this,
+                    tr("Attached project mode is in beta"),
+                    tr("Attached project mode shouldn't be used for real projects for the moment. Crash or project "
+                       "corruption could occur. Continue with attached project mode?"),
+                    QMessageBox::Yes | QMessageBox::No);
+            if (reply == QMessageBox::Yes)
+            {
+                project_type = ProjectType::Attached;
+            }
+        }
+
         // Create the project
-        project = std::make_shared<Project>(size.width(), size.height(), project_directory, layers_edit_widget.get_layer_count());
+        project = std::make_shared<Project>(size.width(),
+                                            size.height(),
+                                            project_directory,
+                                            project_type,
+                                            layers_edit_widget.get_layer_count());
         project->set_name(project_name_edit.text().toStdString());
 
         // Create each layer
@@ -138,7 +184,8 @@ namespace degate
 
     void NewProjectDialog::set_project_directory_path()
     {
-        QString dir = QFileDialog::getExistingDirectory(this, tr("Select the directory where the project will be created"));
+        QString dir =
+                QFileDialog::getExistingDirectory(this, tr("Select the directory where the project will be created"));
 
         if (dir.isNull())
             reject();
@@ -147,4 +194,4 @@ namespace degate
 
         project_path_button.setText(dir + "/" + project_name_edit.text());
     }
-}
+} // namespace degate
