@@ -48,8 +48,8 @@ jobs:
         brew install p7zip
         cp -R build/out/bin/ etc/installer/packages/Degate/data
         cd etc/installer
-        wget https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/tools_ifw/qt.tools.ifw.46/4.6.0-0-202305221011ifw-mac-x64.7z
-        7z x 4.6.0-0-202305221011ifw-mac-x64.7z -y
+        wget https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/tools_ifw/qt.tools.ifw.46/4.6.1-0-202308291018ifw-mac-x64.7z
+        7z x 4.6.1-0-202308291018ifw-mac-x64.7z -y
         ./Tools/QtInstallerFramework/4.6/bin/binarycreator --offline-only -c config/config.xml -p packages "mac_deploy_offline/Degate_offline_installer_Mac_x64"
         ./Tools/QtInstallerFramework/4.6/bin/binarycreator --online-only -c config/config.xml -p packages "mac_deploy_online/Degate_online_installer_Mac_x64"
         
