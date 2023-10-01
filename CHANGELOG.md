@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0-beta.1] - 2023-10-01
+### Added
+- [Beta] New "attached" project type (optimized for huge images).
+- Moved to Qt6 (thank to @agatti).
+
+### Changed
+- Improved the German translation (thank to @maximumspatium).
+
+### Fixed
+- Multiple crash source on project creation.
+- Fixed multiple issues with MacOS version.
+- Mouse wheel events handling (zoom).
+- Proper GLSL version used in shaders.
+- Use OpenGL 3.3 Core Profile (thank to @maximumspatium).
+
 ## [2.0.0] - 2021-04-11
 ### Added
 - New diameter option for the via edit dialog.
