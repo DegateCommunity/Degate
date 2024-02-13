@@ -27,8 +27,6 @@
 #include "Net.h"
 #include "ConnectedLogicModelObject.h"
 
-#include <boost/foreach.hpp>
-
 using namespace degate;
 
 ConnectedLogicModelObject::ConnectedLogicModelObject()
@@ -80,7 +78,7 @@ bool ConnectedLogicModelObject::is_connected() const
 {
     if (net == nullptr) return false;
     if (net->size() >= 2) return true;
-    BOOST_FOREACH(object_id_t oid, *net)
+    for (auto oid : *net)
     {
         if (oid != get_object_id()) return true;
     }

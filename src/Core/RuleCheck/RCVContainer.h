@@ -22,7 +22,6 @@
 #ifndef __RCVCONTAINER_H__
 #define __RCVCONTAINER_H__
 
-#include <boost/foreach.hpp>
 #include <memory>
 #include <list>
 

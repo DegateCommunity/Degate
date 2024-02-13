@@ -27,7 +27,6 @@
 #include "Core/Primitive/BoundingBox.h"
 #include "Core/Matching/LineSegmentExtraction.h"
 #include "Core/Image/Manipulation/MedianFilter.h"
-#include <boost/foreach.hpp>
 
 using namespace degate;
 
@@ -107,7 +106,7 @@ void WireMatching::run()
     assert(lmodel != nullptr);
     assert(layer != nullptr);
 
-    BOOST_FOREACH (LineSegment_shptr ls, *line_segments)
+    for (auto ls : *line_segments)
     {
         debug(TM, "found wire");
         Wire_shptr w(new Wire(bounding_box.get_min_x() + ls->get_from_x(),

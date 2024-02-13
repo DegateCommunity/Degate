@@ -22,7 +22,6 @@
 #ifndef __RCBASE_H__
 #define __RCBASE_H__
 
-#include <boost/foreach.hpp>
 #include <memory>
 #include <list>
 #include "Core/LogicModel/LogicModel.h"

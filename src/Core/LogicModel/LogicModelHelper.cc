@@ -26,7 +26,6 @@
 #include "GUI/Preferences/PreferencesHandler.h"
 
 #include <boost/format.hpp>
-#include <boost/foreach.hpp>
 #include <boost/range/counting_range.hpp>
 
 #include <QMutex>
@@ -742,7 +741,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
 
     std::list<GateTemplateImage_shptr> images;
 
-    BOOST_FOREACH(const Gate_shptr g, gates)
+    for (const auto& g : gates)
     {
         GateTemplateImage_shptr tmpl_img =
             grab_image<GateTemplateImage>(lmodel, layer, g->get_bounding_box());
@@ -783,7 +782,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
     typedef std::map<object_id_t, std::list<Gate_shptr>> gate_sets_type;
     gate_sets_type gate_sets;
 
-    BOOST_FOREACH(PlacedLogicModelObject_shptr plo, gates)
+    for (auto plo : gates)
     {
         if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo))
         {
@@ -797,7 +796,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
      * Iterate over layers.
      */
 
-    BOOST_FOREACH(Layer_shptr layer, get_available_standard_layers(lmodel))
+    for (auto layer : get_available_standard_layers(lmodel))
     {
         /*
          * Iterate over standard cell classes.
@@ -815,7 +814,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
 
 void degate::remove_entire_net(LogicModel_shptr lmodel, Net_shptr net)
 {
-    BOOST_FOREACH(object_id_t oid, *net)
+    for (auto oid : *net)
     {
         PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
         assert(plo != nullptr);

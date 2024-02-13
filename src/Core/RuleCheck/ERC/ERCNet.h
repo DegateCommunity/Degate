@@ -22,7 +22,6 @@
 #ifndef __ERCNET_H__
 #define __ERCNET_H__
 
-#include <boost/foreach.hpp>
 #include <memory>
 #include <list>
 #include "Core/LogicModel/LogicModel.h"
