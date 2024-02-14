@@ -24,7 +24,6 @@
 #include "Core/Matching/EdgeDetection.h"
 #include "Core/Matching/ViaMatching.h"
 #include "Core/Primitive/BoundingBox.h"
-#include <boost/foreach.hpp>
 #include <memory>
 
 
@@ -291,7 +290,7 @@ void ViaMatching::scan(BoundingBox const& bbox, BackgroundImage_shptr bg_img,
     }
 
     matches.sort(compare_correlation);
-    BOOST_FOREACH(match_found const& m, matches)
+    for (const auto& m : matches)
     {
         add_via(m.x, m.y, via_diameter, direction, m.correlation, threshold_match);
     }

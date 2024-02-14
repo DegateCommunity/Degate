@@ -101,8 +101,7 @@ void ExternalMatching::run()
     }
     else
     {
-        BOOST_FOREACH(PlacedLogicModelObject_shptr plo,
-                      parse_file(results_file))
+        for (auto plo : parse_file(results_file))
         {
             lmodel->add_object(layer, plo);
         }

@@ -20,12 +20,10 @@
  */
 
 #include "Core/Generator/CodeTemplateGenerator.h"
-#include <boost/foreach.hpp>
 #include <algorithm>
 #include <string>
 
 using namespace degate;
-using namespace boost;
 
 CodeTemplateGenerator::CodeTemplateGenerator(std::string const& entity_name,
                                              std::string const& description,
@@ -112,7 +110,7 @@ std::string CodeTemplateGenerator::get_first_port_name_not_in(std::vector<std::s
 {
     typedef std::vector<std::string>::const_iterator iter;
 
-    BOOST_FOREACH(std::string const& p_name, ports)
+    for (const auto& p_name : ports)
     {
         iter i = std::find(blacklist.begin(), blacklist.end(), p_name);
         if (i == blacklist.end()) return p_name;
@@ -133,8 +131,11 @@ std::vector<std::string> CodeTemplateGenerator::get_inports() const
 {
     std::vector<std::string> ports;
 
-    BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
-        if (p.second == true) ports.push_back(p.first);
+    for(const auto& p : port_direction)
+    {
+        if (p.second == true)
+            ports.push_back(p.first);
+    }
 
     std::sort(ports.begin(), ports.end());
     return ports;
@@ -144,8 +145,11 @@ std::vector<std::string> CodeTemplateGenerator::get_outports() const
 {
     std::vector<std::string> ports;
 
-    BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
-        if (p.second == false) ports.push_back(p.first);
+    for (const auto& p : port_direction)
+    {
+        if (p.second == false)
+            ports.push_back(p.first);
+    }
 
     std::sort(ports.begin(), ports.end());
     return ports;
@@ -155,8 +159,10 @@ std::vector<std::string> CodeTemplateGenerator::get_ports() const
 {
     std::vector<std::string> ports;
 
-    BOOST_FOREACH(port_direction_type::value_type const& p, port_direction)
+    for (const auto& p : port_direction)
+    {
         ports.push_back(p.first);
+    }
 
     std::sort(ports.begin(), ports.end());
     return ports;

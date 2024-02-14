@@ -21,7 +21,6 @@
  */
 
 #include "Core/LogicModel/Module.h"
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include <iterator>
@@ -399,9 +398,9 @@ void Module::determine_module_ports()
 
 
     // check sub-modules
-    BOOST_FOREACH(Module_shptr sub, modules)
+    for (auto sub : modules)
     {
-        BOOST_FOREACH(port_collection::value_type const& p, sub->ports)
+        for (const auto& p : sub->ports)
         {
             std::string mod_port_name = p.first;
             GatePort_shptr gate_port = p.second;
@@ -552,7 +551,7 @@ Module_shptr Module::lookup_module(std::list<std::string>& path_elements) const
 {
     if (path_elements.size() > 0)
     {
-        BOOST_FOREACH(Module_shptr m, modules)
+        for (auto m : modules)
         {
             if (m->get_name() == path_elements.front())
             {

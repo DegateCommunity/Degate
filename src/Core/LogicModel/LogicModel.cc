@@ -28,7 +28,6 @@
 #include "Core/LogicModel/LogicModel.h"
 
 #include <algorithm>
-#include <boost/foreach.hpp>
 #include <iterator>
 #include <memory>
 
@@ -86,7 +85,7 @@ void LogicModel::print(std::ostream& os)
 
 bool LogicModel::exists_layer_id(layer_collection const& layers, layer_id_t lid) const
 {
-    BOOST_FOREACH(Layer_shptr l, layers)
+    for (auto l : layers)
     {
         if (l != nullptr && l->has_valid_layer_id() && l->get_layer_id() == lid)
             return true;
@@ -381,7 +380,7 @@ void LogicModel::remove_remote_object(object_id_t remote_id)
 
     debug(TM, "Should remove object with remote ID %llu from lmodel - 2.", remote_id);
 
-    BOOST_FOREACH(object_collection::value_type const& p, objects)
+    for (const auto& p : objects)
     {
         PlacedLogicModelObject_shptr plo = p.second;
         RemoteObject_shptr ro;
@@ -692,7 +691,7 @@ Layer_shptr LogicModel::get_layer(layer_position_t pos)
 
 Layer_shptr LogicModel::get_layer_by_id(layer_id_t lid)
 {
-    BOOST_FOREACH(Layer_shptr l, layers)
+    for (auto l : layers)
     {
         if (l->has_valid_layer_id() && l->get_layer_id() == lid)
             return l;
@@ -726,7 +725,10 @@ void LogicModel::set_layers(layer_collection layers)
         }
     }
 
-    BOOST_FOREACH(Layer_shptr l, layers_to_remove) remove_layer(l);
+    for (auto l : layers_to_remove)
+    {
+        remove_layer(l);
+    }
 
     // set new layers
     this->layers = layers;
@@ -747,7 +749,10 @@ void LogicModel::remove_layer(Layer_shptr layer)
         remove_list.push_back(*i);
 
     // Remove objects from logic model.
-    BOOST_FOREACH(PlacedLogicModelObject_shptr o, remove_list) remove_object(o);
+    for (auto o : remove_list)
+    {
+        remove_object(o);
+    }
 
     // Unset background image. It will remove the image files, too.
     layer->unset_image();

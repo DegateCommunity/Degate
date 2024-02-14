@@ -45,7 +45,7 @@ void RCVBlacklistExporter::export_data(std::string const& filename,
         QDomElement root_elem = doc.createElement("rc-blacklist");
         assert(!root_elem.isNull());
 
-        BOOST_FOREACH(RCViolation_shptr rcv, violations)
+        for (auto rcv : violations)
         {
             add_rcv(doc, root_elem, rcv);
         }
