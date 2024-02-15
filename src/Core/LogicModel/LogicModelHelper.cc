@@ -216,8 +216,7 @@ void load_tile(const QRgb* rba_data,
     unsigned int tile_y = global_tile_y + local_tile_y;
 
     // Create a file name from tile number.
-    char filename[PATH_MAX];
-    snprintf(filename, sizeof(filename), "%d_%d.dat", tile_x, tile_y);
+    auto filename = QString("%1_%2.dat").arg(tile_x).arg(tile_y).toStdString();
 
     auto data = new BackgroundImage::pixel_type[tile_size * tile_size];
     memset(data,
@@ -351,9 +350,8 @@ void create_scaled_background_images(const BackgroundImage_shptr& bg_image, unsi
         h >>= 1u;
 
         // create a new image
-        char dir_name[PATH_MAX];
-        snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
-        std::string dir_path = join_pathes(bg_image->get_path(), std::string(dir_name));
+        auto dir_path = join_pathes(bg_image->get_path(), QString("scaling_%1.dimg").arg(i).toStdString());
+
         create_directory(dir_path);
 
         reader.device()->seek(0);

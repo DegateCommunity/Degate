@@ -20,6 +20,7 @@
  */
 
 #include "Core/Utils/MemoryMap.h"
+#include "Core/Utils/FileSystem.h"
 
 #include "catch.hpp"
 

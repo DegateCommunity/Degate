@@ -340,8 +340,7 @@ namespace degate
             GET_CLOCK(now);
 
             // Create a file name from tile number
-            char filename[PATH_MAX];
-            snprintf(filename, sizeof(filename), "%d_%d.dat", x, y);
+            auto filename = QString("%1_%2.dat").arg(x).arg(y).toStdString();
 
             // If filename/object is not in cache, load the tile
             typename cache_type::const_iterator iter = cache.find(filename);
