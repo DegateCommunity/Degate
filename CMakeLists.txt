@@ -23,6 +23,17 @@ cmake_minimum_required(VERSION 3.12.0)
 project(Degate)
 
 #
+# Use ccache if available
+#
+set(DISABLE_CCACHE OFF CACHE BOOL "Do not use ccache even if it is available")
+if (NOT DISABLE_CCACHE)
+    find_program(CCACHE_EXECUTABLE ccache)
+    if (CCACHE_EXECUTABLE)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_EXECUTABLE})
+    endif()
+endif()
+
+#
 # Cpp version
 #
 set(CMAKE_CXX_STANDARD 11)
