@@ -56,6 +56,10 @@ add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
 #
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+#
+# Export compile_commands.json file
+#
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 ############################################################################
 ############################ Dependencies ##################################

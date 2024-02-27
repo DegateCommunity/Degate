@@ -4,6 +4,7 @@ build/*
 .vs/
 .vscode/
 .cache/
+.clangd
 
 etc/installer/packages/Degate/data/*
 !etc/installer/packages/Degate/data/.keepme
