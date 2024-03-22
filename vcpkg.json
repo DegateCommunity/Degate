@@ -1,0 +1,34 @@
+{
+  "name": "degate",
+  "dependencies": [
+    "boost-filesystem",
+    "boost-system",
+    "boost-thread",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "gui",
+        "opengl",
+        "widgets"
+      ]
+    },
+    {
+      "name": "qttools",
+      "default-features": false,
+      "features": [
+        "linguist"
+      ]
+    }
+  ],
+  "default-features": [],
+  "features": {
+    "test": {
+      "description": "Dependencies for testing",
+      "dependencies": [
+        "catch2"
+      ]
+    }
+  }
+}

@@ -23,7 +23,7 @@
 #include "Core/Image/Processor/IPPipe.h"
 #include "Core/Image/Processor/IPCopy.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

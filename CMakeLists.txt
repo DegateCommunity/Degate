@@ -247,23 +247,30 @@ endif()
 #
 # Tests
 #
-add_subdirectory(tests)
+include(CTest)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 
 ############################################################################
 ################################ Doc #######################################
 ############################################################################
 
-find_package(Doxygen QUIET)
-if(DOXYGEN_FOUND)
-    message(STATUS "Doxygen found")
-
-    add_custom_target(Documentation ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/config/DoxyFile"
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            COMMENT "Generating documentation with Doxygen."
-            SOURCES "Degate version")
-
-else()
-    message(STATUS "Doxygen not found")
+if(BUILD_DOCS)
+    find_package(Doxygen QUIET)
+    if(DOXYGEN_FOUND)
+        message(STATUS "Doxygen found")
+    
+        add_custom_target(Documentation ALL
+                COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/config/DoxyFile"
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                COMMENT "Generating documentation with Doxygen."
+                SOURCES "Degate version")
+    
+    else()
+        message(STATUS "Doxygen not found")
+    endif()
 endif()
+

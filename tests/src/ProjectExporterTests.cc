@@ -23,7 +23,7 @@
 #include "Core/Project/ProjectExporter.h"
 #include "Core/Project/Project.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

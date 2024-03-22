@@ -24,7 +24,7 @@
 #include "Core/Project/Project.h"
 #include "Core/LogicModel/LogicModelHelper.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

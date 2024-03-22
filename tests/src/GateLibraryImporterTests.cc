@@ -27,7 +27,7 @@
 
 #include <memory>
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

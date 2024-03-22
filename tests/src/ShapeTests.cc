@@ -24,7 +24,7 @@
 #include "Core/Primitive/Point.h"
 #include "Core/Primitive/Rectangle.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

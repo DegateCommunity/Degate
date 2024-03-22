@@ -22,7 +22,7 @@
 #include "Core/LogicModel/Gate/GateLibraryImporter.h"
 #include "Core/LogicModel/LogicModelImporter.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 
