@@ -22,19 +22,28 @@
 #ifndef __TILECACHE_H__
 #define __TILECACHE_H__
 
-#include "Core/Image/TileImage.h"
-#include "Core/Image/TileCacheBase.h"
 #include "Core/Image/GlobalTileCache.h"
-#include "GUI/Workspace/WorkspaceNotifier.h"
+#include "Core/Image/Image.h"
+#include "Core/Image/TileCacheBase.h"
+#include "Core/Image/TileImage.h"
 #include "Core/Utils/FileSystem.h"
 #include "Core/Utils/MemoryMap.h"
+#include "GUI/Workspace/WorkspaceNotifier.h"
+#include "Globals.h"
 
-#include <QtConcurrent/QtConcurrent>
 #include <QImageReader>
+#include <QtConcurrent/QtConcurrent>
 #include <cmath>
+#include <functional>
+#include <qnamespace.h>
+#include <qrunnable.h>
+#include <qtmetamacros.h>
 
 namespace degate
 {
+    template<class PixelPolicy>
+    class TileLoader;
+
     /**
      * @enum TileLoadingType
      * @brief Defines the different tile loading types.
@@ -60,7 +69,6 @@ namespace degate
         friend class GlobalTileCache<PixelPolicy>;
 
     public:
-
         /**
          * Create a new tile cache.
          * 
@@ -82,10 +90,10 @@ namespace degate
          * @param notification_list : the list of workspace notification(s) to notify
          *      after a new loading finished. This is done only if async loading type.
          */
-        inline TileCache(std::string path, 
-                         unsigned int tile_width_exp, 
-                         unsigned int scale, 
-                         TileLoadingType loading_type, 
+        inline TileCache(std::string path,
+                         unsigned int tile_width_exp,
+                         unsigned int scale,
+                         TileLoadingType loading_type,
                          const WorkspaceNotificationList& notification_list)
             : path(std::move(path)),
               tile_width_exp(tile_width_exp),
@@ -133,7 +141,32 @@ namespace degate
             scaled_size = QSize{size.width() >> h, size.height() >> h};
 
             // Create loading tile
+            QImage image(":/loading.png");
+            image = image.scaled(QSize(tile_size, tile_size), Qt::IgnoreAspectRatio);
+            assert(image.size() == QSize(tile_size, tile_size));
+
+            // Convert to good format
+            if (image.format() != QImage::Format_ARGB32 && image.format() != QImage::Format_RGB32)
+            {
+                image = image.convertToFormat(QImage::Format_ARGB32);
+            }
+
+            // Get data
+            const auto* rgb_data = reinterpret_cast<const QRgb*>(&image.constBits()[0]);
+
+            // Create memory map
             loading_tile = std::make_shared<MemoryMap<typename PixelPolicy::pixel_type>>(tile_size, tile_size);
+
+            // Fill data
+            QRgb rgb;
+            for (unsigned int y = 0; y < tile_size; y++)
+            {
+                for (unsigned int x = 0; x < tile_size; x++)
+                {
+                    rgb = rgb_data[y * tile_size + x];
+                    loading_tile->set(x, y, MERGE_CHANNELS(qRed(rgb), qGreen(rgb), qBlue(rgb), qAlpha(rgb)));
+                }
+            }
         }
 
         /**
@@ -157,7 +190,8 @@ namespace degate
          */
         inline void cleanup_cache() override
         {
-            if (cache.size() == 0) return;
+            if (cache.size() == 0)
+                return;
 
             std::lock_guard<std::mutex> lock(mtx);
 
@@ -168,8 +202,7 @@ namespace degate
             auto oldest = cache.begin();
 
             // Search for oldest entry
-            for (auto iter = cache.begin();
-                 iter != cache.end(); ++iter)
+            for (auto iter = cache.begin(); iter != cache.end(); ++iter)
             {
                 struct timespec clock_val = (*iter).second.second;
                 if (clock_val < oldest_clock_val)
@@ -221,16 +254,10 @@ namespace degate
          */
         inline void print() const override
         {
-            for (typename cache_type::const_iterator iter = cache.begin();
-                 iter != cache.end(); ++iter)
+            for (typename cache_type::const_iterator iter = cache.begin(); iter != cache.end(); ++iter)
             {
-                std::cout << "\t+ "
-                          << path << "/"
-                          << (*iter).first << " "
-                          << (*iter).second.second.tv_sec
-                          << "/"
-                          << (*iter).second.second.tv_nsec
-                          << std::endl;
+                std::cout << "\t+ " << path << "/" << (*iter).first << " " << (*iter).second.second.tv_sec << "/"
+                          << (*iter).second.second.tv_nsec << std::endl;
             }
         }
 
@@ -262,14 +289,17 @@ namespace degate
             unsigned int tile_num_max_size_y = max_size_y >> tile_width_exp;
 
             unsigned int cache_min_x = radius > tile_num_min_x ? 0 : tile_num_min_x - radius;
-            unsigned int cache_max_x = radius + tile_num_max_x > tile_num_max_size_x ? tile_num_max_size_x : tile_num_max_x + radius;
+            unsigned int cache_max_x =
+                    radius + tile_num_max_x > tile_num_max_size_x ? tile_num_max_size_x : tile_num_max_x + radius;
             unsigned int cache_min_y = radius > tile_num_min_y ? 0 : tile_num_min_y - radius;
-            unsigned int cache_max_y = radius + tile_num_max_y > tile_num_max_size_y ? tile_num_max_size_y : tile_num_max_y + radius;
+            unsigned int cache_max_y =
+                    radius + tile_num_max_y > tile_num_max_size_y ? tile_num_max_size_y : tile_num_max_y + radius;
 
             if (static_cast<uint_fast64_t>(cache_max_x - cache_min_x) *
                         static_cast<uint_fast64_t>(cache_max_y - cache_min_y) *
                         static_cast<uint_fast64_t>(get_image_size()) *
-                        static_cast<uint_fast64_t>(sizeof(typename PixelPolicy::pixel_type)) > GlobalTileCache<PixelPolicy>::get_instance().get_max_cache_memory())
+                        static_cast<uint_fast64_t>(sizeof(typename PixelPolicy::pixel_type)) >
+                GlobalTileCache<PixelPolicy>::get_instance().get_max_cache_memory())
             {
                 debug(TM, "Cache too small to cache around");
 
@@ -295,13 +325,13 @@ namespace degate
          * @param y Absolut pixel coordinate.
          * @return Returns a shared pointer to a MemoryMap object.
          */
-        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>
-        inline get_tile(unsigned int x, unsigned int y)
+        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> inline get_tile(unsigned int x, unsigned int y)
         {
             unsigned int tile_num_x = x >> tile_width_exp;
             unsigned int tile_num_y = y >> tile_width_exp;
 
-            if (!(current_tile != nullptr && tile_num_x == curr_tile_num_x && tile_num_y == curr_tile_num_y) || current_tile_is_loading)
+            if (!(current_tile != nullptr && tile_num_x == curr_tile_num_x && tile_num_y == curr_tile_num_y) ||
+                current_tile_is_loading)
             {
                 load_tile(tile_num_x, tile_num_y, true);
             }
@@ -336,7 +366,9 @@ namespace degate
             }
 
             // Get time
-            struct timespec now{};
+            struct timespec now
+            {
+            };
             GET_CLOCK(now);
 
             // Create a file name from tile number
@@ -395,9 +427,9 @@ namespace degate
                     cache[filename] = std::make_pair(load_degate_image_format(filename), now);
                 }
 
-                #ifdef TILECACHE_DEBUG
+#ifdef TILECACHE_DEBUG
                 gtc.print_table();
-                #endif
+#endif
             }
 
             // Update entry
@@ -413,25 +445,6 @@ namespace degate
             }
         }
 
-    protected:
-
-        /**
-         * Get image size in bytes.
-         */
-        inline uint_fast64_t get_image_size() const
-        {
-            return sizeof(typename PixelPolicy::pixel_type) * (uint_fast64_t(1) << tile_width_exp) * (uint_fast64_t(1) << tile_width_exp);
-        }
-
-        /**
-         * Send all notifications regarding the notification list.
-         */
-        inline void notify()
-        {
-            for (auto notification : notification_list)
-                WorkspaceNotifier::get_instance().notify(notification.first, notification.second);
-        }
-
         /**
          * Load a tile (attached mode/on degate's image format).
          * 
@@ -440,18 +453,17 @@ namespace degate
          * 
          * @return Returns the new memory map (here, for attached mod, just memory).
          */
-        inline
-        static
-        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> load(unsigned int tile_x,
-                                                                          unsigned int tile_y,
-                                                                          unsigned int tile_size,
-                                                                          QSize scaled_size,
-                                                                          std::string path,
-                                                                          int best_image_number)
+        inline static std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> load(unsigned int tile_x,
+                                                                                        unsigned int tile_y,
+                                                                                        unsigned int tile_size,
+                                                                                        QSize scaled_size,
+                                                                                        std::string path,
+                                                                                        int best_image_number)
         {
             // Prepare sizes
             QSize reading_size{static_cast<int>(tile_size), static_cast<int>(tile_size)};
-            const QSize read_size{static_cast<int>(tile_x) * static_cast<int>(tile_size), static_cast<int>(tile_y) * static_cast<int>(tile_size)};
+            const QSize read_size{static_cast<int>(tile_x) * static_cast<int>(tile_size),
+                                  static_cast<int>(tile_y) * static_cast<int>(tile_size)};
 
             // Check width
             if (reading_size.width() + read_size.width() > scaled_size.width())
@@ -466,7 +478,17 @@ namespace degate
                 return nullptr;
 
             // Create reader
+            // TODO(db): maybe we should store the image reader?
             QImageReader current_reader(path.c_str());
+
+            // Check supported image format options
+            // TODO(db): if not supported we should show a warning popup + ask if continue + load & store the whole image (still no precomputing of tiles & disk storing)
+            if (!current_reader.supportsOption(QImageIOHandler::ImageOption::ScaledClipRect) ||
+                !current_reader.supportsOption(QImageIOHandler::ImageOption::ScaledSize))
+                debug(TM, "image format doesn't support async loading");
+
+            // FIXME: this should be configurable, usefull security, even if we are only loader small tiles everytime...
+            current_reader.setAllocationLimit(0);
 
             // Create reading rect
             QRect rect(read_size.width(), read_size.height(), reading_size.width(), reading_size.height());
@@ -484,7 +506,11 @@ namespace degate
             if (img.isNull())
             {
                 debug(TM, "can't read image file when loading a new tile\n");
+                return nullptr;
             }
+
+            if (QThread::currentThread()->isInterruptionRequested() || qApp == nullptr)
+                return nullptr;
 
             // Convert to good format
             if (img.format() != QImage::Format_ARGB32 && img.format() != QImage::Format_RGB32)
@@ -493,16 +519,18 @@ namespace degate
             }
 
             // Get data
-            const auto *rgb_data = reinterpret_cast<const QRgb*>(&img.constBits()[0]);
+            const auto* rgb_data = reinterpret_cast<const QRgb*>(&img.constBits()[0]);
 
             // Create memory map
             auto mem = std::make_shared<MemoryMap<typename PixelPolicy::pixel_type>>(tile_size, tile_size);
 
             // Prevent overflows
             unsigned int max_x = tile_size > static_cast<unsigned int>(reading_size.width()) ?
-                                static_cast<unsigned int>(reading_size.width()) : tile_size;
+                                         static_cast<unsigned int>(reading_size.width()) :
+                                         tile_size;
             unsigned int max_y = tile_size > static_cast<unsigned int>(reading_size.height()) ?
-                                static_cast<unsigned int>(reading_size.height()) : tile_size;
+                                         static_cast<unsigned int>(reading_size.height()) :
+                                         tile_size;
 
             // Fill data
             QRgb rgb;
@@ -518,6 +546,25 @@ namespace degate
             return mem;
         }
 
+    protected:
+        /**
+         * Get image size in bytes.
+         */
+        inline uint_fast64_t get_image_size() const
+        {
+            return sizeof(typename PixelPolicy::pixel_type) * (uint_fast64_t(1) << tile_width_exp) *
+                   (uint_fast64_t(1) << tile_width_exp);
+        }
+
+        /**
+         * Send all notifications regarding the notification list.
+         */
+        inline void notify()
+        {
+            for (auto notification : notification_list)
+                WorkspaceNotifier::get_instance().notify(notification.first, notification.second);
+        }
+
         /**
          * Load image in degate internal format.
          * 
@@ -526,16 +573,14 @@ namespace degate
          * 
          * @return Returns a memory map (mapped to the corresponding tile file).
          */
-        inline
-        std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>
-        load_degate_image_format(std::string const& filename)
+        inline std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> load_degate_image_format(
+                std::string const& filename)
         {
             std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> mem(
-                    new MemoryMap<typename PixelPolicy::pixel_type>(
-                            uint_fast64_t(1) << tile_width_exp,
-                            uint_fast64_t(1) << tile_width_exp,
-                            MAP_STORAGE_TYPE_PERSISTENT_FILE,
-                            join_pathes(path, filename)));
+                    new MemoryMap<typename PixelPolicy::pixel_type>(uint_fast64_t(1) << tile_width_exp,
+                                                                    uint_fast64_t(1) << tile_width_exp,
+                                                                    MAP_STORAGE_TYPE_PERSISTENT_FILE,
+                                                                    join_pathes(path, filename)));
 
             return mem;
         }
@@ -549,7 +594,7 @@ namespace degate
         inline bool is_included(unsigned int tile_x, unsigned int tile_y)
         {
             // For historic reasons, Degate's image format will take the project
-            // size as image size (even if the real size is less). Also, the 
+            // size as image size (even if the real size is less). Also, the
             // project size is equal to the biggest image size, so no overflow
             // possible. Therefore, always return true in this case.
             if (degate_image_format)
@@ -571,37 +616,29 @@ namespace degate
          */
         inline void load_async(unsigned int x, unsigned int y, struct timespec now, std::string filename)
         {
-            // Run the load() function (static) async
-            auto future = QtConcurrent::run([=](){
-                return load(x, y, tile_size, scaled_size, path, best_image_number);
-            });
+            // QRunnable will delete the object when task finished
+            auto* loader = new TileLoader<PixelPolicy>(x,
+                                                       y,
+                                                       tile_size,
+                                                       scaled_size,
+                                                       path,
+                                                       best_image_number,
+                                                       [=](auto result) {
+                                                           // Get the load result (if this lambda was called, then watcher is valid/not destroyed)
+                                                           if (result == nullptr)
+                                                               result = loading_tile;
 
-            // Create a new watcher and add it to the list of watchers
-            watchers.push_back(new QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>(nullptr));
-            auto* watcher = watchers.back();
+                                                           // Convert to cache type
+                                                           auto data = std::make_pair(result, now);
 
-            // Called when loading finished and if the watcher object is still valid (not destroyed).
-            QObject::connect(watcher, &QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>::finished, [=]() {
-                // Get the load result (if this lambda was called, then watcher is valid/not destroyed)
-                auto temp = watcher->future().result();
+                                                           // Register the new entry and send notifications (if this lambda was called, then this is valid/not destroyed)
+                                                           std::lock_guard<std::mutex> lock(mtx);
+                                                           cache[filename] = data;
+                                                           notify();
+                                                       });
 
-                // Prevent overflow
-                if (temp == nullptr)
-                    temp = loading_tile;
-
-                // Convert to cache type
-                auto data = std::make_pair(temp, now);
-
-                // Register the new entry and send notifications (if this lambda was called, then this is valid/not destroyed)
-                cache[filename] = data;
-                notify();
-
-                // Remove and delete watcher
-                watchers.erase(std::remove(watchers.begin(), watchers.end(), watcher), watchers.end());
-                delete watcher;
-            });
-
-            watcher->setFuture(future);
+            // TODO(db): We should prioritize new task over old tasks
+            QThreadPool::globalInstance()->start(loader);
         }
 
     private:
@@ -638,6 +675,52 @@ namespace degate
         std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>> loading_tile;
 
         std::vector<QFutureWatcher<std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>>*> watchers;
+    };
+
+    /**
+     * @class TileLoader
+     * @brief Load a new tile, can be used by QThreadPool.
+     */
+    template<class PixelPolicy>
+    class TileLoader : public QObject, public QRunnable
+    {
+    public:
+        typedef std::function<void(std::shared_ptr<MemoryMap<typename PixelPolicy::pixel_type>>)> ResultHookType;
+
+        explicit TileLoader(unsigned int tile_x,
+                            unsigned int tile_y,
+                            unsigned int tile_size,
+                            QSize scaled_size,
+                            std::string path,
+                            int best_image_number,
+                            ResultHookType result_hook)
+            : tile_x(tile_x),
+              tile_y(tile_y),
+              tile_size(tile_size),
+              scaled_size(scaled_size),
+              path(path),
+              best_image_number(best_image_number),
+              result_hook(result_hook) {};
+
+        /**
+         * Run the loading process, used by QThreadPool functions.
+         */
+        void run()
+        {
+            auto result = TileCache<PixelPolicy>::load(tile_x, tile_y, tile_size, scaled_size, path, best_image_number);
+            if (QThread::currentThread()->isInterruptionRequested() || qApp == nullptr)
+                return;
+            result_hook(result);
+        }
+
+    private:
+        ResultHookType result_hook;
+        unsigned int tile_x;
+        unsigned int tile_y;
+        unsigned int tile_size;
+        QSize scaled_size;
+        std::string path;
+        int best_image_number;
     };
 } // namespace degate
 

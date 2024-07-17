@@ -23,7 +23,9 @@
 
 namespace degate
 {
-    void WorkspaceNotifier::define(WorkspaceTarget target, WorkspaceNotification notification, std::function<void(void)> updater)
+    void WorkspaceNotifier::define(WorkspaceTarget target,
+                                   WorkspaceNotification notification,
+                                   std::function<void(void)> updater)
     {
         targets[target][notification] = updater;
     }
@@ -35,6 +37,10 @@ namespace degate
 
     void WorkspaceNotifier::notify(WorkspaceTarget target, WorkspaceNotification notification)
     {
+        // If true, the application is quitting, hence just stop here
+        if (qApp == nullptr)
+            return;
+
         // Check if we are in the main thread (the only space to do UI stuff)
         if (qApp->thread() != QThread::currentThread())
         {
@@ -47,8 +53,7 @@ namespace degate
             timer->setSingleShot(true);
 
             // Connect the timeout of the timer to the notify() function
-            QObject::connect(timer, &QTimer::timeout, [=]()
-            {
+            QObject::connect(timer, &QTimer::timeout, [=]() {
                 // Main thread
 
                 // Call the notify() function with proper args
@@ -78,4 +83,4 @@ namespace degate
                 wnotification->second();
         }
     }
-}
+} // namespace degate

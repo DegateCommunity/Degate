@@ -19,30 +19,32 @@
 
 */
 
-#include "PerformancesPreferencesPage.h"
-
 #include "Globals.h"
+#include "PerformancesPreferencesPage.h"
 
 #include <QMessageBox>
 
 namespace degate
 {
 
-    PerformancesPreferencesPage::PerformancesPreferencesPage(QWidget* parent)
-            : PreferencesPage(parent)
+    PerformancesPreferencesPage::PerformancesPreferencesPage(QWidget* parent) : PreferencesPage(parent)
     {
         //////////
         // Layout creation
         //////////
 
-        introduction_label.setText(tr("These are advanced preferences, please only modify them if you know what you are doing."));
+        introduction_label.setText(
+                tr("These are advanced preferences, please only modify them if you know what you are doing."));
         layout.addWidget(&introduction_label);
 
         // Cache category
         auto general_layout = PreferencesPage::add_category(tr("General"));
 
         // Max concurrent thread count
-        PreferencesPage::add_widget(general_layout, tr("Max concurrent thread count (0 to use system defaults):"), &max_concurrent_thread_count_edit);
+        PreferencesPage::add_widget(general_layout,
+                                    tr("Max concurrent thread count (0 to use system defaults, which is %1 threads):")
+                                            .arg(QThread::idealThreadCount()),
+                                    &max_concurrent_thread_count_edit);
         max_concurrent_thread_count_edit.setMinimum(0);
         max_concurrent_thread_count_edit.setMaximum(std::numeric_limits<int>::max());
         max_concurrent_thread_count_edit.setValue(PREFERENCES_HANDLER.get_preferences().max_concurrent_thread_count);
@@ -57,7 +59,9 @@ namespace degate
         cache_size_edit.setValue(PREFERENCES_HANDLER.get_preferences().cache_size);
 
         // Image importer cache size spinbox
-        PreferencesPage::add_widget(cache_layout, tr("Image importer cache size (in Mb):"), &image_importer_cache_size_edit);
+        PreferencesPage::add_widget(cache_layout,
+                                    tr("Image importer cache size (in Mb):"),
+                                    &image_importer_cache_size_edit);
         image_importer_cache_size_edit.setMinimum(MINIMUM_CACHE_SIZE);
         image_importer_cache_size_edit.setMaximum(std::numeric_limits<int>::max());
         image_importer_cache_size_edit.setValue(PREFERENCES_HANDLER.get_preferences().image_importer_cache_size);
@@ -68,11 +72,13 @@ namespace degate
         if (static_cast<int>(preferences.cache_size) != cache_size_edit.value() ||
             static_cast<int>(preferences.image_importer_cache_size) != image_importer_cache_size_edit.value())
         {
-            QMessageBox::information(this, tr("Preferences"), tr("You must restart Degate for some changes to take effect."));
+            QMessageBox::information(this,
+                                     tr("Preferences"),
+                                     tr("You must restart Degate for some changes to take effect."));
         }
 
         preferences.cache_size = static_cast<unsigned int>(cache_size_edit.value());
         preferences.image_importer_cache_size = static_cast<unsigned int>(image_importer_cache_size_edit.value());
         preferences.max_concurrent_thread_count = static_cast<unsigned int>(max_concurrent_thread_count_edit.value());
     }
-}
+} // namespace degate
