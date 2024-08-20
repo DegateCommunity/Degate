@@ -19,22 +19,20 @@ jobs:
         aqtversion: '>=0.9.7'
         modules: 'qtimageformats'
 
-    - name: Install Boost
-      shell: pwsh
-      # Change Boost version here (see https://sourceforge.net/projects/boost/files/boost-binaries/).
-      # See https://github.com/actions/virtual-environments/issues/2667#issue-804635858.
-      run: |
-        $Url = "https://sourceforge.net/projects/boost/files/boost-binaries/1.72.0/boost_1_72_0-msvc-14.2-64.exe"
-        (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost.exe")
-        Start-Process -Wait -FilePath "$env:TEMP\boost.exe" "/SILENT","/SP-","/SUPPRESSMSGBOXES","/DIR=C:\hostedtoolcache\windows\Boost\1.72.0\x86_64"
+    - name: Install boost
+      uses: MarkusJx/install-boost@v2.4.5
+      id: install-boost
+      with:
+          boost_version: 1.72.0 # Update Boost version here.
 
     - name: Build
       shell: bash
-      # Don't forget to update Boost path.
       run: |
         cd build
-        cmake .. -DBOOST_ROOT="C:\hostedtoolcache\windows\Boost\1.72.0\x86_64" -A x64
+        cmake .. -A x64
         cmake --build . --config $BUILD_TYPE --target Degate
+      env:
+        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
     - name: Tests
       shell: bash
