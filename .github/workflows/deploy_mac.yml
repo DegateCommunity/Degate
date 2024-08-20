@@ -41,7 +41,7 @@ jobs:
       shell: bash
       run: |
         cd build/out/bin/
-        $Qt6_DIR/bin/macdeployqt ./Degate.app
+        $QT_ROOT_DIR/bin/macdeployqt ./Degate.app
         
     - name: Upload Degate binaries
       uses: actions/upload-artifact@v4
