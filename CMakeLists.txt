@@ -113,10 +113,10 @@ set(LIBS ${LIBS} Qt6::Widgets Qt6::Gui Qt6::Core Qt6::Xml Qt6::OpenGL Qt6::OpenG
 #
 if (CMAKE_SIZEOF_VOID_P MATCHES 8) # if 64-bits
     message(STATUS "64 bits configuration")
-    set(CONFIGURATION "BUILD_64")
+    set(CONFIGURATION "x64")
 else() # if 32-bits
     message(STATUS "32 bits configuration")
-    set(CONFIGURATION "BUILD_32")
+    set(CONFIGURATION "x86")
 endif()
 
 #
