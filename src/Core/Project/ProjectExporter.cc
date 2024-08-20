@@ -19,25 +19,24 @@
  *
  */
 
-#include "Globals.h"
-#include "Core/LogicModel/Layer.h"
-#include "Core/Project/ProjectExporter.h"
-#include "Core/Utils/ObjectIDRewriter.h"
-#include "Core/LogicModel/LogicModelExporter.h"
 #include "Core/LogicModel/Gate/GateLibraryExporter.h"
+#include "Core/LogicModel/LogicModelExporter.h"
+#include "Core/Project/ProjectExporter.h"
 #include "Core/RuleCheck/RCVBlacklistExporter.h"
+#include "Core/Utils/ObjectIDRewriter.h"
 #include "Core/Version.h"
+#include "Globals.h"
+#include "Prerequisites.h"
 
 #include <cerrno>
 #include <iostream>
 #include <stdexcept>
-#include <list>
-#include <memory>
 
 using namespace std;
 using namespace degate;
 
-void ProjectExporter::export_all(std::string const& project_directory, const Project_shptr& prj,
+void ProjectExporter::export_all(std::string const& project_directory,
+                                 const Project_shptr& prj,
                                  bool enable_oid_rewrite,
                                  std::string const& project_file,
                                  std::string const& lmodel_file,
@@ -78,7 +77,8 @@ void ProjectExporter::export_all(std::string const& project_directory, const Pro
 
 void ProjectExporter::export_data(std::string const& filename, const Project_shptr& prj)
 {
-    if (prj == nullptr) throw InvalidPointerException("Project pointer is nullptr.");
+    if (prj == nullptr)
+        throw InvalidPointerException("Project pointer is nullptr.");
 
     try
     {
@@ -122,7 +122,8 @@ void ProjectExporter::add_grids(QDomDocument& doc, QDomElement& prj_elem, const 
 {
     QDomElement grids_elem = doc.createElement("grids");
 
-    if (grids_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (grids_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
     add_regular_grid(doc, grids_elem, prj->get_regular_horizontal_grid(), "horizontal");
     add_regular_grid(doc, grids_elem, prj->get_regular_vertical_grid(), "vertical");
@@ -139,7 +140,8 @@ void ProjectExporter::add_regular_grid(QDomDocument& doc,
                                        std::string const& grid_orientation)
 {
     QDomElement grid_elem = doc.createElement("regular-grid");
-    if (grid_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (grid_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
     grid_elem.setAttribute("enabled", grid->is_enabled() ? "true" : "false");
     grid_elem.setAttribute("distance", QString::fromStdString(number_to_string<double>(grid->get_distance())));
@@ -155,18 +157,21 @@ void ProjectExporter::add_irregular_grid(QDomDocument& doc,
                                          std::string const& grid_orientation)
 {
     QDomElement grid_elem = doc.createElement("irregular-grid");
-    if (grid_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (grid_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
     grid_elem.setAttribute("enabled", grid->is_enabled() ? "true" : "false");
     grid_elem.setAttribute("orientation", QString::fromStdString(grid_orientation));
 
     QDomElement offsets_elem = doc.createElement("offsets");
-    if (offsets_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (offsets_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
     for (auto offset : *grid)
     {
         QDomElement offset_elem = doc.createElement("offset-entry");
-        if (offset_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+        if (offset_elem.isNull())
+            throw(std::runtime_error("Failed to create node."));
 
         offset_elem.setAttribute("offset", QString::fromStdString(number_to_string<int>(offset)));
 
@@ -179,9 +184,7 @@ void ProjectExporter::add_irregular_grid(QDomDocument& doc,
 }
 
 
-void ProjectExporter::set_project_node_attributes(QDomDocument& doc,
-                                                  QDomElement& prj_elem,
-                                                  const Project_shptr& prj)
+void ProjectExporter::set_project_node_attributes(QDomDocument& doc, QDomElement& prj_elem, const Project_shptr& prj)
 {
     prj_elem.setAttribute("degate-version", DEGATE_VERSION);
     prj_elem.setAttribute("name", QString::fromStdString(prj->get_name()));
@@ -210,16 +213,18 @@ void ProjectExporter::add_layers(QDomDocument& doc,
                                  const LogicModel_shptr& lmodel,
                                  std::string const& project_dir)
 {
-    if (lmodel == nullptr) throw InvalidPointerException();
+    if (lmodel == nullptr)
+        throw InvalidPointerException();
 
     QDomElement layers_elem = doc.createElement("layers");
-    if (layers_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (layers_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
-    for (auto layer_iter = lmodel->layers_begin();
-         layer_iter != lmodel->layers_end(); ++layer_iter)
+    for (auto layer_iter = lmodel->layers_begin(); layer_iter != lmodel->layers_end(); ++layer_iter)
     {
         QDomElement layer_elem = doc.createElement("layer");
-        if (layer_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+        if (layer_elem.isNull())
+            throw(std::runtime_error("Failed to create node."));
 
         Layer_shptr layer = *layer_iter;
         assert(layer->has_valid_layer_id());
@@ -236,7 +241,9 @@ void ProjectExporter::add_layers(QDomDocument& doc,
             // Regarding the project type, set just the filename or the full path
             if (layer->get_project_type() == ProjectType::Normal)
             {
-                layer_elem.setAttribute("image-filename", QString::fromStdString(get_relative_path(layer->get_image_filename(), project_dir)));
+                layer_elem.setAttribute(
+                        "image-filename",
+                        QString::fromStdString(get_relative_path(layer->get_image_filename(), project_dir)));
             }
             else
             {
@@ -255,20 +262,22 @@ void ProjectExporter::add_port_colors(QDomDocument& doc,
                                       QDomElement& prj_elem,
                                       const PortColorManager_shptr& port_color_manager)
 {
-    if (port_color_manager == nullptr) throw InvalidPointerException();
+    if (port_color_manager == nullptr)
+        throw InvalidPointerException();
 
     QDomElement port_colors_elem = doc.createElement("port-colors");
-    if (port_colors_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (port_colors_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
-    for (auto iter = port_color_manager->begin();
-         iter != port_color_manager->end(); ++iter)
+    for (auto iter = port_color_manager->begin(); iter != port_color_manager->end(); ++iter)
     {
         const std::string port_name = (*iter).first;
         const color_t frame_color = port_color_manager->get_frame_color(port_name);
         const color_t fill_color = port_color_manager->get_fill_color(port_name);
 
         QDomElement color_elem = doc.createElement("port-color");
-        if (color_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+        if (color_elem.isNull())
+            throw(std::runtime_error("Failed to create node."));
 
         color_elem.setAttribute("fill-color", QString::fromStdString(to_color_string(fill_color)));
         color_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(frame_color)));
@@ -281,44 +290,58 @@ void ProjectExporter::add_port_colors(QDomDocument& doc,
 
 void ProjectExporter::add_colors(QDomDocument& doc, QDomElement& prj_elem, const Project_shptr& prj)
 {
-    if (prj == nullptr) throw InvalidPointerException();
+    if (prj == nullptr)
+        throw InvalidPointerException();
 
     QDomElement colors_elem = doc.createElement("default-colors");
-    if (colors_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (colors_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
     default_colors_t default_colors = prj->get_default_colors();
-    for(const auto& p : default_colors)
+    for (const auto& p : default_colors)
     {
         QDomElement color_elem = doc.createElement("color");
-        if (color_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+        if (color_elem.isNull())
+            throw(std::runtime_error("Failed to create node."));
 
         std::string o;
         switch (p.first)
         {
-        case DEFAULT_COLOR_WIRE: o = "wire";
-            break;
-        case DEFAULT_COLOR_VIA_UP: o = "via-up";
-            break;
-        case DEFAULT_COLOR_VIA_DOWN: o = "via-down";
-            break;
-        case DEFAULT_COLOR_EMARKER: o = "emarker";
-            break;
-        case DEFAULT_COLOR_GRID: o = "grid";
-            break;
-        case DEFAULT_COLOR_ANNOTATION: o = "annotation";
-            break;
-        case DEFAULT_COLOR_ANNOTATION_FRAME: o = "annotation-frame";
-            break;
-        case DEFAULT_COLOR_GATE: o = "gate";
-            break;
-        case DEFAULT_COLOR_GATE_FRAME: o = "gate-frame";
-            break;
-        case DEFAULT_COLOR_GATE_PORT: o = "gate-port";
-            break;
-        case DEFAULT_COLOR_TEXT: o = "text";
-            break;
-        default:
-            throw std::runtime_error("Invalid object type.");
+            case DEFAULT_COLOR_WIRE:
+                o = "wire";
+                break;
+            case DEFAULT_COLOR_VIA_UP:
+                o = "via-up";
+                break;
+            case DEFAULT_COLOR_VIA_DOWN:
+                o = "via-down";
+                break;
+            case DEFAULT_COLOR_EMARKER:
+                o = "emarker";
+                break;
+            case DEFAULT_COLOR_GRID:
+                o = "grid";
+                break;
+            case DEFAULT_COLOR_ANNOTATION:
+                o = "annotation";
+                break;
+            case DEFAULT_COLOR_ANNOTATION_FRAME:
+                o = "annotation-frame";
+                break;
+            case DEFAULT_COLOR_GATE:
+                o = "gate";
+                break;
+            case DEFAULT_COLOR_GATE_FRAME:
+                o = "gate-frame";
+                break;
+            case DEFAULT_COLOR_GATE_PORT:
+                o = "gate-port";
+                break;
+            case DEFAULT_COLOR_TEXT:
+                o = "text";
+                break;
+            default:
+                throw std::runtime_error("Invalid object type.");
         }
 
         color_elem.setAttribute("object", QString::fromStdString(o));

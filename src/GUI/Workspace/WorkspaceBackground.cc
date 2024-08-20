@@ -19,12 +19,11 @@
  *
  */
 
-#include "WorkspaceBackground.h"
 #include "GUI/Workspace/WorkspaceNotifier.h"
-
-#include <algorithm>
+#include "WorkspaceBackground.h"
 
 #include <QtConcurrent/QtConcurrent>
+#include <algorithm>
 
 namespace degate
 {
@@ -52,7 +51,6 @@ namespace degate
 
     WorkspaceBackground::WorkspaceBackground(QWidget* parent) : WorkspaceElement(parent)
     {
-
     }
 
     WorkspaceBackground::~WorkspaceBackground()
@@ -66,29 +64,27 @@ namespace degate
         WorkspaceElement::init();
 
         QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex);
-        const char* vsrc =
-            "#version 330 core\n"
-            "in vec2 pos;\n"
-            "in vec2 texCoord;\n"
-            "uniform mat4 mvp;\n"
-            "out vec2 texCoord0;\n"
-            "void main(void)\n"
-            "{\n"
-            "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
-            "    texCoord0 = texCoord;\n"
-            "}\n";
+        const char* vsrc = "#version 330 core\n"
+                           "in vec2 pos;\n"
+                           "in vec2 texCoord;\n"
+                           "uniform mat4 mvp;\n"
+                           "out vec2 texCoord0;\n"
+                           "void main(void)\n"
+                           "{\n"
+                           "    gl_Position = mvp * vec4(pos, 0.0, 1.0);\n"
+                           "    texCoord0 = texCoord;\n"
+                           "}\n";
         vshader->compileSourceCode(vsrc);
 
         QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment);
-        const char* fsrc =
-            "#version 330 core\n"
-            "uniform sampler2D u_texture;\n"
-            "in vec2 texCoord0;\n"
-            "out vec4 color;\n"
-            "void main(void)\n"
-            "{\n"
-            "    color = texture(u_texture, texCoord0);\n"
-            "}\n";
+        const char* fsrc = "#version 330 core\n"
+                           "uniform sampler2D u_texture;\n"
+                           "in vec2 texCoord0;\n"
+                           "out vec4 color;\n"
+                           "void main(void)\n"
+                           "{\n"
+                           "    color = texture(u_texture, texCoord0);\n"
+                           "}\n";
         fshader->compileSourceCode(fsrc);
 
         program = new QOpenGLShaderProgram;
@@ -100,7 +96,9 @@ namespace degate
 
         program->link();
 
-        WorkspaceNotifier::get_instance().define(WorkspaceTarget::WorkspaceBackground, WorkspaceNotification::Update, std::bind(&WorkspaceBackground::update, this));
+        WorkspaceNotifier::get_instance().define(WorkspaceTarget::WorkspaceBackground,
+                                                 WorkspaceNotification::Update,
+                                                 std::bind(&WorkspaceBackground::update, this));
     }
 
     // TODO: Full update on each call, should now what changed and update only what's needed.
@@ -127,10 +125,18 @@ namespace degate
         float pre_scale = static_cast<float>(elem.first);
 
         unsigned int // scaled coordinates
-        min_x = to_lower_tile_offset(std::max<int>(std::floor(viewport_min_x / pre_scale), 0), background_image->get_tile_size()),
-        max_x = to_upper_tile_offset(std::min<int>(std::max<int>(std::ceil(viewport_max_x / pre_scale), 0), std::ceil(project->get_logic_model()->get_width() / pre_scale)), background_image->get_tile_size()),
-        min_y = to_lower_tile_offset(std::max<int>(std::floor(viewport_min_y) / pre_scale, 0), background_image->get_tile_size()),
-        max_y = to_upper_tile_offset(std::min<int>(std::max<int>(std::ceil(viewport_max_y / pre_scale), 0), std::ceil(project->get_logic_model()->get_height() / pre_scale)), background_image->get_tile_size());
+                min_x = to_lower_tile_offset(std::max<int>(std::floor(viewport_min_x / pre_scale), 0),
+                                             background_image->get_tile_size()),
+                max_x = to_upper_tile_offset(
+                        std::min<int>(std::max<int>(std::ceil(viewport_max_x / pre_scale), 0),
+                                      std::ceil(project->get_logic_model()->get_width() / pre_scale)),
+                        background_image->get_tile_size()),
+                min_y = to_lower_tile_offset(std::max<int>(std::floor(viewport_min_y) / pre_scale, 0),
+                                             background_image->get_tile_size()),
+                max_y = to_upper_tile_offset(
+                        std::min<int>(std::max<int>(std::ceil(viewport_max_y / pre_scale), 0),
+                                      std::ceil(project->get_logic_model()->get_height() / pre_scale)),
+                        background_image->get_tile_size());
 
         tile_count = std::ceil((max_x - min_x) / static_cast<float>(background_image->get_tile_size())) *
                      std::ceil((max_y - min_y) / static_cast<float>(background_image->get_tile_size()));
@@ -150,8 +156,6 @@ namespace degate
                 index++;
             }
         }
-
-        assert(index == tile_count);
 
         context->glBindBuffer(GL_ARRAY_BUFFER, 0);
         vao.release();
@@ -216,7 +220,12 @@ namespace degate
         background_textures.clear();
     }
 
-    void WorkspaceBackground::update_viewport(float min_x, float max_x, float min_y, float max_y, float width, float height)
+    void WorkspaceBackground::update_viewport(float min_x,
+                                              float max_x,
+                                              float min_y,
+                                              float max_y,
+                                              float width,
+                                              float height)
     {
         this->scale = (max_x - min_x) / width;
 
@@ -275,13 +284,14 @@ namespace degate
         assert(context->glGetError() == GL_NO_ERROR);
 
         context->glTexImage2D(GL_TEXTURE_2D,
-                     0, // level
-                     GL_RGBA, // BGRA,
-                     tile_width, tile_width,
-                     0, // border
-                     GL_RGBA,
-                     GL_UNSIGNED_BYTE,
-                     data);
+                              0,       // level
+                              GL_RGBA, // BGRA,
+                              tile_width,
+                              tile_width,
+                              0, // border
+                              GL_RGBA,
+                              GL_UNSIGNED_BYTE,
+                              data);
         assert(context->glGetError() == GL_NO_ERROR);
 
         context->glBindTexture(GL_TEXTURE_2D, 0);
@@ -293,29 +303,47 @@ namespace degate
 
         temp.pos = QVector2D(min_x, min_y);
         temp.texCoord = QVector2D(0, 0);
-        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 0 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glBufferSubData(GL_ARRAY_BUFFER,
+                                 index * 6 * sizeof(BackgroundVertex2D) + 0 * sizeof(BackgroundVertex2D),
+                                 sizeof(BackgroundVertex2D),
+                                 &temp);
 
         temp.pos = QVector2D(max_x, min_y);
         temp.texCoord = QVector2D(1, 0);
-        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 1 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glBufferSubData(GL_ARRAY_BUFFER,
+                                 index * 6 * sizeof(BackgroundVertex2D) + 1 * sizeof(BackgroundVertex2D),
+                                 sizeof(BackgroundVertex2D),
+                                 &temp);
 
         temp.pos = QVector2D(min_x, max_y);
         temp.texCoord = QVector2D(0, 1);
-        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 2 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glBufferSubData(GL_ARRAY_BUFFER,
+                                 index * 6 * sizeof(BackgroundVertex2D) + 2 * sizeof(BackgroundVertex2D),
+                                 sizeof(BackgroundVertex2D),
+                                 &temp);
 
         temp.pos = QVector2D(max_x, min_y);
         temp.texCoord = QVector2D(1, 0);
-        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 3 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glBufferSubData(GL_ARRAY_BUFFER,
+                                 index * 6 * sizeof(BackgroundVertex2D) + 3 * sizeof(BackgroundVertex2D),
+                                 sizeof(BackgroundVertex2D),
+                                 &temp);
 
         temp.pos = QVector2D(min_x, max_y);
         temp.texCoord = QVector2D(0, 1);
-        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 4 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glBufferSubData(GL_ARRAY_BUFFER,
+                                 index * 6 * sizeof(BackgroundVertex2D) + 4 * sizeof(BackgroundVertex2D),
+                                 sizeof(BackgroundVertex2D),
+                                 &temp);
 
         temp.pos = QVector2D(max_x, max_y);
         temp.texCoord = QVector2D(1, 1);
-        context->glBufferSubData(GL_ARRAY_BUFFER, index * 6 * sizeof(BackgroundVertex2D) + 5 * sizeof(BackgroundVertex2D), sizeof(BackgroundVertex2D), &temp);
+        context->glBufferSubData(GL_ARRAY_BUFFER,
+                                 index * 6 * sizeof(BackgroundVertex2D) + 5 * sizeof(BackgroundVertex2D),
+                                 sizeof(BackgroundVertex2D),
+                                 &temp);
 
 
         return texture;
     }
-}
+} // namespace degate

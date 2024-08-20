@@ -24,32 +24,32 @@
 #ifndef __QUADTREE_H__
 #define __QUADTREE_H__
 
-#include "Rectangle.h"
+#include "BoundingBox.h"
 #include "Core/Utils/TypeTraits.h"
+#include "Globals.h"
 
 #include <algorithm>
-#include <vector>
-#include <list>
 #include <cassert>
-#include "Globals.h"
 #include <iostream>
+#include <list>
+#include <vector>
 
 namespace degate
 {
-    template <bool b>
+    template<bool b>
     struct get_bbox_trait_selector
     {
-        template <typename T>
+        template<typename T>
         static BoundingBox const& get_bounding_box_for_object(T object)
         {
             return object.get_bounding_box();
         }
     };
 
-    template <>
+    template<>
     struct get_bbox_trait_selector<true>
     {
-        template <typename T>
+        template<typename T>
         static BoundingBox const& get_bounding_box_for_object(T object)
         {
             return object->get_bounding_box();
@@ -57,9 +57,9 @@ namespace degate
     };
 
 
-    template <typename T>
+    template<typename T>
     class QuadTree;
-}
+} // namespace degate
 
 //#include "QuadTreeDownIterator.h"
 #include "QuadTreeRegionIterator.h"
@@ -69,14 +69,13 @@ namespace degate
     /**
      * Quad tree to store objects and to accesss them with a two dimensional access path.
      */
-    template <typename T>
+    template<typename T>
     class QuadTree
     {
         friend class RegionIterator<T>;
         //    friend class DownIterator<T>;
 
     private:
-
         const static int NW = 0;
         const static int NE = 1;
         const static int SW = 2;
@@ -112,8 +111,10 @@ namespace degate
         bool is_splitable() const;
 
     public:
-
-        const std::string get_name() const { return node_name; }
+        const std::string get_name() const
+        {
+            return node_name;
+        }
 
         /**
          * Create a new quadtree.
@@ -191,7 +192,10 @@ namespace degate
         /*
          * Check if there are objects stored in the quadtree.
          */
-        bool is_empty() const { return total_size() == 0; }
+        bool is_empty() const
+        {
+            return total_size() == 0;
+        }
 
         /**
          * Get the dimension of the quadtree.
@@ -248,7 +252,7 @@ namespace degate
     };
 
 
-    template <typename T>
+    template<typename T>
     QuadTree<T>::QuadTree(BoundingBox const& box, int max_entries)
     {
         this->box = box;
@@ -257,7 +261,7 @@ namespace degate
         node_name = "/";
     }
 
-    template <typename T>
+    template<typename T>
     QuadTree<T>::QuadTree(BoundingBox const& box, QuadTree* parent, std::string node_name, int max_entries)
     {
         this->box = box;
@@ -267,61 +271,54 @@ namespace degate
         this->node_name = parent->node_name + std::string("/") + node_name;
     }
 
-    template <typename T>
+    template<typename T>
     QuadTree<T>::~QuadTree()
     {
     }
 
-    template <typename T>
+    template<typename T>
     void QuadTree<T>::get_all_elements(std::vector<T>& vec) const
     {
         std::copy(children.begin(), children.end(), back_inserter(vec));
-        std::for_each(subtree_nodes.begin(), subtree_nodes.end(), [&vec](const QuadTree<T>& q)
-        {
+        std::for_each(subtree_nodes.begin(), subtree_nodes.end(), [&vec](const QuadTree<T>& q) {
             q.get_all_elements(vec);
         });
     }
 
-    template <typename T>
+    template<typename T>
     unsigned int QuadTree<T>::get_width() const
     {
         return static_cast<unsigned int>(box.get_width());
     }
 
-    template <typename T>
+    template<typename T>
     unsigned int QuadTree<T>::get_height() const
     {
         return static_cast<unsigned int>(box.get_height());
     }
 
 
-    template <typename T>
+    template<typename T>
     bool QuadTree<T>::is_splitable() const
     {
-        return box.get_width() > bbox_min_size &&
-            box.get_height() > bbox_min_size &&
-            is_leave();
+        return box.get_width() > bbox_min_size && box.get_height() > bbox_min_size && is_leave();
     }
 
-    template <typename T>
+    template<typename T>
     ret_t QuadTree<T>::split()
     {
         if (is_splitable())
         {
-            BoundingBox nw(box.get_min_x(), box.get_center_x(),
-                           box.get_min_y(), box.get_center_y());
+            BoundingBox nw(box.get_min_x(), box.get_center_x(), box.get_min_y(), box.get_center_y());
 
 
-            BoundingBox sw(box.get_min_x(), box.get_center_x(),
-                           box.get_center_y() + 1, box.get_max_y());
+            BoundingBox sw(box.get_min_x(), box.get_center_x(), box.get_center_y() + 1, box.get_max_y());
 
 
-            BoundingBox ne(box.get_center_x() + 1, box.get_max_x(),
-                           box.get_min_y(), box.get_center_y());
+            BoundingBox ne(box.get_center_x() + 1, box.get_max_x(), box.get_min_y(), box.get_center_y());
 
 
-            BoundingBox se(box.get_center_x() + 1, box.get_max_x(),
-                           box.get_center_y() + 1, box.get_max_y());
+            BoundingBox se(box.get_center_x() + 1, box.get_max_x(), box.get_center_y() + 1, box.get_max_y());
 
 
             QuadTree<T> node_nw(nw, this, "NW", max_entries);
@@ -338,7 +335,8 @@ namespace degate
             return RET_OK;
         }
 
-        debug(TM, "Failed to split a quadtree node of width %f and height %f that is %sa leave",
+        debug(TM,
+              "Failed to split a quadtree node of width %f and height %f that is %sa leave",
               box.get_width(),
               box.get_height(),
               is_leave() ? "" : "not ");
@@ -346,16 +344,14 @@ namespace degate
         return RET_ERR;
     }
 
-    template <typename T>
+    template<typename T>
     ret_t QuadTree<T>::reinsert_objects()
     {
         typename std::list<T> children_copy = children;
 
         children.clear();
 
-        for (typename std::list<T>::iterator it = children_copy.begin();
-             it != children_copy.end();
-             ++it)
+        for (typename std::list<T>::iterator it = children_copy.begin(); it != children_copy.end(); ++it)
         {
             insert(*it);
         }
@@ -363,7 +359,7 @@ namespace degate
         return RET_OK;
     }
 
-    template <typename T>
+    template<typename T>
     ret_t QuadTree<T>::reinsert_all_objects(QuadTree<T>* tree)
     {
         if (tree == nullptr)
@@ -389,32 +385,32 @@ namespace degate
         return RET_OK;
     }
 
-    template <typename T>
+    template<typename T>
     inline BoundingBox QuadTree<T>::get_object_bb(T object)
     {
         return get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(object);
     }
 
-    template <typename T>
+    template<typename T>
     void QuadTree<T>::notify_shape_change(T object, const BoundingBox& old_bb)
     {
         remove(object, old_bb);
         insert(object);
     }
 
-    template <typename T>
+    template<typename T>
     inline ret_t QuadTree<T>::insert(T object)
     {
         return insert(object, get_object_bb(object));
     }
 
-    template <typename T>
+    template<typename T>
     inline ret_t QuadTree<T>::remove(T object)
     {
         return remove(object, get_object_bb(object));
     }
 
-    template <typename T>
+    template<typename T>
     ret_t QuadTree<T>::insert(T object, const BoundingBox& bounding_box)
     {
         ret_t ret;
@@ -426,9 +422,12 @@ namespace degate
         {
             if ((found->children.size() >= max_entries) && found->is_splitable())
             {
-                if (RET_IS_NOT_OK(ret = found->split())) return ret;
-                if (RET_IS_NOT_OK(ret = found->reinsert_objects())) return ret;
-                if (RET_IS_NOT_OK(ret = found->insert(object))) return ret;
+                if (RET_IS_NOT_OK(ret = found->split()))
+                    return ret;
+                if (RET_IS_NOT_OK(ret = found->reinsert_objects()))
+                    return ret;
+                if (RET_IS_NOT_OK(ret = found->insert(object)))
+                    return ret;
                 return RET_OK;
             }
             else
@@ -440,7 +439,7 @@ namespace degate
         return RET_ERR;
     }
 
-    template <typename T>
+    template<typename T>
     ret_t QuadTree<T>::remove(T object, const BoundingBox& bounding_box)
     {
         QuadTree<T>* found = traverse_downto_bounding_box(bounding_box);
@@ -451,10 +450,8 @@ namespace degate
                 debug(TM, "Quadtree can't remove, object not found.");
             found->children.remove(object);
 
-            if (!found->is_leave() &&
-                found->subtree_nodes[NW].children.size() == 0 &&
-                found->subtree_nodes[NE].children.size() == 0 &&
-                found->subtree_nodes[SW].children.size() == 0 &&
+            if (!found->is_leave() && found->subtree_nodes[NW].children.size() == 0 &&
+                found->subtree_nodes[NE].children.size() == 0 && found->subtree_nodes[SW].children.size() == 0 &&
                 found->subtree_nodes[SE].children.size() == 0)
             {
                 return reinsert_all_objects(found);
@@ -466,21 +463,19 @@ namespace degate
     }
 
 
-    template <typename T>
+    template<typename T>
     bool QuadTree<T>::is_leave() const
     {
         return subtree_nodes.size() == 4 ? false : true;
     }
 
-    template <typename T>
+    template<typename T>
     QuadTree<T>* QuadTree<T>::traverse_downto_bounding_box(BoundingBox const& box)
     {
         if (is_leave())
             return this;
 
-        for (typename std::vector<QuadTree<T>>::iterator it = subtree_nodes.begin();
-             it != subtree_nodes.end();
-             ++it)
+        for (typename std::vector<QuadTree<T>>::iterator it = subtree_nodes.begin(); it != subtree_nodes.end(); ++it)
         {
             const BoundingBox& sub_bbox = (*it).box.get_bounding_box();
 
@@ -495,7 +490,7 @@ namespace degate
         return this;
     }
 
-    template <typename T>
+    template<typename T>
     unsigned int QuadTree<T>::total_size() const
     {
         unsigned int this_node = static_cast<unsigned int>(children.size());
@@ -512,7 +507,7 @@ namespace degate
         return this_node + sub_nodes;
     }
 
-    template <typename T>
+    template<typename T>
     unsigned int QuadTree<T>::depth() const
     {
         unsigned int max_d = 0;
@@ -542,7 +537,7 @@ namespace degate
     }
     */
 
-    template <typename T>
+    template<typename T>
     RegionIterator<T> QuadTree<T>::region_iter_begin(int min_x, int max_x, int min_y, int max_y)
     {
         BoundingBox bbox(static_cast<float>(min_x),
@@ -552,60 +547,51 @@ namespace degate
         return region_iter_begin(bbox);
     }
 
-    template <typename T>
+    template<typename T>
     RegionIterator<T> QuadTree<T>::region_iter_begin(BoundingBox const& bbox)
     {
         return RegionIterator<T>(this, bbox);
     }
 
-    template <typename T>
+    template<typename T>
     RegionIterator<T> QuadTree<T>::region_iter_begin()
     {
         return RegionIterator<T>(this, box);
     }
 
-    template <typename T>
+    template<typename T>
     RegionIterator<T> QuadTree<T>::region_iter_end()
     {
         return RegionIterator<T>();
     }
 
 
-    template <typename T>
+    template<typename T>
     BoundingBox const& QuadTree<T>::get_bounding_box() const
     {
         return box;
     }
 
-    template <typename T>
+    template<typename T>
     void QuadTree<T>::print(std::ostream& os, int tabs, bool recursive)
     {
-        os
-            << gen_tabs(tabs) << "Node name                      : " << get_name() << std::endl
-            << gen_tabs(tabs) << "Bounding box                   : x = "
-            << box.get_min_x() << " .. " << box.get_max_x()
-            << " / y = "
-            << box.get_min_y() << " .. " << box.get_max_y()
-            << std::endl
+        os << gen_tabs(tabs) << "Node name                      : " << get_name() << std::endl
+           << gen_tabs(tabs) << "Bounding box                   : x = " << box.get_min_x() << " .. " << box.get_max_x()
+           << " / y = " << box.get_min_y() << " .. " << box.get_max_y() << std::endl
 
-            << gen_tabs(tabs) << "Num elements in this node      : " << children.size() << std::endl
-            << gen_tabs(tabs) << "Preferred max num of elements : " << max_entries << std::endl
-            << std::endl;
+           << gen_tabs(tabs) << "Num elements in this node      : " << children.size() << std::endl
+           << gen_tabs(tabs) << "Preferred max num of elements : " << max_entries << std::endl
+           << std::endl;
 
         if (parent == nullptr /* || children.size() < 5 */)
         {
-            for (typename std::list<T>::iterator c_iter = children.begin();
-                 c_iter != children.end(); ++c_iter)
+            for (typename std::list<T>::iterator c_iter = children.begin(); c_iter != children.end(); ++c_iter)
             {
                 const BoundingBox& e_bb =
-                    get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(*c_iter);
+                        get_bbox_trait_selector<is_pointer<T>::value>::get_bounding_box_for_object(*c_iter);
 
-                os
-                    << gen_tabs(tabs) << "    + Element bounding box           : x = "
-                    << e_bb.get_min_x() << " .. " << e_bb.get_max_x()
-                    << " / y = "
-                    << e_bb.get_min_y() << " .. " << e_bb.get_max_y()
-                    << std::endl;
+                os << gen_tabs(tabs) << "    + Element bounding box           : x = " << e_bb.get_min_x() << " .. "
+                   << e_bb.get_max_x() << " / y = " << e_bb.get_min_y() << " .. " << e_bb.get_max_y() << std::endl;
             }
 
             os << std::endl;
@@ -614,7 +600,8 @@ namespace degate
         if (recursive)
         {
             for (typename std::vector<QuadTree<T>>::iterator stn_iter = subtree_nodes.begin();
-                 stn_iter != subtree_nodes.end(); ++stn_iter)
+                 stn_iter != subtree_nodes.end();
+                 ++stn_iter)
             {
                 (*stn_iter).print(os, tabs + 1);
             }
@@ -625,6 +612,6 @@ namespace degate
        - get object(s) at
        - find object (?)
     */
-}
+} // namespace degate
 
 #endif
