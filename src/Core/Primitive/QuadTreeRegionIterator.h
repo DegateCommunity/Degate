@@ -35,7 +35,7 @@ namespace degate
     class QuadTree;
 
     template<typename T>
-    class RegionIterator : public iterator<std::forward_iterator_tag, T>
+    class RegionIterator : public iter::iterator<std::forward_iterator_tag, T>
     {
     private:
         QuadTree<T>* node;

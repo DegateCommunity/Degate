@@ -27,7 +27,7 @@
 namespace degate
 {
     template<typename T>
-    class DownIterator : public iterator<std::forward_iterator_tag, T>
+    class DownIterator : public iter::iterator<std::forward_iterator_tag, T>
     {
     private:
         QuadTree<T>* node;
