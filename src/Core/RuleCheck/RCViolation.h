@@ -22,7 +22,6 @@
 #ifndef __RCVIOLATION_H__
 #define __RCVIOLATION_H__
 
-#include <boost/foreach.hpp>
 #include <memory>
 #include <list>
 #include "Core/LogicModel/LogicModel.h"

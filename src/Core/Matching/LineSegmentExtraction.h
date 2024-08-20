@@ -28,8 +28,6 @@
 #include <memory>
 #include <fstream>
 
-#include <boost/foreach.hpp>
-
 namespace degate
 {
     // ----------------------------------------------------------------------------------
@@ -194,7 +192,7 @@ namespace degate
                                         unsigned int search_radius_along,
                                         unsigned int search_radius_across) const
         {
-            BOOST_FOREACH(LineSegment_shptr elem2, *this)
+            for (auto elem2 : *this)
             {
                 if (elem != elem2 && elem2->get_orientation() == elem->get_orientation())
                 {
@@ -289,7 +287,7 @@ namespace degate
             std::ofstream myfile;
             myfile.open("/tmp/example.txt");
 
-            BOOST_FOREACH(LineSegment_shptr e, *this)
+            for (auto e : *this)
             {
                 if (e->get_length() > 0)
                 {

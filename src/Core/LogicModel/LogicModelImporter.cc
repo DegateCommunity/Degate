@@ -33,7 +33,6 @@
 #include <list>
 
 #include <boost/format.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace std;
@@ -75,7 +74,7 @@ void LogicModelImporter::import_into(LogicModel_shptr lmodel,
         parse_logic_model_element(root_elem, lmodel);
 
         // check if the ports of placed standard cell are available and create them if necessary
-        BOOST_FOREACH(Gate_shptr g, gates)
+        for (auto g : gates)
         {
             lmodel->update_ports(g);
         }
@@ -546,7 +545,10 @@ std::list<Module_shptr> LogicModelImporter::parse_modules_element(QDomElement co
         if (!sub_modules_elem.isNull())
         {
             std::list<Module_shptr> sub_modules = parse_modules_element(sub_modules_elem, lmodel);
-            BOOST_FOREACH(Module_shptr submod, sub_modules) module->add_module(submod);
+            for (auto submod : sub_modules)
+            {
+                module->add_module(submod);
+            }
         }
 
         modules.push_back(module);

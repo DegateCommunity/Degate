@@ -19,6 +19,7 @@
  *
  */
 
+#include "Core/Utils/Utils.h"
 #include "GUI/Workspace/WorkspaceNotifier.h"
 
 namespace degate
@@ -44,28 +45,11 @@ namespace degate
         // Check if we are in the main thread (the only space to do UI stuff)
         if (qApp->thread() != QThread::currentThread())
         {
-            // If not, we need to run the notify() function in the main thread
-            // We are here in any thead but the main thread
-
-            // Create a single shot and instant timer that will run in the main thread
-            QTimer* timer = new QTimer();
-            timer->moveToThread(qApp->thread());
-            timer->setSingleShot(true);
-
-            // Connect the timeout of the timer to the notify() function
-            QObject::connect(timer, &QTimer::timeout, [=]() {
-                // Main thread
-
+            // Force execution in main thread
+            execute_in_main_thread([&] {
                 // Call the notify() function with proper args
                 notify(target, notification);
-
-                // Delete this time when possible
-                timer->deleteLater();
             });
-
-            // Invoke the start method that will run the previous lambda (and therefore the notify() function with proper args)
-            // This will run in the main thread
-            QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
 
             return;
         }

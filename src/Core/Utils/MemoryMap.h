@@ -22,37 +22,15 @@
 #ifndef __MEMORYMAP_H__
 #define __MEMORYMAP_H__
 
-#include "Core/Utils/FileSystem.h"
 #include "Globals.h"
-#include "Prerequisites.h"
 
-#include <boost/utility.hpp>
-#include <cassert>
-#include <climits>
-#include <cmath>
-#include <cstdint>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <fcntl.h>
+#include <QDir>
+#include <QFile>
+#include <QFileDevice>
+#include <QObject>
+#include <QTemporaryFile>
 #include <memory>
-#include <string>
-#include <sys/types.h>
-
-#if defined(SYS_WINDOWS)
-#define NOMINMAX
-#include <Windows.h>
-#include <io.h>
-#define PATH_MAX MAX_PATH
-#elif defined(SYS_UNIX)
-#include <limits.h> // PATH_MAX for UNIX
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#else
-#error "Unknown architecture"
-#endif
+#include <utility>
 
 namespace degate
 {
@@ -70,29 +48,21 @@ namespace degate
      * You should not use this class directly.
      */
     template<typename T>
-    class MemoryMap : boost::noncopyable
+    class MemoryMap : QObject
     {
     private:
         unsigned int width, height;
         MAP_STORAGE_TYPE storage_type;
 
-        std::string filename;
-        size_t filesize;
         size_t mem_size;
-
-#ifdef SYS_WINDOWS
-        typedef void* fd;
-        void* mem_file;
-#else
-        typedef int fd;
-#endif
-
-        fd file;
+        QFileDevice* backing_file;
         T* mem_view;
 
     private:
+        Q_DISABLE_COPY(MemoryMap)
+
         ret_t alloc_memory();
-        ret_t map_file(std::string const& filename);
+        ret_t map_file(QFile* file);
         void unmap();
 
         void* get_void_ptr(unsigned int x, unsigned int y) const;
@@ -178,9 +148,10 @@ namespace degate
          * @returns Returns a string with the mapped file. If the memory
          *   chunk is heap and not file based, an empty string is returned.
          */
-        std::string const& get_filename() const
+        std::string const get_filename() const
         {
-            return filename;
+            return (backing_file != nullptr) ? QDir::toNativeSeparators(backing_file->fileName()).toStdString() :
+                                               std::string{};
         }
 
         /**
@@ -198,13 +169,7 @@ namespace degate
         : width(width),
           height(height),
           storage_type(MAP_STORAGE_TYPE_MEM),
-          filename(),
-          filesize(0),
           mem_size(width * height * sizeof(T)),
-          file(0),
-#ifdef SYS_WINDOWS
-          mem_file(nullptr),
-#endif
           mem_view(nullptr)
     {
         assert(width > 0 && height > 0);
@@ -221,13 +186,7 @@ namespace degate
         : width(width),
           height(height),
           storage_type(mode),
-          filename(file_to_map),
-          filesize(0),
           mem_size(width * height * sizeof(T)),
-          file(0),
-#ifdef SYS_WINDOWS
-          mem_file(nullptr),
-#endif
           mem_view(nullptr)
     {
         assert(mode == MAP_STORAGE_TYPE_PERSISTENT_FILE || mode == MAP_STORAGE_TYPE_TEMP_FILE);
@@ -235,23 +194,47 @@ namespace degate
         assert(width > 0 && height > 0);
 
         ret_t ret;
-
+        std::unique_ptr<QFile> file;
         if (mode == MAP_STORAGE_TYPE_TEMP_FILE)
         {
             // Random filename
-            std::string fn = get_temp_file_path();
-            ret = map_file(fn);
-            if (RET_IS_NOT_OK(ret))
-                debug(TM, "Can't open a temp file with pattern %s", fn.c_str());
-            assert(RET_IS_OK(ret));
+            auto temporary_file = std::make_unique<QTemporaryFile>();
+            temporary_file->setAutoRemove(true);
+            if (temporary_file->open())
+            {
+                file = std::move(temporary_file);
+            }
         }
-        else if (mode == MAP_STORAGE_TYPE_PERSISTENT_FILE)
+        else
         {
-            ret = map_file(file_to_map);
-            if (RET_IS_NOT_OK(ret))
-                debug(TM, "Can't open file %s as persistent file", file_to_map.c_str());
-            assert(RET_IS_OK(ret));
+            auto persistent_file = std::make_unique<QFile>(QString::fromStdString(file_to_map));
+            if (persistent_file->open(QFile::ReadWrite))
+            {
+                file = std::move(persistent_file);
+            }
         }
+
+        if (!file)
+        {
+            debug(TM,
+                  "Can't open a %s file named \"%s\"",
+                  mode == MAP_STORAGE_TYPE_TEMP_FILE ? "temporary" : "persistent",
+                  mode == MAP_STORAGE_TYPE_TEMP_FILE ? "<temporary>" : file_to_map.c_str());
+            return;
+        }
+
+        ret = map_file(file.get());
+        if (RET_IS_NOT_OK(ret))
+        {
+            debug(TM, "Can't map memory from %s", file->fileName().toLatin1().constData());
+            file->close();
+        }
+        else
+        {
+            backing_file = file.release();
+        }
+
+        assert(RET_IS_OK(ret));
     }
 
 
@@ -261,23 +244,12 @@ namespace degate
         switch (storage_type)
         {
             case MAP_STORAGE_TYPE_MEM:
-
-                if (mem_view != nullptr)
-                    free(mem_view);
-                mem_view = nullptr;
-
+                delete[] mem_view;
                 break;
+
             case MAP_STORAGE_TYPE_PERSISTENT_FILE:
-
-                unmap();
-
-                break;
             case MAP_STORAGE_TYPE_TEMP_FILE:
-
                 unmap();
-
-                remove_file(filename);
-
                 break;
         }
     }
@@ -285,53 +257,35 @@ namespace degate
     template<typename T>
     void MemoryMap<T>::unmap()
     {
-        if (mem_view)
+        if (mem_view && backing_file)
         {
-#ifdef SYS_WINDOWS
-            UnmapViewOfFile(mem_view);
-#else
-            msync(mem_view, filesize, MS_SYNC);
-            munmap(mem_view, filesize);
-#endif
+            backing_file->unmap(reinterpret_cast<uchar*>(mem_view));
             mem_view = nullptr;
         }
 
-#ifdef SYS_WINDOWS
-        if (mem_file)
+        if (backing_file && backing_file->isOpen())
         {
-            CloseHandle(mem_file);
-            mem_file = nullptr;
-        }
-#endif
-
-        if (file)
-        {
-#ifdef SYS_WINDOWS
-            CloseHandle(file);
-#else
-            close(file);
-#endif
-            file = 0;
+            backing_file->close();
+            delete backing_file;
         }
 
-        filesize = 0;
+        backing_file = nullptr;
     }
 
     template<typename T>
     ret_t MemoryMap<T>::alloc_memory()
     {
-        /* If it is not null, it would indicates,
-           that there is already any allocation. */
+        /* If it is not null, it would indicate that there is already an allocation. */
         assert(mem_view == nullptr);
 
         assert(is_mem());
 
-        mem_view = (T*)malloc(static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * sizeof(T));
+        mem_view = new (std::nothrow) T[static_cast<std::size_t>(width) * static_cast<std::size_t>(height)]();
         assert(mem_view != nullptr);
         if (mem_view == nullptr)
+        {
             return RET_MALLOC_FAILED;
-
-        memset(mem_view, 0, static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * sizeof(T));
+        }
 
         return RET_OK;
     }
@@ -358,138 +312,32 @@ namespace degate
 
         if (mem_view != nullptr)
         {
-            unsigned int x, y;
-            for (y = min_y; y < min_y + height; y++)
-                memset(get_void_ptr(x, y), 0, width * sizeof(T));
+            for (auto y = min_y; y < min_y + height; y++)
+                memset(get_void_ptr(min_x, y), 0, width * sizeof(T));
         }
     }
-
 
     /**
      * Use storage in file as storage for memory map
      */
     template<typename T>
-    ret_t MemoryMap<T>::map_file(std::string const& filename)
+    ret_t MemoryMap<T>::map_file(QFile* file)
     {
+        assert(file);
         assert(is_persistent_file() || is_temp_file());
 
-        this->filename = filename;
-
-#ifdef SYS_WINDOWS
-
-        file = CreateFileA(filename.c_str(),
-                           GENERIC_READ | GENERIC_WRITE,
-                           FILE_SHARE_READ | FILE_SHARE_WRITE,
-                           nullptr,
-                           OPEN_ALWAYS,
-                           FILE_ATTRIBUTE_NORMAL,
-                           nullptr);
-        if (!file)
+        if (!file->resize(mem_size))
         {
-            debug(TM, "can't open file: %s", filename.c_str());
+            debug(TM, "cannot resize file %s", file->fileName().toLatin1().constData());
             return RET_ERR;
         }
 
-        LARGE_INTEGER res;
-        if (!GetFileSizeEx(file, &res))
+        mem_view = reinterpret_cast<T*>(file->map(0, file->size()));
+        if (mem_view == nullptr)
         {
-            debug(TM, "can't get size of file: %s", filename.c_str());
+            debug(TM, "cannot create memory map");
             return RET_ERR;
         }
-        filesize = static_cast<size_t>(res.QuadPart);
-
-        if (filesize < mem_size)
-        {
-            filesize = mem_size;
-
-            const DWORD ret = SetFilePointer(file, static_cast<LONG>(filesize - 1), nullptr, FILE_BEGIN);
-            if (ret == INVALID_SET_FILE_POINTER || ret == ERROR_NEGATIVE_SEEK)
-            {
-                debug(TM, "can't set file pointer of file: %s", filename.c_str());
-                return RET_ERR;
-            }
-
-            DWORD dwBytesWritten = 0;
-            char str[] = " ";
-
-            const bool write_res = WriteFile(file, str, static_cast<DWORD>(strlen(str)), &dwBytesWritten, nullptr);
-            if (!write_res)
-            {
-                debug(TM, "can't write to file: %s", filename.c_str());
-                return RET_ERR;
-            }
-        }
-
-        mem_file = CreateFileMapping(file, nullptr, PAGE_READWRITE, 0, 0, nullptr);
-        if (!mem_file)
-        {
-            debug(TM, "can't map file: %s", filename.c_str());
-            return RET_ERR;
-        }
-
-#else
-
-        file = open(filename.c_str(), O_RDWR | O_CREAT, 0600);
-        if (file == -1)
-        {
-            debug(TM, "can't open file: %s", filename.c_str());
-            return RET_ERR;
-        }
-
-#ifdef SYS_APPLE
-
-        struct stat inf;
-        if (fstat(file, &inf) < 0)
-
-#else
-
-        struct stat64 inf;
-        if (fstat64(file, &inf) < 0)
-
-#endif
-        {
-            debug(TM, "can't get the size of file: %s", filename.c_str());
-            return RET_ERR;
-        }
-
-        filesize = inf.st_size;
-
-        if (filesize < mem_size)
-        {
-            filesize = mem_size;
-            lseek(file, filesize - 1, SEEK_SET);
-            if (write(file, " ", 1) != 1)
-            {
-                debug(TM, "can't open file: %s", filename.c_str());
-                return RET_ERR;
-            }
-        }
-
-#endif
-
-        assert(filesize >= mem_size);
-
-#ifdef SYS_WINDOWS
-
-        mem_view = (T*)MapViewOfFile(mem_file, FILE_MAP_ALL_ACCESS, 0, 0, mem_size);
-
-        if (!mem_view)
-        {
-            debug(TM, "can't create memory map");
-            return RET_ERR;
-        }
-
-#else
-
-        mem_view = (T*)mmap(nullptr, filesize, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, file, 0);
-
-        if (mem_view == (void*)(-1))
-        {
-            debug(TM, "can't create memory map");
-            return RET_ERR;
-        }
-
-#endif
 
         return RET_OK;
     }

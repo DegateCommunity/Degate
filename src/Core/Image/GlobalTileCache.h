@@ -25,10 +25,9 @@
 #include "Core/Image/TileCacheBase.h"
 #include "Core/Primitive/SingletonBase.h"
 
-#include <cstddef>
-#include <utility>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <utility>
 
 namespace degate
 {
@@ -40,7 +39,7 @@ namespace degate
      * 
      * @warning This is a singleton, only one instance can exists.
      */
-    template <class PixelPolicy>
+    template<class PixelPolicy>
     class GlobalTileCache : public SingletonBase<GlobalTileCache<PixelPolicy>>
     {
         friend class SingletonBase<GlobalTileCache>;
@@ -55,7 +54,6 @@ namespace degate
         cache_t cache;
 
     private:
-
         /**
          * Create a new global tile cache object (singleton).
          */
@@ -108,7 +106,6 @@ namespace degate
         }
 
     public:
-
         /**
          * Print a status table about the global tile cache.
          */
@@ -129,7 +126,8 @@ namespace degate
                 std::cout << ".";
                 std::cout << std::setw(12) << entry.first.tv_nsec;
                 std::cout << " | ";
-                std::cout << entry.second / static_cast<unsigned long>(1024 * 1024) << " M (" << entry.second << " bytes)\n";
+                std::cout << entry.second / static_cast<unsigned long>(1024 * 1024) << " M (" << entry.second
+                          << " bytes)\n";
                 iter->first->print();
             }
             std::cout << "\n";
@@ -155,7 +153,9 @@ namespace degate
 
             if (allocated_memory + amount <= max_cache_memory)
             {
-                struct timespec now{};
+                struct timespec now
+                {
+                };
                 GET_CLOCK(now);
 
                 auto found = cache.find(requestor);
@@ -249,6 +249,6 @@ namespace degate
             return allocated_memory + amount > max_cache_memory;
         }
     };
-}
+} // namespace degate
 
 #endif //__GLOBALTILECACHE_H__

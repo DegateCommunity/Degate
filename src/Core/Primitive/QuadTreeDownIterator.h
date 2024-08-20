@@ -20,14 +20,14 @@
  */
 
 #ifndef __QUADTREEDOWNITERATOR_H__
-#define	__QUADTREEDOWNITERATOR_H__
+#define __QUADTREEDOWNITERATOR_H__
 
 #include "QuadTree.h"
 
 namespace degate
 {
-    template <typename T>
-    class DownIterator : public std::iterator<std::forward_iterator_tag, T>
+    template<typename T>
+    class DownIterator : public iterator<std::forward_iterator_tag, T>
     {
     private:
         QuadTree<T>* node;
@@ -36,7 +36,7 @@ namespace degate
         typename std::list<T>::iterator children_iter;
         typename std::list<T>::iterator children_iter_end;
 
-        std::list<QuadTree<T> *> open_list;
+        std::list<QuadTree<T>*> open_list;
 
         void next_node();
 
@@ -57,15 +57,15 @@ namespace degate
     };
 
 
-    template <typename T>
-    DownIterator<T>::DownIterator() : node(nullptr), done(true)
+    template<typename T>
+    DownIterator<T>::DownIterator() : node(nullptr),
+                                      done(true)
     {
     }
 
-    template <typename T>
-    DownIterator<T>::DownIterator(QuadTree<T>* node) :
-        node(nullptr),
-        done(false)
+    template<typename T>
+    DownIterator<T>::DownIterator(QuadTree<T>* node) : node(nullptr),
+                                                       done(false)
     {
         assert(node != nullptr);
 
@@ -73,7 +73,7 @@ namespace degate
         next_node();
     }
 
-    template <typename T>
+    template<typename T>
     void DownIterator<T>::next_node()
     {
         if (node == nullptr)
@@ -105,7 +105,7 @@ namespace degate
         }
     }
 
-    template <typename T>
+    template<typename T>
     DownIterator<T>& DownIterator<T>::operator++()
     {
         if (!done)
@@ -123,7 +123,7 @@ namespace degate
         return (*this);
     }
 
-    template <typename T>
+    template<typename T>
     DownIterator<T>& DownIterator<T>::operator=(const DownIterator& other)
     {
         node = other.node;
@@ -134,36 +134,34 @@ namespace degate
         return (*this);
     }
 
-    template <typename T>
+    template<typename T>
     bool DownIterator<T>::operator==(const DownIterator& other) const
     {
         if (done == true && other.done == true)
             return true;
         else
-            return (node == other.node &&
-                children_iter == other.children_iter &&
-                open_list == other.open_list &&
-                done == other.done);
+            return (node == other.node && children_iter == other.children_iter && open_list == other.open_list &&
+                    done == other.done);
     }
 
 
-    template <typename T>
+    template<typename T>
     bool DownIterator<T>::operator!=(const DownIterator& other) const
     {
         return !(*this == other);
     }
 
-    template <typename T>
+    template<typename T>
     T* DownIterator<T>::operator->() const
     {
         return &*children_iter;
     }
 
-    template <typename T>
+    template<typename T>
     T DownIterator<T>::operator*() const
     {
         return *children_iter;
     }
-}
+} // namespace degate
 
 #endif

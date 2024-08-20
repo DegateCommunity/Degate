@@ -28,8 +28,6 @@
 
 #include "Core/LogicModel/LogicModelHelper.h"
 
-#include <boost/foreach.hpp>
-
 namespace degate
 {
     class LookupSubcircuit
@@ -98,7 +96,7 @@ namespace degate
 
             std::set<Gate_shptr> other_gates;
 
-            BOOST_FOREACH(Gate_shptr g,
+            for (auto g :
                           filter_connected_gates(start_gate, GateTemplatePort::PORT_TYPE_OUT, "Q",
                               "flipflop", GateTemplatePort::PORT_TYPE_IN, "D"))
                 if (closed_list.find(g) != closed_list.end())
@@ -107,7 +105,7 @@ namespace degate
                     closed_list.insert(g);
                 }
 
-            BOOST_FOREACH(Gate_shptr g,
+            for (auto g :
                           filter_connected_gates(start_gate, GateTemplatePort::PORT_TYPE_IN, "D",
                               "flipflop", GateTemplatePort::PORT_TYPE_OUT, "Q"))
                 if (closed_list.find(g) != closed_list.end())
@@ -116,7 +114,7 @@ namespace degate
                     closed_list.insert(g);
                 }
 
-            BOOST_FOREACH(Gate_shptr g2, other_gates)
+            for (auto g2 : other_gates)
             {
                 std::cout << "\tGate " << g2->get_descriptive_identifier() << std::endl;
 
@@ -148,7 +146,7 @@ namespace degate
                     Net_shptr net = gport->get_net();
                     if (net != nullptr)
                     {
-                        BOOST_FOREACH(object_id_t oid, *net)
+                        for (auto oid : *net)
                         {
                             if (oid != gport->get_object_id())
                             {

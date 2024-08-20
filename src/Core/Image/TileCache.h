@@ -25,9 +25,9 @@
 #include "Core/Image/GlobalTileCache.h"
 #include "Core/Image/Image.h"
 #include "Core/Image/TileCacheBase.h"
-#include "Core/Image/TileImage.h"
 #include "Core/Utils/FileSystem.h"
 #include "Core/Utils/MemoryMap.h"
+#include "Core/Utils/Utils.h"
 #include "GUI/Workspace/WorkspaceNotifier.h"
 #include "Globals.h"
 
@@ -35,6 +35,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include <cmath>
 #include <functional>
+#include <qmessagebox.h>
 #include <qnamespace.h>
 #include <qrunnable.h>
 #include <qtmetamacros.h>
@@ -372,8 +373,7 @@ namespace degate
             GET_CLOCK(now);
 
             // Create a file name from tile number
-            char filename[PATH_MAX];
-            snprintf(filename, sizeof(filename), "%d_%d.dat", x, y);
+            auto filename = QString("%1_%2.dat").arg(x).arg(y).toStdString();
 
             // If filename/object is not in cache, load the tile
             typename cache_type::const_iterator iter = cache.find(filename);
@@ -482,10 +482,19 @@ namespace degate
             QImageReader current_reader(path.c_str());
 
             // Check supported image format options
-            // TODO(db): if not supported we should show a warning popup + ask if continue + load & store the whole image (still no precomputing of tiles & disk storing)
             if (!current_reader.supportsOption(QImageIOHandler::ImageOption::ScaledClipRect) ||
                 !current_reader.supportsOption(QImageIOHandler::ImageOption::ScaledSize))
+            {
                 debug(TM, "image format doesn't support async loading");
+                execute_in_main_thread([] {
+                    QMessageBox::warning(
+                            nullptr,
+                            QMessageBox::tr("Image format doesn't support async loading"),
+                            QMessageBox::tr("An image used doesn't support async loading. Therefore, "
+                                            "continuing with 'detached' project mode will impact performances."),
+                            QMessageBox::Ok);
+                });
+            }
 
             // FIXME: this should be configurable, usefull security, even if we are only loader small tiles everytime...
             current_reader.setAllocationLimit(0);
@@ -694,13 +703,13 @@ namespace degate
                             std::string path,
                             int best_image_number,
                             ResultHookType result_hook)
-            : tile_x(tile_x),
+            : result_hook(result_hook),
+              tile_x(tile_x),
               tile_y(tile_y),
               tile_size(tile_size),
               scaled_size(scaled_size),
               path(path),
-              best_image_number(best_image_number),
-              result_hook(result_hook) {};
+              best_image_number(best_image_number) {};
 
         /**
          * Run the loading process, used by QThreadPool functions.

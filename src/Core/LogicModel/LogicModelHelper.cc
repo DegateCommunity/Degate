@@ -26,7 +26,6 @@
 #include "GUI/Preferences/PreferencesHandler.h"
 
 #include <boost/format.hpp>
-#include <boost/foreach.hpp>
 #include <boost/range/counting_range.hpp>
 
 #include <QMutex>
@@ -217,8 +216,7 @@ void load_tile(const QRgb* rba_data,
     unsigned int tile_y = global_tile_y + local_tile_y;
 
     // Create a file name from tile number.
-    char filename[PATH_MAX];
-    snprintf(filename, sizeof(filename), "%d_%d.dat", tile_x, tile_y);
+    auto filename = QString("%1_%2.dat").arg(tile_x).arg(tile_y).toStdString();
 
     auto data = new BackgroundImage::pixel_type[tile_size * tile_size];
     memset(data,
@@ -352,9 +350,8 @@ void create_scaled_background_images(const BackgroundImage_shptr& bg_image, unsi
         h >>= 1u;
 
         // create a new image
-        char dir_name[PATH_MAX];
-        snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
-        std::string dir_path = join_pathes(bg_image->get_path(), std::string(dir_name));
+        auto dir_path = join_pathes(bg_image->get_path(), QString("scaling_%1.dimg").arg(i).toStdString());
+
         create_directory(dir_path);
 
         reader.device()->seek(0);
@@ -742,7 +739,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
 
     std::list<GateTemplateImage_shptr> images;
 
-    BOOST_FOREACH(const Gate_shptr g, gates)
+    for (const auto& g : gates)
     {
         GateTemplateImage_shptr tmpl_img =
             grab_image<GateTemplateImage>(lmodel, layer, g->get_bounding_box());
@@ -783,7 +780,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
     typedef std::map<object_id_t, std::list<Gate_shptr>> gate_sets_type;
     gate_sets_type gate_sets;
 
-    BOOST_FOREACH(PlacedLogicModelObject_shptr plo, gates)
+    for (auto plo : gates)
     {
         if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo))
         {
@@ -797,7 +794,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
      * Iterate over layers.
      */
 
-    BOOST_FOREACH(Layer_shptr layer, get_available_standard_layers(lmodel))
+    for (auto layer : get_available_standard_layers(lmodel))
     {
         /*
          * Iterate over standard cell classes.
@@ -815,7 +812,7 @@ void degate::merge_gate_images(LogicModel_shptr lmodel,
 
 void degate::remove_entire_net(LogicModel_shptr lmodel, Net_shptr net)
 {
-    BOOST_FOREACH(object_id_t oid, *net)
+    for (auto oid : *net)
     {
         PlacedLogicModelObject_shptr plo = lmodel->get_object(oid);
         assert(plo != nullptr);

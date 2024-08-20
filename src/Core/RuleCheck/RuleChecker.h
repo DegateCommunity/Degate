@@ -50,10 +50,10 @@ namespace degate
 
             rc_violations.clear();
 
-            BOOST_FOREACH(RCBase_shptr check, checks)
+            for (auto check : checks)
             {
                 check->run(lmodel);
-                BOOST_FOREACH(RCViolation_shptr violation, check->get_rc_violations())
+                for (auto violation : check->get_rc_violations())
                 {
                     rc_violations.push_back(violation);
                 }

@@ -368,8 +368,10 @@ namespace degate
 	{
         code_text[languages[language_selector.currentText()]] = text_area.toPlainText().toStdString();
 
-        BOOST_FOREACH(code_text_map_type::value_type &p, code_text)
+        for (auto &p : code_text)
+        {
             gate->set_implementation(static_cast<GateTemplate::IMPLEMENTATION_TYPE>(p.first), p.second);
+        }
 	}
 
     void GateEditBehaviourTab::generate()

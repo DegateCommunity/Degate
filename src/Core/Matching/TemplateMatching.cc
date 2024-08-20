@@ -31,7 +31,6 @@
 #include <memory>
 
 #include <utility>
-#include <boost/foreach.hpp>
 #include <cmath>
 
 using namespace degate;
@@ -269,9 +268,9 @@ void TemplateMatching::run()
   
     wait;
     */
-    BOOST_FOREACH(GateTemplate_shptr tmpl, tmpl_set)
+    for (auto tmpl : tmpl_set)
     {
-        BOOST_FOREACH(Gate::ORIENTATION orientation, tmpl_orientations)
+        for (auto orientation : tmpl_orientations)
         {
             boost::format f("Check cell \"%1%\"");
             f % tmpl->get_name();
@@ -300,7 +299,7 @@ void TemplateMatching::run()
 
     matches.sort(compare_correlation);
 
-    BOOST_FOREACH(match_found const& m, matches)
+    for (const auto& m : matches)
     {
         std::cout << "Try to insert gate of type " << m.tmpl->get_name() << " with corr="
             << m.correlation << " at " << m.x << "," << m.y << std::endl;

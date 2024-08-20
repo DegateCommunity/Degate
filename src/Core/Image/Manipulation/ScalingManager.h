@@ -184,10 +184,7 @@ namespace degate
                 if (project_type == ProjectType::Normal)
                 {
                     // Create a new image directory name.
-                    char dir_name[PATH_MAX];
-                    snprintf(dir_name, sizeof(dir_name), "scaling_%d.dimg", i);
-
-                    path = join_pathes(images[1]->get_path(), std::string(dir_name));
+                    path = join_pathes(images[1]->get_path(), QString("scaling_%1.dimg").arg(i).toStdString());
 
                     // Check if need to create scaled images
                     debug(TM, "create scaled image in %s for scaling factor %d?", path.c_str(), i);

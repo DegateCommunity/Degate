@@ -22,7 +22,6 @@
 
 #include "Core/Generator/VerilogTBCodeTemplateGenerator.h"
 #include <boost/format.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/join.hpp>
 #include <list>
 #include <boost/lexical_cast.hpp>
@@ -44,10 +43,14 @@ VerilogTBCodeTemplateGenerator::~VerilogTBCodeTemplateGenerator()
 std::string VerilogTBCodeTemplateGenerator::generate() const
 {
     port_map_type port_map;
-    BOOST_FOREACH(std::string const& port_name, get_inports())
+    for (const auto& port_name : get_inports())
+    {
         port_map[port_name] = port_name;
-    BOOST_FOREACH(std::string const& port_name, get_outports())
+    }
+    for (const auto& port_name : get_outports())
+    {
         port_map[port_name] = port_name;
+    }
 
     return
         generate_header() +
@@ -77,8 +80,7 @@ std::string VerilogTBCodeTemplateGenerator::generate_module(std::string const& d
         boost::algorithm::join(generate_identifier<std::vector<std::string>>(get_outports()), ", ");
 
     std::list<std::string> port_wiring;
-    BOOST_FOREACH(std::string const & pname,
-                  generate_identifier(get_ports()))
+    for (const auto& pname : generate_identifier(get_ports()))
     {
         boost::format f(".%1%(%2%)");
         f % pname % pname;
@@ -86,8 +88,7 @@ std::string VerilogTBCodeTemplateGenerator::generate_module(std::string const& d
     }
 
     std::string inport_init;
-    BOOST_FOREACH(std::string const & pname,
-                  generate_identifier(get_inports()))
+    for (const auto& pname : generate_identifier(get_inports()))
     {
         boost::format f("    %1% <= 1'b0;\n");
         f % pname;
@@ -193,8 +194,10 @@ std::string VerilogTBCodeTemplateGenerator::generate_all_assignments
     while (increment(assignment))
     {
         std::string assignment2;
-        BOOST_FOREACH(int i, assignment)
+        for (auto i : assignment)
+        {
             assignment2.push_back(boost::lexical_cast<char>(i));
+        }
         std::reverse(assignment2.begin(), assignment2.end());
 
         // generate assignemt string
@@ -203,8 +206,7 @@ std::string VerilogTBCodeTemplateGenerator::generate_all_assignments
         f % assignment_dst % prefix % assignment2;
 
         testcode += f.str();
-        BOOST_FOREACH(std::string const& oport,
-                      generate_identifier<std::vector<std::string> >(out_port_idents))
+        for (const auto& oport : generate_identifier<std::vector<std::string> >(out_port_idents))
         {
             boost::format f2("    assert(%1% === 1'bX); // please edit\n\n");
             f2 % oport;

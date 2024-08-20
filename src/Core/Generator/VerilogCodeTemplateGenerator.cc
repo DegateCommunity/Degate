@@ -24,7 +24,6 @@
 #include "Core/Utils/DegateExceptions.h"
 
 #include <boost/format.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/join.hpp>
 
 using namespace boost;
@@ -97,7 +96,7 @@ std::string VerilogCodeTemplateGenerator::generate_port_definition() const
     std::string ret;
 
     ret += "  // input ports\n";
-    BOOST_FOREACH(std::string const& port_name,
+    for (const auto& port_name :
                   generate_identifier<std::vector<std::string> >(get_inports()))
     {
         boost::format f("  input %1%;\n");
@@ -107,7 +106,7 @@ std::string VerilogCodeTemplateGenerator::generate_port_definition() const
 
 
     ret += "\n  // output ports\n";
-    BOOST_FOREACH(std::string const& port_name,
+    for (const auto& port_name :
                   generate_identifier<std::vector<std::string> >(get_outports()))
     {
         boost::format f("  output %1%;\n");
@@ -327,7 +326,7 @@ std::string VerilogCodeTemplateGenerator::generate_impl(std::string const& logic
         logic_class == "oai")
     {
         std::string ret;
-        BOOST_FOREACH(std::string const& oport,
+        for (const auto& oport :
                       generate_identifier<std::vector<std::string> >(get_outports()))
         {
             boost::format f("  assign %1% = ...;\n");
@@ -402,7 +401,7 @@ std::string VerilogCodeTemplateGenerator::generate_identifier(std::string const&
     std::string identifier = prefix;
 
     bool first_char = prefix == "" ? true : false;
-    BOOST_FOREACH(char c, name)
+    for (auto c : name)
     {
         if (c == '/' || c == '!' || c == '~') identifier.append("not");
         else if (first_char && !isalpha(c))
