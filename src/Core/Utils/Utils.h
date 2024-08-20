@@ -26,39 +26,45 @@
 #include <qthread.h>
 #include <qtimer.h>
 
-template<typename F>
-inline void execute_in_main_thread(F&& target)
+namespace degate
 {
-    // Check if we are in the main thread (the only space to do UI stuff)
-    if (qApp->thread() != QThread::currentThread())
+    /**
+     * Execute a lambda in the main thread.
+     */
+    template<typename F>
+    inline void execute_in_main_thread(F&& target)
     {
-        // We are here in any thead but the main thread
+        // Check if we are in the main thread (the only space to do UI stuff)
+        if (qApp->thread() != QThread::currentThread())
+        {
+            // We are here in any thead but the main thread
 
-        // Create a single shot and instant timer that will run in the main thread
-        QTimer* timer = new QTimer();
-        timer->moveToThread(qApp->thread());
-        timer->setSingleShot(true);
+            // Create a single shot and instant timer that will run in the main thread
+            QTimer* timer = new QTimer();
+            timer->moveToThread(qApp->thread());
+            timer->setSingleShot(true);
 
-        // Connect the timeout of the timer to the notify() function
-        QObject::connect(timer, &QTimer::timeout, [=]() {
+            // Connect the timeout of the timer to the notify() function
+            QObject::connect(timer, &QTimer::timeout, [=]() {
+                // Main thread
+                target();
+
+                // Delete this time when possible
+                timer->deleteLater();
+            });
+
+            // Invoke the start method that will run the previous lambda
+            // This will run in the main thread
+            QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
+
+            return;
+        }
+        else
+        {
             // Main thread
             target();
-
-            // Delete this time when possible
-            timer->deleteLater();
-        });
-
-        // Invoke the start method that will run the previous lambda
-        // This will run in the main thread
-        QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
-
-        return;
+        }
     }
-    else
-    {
-        // Main thread
-        target();
-    }
-}
+} // namespace degate
 
 #endif
