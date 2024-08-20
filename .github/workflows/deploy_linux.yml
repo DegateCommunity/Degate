@@ -21,24 +21,21 @@ jobs:
         modules: 'qtimageformats'
         tools: 'tools_ifw'
 
-    - name: Install Boost
-      shell: pwsh
-      # Change Boost version here (see https://github.com/actions/boost-versions/releases).
-      # See https://github.com/actions/virtual-environments/issues/2667#issue-804635858.
-      run: |
-        $url = "https://github.com/actions/boost-versions/releases/download/1.72.0-20200608.4/boost-1.72.0-linux-18.04-gcc-x64.tar.gz"
-        (New-Object System.Net.WebClient).DownloadFile($url, "/tmp/boost.tar.gz")
-        mkdir "/tmp/boost"
-        tar -xzf "/tmp/boost.tar.gz" -C "/tmp/boost"
-        Push-Location -Path "/tmp/boost"
-        Invoke-Expression "bash ./setup.sh"
+    - name: Install boost
+      uses: MarkusJx/install-boost@v2.4.5
+      id: install-boost
+      with:
+          boost_version: 1.72.0 # Update Boost version here.
+          boost_install_dir: "/opt/hostedtoolcache"
 
     - name: Build
       shell: bash
       run: |
         cd build
-        cmake .. -DBOOST_ROOT="/opt/hostedtoolcache/boost/1.72.0/x64"
+        cmake .. 
         cmake --build . --config $BUILD_TYPE --target Degate
+      env:
+        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
     - name: Prepare Degate AppImage
       shell: bash
@@ -65,13 +62,13 @@ jobs:
         rm ../installer/packages/Degate/data/.keepme
 
     - name: Upload Degate appimage
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_appimage_Linux_x64
         path: etc/Degate*.AppImage
         
     - name: Upload Degate binaries
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_binaries_Linux_x64
         path: etc/linux_deploy/
@@ -85,13 +82,13 @@ jobs:
         binarycreator --online-only -c config/config.xml -p packages "Degate_online_installer_Linux_x64"
         
     - name: Upload Degate offline installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_offline_installer_Linux_x64
         path: etc/installer/Degate_offline_installer_Linux_x64
 
     - name: Upload Degate online installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_online_installer_Linux_x64
         path: etc/installer/Degate_online_installer_Linux_x64
@@ -103,7 +100,7 @@ jobs:
         repogen -p packages repository
       
     - name: Upload Degate update
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_update_Linux_x64
         path: etc/installer/repository

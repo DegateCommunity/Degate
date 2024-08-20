@@ -20,31 +20,30 @@ jobs:
         modules: 'qtimageformats'
         tools: 'tools_ifw'
 
-    - name: Install Boost
-      shell: pwsh
-      # Change Boost version here (see https://sourceforge.net/projects/boost/files/boost-binaries/).
-      # See https://github.com/actions/virtual-environments/issues/2667#issue-804635858.
-      run: |
-        $Url = "https://sourceforge.net/projects/boost/files/boost-binaries/1.72.0/boost_1_72_0-msvc-14.2-64.exe"
-        (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost.exe")
-        Start-Process -Wait -FilePath "$env:TEMP\boost.exe" "/SILENT","/SP-","/SUPPRESSMSGBOXES","/DIR=C:\hostedtoolcache\windows\Boost\1.72.0\x86_64"
+    - name: Install boost
+      uses: MarkusJx/install-boost@v2.4.5
+      id: install-boost
+      with:
+          boost_version: 1.72.0 # Update Boost version here.
+          boost_install_dir: "C:\\hostedtoolcache\\windows\\Boost"
 
     - name: Build
       shell: bash
-      # Don't forget to update Boost path.
       run: |
         cd build
-        cmake .. -DBOOST_ROOT="C:\hostedtoolcache\windows\Boost\1.72.0\x86_64" -A x64
+        cmake .. -A x64
         cmake --build . --config $BUILD_TYPE --target Degate
+      env:
+        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
       
     - name: Prepare binaries
       shell: bash
       run: |
         cd build/out/bin/$BUILD_TYPE
-        $Qt6_DIR/bin/windeployqt.exe ./
+        $QT_ROOT_DIR/bin/windeployqt.exe ./
         
     - name: Upload Degate binaries
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_binaries_Windows_x64
         path: build/out/bin/${{ env.BUILD_TYPE }}/
@@ -67,13 +66,13 @@ jobs:
         binarycreator.exe --online-only -c config\config.xml -p packages "Degate_online_installer_Windows_x64.exe"
       
     - name: Upload Degate offline installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_offline_installer_Windows_x64
         path: etc/installer/Degate_offline_installer_Windows_x64.exe
 
     - name: Upload Degate online installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_online_installer_Windows_x64
         path: etc/installer/Degate_online_installer_Windows_x64.exe
@@ -85,7 +84,7 @@ jobs:
         repogen.exe -p packages repository
       
     - name: Upload Degate update
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_update_Windows_x64
         path: etc/installer/repository

@@ -23,13 +23,21 @@ jobs:
         aqtversion: '>=0.9.7'
         modules: 'qtimageformats'
 
+    - name: Install boost
+      uses: MarkusJx/install-boost@v2.4.5
+      id: install-boost
+      with:
+          boost_version: 1.72.0 # Update Boost version here.
+          boost_install_dir: "/opt/hostedtoolcache"
+
     - name: Build
       shell: bash
       run: |
-        brew install boost
         cd build
-        cmake ..
+        cmake .. 
         cmake --build . --config $BUILD_TYPE --target Degate
+      env:
+        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
     - name: Tests
       shell: bash

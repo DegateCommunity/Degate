@@ -22,13 +22,21 @@ jobs:
         tools: 'tools_ifw'
         add-tools-to-path: 'true'
 
+    - name: Install boost
+      uses: MarkusJx/install-boost@v2.4.5
+      id: install-boost
+      with:
+          boost_version: 1.72.0 # Update Boost version here.
+          boost_install_dir: "/opt/hostedtoolcache"
+
     - name: Build
       shell: bash
       run: |
-        brew install boost
         cd build
-        cmake ..
+        cmake .. 
         cmake --build . --config $BUILD_TYPE --target Degate
+      env:
+        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
     - name: Prepare binaries
       shell: bash
@@ -37,7 +45,7 @@ jobs:
         $Qt6_DIR/bin/macdeployqt ./Degate.app
         
     - name: Upload Degate binaries
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_binaries_Mac_x64
         path: build/out/bin/
@@ -52,13 +60,13 @@ jobs:
         binarycreator --online-only -c config/config.xml -p packages "mac_deploy_online/Degate_online_installer_Mac_x64"
         
     - name: Upload Degate offline installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_offline_installer_Mac_x64
         path: etc/installer/mac_deploy_offline/
 
     - name: Upload Degate online installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_online_installer_Mac_x64
         path: etc/installer/mac_deploy_online/
@@ -70,7 +78,7 @@ jobs:
         repogen -p packages repository
       
     - name: Upload Degate update
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Degate_update_Mac_x64
         path: etc/installer/repository
