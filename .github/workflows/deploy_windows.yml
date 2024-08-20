@@ -25,7 +25,6 @@ jobs:
       id: install-boost
       with:
           boost_version: 1.72.0 # Update Boost version here.
-          boost_install_dir: "C:\\hostedtoolcache\\windows\\Boost"
 
     - name: Build
       shell: bash
