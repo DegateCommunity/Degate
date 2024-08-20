@@ -23,10 +23,10 @@
 #define __PREFERENCESHANDLER_H__
 
 #include "Core/Primitive/SingletonBase.h"
-#include "GUI/Preferences/ThemeManager.h"
+#include "Core/Project/Project.h"
 #include "Core/XML/XMLExporter.h"
 #include "Core/XML/XMLImporter.h"
-#include "Core/Project/Project.h"
+#include "GUI/Preferences/ThemeManager.h"
 
 #include <QObject>
 
@@ -75,7 +75,6 @@ namespace degate
         unsigned int cache_size;
         unsigned int image_importer_cache_size;
         unsigned int max_concurrent_thread_count;
-
     };
 
     /**
@@ -89,7 +88,6 @@ namespace degate
         Q_OBJECT
 
     public:
-
         /**
          * Create the preferences handler.
          */
@@ -146,6 +144,11 @@ namespace degate
          */
         void add_recent_project(const Project_shptr& project);
 
+        /**
+         * Returns true if the desktop theme is dark.
+         */
+        bool is_desktop_in_dark_mode();
+
     protected:
         /**
          * Remove invalid recent projects (that are not reachable).
@@ -194,7 +197,7 @@ namespace degate
         std::shared_ptr<QTranslator> base_translator = nullptr;
         std::vector<std::pair<std::string /* Project name */, std::string /* Project path */>> recent_projects;
     };
-}
+} // namespace degate
 
 /**
  * Get the preferences handler instance.
