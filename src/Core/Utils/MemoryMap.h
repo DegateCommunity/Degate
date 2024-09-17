@@ -22,17 +22,15 @@
 #ifndef __MEMORYMAP_H__
 #define __MEMORYMAP_H__
 
-#include "Prerequisites.h"
 #include "Globals.h"
-
-#include <memory>
-#include <utility>
 
 #include <QDir>
 #include <QFile>
 #include <QFileDevice>
 #include <QObject>
 #include <QTemporaryFile>
+#include <memory>
+#include <utility>
 
 namespace degate
 {
@@ -49,7 +47,7 @@ namespace degate
      *
      * You should not use this class directly.
      */
-    template <typename T>
+    template<typename T>
     class MemoryMap : QObject
     {
     private:
@@ -85,8 +83,6 @@ namespace degate
         }
 
     public:
-
-
         /**
          * Allocate a heap based memory chunk.
          * @param width The width of a 2D map.
@@ -102,24 +98,28 @@ namespace degate
          * @param mode Is either MAP_STORAGE_TYPE_PERSISTENT_FILE or MAP_STORAGE_TYPE_TEMP_FILE.
          * @param file_to_map The name of the file, which should be mmap().
          */
-        MemoryMap(unsigned int width, unsigned int height,
-                  MAP_STORAGE_TYPE mode, std::string const& file_to_map);
+        MemoryMap(unsigned int width, unsigned int height, MAP_STORAGE_TYPE mode, std::string const& file_to_map);
 
         /**
          * The destructor.
          */
         ~MemoryMap();
 
-        int get_width() const { return width; }
-        int get_height() const { return height; }
+        int get_width() const
+        {
+            return width;
+        }
+        int get_height() const
+        {
+            return height;
+        }
 
         /**
          * Cear the whole memory map.
          */
         void clear();
 
-        void clear_area(unsigned int min_x, unsigned int min_y,
-                        unsigned int width, unsigned int height);
+        void clear_area(unsigned int min_x, unsigned int min_y, unsigned int width, unsigned int height);
 
         /**
          * Set the value of a memory element.
@@ -138,30 +138,39 @@ namespace degate
         void raw_copy(void* buf) const;
 
         /**
+         * Copy all data from a buffer into the memory map. Make sure that the buffer \p buf
+         * is large enough and hold get_width() * get_height() * sizeof(T) bytes.
+         */
+        void raw_set(void* buf) const;
+
+        /**
          * Get the name of the mapped file.
          * @returns Returns a string with the mapped file. If the memory
          *   chunk is heap and not file based, an empty string is returned.
          */
         std::string const get_filename() const
         {
-            return (backing_file != nullptr) ?
-                           QDir::toNativeSeparators(backing_file->fileName()).toStdString() :
-                           std::string{};
+            return (backing_file != nullptr) ? QDir::toNativeSeparators(backing_file->fileName()).toStdString() :
+                                               std::string{};
         }
 
         /**
          * Get data (can be null).
          * @return Returns data.
          */
-        T* data() { return mem_view; };
+        T* data()
+        {
+            return mem_view;
+        };
     };
 
-    template <typename T>
-    MemoryMap<T>::MemoryMap(unsigned int width, unsigned int height) :
-        width(width), height(height),
-        storage_type(MAP_STORAGE_TYPE_MEM),
-        mem_size(width * height * sizeof(T)),
-        mem_view(nullptr)
+    template<typename T>
+    MemoryMap<T>::MemoryMap(unsigned int width, unsigned int height)
+        : width(width),
+          height(height),
+          storage_type(MAP_STORAGE_TYPE_MEM),
+          mem_size(width * height * sizeof(T)),
+          mem_view(nullptr)
     {
         assert(width > 0 && height > 0);
 
@@ -169,13 +178,16 @@ namespace degate
         assert(ret == RET_OK);
     }
 
-    template <typename T>
-    MemoryMap<T>::MemoryMap(unsigned int width, unsigned int height,
-                            MAP_STORAGE_TYPE mode, std::string const& file_to_map) :
-        width(width), height(height),
-        storage_type(mode),
-        mem_size(width * height * sizeof(T)),
-        mem_view(nullptr)
+    template<typename T>
+    MemoryMap<T>::MemoryMap(unsigned int width,
+                            unsigned int height,
+                            MAP_STORAGE_TYPE mode,
+                            std::string const& file_to_map)
+        : width(width),
+          height(height),
+          storage_type(mode),
+          mem_size(width * height * sizeof(T)),
+          mem_view(nullptr)
     {
         assert(mode == MAP_STORAGE_TYPE_PERSISTENT_FILE || mode == MAP_STORAGE_TYPE_TEMP_FILE);
 
@@ -226,23 +238,23 @@ namespace degate
     }
 
 
-    template <typename T>
+    template<typename T>
     MemoryMap<T>::~MemoryMap()
     {
         switch (storage_type)
         {
-        case MAP_STORAGE_TYPE_MEM:
-            delete[] mem_view;
-            break;
+            case MAP_STORAGE_TYPE_MEM:
+                delete[] mem_view;
+                break;
 
-        case MAP_STORAGE_TYPE_PERSISTENT_FILE:
-        case MAP_STORAGE_TYPE_TEMP_FILE:
-            unmap();
-            break;
+            case MAP_STORAGE_TYPE_PERSISTENT_FILE:
+            case MAP_STORAGE_TYPE_TEMP_FILE:
+                unmap();
+                break;
         }
     }
 
-    template <typename T>
+    template<typename T>
     void MemoryMap<T>::unmap()
     {
         if (mem_view && backing_file)
@@ -260,7 +272,7 @@ namespace degate
         backing_file = nullptr;
     }
 
-    template <typename T>
+    template<typename T>
     ret_t MemoryMap<T>::alloc_memory()
     {
         /* If it is not null, it would indicate that there is already an allocation. */
@@ -270,7 +282,8 @@ namespace degate
 
         mem_view = new (std::nothrow) T[static_cast<std::size_t>(width) * static_cast<std::size_t>(height)]();
         assert(mem_view != nullptr);
-        if (mem_view == nullptr) {
+        if (mem_view == nullptr)
+        {
             return RET_MALLOC_FAILED;
         }
 
@@ -280,20 +293,20 @@ namespace degate
     /**
      * Clear map data.
      */
-    template <typename T>
+    template<typename T>
     void MemoryMap<T>::clear()
     {
         assert(mem_view != nullptr);
-        if (mem_view != nullptr) memset(mem_view, 0, width * height * sizeof(T));
+        if (mem_view != nullptr)
+            memset(mem_view, 0, width * height * sizeof(T));
     }
 
 
     /**
      * Clear an area given by start point and width and height
      */
-    template <typename T>
-    void MemoryMap<T>::clear_area(unsigned int min_x, unsigned int min_y,
-                                  unsigned int width, unsigned int height)
+    template<typename T>
+    void MemoryMap<T>::clear_area(unsigned int min_x, unsigned int min_y, unsigned int width, unsigned int height)
     {
         assert(mem_view != nullptr);
 
@@ -307,7 +320,7 @@ namespace degate
     /**
      * Use storage in file as storage for memory map
      */
-    template <typename T>
+    template<typename T>
     ret_t MemoryMap<T>::map_file(QFile* file)
     {
         assert(file);
@@ -330,7 +343,7 @@ namespace degate
     }
 
 
-    template <typename T>
+    template<typename T>
     void MemoryMap<T>::raw_copy(void* buf) const
     {
         assert(mem_view != nullptr);
@@ -338,7 +351,15 @@ namespace degate
     }
 
 
-    template <typename T>
+    template<typename T>
+    void MemoryMap<T>::raw_set(void* buf) const
+    {
+        assert(mem_view != nullptr);
+        memcpy(mem_view, buf, static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * sizeof(T));
+    }
+
+
+    template<typename T>
     void* MemoryMap<T>::get_void_ptr(unsigned int x, unsigned int y) const
     {
         if (x + y < width * height)
@@ -351,7 +372,7 @@ namespace degate
         }
     }
 
-    template <typename T>
+    template<typename T>
     inline void MemoryMap<T>::set(unsigned int x, unsigned int y, T new_val)
     {
         if (x >= width || y >= height)
@@ -362,7 +383,7 @@ namespace degate
         mem_view[y * width + x] = new_val;
     }
 
-    template <typename T>
+    template<typename T>
     inline T MemoryMap<T>::get(unsigned int x, unsigned int y) const
     {
         if (x >= width || y >= height)
@@ -373,6 +394,6 @@ namespace degate
         assert(x < width && y < height);
         return mem_view[y * width + x];
     }
-}
+} // namespace degate
 
 #endif

@@ -20,18 +20,16 @@
  */
 
 #include "Core/RuleCheck/RCVBlacklistExporter.h"
-#include "Core/Image/ImageHelper.h"
+#include "Prerequisites.h"
 
 #include <iostream>
 #include <stdexcept>
-#include <list>
 
 
 using namespace std;
 using namespace degate;
 
-void RCVBlacklistExporter::export_data(std::string const& filename,
-                                       RCBase::container_type const& violations)
+void RCVBlacklistExporter::export_data(std::string const& filename, RCBase::container_type const& violations)
 {
     std::string directory = get_basedir(filename);
 
@@ -71,12 +69,11 @@ void RCVBlacklistExporter::export_data(std::string const& filename,
     }
 }
 
-void RCVBlacklistExporter::add_rcv(QDomDocument& doc,
-                                   QDomElement& root_elem,
-                                   RCViolation_shptr rcv)
+void RCVBlacklistExporter::add_rcv(QDomDocument& doc, QDomElement& root_elem, RCViolation_shptr rcv)
 {
     QDomElement rcv_elem = doc.createElement("rc-violation");
-    if (rcv_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (rcv_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
     PlacedLogicModelObject_shptr o = rcv->get_object();
     object_id_t new_oid = oid_rewriter->get_new_object_id(o->get_object_id());

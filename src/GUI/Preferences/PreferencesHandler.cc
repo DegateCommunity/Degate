@@ -21,20 +21,34 @@
 
 #include "PreferencesHandler.h"
 
+#include <QStyleHints>
 #include <fstream>
 
 #define RECENT_PROJECTS_LIST_FILE "recent.config"
 
 namespace degate
 {
-    PreferencesHandler::PreferencesHandler() : settings(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIGURATION_FILE_NAME)), QSettings::IniFormat)
+    PreferencesHandler::PreferencesHandler()
+        : settings(QString::fromStdString(DEGATE_IN_CONFIGURATION(DEGATE_CONFIGURATION_FILE_NAME)),
+                   QSettings::IniFormat)
     {
         ///////////
         // Appearance
         ///////////
 
         // Theme
-        QString theme = settings.value("theme", "native").toString();
+        auto default_theme = "native";
+#ifdef SYS_WINDOWS
+        // Fix for Windows where Qt doesn't handle automatic dark theme regarding desktop theme state
+        // It will always stay native light
+        // Therefore if we detect manually that the desktop is in dark theme, we force default theme to dark
+        // NOTE: the dark theme isn't native dark, but Qt doesn't seem to offer one anyway
+        if (is_desktop_in_dark_mode())
+        {
+            default_theme = "dark";
+        }
+#endif
+        QString theme = settings.value("theme", default_theme).toString();
         preferences.theme = string_to_theme(theme.toStdString());
 
         // Icon Theme
@@ -220,6 +234,21 @@ namespace degate
         insert_recent_project(project->get_name(), project->get_project_directory());
     }
 
+    bool PreferencesHandler::is_desktop_in_dark_mode()
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+        const auto scheme = QGuiApplication::styleHints()->colorScheme();
+        return scheme == Qt::ColorScheme::Dark;
+#else
+        // This is a workaround, not perfect but should work
+        const QPalette default_palette;
+        const auto text = default_palette.color(QPalette::WindowText);
+        const auto window = default_palette.color(QPalette::Window);
+        return text.lightness() > window.lightness();
+#endif
+    }
+
+
     void PreferencesHandler::remove_invalid_recent_projects()
     {
         std::vector<std::pair<std::string, std::string>> elements;
@@ -325,4 +354,4 @@ namespace degate
 
         recent_projects.emplace_back(project_name, project_path);
     }
-}
+} // namespace degate

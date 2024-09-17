@@ -19,23 +19,20 @@
  *
  */
 
-#include "Core/LogicModel/Gate/GateLibraryExporter.h"
-#include "Core/Utils/FileSystem.h"
 #include "Core/Image/ImageHelper.h"
-#include "Core/Utils/DegateHelper.h"
+#include "Core/LogicModel/Gate/GateLibraryExporter.h"
 #include "Core/LogicModel/Gate/GateTemplate.h"
-
-#include <sys/types.h>
-#include <sys/stat.h>
+#include "Core/Utils/DegateHelper.h"
+#include "Core/Utils/FileSystem.h"
+#include "Prerequisites.h"
 
 #include <cerrno>
-#include <string>
 #include <iostream>
-#include <sstream>
-#include <fstream>
-#include <stdexcept>
-#include <list>
 #include <memory>
+#include <stdexcept>
+#include <string>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 
 using namespace std;
@@ -43,7 +40,8 @@ using namespace degate;
 
 void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_shptr gate_lib)
 {
-    if (gate_lib == nullptr) throw InvalidPointerException("Gate library pointer is nullptr.");
+    if (gate_lib == nullptr)
+        throw InvalidPointerException("Gate library pointer is nullptr.");
 
     std::string directory = get_basedir(filename);
 
@@ -58,7 +56,8 @@ void GateLibraryExporter::export_data(std::string const& filename, GateLibrary_s
         assert(!root_elem.isNull());
 
         QDomElement templates_elem = doc.createElement("gate-templates");
-        if (templates_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+        if (templates_elem.isNull())
+            throw(std::runtime_error("Failed to create node."));
 
         add_gates(doc, templates_elem, gate_lib, directory);
 
@@ -90,13 +89,13 @@ void GateLibraryExporter::add_gates(QDomDocument& doc,
                                     GateLibrary_shptr gate_lib,
                                     std::string const& directory)
 {
-    for (GateLibrary::template_iterator iter = gate_lib->begin();
-         iter != gate_lib->end(); ++iter)
+    for (GateLibrary::template_iterator iter = gate_lib->begin(); iter != gate_lib->end(); ++iter)
     {
         GateTemplate_shptr gate_tmpl((*iter).second);
 
         QDomElement gate_elem = doc.createElement("gate");
-        if (gate_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+        if (gate_elem.isNull())
+            throw(std::runtime_error("Failed to create node."));
 
         object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
         gate_elem.setAttribute("type-id", QString::fromStdString(number_to_string<object_id_t>(new_oid)));
@@ -108,8 +107,7 @@ void GateLibraryExporter::add_gates(QDomDocument& doc,
         gate_elem.setAttribute("frame-color", QString::fromStdString(to_color_string(gate_tmpl->get_frame_color())));
 
         gate_elem.setAttribute("width", QString::fromStdString(number_to_string<float>(gate_tmpl->get_width())));
-        gate_elem.setAttribute(
-            "height", QString::fromStdString(number_to_string<float>(gate_tmpl->get_height())));
+        gate_elem.setAttribute("height", QString::fromStdString(number_to_string<float>(gate_tmpl->get_height())));
 
         add_images(doc, gate_elem, gate_tmpl, directory);
         add_ports(doc, gate_elem, gate_tmpl);
@@ -128,17 +126,19 @@ void GateLibraryExporter::add_images(QDomDocument& doc,
     // export images
 
     QDomElement images_elem = doc.createElement("images");
-    if (images_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (images_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
-    for (GateTemplate::image_iterator img_iter = gate_tmpl->images_begin();
-         img_iter != gate_tmpl->images_end(); ++img_iter)
+    for (GateTemplate::image_iterator img_iter = gate_tmpl->images_begin(); img_iter != gate_tmpl->images_end();
+         ++img_iter)
     {
         Layer::LAYER_TYPE layer_type = (*img_iter).first;
         GateTemplateImage_shptr img = (*img_iter).second;
         assert(img != nullptr);
 
         QDomElement img_elem = doc.createElement("image");
-        if (img_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+        if (img_elem.isNull())
+            throw(std::runtime_error("Failed to create node."));
 
         img_elem.setAttribute("layer-type", QString::fromStdString(Layer::get_layer_type_as_string(layer_type)));
 
@@ -158,18 +158,17 @@ void GateLibraryExporter::add_images(QDomDocument& doc,
     gate_elem.appendChild(images_elem);
 }
 
-void GateLibraryExporter::add_ports(QDomDocument& doc,
-                                    QDomElement& gate_elem,
-                                    GateTemplate_shptr gate_tmpl)
+void GateLibraryExporter::add_ports(QDomDocument& doc, QDomElement& gate_elem, GateTemplate_shptr gate_tmpl)
 {
     QDomElement ports_elem = doc.createElement("ports");
-    if (ports_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (ports_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
-    for (GateTemplate::port_iterator piter = gate_tmpl->ports_begin();
-         piter != gate_tmpl->ports_end(); ++piter)
+    for (GateTemplate::port_iterator piter = gate_tmpl->ports_begin(); piter != gate_tmpl->ports_end(); ++piter)
     {
         QDomElement port_elem = doc.createElement("port");
-        if (port_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+        if (port_elem.isNull())
+            throw(std::runtime_error("Failed to create node."));
 
         GateTemplatePort_shptr tmpl_port((*piter));
 
@@ -202,10 +201,12 @@ void GateLibraryExporter::add_implementations(QDomDocument& doc,
                                               std::string const& directory)
 {
     QDomElement implementations_elem = doc.createElement("implementations");
-    if (implementations_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+    if (implementations_elem.isNull())
+        throw(std::runtime_error("Failed to create node."));
 
     for (GateTemplate::implementation_iter iter = gate_tmpl->implementations_begin();
-         iter != gate_tmpl->implementations_end(); ++iter)
+         iter != gate_tmpl->implementations_end();
+         ++iter)
     {
         GateTemplate::IMPLEMENTATION_TYPE t = iter->first;
         std::string const& code = iter->second;
@@ -214,23 +215,30 @@ void GateLibraryExporter::add_implementations(QDomDocument& doc,
         if (t != GateTemplate::UNDEFINED && !code.empty())
         {
             QDomElement impl_elem = doc.createElement("implementation");
-            if (impl_elem.isNull()) throw(std::runtime_error("Failed to create node."));
+            if (impl_elem.isNull())
+                throw(std::runtime_error("Failed to create node."));
 
             object_id_t new_oid = oid_rewriter->get_new_object_id(gate_tmpl->get_object_id());
             boost::format fmter("%1%%2%.%3%");
             switch (t)
             {
-            case GateTemplate::TEXT: fmter % "" % new_oid % "txt";
-                break;
-            case GateTemplate::VHDL: fmter % "" % new_oid % "vhdl";
-                break;
-            case GateTemplate::VHDL_TESTBENCH: fmter % "test_" % new_oid % "vhdl";
-                break;
-            case GateTemplate::VERILOG: fmter % "" % new_oid % "v";
-                break;
-            case GateTemplate::VERILOG_TESTBENCH: fmter % "test_" % new_oid % "v";
-                break;
-            default: assert(1==0); // already handled. just to get rid of a compiler warning.
+                case GateTemplate::TEXT:
+                    fmter % "" % new_oid % "txt";
+                    break;
+                case GateTemplate::VHDL:
+                    fmter % "" % new_oid % "vhdl";
+                    break;
+                case GateTemplate::VHDL_TESTBENCH:
+                    fmter % "test_" % new_oid % "vhdl";
+                    break;
+                case GateTemplate::VERILOG:
+                    fmter % "" % new_oid % "v";
+                    break;
+                case GateTemplate::VERILOG_TESTBENCH:
+                    fmter % "test_" % new_oid % "v";
+                    break;
+                default:
+                    assert(1 == 0); // already handled. just to get rid of a compiler warning.
             }
             std::string filename(fmter.str());
 
