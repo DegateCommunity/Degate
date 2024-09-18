@@ -207,6 +207,13 @@ Binaries are in the 'build/out/bin' folder in the bundle ".app" format.
   This message can appear for MacOS users. The problem comes from spaces in directory names, this is a bug from CMake.
   Simply move your Degate folder to a file tree without spaces in directory names.
 
+- `CMake Error at vcpkg_execute_required_process.cmake:127 (message): Command failed: vcpkg/downloads/tools/ninja/1.10.2-linux/ninja -v`
+
+  Please refer to vcpkg output, this is linked to `qtbase` installation that need pre-installed dependencies on some platforms. For example on linux you need to execute:
+  `sudo apt-get install '^libxcb.*-dev'
+  libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev
+  libxkbcommon-x11-dev libegl1-mesa-dev`.
+
 # Demo projects
 
 You can find demo projects [here](https://github.com/DegateCommunity/DegateDemoProjects).

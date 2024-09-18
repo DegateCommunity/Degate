@@ -30,6 +30,7 @@ jobs:
       shell: bash
       run: |
         ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+        apt-get install -y '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev libegl1-mesa-dev
 
     - name: Build
       shell: bash
