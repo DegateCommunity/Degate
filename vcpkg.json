@@ -20,11 +20,12 @@
       "features": [
         "linguist"
       ]
-    }
+    },
+    "qtimageformats"
   ],
   "default-features": [],
   "features": {
-    "test": {
+    "tests": {
       "description": "Dependencies for testing",
       "dependencies": [
         "catch2"

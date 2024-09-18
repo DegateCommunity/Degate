@@ -20,6 +20,21 @@
 #####################################################################
 
 cmake_minimum_required(VERSION 3.12.0)
+
+#
+# Use vcpkg
+#
+set(VCPKG_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
+set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+
+#
+# Configure tests
+#
+option(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    list(APPEND VCPKG_MANIFEST_FEATURES "tests")
+endif()
+
 project(Degate)
 
 #
@@ -262,6 +277,7 @@ endif()
 ################################ Doc #######################################
 ############################################################################
 
+option(BUILD_DOCS "Build docs" OFF)
 if(BUILD_DOCS)
     find_package(Doxygen QUIET)
     if(DOXYGEN_FOUND)
