@@ -209,10 +209,11 @@ Binaries are in the 'build/out/bin' folder in the bundle ".app" format.
 
 - `CMake Error at vcpkg_execute_required_process.cmake:127 (message): Command failed: vcpkg/downloads/tools/ninja/1.10.2-linux/ninja -v`
 
-  Please refer to vcpkg output, this is linked to `qtbase` installation that need pre-installed dependencies on some platforms. For example on linux you need to execute:
+  Please refer to vcpkg output, this is linked to Qt installation that need pre-installed dependencies on some platforms. For example on linux you need to execute:
   `sudo apt-get install '^libxcb.*-dev'
   libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev
-  libxkbcommon-x11-dev libegl1-mesa-dev`.
+  libxkbcommon-x11-dev libegl1-mesa-dev` and `sudo apt-get install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev
+`.
 
 # Demo projects
 
