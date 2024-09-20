@@ -5,6 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 env:
   BUILD_TYPE: Release # Change build type here.
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+  VCPKG_ROOT: '${{ github.workspace }}/vcpkg'
 
 jobs:
   build:
