@@ -48,3 +48,10 @@ jobs:
         cmake --build . --config $BUILD_TYPE --target DegateTests
         cd tests/out/bin
         ./DegateTests
+
+    - name: Upload vcpkg build logs
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: 'vcpkg-buildlogs-${{ matrix.triplet }}'
+        path: ${{ env.VCPKG_ROOT }}/buildtrees/**/*.log
