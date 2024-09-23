@@ -31,7 +31,8 @@ jobs:
       shell: bash
       run: |
         ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
-        brew install autoconf autoconf-archive
+        brew reinstall autoconf
+        brew install automake autoconf-archive
 
     - name: Build
       shell: bash
