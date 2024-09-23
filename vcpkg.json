@@ -8,7 +8,6 @@
     "boost-algorithm",
     "boost-core",
     "boost-lexical-cast",
-    "boost-scope",
     "boost-date-time",
     "boost-optional",
     "boost-range",
@@ -17,9 +16,32 @@
       "default-features": false,
       "features": [
         "concurrent",
+        "thread",
         "gui",
         "opengl",
-        "widgets"
+        "widgets",
+        "jpeg",
+        "png",
+        {
+          "name": "xrender",
+          "platform": "linux"
+        },
+        {
+          "name": "xcb",
+          "platform": "linux"
+        },
+        {
+          "name": "xcb-xlib",
+          "platform": "linux"
+        },
+        {
+          "name": "fontconfig",
+          "platform": "linux"
+        },
+        {
+          "name": "egl",
+          "platform": "linux"
+        }
       ]
     },
     {
@@ -39,6 +61,5 @@
         "catch2"
       ]
     }
-  },
-  "builtin-baseline": "3508985146f1b1d248c67ead13f8f54be5b4f5da"
+  }
 }

@@ -22,8 +22,7 @@
 #include "Core/Configuration.h"
 #include "Core/Utils/FileSystem.h"
 
-#include <boost/filesystem/exception.hpp>
-#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem.hpp>
 #include <climits>
 #include <cstring>
 #include <string>

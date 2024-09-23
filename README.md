@@ -132,7 +132,15 @@ We use [vcpkg](https://vcpkg.io) to handle installation of those, please refer t
 
 ## Dependencies version
 
-Described in the `vcpkg.json` file.
+- CMake 3.12.0 or newer,
+
+For Linux (please the Linux section below):
+- xcb-lib
+- xrender-lib
+- autoconf-archive
+- xkbcommon
+- egl1-mesa-lib
+- xrandr-lib
 
 ## Quick start
 
