@@ -137,6 +137,7 @@ We use [vcpkg](https://vcpkg.io) to handle installation of those, please refer t
 For Linux (please the Linux section below):
 - xcb-lib
 - xrender-lib
+- autoconf
 - autoconf-archive
 - xkbcommon
 - egl1-mesa-lib
@@ -155,6 +156,9 @@ First, clone this repository (help [here](https://docs.github.com/en/github/crea
 Prepare the install of dependencies:
 ```console
 > ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+> apt install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev
+  libxkbcommon-x11-dev libegl1-mesa-dev
+> apt install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev autoconf autoconf-archive
 ```
 If anything is missing, you should be prompted with help on how to install the needed tools.
 
@@ -187,6 +191,7 @@ Binaries are in the 'build/out/bin' folder.
 Prepare the install of dependencies:
 ```console
 > ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+> brew install autoconf autoconf-archive
 ```
 
 Build (in the 'build' folder, for example):

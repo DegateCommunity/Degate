@@ -31,6 +31,7 @@ jobs:
       shell: bash
       run: |
         ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+        brew install autoconf autoconf-archive
 
     - name: Build
       shell: bash
@@ -45,6 +46,7 @@ jobs:
       shell: bash
       run: |
         cd build
+        cmake .. -DBUILD_TESTS=1
         cmake --build . --config $BUILD_TYPE --target DegateTests
         cd tests/out/bin
         ./DegateTests

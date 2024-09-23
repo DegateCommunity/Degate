@@ -41,9 +41,10 @@ jobs:
       shell: bash
       run: |
         cd build
+        cmake .. -DBUILD_TESTS=1
         cmake --build . --config $BUILD_TYPE --target DegateTests
+        ./vcpkg_installed/x64-windows/tools/qt5/bin/windeployqt.exe ./tests/out/bin/$BUILD_TYPE
         cd tests/out/bin/$BUILD_TYPE
-        $Qt6_DIR/bin/windeployqt.exe ./
         ./DegateTests.exe
 
     - name: Upload vcpkg build logs
