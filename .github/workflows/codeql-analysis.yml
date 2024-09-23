@@ -2,6 +2,8 @@ name: "CodeQL"
 
 env:
   BUILD_TYPE: Release # Change build type here.
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+  VCPKG_ROOT: '${{ github.workspace }}/vcpkg'
 
 on:
   push:
@@ -25,44 +27,47 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+          submodules: recursive
+
+    - name: Export GitHub Actions cache environment variables
+      uses: actions/github-script@v7
+      with:
+        script: |
+          core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+          core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+    # Since VCPKG take a lot of space for Qt install, we run out of free disk space on Ubuntu 20.04
+    # This will remove some unused runner image dependencies
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
+      with:
+        # this might remove tools that are actually needed,
+        # if set to "true" but frees about 6 GB
+        tool-cache: false
+        
+        # all of these default to true, but feel free to set to
+        # "false" if necessary for your workflow
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        docker-images: true
+        swap-storage: true
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
-        # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    #- name: Autobuild
-    #  uses: github/codeql-action/autobuild@v1
-
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
-
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
-
-    #- run: |
-    #   make bootstrap
-    #   make release
-      
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2
-      with:
-        version: 6.2.4 # Update Qt version here.
-        aqtversion: '>=0.9.7'
-
-    - name: Install Boost
+    - name: Prepare dependencies
       shell: bash
       run: |
-        sudo apt-get install -y libboost-all-dev
-
+        ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+        sudo apt-get install -y '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev libegl1-mesa-dev
+        sudo apt-get install -y libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev
+      
     - name: Build
       shell: bash
       run: |
@@ -71,4 +76,4 @@ jobs:
         cmake --build . --config $BUILD_TYPE
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2

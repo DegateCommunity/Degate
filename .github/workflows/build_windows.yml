@@ -4,6 +4,8 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release # Change build type here.
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+  VCPKG_ROOT: '${{ github.workspace }}/vcpkg'
 
 jobs:
   build:
@@ -11,19 +13,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+          submodules: recursive
       
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+    - name: Export GitHub Actions cache environment variables
+      uses: actions/github-script@v7
       with:
-        version: 6.2.4 # Update Qt version here.
-        aqtversion: '>=0.9.7'
-        modules: 'qtimageformats'
+        script: |
+          core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+          core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-    - name: Install boost
-      uses: MarkusJx/install-boost@v2.4.5
-      id: install-boost
-      with:
-          boost_version: 1.72.0 # Update Boost version here.
+    - name: Prepare dependencies
+      shell: cmd
+      run: |
+        .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 
     - name: Build
       shell: bash
@@ -42,3 +45,11 @@ jobs:
         cd tests/out/bin/$BUILD_TYPE
         $Qt6_DIR/bin/windeployqt.exe ./
         ./DegateTests.exe
+
+    - name: Upload vcpkg build logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'vcpkg-buildlogs-${{ matrix.triplet }}'
+        path: ${{ env.VCPKG_ROOT }}/buildtrees/**/*.log
+
