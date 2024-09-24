@@ -124,6 +124,7 @@ set(LIBS ${Boost_LIBRARIES})
 ############# Qt
 find_package(Qt6 COMPONENTS Core Widgets Gui Xml OpenGL OpenGLWidgets Concurrent LinguistTools REQUIRED)
 set(LIBS ${LIBS} Qt6::Widgets Qt6::Gui Qt6::Core Qt6::Xml Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Concurrent)
+qt_standard_project_setup()
 
 
 ############################################################################
@@ -226,14 +227,14 @@ endif ()
 #
 # Link DegateCore
 #
-add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "Degate version")
-target_link_libraries(DegateCore ${LIBS})
+qt_add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "Degate version")
+target_link_libraries(DegateCore PRIVATE ${LIBS})
 
 #
 # Link main (Degate)
 #
-add_executable(Degate "src/Main.cc" res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "res/resource.rc")
-target_link_libraries(Degate ${LIBS} DegateCore)
+qt_add_executable(Degate "src/Main.cc" res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "res/resource.rc")
+target_link_libraries(Degate PRIVATE ${LIBS} DegateCore)
 
 #
 # Activate bundle for MacOS.
@@ -244,6 +245,16 @@ set_target_properties(Degate PROPERTIES MACOSX_BUNDLE TRUE)
 # Installation specifications
 #
 install (TARGETS Degate DESTINATION out/bin)
+
+#
+# Automatic Qt deploy
+#
+qt_generate_deploy_app_script(
+    TARGET Degate
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${deploy_script})
 
 #
 # Output specifications

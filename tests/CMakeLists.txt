@@ -37,7 +37,7 @@ file(GLOB_RECURSE TEST_SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIR
 #
 # Link
 #
-add_executable(DegateTests ${TEST_SRC_FILES})
+qt_add_executable(DegateTests ${TEST_SRC_FILES})
 target_link_libraries(DegateTests PRIVATE ${LIBS} DegateCore Catch2::Catch2)
 
 #
@@ -49,6 +49,16 @@ set_target_properties(DegateTests
     LIBRARY_OUTPUT_DIRECTORY "out/lib"
     RUNTIME_OUTPUT_DIRECTORY "out/bin"
 )
+
+#
+# Automatic Qt deploy
+#
+qt_generate_deploy_app_script(
+    TARGET DegateTests
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${deploy_script})
 
 #
 # Link Catch2 tests to CTest

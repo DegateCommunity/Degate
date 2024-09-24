@@ -43,7 +43,6 @@ jobs:
         cd build
         cmake .. -DBUILD_TESTS=1
         cmake --build . --config $BUILD_TYPE --target DegateTests
-        ./vcpkg_installed/x64-windows/tools/Qt6/bin/windeployqt.exe ./tests/out/bin/$BUILD_TYPE
         cd tests/out/bin/$BUILD_TYPE
         ./DegateTests.exe
 
