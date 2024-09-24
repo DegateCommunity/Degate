@@ -134,7 +134,7 @@ We use [vcpkg](https://vcpkg.io) to handle installation of those, please refer t
 
 - CMake 3.12.0 or newer,
 
-For Linux (please the Linux section below):
+For Linux (please read the Linux section below):
 - xcb-lib
 - xrender-lib
 - autoconf
@@ -142,6 +142,11 @@ For Linux (please the Linux section below):
 - xkbcommon
 - egl1-mesa-lib
 - xrandr-lib
+
+For MacOS (please read the MacOS section below):
+- automake
+- autoconf
+- autoconf-archive
 
 ## Quick start
 
@@ -191,7 +196,7 @@ Binaries are in the 'build/out/bin' folder.
 Prepare the install of dependencies:
 ```console
 > ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
-> brew install autoconf autoconf-archive
+> brew install autoconf autoconf-archive automake 
 ```
 
 Build (in the 'build' folder, for example):

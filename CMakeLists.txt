@@ -35,6 +35,13 @@ if(BUILD_TESTS)
     list(APPEND VCPKG_MANIFEST_FEATURES "tests")
 endif()
 
+#
+# Tell vcpkg to export dll to build folder (windows only)
+#
+if (WIN32)
+    set(X_VCPKG_APPLOCAL_DEPS_INSTALL ON)
+endif()
+
 project(Degate)
 
 #
