@@ -22,7 +22,7 @@
 #include "Core/LogicModel/Wire/Wire.h"
 #include "Core/LogicModel/LogicModel.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

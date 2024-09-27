@@ -19,9 +19,8 @@
 
 */
 
-#include "CrashReport.h"
-
 #include "Core/Version.h"
+#include "CrashReport.h"
 #include "Globals.h"
 
 #include <QApplication>
@@ -59,7 +58,8 @@ namespace degate
         // Report button
         report_button.setText(tr("Report"));
         QObject::connect(&report_button, &QPushButton::clicked, this, [=]() {
-            QDesktopServices::openUrl(QUrl("https://github.com/DegateCommunity/Degate/issues/new?template=bug_report.md"));
+            QDesktopServices::openUrl(
+                    QUrl("https://github.com/DegateCommunity/Degate/issues/new?template=bug_report.md"));
         });
         buttons_layout.addWidget(&report_button);
 
@@ -108,7 +108,8 @@ namespace degate
                           .arg(QString::fromStdString(error));
 
         std::ofstream log_file;
-        log_file.open(DEGATE_IN_CONFIGURATION(ERROR_FILE_NAME), std::fstream::in | std::fstream::out | std::fstream::app);
+        log_file.open(DEGATE_IN_CONFIGURATION(ERROR_FILE_NAME),
+                      std::fstream::in | std::fstream::out | std::fstream::app);
 
         if (!log_file.is_open())
             return;
@@ -118,6 +119,8 @@ namespace degate
         log_file.close();
 
         degate::create_error_dialog(message.toStdString());
+
+        exit(EXIT_FAILURE);
     }
 
     void create_error_dialog(const std::string& error)

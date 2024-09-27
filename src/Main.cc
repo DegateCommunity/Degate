@@ -19,15 +19,15 @@
  *
  */
 
-#include <csignal>
+#include "Core/Utils/CrashReport.h"
+#include "Core/Version.h"
+#include "GUI/MainWindow.h"
+#include "GUI/Preferences/PreferencesHandler.h"
+
 #include <QApplication>
 #include <QSplashScreen>
 #include <QTranslator>
-
-#include "GUI/Preferences/PreferencesHandler.h"
-#include "GUI/MainWindow.h"
-#include "Core/Version.h"
-#include "Core/Utils/CrashReport.h"
+#include <csignal>
 
 /**
  * @class Degate
@@ -38,7 +38,6 @@
 class Degate final : public QApplication
 {
 public:
-
     /**
      * Constructor, @see QApplication.
      * 
@@ -87,22 +86,16 @@ int main(int argc, char* argv[])
     std::signal(SIGSEGV, [](int signal) {
         std::string error = "A SIGSEGV occurred (" + std::to_string(signal) + ").";
         degate::crash_report(error);
-        QApplication::closeAllWindows();
-        exit(EXIT_FAILURE);
     });
 
     std::signal(SIGFPE, [](int signal) {
         std::string error = "A SIGFPE occurred (" + std::to_string(signal) + ").";
         degate::crash_report(error);
-        QApplication::closeAllWindows();
-        exit(EXIT_FAILURE);
     });
 
     std::signal(SIGILL, [](int signal) {
         std::string error = "A SIGILL occurred (" + std::to_string(signal) + ").";
         degate::crash_report(error);
-        QApplication::closeAllWindows();
-        exit(EXIT_FAILURE);
     });
 
     try
@@ -122,7 +115,8 @@ int main(int argc, char* argv[])
 
         // If it's a first launch or an updated Degate version, show help menu.
         if (degate::PreferencesHandler::get_instance().get_settings().value("first_launch", true).toBool() ||
-            degate::PreferencesHandler::get_instance().get_settings().value("last_launch_version", "") != DEGATE_VERSION)
+            degate::PreferencesHandler::get_instance().get_settings().value("last_launch_version", "") !=
+                    DEGATE_VERSION)
         {
             window.on_menu_help_about();
 
@@ -134,9 +128,8 @@ int main(int argc, char* argv[])
     }
     catch (const std::exception& e)
     {
+        debug(TM, "Exception occured: %s", e.what());
         degate::crash_report(e.what());
-
-        return EXIT_FAILURE;
     }
 
     return ret;

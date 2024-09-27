@@ -1,0 +1,65 @@
+{
+  "name": "degate",
+  "dependencies": [
+    "boost-filesystem",
+    "boost-system",
+    "boost-thread",
+    "boost-format",
+    "boost-algorithm",
+    "boost-core",
+    "boost-lexical-cast",
+    "boost-date-time",
+    "boost-optional",
+    "boost-range",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "thread",
+        "gui",
+        "opengl",
+        "widgets",
+        "jpeg",
+        "png",
+        {
+          "name": "xrender",
+          "platform": "linux"
+        },
+        {
+          "name": "xcb",
+          "platform": "linux"
+        },
+        {
+          "name": "xcb-xlib",
+          "platform": "linux"
+        },
+        {
+          "name": "fontconfig",
+          "platform": "linux"
+        },
+        {
+          "name": "egl",
+          "platform": "linux"
+        }
+      ]
+    },
+    {
+      "name": "qttools",
+      "default-features": false,
+      "features": [
+        "linguist"
+      ]
+    },
+    "qtimageformats"
+  ],
+  "default-features": [],
+  "features": {
+    "tests": {
+      "description": "Dependencies for testing",
+      "dependencies": [
+        "catch2"
+      ]
+    }
+  }
+}

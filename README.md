@@ -128,28 +128,45 @@ Also, you can find [here](https://github.com/DegateCommunity/Degate/wiki) the of
 
 Degate has only 2 dependencies: Boost and Qt5.
 
-For Boost, you can specify to CMake a custom path with: -DBOOST_ROOT="custom_path_to_boost". Prebuilt versions for Windows are available here: https://sourceforge.net/projects/boost/files/boost-binaries/.
-
-For Qt5, you can specify to CMake a custom path with: -DCMAKE_PREFIX_PATH="custom_path_to_qt". For example, on Windows: Qt/VERSION/COMPILER/lib/cmake/Qt5. You can download Qt5 here: https://www.qt.io/download.
-
-For Linux, don't forget to install the Qt5 add-on module: ImageFormats (you just need to have the package installed, it will be embedded in the Qt5::Core module after). See https://doc.qt.io/qt-5/qtimageformats-index.html. For example, on debian, the package is: qt5-image-formats-plugins. Same problem with linguist tools, for example for debian you need the package: qttools5-dev.
+We use [vcpkg](https://vcpkg.io) to handle installation of those, please refer to the #Quick-start section below.
 
 ## Dependencies version
 
 - CMake 3.12.0 or newer,
-- Boost 1.70.0 or newer,
-- Qt 5.14.0 or newer.
+
+For Linux (please read the Linux section below):
+- xcb-lib
+- xrender-lib
+- autoconf
+- autoconf-archive
+- xkbcommon
+- egl1-mesa-lib
+- xrandr-lib
+
+For MacOS (please read the MacOS section below):
+- automake
+- autoconf
+- autoconf-archive
 
 ## Quick start
 
-Firstly, clone this repository (help [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)).
+First, clone this repository (help [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)):
+```console
+> git clone https://github.com/DegateCommunity/Degate
+> git submodule update --init --recursive
+```
 
 ### For Linux (debian-like)
 
-Install dependencies:
+Prepare the install of dependencies:
 ```console
-> sudo apt-get install cmake g++ qt5-default qt5-image-formats-plugins qttools5-dev libboost-all-dev
+> ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+> apt install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev
+  libxkbcommon-x11-dev libegl1-mesa-dev
+> apt install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev autoconf autoconf-archive
 ```
+If anything is missing, you should be prompted with help on how to install the needed tools.
+
 Build (in the 'build' folder, for example):
 ```console
 > cmake ..
@@ -162,24 +179,8 @@ Binaries are in the 'build/out/bin' folder.
 Install dependencies:
 - CMake: https://cmake.org/download/
 - A compiler (for example MSVC): https://visualstudio.microsoft.com/
-- Qt: https://www.qt.io/download-qt-installer
-- Boost: https://sourceforge.net/projects/boost/files/boost-binaries/
-
-Build (in the 'build' folder, for example):
 ```console
-> cmake .. -DBOOST_ROOT="path_to_boost" -DCMAKE_PREFIX_PATH="path_to_qt"
-> cmake --build .
-```
-Binaries are in the 'build/out/bin' folder.
-
-### For MacOS
-
-Install dependencies (we will use [Homebrew](https://brew.sh) here) :
-- XCode: https://apps.apple.com/app/xcode/id497799835
-
-```console
-> brew install boost
-> brew install qt
+> .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 ```
 
 Build (in the 'build' folder, for example):
@@ -187,6 +188,23 @@ Build (in the 'build' folder, for example):
 > cmake ..
 > cmake --build .
 ```
+
+Binaries are in the 'build/out/bin' folder.
+
+### For MacOS
+
+Prepare the install of dependencies:
+```console
+> ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+> brew install autoconf autoconf-archive automake 
+```
+
+Build (in the 'build' folder, for example):
+```console
+> cmake ..
+> cmake --build .
+```
+
 Binaries are in the 'build/out/bin' folder in the bundle ".app" format.
 
 ## Troubleshooting
@@ -206,6 +224,14 @@ Binaries are in the 'build/out/bin' folder in the bundle ".app" format.
 
   This message can appear for MacOS users. The problem comes from spaces in directory names, this is a bug from CMake.
   Simply move your Degate folder to a file tree without spaces in directory names.
+
+- `CMake Error at vcpkg_execute_required_process.cmake:127 (message): Command failed: vcpkg/downloads/tools/ninja/1.10.2-linux/ninja -v`
+
+  Please refer to vcpkg output, this is linked to Qt installation that need pre-installed dependencies on some platforms. For example on linux you need to execute:
+  `sudo apt-get install '^libxcb.*-dev'
+  libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev
+  libxkbcommon-x11-dev libegl1-mesa-dev` and `sudo apt-get install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev
+`.
 
 # Demo projects
 

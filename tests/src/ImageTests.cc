@@ -24,7 +24,7 @@
 #include "Core/Image/TIFFWriter.h"
 #include "Core/Image/ImageReader.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

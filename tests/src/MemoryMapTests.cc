@@ -22,7 +22,7 @@
 #include "Core/Utils/MemoryMap.h"
 #include "Core/Utils/FileSystem.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

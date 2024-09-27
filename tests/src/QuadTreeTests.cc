@@ -27,7 +27,7 @@
 #include "Core/Primitive/QuadTree.h"
 #include "Core/LogicModel/Via/Via.h"
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 using namespace degate;
 

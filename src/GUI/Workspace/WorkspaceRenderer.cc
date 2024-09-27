@@ -19,67 +19,73 @@
  *
  */
 
-#include "GUI/Workspace/WorkspaceRenderer.h"
-#include "GUI/Dialog/GateEditDialog.h"
+#include "Core/Utils/CrashReport.h"
+#include "Core/Utils/DegateExceptions.h"
 #include "GUI/Dialog/AnnotationEditDialog.h"
+#include "GUI/Dialog/GateEditDialog.h"
 #include "GUI/Preferences/PreferencesHandler.h"
 #include "GUI/Workspace/WorkspaceNotifier.h"
+#include "GUI/Workspace/WorkspaceRenderer.h"
+#include "Globals.h"
+
+#include <qt6/QtOpenGLWidgets/qopenglwidget.h>
 
 namespace degate
 {
 
-	WorkspaceRenderer::WorkspaceRenderer(QWidget* parent)
-            : QOpenGLWidget(parent),
-              background(this),
-              gates(this),
-              annotations(this),
-              emarkers(this),
-              vias(this),
-              wires(this),
-              selection_tool(this),
-              wire_tool(this),
-              regular_grid(this)
+    WorkspaceRenderer::WorkspaceRenderer(QWidget* parent)
+        : QOpenGLWidget(parent),
+          background(this),
+          gates(this),
+          annotations(this),
+          emarkers(this),
+          vias(this),
+          wires(this),
+          selection_tool(this),
+          wire_tool(this),
+          regular_grid(this)
     {
-		setFocusPolicy(Qt::StrongFocus);
-		setCursor(Qt::CrossCursor);
-		setMouseTracking(true);
+        setFocusPolicy(Qt::StrongFocus);
+        setCursor(Qt::CrossCursor);
+        setMouseTracking(true);
 
-		selected_objects.set_object_update_function(std::bind(&WorkspaceRenderer::update_object, this, std::placeholders::_1));
-	}
+        selected_objects.set_object_update_function(
+                std::bind(&WorkspaceRenderer::update_object, this, std::placeholders::_1));
+    }
 
-	WorkspaceRenderer::~WorkspaceRenderer()
-	{
+    WorkspaceRenderer::~WorkspaceRenderer()
+    {
         // Prevent cleanup if OpenGL functions wheren't initialized
         if (!initialized)
             return;
 
-		makeCurrent();
+        makeCurrent();
 
         this->cleanup();
 
-		doneCurrent();
+        doneCurrent();
 
-		auto updated_preferences = PREFERENCES_HANDLER.get_preferences();
+        auto updated_preferences = PREFERENCES_HANDLER.get_preferences();
         updated_preferences.show_grid = draw_grid;
         PREFERENCES_HANDLER.update(updated_preferences);
-	}
+    }
 
-	void WorkspaceRenderer::update_screen()
-	{
-		makeCurrent();
+    void WorkspaceRenderer::update_screen()
+    {
+        makeCurrent();
 
-		if (project == nullptr)
-			return;
+        if (project == nullptr)
+            return;
 
         background.update();
-		gates.update();
-		annotations.update();
+        gates.update();
+        annotations.update();
         emarkers.update();
         vias.update();
         wires.update();
 
-		update();
-	}
+        update();
+    }
 
     void WorkspaceRenderer::update_objects()
     {
@@ -211,17 +217,17 @@ namespace degate
         update();
     }
 
-	void WorkspaceRenderer::set_project(const Project_shptr& new_project)
-	{
-	    reset_area_selection();
-	    reset_selection();
-	    reset_wire_tool();
+    void WorkspaceRenderer::set_project(const Project_shptr& new_project)
+    {
+        reset_area_selection();
+        reset_selection();
+        reset_wire_tool();
 
-		project = new_project;
+        project = new_project;
 
-		background.set_project(new_project);
-		gates.set_project(new_project);
-		annotations.set_project(new_project);
+        background.set_project(new_project);
+        gates.set_project(new_project);
+        annotations.set_project(new_project);
         emarkers.set_project(new_project);
         vias.set_project(new_project);
         wires.set_project(new_project);
@@ -258,48 +264,48 @@ namespace degate
             // Otherwise, just center the view
             center_view(QPointF{width() / 2.0, height() / 2.0});
         }
-            
+
         update_screen();
-	}
+    }
 
-	bool WorkspaceRenderer::has_area_selection()
-	{
-		return selection_tool.has_selection();
-	}
+    bool WorkspaceRenderer::has_area_selection()
+    {
+        return selection_tool.has_selection();
+    }
 
-	BoundingBox WorkspaceRenderer::get_area_selection()
-	{
-		return selection_tool.get_selection_box();
-	}
+    BoundingBox WorkspaceRenderer::get_area_selection()
+    {
+        return selection_tool.get_selection_box();
+    }
 
     BoundingBox WorkspaceRenderer::get_safe_area_selection()
     {
-	    return get_safe_bounding_box(get_area_selection());
+        return get_safe_bounding_box(get_area_selection());
     }
 
     ObjectSet& WorkspaceRenderer::get_selected_objects()
-	{
-		return selected_objects;
-	}
+    {
+        return selected_objects;
+    }
 
     void WorkspaceRenderer::add_object_to_selection(PlacedLogicModelObject_shptr& object)
     {
         selected_objects.add(object, project->get_logic_model());
     }
 
-	void WorkspaceRenderer::reset_area_selection()
-	{
+    void WorkspaceRenderer::reset_area_selection()
+    {
         selection_tool.set_selection_state(false);
-		update();
-	}
+        update();
+    }
 
-	void WorkspaceRenderer::reset_selection()
-	{
-		if (selected_objects.empty())
-			return;
+    void WorkspaceRenderer::reset_selection()
+    {
+        if (selected_objects.empty())
+            return;
 
         selected_objects.clear();
-	}
+    }
 
     void WorkspaceRenderer::reset_wire_tool()
     {
@@ -321,63 +327,63 @@ namespace degate
 
     void WorkspaceRenderer::use_wire_tool()
     {
-	    reset_area_selection();
-	    reset_selection();
+        reset_area_selection();
+        reset_selection();
 
         current_tool = WorkspaceTool::WIRE;
 
         update();
     }
 
-	bool WorkspaceRenderer::has_selection()
-	{
-		if (selected_objects.empty())
-			return false;
-		else
-			return true;
-	}
+    bool WorkspaceRenderer::has_selection()
+    {
+        if (selected_objects.empty())
+            return false;
+        else
+            return true;
+    }
 
-	void WorkspaceRenderer::show_gates(bool value)
-	{
-		draw_gates = value;
+    void WorkspaceRenderer::show_gates(bool value)
+    {
+        draw_gates = value;
 
-		update();
-	}
+        update();
+    }
 
-	void WorkspaceRenderer::show_gates_name(bool value)
-	{
-		draw_gates_name = value;
+    void WorkspaceRenderer::show_gates_name(bool value)
+    {
+        draw_gates_name = value;
 
-		update();
-	}
+        update();
+    }
 
-	void WorkspaceRenderer::show_ports(bool value)
-	{
-		draw_ports = value;
+    void WorkspaceRenderer::show_ports(bool value)
+    {
+        draw_ports = value;
 
-		update();
-	}
+        update();
+    }
 
-	void WorkspaceRenderer::show_ports_name(bool value)
-	{
-		draw_ports_name = value;
+    void WorkspaceRenderer::show_ports_name(bool value)
+    {
+        draw_ports_name = value;
 
-		update();
-	}
+        update();
+    }
 
-	void WorkspaceRenderer::show_annotations(bool value)
-	{
-		draw_annotations = value;
+    void WorkspaceRenderer::show_annotations(bool value)
+    {
+        draw_annotations = value;
 
-		update();
-	}
+        update();
+    }
 
-	void WorkspaceRenderer::show_annotations_name(bool value)
-	{
-		draw_annotations_name = value;
+    void WorkspaceRenderer::show_annotations_name(bool value)
+    {
+        draw_annotations_name = value;
 
-		update();
-	}
+        update();
+    }
 
     void WorkspaceRenderer::show_emarkers(bool value)
     {
@@ -436,10 +442,10 @@ namespace degate
         }
     }
 
-	void WorkspaceRenderer::free_textures()
-	{
-		background.free_textures();
-	}
+    void WorkspaceRenderer::free_textures()
+    {
+        background.free_textures();
+    }
 
     void WorkspaceRenderer::cleanup()
     {
@@ -451,77 +457,77 @@ namespace degate
         Text::delete_context();
     }
 
-	void WorkspaceRenderer::initializeGL()
-	{
-		makeCurrent();
+    void WorkspaceRenderer::initializeGL()
+    {
+        makeCurrent();
 
-		initializeOpenGLFunctions();
+        initializeOpenGLFunctions();
 
         initialized = true;
 
-		Text::init_context();
+        Text::init_context();
 
         //QColor color = QApplication::palette().color(QWidget::backgroundRole());
         //glClearColor(color.red() / 255.0, color.green() / 255.0, color.blue() / 255.0, 1.0);
 
-		glClearColor(0.0, 0.0, 0.0, 1.0);
-		glEnable(GL_BLEND);
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glEnable(GL_BLEND);
         glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
         glDisable(GL_LINE_SMOOTH);
 
-		background.init();
-		gates.init();
-		annotations.init();
+        background.init();
+        gates.init();
+        annotations.init();
         emarkers.init();
         vias.init();
-		selection_tool.init();
-		wires.init();
+        selection_tool.init();
+        wires.init();
         wire_tool.init();
         regular_grid.init();
 
         // Get and print OpenGL version
-        QOpenGLContext *ctx = QOpenGLContext::currentContext();
+        QOpenGLContext* ctx = QOpenGLContext::currentContext();
         QSurfaceFormat sf = ctx->format();
         debug(TM, "OpenGL version: %d.%d.%d", sf.majorVersion(), sf.minorVersion(), sf.profile());
 
         // Get and print GLSL version
-        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
+        QOpenGLFunctions* glFuncs = QOpenGLContext::currentContext()->functions();
         debug(TM, "GLSL version: %s", glFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION));
 
         // Define the draw notification for the workspace (renderer), just a repaint
-        WorkspaceNotifier::get_instance().define(WorkspaceTarget::Workspace, WorkspaceNotification::Draw, [=](){
+        WorkspaceNotifier::get_instance().define(WorkspaceTarget::Workspace, WorkspaceNotification::Draw, [=]() {
             this->repaint();
         });
-	}
+    }
 
-	void WorkspaceRenderer::paintGL()
-	{
-		makeCurrent();
+    void WorkspaceRenderer::paintGL()
+    {
+        makeCurrent();
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		background.draw(projection);
+        background.draw(projection);
 
-		if (draw_wires)
-		    wires.draw(projection);
+        if (draw_wires)
+            wires.draw(projection);
 
-		if (draw_annotations)
-			annotations.draw(projection);
+        if (draw_annotations)
+            annotations.draw(projection);
 
-		if (draw_annotations_name)
-			annotations.draw_name(projection);
+        if (draw_annotations_name)
+            annotations.draw_name(projection);
 
-		if (draw_gates)
-			gates.draw(projection);
+        if (draw_gates)
+            gates.draw(projection);
 
-		if (draw_gates_name)
-			gates.draw_gates_name(projection);
+        if (draw_gates_name)
+            gates.draw_gates_name(projection);
 
-		if (draw_ports)
-			gates.draw_ports(projection);
+        if (draw_ports)
+            gates.draw_ports(projection);
 
-		if (draw_ports_name)
-			gates.draw_ports_name(projection);
+        if (draw_ports_name)
+            gates.draw_ports_name(projection);
 
         if (draw_emarkers)
             emarkers.draw(projection);
@@ -536,45 +542,45 @@ namespace degate
             vias.draw_name(projection);
 
         if (current_tool == WorkspaceTool::AREA_SELECTION)
-		    selection_tool.draw(projection);
+            selection_tool.draw(projection);
 
         if (current_tool == WorkspaceTool::WIRE)
             wire_tool.draw(projection);
 
         if (draw_grid)
             regular_grid.draw(projection);
-	}
+    }
 
-	void WorkspaceRenderer::resizeGL(int w, int h)
-	{
-		makeCurrent();
+    void WorkspaceRenderer::resizeGL(int w, int h)
+    {
+        makeCurrent();
 
-		glViewport(0, 0, w, h);
+        glViewport(0, 0, w, h);
 
-		set_projection(NO_ZOOM, center_x, center_y);
-	}
+        set_projection(NO_ZOOM, center_x, center_y);
+    }
 
-	QPointF WorkspaceRenderer::get_widget_mouse_position() const
-	{
-		const QPointF qt_widget_relative = mapFromGlobal(QCursor::pos());
-		return QPointF(qt_widget_relative.x(), qt_widget_relative.y());
-	}
+    QPointF WorkspaceRenderer::get_widget_mouse_position() const
+    {
+        const QPointF qt_widget_relative = mapFromGlobal(QCursor::pos());
+        return QPointF(qt_widget_relative.x(), qt_widget_relative.y());
+    }
 
-	QPointF WorkspaceRenderer::get_opengl_mouse_position() const
-	{
-		const QPointF widget_mouse_position = get_widget_mouse_position();
+    QPointF WorkspaceRenderer::get_opengl_mouse_position() const
+    {
+        const QPointF widget_mouse_position = get_widget_mouse_position();
         return QPointF(viewport_min_x + widget_mouse_position.x() * scale,
                        viewport_min_y + widget_mouse_position.y() * scale);
-	}
+    }
 
     QPointF WorkspaceRenderer::get_safe_opengl_mouse_position() const
     {
-	    return get_safe_position(get_opengl_mouse_position());
+        return get_safe_position(get_opengl_mouse_position());
     }
 
     WorkspaceTool WorkspaceRenderer::get_current_tool() const
     {
-	    return current_tool;
+        return current_tool;
     }
 
     void WorkspaceRenderer::update_object(PlacedLogicModelObject_shptr object)
@@ -621,68 +627,72 @@ namespace degate
         set_projection(NO_ZOOM, point.x(), point.y());
     }
 
-	void WorkspaceRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
-	{
-		scale *= scale_factor;
+    void WorkspaceRenderer::set_projection(float scale_factor, float new_center_x, float new_center_y)
+    {
+        scale *= scale_factor;
 
-		center_x = new_center_x;
-		center_y = new_center_y;
+        center_x = new_center_x;
+        center_y = new_center_y;
 
-		viewport_min_x = center_x - (static_cast<float>(width()) * scale) / 2.0;
-		viewport_min_y = center_y - (static_cast<float>(height()) * scale) / 2.0;
-		viewport_max_x = center_x + (static_cast<float>(width()) * scale) / 2.0;
-		viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
+        viewport_min_x = center_x - (static_cast<float>(width()) * scale) / 2.0;
+        viewport_min_y = center_y - (static_cast<float>(height()) * scale) / 2.0;
+        viewport_max_x = center_x + (static_cast<float>(width()) * scale) / 2.0;
+        viewport_max_y = center_y + (static_cast<float>(height()) * scale) / 2.0;
 
-        background.update_viewport(viewport_min_x, viewport_max_x, viewport_min_y, viewport_max_y, static_cast<float>(width()), static_cast<float>(height()));
+        background.update_viewport(viewport_min_x,
+                                   viewport_max_x,
+                                   viewport_min_y,
+                                   viewport_max_y,
+                                   static_cast<float>(width()),
+                                   static_cast<float>(height()));
 
         regular_grid.viewport_update(BoundingBox(viewport_min_x, viewport_max_x, viewport_min_y, viewport_max_y));
 
         if (draw_grid)
             regular_grid.update();
 
-		projection.setToIdentity();
-		projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
-	}
+        projection.setToIdentity();
+        projection.ortho(viewport_min_x, viewport_max_x, viewport_max_y, viewport_min_y, -1, 1);
+    }
 
-	void WorkspaceRenderer::mousePressEvent(QMouseEvent* event)
-	{
+    void WorkspaceRenderer::mousePressEvent(QMouseEvent* event)
+    {
         makeCurrent();
 
-		QOpenGLWidget::mousePressEvent(event);
+        QOpenGLWidget::mousePressEvent(event);
 
-		mouse_last_pos = get_opengl_mouse_position();
+        mouse_last_pos = get_opengl_mouse_position();
 
-		if (event->button() == Qt::LeftButton)
-			setCursor(Qt::ClosedHandCursor);
+        if (event->button() == Qt::LeftButton)
+            setCursor(Qt::ClosedHandCursor);
 
         // Area selection + CTRL
-        if (event->button() == Qt::RightButton &&
-            current_tool == WorkspaceTool::AREA_SELECTION &&
+        if (event->button() == Qt::RightButton && current_tool == WorkspaceTool::AREA_SELECTION &&
             QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
         {
             reset_area_selection();
         }
-	}
+    }
 
-	void WorkspaceRenderer::mouseReleaseEvent(QMouseEvent* event)
-	{
+    void WorkspaceRenderer::mouseReleaseEvent(QMouseEvent* event)
+    {
         makeCurrent();
 
-		QOpenGLWidget::mouseReleaseEvent(event);
+        QOpenGLWidget::mouseReleaseEvent(event);
 
-		if (event->button() == Qt::LeftButton)
-			setCursor(Qt::CrossCursor);
+        if (event->button() == Qt::LeftButton)
+            setCursor(Qt::CrossCursor);
 
-		// Selection
-		if (event->button() == Qt::LeftButton && !mouse_moved)
-		{
-			if (project == nullptr)
-				return;
+        // Selection
+        if (event->button() == Qt::LeftButton && !mouse_moved)
+        {
+            if (project == nullptr)
+                return;
 
-			QPointF pos = get_opengl_mouse_position();
+            QPointF pos = get_opengl_mouse_position();
 
-			LogicModel_shptr lmodel = project->get_logic_model();
-			Layer_shptr layer = lmodel->get_current_layer();
+            LogicModel_shptr lmodel = project->get_logic_model();
+            Layer_shptr layer = lmodel->get_current_layer();
             PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(),
                                                                              pos.y(),
                                                                              0,
@@ -693,7 +703,7 @@ namespace degate
                                                                              !draw_vias,
                                                                              !draw_wires);
 
-			// Check if there is a gate or gate port on the logic layer
+            // Check if there is a gate or gate port on the logic layer
             try
             {
                 PlacedLogicModelObject_shptr logic_plo;
@@ -728,12 +738,12 @@ namespace degate
             }
 
             // If no CTRL reset selection (single selection)
-			if (!selected_objects.empty() && !QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-				reset_selection();
+            if (!selected_objects.empty() && !QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
+                reset_selection();
 
-			if (plo != nullptr)
-			    add_object_to_selection(plo);
-		}
+            if (plo != nullptr)
+                add_object_to_selection(plo);
+        }
 
         // Selection imply no area selection
         if (!mouse_moved && !selected_objects.empty() && current_tool == WorkspaceTool::AREA_SELECTION)
@@ -753,7 +763,8 @@ namespace degate
             new_wire->set_diameter(project->get_default_wire_diameter());
 
             // Registre wire
-            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(), new_wire);
+            project->get_logic_model()->add_object(project->get_logic_model()->get_current_layer()->get_layer_pos(),
+                                                   new_wire);
 
             // Restart line drawing
             wire_tool.start_line_drawing(wire_tool.get_line().get_to_x(), wire_tool.get_line().get_to_y());
@@ -776,8 +787,7 @@ namespace degate
         }
 
         // Area selection + CTRL
-        if (event->button() == Qt::RightButton &&
-            current_tool == WorkspaceTool::AREA_SELECTION &&
+        if (event->button() == Qt::RightButton && current_tool == WorkspaceTool::AREA_SELECTION &&
             selection_tool.is_object_selection_mode_active())
         {
             BoundingBox bb = get_safe_area_selection();
@@ -822,36 +832,36 @@ namespace degate
         }
 
         // Emit signal (for mouse context menu)
-		if (event->button() == Qt::RightButton && !mouse_moved)
-		    emit right_mouse_button_released();
+        if (event->button() == Qt::RightButton && !mouse_moved)
+            emit right_mouse_button_released();
 
-		mouse_moved = false;
-	}
+        mouse_moved = false;
+    }
 
-	void WorkspaceRenderer::mouseMoveEvent(QMouseEvent* event)
-	{
+    void WorkspaceRenderer::mouseMoveEvent(QMouseEvent* event)
+    {
         makeCurrent();
 
-		QOpenGLWidget::mouseMoveEvent(event);
+        QOpenGLWidget::mouseMoveEvent(event);
 
-		// Movement
-		if (event->buttons() & Qt::LeftButton)
-		{
+        // Movement
+        if (event->buttons() & Qt::LeftButton)
+        {
             mouse_moved = true;
 
-			float dx = get_opengl_mouse_position().x() - mouse_last_pos.x();
-			float dy = get_opengl_mouse_position().y() - mouse_last_pos.y();
+            float dx = get_opengl_mouse_position().x() - mouse_last_pos.x();
+            float dy = get_opengl_mouse_position().y() - mouse_last_pos.y();
 
-			center_x -= dx;
-			center_y -= dy;
-			set_projection(NO_ZOOM, center_x, center_y);
+            center_x -= dx;
+            center_y -= dy;
+            set_projection(NO_ZOOM, center_x, center_y);
 
-			update();
-		}
+            update();
+        }
 
-		// Area selection
-		if (event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::AREA_SELECTION)
-		{
+        // Area selection
+        if (event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::AREA_SELECTION)
+        {
             mouse_moved = true;
 
             // If there is no area selection, start new one and set new origin
@@ -869,16 +879,16 @@ namespace degate
             }
 
             // Update other area extremity on mouse position
-			selection_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
+            selection_tool.update(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
 
             // If an object is selected, reset selection
-			if (!selected_objects.empty())
-			    reset_selection();
+            if (!selected_objects.empty())
+                reset_selection();
 
-			update();
-		}
+            update();
+        }
 
-		if (event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::WIRE)
+        if (event->buttons() & Qt::RightButton && current_tool == WorkspaceTool::WIRE)
         {
             mouse_moved = true;
 
@@ -893,12 +903,12 @@ namespace degate
             update();
         }
 
-		// Mouse coords signal
-		emit mouse_coords_changed(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
-	}
+        // Mouse coords signal
+        emit mouse_coords_changed(get_opengl_mouse_position().x(), get_opengl_mouse_position().y());
+    }
 
-	void WorkspaceRenderer::wheelEvent(QWheelEvent* event)
-	{
+    void WorkspaceRenderer::wheelEvent(QWheelEvent* event)
+    {
         makeCurrent();
 
         QPoint wheel_delta = event->angleDelta();
@@ -910,107 +920,126 @@ namespace degate
         else
             QOpenGLWidget::wheelEvent(event);
 
-		event->accept();
-	}
+        event->accept();
+    }
 
-	void WorkspaceRenderer::keyPressEvent(QKeyEvent* event)
-	{
+    void WorkspaceRenderer::keyPressEvent(QKeyEvent* event)
+    {
         makeCurrent();
 
-		QOpenGLWidget::keyPressEvent(event);
-	}
+        QOpenGLWidget::keyPressEvent(event);
+    }
 
-	void WorkspaceRenderer::keyReleaseEvent(QKeyEvent* event)
-	{
+    void WorkspaceRenderer::keyReleaseEvent(QKeyEvent* event)
+    {
         makeCurrent();
 
-		QOpenGLWidget::keyReleaseEvent(event);
+        QOpenGLWidget::keyReleaseEvent(event);
 
-		if (event->key() == Qt::Key_Escape)
+        if (event->key() == Qt::Key_Escape)
         {
             wire_tool.reset_line_drawing();
             update();
         }
-	}
+    }
 
-	void WorkspaceRenderer::mouseDoubleClickEvent(QMouseEvent* event)
-	{
+    void WorkspaceRenderer::mouseDoubleClickEvent(QMouseEvent* event)
+    {
         makeCurrent();
 
-		QOpenGLWidget::mouseDoubleClickEvent(event);
+        QOpenGLWidget::mouseDoubleClickEvent(event);
 
-		if (event->button() == Qt::LeftButton)
-		{
-			if (project == nullptr)
-				return;
+        if (event->button() == Qt::LeftButton)
+        {
+            if (project == nullptr)
+                return;
 
-			QPointF pos = get_opengl_mouse_position();
+            QPointF pos = get_opengl_mouse_position();
 
-			LogicModel_shptr lmodel = project->get_logic_model();
-			Layer_shptr layer = lmodel->get_current_layer();
-			PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
+            LogicModel_shptr lmodel = project->get_logic_model();
+            Layer_shptr layer = lmodel->get_current_layer();
+            PlacedLogicModelObject_shptr plo = layer->get_object_at_position(pos.x(),
+                                                                             pos.y(),
+                                                                             0,
+                                                                             !draw_annotations,
+                                                                             !draw_gates,
+                                                                             !draw_ports,
+                                                                             !draw_emarkers,
+                                                                             !draw_vias,
+                                                                             !draw_wires);
 
-			// Check if there is a gate or gate port on the logic layer
-			if (plo == nullptr)
-			{
-				try
-				{
-					layer = get_first_logic_layer(lmodel);
-					plo = layer->get_object_at_position(pos.x(), pos.y(), 0, !draw_annotations, !draw_gates, !draw_ports, !draw_emarkers, !draw_vias, !draw_wires);
-			    }
-				catch (CollectionLookupException const&)
-				{
-				}
-			}
+            // Check if there is a gate or gate port on the logic layer
+            if (plo == nullptr)
+            {
+                try
+                {
+                    layer = get_first_logic_layer(lmodel);
+                    plo = layer->get_object_at_position(pos.x(),
+                                                        pos.y(),
+                                                        0,
+                                                        !draw_annotations,
+                                                        !draw_gates,
+                                                        !draw_ports,
+                                                        !draw_emarkers,
+                                                        !draw_vias,
+                                                        !draw_wires);
+                }
+                catch (CollectionLookupException const&)
+                {
+                }
+            }
 
-			if (plo != nullptr)
-			{
-				if (SubProjectAnnotation_shptr sp = std::dynamic_pointer_cast<SubProjectAnnotation>(plo))
-				{
-					std::string dir = join_pathes(project->get_project_directory(), sp->get_path());
-					debug(TM, "Will open or create project at %s", dir.c_str());
+            if (plo != nullptr)
+            {
+                if (SubProjectAnnotation_shptr sp = std::dynamic_pointer_cast<SubProjectAnnotation>(plo))
+                {
+                    std::string dir = join_pathes(project->get_project_directory(), sp->get_path());
+                    debug(TM, "Will open or create project at %s", dir.c_str());
 
-					emit project_changed(dir);
-				}
-				else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo))
-				{
-					GateInstanceEditDialog dialog(this, gate, project);
-					dialog.exec();
+                    emit project_changed(dir);
+                }
+                else if (Gate_shptr gate = std::dynamic_pointer_cast<Gate>(plo))
+                {
+                    GateInstanceEditDialog dialog(this, gate, project);
+                    dialog.exec();
 
                     project->get_logic_model()->update_ports(gate);
 
-					makeCurrent();
-					gates.update();
-					update();
+                    makeCurrent();
+                    gates.update();
+                    update();
 
                     emit project_changed();
-				}
-				else if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
-				{
-					{
-						PortPlacementDialog dialog(this, project, gate_port->get_gate()->get_gate_template(), gate_port->get_template_port());
-						dialog.exec();
-					}
+                }
+                else if (GatePort_shptr gate_port = std::dynamic_pointer_cast<GatePort>(plo))
+                {
+                    {
+                        PortPlacementDialog dialog(this,
+                                                   project,
+                                                   gate_port->get_gate()->get_gate_template(),
+                                                   gate_port->get_template_port());
+                        dialog.exec();
+                    }
 
-					project->get_logic_model()->update_ports(gate_port->get_gate());
-
-					makeCurrent();
-					gates.update();
-					update();
-
-                    emit project_changed();
-				}
-				else if (Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(plo))
-				{
-					AnnotationEditDialog dialog(this, annotation);
-					dialog.exec();
+                    project->get_logic_model()->update_ports(gate_port->get_gate());
 
                     makeCurrent();
-					annotations.update();
-					update();
+                    gates.update();
+                    update();
 
                     emit project_changed();
-				}
+                }
+                else if (Annotation_shptr annotation = std::dynamic_pointer_cast<Annotation>(plo))
+                {
+                    AnnotationEditDialog dialog(this, annotation);
+                    dialog.exec();
+
+                    makeCurrent();
+                    annotations.update();
+                    update();
+
+                    emit project_changed();
+                }
                 else if (EMarker_shptr emarker = std::dynamic_pointer_cast<EMarker>(plo))
                 {
                     EMarkerEditDialog dialog(this, emarker);
@@ -1033,25 +1062,25 @@ namespace degate
 
                     emit project_changed();
                 }
-			}
-		}
+            }
+        }
 
-		setCursor(Qt::CrossCursor);
-	}
+        setCursor(Qt::CrossCursor);
+    }
 
-	void WorkspaceRenderer::zoom_in()
-	{
-		set_projection(ZOOM_IN, center_x, center_y);
+    void WorkspaceRenderer::zoom_in()
+    {
+        set_projection(ZOOM_IN, center_x, center_y);
 
-		update();
-	}
+        update();
+    }
 
-	void WorkspaceRenderer::zoom_out()
-	{
-		set_projection(ZOOM_OUT, center_x, center_y);
+    void WorkspaceRenderer::zoom_out()
+    {
+        set_projection(ZOOM_OUT, center_x, center_y);
 
-		update();
-	}
+        update();
+    }
 
     QPointF WorkspaceRenderer::get_safe_position(QPointF position) const
     {
@@ -1108,4 +1137,50 @@ namespace degate
 
         return res;
     }
-}
+
+    bool WorkspaceRenderer::event(QEvent* event)
+    {
+        if (!this->context_initialized && event->type() == QEvent::Show)
+        {
+            auto result = QOpenGLWidget::event(event);
+            this->context_initialized = true;
+
+            // Check OpenGL initialization
+            if (this->context() == nullptr || !this->context()->isValid())
+            {
+                QMessageBox::critical(
+                        this,
+                        "Error",
+                        "Degate couldn't create an OpenGL context. Please install appropriate drivers to run the "
+                        "software.");
+                throw DegateRuntimeException("No OpenGL driver installed on the machine.");
+            }
+
+            // Check that we are not using software OpenGL through llvmpipe
+            auto functions = this->context()->functions();
+            if (functions != nullptr)
+            {
+                const std::string vendor = reinterpret_cast<const char*>(functions->glGetString(GL_VENDOR));
+                const std::string renderer = reinterpret_cast<const char*>(functions->glGetString(GL_RENDERER));
+                const std::string version = reinterpret_cast<const char*>(functions->glGetString(GL_VERSION));
+                debug(TM, "Detected OpenGL vendor: %s", vendor.c_str());
+                debug(TM, "Detected OpenGL renderer: %s", renderer.c_str());
+                debug(TM, "Detected OpenGL version: %s", version.c_str());
+
+                if (renderer.find("llvmpipe") != std::string::npos)
+                {
+                    QMessageBox::warning(this,
+                                         "OpenGL",
+                                         "You are using a software implementation of OpenGL because no real driver has "
+                                         "been found. Please note that this will have an impact on performances, and "
+                                         "could even not work at all.");
+                }
+            }
+            return result;
+        }
+        else
+        {
+            return QOpenGLWidget::event(event);
+        }
+    }
+} // namespace degate

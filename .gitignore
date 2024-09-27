@@ -25,3 +25,6 @@ doc/config/DoxyFile
 
 build.sh
 run.sh
+release.sh
+test.sh
+doc.sh

@@ -22,22 +22,22 @@
 #ifndef __WORKSPACERENDERER_H__
 #define __WORKSPACERENDERER_H__
 
-#include "Core/Project/Project.h"
+#include "Core/LogicModel/Annotation/SubProjectAnnotation.h"
 #include "Core/LogicModel/HlObjectSet.h"
-#include "GUI/Workspace/WorkspaceBackground.h"
-#include "GUI/Workspace/WorkspaceGates.h"
+#include "Core/LogicModel/LogicModelHelper.h"
+#include "Core/Project/Project.h"
+#include "GUI/Dialog/EMarkerEditDialog.h"
+#include "GUI/Dialog/ViaEditDialog.h"
 #include "GUI/Text/Text.h"
 #include "GUI/Workspace/WorkspaceAnnotations.h"
-#include "Core/LogicModel/Annotation/SubProjectAnnotation.h"
-#include "Core/LogicModel/LogicModelHelper.h"
-#include "GUI/Workspace/WorkspaceSelectionTool.h"
+#include "GUI/Workspace/WorkspaceBackground.h"
 #include "GUI/Workspace/WorkspaceEMarkers.h"
-#include "GUI/Dialog/EMarkerEditDialog.h"
-#include "GUI/Workspace/WorkspaceVias.h"
-#include "GUI/Dialog/ViaEditDialog.h"
-#include "GUI/Workspace/WorkspaceWires.h"
-#include "GUI/Workspace/WorkspaceWireTool.h"
+#include "GUI/Workspace/WorkspaceGates.h"
 #include "GUI/Workspace/WorkspaceRegularGrid.h"
+#include "GUI/Workspace/WorkspaceSelectionTool.h"
+#include "GUI/Workspace/WorkspaceVias.h"
+#include "GUI/Workspace/WorkspaceWireTool.h"
+#include "GUI/Workspace/WorkspaceWires.h"
 
 #include <QtOpenGL/QtOpenGL>
 #include <QtOpenGLWidgets/QtOpenGLWidgets>
@@ -88,10 +88,9 @@ namespace degate
      */
     class WorkspaceRenderer : public QOpenGLWidget, protected QOpenGLFunctions
     {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-
         /**
          * Create a workspace renderer.
          *
@@ -274,6 +273,11 @@ namespace degate
          * @param new_center_y : y value of the new center.
          */
         void set_projection(float scale_factor, float new_center_x, float new_center_y);
+
+        /**
+         *
+         */
+        bool event(QEvent* event) override;
 
     public slots:
         /**
@@ -494,25 +498,27 @@ namespace degate
         bool draw_grid = false;
 
         // View parameters
-        bool draw_gates            = true;
-        bool draw_gates_name       = true;
-        bool draw_ports            = true;
-        bool draw_ports_name       = true;
-        bool draw_annotations      = true;
+        bool draw_gates = true;
+        bool draw_gates_name = true;
+        bool draw_ports = true;
+        bool draw_ports_name = true;
+        bool draw_annotations = true;
         bool draw_annotations_name = true;
-        bool draw_emarkers         = true;
-        bool draw_emarkers_name    = true;
-        bool draw_vias             = true;
-        bool draw_vias_name        = true;
-        bool draw_wires            = true;
+        bool draw_emarkers = true;
+        bool draw_emarkers_name = true;
+        bool draw_vias = true;
+        bool draw_vias_name = true;
+        bool draw_wires = true;
 
         // Used tool
         WorkspaceTool current_tool;
 
-        // Last create wire created with the wire tool
+        // Last wire created with the wire tool
         Wire_shptr last_created_wire = nullptr;
 
+        // Did we tried to initialize the OpenGL context
+        bool context_initialized = false;
     };
-}
+} // namespace degate
 
 #endif

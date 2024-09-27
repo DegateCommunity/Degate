@@ -19,14 +19,12 @@
  *
  */
 
-#include "Core/Utils/FileSystem.h"
 #include "Core/Configuration.h"
+#include "Core/Utils/FileSystem.h"
 
-#include <cstring>
+#include <boost/filesystem.hpp>
 #include <climits>
-
-#include <boost/filesystem/operations.hpp>
-#include <iostream>
+#include <cstring>
 #include <string>
 
 using namespace degate;
@@ -92,7 +90,8 @@ std::string degate::get_basedir(std::string const& path)
     {
         resolved_path = get_realpath(path);
 
-        if (is_directory(resolved_path)) return resolved_path;
+        if (is_directory(resolved_path))
+            return resolved_path;
         else
         {
             boost::filesystem::path p(path);
@@ -119,7 +118,8 @@ std::string degate::get_file_suffix(std::string const& path)
     {
         return path.substr(last_occurance + 1, path.size() - last_occurance);
     }
-    else return std::string();
+    else
+        return std::string();
 }
 
 bool degate::remove_file(std::string const& path)
@@ -147,7 +147,9 @@ void degate::remove_directory(std::string const& path)
     }
 }
 
-void degate::clear_directory(std::string const& path, std::vector<std::string> const& exclusion_list, std::string const& base_directory_path)
+void degate::clear_directory(std::string const& path,
+                             std::vector<std::string> const& exclusion_list,
+                             std::string const& base_directory_path)
 {
     if (path.empty())
         return;
@@ -158,7 +160,7 @@ void degate::clear_directory(std::string const& path, std::vector<std::string> c
         base_directory = path;
 
     boost::filesystem::directory_iterator end_itr;
-    for(boost::filesystem::directory_iterator it(path); it != end_itr; it++)
+    for (boost::filesystem::directory_iterator it(path); it != end_itr; it++)
     {
         // If no exclusion list
         if (exclusion_list.empty())
@@ -179,11 +181,14 @@ void degate::clear_directory(std::string const& path, std::vector<std::string> c
         {
             try
             {
-                if (boost::filesystem::equivalent(boost::filesystem::path(element), boost::filesystem::path(excluded_element)) || stripped_element == excluded_element)
+                if (boost::filesystem::equivalent(boost::filesystem::path(element),
+                                                  boost::filesystem::path(excluded_element)) ||
+                    stripped_element == excluded_element)
                     skip = true;
             }
             catch (const std::exception&)
-            {}
+            {
+            }
         }
 
         // If in exclusion list, skip the element clear
@@ -230,7 +235,8 @@ std::string degate::get_temp_directory_path()
 
 std::string degate::generate_temp_file_pattern()
 {
-    boost::filesystem::path p(boost::filesystem::temp_directory_path() / boost::filesystem::path("degate_temp.%%%%%%%%"));
+    boost::filesystem::path p(boost::filesystem::temp_directory_path() /
+                              boost::filesystem::path("degate_temp.%%%%%%%%"));
     return p.make_preferred().string();
 }
 
@@ -273,11 +279,11 @@ std::string degate::get_basename(std::string const& path)
     size_t last_occurance = filename.rfind(".", filename.size());
     if (last_occurance < filename.size())
         return filename.substr(0, last_occurance);
-    else return filename;
+    else
+        return filename;
 }
 
-boost::filesystem::path
-naive_uncomplete(boost::filesystem::path const p, boost::filesystem::path const base)
+boost::filesystem::path naive_uncomplete(boost::filesystem::path const p, boost::filesystem::path const base)
 {
     using boost::filesystem::path;
 
@@ -309,7 +315,7 @@ naive_uncomplete(boost::filesystem::path const p, boost::filesystem::path const 
 #endif
 
     // Cache system-dependent dot, double-dot and slash strings
-    const std::string dot  = ".";
+    const std::string dot = ".";
     const std::string dots = "..";
 #ifdef WIN32
     const std::string sep = "/";
@@ -363,8 +369,7 @@ naive_uncomplete(boost::filesystem::path const p, boost::filesystem::path const 
 }
 
 
-std::string degate::get_relative_path(std::string const& path,
-                                      std::string const& relative_to)
+std::string degate::get_relative_path(std::string const& path, std::string const& relative_to)
 {
     return naive_uncomplete(path, relative_to).make_preferred().string();
 }

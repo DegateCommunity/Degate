@@ -4,6 +4,8 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release # Change build type here.
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+  VCPKG_ROOT: '${{ github.workspace }}/vcpkg'
 
 jobs:
   build:
@@ -15,19 +17,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v3
       with:
-        version: 6.2.4 # Update Qt version here.
-        aqtversion: '>=0.9.7'
-        modules: 'qtimageformats'
+          submodules: recursive
 
-    - name: Install boost
-      uses: MarkusJx/install-boost@v2.4.5
-      id: install-boost
+    - name: Export GitHub Actions cache environment variables
+      uses: actions/github-script@v7
       with:
-          boost_version: 1.72.0 # Update Boost version here.
+        script: |
+          core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+          core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+    - name: Prepare dependencies
+      shell: bash
+      run: |
+        ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+        brew reinstall autoconf
+        brew install automake autoconf-archive
 
     - name: Build
       shell: bash
@@ -42,6 +47,15 @@ jobs:
       shell: bash
       run: |
         cd build
+        cmake .. -DBUILD_TESTS=1
         cmake --build . --config $BUILD_TYPE --target DegateTests
         cd tests/out/bin
         ./DegateTests
+
+    - name: Upload vcpkg build logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'vcpkg-buildlogs-${{ matrix.triplet }}'
+        path: ${{ env.VCPKG_ROOT }}/buildtrees/**/*.log
+

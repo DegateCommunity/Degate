@@ -19,8 +19,10 @@
 #
 #####################################################################
 
-enable_testing()
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/catch2/")
+project(DegateTests LANGUAGES CXX)
+
+find_package(Catch2 CONFIG REQUIRED)
+include(Catch)
 
 #
 # The tests source files
@@ -33,21 +35,10 @@ file(GLOB_RECURSE TEST_SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" LIST_DIR
 )
 
 #
-# Include directories
-#
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../src")
-
-#
-# Defines groups (to respect folders hierarchy)
-#
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX "src" FILES ${TEST_SRC_FILES})
-
-#
 # Link
 #
-add_executable(DegateTests ${TEST_SRC_FILES})
-target_link_libraries(DegateTests ${LIBS} DegateCore)
+qt_add_executable(DegateTests ${TEST_SRC_FILES})
+target_link_libraries(DegateTests PRIVATE ${LIBS} DegateCore Catch2::Catch2)
 
 #
 # Output specifications
@@ -60,9 +51,18 @@ set_target_properties(DegateTests
 )
 
 #
+# Automatic Qt deploy
+#
+qt_generate_deploy_app_script(
+    TARGET DegateTests
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${deploy_script})
+
+#
 # Link Catch2 tests to CTest
 #
-include(catch2/Catch.cmake)
 catch_discover_tests(DegateTests)
 
 #

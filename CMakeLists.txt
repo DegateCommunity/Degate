@@ -20,6 +20,41 @@
 #####################################################################
 
 cmake_minimum_required(VERSION 3.12.0)
+
+#
+# Custom triplets used by Degate (e.g. this allow mixing dynamic/static linking for dependencies)
+#
+set(VCPKG_OVERLAY_TRIPLETS "${CMAKE_CURRENT_SOURCE_DIR}/etc/vcpkg-triplets")
+
+#
+# Use specific triplet for windows, that'll use static build for everything except qt
+#
+if (WIN32)
+    set(VCPKG_DEFAULT_TRIPLET "x64-windows-degate")
+    set(VCPKG_TARGET_TRIPLET "x64-windows-degate" CACHE STRING "target triplet" FORCE)
+endif()
+
+#
+# Use vcpkg
+#
+set(VCPKG_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
+set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+
+#
+# Configure tests
+#
+option(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    list(APPEND VCPKG_MANIFEST_FEATURES "tests")
+endif()
+
+#
+# Tell vcpkg to export dll to build folder (windows only)
+#
+if (WIN32)
+    set(X_VCPKG_APPLOCAL_DEPS_INSTALL ON)
+endif()
+
 project(Degate)
 
 #
@@ -102,6 +137,7 @@ set(LIBS ${Boost_LIBRARIES})
 ############# Qt
 find_package(Qt6 COMPONENTS Core Widgets Gui Xml OpenGL OpenGLWidgets Concurrent LinguistTools REQUIRED)
 set(LIBS ${LIBS} Qt6::Widgets Qt6::Gui Qt6::Core Qt6::Xml Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Concurrent)
+qt_standard_project_setup()
 
 
 ############################################################################
@@ -204,14 +240,14 @@ endif ()
 #
 # Link DegateCore
 #
-add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "Degate version")
-target_link_libraries(DegateCore ${LIBS})
+qt_add_library(DegateCore STATIC ${SRC_FILES} res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "Degate version")
+target_link_libraries(DegateCore PRIVATE ${LIBS})
 
 #
 # Link main (Degate)
 #
-add_executable(Degate "src/Main.cc" res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "res/resource.rc")
-target_link_libraries(Degate ${LIBS} DegateCore)
+qt_add_executable(Degate "src/Main.cc" res/resources.qrc res/qdarkstyle/style.qrc ${CMAKE_BINARY_DIR}/translations.qrc ${TRANSLATION_FILES} ${QM_FILES} "res/resource.rc")
+target_link_libraries(Degate PRIVATE ${LIBS} DegateCore)
 
 #
 # Activate bundle for MacOS.
@@ -222,6 +258,16 @@ set_target_properties(Degate PROPERTIES MACOSX_BUNDLE TRUE)
 # Installation specifications
 #
 install (TARGETS Degate DESTINATION out/bin)
+
+#
+# Automatic Qt deploy (doesn't deploy everything...)
+#
+qt_generate_deploy_app_script(
+    TARGET Degate
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${deploy_script})
 
 #
 # Output specifications
@@ -251,23 +297,31 @@ endif()
 #
 # Tests
 #
-add_subdirectory(tests)
+include(CTest)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 
 ############################################################################
 ################################ Doc #######################################
 ############################################################################
 
-find_package(Doxygen QUIET)
-if(DOXYGEN_FOUND)
-    message(STATUS "Doxygen found")
-
-    add_custom_target(Documentation ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/config/DoxyFile"
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            COMMENT "Generating documentation with Doxygen."
-            SOURCES "Degate version")
-
-else()
-    message(STATUS "Doxygen not found")
+option(BUILD_DOCS "Build docs" OFF)
+if(BUILD_DOCS)
+    find_package(Doxygen QUIET)
+    if(DOXYGEN_FOUND)
+        message(STATUS "Doxygen found")
+    
+        add_custom_target(Documentation ALL
+                COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/config/DoxyFile"
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                COMMENT "Generating documentation with Doxygen."
+                SOURCES "Degate version")
+    
+    else()
+        message(STATUS "Doxygen not found")
+    endif()
 endif()
+
