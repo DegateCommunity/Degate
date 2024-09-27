@@ -43,6 +43,10 @@ jobs:
         cd build
         cmake .. -DBUILD_TESTS=1
         cmake --build . --config $BUILD_TYPE --target DegateTests
+        # Windeployqt is sooo broken when using vcpkg...
+        # ./vcpkg_installed/x64-windows/tools/Qt6/bin/windeployqt.exe ./tests/out/bin/$BUILD_TYPE
+        mkdir -P tests/out/bin/$BUILD_TYPE/imageformats
+        find . -name vcpkg_installed/x64-windows-degate/Qt6/plugins/imageformats/*.dll -exec cp {} tests/out/bin/$BUILD_TYPE/imageformats/ \;
         cd tests/out/bin/$BUILD_TYPE
         ./DegateTests.exe
 

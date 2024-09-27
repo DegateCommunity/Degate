@@ -22,6 +22,19 @@
 cmake_minimum_required(VERSION 3.12.0)
 
 #
+# Custom triplets used by Degate (e.g. this allow mixing dynamic/static linking for dependencies)
+#
+set(VCPKG_OVERLAY_TRIPLETS "${CMAKE_CURRENT_SOURCE_DIR}/etc/vcpkg-triplets")
+
+#
+# Use specific triplet for windows, that'll use static build for everything except qt
+#
+if (WIN32)
+    set(VCPKG_DEFAULT_TRIPLET "x64-windows-degate")
+    set(VCPKG_TARGET_TRIPLET "x64-windows-degate" CACHE STRING "target triplet" FORCE)
+endif()
+
+#
 # Use vcpkg
 #
 set(VCPKG_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
@@ -247,7 +260,7 @@ set_target_properties(Degate PROPERTIES MACOSX_BUNDLE TRUE)
 install (TARGETS Degate DESTINATION out/bin)
 
 #
-# Automatic Qt deploy
+# Automatic Qt deploy (doesn't deploy everything...)
 #
 qt_generate_deploy_app_script(
     TARGET Degate
