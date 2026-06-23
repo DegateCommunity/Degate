@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
     }
     catch (const std::exception& e)
     {
-        debug(TM, "Exception occured: %s", e.what());
+        debug(TM, "Exception occurred: %s", e.what());
         degate::crash_report(e.what());
     }
 
